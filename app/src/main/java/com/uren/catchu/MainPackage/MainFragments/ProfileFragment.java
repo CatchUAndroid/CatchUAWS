@@ -8,24 +8,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.config.AWSConfiguration;
-
 import com.amazonaws.regions.Regions;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-
 import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
-
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -119,13 +114,10 @@ public class ProfileFragment extends BaseFragment {
                 @Override
                 public void onFailure(Exception e) {
                     progressBar.setVisibility(View.GONE);
-                    Log.i("nerdeyiz", "c");
-                    //
                 }
 
                 @Override
                 public void onTaskContinue() {
-                    Log.i("nerdeyiz", "a");
                     progressBar.setVisibility(View.VISIBLE);
                 }
             });
@@ -137,6 +129,7 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void printUserDetail() {
+
         CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getResultArray().get(0).getName() +"!!");
         Log.i("name ", userProfile.getResultArray().get(0).getName());
         Log.i("username ", userProfile.getResultArray().get(0).getUsername());

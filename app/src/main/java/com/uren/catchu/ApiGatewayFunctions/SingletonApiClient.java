@@ -1,9 +1,6 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
-import android.util.Log;
-
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
-
 import catchu.CatchUMobileAPIClient;
 
 public class SingletonApiClient {
@@ -14,26 +11,20 @@ public class SingletonApiClient {
     public CatchUMobileAPIClient client;
 
     // private constructor restricted to this class itself
-    public SingletonApiClient()
-    {
+    public SingletonApiClient() {
+
         // create a client
-        
         ApiClientFactory factory = new ApiClientFactory();
         client = factory.build(CatchUMobileAPIClient.class);
 
     }
 
     // static method to create instance of SingletonApiClient class
-    public static SingletonApiClient getInstance()
-    {
+    public static SingletonApiClient getInstance() {
         if (myInstance == null)
             myInstance = new SingletonApiClient();
 
         return myInstance;
     }
-
-
-
-
 
 }

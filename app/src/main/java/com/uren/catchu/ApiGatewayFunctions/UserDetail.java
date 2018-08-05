@@ -3,11 +3,7 @@ package com.uren.catchu.ApiGatewayFunctions;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-
-import catchu.CatchUMobileAPIClient;
 import catchu.model.UserProfile;
 
 public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
@@ -29,28 +25,28 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
 
         //ApiClientFactory factory = new ApiClientFactory();
         //CatchUMobileAPIClient client = factory.build(CatchUMobileAPIClient.class);
-        Log.i("nerdeyiz", "1");
 
         try {
 
             UserProfile userProfile = instance.client.usersGet("us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96");
             //SearchResult searchResult = client.searchGet("us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96", "e");
-            Log.i("nerdeyiz", "1.5");
             return userProfile;
         } catch (Exception e) {
             mException = e;
             e.printStackTrace();
             Log.e("error ", e.toString());
         }
-        Log.i("nerdeyiz", "2");
+
         return null;
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        mCallBack.onTaskContinue();
 
+        if (mCallBack != null) {
+            mCallBack.onTaskContinue();
+        }
 
     }
 
