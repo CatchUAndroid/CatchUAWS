@@ -17,7 +17,6 @@ public class SingletonApiClient {
     public SingletonApiClient()
     {
         // create a client
-
         ApiClientFactory factory = new ApiClientFactory();
         client = factory.build(CatchUMobileAPIClient.class);
 
