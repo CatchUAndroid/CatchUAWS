@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">CatchU</string>
+    <string name="title_activity_authenticator">AuthenticatorActivity</string>
+
+    <string name="facebook_app_id">188399458686974</string>
+    <string name="fb_login_protocol_scheme">fb188399458686974</string>
+
+    <array name="tab_name">
+        <item>Home</item>
+        <item>Search</item>
+        <item>Share</item>
+        <item>News</item>
+        <item>Profile</item>
+    </array>
+
+    <string name="exitItem">Log Out</string>
+
+</resources>
