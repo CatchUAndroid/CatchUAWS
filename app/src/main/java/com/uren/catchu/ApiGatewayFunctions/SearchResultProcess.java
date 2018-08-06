@@ -28,11 +28,13 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
     @Override
     protected SearchResult doInBackground(Void... voids) {
 
-        ApiClientFactory factory = new ApiClientFactory();
-        CatchUMobileAPIClient client = factory.build(CatchUMobileAPIClient.class);
+        SingletonApiClient instance = SingletonApiClient.getInstance();
+
+        //ApiClientFactory factory = new ApiClientFactory();
+        //CatchUMobileAPIClient client = factory.build(CatchUMobileAPIClient.class);
 
         try {
-            SearchResult searchResult = client.searchGet(userid, searchText);
+            SearchResult searchResult = instance.client.searchGet(userid, searchText);
             return searchResult;
 
         } catch (Exception e) {

@@ -1,48 +1,58 @@
-package com.uren.catchu.MainPackage.MainFragments;
+package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
 import android.content.Context;
-import android.annotation.SuppressLint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
-import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
+import com.uren.catchu.GeneralUtils.PermissionModule;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
 
 import butterknife.ButterKnife;
-import catchu.CatchUMobileAPIClient;
 import catchu.model.SearchResult;
-import catchu.model.UserProfile;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.uren.catchu.Constants.StringConstants.defSpace;
+import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 
-public class SearchFragment extends BaseFragment{
+public class SearchFragment extends BaseFragment {
 
     private Context context;
-    public ProgressBar progressBar;
+
     View view;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
+
+    public static String selectedProperty;
+
+    private boolean queryTextChanged = false;
 
     String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
     //Toolbar mToolBar;
 
+    public static final String propFriends = "Friends";
+    public static final String propPersons = "Persons";
+    public static final String propOnlyMe = "OnlyMe";
+    public static final String propGroups = "Groups";
+
     SearchResult searchResult;
+    SpecialSelectTabAdapter adapter;
+
+    private static final int personFragmentTab = 0;
+    private static final int groupFragmentTab = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,10 +60,7 @@ public class SearchFragment extends BaseFragment{
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
         view = inflater.inflate(R.layout.fragment_search, container, false);
@@ -63,13 +70,22 @@ public class SearchFragment extends BaseFragment{
 
         context = getActivity();
 
+        PermissionModule permissionModule = new PermissionModule(context);
+        permissionModule.checkPermissions();
+
         return view;
     }
 
     private void initializeItems() {
 
-        progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
         overwriteToolbar();
+
+        viewPager = view.findViewById(R.id.viewpager);
+
+        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
+
+        selectedProperty = propPersons;
     }
 
     private void overwriteToolbar() {
@@ -77,7 +93,7 @@ public class SearchFragment extends BaseFragment{
         ((NextActivity) getActivity()).getSupportActionBar().hide();
 
         Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbarLayout);
-        mToolBar.setTitle("Kisi veya Gruplari Seciniz...");
+        mToolBar.setTitle(getResources().getString(R.string.search));
         mToolBar.setNavigationIcon(R.drawable.back_arrow);
         mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
         mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
@@ -86,7 +102,6 @@ public class SearchFragment extends BaseFragment{
         ((NextActivity)getActivity()).setSupportActionBar(mToolBar);
         ((NextActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
@@ -105,7 +120,21 @@ public class SearchFragment extends BaseFragment{
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                getSearchResult(userid, newText);
+                if(!newText.isEmpty()) {
+
+                    if(!queryTextChanged){
+                        adapter = new SpecialSelectTabAdapter(getFragmentManager());
+                        //adapter.addFragment(new GroupFragment(FirebaseGetAccountHolder.getUserID(), context, null), "Gonderiler");
+                        adapter.addFragment(new PersonFragment(userid, verticalShown, newText, context),"Kisiler");
+                        viewPager.setAdapter(adapter);
+                        queryTextChanged = true;
+                    }else {
+                        PersonFragment personFragment = new PersonFragment(userid, verticalShown, newText, context);
+                        adapter.updateFragment(personFragmentTab, personFragment);
+                        reloadAdapter();
+                    }
+                }
+
                 return false;
             }
         });
@@ -113,37 +142,14 @@ public class SearchFragment extends BaseFragment{
         super.onCreateOptionsMenu(menu,menuInflater);
     }
 
+    public void reloadAdapter(){
+        adapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getSearchResult(userid, defSpace);
+        //getSearchResult(userid, defSpace);
     }
-
-    public void getSearchResult(String userid, String searchText){
-
-        SearchResultProcess searchResultProcess = new SearchResultProcess(getApplicationContext(), new OnEventListener<SearchResult>() {
-
-            @Override
-            public void onSuccess(SearchResult object) {
-                Log.i("Info", "SearchResult on success");
-                progressBar.setVisibility(View.GONE);
-                searchResult = object;
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        }, userid, searchText);
-
-        searchResultProcess.execute();
-    }
-
-
 }

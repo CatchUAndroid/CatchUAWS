@@ -2,4 +2,10 @@
 <resources>
     <string name="app_name">CatchU</string>
     <string name="exitItem">Çıkış</string>
+    <string name="search">Ara</string>
+
+    <string name="upperFriend">ARKADAŞ</string>
+    <string name="upperRequested">BEKLIYOR</string>
+    <string name="upperAddFriend">ARKADAŞ EKLE</string>
+
 </resources>
