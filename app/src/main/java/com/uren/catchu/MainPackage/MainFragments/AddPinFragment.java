@@ -30,6 +30,7 @@ public class AddPinFragment extends BaseFragment
 
         ButterKnife.bind(this, view);
 
+        //((NextActivity) getActivity()).getSupportActionBar().show();
         ( (NextActivity)getActivity()).updateToolbarTitle("Pin fragment");
 
 
