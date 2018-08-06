@@ -1,18 +1,23 @@
 package com.uren.catchu.MainPackage.MainFragments;
 
+import android.media.session.PlaybackState;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.regions.Regions;
+import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -32,6 +37,8 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     public ProgressBar progressBar;
 
+    @BindView(R.id.imgProfile)
+    ImageView imgProfile;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +115,7 @@ public class ProfileFragment extends BaseFragment {
                     Log.i("userDetail", "successful");
                     progressBar.setVisibility(View.GONE);
                     userProfile = u;
+                    updateUI();
                     printUserDetail();
                 }
 
@@ -125,6 +133,138 @@ public class ProfileFragment extends BaseFragment {
         }else{
             printUserDetail();
         }
+
+    }
+
+    int i= 0;
+    private void updateUI() {
+
+
+
+        final String[] photoUrl = {
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/8.jpg",
+                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/9.jpg"
+        };
+
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    CommonUtils.showToast(getActivity(), "yeni foto1..");
+                    //feed porfile picture
+                    Picasso.with(getActivity())
+                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg")
+                            .transform(new CircleTransform())
+                            .into(imgProfile);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            CommonUtils.showToast(getActivity(), "yeni foto2..");
+                            //feed porfile picture
+                            Picasso.with(getActivity())
+                                    //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                    .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg")
+                                    .transform(new CircleTransform())
+                                    .into(imgProfile);
+
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    CommonUtils.showToast(getActivity(), "yeni foto3..");
+                                    //feed porfile picture
+                                    Picasso.with(getActivity())
+                                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg")
+                                            .transform(new CircleTransform())
+                                            .into(imgProfile);
+                                    new Handler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            CommonUtils.showToast(getActivity(), "yeni foto4..");
+                                            //feed porfile picture
+                                            Picasso.with(getActivity())
+                                                    //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                    .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
+                                                    .transform(new CircleTransform())
+                                                    .into(imgProfile);
+
+                                            new Handler().postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    CommonUtils.showToast(getActivity(), "yeni fot5o..");
+                                                    //feed porfile picture
+                                                    Picasso.with(getActivity())
+                                                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg")
+                                                            .transform(new CircleTransform())
+                                                            .into(imgProfile);
+
+                                                    new Handler().postDelayed(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            CommonUtils.showToast(getActivity(), "yeni foto6..");
+                                                            //feed porfile picture
+                                                            Picasso.with(getActivity())
+                                                                    //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                                    .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg")
+                                                                    .transform(new CircleTransform())
+                                                                    .into(imgProfile);
+
+                                                            new Handler().postDelayed(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    CommonUtils.showToast(getActivity(), "yeni foto7..");
+                                                                    //feed porfile picture
+                                                                    Picasso.with(getActivity())
+                                                                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg")
+                                                                            .transform(new CircleTransform())
+                                                                            .into(imgProfile);
+
+                                                                }
+                                                            }, 5000);
+
+                                                        }
+                                                    }, 5000);
+
+                                                }
+                                            }, 5000);
+
+                                        }
+                                    }, 5000);
+
+
+                                }
+                            }, 5000);
+
+                        }
+                    }, 5000);
+
+
+                }
+            }, 5000);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     }
 
