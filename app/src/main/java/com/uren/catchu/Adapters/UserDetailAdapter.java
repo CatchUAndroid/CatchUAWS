@@ -79,6 +79,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 @Override
                 public void onClick(View view) {
 
+                    if(isPrivateAccount){
+
+                    }
                 }
             });
         }
