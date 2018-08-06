@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import butterknife.ButterKnife;
 
 public class SearchFragment extends BaseFragment{
 
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -26,10 +28,11 @@ public class SearchFragment extends BaseFragment{
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-
         ButterKnife.bind(this, view);
 
         ( (NextActivity)getActivity()).updateToolbarTitle("Search");
+
+        context = getActivity();
 
 
         return view;
