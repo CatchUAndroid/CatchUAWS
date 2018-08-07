@@ -1,1 +1,0 @@
-1-Search sayfasinda ilk aramada kisiler getiriliyor, sayfa degistirip tekrar search sayfasina geliyoruz. Ilk text girisinde PersonFragment onCreate calismiyor.
