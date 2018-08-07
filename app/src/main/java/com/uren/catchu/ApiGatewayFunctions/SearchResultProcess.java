@@ -30,9 +30,6 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
-        //ApiClientFactory factory = new ApiClientFactory();
-        //CatchUMobileAPIClient client = factory.build(CatchUMobileAPIClient.class);
-
         try {
             SearchResult searchResult = instance.client.searchGet(userid, searchText);
             return searchResult;
@@ -46,7 +43,6 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
         return null;
     }
 
-
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -54,7 +50,6 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
         if (mCallBack != null) {
             mCallBack.onTaskContinue();
         }
-
     }
 
     @Override
@@ -68,6 +63,5 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
                 mCallBack.onFailure(mException);
             }
         }
-
     }
 }

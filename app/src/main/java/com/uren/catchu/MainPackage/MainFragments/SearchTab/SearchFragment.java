@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,10 +26,12 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFr
 import butterknife.ButterKnife;
 import catchu.model.SearchResult;
 
+import static com.uren.catchu.Constants.StringConstants.propGroups;
+import static com.uren.catchu.Constants.StringConstants.propPersons;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 
-public class SearchFragment extends BaseFragment  {
+public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     private Context context;
 
@@ -44,16 +47,13 @@ public class SearchFragment extends BaseFragment  {
 
     //Toolbar mToolBar;
 
-    public static final String propFriends = "Friends";
-    public static final String propPersons = "Persons";
-    public static final String propOnlyMe = "OnlyMe";
-    public static final String propGroups = "Groups";
 
     SearchResult searchResult;
     SpecialSelectTabAdapter adapter;
 
     private static final int personFragmentTab = 0;
     private static final int groupFragmentTab = 1;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,9 +67,8 @@ public class SearchFragment extends BaseFragment  {
         view = inflater.inflate(R.layout.fragment_search, container, false);
         ButterKnife.bind(this, view);
 
-        initializeItems();
-
         context = getActivity();
+        initializeItems();
 
         PermissionModule permissionModule = new PermissionModule(context);
         permissionModule.checkPermissions();
@@ -82,13 +81,62 @@ public class SearchFragment extends BaseFragment  {
         overwriteToolbar();
 
         viewPager = view.findViewById(R.id.viewpager);
+        setupViewPager(viewPager);
 
         tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
         selectedProperty = propPersons;
         queryTextChanged = false;
+
+        addListeners();
     }
+
+    private void setupViewPager(final ViewPager viewPager) {
+
+        adapter = new SpecialSelectTabAdapter(getFragmentManager());
+        adapter.addFragment(new PersonFragment(userid, verticalShown, "A", context), getResources().getString(R.string.friends));
+        //adapter.addFragment(new GroupFragment(FirebaseGetAccountHolder.getUserID(), context, null), "Gruplar");
+        viewPager.setAdapter(adapter);
+    }
+
+    private void addListeners() {
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()) {
+
+                    case personFragmentTab:
+
+                        selectedProperty = propPersons;
+                        break;
+
+
+                    case groupFragmentTab:
+
+                        selectedProperty = propGroups;
+                        break;
+
+                    default:
+                        Log.i("Info", "Tablayout unknown");
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
 
     private void overwriteToolbar() {
 
@@ -101,8 +149,8 @@ public class SearchFragment extends BaseFragment  {
         mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
         mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
 
-        ((NextActivity)getActivity()).setSupportActionBar(mToolBar);
-        ((NextActivity)getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((NextActivity) getActivity()).setSupportActionBar(mToolBar);
+        ((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override
@@ -122,29 +170,35 @@ public class SearchFragment extends BaseFragment  {
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                if(!newText.isEmpty()) {
+                if (!newText.isEmpty()) {
 
-                    if(!queryTextChanged){
-                        adapter = new SpecialSelectTabAdapter(getFragmentManager());
-                        //adapter.addFragment(new GroupFragment(FirebaseGetAccountHolder.getUserID(), context, null), "Gonderiler");
-                        adapter.addFragment(new PersonFragment(userid, verticalShown, newText, context),"Kisiler");
-                        viewPager.setAdapter(adapter);
-                        queryTextChanged = true;
-                    }else {
-                        PersonFragment personFragment = new PersonFragment(userid, verticalShown, newText, context);
-                        adapter.updateFragment(personFragmentTab, personFragment);
-                        reloadAdapter();
-                    }
+                    if (selectedProperty.equals(propPersons))
+                        searchForPersons(newText);
+                    else if(selectedProperty.equals(propGroups))
+                        searchForGroups(newText);
+
                 }
 
                 return false;
             }
         });
 
-        super.onCreateOptionsMenu(menu,menuInflater);
+        super.onCreateOptionsMenu(menu, menuInflater);
     }
 
-    public void reloadAdapter(){
+    public void searchForPersons(String searchText) {
+
+        PersonFragment personFragment = new PersonFragment(userid, verticalShown, searchText, context);
+        adapter.updateFragment(personFragmentTab, personFragment);
+        reloadAdapter();
+    }
+
+    public void searchForGroups(String searchText) {
+
+
+    }
+
+    public void reloadAdapter() {
         adapter.notifyDataSetChanged();
     }
 
@@ -155,4 +209,8 @@ public class SearchFragment extends BaseFragment  {
         //getSearchResult(userid, defSpace);
     }
 
+    @Override
+    public boolean onBackPressed() {
+        return false;
+    }
 }

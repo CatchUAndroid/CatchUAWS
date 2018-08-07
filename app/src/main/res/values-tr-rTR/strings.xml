@@ -7,5 +7,7 @@
     <string name="upperFriend">ARKADAŞ</string>
     <string name="upperRequested">BEKLIYOR</string>
     <string name="upperAddFriend">ARKADAŞ EKLE</string>
+    <string name="friends">ARKADAŞLAR</string>
+    <string name="groups">GRUPLAR</string>
 
 </resources>

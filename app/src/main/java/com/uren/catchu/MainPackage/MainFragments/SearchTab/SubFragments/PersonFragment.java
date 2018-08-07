@@ -48,7 +48,7 @@ public class PersonFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
 
-    @SuppressLint("ValidFragment")
+    //@SuppressLint("ValidFragment")
     public PersonFragment(String userid, String viewType, String searchText, Context context) {
         this.userid = userid;
         this.viewType = viewType;
@@ -57,13 +57,12 @@ public class PersonFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_special_select, container, false);
         ButterKnife.bind(this, mView);

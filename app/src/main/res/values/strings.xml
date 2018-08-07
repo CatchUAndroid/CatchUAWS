@@ -15,9 +15,10 @@
 
     <string name="exitItem">Log Out</string>
     <string name="search">Search</string>
-
     <string name="upperFriend">FRIEND</string>
     <string name="upperRequested">REQUESTED</string>
     <string name="upperAddFriend">ADD FRIEND</string>
+    <string name="friends">FRIENDS</string>
+    <string name="groups">GROUPS</string>
 
 </resources>

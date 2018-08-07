@@ -17,5 +17,10 @@ public class StringConstants {
     public static final String verticalShown = "vertical";
     public static final String gridShown = "grid";
 
+    public static final String propFriends = "Friends";
+    public static final String propPersons = "Persons";
+    public static final String propOnlyMe = "OnlyMe";
+    public static final String propGroups = "Groups";
+
 
 }
