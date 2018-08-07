@@ -23,13 +23,9 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
-        //ApiClientFactory factory = new ApiClientFactory();
-        //CatchUMobileAPIClient client = factory.build(CatchUMobileAPIClient.class);
-
         try {
 
             UserProfile userProfile = instance.client.usersGet("us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96");
-            //SearchResult searchResult = client.searchGet("us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96", "e");
             return userProfile;
         } catch (Exception e) {
             mException = e;

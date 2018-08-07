@@ -116,7 +116,7 @@ public class PersonFragment extends Fragment {
 
                 UserDetailAdapter userDetailAdapter = null;
 
-                userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult);
+                userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult, userid);
 
                 personRecyclerView.setAdapter(userDetailAdapter);
                 linearLayoutManager = new LinearLayoutManager(context);

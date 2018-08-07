@@ -29,7 +29,6 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.regions.Regions;
-import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -90,17 +89,6 @@ public class ProfileFragment extends BaseFragment {
     private void setUpPager() {
 
         NewsPagerAdapter adp = new NewsPagerAdapter(getFragmentManager());
-        NewsList n1 = new NewsList();
-        NewsList n2 = new NewsList();
-        NewsList n3 = new NewsList();
-        NewsList n4 = new NewsList();
-        NewsList n5 = new NewsList();
-
-        adp.addFrag(n1, "World");
-        adp.addFrag(n2, "Special");
-        adp.addFrag(n3, "International");
-        adp.addFrag(n4, "Technology");
-        adp.addFrag(n5, "Finance");
 
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         vpNews.setAdapter(adp);
@@ -184,108 +172,9 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
-    public static class NewsList extends Fragment {
-
-        RecyclerView rvNewsList;
-
-        public NewsList() {
-
-        }
-
-        @Nullable
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            rvNewsList = (RecyclerView) inflater.inflate(R.layout.news_recycler_view, container, false);
-            return rvNewsList;
-        }
-
-        @Override
-        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            setUpRecyclerView();
-        }
-
-        private void setUpRecyclerView() {
-            List<String> content = new ArrayList<>();
-            for (int i = 0; i < 5; i++) {
-                content.add("content " + i);
-            }
-            rvNewsList.setHasFixedSize(true);
-            RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
-            rvNewsList.setLayoutManager(lm);
-            MySimpleAdapter adapter = new MySimpleAdapter(content);
-            rvNewsList.setAdapter(adapter);
-        }
-
-        private class MySimpleAdapter extends RecyclerView.Adapter {
-
-            List<String> content = new ArrayList<>();
-
-            public MySimpleAdapter(List<String> c) {
-                content.addAll(c);
-            }
-
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_row, parent, false);
-                MyViewHolder vh = new MyViewHolder(v);
-                return vh;
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                MyViewHolder vh = (MyViewHolder) holder;
-                vh.tv.setText("Option " + position);
-            }
-
-            @Override
-            public int getItemCount() {
-                return content.size();
-            }
-
-            public class MyViewHolder extends RecyclerView.ViewHolder {
-                public TextView tv;
-
-                public MyViewHolder(View itemView) {
-                    super(itemView);
-                    tv = (TextView) itemView.findViewById(R.id.tvRv);
-                }
-            }
-        }
-    }
 
 
-    public static class DummyFragment extends Fragment {
-        int color;
 
-        public DummyFragment() {
-        }
-
-        @SuppressLint("ValidFragment")
-        public DummyFragment(int color) {
-            this.color = color;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-            View view = inflater.inflate(R.layout.silinecek_dummy_fragment, container, false);
-
-            final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
-            frameLayout.setBackgroundColor(color);
-
-            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dummyfrag_scrollableview);
-
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.setHasFixedSize(true);
-
-            //DessertAdapter adapter = new DessertAdapter(getContext());
-            //recyclerView.setAdapter(adapter);
-
-            return view;
-        }
-
-    }
 
 
     private void getProfileDetail() {
@@ -337,105 +226,6 @@ public class ProfileFragment extends BaseFragment {
                 "https://s3.amazonaws.com/catchumobilebucket/UserProfile/9.jpg"
         };
 
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CommonUtils.showToast(getActivity(), "yeni foto1..");
-                //feed porfile picture
-                Picasso.with(getActivity())
-                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg")
-                        .transform(new CircleTransform())
-                        .into(imgProfile);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        CommonUtils.showToast(getActivity(), "yeni foto2..");
-                        //feed porfile picture
-                        Picasso.with(getActivity())
-                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg")
-                                .transform(new CircleTransform())
-                                .into(imgProfile);
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                CommonUtils.showToast(getActivity(), "yeni foto3..");
-                                //feed porfile picture
-                                Picasso.with(getActivity())
-                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg")
-                                        .transform(new CircleTransform())
-                                        .into(imgProfile);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CommonUtils.showToast(getActivity(), "yeni foto4..");
-                                        //feed porfile picture
-                                        Picasso.with(getActivity())
-                                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
-                                                .transform(new CircleTransform())
-                                                .into(imgProfile);
-
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                CommonUtils.showToast(getActivity(), "yeni fot5o..");
-                                                //feed porfile picture
-                                                Picasso.with(getActivity())
-                                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg")
-                                                        .transform(new CircleTransform())
-                                                        .into(imgProfile);
-
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        CommonUtils.showToast(getActivity(), "yeni foto6..");
-                                                        //feed porfile picture
-                                                        Picasso.with(getActivity())
-                                                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg")
-                                                                .transform(new CircleTransform())
-                                                                .into(imgProfile);
-
-                                                        new Handler().postDelayed(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                CommonUtils.showToast(getActivity(), "yeni foto7..");
-                                                                //feed porfile picture
-                                                                Picasso.with(getActivity())
-                                                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg")
-                                                                        .transform(new CircleTransform())
-                                                                        .into(imgProfile);
-
-                                                            }
-                                                        }, 5000);
-
-                                                    }
-                                                }, 5000);
-
-                                            }
-                                        }, 5000);
-
-                                    }
-                                }, 5000);
-
-
-                            }
-                        }, 5000);
-
-                    }
-                }, 5000);
-
-
-            }
-        }, 5000);
 
 
     }

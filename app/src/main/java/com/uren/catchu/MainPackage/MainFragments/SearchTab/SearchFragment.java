@@ -19,6 +19,7 @@ import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.PermissionModule;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
@@ -26,6 +27,7 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFr
 import butterknife.ButterKnife;
 import catchu.model.SearchResult;
 
+import static com.uren.catchu.Constants.StringConstants.GET_AUTHENTICATED_USER_GROUP_LIST;
 import static com.uren.catchu.Constants.StringConstants.propGroups;
 import static com.uren.catchu.Constants.StringConstants.propPersons;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
@@ -40,8 +42,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private TabLayout tabLayout;
 
     public static String selectedProperty;
-
-    private boolean queryTextChanged = false;
 
     String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
@@ -87,7 +87,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         tabLayout.setupWithViewPager(viewPager);
 
         selectedProperty = propPersons;
-        queryTextChanged = false;
 
         addListeners();
     }
@@ -96,7 +95,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
         adapter = new SpecialSelectTabAdapter(getFragmentManager());
         adapter.addFragment(new PersonFragment(userid, verticalShown, "A", context), getResources().getString(R.string.friends));
-        //adapter.addFragment(new GroupFragment(FirebaseGetAccountHolder.getUserID(), context, null), "Gruplar");
+        adapter.addFragment(new GroupFragment(context, userid, GET_AUTHENTICATED_USER_GROUP_LIST), getResources().getString(R.string.groups));
         viewPager.setAdapter(adapter);
     }
 
@@ -174,9 +173,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
                     if (selectedProperty.equals(propPersons))
                         searchForPersons(newText);
-                    else if(selectedProperty.equals(propGroups))
-                        searchForGroups(newText);
-
                 }
 
                 return false;
@@ -191,11 +187,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         PersonFragment personFragment = new PersonFragment(userid, verticalShown, searchText, context);
         adapter.updateFragment(personFragmentTab, personFragment);
         reloadAdapter();
-    }
-
-    public void searchForGroups(String searchText) {
-
-
     }
 
     public void reloadAdapter() {
