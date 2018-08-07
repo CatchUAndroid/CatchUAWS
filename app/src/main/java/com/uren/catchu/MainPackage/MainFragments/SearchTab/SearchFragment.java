@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.PermissionModule;
+import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -27,7 +28,7 @@ import catchu.model.SearchResult;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 
-public class SearchFragment extends BaseFragment {
+public class SearchFragment extends BaseFragment  {
 
     private Context context;
 
@@ -86,6 +87,7 @@ public class SearchFragment extends BaseFragment {
         tabLayout.setupWithViewPager(viewPager);
 
         selectedProperty = propPersons;
+        queryTextChanged = false;
     }
 
     private void overwriteToolbar() {
@@ -152,4 +154,5 @@ public class SearchFragment extends BaseFragment {
 
         //getSearchResult(userid, defSpace);
     }
+
 }

@@ -79,6 +79,11 @@ public class PersonFragment extends Fragment {
 
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+    }
+
     public void getSearchResult(String userid, String searchText){
 
         SearchResultProcess searchResultProcess = new SearchResultProcess(getApplicationContext(), new OnEventListener<SearchResult>() {
