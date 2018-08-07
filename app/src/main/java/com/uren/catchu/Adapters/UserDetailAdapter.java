@@ -26,6 +26,8 @@ import catchu.model.SearchResultResultArrayItem;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
@@ -102,13 +104,16 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
             if(friendRelation){
                 // TODO: 7.08.2018  bu kisim doldurulacak. Kural ne olmali konusalim
+                processFriendRequest(FRIEND_DELETE_FOLLOW);
+                statuDisplayBtn.setText(context.getResources().getString(R.string.upperAddFriend));
+                statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.background, null));
             }else {
                 if(pendingFriendRequest){
-                    // TODO: 7.08.2018 Gonderilen istegi geri cekecegiz...
-                    // TODO: 7.08.2018 Burada direk butona basinca mi geri cekmeli yoksa geri cek secenegi mi olmali 
+                    processFriendRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
+                    statuDisplayBtn.setText(context.getResources().getString(R.string.upperAddFriend));
+                    statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.background, null));
                 }
                 else{
-                    // TODO: 7.08.2018 Arkadas ekleyecegiz...
                     if(isPrivateAccount){
                         processFriendRequest(FRIEND_FOLLOW_REQUEST);
                         statuDisplayBtn.setText(context.getResources().getString(R.string.upperRequested));
@@ -116,11 +121,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     }else{
                         processFriendRequest(FRIEND_CREATE_FOLLOW_DIRECTLY);
                         statuDisplayBtn.setText(context.getResources().getString(R.string.upperFriend));
-                        statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.background, null));
+                        statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.green, null));
                     }
                 }
             }
-
         }
 
         public void processFriendRequest(String requestType){
@@ -163,6 +167,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
             if(friendRelation){
                 statuDisplayBtn.setText(context.getResources().getString(R.string.upperFriend));
+                statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.green, null));
             }else {
                 if(pendingFriendRequest) {
                     statuDisplayBtn.setText(context.getResources().getString(R.string.upperRequested));

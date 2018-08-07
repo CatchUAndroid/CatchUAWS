@@ -48,9 +48,8 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center"
                 android:background="@drawable/ripple_button_admin"
-                android:text="  Grup Yöneticisi  "
                 android:textAllCaps="false"
-                android:textColor="@color/green"
+                android:textColor="@color/gray"
                 android:textSize="10sp"
                 android:textStyle="normal|bold|italic" />
 
