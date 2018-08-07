@@ -1,16 +1,30 @@
 package com.uren.catchu.MainPackage.MainFragments;
 
+import android.annotation.SuppressLint;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.config.AWSConfiguration;
@@ -22,7 +36,12 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
@@ -37,8 +56,11 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     public ProgressBar progressBar;
 
-    @BindView(R.id.imgProfile)
+    //@BindView(R.id.imgProfile)
     ImageView imgProfile;
+
+    TabLayout tabs;
+    ViewPager vpNews;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,12 +74,72 @@ public class ProfileFragment extends BaseFragment {
         // Inflate the layout for this fragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
+            initUI();
+
+            tabs = (TabLayout) mView.findViewById(R.id.htab_tabs);
+            vpNews = (ViewPager) mView.findViewById(R.id.htab_viewpager);
+            setUpPager();
         }
 
-        initUI();
+
+
 
         return mView;
     }
+
+    private void setUpPager() {
+
+        NewsPagerAdapter adp = new NewsPagerAdapter(getFragmentManager());
+        NewsList n1 = new NewsList();
+        NewsList n2 = new NewsList();
+        NewsList n3 = new NewsList();
+        NewsList n4 = new NewsList();
+        NewsList n5 = new NewsList();
+
+        adp.addFrag(n1, "World");
+        adp.addFrag(n2, "Special");
+        adp.addFrag(n3, "International");
+        adp.addFrag(n4, "Technology");
+        adp.addFrag(n5, "Finance");
+
+        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        vpNews.setAdapter(adp);
+        vpNews.setOffscreenPageLimit(12);
+        tabs.setupWithViewPager(vpNews);
+
+
+    }
+
+    private class NewsPagerAdapter extends FragmentPagerAdapter {
+
+        List<Fragment> fragList = new ArrayList<>();
+        List<String> titleList = new ArrayList<>();
+
+        public NewsPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFrag(Fragment f, String title) {
+            fragList.add(f);
+            titleList.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragList.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return titleList.get(position);
+        }
+    }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -67,6 +149,7 @@ public class ProfileFragment extends BaseFragment {
         getProfileDetail();
 
     }
+
 
     private void getCurrentUserInfo() {
 
@@ -101,10 +184,113 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
+    public static class NewsList extends Fragment {
+
+        RecyclerView rvNewsList;
+
+        public NewsList() {
+
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            rvNewsList = (RecyclerView) inflater.inflate(R.layout.news_recycler_view, container, false);
+            return rvNewsList;
+        }
+
+        @Override
+        public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            setUpRecyclerView();
+        }
+
+        private void setUpRecyclerView() {
+            List<String> content = new ArrayList<>();
+            for (int i = 0; i < 5; i++) {
+                content.add("content " + i);
+            }
+            rvNewsList.setHasFixedSize(true);
+            RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
+            rvNewsList.setLayoutManager(lm);
+            MySimpleAdapter adapter = new MySimpleAdapter(content);
+            rvNewsList.setAdapter(adapter);
+        }
+
+        private class MySimpleAdapter extends RecyclerView.Adapter {
+
+            List<String> content = new ArrayList<>();
+
+            public MySimpleAdapter(List<String> c) {
+                content.addAll(c);
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_row, parent, false);
+                MyViewHolder vh = new MyViewHolder(v);
+                return vh;
+            }
+
+            @Override
+            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                MyViewHolder vh = (MyViewHolder) holder;
+                vh.tv.setText("Option " + position);
+            }
+
+            @Override
+            public int getItemCount() {
+                return content.size();
+            }
+
+            public class MyViewHolder extends RecyclerView.ViewHolder {
+                public TextView tv;
+
+                public MyViewHolder(View itemView) {
+                    super(itemView);
+                    tv = (TextView) itemView.findViewById(R.id.tvRv);
+                }
+            }
+        }
+    }
+
+
+    public static class DummyFragment extends Fragment {
+        int color;
+
+        public DummyFragment() {
+        }
+
+        @SuppressLint("ValidFragment")
+        public DummyFragment(int color) {
+            this.color = color;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View view = inflater.inflate(R.layout.silinecek_dummy_fragment, container, false);
+
+            final FrameLayout frameLayout = (FrameLayout) view.findViewById(R.id.dummyfrag_bg);
+            frameLayout.setBackgroundColor(color);
+
+            RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.dummyfrag_scrollableview);
+
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity().getBaseContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setHasFixedSize(true);
+
+            //DessertAdapter adapter = new DessertAdapter(getContext());
+            //recyclerView.setAdapter(adapter);
+
+            return view;
+        }
+
+    }
+
 
     private void getProfileDetail() {
 
-        if(userProfile == null){
+        if (userProfile == null) {
 
             //Asenkron Task başlatır.
             UserDetail loadUserDetail = new UserDetail(getApplicationContext(), new OnEventListener<UserProfile>() {
@@ -115,7 +301,7 @@ public class ProfileFragment extends BaseFragment {
                     Log.i("userDetail", "successful");
                     progressBar.setVisibility(View.GONE);
                     userProfile = u;
-                    updateUI();
+                    //updateUI();
                     printUserDetail();
                 }
 
@@ -130,15 +316,13 @@ public class ProfileFragment extends BaseFragment {
                 }
             });
             loadUserDetail.execute();
-        }else{
+        } else {
             printUserDetail();
         }
 
     }
 
-    int i= 0;
     private void updateUI() {
-
 
 
         final String[] photoUrl = {
@@ -154,123 +338,111 @@ public class ProfileFragment extends BaseFragment {
         };
 
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    CommonUtils.showToast(getActivity(), "yeni foto1..");
-                    //feed porfile picture
-                    Picasso.with(getActivity())
-                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg")
-                            .transform(new CircleTransform())
-                            .into(imgProfile);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                CommonUtils.showToast(getActivity(), "yeni foto1..");
+                //feed porfile picture
+                Picasso.with(getActivity())
+                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg")
+                        .transform(new CircleTransform())
+                        .into(imgProfile);
 
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            CommonUtils.showToast(getActivity(), "yeni foto2..");
-                            //feed porfile picture
-                            Picasso.with(getActivity())
-                                    //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                    .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg")
-                                    .transform(new CircleTransform())
-                                    .into(imgProfile);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        CommonUtils.showToast(getActivity(), "yeni foto2..");
+                        //feed porfile picture
+                        Picasso.with(getActivity())
+                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg")
+                                .transform(new CircleTransform())
+                                .into(imgProfile);
 
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    CommonUtils.showToast(getActivity(), "yeni foto3..");
-                                    //feed porfile picture
-                                    Picasso.with(getActivity())
-                                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg")
-                                            .transform(new CircleTransform())
-                                            .into(imgProfile);
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            CommonUtils.showToast(getActivity(), "yeni foto4..");
-                                            //feed porfile picture
-                                            Picasso.with(getActivity())
-                                                    //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                    .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
-                                                    .transform(new CircleTransform())
-                                                    .into(imgProfile);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                CommonUtils.showToast(getActivity(), "yeni foto3..");
+                                //feed porfile picture
+                                Picasso.with(getActivity())
+                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg")
+                                        .transform(new CircleTransform())
+                                        .into(imgProfile);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        CommonUtils.showToast(getActivity(), "yeni foto4..");
+                                        //feed porfile picture
+                                        Picasso.with(getActivity())
+                                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
+                                                .transform(new CircleTransform())
+                                                .into(imgProfile);
 
-                                            new Handler().postDelayed(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    CommonUtils.showToast(getActivity(), "yeni fot5o..");
-                                                    //feed porfile picture
-                                                    Picasso.with(getActivity())
-                                                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg")
-                                                            .transform(new CircleTransform())
-                                                            .into(imgProfile);
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                CommonUtils.showToast(getActivity(), "yeni fot5o..");
+                                                //feed porfile picture
+                                                Picasso.with(getActivity())
+                                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg")
+                                                        .transform(new CircleTransform())
+                                                        .into(imgProfile);
 
-                                                    new Handler().postDelayed(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            CommonUtils.showToast(getActivity(), "yeni foto6..");
-                                                            //feed porfile picture
-                                                            Picasso.with(getActivity())
-                                                                    //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                                    .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg")
-                                                                    .transform(new CircleTransform())
-                                                                    .into(imgProfile);
+                                                new Handler().postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        CommonUtils.showToast(getActivity(), "yeni foto6..");
+                                                        //feed porfile picture
+                                                        Picasso.with(getActivity())
+                                                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg")
+                                                                .transform(new CircleTransform())
+                                                                .into(imgProfile);
 
-                                                            new Handler().postDelayed(new Runnable() {
-                                                                @Override
-                                                                public void run() {
-                                                                    CommonUtils.showToast(getActivity(), "yeni foto7..");
-                                                                    //feed porfile picture
-                                                                    Picasso.with(getActivity())
-                                                                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                                            .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg")
-                                                                            .transform(new CircleTransform())
-                                                                            .into(imgProfile);
+                                                        new Handler().postDelayed(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                CommonUtils.showToast(getActivity(), "yeni foto7..");
+                                                                //feed porfile picture
+                                                                Picasso.with(getActivity())
+                                                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                                                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg")
+                                                                        .transform(new CircleTransform())
+                                                                        .into(imgProfile);
 
-                                                                }
-                                                            }, 5000);
+                                                            }
+                                                        }, 5000);
 
-                                                        }
-                                                    }, 5000);
+                                                    }
+                                                }, 5000);
 
-                                                }
-                                            }, 5000);
+                                            }
+                                        }, 5000);
 
-                                        }
-                                    }, 5000);
-
-
-                                }
-                            }, 5000);
-
-                        }
-                    }, 5000);
+                                    }
+                                }, 5000);
 
 
-                }
-            }, 5000);
+                            }
+                        }, 5000);
+
+                    }
+                }, 5000);
 
 
-
-
-
-
-
-
-
-
-
-
+            }
+        }, 5000);
 
 
     }
 
     private void printUserDetail() {
 
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getResultArray().get(0).getName() +"!!");
+        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getResultArray().get(0).getName() + "!!");
         Log.i("name ", userProfile.getResultArray().get(0).getName());
         Log.i("username ", userProfile.getResultArray().get(0).getUsername());
         Log.i("userId ", userProfile.getResultArray().get(0).getUserid());
