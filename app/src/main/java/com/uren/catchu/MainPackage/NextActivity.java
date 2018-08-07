@@ -26,7 +26,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.HomeFragment;
 import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
-import com.uren.catchu.MainPackage.MainFragments.SearchFragment;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 
 import butterknife.BindArray;
@@ -156,6 +156,12 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     private void switchTab(int position) {
+
+        if(position == 1){
+            getSupportActionBar().hide();
+        }else {
+            getSupportActionBar().show();
+        }
 
         mNavController.switchTab(position);
     }

@@ -139,17 +139,17 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     private void overwriteToolbar() {
 
-        ((NextActivity) getActivity()).getSupportActionBar().hide();
+        //((NextActivity) getActivity()).getSupportActionBar().hide();
 
         Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbarLayout);
         mToolBar.setTitle(getResources().getString(R.string.search));
-        mToolBar.setNavigationIcon(R.drawable.back_arrow);
+       // mToolBar.setNavigationIcon(R.drawable.back_arrow);
         mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
         mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
         mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
 
-        ((NextActivity) getActivity()).setSupportActionBar(mToolBar);
-        ((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //((NextActivity) getActivity()).setSupportActionBar(mToolBar);
+        //((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
     @Override
