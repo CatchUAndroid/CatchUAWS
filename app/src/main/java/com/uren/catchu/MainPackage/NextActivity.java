@@ -15,10 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.facebook.login.LoginManager;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -27,7 +25,7 @@ import com.uren.catchu.MainPackage.MainFragments.AddPinFragment;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.HomeFragment;
 import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
-import com.uren.catchu.MainPackage.MainFragments.ProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchFragment;
 import com.uren.catchu.R;
 
@@ -158,6 +156,7 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     private void switchTab(int position) {
+
         mNavController.switchTab(position);
     }
 
