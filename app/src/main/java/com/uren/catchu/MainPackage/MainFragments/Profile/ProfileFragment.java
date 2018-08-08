@@ -62,6 +62,8 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     public ProgressBar progressBar;
 
+    String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
+
     //@BindView(R.id.imgProfile)
     ImageView imgProfile;
 
@@ -185,8 +187,6 @@ public class ProfileFragment extends BaseFragment {
         Log.i("Identity Id ", identityId);
         Log.i("Pool Id     ", poolId);
         Log.i("Region      ", region);
-
-
     }
 
     private void initUI() {
@@ -221,7 +221,7 @@ public class ProfileFragment extends BaseFragment {
                 public void onTaskContinue() {
                     progressBar.setVisibility(View.VISIBLE);
                 }
-            });
+            }, userid);
             loadUserDetail.execute();
         } else {
             printUserDetail();

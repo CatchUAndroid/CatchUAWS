@@ -28,6 +28,8 @@ import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.UserFriends;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -39,6 +41,7 @@ public class NextActivity extends AppCompatActivity implements
         FragNavController.RootFragmentListener {
 
     private Context context;
+    String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
     private int onPauseCount = 0;
     private boolean onPausedInd = false;
@@ -106,6 +109,16 @@ public class NextActivity extends AppCompatActivity implements
             }
         });
 
+        fillSingletonClasses();
+    }
+
+    public void fillSingletonClasses(){
+
+        UserFriends.setInstance(null);
+        UserFriends.getInstance(userid);
+
+        AccountHolderInfo.setInstance(null);
+        AccountHolderInfo.getInstance(userid);
     }
 
     private void initValues() {
@@ -113,10 +126,6 @@ public class NextActivity extends AppCompatActivity implements
         onPausedInd = true;
         context = this;
         ButterKnife.bind(this);
-
-
-
-
         initToolbar();
         initTab();
     }
@@ -157,7 +166,7 @@ public class NextActivity extends AppCompatActivity implements
 
     private void switchTab(int position) {
 
-        if(position == 1){
+        if(position == FragNavController.TAB2){
             getSupportActionBar().hide();
         }else {
             getSupportActionBar().show();

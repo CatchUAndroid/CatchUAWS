@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
@@ -20,6 +21,7 @@ import com.uren.catchu.GeneralUtils.PermissionModule;
 import com.uren.catchu.R;
 
 import catchu.model.FriendRequest;
+import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
 import catchu.model.SearchResult;
 import catchu.model.SearchResultResultArrayItem;
@@ -102,8 +104,8 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         public void checkFriendRelation(){
 
+            // TODO: 8.08.2018 --> Butona basildiginda o andaki item refresh olmasi icin tekrar servis call edilecek.. 
             if(friendRelation){
-                // TODO: 7.08.2018  bu kisim doldurulacak. Kural ne olmali konusalim
                 processFriendRequest(FRIEND_DELETE_FOLLOW);
                 statuDisplayBtn.setText(context.getResources().getString(R.string.upperAddFriend));
                 statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.background, null));
@@ -134,16 +136,17 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             Log.i("Info", "   >>userid         :" + userid);
             Log.i("Info", "   >>requestedUserid:" + requestedUserid);
 
-            FriendRequestProcess friendRequestProcess = new FriendRequestProcess(context, new OnEventListener<FriendRequest>() {
+            final FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
 
                 @Override
-                public void onSuccess(FriendRequest object) {
+                public void onSuccess(FriendRequestList object) {
                     Log.i("Info", "Request operation is successful");
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     Log.i("Info", "Request operation is failed !!!!");
+                    Toast.makeText(context, context.getResources().getString(R.string.error) + e.toString(), Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

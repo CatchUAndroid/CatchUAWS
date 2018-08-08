@@ -1,11 +1,14 @@
 package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
+import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +45,8 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private TabLayout tabLayout;
 
     public static String selectedProperty;
+
+    SearchView searchView;
 
     String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
@@ -139,17 +144,14 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     private void overwriteToolbar() {
 
-        //((NextActivity) getActivity()).getSupportActionBar().hide();
-
-        Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbarLayout);
+        Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
         mToolBar.setTitle(getResources().getString(R.string.search));
-       // mToolBar.setNavigationIcon(R.drawable.back_arrow);
+        mToolBar.setNavigationIcon(R.drawable.back_arrow);
         mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
         mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
         mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
 
-        //((NextActivity) getActivity()).setSupportActionBar(mToolBar);
-        //((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+        ((NextActivity) getActivity()).setSupportActionBar(mToolBar);
     }
 
     @Override
@@ -157,8 +159,10 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
         menuInflater.inflate(R.menu.menu_search, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.item_search);
-        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView) searchItem.getActionView();
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        searchView = (android.support.v7.widget.SearchView) searchItem.getActionView();
+
 
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
@@ -180,6 +184,41 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         });
 
         super.onCreateOptionsMenu(menu, menuInflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+
+        MenuItem register = menu.findItem(R.id.addNewGroup);
+        if(selectedProperty.equals(propPersons))
+            register.setVisible(false);
+        else
+            register.setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()){
+            case android.R.id.home:
+                break;
+            case R.id.logOut:
+                break;
+            case R.id.addNewGroup:
+
+                /*if(FirebaseGetFriends.getInstance(getFbUserID()).getListSize() == 0){
+                    CustomDialogAdapter.showDialogWarning(SpecialSelectActivity.this,
+                            "Grup olusturmak için önce arkadas eklemelisiniz.");
+                }else {
+                    startActivity(new Intent(this, AddNewFriendActivity.class));
+                }*/
+
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     public void searchForPersons(String searchText) {

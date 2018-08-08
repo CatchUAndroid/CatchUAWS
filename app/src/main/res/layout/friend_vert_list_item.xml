@@ -41,13 +41,12 @@
             android:layout_height="wrap_content"
             android:gravity="right|center">
 
-            <Button
-                android:id="@+id/statuDisplayBtn"
+            <CheckBox
+                android:id="@+id/selectCheckBox"
                 android:layout_width="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/ripple_button_admin"
                 android:textAllCaps="false"
                 android:textColor="@color/gray"
                 android:textSize="10sp"
