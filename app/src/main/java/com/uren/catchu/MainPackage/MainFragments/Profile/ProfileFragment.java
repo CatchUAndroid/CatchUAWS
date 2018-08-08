@@ -238,7 +238,7 @@ public class ProfileFragment extends BaseFragment {
             });
             loadUserDetail.execute();
         } else {
-            printUserDetail();
+            //printUserDetail();
         }
 
     }
@@ -363,12 +363,12 @@ public class ProfileFragment extends BaseFragment {
 
     private void printUserDetail() {
 
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getResultArray().get(0).getName() + "!!");
-        Log.i("name ", userProfile.getResultArray().get(0).getName());
-        Log.i("username ", userProfile.getResultArray().get(0).getUsername());
-        Log.i("userId ", userProfile.getResultArray().get(0).getUserid());
-        Log.i("isPrivateAcc ", userProfile.getResultArray().get(0).getIsPrivateAccount().toString());
-        Log.i("profilePicUrl ", userProfile.getResultArray().get(0).getProfilePhotoUrl());
+        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getUserInfo().getName() + "!!");
+        Log.i("name ", userProfile.getUserInfo().getName());
+        Log.i("username ", userProfile.getUserInfo().getUsername());
+        Log.i("userId ", userProfile.getUserInfo().getUserid());
+        Log.i("isPrivateAcc ", userProfile.getUserInfo().getIsPrivateAccount().toString());
+        Log.i("profilePicUrl ", userProfile.getUserInfo().getProfilePhotoUrl());
 
     }
 
