@@ -1,9 +1,12 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.session.PlaybackState;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -23,10 +26,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -60,15 +66,16 @@ public class ProfileFragment extends BaseFragment {
     UserProfile userProfile;
 
     @BindView(R.id.progressBar)
-    public ProgressBar progressBar;
-
-    //@BindView(R.id.imgProfile)
-    ImageView imgProfile;
-
+    ProgressBar progressBar;
     @BindView(R.id.htab_tabs)
     TabLayout tabs;
     @BindView(R.id.htab_viewpager)
     ViewPager vpNews;
+
+
+    @BindView(R.id.imgProfile)
+    ImageView imgProfile;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +91,7 @@ public class ProfileFragment extends BaseFragment {
 
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
-            ((NextActivity) getActivity()).updateToolbarTitle("Profile");
+            //((NextActivity) getActivity()).updateToolbarTitle("Profile");
 
             setUpPager();
             setToolbarColor();
@@ -127,7 +134,13 @@ public class ProfileFragment extends BaseFragment {
     }
 
     private void setToolbarColor() {
+
+        //Toolbar toolbar = (Toolbar) mView.findViewById(R.id.htab_toolbar);
+
+
+
     }
+
 
     private void setUpPager() {
 
@@ -159,6 +172,7 @@ public class ProfileFragment extends BaseFragment {
 
         getCurrentUserInfo();
         getProfileDetail();
+        updateUI();
 
     }
 
@@ -209,7 +223,7 @@ public class ProfileFragment extends BaseFragment {
                     progressBar.setVisibility(View.GONE);
                     userProfile = u;
                     //updateUI();
-                    printUserDetail();
+                    //printUserDetail();
                 }
 
                 @Override

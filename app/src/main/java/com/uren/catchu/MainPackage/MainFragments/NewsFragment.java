@@ -27,7 +27,7 @@ public class NewsFragment extends BaseFragment{
 
         ButterKnife.bind(this, view);
 
-        ( (NextActivity)getActivity()).updateToolbarTitle("News");
+        //( (NextActivity)getActivity()).updateToolbarTitle("News");
 
 
         return view;

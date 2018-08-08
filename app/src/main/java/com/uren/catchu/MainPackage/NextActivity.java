@@ -2,6 +2,8 @@ package com.uren.catchu.MainPackage;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -46,8 +49,8 @@ public class NextActivity extends AppCompatActivity implements
     @BindView(R.id.content_frame)
     FrameLayout contentFrame;
 
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    //@BindView(R.id.toolbar)
+    //Toolbar toolbar;
 
     private int[] mTabIconsSelected = {
             R.drawable.tab_home,
@@ -115,14 +118,34 @@ public class NextActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
 
-
-
-        initToolbar();
+        //initToolbar();
+        setStatusBarTransparent();
         initTab();
     }
 
     private void initToolbar() {
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
+        //setStatusBarTransparent();
+
+    }
+
+    private void setStatusBarTransparent() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Android 5.0
+            int visibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                // Android 6.0
+                // visibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+            getWindow().getDecorView().setSystemUiVisibility(visibility);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            // Android 4.4
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
     }
 
     private void initTab() {
@@ -157,12 +180,6 @@ public class NextActivity extends AppCompatActivity implements
 
     private void switchTab(int position) {
 
-        if(position == 1){
-            getSupportActionBar().hide();
-        }else {
-            getSupportActionBar().show();
-        }
-
         mNavController.switchTab(position);
     }
 
@@ -178,7 +195,7 @@ public class NextActivity extends AppCompatActivity implements
 
         onPauseCount = onPauseCount + 1;
 
-        if(onPauseCount > 1) {
+        if (onPauseCount > 1) {
             onPausedInd = true;
             Log.i("onPausedInd", "  >>onPause  onPausedInd:" + onPausedInd);
         }
@@ -310,8 +327,6 @@ public class NextActivity extends AppCompatActivity implements
 
         getSupportActionBar().setTitle(title);
     }
-
-
 
 
 }
