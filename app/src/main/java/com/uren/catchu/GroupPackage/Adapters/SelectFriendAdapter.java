@@ -19,7 +19,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import catchu.model.FriendList;
-import catchu.model.FriendListResultArrayItem;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
@@ -57,8 +57,8 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     @Override
     public void onBindViewHolder(@NonNull SelectFriendAdapter.MyViewHolder myViewHolder, int position) {
 
-        FriendListResultArrayItem friendListResultArrayItem = friendList.getResultArray().get(position);
-        myViewHolder.setData(friendListResultArrayItem, position);
+        UserProfileProperties userProfileProperties = friendList.getResultArray().get(position);
+        myViewHolder.setData(userProfileProperties, position);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -67,7 +67,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         ImageView profilePicImgView;
         CheckBox selectCheckBox;
         LinearLayout specialListLinearLayout;
-        FriendListResultArrayItem selectedFriend;
+        UserProfileProperties selectedFriend;
 
         int position = 0;
 
@@ -109,7 +109,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             });
         }
 
-        public void setData(FriendListResultArrayItem selectedFriend, int position) {
+        public void setData(UserProfileProperties selectedFriend, int position) {
             this.nameTextView.setText(selectedFriend.getName());
             this.position = position;
             this.selectedFriend = selectedFriend;

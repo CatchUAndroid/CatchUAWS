@@ -117,11 +117,11 @@ public class NextActivity extends AppCompatActivity implements
 
     public void fillSingletonClasses(){
 
-        UserFriends.setInstance(null);
-        UserFriends.getInstance(userid);
-
         AccountHolderInfo.setInstance(null);
         AccountHolderInfo.getInstance();
+
+        UserFriends.setInstance(null);
+        UserFriends.getInstance(AccountHolderInfo.getUserID());
     }
 
     private void initValues() {
@@ -192,12 +192,6 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     private void switchTab(int position) {
-
-        if(position == FragNavController.TAB2){
-            getSupportActionBar().hide();
-        }else {
-            getSupportActionBar().show();
-        }
 
         mNavController.switchTab(position);
     }
@@ -279,7 +273,7 @@ public class NextActivity extends AppCompatActivity implements
         // If we have a backstack, show the back button
         if (getSupportActionBar() != null && mNavController != null) {
 
-            updateToolbar();
+            //updateToolbar();
         }
     }
 
@@ -338,7 +332,7 @@ public class NextActivity extends AppCompatActivity implements
         // If we have a backstack, show the back button
         if (getSupportActionBar() != null && mNavController != null) {
 
-            updateToolbar();
+            //updateToolbar();
         }
     }
 

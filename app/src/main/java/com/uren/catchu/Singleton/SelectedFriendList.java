@@ -1,7 +1,7 @@
 package com.uren.catchu.Singleton;
 
 import catchu.model.FriendList;
-import catchu.model.FriendListResultArrayItem;
+import catchu.model.UserProfileProperties;
 
 public class SelectedFriendList {
 
@@ -33,20 +33,20 @@ public class SelectedFriendList {
         return friendList.getResultArray().size();
     }
 
-    public FriendListResultArrayItem getFriend(int position){
+    public UserProfileProperties getFriend(int position){
         return friendList.getResultArray().get(position);
     }
 
-    public void addFriend(FriendListResultArrayItem friendListResultArrayItem){
-        friendList.getResultArray().add(friendListResultArrayItem);
+    public void addFriend(UserProfileProperties userProfileProperties){
+        friendList.getResultArray().add(userProfileProperties);
     }
 
     public void removeFriend(String userID){
 
         for(int index = 0; index < getSize(); index++){
-            FriendListResultArrayItem friendListResultArrayItem = friendList.getResultArray().get(index);
+            UserProfileProperties userProfileProperties = friendList.getResultArray().get(index);
 
-            if(friendListResultArrayItem.getUserid().equals(userID)){
+            if(userProfileProperties.getUserid().equals(userID)){
                 friendList.getResultArray().remove(index);
                 break;
             }

@@ -7,7 +7,6 @@ import android.util.Log;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.FriendList;
-import catchu.model.FriendListError;
 import catchu.model.FriendRequestList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
