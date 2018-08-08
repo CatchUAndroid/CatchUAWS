@@ -9,6 +9,11 @@
     <string name="upperAddFriend">ARKADAŞ EKLE</string>
     <string name="friends">ARKADAŞLAR</string>
     <string name="groups">GRUPLAR</string>
+    <string name="error">Hata:</string>
+    <string name="addNewGroup">Yeni Grup</string>
+    <string name="addPersonToGroup">Katılımcı Ekle</string>
+    <string name="selectLeastOneFriend">En az 1 kişi seçmelisiniz!</string>
+    <string name="selectLeastOneGroup">En az 1 grup seçmelisiniz!</string>
 
     <string name="profile">Profil</string>
 

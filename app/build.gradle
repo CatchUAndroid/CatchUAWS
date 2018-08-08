@@ -33,7 +33,6 @@ dependencies {
 
     implementation 'com.miguelcatalan:materialsearchview:1.4.0'
 
-
     //**************** MY DEPENDENCIES *******************//
 
     /*=======UTILS=========*/

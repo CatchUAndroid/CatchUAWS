@@ -3,32 +3,35 @@ package com.uren.catchu.ApiGatewayFunctions;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import catchu.model.UserProfile;
 
-public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
+import catchu.model.FriendList;
+import catchu.model.FriendListError;
+import catchu.model.FriendRequestList;
+import catchu.model.GroupRequest;
+import catchu.model.GroupRequestResult;
 
-    private OnEventListener<UserProfile> mCallBack;
-    private Context mContext;
+public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> {
+
+    private OnEventListener<FriendList> mCallBack;
     public Exception mException;
     public String userid;
 
-    public UserDetail(Context context, OnEventListener callback, String userid) {
-        mCallBack = callback;
-        mContext = context;
+    public FriendListRequestProcess(OnEventListener callback, String userid) {
+        this.mCallBack = callback;
         this.userid = userid;
     }
 
-
     @Override
-    protected UserProfile doInBackground(Void... voids) {
+    protected FriendList doInBackground(Void... voids) {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
+            FriendList friendList = instance.client.friendsGet(userid);
+            return friendList;
 
-            UserProfile userProfile = instance.client.usersGet(userid);
-            return userProfile;
         } catch (Exception e) {
             mException = e;
             e.printStackTrace();
@@ -45,20 +48,18 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
         if (mCallBack != null) {
             mCallBack.onTaskContinue();
         }
-
     }
 
     @Override
-    protected void onPostExecute(UserProfile userProfile) {
-        super.onPostExecute(userProfile);
+    protected void onPostExecute(FriendList friendList) {
+        super.onPostExecute(friendList);
 
         if (mCallBack != null) {
             if (mException == null) {
-                mCallBack.onSuccess(userProfile);
+                mCallBack.onSuccess(friendList);
             } else {
                 mCallBack.onFailure(mException);
             }
         }
-
     }
 }

@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,11 +21,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".MainPackage.NextActivity"
+        <activity
+            android:name=".MainPackage.NextActivity"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize"/>
-
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:exported="true">
@@ -47,6 +45,8 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
+        <activity android:name=".GroupPackage.AddGroupActivity" />
+        <activity android:name=".GroupPackage.SelectFriendToGroupActivity"></activity>
     </application>
 
 </manifest>
