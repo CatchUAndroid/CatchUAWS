@@ -26,6 +26,7 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFra
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.ButterKnife;
 import catchu.model.SearchResult;
@@ -48,16 +49,13 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     SearchView searchView;
 
-    String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
-
-    //Toolbar mToolBar;
-
-
     SearchResult searchResult;
     SpecialSelectTabAdapter adapter;
 
     private static final int personFragmentTab = 0;
     private static final int groupFragmentTab = 1;
+
+    String userid;
 
 
     @Override
@@ -83,6 +81,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     private void initializeItems() {
 
+        userid = AccountHolderInfo.getUserID();
         overwriteToolbar();
 
         viewPager = view.findViewById(R.id.viewpager);
@@ -92,7 +91,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         tabLayout.setupWithViewPager(viewPager);
 
         selectedProperty = propPersons;
-
         addListeners();
     }
 
