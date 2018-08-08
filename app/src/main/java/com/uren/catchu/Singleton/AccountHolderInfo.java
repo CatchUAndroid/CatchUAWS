@@ -23,7 +23,7 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    //private static String userid;
+    private static String awsUserId;
 
     public static AccountHolderInfo getInstance() {
 
@@ -47,6 +47,9 @@ public class AccountHolderInfo {
     }
 
     public static String getUserID() {
+
+        if(!awsUserId.isEmpty())
+            return awsUserId;
 
         if(accountHolderInfoInstance == null){
             accountHolderInfoInstance = new AccountHolderInfo();
@@ -80,6 +83,7 @@ public class AccountHolderInfo {
 
 
         // TODO: 8.08.2018 --> Simdilik erkutun userid ile gidelim...
+        awsUserId = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
         return "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
         //String identityId = credentialsProvider.getIdentityId();
