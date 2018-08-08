@@ -50,12 +50,12 @@ public class AccountHolderInfo {
 
         if(accountHolderInfoInstance == null){
             accountHolderInfoInstance = new AccountHolderInfo();
-            return accountHolderInfoInstance.userProfile.getResultArray().get(0).getUserid();
+            return accountHolderInfoInstance.userProfile.getUserInfo().getUserid();
         }
 
         // TODO: 8.08.2018 --> Burada duzenleme gerekecek. Array olmasina gerek yok dedik...
-        if(!accountHolderInfoInstance.userProfile.getResultArray().get(0).getUserid().isEmpty())
-            return accountHolderInfoInstance.userProfile.getResultArray().get(0).getUserid();
+        if(!accountHolderInfoInstance.userProfile.getUserInfo().getUserid().isEmpty())
+            return accountHolderInfoInstance.userProfile.getUserInfo().getUserid();
         else
             return getUserIdFromCognito();
     }

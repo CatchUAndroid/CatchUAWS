@@ -121,7 +121,7 @@ public class NextActivity extends AppCompatActivity implements
         UserFriends.getInstance(userid);
 
         AccountHolderInfo.setInstance(null);
-        AccountHolderInfo.getInstance(userid);
+        AccountHolderInfo.getInstance();
     }
 
     private void initValues() {

@@ -70,9 +70,6 @@ public class ProfileFragment extends BaseFragment {
 
     String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
-    //@BindView(R.id.imgProfile)
-    ImageView imgProfile;
-
     @BindView(R.id.htab_tabs)
     TabLayout tabs;
     @BindView(R.id.htab_viewpager)
