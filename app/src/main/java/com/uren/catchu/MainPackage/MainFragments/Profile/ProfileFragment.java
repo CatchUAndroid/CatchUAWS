@@ -26,6 +26,7 @@ import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.regions.Regions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -33,6 +34,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -291,12 +294,10 @@ public class ProfileFragment extends BaseFragment
 
     private void userEditClicked() {
 
-        NewsList nextFrag = new NewsList();
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(((ViewGroup)getView().getParent()).getId(), nextFrag, "profileDetailFragment")
-                .addToBackStack("profileDetailFragment")
-                .commit();
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new UserEditFragment());
 
+        }
 
     }
 }
