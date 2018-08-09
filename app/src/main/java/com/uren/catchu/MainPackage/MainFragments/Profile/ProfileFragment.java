@@ -1,38 +1,24 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.media.session.PlaybackState;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toolbar;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -41,19 +27,16 @@ import com.amazonaws.regions.Regions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CircleTransform;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,7 +44,8 @@ import catchu.model.UserProfile;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 
-public class ProfileFragment extends BaseFragment {
+public class ProfileFragment extends BaseFragment
+        implements View.OnClickListener {
 
     View mView;
     UserProfile userProfile;
@@ -76,9 +60,19 @@ public class ProfileFragment extends BaseFragment {
     @BindView(R.id.htab_viewpager)
     ViewPager vpNews;
 
-
+    @BindView(R.id.htab_toolbar)
+    Toolbar toolbar;
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
+    @BindView(R.id.txtUserName)
+    TextView txtUserName;
+    @BindView(R.id.toolbar_title)
+    TextView toolbarTitle;
+
+    @BindView(R.id.imgUserEdit)
+    ClickableImageView imgUserEdit;
+    @BindView(R.id.imgSettings)
+    ClickableImageView imgSettings;
 
 
     @Override
@@ -95,14 +89,23 @@ public class ProfileFragment extends BaseFragment {
 
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
-            //((NextActivity) getActivity()).updateToolbarTitle("Profile");
 
+            initListeners();
+            setCollapsingToolbar();
             setUpPager();
-            setToolbarColor();
+
         }
 
+        return mView;
+    }
 
+    private void initListeners() {
 
+        imgUserEdit.setOnClickListener(this);
+        imgSettings.setOnClickListener(this);
+    }
+
+    private void setCollapsingToolbar() {
 
         final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) mView.findViewById(R.id.htab_collapse_toolbar);
 
@@ -132,17 +135,6 @@ public class ProfileFragment extends BaseFragment {
             );
         }
 
-
-
-        return mView;
-    }
-
-    private void setToolbarColor() {
-
-        //Toolbar toolbar = (Toolbar) mView.findViewById(R.id.htab_toolbar);
-
-
-
     }
 
 
@@ -169,16 +161,47 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        getCurrentUserInfo();
-        //getProfileDetail();
         updateUI();
-        printUserDetail();
 
+    }
+
+    private void updateUI() {
+        Log.i("durum ", "1");
+        if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+            Log.i("durum ", "2");
+            userProfile = AccountHolderInfo.getInstance().getUser();
+            setProfileDetail();
+        } else {
+            Log.i("durum ", "3");
+            getProfileDetail();
+        }
+
+    }
+
+    private void setProfileDetail() {
+        Log.i("durum ", "4");
+
+        toolbarTitle.setText(userProfile.getUserInfo().getName());
+
+        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getUserInfo().getName() + "!!");
+
+        Log.i("name ", userProfile.getUserInfo().getName());
+        Log.i("username ", userProfile.getUserInfo().getUsername());
+        Log.i("userId ", userProfile.getUserInfo().getUserid());
+        Log.i("isPrivateAcc ", userProfile.getUserInfo().getIsPrivateAccount().toString());
+        Log.i("profilePicUrl ", userProfile.getUserInfo().getProfilePhotoUrl());
+
+        Picasso.with(getActivity())
+                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
+                .transform(new CircleTransform())
+                .into(imgProfile);
+
+        txtUserName.setText(userProfile.getUserInfo().getUsername());
     }
 
 
@@ -208,13 +231,9 @@ public class ProfileFragment extends BaseFragment {
 
     }
 
-    private void initUI() {
-
-
-    }
-
-
     private void getProfileDetail() {
+
+        Log.i("durum ", "5");
 
         if (userProfile == null) {
 
@@ -223,162 +242,42 @@ public class ProfileFragment extends BaseFragment {
 
                 @Override
                 public void onSuccess(UserProfile u) {
-
+                    Log.i("durum ", "6");
                     Log.i("userDetail", "successful");
                     progressBar.setVisibility(View.GONE);
                     userProfile = u;
-                    //updateUI();
-                    //printUserDetail();
+                    setProfileDetail();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     progressBar.setVisibility(View.GONE);
+                    Log.i("durum ", "7");
                 }
 
                 @Override
                 public void onTaskContinue() {
+                    Log.i("durum ", "8");
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }, userid);
             loadUserDetail.execute();
         } else {
-            //printUserDetail();
+            setProfileDetail();
         }
 
     }
 
-    private void updateUI() {
+    @Override
+    public void onClick(View v) {
 
+        if (v == imgUserEdit){
+            CommonUtils.showToast(getActivity()," userEdit clicked");
+        }
 
-        final String[] photoUrl = {
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/8.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/9.jpg"
-        };
-
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                CommonUtils.showToast(getActivity(), "yeni foto1..");
-                //feed porfile picture
-                Picasso.with(getActivity())
-                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/1.jpg")
-                        .transform(new CircleTransform())
-                        .into(imgProfile);
-
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        CommonUtils.showToast(getActivity(), "yeni foto2..");
-                        //feed porfile picture
-                        Picasso.with(getActivity())
-                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/2.jpg")
-                                .transform(new CircleTransform())
-                                .into(imgProfile);
-
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                CommonUtils.showToast(getActivity(), "yeni foto3..");
-                                //feed porfile picture
-                                Picasso.with(getActivity())
-                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/3.jpg")
-                                        .transform(new CircleTransform())
-                                        .into(imgProfile);
-                                new Handler().postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        CommonUtils.showToast(getActivity(), "yeni foto4..");
-                                        //feed porfile picture
-                                        Picasso.with(getActivity())
-                                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
-                                                .transform(new CircleTransform())
-                                                .into(imgProfile);
-
-                                        new Handler().postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                CommonUtils.showToast(getActivity(), "yeni fot5o..");
-                                                //feed porfile picture
-                                                Picasso.with(getActivity())
-                                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/5.jpg")
-                                                        .transform(new CircleTransform())
-                                                        .into(imgProfile);
-
-                                                new Handler().postDelayed(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        CommonUtils.showToast(getActivity(), "yeni foto6..");
-                                                        //feed porfile picture
-                                                        Picasso.with(getActivity())
-                                                                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/6.jpg")
-                                                                .transform(new CircleTransform())
-                                                                .into(imgProfile);
-
-                                                        new Handler().postDelayed(new Runnable() {
-                                                            @Override
-                                                            public void run() {
-                                                                CommonUtils.showToast(getActivity(), "yeni foto7..");
-                                                                //feed porfile picture
-                                                                Picasso.with(getActivity())
-                                                                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                                                                        .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/7.jpg")
-                                                                        .transform(new CircleTransform())
-                                                                        .into(imgProfile);
-
-                                                            }
-                                                        }, 5000);
-
-                                                    }
-                                                }, 5000);
-
-                                            }
-                                        }, 5000);
-
-                                    }
-                                }, 5000);
-
-
-                            }
-                        }, 5000);
-
-                    }
-                }, 5000);
-
-
-            }
-        }, 5000);
-
+        if(v == imgSettings){
+            CommonUtils.showToast(getActivity()," settings clicked");
+        }
 
     }
-
-    private void printUserDetail() {
-
-        UserProfile userProfile2 = AccountHolderInfo.getInstance().getUser();
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
-
-        Log.i("name ", userProfile2.getUserInfo().getName());
-        Log.i("username ", userProfile2.getUserInfo().getUsername());
-        Log.i("userId ", userProfile2.getUserInfo().getUserid());
-        Log.i("isPrivateAcc ", userProfile2.getUserInfo().getIsPrivateAccount().toString());
-        Log.i("profilePicUrl ", userProfile2.getUserInfo().getProfilePhotoUrl());
-
-
-
-    }
-
 }

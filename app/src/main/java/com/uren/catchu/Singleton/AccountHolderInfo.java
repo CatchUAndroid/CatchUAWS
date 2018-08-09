@@ -24,6 +24,7 @@ public class AccountHolderInfo {
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
     private static String awsUserId;
+    private static OnEventListener<AccountHolderInfo> mCallBack;
 
     public static AccountHolderInfo getInstance() {
 

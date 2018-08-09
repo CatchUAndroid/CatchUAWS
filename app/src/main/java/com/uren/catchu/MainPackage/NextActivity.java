@@ -112,7 +112,7 @@ public class NextActivity extends AppCompatActivity implements
             }
         });
 
-        //fillSingletonClasses();
+        fillSingletonClasses();
     }
 
     public void fillSingletonClasses(){

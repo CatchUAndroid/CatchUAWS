@@ -25,5 +25,7 @@
     <color name="primary_700">#303F9F</color>
     <!--Pink 500-->
 
+    <color name="dot_dark_screen3">#ff0000</color>
+
 
 </resources>
