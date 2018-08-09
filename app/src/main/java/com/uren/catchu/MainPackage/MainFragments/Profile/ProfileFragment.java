@@ -370,9 +370,7 @@ public class ProfileFragment extends BaseFragment {
 
         UserProfile userProfile2 = AccountHolderInfo.getInstance().getUser();
         CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
-        
 
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
         Log.i("name ", userProfile2.getUserInfo().getName());
         Log.i("username ", userProfile2.getUserInfo().getUsername());
         Log.i("userId ", userProfile2.getUserInfo().getUserid());
