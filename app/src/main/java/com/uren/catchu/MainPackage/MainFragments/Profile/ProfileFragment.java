@@ -368,14 +368,9 @@ public class ProfileFragment extends BaseFragment {
 
     private void printUserDetail() {
 
-        UserProfile userProfile2 = AccountHolderInfo.getInstance(progressBar).getUser();
+        UserProfile userProfile2 = AccountHolderInfo.getInstance().getUser();
         CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
-
-
-
-
-
-
+        
 
         CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
         Log.i("name ", userProfile2.getUserInfo().getName());
