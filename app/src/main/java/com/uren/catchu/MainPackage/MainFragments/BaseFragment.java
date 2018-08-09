@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+
 public class BaseFragment extends Fragment {
 
     public static final String ARGS_INSTANCE = "com.f22labs.instalikefragmenttransaction";
 
-    FragmentNavigation mFragmentNavigation;
+    public FragmentNavigation mFragmentNavigation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class BaseFragment extends Fragment {
     }
 
     public interface FragmentNavigation {
-         void pushFragment(Fragment fragment);
+        void pushFragment(Fragment fragment);
     }
 
 }

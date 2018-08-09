@@ -90,7 +90,7 @@ public class ProfileFragment extends BaseFragment
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
 
-            initListeners();
+
             setCollapsingToolbar();
             setUpPager();
 
@@ -99,11 +99,7 @@ public class ProfileFragment extends BaseFragment
         return mView;
     }
 
-    private void initListeners() {
 
-        imgUserEdit.setOnClickListener(this);
-        imgSettings.setOnClickListener(this);
-    }
 
     private void setCollapsingToolbar() {
 
@@ -166,7 +162,14 @@ public class ProfileFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
 
         updateUI();
+        initListeners();
 
+    }
+
+    private void initListeners() {
+
+        imgUserEdit.setOnClickListener(this);
+        imgSettings.setOnClickListener(this);
     }
 
     private void updateUI() {
@@ -273,11 +276,27 @@ public class ProfileFragment extends BaseFragment
 
         if (v == imgUserEdit){
             CommonUtils.showToast(getActivity()," userEdit clicked");
+            userEditClicked();
         }
 
         if(v == imgSettings){
             CommonUtils.showToast(getActivity()," settings clicked");
+            settingsClicked();
         }
+
+    }
+
+    private void settingsClicked() {
+    }
+
+    private void userEditClicked() {
+
+        NewsList nextFrag = new NewsList();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(((ViewGroup)getView().getParent()).getId(), nextFrag, "profileDetailFragment")
+                .addToBackStack("profileDetailFragment")
+                .commit();
+
 
     }
 }

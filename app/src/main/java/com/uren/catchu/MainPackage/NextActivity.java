@@ -194,6 +194,10 @@ public class NextActivity extends AppCompatActivity implements
     private void switchTab(int position) {
 
         mNavController.switchTab(position);
+        clearReselectedTab(position);
+    }
+
+    private void clearReselectedTab(int position) {
     }
 
     @Override
