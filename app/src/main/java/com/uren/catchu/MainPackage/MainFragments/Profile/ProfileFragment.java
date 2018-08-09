@@ -48,6 +48,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.N
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import org.json.JSONObject;
 
@@ -174,8 +175,9 @@ public class ProfileFragment extends BaseFragment {
         super.onViewCreated(view, savedInstanceState);
 
         getCurrentUserInfo();
-        getProfileDetail();
+        //getProfileDetail();
         updateUI();
+        printUserDetail();
 
     }
 
@@ -366,12 +368,23 @@ public class ProfileFragment extends BaseFragment {
 
     private void printUserDetail() {
 
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getUserInfo().getName() + "!!");
-        Log.i("name ", userProfile.getUserInfo().getName());
-        Log.i("username ", userProfile.getUserInfo().getUsername());
-        Log.i("userId ", userProfile.getUserInfo().getUserid());
-        Log.i("isPrivateAcc ", userProfile.getUserInfo().getIsPrivateAccount().toString());
-        Log.i("profilePicUrl ", userProfile.getUserInfo().getProfilePhotoUrl());
+        UserProfile userProfile2 = AccountHolderInfo.getInstance(progressBar).getUser();
+        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
+
+
+
+
+
+
+
+        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile2.getUserInfo().getName() + "!!");
+        Log.i("name ", userProfile2.getUserInfo().getName());
+        Log.i("username ", userProfile2.getUserInfo().getUsername());
+        Log.i("userId ", userProfile2.getUserInfo().getUserid());
+        Log.i("isPrivateAcc ", userProfile2.getUserInfo().getIsPrivateAccount().toString());
+        Log.i("profilePicUrl ", userProfile2.getUserInfo().getProfilePhotoUrl());
+
+
 
     }
 
