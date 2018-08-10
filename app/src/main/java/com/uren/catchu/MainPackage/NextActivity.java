@@ -136,7 +136,6 @@ public class NextActivity extends AppCompatActivity implements
         context = this;
         ButterKnife.bind(this);
 
-
         //initToolbar();
         setStatusBarTransparent();
         initTab();
