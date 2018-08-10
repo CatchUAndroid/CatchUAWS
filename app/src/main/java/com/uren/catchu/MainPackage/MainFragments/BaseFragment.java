@@ -30,7 +30,7 @@ public class BaseFragment extends Fragment {
 
     public interface FragmentNavigation {
         void pushFragment(Fragment fragment);
-        public void pushFragment(Fragment fragment,FragNavTransactionOptions transactionOptions);
+        void pushFragment(Fragment fragment, String animationTag);
     }
 
 }

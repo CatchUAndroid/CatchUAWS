@@ -14,6 +14,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 
 public class UserEditFragment extends BaseFragment {
 
@@ -54,12 +55,7 @@ public class UserEditFragment extends BaseFragment {
 
                 if (mFragmentNavigation != null) {
 
-                    FragNavTransactionOptions transactionOptions = FragNavTransactionOptions.newBuilder()
-                            .customAnimations(R.anim.slide_from_right, R.anim.slide_to_left,
-                                    R.anim.slide_from_left, R.anim.slide_to_right)
-                            .build();
-
-                    mFragmentNavigation.pushFragment(new UserEditFragment(), transactionOptions);
+                    mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
 
                     //mFragmentNavigation.pushFragment(new UserEditFragment());
 

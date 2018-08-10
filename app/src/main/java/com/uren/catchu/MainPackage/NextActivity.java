@@ -302,7 +302,10 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void pushFragment(Fragment fragment, FragNavTransactionOptions transactionOptions) {
+    public void pushFragment(Fragment fragment, String animationTag) {
+
+        ANIMATION_TAG = animationTag;
+        setTransactionOption();
 
         if (mNavController != null) {
             mNavController.pushFragment(fragment, transactionOptions);

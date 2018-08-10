@@ -49,6 +49,8 @@ import butterknife.ButterKnife;
 import catchu.model.UserProfile;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 
 public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
@@ -163,7 +165,6 @@ public class ProfileFragment extends BaseFragment
         vpNews.setOffscreenPageLimit(12);
         tabs.setupWithViewPager(vpNews);
 
-
     }
 
     @Override
@@ -182,20 +183,17 @@ public class ProfileFragment extends BaseFragment
     }
 
     private void updateUI() {
-        Log.i("durum ", "1");
+
         if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-            Log.i("durum ", "2");
             userProfile = AccountHolderInfo.getInstance().getUser();
             setProfileDetail();
         } else {
-            Log.i("durum ", "3");
             getProfileDetail();
         }
 
     }
 
     private void setProfileDetail() {
-        Log.i("durum ", "4");
 
         toolbarTitle.setText(userProfile.getUserInfo().getName());
 
@@ -250,8 +248,6 @@ public class ProfileFragment extends BaseFragment
 
     private void getProfileDetail() {
 
-        Log.i("durum ", "5");
-
         if (userProfile == null) {
 
             //Asenkron Task başlatır.
@@ -259,7 +255,6 @@ public class ProfileFragment extends BaseFragment
 
                 @Override
                 public void onSuccess(UserProfile u) {
-                    Log.i("durum ", "6");
                     Log.i("userDetail", "successful");
                     progressBar.setVisibility(View.GONE);
                     userProfile = u;
@@ -269,12 +264,11 @@ public class ProfileFragment extends BaseFragment
                 @Override
                 public void onFailure(Exception e) {
                     progressBar.setVisibility(View.GONE);
-                    Log.i("durum ", "7");
+
                 }
 
                 @Override
                 public void onTaskContinue() {
-                    Log.i("durum ", "8");
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }, userid);
@@ -289,12 +283,10 @@ public class ProfileFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == imgUserEdit) {
-            CommonUtils.showToast(getActivity(), " userEdit clicked");
             userEditClicked();
         }
 
         if (v == imgSettings) {
-            CommonUtils.showToast(getActivity(), " settings clicked");
             settingsClicked();
         }
 
@@ -304,12 +296,7 @@ public class ProfileFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
 
-            FragNavTransactionOptions transactionOptions = FragNavTransactionOptions.newBuilder()
-                    .customAnimations(R.anim.slide_from_left, R.anim.slide_to_right,
-                            R.anim.slide_from_right, R.anim.slide_to_left)
-                    .build();
-
-            mFragmentNavigation.pushFragment(new SettingsFragment(), transactionOptions);
+            mFragmentNavigation.pushFragment(new SettingsFragment(), AnimateLeftToRight);
 
             //mFragmentNavigation.pushFragment(new UserEditFragment());
 
@@ -321,12 +308,7 @@ public class ProfileFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
 
-            FragNavTransactionOptions transactionOptions = FragNavTransactionOptions.newBuilder()
-                    .customAnimations(R.anim.slide_from_right, R.anim.slide_to_left,
-                            R.anim.slide_from_left, R.anim.slide_to_right)
-                    .build();
-
-            mFragmentNavigation.pushFragment(new UserEditFragment(), transactionOptions);
+            mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
 
             //mFragmentNavigation.pushFragment(new UserEditFragment());
 
