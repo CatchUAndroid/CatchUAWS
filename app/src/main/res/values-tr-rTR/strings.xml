@@ -14,6 +14,21 @@
     <string name="addPersonToGroup">Katılımcı Ekle</string>
     <string name="selectLeastOneFriend">En az 1 kişi seçmelisiniz!</string>
     <string name="selectLeastOneGroup">En az 1 grup seçmelisiniz!</string>
+    <string name="addFriendFirst">Grup oluşturmak için önce arkadaş eklemelisiniz!</string>
+    <string name="addGroupName">Grup adı ekle</string>
+    <string name="pleaseWriteGroupName">Lütfen grup adını yazınız!</string>
+    <string name="deviceHasNoCamera">Cihazın kamerası yok!</string>
+    <string name="groupIsCreating">Grup Oluşturuluyor...</string>
+    <string name="writeGroupName">Grup adını yazın...</string>
+    <string name="defineGroupNameAndIcon">Grup adı ve simgesi belirleyin</string>
+    <string name="participant">Katılımcı:</string>
+    <string name="constantItem">adet</string>
+    <string name="adminText">  Grup Yöneticisi  </string>
+    <string name="technicalError">Teknik Hata!</string>
+    <string name="selectPicture">Resim Seçin</string>
+    <string name="openCamera">Kamerayı Aç</string>
+    <string name="openGallery">Galeriden Seç</string>
+    <string name="chooseProfilePhoto">Profil fotoğrafı seçin</string>
 
     <string name="profile">Profil</string>
 

@@ -1,5 +1,6 @@
 package com.uren.catchu.GroupPackage;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
@@ -25,10 +26,13 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     Toolbar mToolBar;
 
     ViewPager viewPager;
+    ViewPager viewPagerHorizontal;
     //String comingPageName = null;
     String userid;
 
     private static SelectedFriendList selectedFriendListInstance;
+
+    SpecialSelectTabAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,17 +55,39 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 checkSelectedPerson();
             }
         });
 
+        initUI();
         getFriendSelectionPage();
+    }
+
+    private void initUI() {
+
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPagerHorizontal = (ViewPager) findViewById(R.id.viewpagerHorizontal);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        reloadAdapter();
+    }
+
+    private void reloadAdapter() {
+
+        if(adapter.getItem(0) != null) {
+            FriendFragment friendFragment = new FriendFragment(SelectFriendToGroupActivity.this, userid, verticalShown);
+            adapter.updateFragment(0, friendFragment);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     private void getFriendSelectionPage() {
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        SpecialSelectTabAdapter adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
+        adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
         adapter.addFragment(new FriendFragment(SelectFriendToGroupActivity.this, userid, verticalShown)," ");
         viewPager.setAdapter(adapter);
     }
@@ -82,6 +108,8 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
             }
         }else
             startActivity(new Intent(this, AddGroupDetailActivity.class));*/
+
+        startActivity(new Intent(this, AddGroupActivity.class));
     }
 
     private void addFriendToGroup() {

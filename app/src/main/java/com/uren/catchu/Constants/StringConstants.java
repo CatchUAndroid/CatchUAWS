@@ -39,4 +39,8 @@ public class StringConstants {
     public static final String AnimateLeftToRight = "AnimateLeftToRight";
     public static final String AnimateRightToLeft = "AnimateRightToLeft";
 
+    //Image Extension Types
+    public static final String JPG_TYPE = "jpg";
+
+
 }

@@ -25,6 +25,21 @@
     <string name="addPersonToGroup">Add Friend to Group</string>
     <string name="selectLeastOneFriend">You must choose at least 1 person!</string>
     <string name="selectLeastOneGroup">You must choose at least 1 group!</string>
+    <string name="addFriendFirst">To create a group, you must first add a friend!</string>
+    <string name="addGroupName">Add group name</string>
+    <string name="pleaseWriteGroupName">Please write group name!</string>
+    <string name="deviceHasNoCamera">Device has no camera!</string>
+    <string name="groupIsCreating">Group is composing...</string>
+    <string name="writeGroupName">Write group name...</string>
+    <string name="defineGroupNameAndIcon">Specify group name and icon</string>
+    <string name="participant">Participant:</string>
+    <string name="constantItem">item</string>
+    <string name="adminText">  Administrator  </string>
+    <string name="technicalError">Technical Error!</string>
+    <string name="selectPicture">Select Picture</string>
+    <string name="openCamera">Open Camera</string>
+    <string name="openGallery">Open Gallery</string>
+    <string name="chooseProfilePhoto">Choose a profile photo</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

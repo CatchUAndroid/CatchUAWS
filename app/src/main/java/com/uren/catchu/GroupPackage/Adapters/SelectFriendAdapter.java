@@ -3,6 +3,7 @@ package com.uren.catchu.GroupPackage.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
+import com.uren.catchu.Singleton.UserFriends;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
@@ -28,7 +34,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
     View view;
     LayoutInflater layoutInflater;
-    String userid;
     public ImageLoader imageLoader;
 
     Context context;
@@ -36,11 +41,13 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     FriendList friendList;
     SelectedFriendList selectedFriendList;
 
-    public SelectFriendAdapter(Context context, FriendList friendList, String userid) {
+    ViewPager viewPagerHorizontal;
+    RecyclerView horRecyclerView;
+
+    public SelectFriendAdapter(Context context, FriendList friendList) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.friendList = friendList;
-        this.userid = userid;
         activity = (Activity) context;
         imageLoader=new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
         selectedFriendList = SelectedFriendList.getInstance();
@@ -51,6 +58,10 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     public SelectFriendAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         view = layoutInflater.inflate(R.layout.friend_vert_list_item, viewGroup, false);
         final SelectFriendAdapter.MyViewHolder holder = new SelectFriendAdapter.MyViewHolder(view);
+
+        viewPagerHorizontal = (ViewPager) activity.findViewById(R.id.viewpagerHorizontal);
+        horRecyclerView = (RecyclerView) activity.findViewById(R.id.horRecyclerView);
+
         return holder;
     }
 
@@ -64,6 +75,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTextView;
+        TextView usernameTextView;
         ImageView profilePicImgView;
         CheckBox selectCheckBox;
         LinearLayout specialListLinearLayout;
@@ -76,6 +88,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
             profilePicImgView = (ImageView) view.findViewById(R.id.profilePicImgView);
             nameTextView = (TextView) view.findViewById(R.id.nameTextView);
+            usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             selectCheckBox = (CheckBox) view.findViewById(R.id.selectCheckBox);
             specialListLinearLayout = (LinearLayout) view.findViewById(R.id.specialListLinearLayout);
 
@@ -86,7 +99,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                     hideKeyBoard(itemView);
                     if(selectCheckBox.isChecked()) {
                         selectCheckBox.setChecked(false);
-                        selectedFriendList.removeFriend(selectedFriend.getUserid());
+                        selectedFriendList.removeFriend(selectedFriend);
                     }
                     else {
                         selectCheckBox.setChecked(true);
@@ -103,7 +116,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                         selectedFriendList.addFriend(selectedFriend);
                     }
                     else {
-                        selectedFriendList.removeFriend(selectedFriend.getUserid());
+                        selectedFriendList.removeFriend(selectedFriend);
                     }
                 }
             });
@@ -111,9 +124,22 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
         public void setData(UserProfileProperties selectedFriend, int position) {
             this.nameTextView.setText(selectedFriend.getName());
+            this.usernameTextView.setText(selectedFriend.getUsername());
             this.position = position;
             this.selectedFriend = selectedFriend;
             imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), profilePicImgView, displayRounded);
+            updateSelectedPerson();
+        }
+
+        public void updateSelectedPerson(){
+
+            if(selectedFriendList.getSelectedFriendList().getResultArray() == null)
+                return;
+
+            for(int index = 0; index < selectedFriendList.getSize(); index++){
+               if(selectedFriend.getUserid().equals(selectedFriendList.getFriend(index).getUserid()))
+                   selectCheckBox.setChecked(true);
+            }
         }
     }
 
