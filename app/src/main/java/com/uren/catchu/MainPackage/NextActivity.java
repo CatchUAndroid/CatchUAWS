@@ -21,6 +21,7 @@ import android.widget.ImageView;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.uren.catchu.FragmentControllers.FragNavController;
+import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainActivity;
@@ -38,6 +39,9 @@ import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
         FragNavController.TransactionListener,
@@ -51,6 +55,9 @@ public class NextActivity extends AppCompatActivity implements
 
     @BindView(R.id.content_frame)
     FrameLayout contentFrame;
+
+    public String ANIMATION_TAG;
+    public FragNavTransactionOptions transactionOptions;
 
     //@BindView(R.id.toolbar)
     //Toolbar toolbar;
@@ -107,7 +114,6 @@ public class NextActivity extends AppCompatActivity implements
             public void onTabReselected(TabLayout.Tab tab) {
 
                 mNavController.clearStack();
-
                 switchTab(tab.getPosition());
             }
         });
@@ -115,7 +121,7 @@ public class NextActivity extends AppCompatActivity implements
         fillSingletonClasses();
     }
 
-    public void fillSingletonClasses(){
+    public void fillSingletonClasses() {
 
         AccountHolderInfo.setInstance(null);
         AccountHolderInfo.getInstance();
@@ -194,10 +200,7 @@ public class NextActivity extends AppCompatActivity implements
     private void switchTab(int position) {
 
         mNavController.switchTab(position);
-        clearReselectedTab(position);
-    }
 
-    private void clearReselectedTab(int position) {
     }
 
     @Override
@@ -222,7 +225,8 @@ public class NextActivity extends AppCompatActivity implements
     public void onBackPressed() {
 
         if (!mNavController.isRootFragment()) {
-            mNavController.popFragment();
+            setTransactionOption();
+            mNavController.popFragment(transactionOptions);
         } else {
 
             if (fragmentHistory.isEmpty()) {
@@ -243,6 +247,31 @@ public class NextActivity extends AppCompatActivity implements
                 }
             }
         }
+    }
+
+    private void setTransactionOption() {
+
+        if(transactionOptions == null){
+            transactionOptions = FragNavTransactionOptions.newBuilder().build();
+        }
+
+        switch (ANIMATION_TAG) {
+            case AnimateRightToLeft:
+                transactionOptions.enterAnimation = R.anim.slide_from_right;
+                transactionOptions.exitAnimation = R.anim.slide_to_left;
+                transactionOptions.popEnterAnimation = R.anim.slide_from_left;
+                transactionOptions.popExitAnimation = R.anim.slide_to_right;
+                break;
+            case AnimateLeftToRight:
+                transactionOptions.enterAnimation = R.anim.slide_from_left;
+                transactionOptions.exitAnimation = R.anim.slide_to_right;
+                transactionOptions.popEnterAnimation = R.anim.slide_from_right;
+                transactionOptions.popExitAnimation = R.anim.slide_to_left;
+                break;
+            default:
+                transactionOptions = null;
+        }
+
     }
 
     private void updateTabSelection(int currentTab) {
@@ -270,6 +299,15 @@ public class NextActivity extends AppCompatActivity implements
         if (mNavController != null) {
             mNavController.pushFragment(fragment);
         }
+    }
+
+    @Override
+    public void pushFragment(Fragment fragment, FragNavTransactionOptions transactionOptions) {
+
+        if (mNavController != null) {
+            mNavController.pushFragment(fragment, transactionOptions);
+        }
+
     }
 
     @Override

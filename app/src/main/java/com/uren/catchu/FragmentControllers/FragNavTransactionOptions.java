@@ -19,13 +19,13 @@ public class FragNavTransactionOptions {
     @FragNavController.Transit
     int transition = FragmentTransaction.TRANSIT_NONE;
     @AnimRes
-    int enterAnimation = 0;
+    public int enterAnimation = 0;
     @AnimRes
-    int exitAnimation = 0;
+    public int exitAnimation = 0;
     @AnimRes
-    int popEnterAnimation = 0;
+    public int popEnterAnimation = 0;
     @AnimRes
-    int popExitAnimation = 0;
+    public int popExitAnimation = 0;
     @StyleRes
     int transitionStyle = 0;
     String breadCrumbTitle;

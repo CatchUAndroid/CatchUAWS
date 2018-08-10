@@ -35,5 +35,7 @@ public class StringConstants {
     public static final String FRIEND_DELETE_FOLLOW = "deleteFollow";
     public static final String FRIEND_DELETE_PENDING_FOLLOW_REQUEST = "deletePendingFollowRequest";
 
+    public static final String AnimateLeftToRight = "AnimateLeftToRight";
+    public static final String AnimateRightToLeft = "AnimateRightToLeft";
 
 }

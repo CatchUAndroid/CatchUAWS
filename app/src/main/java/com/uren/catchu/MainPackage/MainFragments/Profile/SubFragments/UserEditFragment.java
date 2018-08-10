@@ -2,16 +2,20 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
+import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
-public class UserEditFragment extends Fragment {
+import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+
+public class UserEditFragment extends BaseFragment {
 
     LinearLayout rvNewsList;
 
@@ -33,12 +37,33 @@ public class UserEditFragment extends Fragment {
 
 
         Button btn = (Button) view.findViewById(R.id.btnBack);
+        Button btnbtnNextFrag = (Button) view.findViewById(R.id.btnNextFrag);
 
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ((NextActivity)getActivity()).ANIMATION_TAG = AnimateLeftToRight;
                 getActivity().onBackPressed();
+            }
+        });
+
+        btnbtnNextFrag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (mFragmentNavigation != null) {
+
+                    FragNavTransactionOptions transactionOptions = FragNavTransactionOptions.newBuilder()
+                            .customAnimations(R.anim.slide_from_right, R.anim.slide_to_left,
+                                    R.anim.slide_from_left, R.anim.slide_to_right)
+                            .build();
+
+                    mFragmentNavigation.pushFragment(new UserEditFragment(), transactionOptions);
+
+                    //mFragmentNavigation.pushFragment(new UserEditFragment());
+
+                }
             }
         });
 

@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
@@ -26,6 +27,7 @@ import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.regions.Regions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
@@ -34,6 +36,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -65,12 +68,17 @@ public class ProfileFragment extends BaseFragment
 
     @BindView(R.id.htab_toolbar)
     Toolbar toolbar;
+    @BindView(R.id.toolbar_title)
+    TextView toolbarTitle;
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
     @BindView(R.id.txtUserName)
     TextView txtUserName;
-    @BindView(R.id.toolbar_title)
-    TextView toolbarTitle;
+    @BindView(R.id.txtFollowerCnt)
+    TextView txtFollowerCnt;
+    @BindView(R.id.txtFollowingCnt)
+    TextView txtFollowingCnt;
+
 
     @BindView(R.id.imgUserEdit)
     ClickableImageView imgUserEdit;
@@ -93,7 +101,6 @@ public class ProfileFragment extends BaseFragment
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
 
-
             setCollapsingToolbar();
             setUpPager();
 
@@ -101,7 +108,6 @@ public class ProfileFragment extends BaseFragment
 
         return mView;
     }
-
 
 
     private void setCollapsingToolbar() {
@@ -201,6 +207,8 @@ public class ProfileFragment extends BaseFragment
         Log.i("isPrivateAcc ", userProfile.getUserInfo().getIsPrivateAccount().toString());
         Log.i("profilePicUrl ", userProfile.getUserInfo().getProfilePhotoUrl());
 
+
+
         Picasso.with(getActivity())
                 //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
                 .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
@@ -208,6 +216,9 @@ public class ProfileFragment extends BaseFragment
                 .into(imgProfile);
 
         txtUserName.setText(userProfile.getUserInfo().getUsername());
+        txtFollowerCnt.setText(userProfile.getRelationCountInfo().getFollowerCount());
+        txtFollowingCnt.setText(userProfile.getRelationCountInfo().getFollowingCount());
+
     }
 
 
@@ -277,25 +288,47 @@ public class ProfileFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == imgUserEdit){
-            CommonUtils.showToast(getActivity()," userEdit clicked");
+        if (v == imgUserEdit) {
+            CommonUtils.showToast(getActivity(), " userEdit clicked");
             userEditClicked();
         }
 
-        if(v == imgSettings){
-            CommonUtils.showToast(getActivity()," settings clicked");
+        if (v == imgSettings) {
+            CommonUtils.showToast(getActivity(), " settings clicked");
             settingsClicked();
         }
 
     }
 
     private void settingsClicked() {
+
+        if (mFragmentNavigation != null) {
+
+            FragNavTransactionOptions transactionOptions = FragNavTransactionOptions.newBuilder()
+                    .customAnimations(R.anim.slide_from_left, R.anim.slide_to_right,
+                            R.anim.slide_from_right, R.anim.slide_to_left)
+                    .build();
+
+            mFragmentNavigation.pushFragment(new SettingsFragment(), transactionOptions);
+
+            //mFragmentNavigation.pushFragment(new UserEditFragment());
+
+        }
+
     }
 
     private void userEditClicked() {
 
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new UserEditFragment());
+
+            FragNavTransactionOptions transactionOptions = FragNavTransactionOptions.newBuilder()
+                    .customAnimations(R.anim.slide_from_right, R.anim.slide_to_left,
+                            R.anim.slide_from_left, R.anim.slide_to_right)
+                    .build();
+
+            mFragmentNavigation.pushFragment(new UserEditFragment(), transactionOptions);
+
+            //mFragmentNavigation.pushFragment(new UserEditFragment());
 
         }
 
