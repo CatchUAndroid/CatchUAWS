@@ -3,14 +3,17 @@ package com.uren.catchu.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -48,6 +51,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
         TextView groupnameTextView;
         ImageView groupPicImgView;
+        Button adminDisplayButton;
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
         int position = 0;
 
@@ -56,6 +60,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
             groupPicImgView = (ImageView) view.findViewById(R.id.groupPicImgView);
             groupnameTextView = (TextView) view.findViewById(R.id.groupnameTextView);
+            adminDisplayButton = (Button) view.findViewById(R.id.adminDisplayButton);
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {
@@ -65,6 +70,21 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName());
             imageLoader.DisplayImage(groupRequestResultResultArrayItem.getGroupPhotoUrl(),
                     groupPicImgView, displayRounded);
+
+            Log.i("Info", "  >>groupRequestResultResultArrayItem.getGroupAdmin():" + groupRequestResultResultArrayItem.getGroupAdmin());
+            Log.i("Info", "  >>AccountHolderInfo.getUserID()                    :" + AccountHolderInfo.getUserID());
+            Log.i("Info", "  >>groupRequestResultResultArrayItem.getGroupid()   :" + groupRequestResultResultArrayItem.getGroupid());
+            Log.i("Info", "  >>==============================");
+
+
+            try {
+                if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID()))
+                    adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
+                else
+                    adminDisplayButton.setVisibility(View.GONE);
+            }catch (NullPointerException e){
+                adminDisplayButton.setVisibility(View.GONE);
+            }
         }
     }
 

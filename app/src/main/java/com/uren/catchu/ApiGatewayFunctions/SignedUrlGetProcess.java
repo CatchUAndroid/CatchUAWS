@@ -1,33 +1,30 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
-import catchu.model.GroupRequest;
-import catchu.model.GroupRequestResult;
+import catchu.model.CommonS3BucketResult;
 
-public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult> {
+public class SignedUrlGetProcess extends AsyncTask<Void, Void, CommonS3BucketResult> {
 
-    private OnEventListener<GroupRequestResult> mCallBack;
+    private OnEventListener<CommonS3BucketResult> mCallBack;
     public Exception mException;
-    public GroupRequest groupRequest;
+    public String extensionType;
 
-    public GroupResultProcess(OnEventListener callback, GroupRequest groupRequest) {
+    public SignedUrlGetProcess(OnEventListener callback,String extensionType) {
+        this.extensionType = extensionType;
         this.mCallBack = callback;
-        this.groupRequest = groupRequest;
     }
 
     @Override
-    protected GroupRequestResult doInBackground(Void... voids) {
-
+    protected CommonS3BucketResult doInBackground(Void... voids) {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            GroupRequestResult groupRequestResult = instance.client.groupsPost(groupRequest);
-            return groupRequestResult;
+            CommonS3BucketResult commonS3BucketResult = instance.client.commonSignedurlGet(extensionType);
+            return commonS3BucketResult;
 
         } catch (Exception e) {
             mException = e;
@@ -48,12 +45,12 @@ public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult
     }
 
     @Override
-    protected void onPostExecute(GroupRequestResult groupRequestResult) {
-        super.onPostExecute(groupRequestResult);
+    protected void onPostExecute(CommonS3BucketResult commonS3BucketResult) {
+        super.onPostExecute(commonS3BucketResult);
 
         if (mCallBack != null) {
             if (mException == null) {
-                mCallBack.onSuccess(groupRequestResult);
+                mCallBack.onSuccess(commonS3BucketResult);
             } else {
                 mCallBack.onFailure(mException);
             }

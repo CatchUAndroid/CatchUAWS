@@ -1,5 +1,8 @@
 package com.uren.catchu.Singleton;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
@@ -12,6 +15,8 @@ public class SelectedFriendList {
 
         if(instance == null) {
             friendList = new FriendList();
+            List<UserProfileProperties> userProfileProperties = new ArrayList<UserProfileProperties>();
+            friendList.setResultArray(userProfileProperties);
             instance = new SelectedFriendList();
         }
         return instance;
@@ -33,24 +38,20 @@ public class SelectedFriendList {
         return friendList.getResultArray().size();
     }
 
-    public UserProfileProperties getFriend(int position){
-        return friendList.getResultArray().get(position);
-    }
-
     public void addFriend(UserProfileProperties userProfileProperties){
         friendList.getResultArray().add(userProfileProperties);
     }
 
-    public void removeFriend(String userID){
+    public UserProfileProperties getFriend(int position){
+        return friendList.getResultArray().get(position);
+    }
 
-        for(int index = 0; index < getSize(); index++){
-            UserProfileProperties userProfileProperties = friendList.getResultArray().get(index);
+    public void updateFriendList(List<UserProfileProperties> userProfilePropertiesList){
+        friendList.setResultArray(userProfilePropertiesList);
+    }
 
-            if(userProfileProperties.getUserid().equals(userID)){
-                friendList.getResultArray().remove(index);
-                break;
-            }
-        }
+    public void removeFriend(UserProfileProperties userProfileProperties){
+        friendList.getResultArray().remove(userProfileProperties);
     }
 
     public void clearFriendList(){

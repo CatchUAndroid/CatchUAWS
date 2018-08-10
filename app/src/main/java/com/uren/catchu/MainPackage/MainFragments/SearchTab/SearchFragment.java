@@ -1,6 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
-import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
-import com.uren.catchu.GeneralUtils.PermissionModule;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.Permissions.PermissionModule;
+import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFragment;
@@ -27,6 +28,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.UserFriends;
 
 import butterknife.ButterKnife;
 import catchu.model.SearchResult;
@@ -56,7 +58,10 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private static final int groupFragmentTab = 1;
 
     String userid;
+    MenuItem searchItem;
+    Toolbar mToolBar;
 
+    // TODO(BUG) - Tab degistirip tekrar search e geldigimizde Person fragment ve Group Fragment funclar calismiyor
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,12 +118,15 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
                     case personFragmentTab:
 
                         selectedProperty = propPersons;
+                        searchItem.setVisible(true);
+                        ((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
                         break;
-
 
                     case groupFragmentTab:
 
                         selectedProperty = propGroups;
+                        searchItem.setVisible(false);
+                        ((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
                         break;
 
                     default:
@@ -142,9 +150,8 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     private void overwriteToolbar() {
 
-        Toolbar mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
+        mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
         mToolBar.setTitle(getResources().getString(R.string.search));
-        mToolBar.setNavigationIcon(R.drawable.back_arrow);
         mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
         mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
         mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
@@ -157,10 +164,9 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
         menuInflater.inflate(R.menu.menu_search, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
 
         searchView = (android.support.v7.widget.SearchView) searchItem.getActionView();
-
 
         searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
             @Override
@@ -188,10 +194,11 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     public void onPrepareOptionsMenu(Menu menu) {
 
         MenuItem register = menu.findItem(R.id.addNewGroup);
-        if(selectedProperty.equals(propPersons))
+        if(selectedProperty.equals(propPersons)) {
             register.setVisible(false);
-        else
+        } else {
             register.setVisible(true);
+        }
     }
 
     @Override
@@ -204,12 +211,10 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
                 break;
             case R.id.addNewGroup:
 
-                /*if(FirebaseGetFriends.getInstance(getFbUserID()).getListSize() == 0){
-                    CustomDialogAdapter.showDialogWarning(SpecialSelectActivity.this,
-                            "Grup olusturmak için önce arkadas eklemelisiniz.");
-                }else {
-                    startActivity(new Intent(this, AddNewFriendActivity.class));
-                }*/
+                if(UserFriends.getInstance(AccountHolderInfo.getUserID()).getSize() == 0)
+                    CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
+                else
+                    startActivity(new Intent(context, SelectFriendToGroupActivity.class));
 
                 break;
             default:

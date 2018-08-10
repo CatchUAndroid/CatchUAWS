@@ -36,4 +36,8 @@ public class StringConstants {
     public static final String FRIEND_DELETE_PENDING_FOLLOW_REQUEST = "deletePendingFollowRequest";
 
 
+    //Image Extension Types
+    public static final String JPG_TYPE = "jpg";
+
+
 }

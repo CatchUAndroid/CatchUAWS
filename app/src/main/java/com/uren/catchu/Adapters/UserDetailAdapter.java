@@ -14,19 +14,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
-import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
-import com.uren.catchu.GeneralUtils.PermissionModule;
 import com.uren.catchu.R;
 
-import catchu.model.FriendRequest;
 import catchu.model.FriendRequestList;
-import catchu.model.GroupRequestResult;
+import catchu.model.RelationProperties;
 import catchu.model.SearchResult;
 import catchu.model.SearchResultResultArrayItem;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -54,6 +50,22 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         this.userid = userid;
         activity = (Activity) context;
         imageLoader=new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
+
+        Log.i("Info", "UserDetailAdapter +++++++++++++++++++++++++");
+        writeSearchResult();
+
+    }
+
+    public void writeSearchResult(){
+        Log.i("Info", "writeSearchResult +++++++++++++++++++++++++");
+
+        for(int i=0; i < searchResult.getResultArray().size(); i++){
+
+            Log.i("Info", "   >>user name      :" + searchResult.getResultArray().get(i).getName());
+            Log.i("Info", "   >>friend relation:" + searchResult.getResultArray().get(i).getFriendRelation());
+            Log.i("Info", "   >>pend. request  :" + searchResult.getResultArray().get(i).getPendingFriendRequest());
+            Log.i("Info", "   >>=====================================");
+        }
     }
 
     @NonNull
@@ -74,14 +86,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTextView;
+        TextView usernameTextView;
         ImageView profilePicImgView;
         SearchResultResultArrayItem selectedFriend;
         Button statuDisplayBtn;
-        boolean isPrivateAccount;
-        boolean friendRelation;
-        boolean pendingFriendRequest;
-
-        String requesterUserid;
         String requestedUserid;
 
         int position = 0;
@@ -90,6 +98,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             super(itemView);
 
             profilePicImgView = (ImageView) view.findViewById(R.id.profilePicImgView);
+            usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
             nameTextView = (TextView) view.findViewById(R.id.nameTextView);
             statuDisplayBtn = (Button) view.findViewById(R.id.statuDisplayBtn);
 
@@ -104,26 +113,16 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         public void checkFriendRelation(){
 
-            // TODO: 8.08.2018 --> Butona basildiginda o andaki item refresh olmasi icin tekrar servis call edilecek.. 
-            if(friendRelation){
+            if(selectedFriend.getFriendRelation())
                 processFriendRequest(FRIEND_DELETE_FOLLOW);
-                statuDisplayBtn.setText(context.getResources().getString(R.string.upperAddFriend));
-                statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.background, null));
-            }else {
-                if(pendingFriendRequest){
+            else {
+                if(selectedFriend.getPendingFriendRequest())
                     processFriendRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-                    statuDisplayBtn.setText(context.getResources().getString(R.string.upperAddFriend));
-                    statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.background, null));
-                }
                 else{
-                    if(isPrivateAccount){
+                    if(selectedFriend.getIsPrivateAccount()){
                         processFriendRequest(FRIEND_FOLLOW_REQUEST);
-                        statuDisplayBtn.setText(context.getResources().getString(R.string.upperRequested));
-                        statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.black_25_transparent, null));
                     }else{
                         processFriendRequest(FRIEND_CREATE_FOLLOW_DIRECTLY);
-                        statuDisplayBtn.setText(context.getResources().getString(R.string.upperFriend));
-                        statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.green, null));
                     }
                 }
             }
@@ -140,12 +139,25 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
                 @Override
                 public void onSuccess(FriendRequestList object) {
-                    Log.i("Info", "Request operation is successful");
+                    RelationProperties relationProperties = object.getUpdatedUserRelationInfo();
+
+                    Log.i("Info", "   ==========================");
+                    Log.i("Info", "   >>getFriendRelation      :" + relationProperties.getFriendRelation());
+                    Log.i("Info", "   >>getPendingFriendRequest:" + relationProperties.getPendingFriendRequest());
+
+                    selectedFriend.setFriendRelation(relationProperties.getFriendRelation());
+                    selectedFriend.setPendingFriendRequest(relationProperties.getPendingFriendRequest());
+
+                    searchResult.getResultArray().remove(position);
+                    searchResult.getResultArray().add(position, selectedFriend);
+
+                    updateUIValue();
+
+                    writeSearchResult();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-                    Log.i("Info", "Request operation is failed !!!!");
                     Toast.makeText(context, context.getResources().getString(R.string.error) + e.toString(), Toast.LENGTH_SHORT).show();
                 }
 
@@ -160,19 +172,22 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {
             this.nameTextView.setText(selectedFriend.getName());
+            this.usernameTextView.setText(selectedFriend.getUsername());
             this.position = position;
             this.selectedFriend = selectedFriend;
-            this.isPrivateAccount = selectedFriend.getIsPrivateAccount();
-            this.friendRelation = selectedFriend.getFriendRelation();
-            this.pendingFriendRequest = selectedFriend.getPendingFriendRequest();
             this.requestedUserid = selectedFriend.getUserid();
             imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), profilePicImgView, displayRounded);
 
-            if(friendRelation){
+            updateUIValue();
+        }
+
+        public void updateUIValue(){
+
+            if(selectedFriend.getFriendRelation()){
                 statuDisplayBtn.setText(context.getResources().getString(R.string.upperFriend));
                 statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.green, null));
             }else {
-                if(pendingFriendRequest) {
+                if(selectedFriend.getPendingFriendRequest()) {
                     statuDisplayBtn.setText(context.getResources().getString(R.string.upperRequested));
                     statuDisplayBtn.setBackgroundColor(context.getResources().getColor(R.color.black_25_transparent, null));
                 }

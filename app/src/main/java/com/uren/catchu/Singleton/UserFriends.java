@@ -31,6 +31,14 @@ public class UserFriends {
         getFriends();
     }
 
+    public FriendList getFriendList(){
+        return friendList;
+    }
+
+    public int getSize(){
+        return friendList.getResultArray().size();
+    }
+
     public static void setInstance(UserFriends instance) {
         userFriendsInstance = instance;
     }

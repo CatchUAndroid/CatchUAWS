@@ -41,7 +41,7 @@
             android:gravity="right|center">
 
             <Button
-                android:id="@+id/statuDisplayBtn"
+                android:id="@+id/adminDisplayButton"
                 android:layout_width="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_height="30dp"

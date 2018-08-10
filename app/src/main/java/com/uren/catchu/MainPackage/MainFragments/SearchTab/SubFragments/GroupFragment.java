@@ -22,6 +22,7 @@ import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
@@ -41,6 +42,7 @@ public class GroupFragment extends Fragment {
 
     LinearLayoutManager linearLayoutManager;
     RelativeLayout specialSelectRelLayout;
+    GroupRequest groupRequest;
 
     private Context context;
 
@@ -76,12 +78,19 @@ public class GroupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         groupRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
+        setGroupRequest();
         getGroupResult();
+    }
+
+    public void setGroupRequest(){
+        groupRequest = new GroupRequest();
+        groupRequest.setUserid(userid);
+        groupRequest.setRequestType(requestType);
     }
 
     private void getGroupResult() {
 
-        GroupResultProcess groupResultProcess = new GroupResultProcess(getApplicationContext(), new OnEventListener<GroupRequestResult>() {
+        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener<GroupRequestResult>() {
 
             @Override
             public void onSuccess(GroupRequestResult object) {
@@ -100,7 +109,7 @@ public class GroupFragment extends Fragment {
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, userid, requestType);
+        }, groupRequest);
 
         groupResultProcess.execute();
     }
