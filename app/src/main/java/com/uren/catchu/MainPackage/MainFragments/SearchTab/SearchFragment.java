@@ -72,11 +72,16 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        view = inflater.inflate(R.layout.fragment_search, container, false);
-        ButterKnife.bind(this, view);
 
-        context = getActivity();
-        initializeItems();
+
+        if(view == null) {
+
+            view = inflater.inflate(R.layout.fragment_search, container, false);
+            ButterKnife.bind(this, view);
+
+            context = getActivity();
+            initializeItems();
+        }
 
         PermissionModule permissionModule = new PermissionModule(context);
         permissionModule.checkPermissions();

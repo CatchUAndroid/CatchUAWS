@@ -1,5 +1,6 @@
 package com.uren.catchu.GroupPackage;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +30,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     ViewPager viewPagerHorizontal;
     //String comingPageName = null;
     String userid;
+    public static Activity thisActivity;
 
     private static SelectedFriendList selectedFriendListInstance;
 
@@ -38,6 +40,8 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_friend_to_group);
+
+        thisActivity = this;
 
         mToolBar = (Toolbar) findViewById(R.id.toolbarLayout);
         mToolBar.setSubtitle(getResources().getString(R.string.addPersonToGroup));

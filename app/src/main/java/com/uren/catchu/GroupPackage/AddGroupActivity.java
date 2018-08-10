@@ -472,9 +472,11 @@ public class AddGroupActivity extends AppCompatActivity {
             @Override
             public void run() {
                 mProgressDialog.dismiss();
-                Intent intent = new Intent(getApplicationContext(), NextActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                //Intent intent = new Intent(getApplicationContext(), NextActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //startActivity(intent);
+                finish();
+                SelectFriendToGroupActivity.thisActivity.finish();
             }
         }, 1000);
     }
