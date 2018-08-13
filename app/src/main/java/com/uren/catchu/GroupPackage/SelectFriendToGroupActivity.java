@@ -27,7 +27,6 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     Toolbar mToolBar;
 
     ViewPager viewPager;
-    ViewPager viewPagerHorizontal;
     //String comingPageName = null;
     String userid;
     public static Activity thisActivity;
@@ -71,7 +70,6 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     private void initUI() {
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPagerHorizontal = (ViewPager) findViewById(R.id.viewpagerHorizontal);
     }
 
     @Override

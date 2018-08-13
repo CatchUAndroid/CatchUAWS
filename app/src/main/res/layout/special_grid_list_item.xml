@@ -40,24 +40,6 @@
 
         </RelativeLayout>
 
-
-
-        <!--ImageView
-            android:id="@+id/specialPictureImgView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/img_border_blue"
-            android:src="@drawable/gallery_icon80"
-            android:layout_gravity="center"/-->
-
-
-
-
-
-
-
-
-
         <TextView
             android:id="@+id/specialNameTextView"
             android:layout_width="wrap_content"
