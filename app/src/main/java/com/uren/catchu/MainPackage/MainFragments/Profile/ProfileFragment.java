@@ -214,8 +214,8 @@ public class ProfileFragment extends BaseFragment
                 .into(imgProfile);
 
         txtUserName.setText(userProfile.getUserInfo().getUsername());
-        txtFollowerCnt.setText(userProfile.getRelationCountInfo().getFollowerCount());
-        txtFollowingCnt.setText(userProfile.getRelationCountInfo().getFollowingCount());
+        txtFollowerCnt.setText(userProfile.getRelationCountInfo().getFollowerCount() + "\n" + "followers");
+        txtFollowingCnt.setText(userProfile.getRelationCountInfo().getFollowingCount() + "\n" + "following");
 
     }
 
