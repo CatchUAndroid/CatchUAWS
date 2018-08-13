@@ -12,21 +12,21 @@ import android.widget.LinearLayout;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 
 
-public class SettingsFragment extends Fragment {
+public class FollowerFragment extends Fragment {
 
     LinearLayout rvNewsList;
 
-    public SettingsFragment() {
+    public FollowerFragment() {
 
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rvNewsList = (LinearLayout) inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
+        rvNewsList = (LinearLayout) inflater.inflate(R.layout.profile_subfragment_followers, container, false);
         return rvNewsList;
     }
 
@@ -42,7 +42,7 @@ public class SettingsFragment extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity)getActivity()).ANIMATION_TAG = AnimateRightToLeft;
+                ((NextActivity)getActivity()).ANIMATION_TAG = AnimateLeftToRight;
                 getActivity().onBackPressed();
             }
         });

@@ -2,23 +2,42 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
+import butterknife.BindDimen;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 
-public class UserEditFragment extends BaseFragment {
+public class UserEditFragment extends BaseFragment
+        implements View.OnClickListener {
 
-    LinearLayout rvNewsList;
+    View mView;
+
+    @BindView(R.id.toolbarLayout)
+    Toolbar mToolBar;
+    @BindView(R.id.toolbarTitle)
+    TextView toolbarTitle;
+
+    @BindView(R.id.imgCancel)
+    ClickableImageView imgCancel;
+    @BindView(R.id.imgConfirm)
+    ClickableImageView imgConfirm;
+
 
     public UserEditFragment() {
 
@@ -27,8 +46,20 @@ public class UserEditFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rvNewsList = (LinearLayout) inflater.inflate(R.layout.fragment_user_edit, container, false);
-        return rvNewsList;
+
+        mView = inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
+        ButterKnife.bind(this, mView);
+
+        setUpToolbar();
+
+        return mView;
+    }
+
+    private void setUpToolbar() {
+
+        imgCancel.setOnClickListener(this);
+        imgConfirm.setOnClickListener(this);
+
     }
 
     @Override
@@ -44,8 +75,7 @@ public class UserEditFragment extends BaseFragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity)getActivity()).ANIMATION_TAG = AnimateLeftToRight;
-                getActivity().onBackPressed();
+
             }
         });
 
@@ -65,4 +95,28 @@ public class UserEditFragment extends BaseFragment {
 
     }
 
+    @Override
+    public void onClick(View v) {
+
+        if (v == imgCancel) {
+            editProfileCancelClicked();
+        }
+
+        if (v == imgConfirm) {
+            editProfileConfirmClicked();
+        }
+
+
+    }
+
+    private void editProfileCancelClicked() {
+
+        ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
+        getActivity().onBackPressed();
+
+    }
+
+    private void editProfileConfirmClicked() {
+
+    }
 }
