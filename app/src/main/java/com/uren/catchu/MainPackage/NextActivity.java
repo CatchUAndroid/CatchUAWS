@@ -344,7 +344,7 @@ public class NextActivity extends AppCompatActivity implements
         }
         throw new IllegalStateException("Need to send an index that we know");
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -369,7 +369,7 @@ public class NextActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-
+*/
     @Override
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
         //do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life

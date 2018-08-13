@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlUserEdit"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:background="@color/colorPrimary">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:weightSum="5">
+
+            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/cancel4"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/imgCancel"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/editProfile"
+                android:layout_gravity="bottom"
+                android:id="@+id/toolbarTitle"
+                android:textSize="30sp"
+                android:fontFamily="@font/pacifico"
+                android:textColor="@android:color/white"
+                android:layout_weight="3"
+                android:gravity="center"/>
+
+            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/confirm"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:id="@+id/imgConfirm"/>
+
+
+
+        </LinearLayout>
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarLayout">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/btnNextFrag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next Fragment"
+                android:textSize="30sp" />
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</RelativeLayout>

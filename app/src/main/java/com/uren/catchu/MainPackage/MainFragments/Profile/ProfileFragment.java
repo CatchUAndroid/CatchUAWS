@@ -35,6 +35,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
@@ -180,6 +182,8 @@ public class ProfileFragment extends BaseFragment
 
         imgUserEdit.setOnClickListener(this);
         imgSettings.setOnClickListener(this);
+        txtFollowerCnt.setOnClickListener(this);
+        txtFollowingCnt.setOnClickListener(this);
     }
 
     private void updateUI() {
@@ -214,7 +218,7 @@ public class ProfileFragment extends BaseFragment
                 .into(imgProfile);
 
         txtUserName.setText(userProfile.getUserInfo().getUsername());
-        txtFollowerCnt.setText(userProfile.getRelationCountInfo().getFollowerCount() + "\n" + "followers");
+        txtFollowerCnt.setText(userProfile.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
         txtFollowingCnt.setText(userProfile.getRelationCountInfo().getFollowingCount() + "\n" + "following");
 
     }
@@ -290,7 +294,16 @@ public class ProfileFragment extends BaseFragment
             settingsClicked();
         }
 
+        if (v == txtFollowerCnt) {
+            followerClicked();
+        }
+
+        if (v == txtFollowingCnt) {
+            followingClicked();
+        }
+
     }
+
 
     private void settingsClicked() {
 
@@ -309,6 +322,30 @@ public class ProfileFragment extends BaseFragment
         if (mFragmentNavigation != null) {
 
             mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
+
+            //mFragmentNavigation.pushFragment(new UserEditFragment());
+
+        }
+
+    }
+
+    private void followerClicked() {
+
+        if (mFragmentNavigation != null) {
+
+            mFragmentNavigation.pushFragment(new FollowerFragment(), AnimateRightToLeft);
+
+            //mFragmentNavigation.pushFragment(new UserEditFragment());
+
+        }
+
+    }
+
+    private void followingClicked() {
+
+        if (mFragmentNavigation != null) {
+
+            mFragmentNavigation.pushFragment(new FollowingFragment(), AnimateRightToLeft);
 
             //mFragmentNavigation.pushFragment(new UserEditFragment());
 
