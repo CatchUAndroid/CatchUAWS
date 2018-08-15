@@ -54,5 +54,6 @@
 
     <string name="profile">Profile</string>
     <string name="editProfile">Edit Profile</string>
+    <string name="addGroup">New Group</string>
 
 </resources>

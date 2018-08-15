@@ -17,7 +17,7 @@ import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 
 public class SettingsFragment extends Fragment {
 
-    LinearLayout rvNewsList;
+    View mView;
 
     public SettingsFragment() {
 
@@ -26,26 +26,13 @@ public class SettingsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rvNewsList = (LinearLayout) inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
-        return rvNewsList;
+        mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
+        return mView;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //setUpRecyclerView();
-
-
-        Button btn = (Button) view.findViewById(R.id.btnBack);
-
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((NextActivity)getActivity()).ANIMATION_TAG = AnimateRightToLeft;
-                getActivity().onBackPressed();
-            }
-        });
 
     }
 }
