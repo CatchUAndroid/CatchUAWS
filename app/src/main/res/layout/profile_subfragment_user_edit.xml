@@ -20,35 +20,34 @@
             android:weightSum="5">
 
             <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                android:id="@+id/imgCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/cancel4"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
-                android:id="@+id/imgCancel"/>
+                android:layout_weight="1"
+                android:src="@drawable/cancel4" />
 
             <TextView
+                android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/editProfile"
                 android:layout_gravity="bottom"
-                android:id="@+id/toolbarTitle"
-                android:textSize="30sp"
-                android:fontFamily="@font/pacifico"
-                android:textColor="@android:color/white"
                 android:layout_weight="3"
-                android:gravity="center"/>
+                android:fontFamily="@font/pacifico"
+                android:gravity="center"
+                android:text="@string/editProfile"
+                android:textColor="@android:color/white"
+                android:textSize="30sp" />
 
             <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                android:id="@+id/imgConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:src="@drawable/confirm"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
-                android:id="@+id/imgConfirm"/>
-
+                android:layout_weight="1"
+                android:src="@drawable/confirm" />
 
 
         </LinearLayout>
@@ -63,21 +62,114 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Back"
-                android:textSize="30sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
 
-            <Button
-                android:id="@+id/btnNextFrag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Next Fragment"
-                android:textSize="30sp" />
+
+                <ImageView
+                    android:id="@+id/htab_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/header"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    app:layout_collapseMode="parallax" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.3"
+                    android:background="@android:color/black"
+                    android:fitsSystemWindows="true" />
+
+
+                <!-- Cover Picture /-->
+                <RelativeLayout
+                    android:id="@+id/rlCoverPicture"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="1"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/add_image" />
+
+                </RelativeLayout>
+
+
+                <!-- Profile Picture /-->
+                <RelativeLayout
+                    android:id="@+id/rlProfilePicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="30dp">
+
+
+                    <ImageView
+                        android:id="@+id/imgProfile"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center"
+                        android:background="@drawable/img_border" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:alpha="1"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/add_image" />
+
+                    </RelativeLayout>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+
+            <!-- User Info Layout /-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="900dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:text="Diğer zımbırtılar buraya..."
+                    android:layout_marginTop="20dp"/>
+
+
+                <Button
+                    android:id="@+id/btnBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Back"
+                    android:textSize="30sp" />
+
+                <Button
+                    android:id="@+id/btnNextFrag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Next Fragment"
+                    android:textSize="30sp" />
+
+
+            </LinearLayout>
 
 
         </LinearLayout>
