@@ -74,7 +74,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="GRUBU SIL"
+                        android:text="@string/exitFromGroup"
                         android:id="@+id/deleteGroupTextView"
                         android:layout_gravity="center"
                         android:textStyle="bold"
