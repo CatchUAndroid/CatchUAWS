@@ -43,6 +43,11 @@
     <string name="groupInformation">Group Information</string>
     <string name="deleteGroup">Delete Group</string>
     <string name="exitFromGroup">Exit From Group</string>
+    <string name="areYouSureExitFromGroup">Are you sure you want to leave the group?</string>
+    <string name="upperYes">YES</string>
+    <string name="upperNo">NO</string>
+    <string name="lowerYes">Yes</string>
+    <string name="lowerNo">No</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
