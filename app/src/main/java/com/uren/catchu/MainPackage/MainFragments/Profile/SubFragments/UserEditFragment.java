@@ -8,13 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -38,6 +42,14 @@ public class UserEditFragment extends BaseFragment
     @BindView(R.id.imgConfirm)
     ClickableImageView imgConfirm;
 
+    @BindView(R.id.rlCoverPicture)
+    RelativeLayout rlCoverPicture;
+    @BindView(R.id.rlProfilePicture)
+    RelativeLayout rlProfilePicture;
+
+    @BindView(R.id.imgProfile)
+    ImageView imgProfile;
+
 
     public UserEditFragment() {
 
@@ -59,6 +71,8 @@ public class UserEditFragment extends BaseFragment
 
         imgCancel.setOnClickListener(this);
         imgConfirm.setOnClickListener(this);
+        rlCoverPicture.setOnClickListener(this);
+        rlProfilePicture.setOnClickListener(this);
 
     }
 
@@ -67,6 +81,7 @@ public class UserEditFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
         //setUpRecyclerView();
 
+        updateUI();
 
         Button btn = (Button) view.findViewById(R.id.btnBack);
         Button btnbtnNextFrag = (Button) view.findViewById(R.id.btnNextFrag);
@@ -95,6 +110,26 @@ public class UserEditFragment extends BaseFragment
 
     }
 
+    private void updateUI() {
+
+
+        // TODO : Update Cover picture
+
+
+        //Profile picture
+        Picasso.with(getActivity())
+                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                .load(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl())
+                .transform(new CircleTransform())
+                .into(imgProfile);
+
+
+
+
+
+
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -106,8 +141,17 @@ public class UserEditFragment extends BaseFragment
             editProfileConfirmClicked();
         }
 
+        if (v == rlCoverPicture) {
+            coverPictureClicked();
+        }
+
+        if (v == rlProfilePicture) {
+            profilePictureClicked();
+        }
+
 
     }
+
 
     private void editProfileCancelClicked() {
 
@@ -119,4 +163,15 @@ public class UserEditFragment extends BaseFragment
     private void editProfileConfirmClicked() {
 
     }
+
+    private void coverPictureClicked() {
+
+
+    }
+
+    private void profilePictureClicked() {
+
+
+    }
+
 }
