@@ -213,7 +213,7 @@ public class ProfileFragment extends BaseFragment
 
         Picasso.with(getActivity())
                 //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                .load("https://s3.amazonaws.com/catchumobilebucket/UserProfile/4.jpg")
+                .load(userProfile.getUserInfo().getProfilePhotoUrl())
                 .transform(new CircleTransform())
                 .into(imgProfile);
 
