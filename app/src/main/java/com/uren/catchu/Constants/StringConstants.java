@@ -22,10 +22,16 @@ public class StringConstants {
     public static final String propOnlyMe = "OnlyMe";
     public static final String propGroups = "Groups";
 
+    //Intent variables
+    public static final String PUTEXTRA_GROUP_ID = "GROUP_ID";
+
     //Group Request Types
     public static final String GET_AUTHENTICATED_USER_GROUP_LIST = "GET_AUTHENTICATED_USER_GROUP_LIST"; //Kullanicinin dahil oldugu gruplar
     public static final String GET_GROUP_PARTICIPANT_LIST = "GET_GROUP_PARTICIPANT_LIST"; //Bir grubun katilimcilarini cekmek icin
     public static final String CREATE_GROUP = "CREATE_GROUP";
+    public static final String EXIT_GROUP = "EXIT_GROUP";
+    public static final String ADD_PARTICIPANT_INTO_GROUP = "ADD_PARTICIPANT_INTO_GROUP";
+    public static final String CHANGE_GROUP_ADMIN = "CHANGE_GROUP_ADMIN";
 
     //Friend Request Types
     public static final String FRIEND_FOLLOW_REQUEST = "followRequest";

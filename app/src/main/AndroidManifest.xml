@@ -46,7 +46,8 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".GroupPackage.AddGroupActivity" />
-        <activity android:name=".GroupPackage.SelectFriendToGroupActivity"></activity>
+        <activity android:name=".GroupPackage.SelectFriendToGroupActivity" />
+        <activity android:name=".GroupPackage.DisplayGroupDetailActivity"></activity>
     </application>
 
 </manifest>

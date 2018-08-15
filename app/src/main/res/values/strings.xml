@@ -40,6 +40,9 @@
     <string name="openCamera">Open Camera</string>
     <string name="openGallery">Open Gallery</string>
     <string name="chooseProfilePhoto">Choose a profile photo</string>
+    <string name="groupInformation">Group Information</string>
+    <string name="deleteGroup">Delete Group</string>
+    <string name="exitFromGroup">Exit From Group</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

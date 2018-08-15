@@ -19,6 +19,7 @@
     <color name="green">#70c050</color>
     <color name="backgroundFragment">#2b2b2b</color>
     <color name="toastBackground">#E1E7EA</color>
+    <color name="red">#FE3824</color>
 
     <!--Indigo 500-->
     <color name="primary_500">#3F51B5</color>
