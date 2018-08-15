@@ -32,5 +32,6 @@
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
+    <string name="addGroup">Yeni Grup</string>
 
 </resources>
