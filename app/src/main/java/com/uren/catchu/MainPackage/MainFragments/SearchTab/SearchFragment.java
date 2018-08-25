@@ -184,9 +184,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         });
     }
 
-
-    int i = 0;
-
+    
     private void overwriteToolbar() {
 
         mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
