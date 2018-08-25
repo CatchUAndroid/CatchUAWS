@@ -37,6 +37,9 @@
     <string name="upperNo">HAYIR</string>
     <string name="lowerYes">Evet</string>
     <string name="lowerNo">Hayır</string>
+    <string name="youText">Siz</string>
+    <string name="removeFromGroup">  Gruptan Çikar</string>
+    <string name="viewTheProfile">  Profil Görüntüle</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

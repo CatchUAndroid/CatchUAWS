@@ -9,15 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.uren.catchu.GroupPackage.Fragments.GroupDetailFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -65,16 +68,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         Intent i = getIntent();
         groupId = (String) i.getSerializableExtra(PUTEXTRA_GROUP_ID);
 
+        Log.i("Info", "  >>groupId:" + groupId);
+
         setGUIVariables();
         getGroupParticipants();
-
-        if (AccountHolderInfo.getUserID().equals(groupRequestResult.getResultArray().get(0).getGroupAdmin()))
-            addFriendCardView.setVisibility(View.VISIBLE);
-
-        collapsingToolbarLayout.setTitle(groupRequestResult.getResultArray().get(0).getName());
-        imageLoader.DisplayImage(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl(), groupPictureImgV, displayRectangle);
-
-        setupViewPager();
         addListeners();
     }
 
@@ -99,6 +96,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
                 groupRequestResult = (GroupRequestResult) object;
                 groupParticipantList.addAll(groupRequestResult.getResultArrayParticipantList());
                 setParticipantCount();
+                setCardViewVisibility();
+                setGroupTitle();
+                setGroupImage();
+                setupViewPager();
             }
 
             @Override
@@ -119,9 +120,22 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         personCntTv.setText(Integer.toString(groupParticipantList.size()));
     }
 
+    public void setCardViewVisibility(){
+        if (AccountHolderInfo.getUserID().equals(groupRequestResult.getResultArray().get(0).getGroupAdmin()))
+            addFriendCardView.setVisibility(View.VISIBLE);
+    }
+
+    public void setGroupTitle(){
+        collapsingToolbarLayout.setTitle(groupRequestResult.getResultArray().get(0).getName());
+    }
+
+    public void setGroupImage(){
+        imageLoader.DisplayImage(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl(), groupPictureImgV, displayRectangle);
+    }
+
     public void addListeners() {
 
-        addFriendCardView.setOnClickListener(new View.OnClickListener() {
+        /*addFriendCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AddNewFriendActivity.class);
@@ -129,7 +143,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
                 intent.putExtra(groupConstant, group);
                 startActivity(intent);
             }
-        });
+        });*/
 
         deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,29 +157,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
-        adapter.addFragment(new GroupDetailFragment(group, verticalShown), " ");
+        adapter.addFragment(new GroupDetailFragment(groupParticipantList, groupRequestResult), " ");
         viewPager.setAdapter(adapter);
     }
 
-    public Group getGroup() {
-        return this.group;
-    }
-
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public void setGroupFriendList(ArrayList<Friend> friendList) {
-        this.group.setFriendList(friendList);
-    }
-
-    public static void addFriendToGroup(Friend friend) {
-        group.getFriendList().add(friend);
-    }
-
-    public String getFbUserID() {
-        return FirebaseGetAccountHolder.getUserID();
-    }
 
     @Override
     public void onStart() {
@@ -174,8 +169,13 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     }
 
     public void reloadAdapter() {
-        adapter.addFragment(new GroupDetailFragment(group, verticalShown), " ");
-        viewPager.setAdapter(adapter);
+
+        if(groupParticipantList != null && groupRequestResult != null) {
+            GroupDetailFragment groupDetailFragment = new GroupDetailFragment(groupParticipantList, groupRequestResult);
+            //adapter.addFragment(new GroupDetailFragment(groupParticipantList, groupRequestResult), " ");
+            adapter.updateFragment(0, groupDetailFragment);
+            //viewPager.setAdapter(adapter);
+        }
     }
 
     public void showYesNoDialog(String title, String message) {
@@ -193,11 +193,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 exitFromGroup(AccountHolderInfo.getUserID());
-
-
-                FirebaseDeleteGroupAdapter firebaseDeleteGroupAdapter =
-                        new FirebaseDeleteGroupAdapter(group, exitGroup);
-                FirebaseGetGroups.getInstance(getFbUserID()).removeGroupFromList(group.getGroupID());
                 finish();
             }
         });
@@ -223,10 +218,8 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-
-
-                groupRequestResult.getResultArray().remove(groupRequestResultResultArrayItem);
-                imageLoader.removeImageViewFromMap(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                // TODO: 15.08.2018 - Singleton class kullanacaksak eger burada da ekleme olacaktir
+                imageLoader.removeImageViewFromMap(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl());
             }
 
             @Override
