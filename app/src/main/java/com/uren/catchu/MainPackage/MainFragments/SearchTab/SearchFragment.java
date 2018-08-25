@@ -6,16 +6,25 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -61,6 +70,20 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     MenuItem searchItem;
     Toolbar mToolBar;
 
+    //nurullah - person ve group fragmentları tek bir tane yaratılacak şekilde düzenlendi
+    private PersonFragment personFragment;
+    private GroupFragment groupFragment;
+
+    //Search bar degiskenleri
+    private EditText editTextSearch;
+    private ImageView imgCancelSearch;
+    private String searchText = "";
+    private String tempSearchText = "";
+    private RelativeLayout rl;
+    private RelativeLayout r2;
+    private TextView txtAddGroup;
+    private Boolean refreshSearch = true;
+
     // TODO(BUG) - Tab degistirip tekrar search e geldigimizde Person fragment ve Group Fragment funclar calismiyor
 
     @Override
@@ -73,14 +96,16 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         setHasOptionsMenu(true);
 
 
-
-        if(view == null) {
+        if (view == null) {
 
             view = inflater.inflate(R.layout.fragment_search, container, false);
             ButterKnife.bind(this, view);
 
             context = getActivity();
             initializeItems();
+
+        } else {
+            refreshSearch = false;
         }
 
         PermissionModule permissionModule = new PermissionModule(context);
@@ -106,9 +131,12 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
     private void setupViewPager(final ViewPager viewPager) {
 
+        personFragment = new PersonFragment(userid, verticalShown, "A", context);
+        groupFragment = new GroupFragment(context, userid, GET_AUTHENTICATED_USER_GROUP_LIST);
+
         adapter = new SpecialSelectTabAdapter(getFragmentManager());
-        adapter.addFragment(new PersonFragment(userid, verticalShown, "A", context), getResources().getString(R.string.friends));
-        adapter.addFragment(new GroupFragment(context, userid, GET_AUTHENTICATED_USER_GROUP_LIST), getResources().getString(R.string.groups));
+        adapter.addFragment(personFragment, getResources().getString(R.string.friends));
+        adapter.addFragment(groupFragment, getResources().getString(R.string.groups));
         viewPager.setAdapter(adapter);
     }
 
@@ -123,15 +151,19 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
                     case personFragmentTab:
 
                         selectedProperty = propPersons;
-                        searchItem.setVisible(true);
-                        ((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
+                        rl.setVisibility(View.VISIBLE);
+                        r2.setVisibility(View.GONE);
+                        //searchItem.setVisible(true);
+                        //((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
                         break;
 
                     case groupFragmentTab:
-
+                        rl.setVisibility(View.GONE);
+                        r2.setVisibility(View.VISIBLE);
                         selectedProperty = propGroups;
-                        searchItem.setVisible(false);
-                        ((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+                        //searchItem.setVisible(false);
+                        //((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
                         break;
 
                     default:
@@ -152,88 +184,88 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         });
     }
 
-
+    
     private void overwriteToolbar() {
 
         mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
-        mToolBar.setTitle(getResources().getString(R.string.search));
-        mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
-        mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
-        mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
 
-        ((NextActivity) getActivity()).setSupportActionBar(mToolBar);
-    }
+        editTextSearch = (EditText) view.findViewById(R.id.editTextSearch);
+        imgCancelSearch = (ImageView) view.findViewById(R.id.imgCancelSearch);
+        rl = (RelativeLayout) view.findViewById(R.id.rl);
+        r2 = (RelativeLayout) view.findViewById(R.id.r2);
+        txtAddGroup = (TextView) view.findViewById(R.id.txtAddGroup);
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-
-        menuInflater.inflate(R.menu.menu_search, menu);
-
-        searchItem = menu.findItem(R.id.action_search);
-
-        searchView = (android.support.v7.widget.SearchView) searchItem.getActionView();
-
-        searchView.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
+        //Cancel click
+        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+            public void onClick(View v) {
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
+                refreshSearch = true;
+                editTextSearch.getText().clear();
+                imgCancelSearch.setVisibility(View.GONE);
 
-                if (!newText.isEmpty()) {
-
-                    if (selectedProperty.equals(propPersons))
-                        searchForPersons(newText);
-                }
-
-                return false;
             }
         });
 
-        super.onCreateOptionsMenu(menu, menuInflater);
+        //Add new grup click
+        txtAddGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addNewGroup();
+            }
+        });
+
+        //Search text change listener
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                tempSearchText = editTextSearch.getText().toString();
+
+                // TODO : search text boş olduğunda recyler view ler boş olmalı mı? şimdilik A'lar geliyor.
+                if (tempSearchText.matches("")) {
+                    if (!refreshSearch) return;
+                    searchForPersons("A");
+                    searchText = tempSearchText;
+                    return;
+                }
+
+                //tab değistiğinde onTextChanged fonksiyonu tekrar çağrılıyor,
+                // kontrol text degisti ise durumunu kontrol için eklendi.
+                if (!tempSearchText.matches(searchText)) {
+                    searchForPersons(tempSearchText);
+                    imgCancelSearch.setVisibility(View.VISIBLE);
+                    searchText = tempSearchText;
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+
     }
 
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
+    public void addNewGroup() {
 
-        MenuItem register = menu.findItem(R.id.addNewGroup);
-        if(selectedProperty.equals(propPersons)) {
-            register.setVisible(false);
-        } else {
-            register.setVisible(true);
-        }
-    }
+        if (UserFriends.getInstance(AccountHolderInfo.getUserID()).getSize() == 0)
+            CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
+        else
+            startActivity(new Intent(context, SelectFriendToGroupActivity.class));
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()){
-            case android.R.id.home:
-                break;
-            case R.id.logOut:
-                break;
-            case R.id.addNewGroup:
-
-                if(UserFriends.getInstance(AccountHolderInfo.getUserID()).getSize() == 0)
-                    CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
-                else
-                    startActivity(new Intent(context, SelectFriendToGroupActivity.class));
-
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     public void searchForPersons(String searchText) {
 
-        PersonFragment personFragment = new PersonFragment(userid, verticalShown, searchText, context);
         adapter.updateFragment(personFragmentTab, personFragment);
-        reloadAdapter();
+        personFragment.getSearchResult(userid, searchText);
+        //reloadAdapter();
     }
 
     public void reloadAdapter() {

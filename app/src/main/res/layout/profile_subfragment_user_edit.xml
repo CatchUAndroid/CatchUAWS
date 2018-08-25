@@ -19,18 +19,28 @@
             android:orientation="horizontal"
             android:weightSum="5">
 
-            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+            <!--com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                 android:id="@+id/imgCancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:src="@drawable/cancel4" />
+                android:src="@drawable/cancel4" /-->
+
+            <TextView
+                android:id="@+id/txtCancel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:text="İptal"
+                android:textColor="@color/clearWhite"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/toolbarTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="3"
@@ -40,14 +50,24 @@
                 android:textColor="@android:color/white"
                 android:textSize="30sp" />
 
-            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+            <TextView
+                android:id="@+id/txtSave"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:text="Kaydet"
+                android:textColor="@color/clearWhite"
+                android:textSize="20sp" />
+
+            <!--com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                 android:id="@+id/imgConfirm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
-                android:src="@drawable/confirm" />
+                android:src="@drawable/confirm" /-->
 
 
         </LinearLayout>
@@ -149,9 +169,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:layout_marginTop="20dp"
                     android:text="Diğer zımbırtılar buraya..."
-                    android:layout_marginTop="20dp"/>
+                    android:textSize="20sp" />
 
 
                 <Button
