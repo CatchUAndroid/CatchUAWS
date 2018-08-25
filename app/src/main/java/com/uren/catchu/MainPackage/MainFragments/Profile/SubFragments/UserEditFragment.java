@@ -37,10 +37,10 @@ public class UserEditFragment extends BaseFragment
     @BindView(R.id.toolbarTitle)
     TextView toolbarTitle;
 
-    @BindView(R.id.imgCancel)
-    ClickableImageView imgCancel;
-    @BindView(R.id.imgConfirm)
-    ClickableImageView imgConfirm;
+    //@BindView(R.id.imgCancel)
+    //ClickableImageView imgCancel;
+    //@BindView(R.id.imgConfirm)
+    //ClickableImageView imgConfirm;
 
     @BindView(R.id.rlCoverPicture)
     RelativeLayout rlCoverPicture;
@@ -49,6 +49,11 @@ public class UserEditFragment extends BaseFragment
 
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
+
+    @BindView(R.id.txtCancel)
+    TextView txtCancel;
+    @BindView(R.id.txtSave)
+    TextView txtSave;
 
 
     public UserEditFragment() {
@@ -69,8 +74,12 @@ public class UserEditFragment extends BaseFragment
 
     private void setUpToolbar() {
 
-        imgCancel.setOnClickListener(this);
-        imgConfirm.setOnClickListener(this);
+        //imgCancel.setOnClickListener(this);
+        //imgConfirm.setOnClickListener(this);
+
+        txtSave.setOnClickListener(this);
+        txtCancel.setOnClickListener(this);
+
         rlCoverPicture.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
 
@@ -133,11 +142,11 @@ public class UserEditFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == imgCancel) {
+        if (v == txtCancel) {
             editProfileCancelClicked();
         }
 
-        if (v == imgConfirm) {
+        if (v == txtSave) {
             editProfileConfirmClicked();
         }
 

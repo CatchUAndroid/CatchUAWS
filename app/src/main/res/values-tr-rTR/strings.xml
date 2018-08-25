@@ -33,5 +33,7 @@
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
     <string name="addGroup">Yeni Grup</string>
+    <string name="save">Kaydet</string>
+    <string name="cancel">İptal</string>
 
 </resources>

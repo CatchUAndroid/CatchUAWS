@@ -47,5 +47,7 @@
     <string name="profile">Profile</string>
     <string name="editProfile">Edit Profile</string>
     <string name="addGroup">New Group</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
