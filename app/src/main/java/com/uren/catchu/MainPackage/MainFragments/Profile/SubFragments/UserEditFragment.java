@@ -1,5 +1,8 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
@@ -8,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,6 +24,8 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import java.util.Calendar;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
@@ -42,8 +49,8 @@ public class UserEditFragment extends BaseFragment
     //@BindView(R.id.imgConfirm)
     //ClickableImageView imgConfirm;
 
-    @BindView(R.id.rlCoverPicture)
-    RelativeLayout rlCoverPicture;
+    //@BindView(R.id.rlCoverPicture)
+    //RelativeLayout rlCoverPicture;
     @BindView(R.id.rlProfilePicture)
     RelativeLayout rlProfilePicture;
 
@@ -55,6 +62,12 @@ public class UserEditFragment extends BaseFragment
     @BindView(R.id.txtSave)
     TextView txtSave;
 
+    //Fields
+    //@BindView(R.id.edtBirthDay)
+    EditText edtBirthDay;
+
+
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
 
     public UserEditFragment() {
 
@@ -80,8 +93,22 @@ public class UserEditFragment extends BaseFragment
         txtSave.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
 
-        rlCoverPicture.setOnClickListener(this);
+        //rlCoverPicture.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
+
+        edtBirthDay = (EditText) mView.findViewById(R.id.edtBirthDay);
+        edtBirthDay.setOnClickListener(this);
+
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                //Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
+
+                String date = month + "/" + day + "/" + year;
+                edtBirthDay.setText(date);
+            }
+        };
 
     }
 
@@ -92,6 +119,7 @@ public class UserEditFragment extends BaseFragment
 
         updateUI();
 
+        /*
         Button btn = (Button) view.findViewById(R.id.btnBack);
         Button btnbtnNextFrag = (Button) view.findViewById(R.id.btnNextFrag);
 
@@ -116,7 +144,7 @@ public class UserEditFragment extends BaseFragment
                 }
             }
         });
-
+        */
     }
 
     private void updateUI() {
@@ -133,10 +161,6 @@ public class UserEditFragment extends BaseFragment
                 .into(imgProfile);
 
 
-
-
-
-
     }
 
     @Override
@@ -150,17 +174,43 @@ public class UserEditFragment extends BaseFragment
             editProfileConfirmClicked();
         }
 
+/*
         if (v == rlCoverPicture) {
             coverPictureClicked();
         }
-
+*/
         if (v == rlProfilePicture) {
             profilePictureClicked();
+        }
+
+        if (v == edtBirthDay) {
+            birthDayClicked();
         }
 
 
     }
 
+
+
+    private void birthDayClicked() {
+
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                getActivity(),
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListener,
+                year,month,day);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+
+
+
+    }
 
     private void editProfileCancelClicked() {
 
