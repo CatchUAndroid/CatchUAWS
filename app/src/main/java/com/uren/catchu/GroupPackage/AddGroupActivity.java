@@ -57,6 +57,7 @@ import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
+import com.uren.catchu.Singleton.UserGroups;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -88,6 +89,7 @@ import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 
 import static com.amazonaws.auth.policy.Principal.WebIdentityProviders.Amazon;
@@ -120,12 +122,6 @@ public class AddGroupActivity extends AppCompatActivity {
 
     RelativeLayout addGroupDtlRelLayout;
     Context context;
-
-    String attachmentName = "bitmap";
-    String attachmentFileName = "bitmap.bmp";
-    String crlf = "\r\n";
-    String twoHyphens = "--";
-    String boundary =  "*****";
 
     List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
     GroupRequest groupRequest;
@@ -445,8 +441,10 @@ public class AddGroupActivity extends AppCompatActivity {
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
+                GroupRequestResult groupRequestResult = (GroupRequestResult) object;
                 mProgressDialog.setMessage(getResources().getString(R.string.groupIsCreating));
                 mProgressDialog.show();
+                addGroupToUsersGroup(groupRequestResult);
                 returnPreviousActivity();
             }
 
@@ -462,6 +460,16 @@ public class AddGroupActivity extends AppCompatActivity {
         }, groupRequest);
 
         groupResultProcess.execute();
+    }
+
+    public void addGroupToUsersGroup(GroupRequestResult groupRequestResult){
+        GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
+        groupRequestResultResultArrayItem.setGroupAdmin(groupRequestResult.getResultArray().get(0).getGroupAdmin());
+        groupRequestResultResultArrayItem.setGroupid(groupRequestResult.getResultArray().get(0).getGroupid());
+        groupRequestResultResultArrayItem.setGroupPhotoUrl(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl());
+        groupRequestResultResultArrayItem.setName(groupRequestResult.getResultArray().get(0).getName());
+        groupRequestResultResultArrayItem.setCreateAt(groupRequestResult.getResultArray().get(0).getCreateAt());
+        UserGroups.getInstance(AccountHolderInfo.getUserID()).addGroupToRequestResult(groupRequestResultResultArrayItem);
     }
 
     private void returnPreviousActivity() {

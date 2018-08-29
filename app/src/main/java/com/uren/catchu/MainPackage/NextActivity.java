@@ -34,6 +34,7 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserFriends;
+import com.uren.catchu.Singleton.UserGroups;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -128,6 +129,9 @@ public class NextActivity extends AppCompatActivity implements
 
         UserFriends.setInstance(null);
         UserFriends.getInstance(AccountHolderInfo.getUserID());
+
+        UserGroups.setInstance(null);
+        UserGroups.getInstance(AccountHolderInfo.getUserID());
     }
 
     private void initValues() {

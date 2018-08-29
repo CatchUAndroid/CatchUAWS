@@ -30,7 +30,9 @@ import java.util.List;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
@@ -43,31 +45,38 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
     private ImageView specialProfileImgView;
     LinearLayout specialListLinearLayout;
     LayoutInflater layoutInflater;
-    List<UserProfile> groupParticipantList;
-    GroupRequestResult groupRequestResult;
+    List<UserProfileProperties> groupParticipantList;
+    GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
 
     Context context;
     Activity activity;
 
-    public static final int CODE_REMOVE_FROM_GROUP = 0;
-    public static final int CODE_DISPLAY_PROFILE = 1;
+    public static final int CODE_DISPLAY_PROFILE = 0;
+    public static final int CODE_REMOVE_FROM_GROUP = 1;
+
 
     TextView textview;
 
-    public GroupDetailListAdapter(Context context, List<UserProfile> groupParticipantList, GroupRequestResult groupRequestResult) {
+    public GroupDetailListAdapter(Context context, List<UserProfileProperties> groupParticipantList, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem) {
         layoutInflater = LayoutInflater.from(context);
+        initVaribles();
         this.groupParticipantList.addAll(groupParticipantList);
-        this.groupRequestResult.setResultArray(groupRequestResult.getResultArray());
+        this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
         Collections.sort(groupParticipantList, new CustomComparator());
         this.context = context;
         activity = (Activity) context;
         imageLoader = new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
     }
 
-    public class CustomComparator implements Comparator<UserProfile> {
+    public void initVaribles(){
+        this.groupParticipantList = new ArrayList<UserProfileProperties>();
+        this.groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
+    }
+
+    public class CustomComparator implements Comparator<UserProfileProperties> {
         @Override
-        public int compare(UserProfile o1, UserProfile o2) {
-            return o1.getUserInfo().getName().compareToIgnoreCase(o2.getUserInfo().getName());
+        public int compare(UserProfileProperties o1, UserProfileProperties o2) {
+            return o1.getName().compareToIgnoreCase(o2.getName());
         }
     }
 
@@ -86,7 +95,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView userNameSurname;
-        UserProfile userProfile;
+        UserProfileProperties userProfile;
         Button adminDisplayBtn;
 
         int position = 0;
@@ -99,35 +108,29 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             specialListLinearLayout = (LinearLayout) view.findViewById(R.id.specialListLinearLayout);
             adminDisplayBtn = (Button) view.findViewById(R.id.adminDisplayBtn);
 
-            //final TextView textview = (TextView) activity.findViewById(R.id.personCntTv);
-            //textview.setText(Integer.toString(data.size()));
-
             specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!AccountHolderInfo.getUserID().equals(userProfile.getUserInfo().getUserid())) {
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+                    if (!AccountHolderInfo.getUserID().equals(userProfile.getUserid())) {
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
 
-                        adapter.add(context.getResources().getString(R.string.removeFromGroup));
                         adapter.add(context.getResources().getString(R.string.viewTheProfile));
+
+                        if(AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
+                            adapter.add(context.getResources().getString(R.string.removeFromGroup));
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int item) {
 
-                                if (item == CODE_REMOVE_FROM_GROUP) {
-                                    exitFromGroup(userProfile.getUserInfo().getUserid(), position);
 
+                                if (item == CODE_DISPLAY_PROFILE){
 
-
-                                    //if (context instanceof DisplayGroupDetailActivity) {
-                                    //    ((DisplayGroupDetailActivity) context).setGroupFriendList(data);
-                                   // }
-
-                                } else if (item == CODE_DISPLAY_PROFILE) {
-
-
+                                    Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (item == CODE_REMOVE_FROM_GROUP) {
+                                    exitFromGroup(userProfile.getUserid(), position);
                                 } else {
                                     CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
                                             context.getResources().getString(R.string.technicalError));
@@ -142,23 +145,23 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             });
         }
 
-        public void setData(UserProfile userProfile, int position) {
+        public void setData(UserProfileProperties userProfile, int position) {
 
             //kullanici adi soyadi bilgisi yazilacak
-            if (AccountHolderInfo.getUserID().equals(userProfile.getUserInfo().getUserid()))
+            if (AccountHolderInfo.getUserID().equals(userProfile.getUserid()))
                 this.userNameSurname.setText(context.getResources().getString(R.string.youText));
             else
-                this.userNameSurname.setText(userProfile.getUserInfo().getName());
+                this.userNameSurname.setText(userProfile.getName());
 
             //Admin grup box degeri eklenecek
-            if (groupRequestResult.getResultArray().get(0).getGroupAdmin().equals(userProfile.getUserInfo().getUserid()))
+            if (groupRequestResultResultArrayItem.getGroupAdmin().equals(userProfile.getUserid()))
                 adminDisplayBtn.setVisibility(View.VISIBLE);
             else
                 adminDisplayBtn.setVisibility(View.GONE);
 
             this.position = position;
             this.userProfile = userProfile;
-            imageLoader.DisplayImage(userProfile.getUserInfo().getProfilePhotoUrl(), specialProfileImgView, displayRounded);
+            imageLoader.DisplayImage(userProfile.getProfilePhotoUrl(), specialProfileImgView, displayRounded);
         }
 
         public void exitFromGroup(String userid, final int position){
@@ -166,7 +169,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             final GroupRequest groupRequest = new GroupRequest();
             groupRequest.setRequestType(EXIT_GROUP);
             groupRequest.setUserid(userid);
-            groupRequest.setGroupid(groupRequestResult.getResultArray().get(0).getGroupid());
+            groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
 
             GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
                 @Override
@@ -193,7 +196,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
     @Override
     public void onBindViewHolder(GroupDetailListAdapter.MyViewHolder holder, int position) {
-        UserProfile selectedFriend = groupParticipantList.get(position);
+        UserProfileProperties selectedFriend = groupParticipantList.get(position);
         holder.setData(selectedFriend, position);
     }
 

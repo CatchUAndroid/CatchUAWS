@@ -19,6 +19,8 @@ import com.uren.catchu.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.UserGroups;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,45 +80,13 @@ public class GroupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         groupRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
-        setGroupRequest();
-        getGroupResult();
-    }
-
-    public void setGroupRequest(){
-        groupRequest = new GroupRequest();
-        groupRequest.setUserid(userid);
-        groupRequest.setRequestType(requestType);
-    }
-
-    private void getGroupResult() {
-
-        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener<GroupRequestResult>() {
-
-            @Override
-            public void onSuccess(GroupRequestResult object) {
-                Log.i("Info", "GroupResultProcess on success");
-                progressBar.setVisibility(View.GONE);
-                groupRequestResult = object;
-                getData();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        }, groupRequest);
-
-        groupResultProcess.execute();
+        getData();
     }
 
     public void getData(){
 
-        UserGroupsListAdapter userGroupsListAdapter = new UserGroupsListAdapter(context, groupRequestResult);
+        UserGroups userGroups = UserGroups.getInstance(AccountHolderInfo.getUserID());
+        UserGroupsListAdapter userGroupsListAdapter = new UserGroupsListAdapter(context, userGroups.getGroupRequestResult());
         groupRecyclerView.setAdapter(userGroupsListAdapter);
         linearLayoutManager  = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

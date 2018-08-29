@@ -33,6 +33,10 @@ public class UserGroups {
         return userGroupsInstance;
     }
 
+    public GroupRequestResult getGroupRequestResult(){
+        return groupRequestResult;
+    }
+
     public UserGroups(String userid){
         this.userid = userid;
         getGroupResult();
@@ -46,9 +50,27 @@ public class UserGroups {
         userGroupsInstance = instance;
     }
 
+    public void addGroupToRequestResult(GroupRequestResultResultArrayItem item){
+        groupRequestResult.getResultArray().add(item);
+    }
+
+    public static GroupRequestResultResultArrayItem getGroupWithId(String groupid){
+
+        for(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem:groupRequestResult.getResultArray()){
+            if(groupid.equals(groupRequestResultResultArrayItem.getGroupid()))
+                return groupRequestResultResultArrayItem;
+        }
+
+        return null;
+    }
+
+    public static void removeGroupFromList(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem){
+        groupRequestResult.getResultArray().remove(groupRequestResultResultArrayItem);
+    }
+
     private void getGroupResult() {
 
-        GroupRequest groupRequest = new GroupRequest();
+        final GroupRequest groupRequest = new GroupRequest();
         groupRequest.setUserid(userid);
         groupRequest.setRequestType(GET_AUTHENTICATED_USER_GROUP_LIST);
 

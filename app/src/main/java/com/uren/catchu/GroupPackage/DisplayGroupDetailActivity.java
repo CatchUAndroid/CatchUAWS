@@ -21,15 +21,19 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GroupPackage.Fragments.GroupDetailFragment;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.UserGroups;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LIST;
@@ -53,15 +57,16 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     CardView addFriendCardView;
     CardView deleteGroupCardView;
 
-    List<UserProfile> groupParticipantList;
+    List<UserProfileProperties> groupParticipantList;
     GroupRequestResult groupRequestResult;
+    GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_group_detail);
 
-        groupParticipantList = new ArrayList<UserProfile>();
+        groupParticipantList = new ArrayList<UserProfileProperties>();
 
         imageLoader = new ImageLoader(this, groupsCacheDirectory);
 
@@ -71,9 +76,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         Log.i("Info", "  >>groupId:" + groupId);
 
         setGUIVariables();
+        getGroupInformation();
         getGroupParticipants();
         addListeners();
     }
+
+
 
     public void setGUIVariables() {
         groupPictureImgV = (ImageView) findViewById(R.id.groupPictureImgv);
@@ -82,6 +90,15 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         deleteGroupCardView = (CardView) findViewById(R.id.deleteGroupCardView);
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+    }
+
+    private void getGroupInformation() {
+
+        groupRequestResultResultArrayItem = UserGroups.getGroupWithId(this.groupId);
+
+        if(groupRequestResultResultArrayItem == null)
+            CommonUtils.showToast(DisplayGroupDetailActivity.this,
+                    getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
     }
 
     public void getGroupParticipants() {
@@ -121,16 +138,17 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     }
 
     public void setCardViewVisibility(){
-        if (AccountHolderInfo.getUserID().equals(groupRequestResult.getResultArray().get(0).getGroupAdmin()))
+        if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
             addFriendCardView.setVisibility(View.VISIBLE);
     }
 
     public void setGroupTitle(){
-        collapsingToolbarLayout.setTitle(groupRequestResult.getResultArray().get(0).getName());
+        collapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
+        ///collapsingToolbarLayout.setsuccc
     }
 
     public void setGroupImage(){
-        imageLoader.DisplayImage(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl(), groupPictureImgV, displayRectangle);
+        imageLoader.DisplayImage(groupRequestResultResultArrayItem.getGroupPhotoUrl(), groupPictureImgV, displayRectangle);
     }
 
     public void addListeners() {
@@ -151,16 +169,14 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
                 showYesNoDialog(null, getResources().getString(R.string.areYouSureExitFromGroup));
             }
         });
-
     }
 
 
     private void setupViewPager() {
         adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
-        adapter.addFragment(new GroupDetailFragment(groupParticipantList, groupRequestResult), " ");
+        adapter.addFragment(new GroupDetailFragment(groupParticipantList, groupRequestResultResultArrayItem), " ");
         viewPager.setAdapter(adapter);
     }
-
 
     @Override
     public void onStart() {
@@ -171,7 +187,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     public void reloadAdapter() {
 
         if(groupParticipantList != null && groupRequestResult != null) {
-            GroupDetailFragment groupDetailFragment = new GroupDetailFragment(groupParticipantList, groupRequestResult);
+            GroupDetailFragment groupDetailFragment = new GroupDetailFragment(groupParticipantList, groupRequestResultResultArrayItem);
             //adapter.addFragment(new GroupDetailFragment(groupParticipantList, groupRequestResult), " ");
             adapter.updateFragment(0, groupDetailFragment);
             //viewPager.setAdapter(adapter);
@@ -193,7 +209,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 exitFromGroup(AccountHolderInfo.getUserID());
-                finish();
             }
         });
 
@@ -218,8 +233,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                // TODO: 15.08.2018 - Singleton class kullanacaksak eger burada da ekleme olacaktir
-                imageLoader.removeImageViewFromMap(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl());
+                UserGroups.removeGroupFromList(groupRequestResultResultArrayItem);
+                imageLoader.removeImageViewFromMap(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                SearchFragment.reloadAdapter();
+                finish();
             }
 
             @Override

@@ -61,7 +61,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     SearchView searchView;
 
     SearchResult searchResult;
-    SpecialSelectTabAdapter adapter;
+    static SpecialSelectTabAdapter adapter;
 
     private static final int personFragmentTab = 0;
     private static final int groupFragmentTab = 1;
@@ -112,6 +112,14 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         permissionModule.checkPermissions();
 
         return view;
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+       // if(adapter != null)
+       //     adapter.notifyDataSetChanged();
     }
 
     private void initializeItems() {
@@ -268,7 +276,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         //reloadAdapter();
     }
 
-    public void reloadAdapter() {
+    public static void reloadAdapter() {
         adapter.notifyDataSetChanged();
     }
 

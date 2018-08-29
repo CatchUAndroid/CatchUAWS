@@ -15,11 +15,14 @@ import android.widget.Toast;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 
 @SuppressLint("ValidFragment")
 public class GroupDetailFragment extends Fragment {
@@ -28,12 +31,13 @@ public class GroupDetailFragment extends Fragment {
     RecyclerView personRecyclerView;
 
     LinearLayoutManager linearLayoutManager;
-    GroupRequestResult groupRequestResult;
-    List<UserProfile> groupParticipantList;
+    List<UserProfileProperties> groupParticipantList;
+    GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
 
     @SuppressLint("ValidFragment")
-    public GroupDetailFragment(List<UserProfile> groupParticipantList, GroupRequestResult groupRequestResult) {
-        this.groupRequestResult = groupRequestResult;
+    public GroupDetailFragment(List<UserProfileProperties> groupParticipantList, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem) {
+        this.groupParticipantList = new ArrayList<UserProfileProperties>();
+        this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
         this.groupParticipantList.addAll(groupParticipantList);
     }
 
@@ -61,7 +65,7 @@ public class GroupDetailFragment extends Fragment {
     public void getData() {
 
         GroupDetailListAdapter groupDetailListAdapter = new GroupDetailListAdapter(getActivity(),
-                groupParticipantList, groupRequestResult);
+                groupParticipantList, groupRequestResultResultArrayItem);
 
         personRecyclerView.setAdapter(groupDetailListAdapter);
         linearLayoutManager = new LinearLayoutManager(getActivity());
