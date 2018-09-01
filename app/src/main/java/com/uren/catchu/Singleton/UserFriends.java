@@ -1,6 +1,7 @@
 package com.uren.catchu.Singleton;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,7 +17,7 @@ public class UserFriends {
 
     private static UserFriends userFriendsInstance = null;
     private String userid;
-    private FriendList friendList;
+    private static FriendList friendList;
 
     public static UserFriends getInstance(String userId){
 
@@ -31,7 +32,7 @@ public class UserFriends {
         getFriends();
     }
 
-    public FriendList getFriendList(){
+    public static FriendList getFriendList(){
         return friendList;
     }
 
@@ -63,6 +64,6 @@ public class UserFriends {
             }
         }, userid);
 
-        friendListRequestProcess.execute();
+        friendListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

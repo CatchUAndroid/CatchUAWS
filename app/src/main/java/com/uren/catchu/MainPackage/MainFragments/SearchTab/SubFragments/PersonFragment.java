@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -106,7 +107,7 @@ public class PersonFragment extends Fragment {
             }
         }, userid, searchText);
 
-        searchResultProcess.execute();
+        searchResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void getData(){

@@ -20,6 +20,8 @@
     <color name="backgroundFragment">#2b2b2b</color>
     <color name="toastBackground">#E1E7EA</color>
     <color name="red">#FE3824</color>
+    <color name="text_shadow">#7F000000</color>
+    <color name="text_shadow_white">#FFFFFF</color>
 
     <!--Indigo 500-->
     <color name="primary_500">#3F51B5</color>

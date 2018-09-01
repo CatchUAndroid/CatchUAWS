@@ -24,6 +24,7 @@ import com.uren.catchu.Singleton.SelectedFriendList;
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.NumericConstants.CODE_REMOVE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
 
@@ -38,8 +39,6 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
     SelectedFriendList selectedFriendList;
     ClickCallback clickCallback;
 
-    public static int selectedItemPosition = 0;
-
     public SelectedItemAdapter(Context context, ClickCallback clickCallback) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
@@ -52,7 +51,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
     @NonNull
     @Override
     public SelectedItemAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        view = layoutInflater.inflate(R.layout.special_grid_list_item, viewGroup, false);
+        view = layoutInflater.inflate(R.layout.grid_list_item_small, viewGroup, false);
         final SelectedItemAdapter.MyViewHolder holder = new SelectedItemAdapter.MyViewHolder(view);
         return holder;
     }
@@ -69,7 +68,6 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         ImageView specialPictureImgView;
         ImageView deletePersonImgv;
         TextView specialNameTextView;
-
         UserProfileProperties selectedFriend;
 
         int position = 0;
@@ -85,7 +83,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
                 @Override
                 public void onClick(View v) {
                     removeItem(position);
-                    clickCallback.onItemClick(getAdapterPosition());
+                    clickCallback.onItemClick();
                 }
             });
 
@@ -93,7 +91,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
                 @Override
                 public void onClick(View v) {
                     removeItem(position);
-                    clickCallback.onItemClick(getAdapterPosition());
+                    clickCallback.onItemClick();
                 }
             });
         }
@@ -110,10 +108,6 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
             this.selectedFriend = selectedFriend;
             imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), specialPictureImgView, displayRounded);
         }
-    }
-
-    public long getItemId(int position) {
-        return position;
     }
 
     @Override

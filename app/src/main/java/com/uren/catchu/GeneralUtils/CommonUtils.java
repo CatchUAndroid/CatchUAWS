@@ -21,6 +21,7 @@ import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +35,10 @@ public class CommonUtils {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
+    public static final void showToastLong(Context context, String message) {
 
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
 
     public static final String getDeviceID(Context context) {
         return Settings.Secure.getString(context.getContentResolver(),

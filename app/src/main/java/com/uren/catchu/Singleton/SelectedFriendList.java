@@ -26,6 +26,17 @@ public class SelectedFriendList {
         SelectedFriendList.instance = instance;
     }
 
+    public boolean isUserInList(String userid){
+
+        for(UserProfileProperties userProfileProperties: friendList.getResultArray()){
+            if(userProfileProperties.getUserid().equals(userid)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public FriendList getSelectedFriendList() {
         return friendList;
     }
@@ -46,7 +57,7 @@ public class SelectedFriendList {
         return friendList.getResultArray().get(position);
     }
 
-    public void updateFriendList(List<UserProfileProperties> userProfilePropertiesList){
+    public static void updateFriendList(List<UserProfileProperties> userProfilePropertiesList){
         friendList.setResultArray(userProfilePropertiesList);
     }
 

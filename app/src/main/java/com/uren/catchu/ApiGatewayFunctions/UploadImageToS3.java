@@ -42,6 +42,7 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             OutputStream output = connection.getOutputStream();
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
             byte[] b = baos.toByteArray();
 

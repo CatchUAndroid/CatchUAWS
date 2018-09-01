@@ -51,6 +51,9 @@
     <string name="youText">You</string>
     <string name="removeFromGroup">  Remove from the group</string>
     <string name="viewTheProfile">  View the profile</string>
+    <string name="createdAt">Created at:</string>
+    <string name="changeAsAdmin">Make Group Admin</string>
+    <string name="friendsAdding">Participants adding...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -60,5 +63,7 @@
     <string name="addGroup">New Group</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="giveNewName">Write New Name</string>
+    <string name="groupPhotoChanging">Photo is changing...</string>
 
 </resources>

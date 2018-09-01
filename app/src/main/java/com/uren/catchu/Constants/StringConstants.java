@@ -24,6 +24,9 @@ public class StringConstants {
 
     //Intent variables
     public static final String PUTEXTRA_GROUP_ID = "GROUP_ID";
+    public static final String PUTEXTRA_GROUP_NAME = "GROUP_NAME";
+    public static final String PUTEXTRA_ACTIVITY_NAME = "ACTIVITY_NAME";
+
 
     //Group Request Types
     public static final String GET_AUTHENTICATED_USER_GROUP_LIST = "GET_AUTHENTICATED_USER_GROUP_LIST"; //Kullanicinin dahil oldugu gruplar
@@ -32,6 +35,7 @@ public class StringConstants {
     public static final String EXIT_GROUP = "EXIT_GROUP";
     public static final String ADD_PARTICIPANT_INTO_GROUP = "ADD_PARTICIPANT_INTO_GROUP";
     public static final String CHANGE_GROUP_ADMIN = "CHANGE_GROUP_ADMIN";
+    public static final String UPDATE_GROUP_INFO = "UPDATE_GROUP_INFO";
 
     //Friend Request Types
     public static final String FRIEND_FOLLOW_REQUEST = "followRequest";

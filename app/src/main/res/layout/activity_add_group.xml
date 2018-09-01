@@ -30,7 +30,7 @@
             </LinearLayout>
         </android.support.v7.widget.Toolbar>
 
-        <android.support.design.widget.AppBarLayout
+        <!--android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
@@ -43,7 +43,7 @@
                 app:tabMode="fixed"
                 app:tabGravity="fill"/>
 
-        </android.support.design.widget.AppBarLayout>
+        </android.support.design.widget.AppBarLayout-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,12 +101,31 @@
                 android:text="@string/constantItem"/>
         </LinearLayout>
 
-        <android.support.v4.view.ViewPager
+        <!--include layout="@layout/layout_progress_bar" /-->
+
+        <!--android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:background="@color/toastBackground"/>
+            android:background="@color/toastBackground"/-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/recyclerView"
+                android:background="@color/toastBackground">
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
+
+
+
+        <include layout="@layout/layout_progress_bar"/>
 
     </LinearLayout>
 

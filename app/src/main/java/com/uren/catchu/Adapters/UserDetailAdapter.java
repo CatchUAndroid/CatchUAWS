@@ -2,6 +2,7 @@ package com.uren.catchu.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -167,7 +168,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 }
             }, requestType, userid, requestedUserid);
 
-            friendRequestProcess.execute();
+            friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {

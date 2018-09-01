@@ -31,7 +31,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
     View view;
 
     LayoutInflater layoutInflater;
-    SelectedFriendList selectedFriendList;
 
     Context context;
     TextView participantCntTv;
@@ -43,7 +42,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         this.context = context;
         activity = (Activity) context;
         imageLoader=new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
-        selectedFriendList = SelectedFriendList.getInstance();
     }
 
     public Object getItem(int position) {
@@ -92,9 +90,10 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
 
         private void removeItem(int position){
             friendList.getResultArray().remove(selectedFriend);
-            selectedFriendList.updateFriendList(friendList.getResultArray());
+            SelectedFriendList.updateFriendList(friendList.getResultArray());
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, getItemCount());
+            SelectFriendToGroupActivity.adapter.notifyDataSetChanged();
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {

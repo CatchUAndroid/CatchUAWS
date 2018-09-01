@@ -22,6 +22,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -30,6 +33,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +55,8 @@ import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.HttpHandler;
 import com.uren.catchu.GeneralUtils.UriAdapter;
-import com.uren.catchu.GroupPackage.Fragments.SelectedFriendFragment;
+import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -83,6 +88,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import butterknife.BindView;
 import catchu.CatchUMobileAPIClient;
 import catchu.model.CommonS3BucketResult;
 import catchu.model.FriendList;
@@ -100,8 +106,10 @@ import static com.uren.catchu.Constants.StringConstants.gridShown;
 public class AddGroupActivity extends AppCompatActivity {
 
     Toolbar mToolBar;
-    ViewPager viewPager;
-    TabLayout tabLayout;
+    //ViewPager viewPager;
+    //TabLayout tabLayout;
+    public static RecyclerView recyclerView;
+    public static FriendGridListAdapter adapter;
     FloatingActionButton saveGroupInfoFab;
     EditText groupNameEditText;
 
@@ -131,6 +139,8 @@ public class AddGroupActivity extends AppCompatActivity {
     private static final int adapterCameraSelected = 0;
     private static final int adapterGallerySelected = 1;
 
+    //ProgressBar progressBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,6 +169,8 @@ public class AddGroupActivity extends AppCompatActivity {
         saveGroupInfoFab = (FloatingActionButton) findViewById(R.id.saveGroupInfoFab);
         groupNameEditText = (EditText) findViewById(R.id.groupNameEditText);
         addGroupDtlRelLayout = (RelativeLayout) findViewById(R.id.addGroupDtlRelLayout);
+        recyclerView = findViewById(R.id.recyclerView);
+        //progressBar = findViewById(R.id.progressBar);
 
         addListeners();
 
@@ -202,13 +214,10 @@ public class AddGroupActivity extends AppCompatActivity {
 
     private void openPersonSelectionPage() {
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        SpecialSelectTabAdapter adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
-        adapter.addFragment(new SelectedFriendFragment(gridShown), getResources().getString(R.string.friends));
-        viewPager.setAdapter(adapter);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        adapter = new FriendGridListAdapter(this, selectedFriendListInstance.getSelectedFriendList());
+        recyclerView.setAdapter(adapter);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
     @Override
@@ -378,7 +387,18 @@ public class AddGroupActivity extends AppCompatActivity {
         groupRequest.setGroupPhotoUrl(downloadUrl);
     }
 
+    public void dialogShow(){
+        if(!mProgressDialog.isShowing()) mProgressDialog.show();
+    }
+
+    public void dialogDismiss(){
+        if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
+    }
+
     public void saveGroupToAmazon(){
+
+        mProgressDialog.setMessage(getResources().getString(R.string.groupIsCreating));
+        dialogShow();
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -403,13 +423,15 @@ public class AddGroupActivity extends AppCompatActivity {
                                 CommonUtils.showToast(context, is.toString());
                             }
                         }catch (IOException e){
-                            CommonUtils.showToast(context, getResources().getString(R.string.error) + e.getMessage());
+                            dialogDismiss();
+                            CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        CommonUtils.showToast(context, getResources().getString(R.string.error) + e.getMessage());
+                        dialogDismiss();
+                        CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
                     }
 
                     @Override
@@ -418,12 +440,13 @@ public class AddGroupActivity extends AppCompatActivity {
                     }
                 }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getSignedUrl());
 
-                uploadImageToS3.execute();
+                uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.i("Info", "  >>getSignedUpUploadUrl onFailure!!!" );
+                dialogDismiss();
+                CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
             }
 
             @Override
@@ -431,35 +454,37 @@ public class AddGroupActivity extends AppCompatActivity {
 
             }
         }, JPG_TYPE);
-        signedUrlGetProcess.execute();
+
+        signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void saveGroupToNeoJ() {
 
         Log.i("Info", "saveGroupToAWS+++++++++++++++++++++++++++++++");
 
+
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 GroupRequestResult groupRequestResult = (GroupRequestResult) object;
-                mProgressDialog.setMessage(getResources().getString(R.string.groupIsCreating));
-                mProgressDialog.show();
                 addGroupToUsersGroup(groupRequestResult);
                 returnPreviousActivity();
             }
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.showToast(context, context.getResources().getString(R.string.error) + e.toString());
+                //progressBar.setVisibility(View.GONE);
+                dialogDismiss();
+                CommonUtils.showToast(context, context.getResources().getString(R.string.error) + e.getMessage());
             }
 
             @Override
             public void onTaskContinue() {
-
+                //progressBar.setVisibility(View.VISIBLE);
             }
         }, groupRequest);
 
-        groupResultProcess.execute();
+        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void addGroupToUsersGroup(GroupRequestResult groupRequestResult){
@@ -469,7 +494,8 @@ public class AddGroupActivity extends AppCompatActivity {
         groupRequestResultResultArrayItem.setGroupPhotoUrl(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl());
         groupRequestResultResultArrayItem.setName(groupRequestResult.getResultArray().get(0).getName());
         groupRequestResultResultArrayItem.setCreateAt(groupRequestResult.getResultArray().get(0).getCreateAt());
-        UserGroups.getInstance(AccountHolderInfo.getUserID()).addGroupToRequestResult(groupRequestResultResultArrayItem);
+        UserGroups.addGroupToRequestResult(groupRequestResultResultArrayItem);
+        SearchFragment.reloadAdapter();
     }
 
     private void returnPreviousActivity() {
@@ -479,7 +505,8 @@ public class AddGroupActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mProgressDialog.dismiss();
+                //progressBar.setVisibility(View.GONE);
+                dialogDismiss();
                 //Intent intent = new Intent(getApplicationContext(), NextActivity.class);
                 //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 //startActivity(intent);
