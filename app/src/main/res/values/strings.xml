@@ -13,6 +13,13 @@
         <item>Profile</item>
     </array>
 
+    <array name="gender">
+        <item>Man</item>
+        <item>Woman</item>
+        <item>Unspecified</item>
+    </array>
+
+
     <string name="exitItem">Log Out</string>
     <string name="search">Search</string>
     <string name="upperFriend">FRIEND</string>
