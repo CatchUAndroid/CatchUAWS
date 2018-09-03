@@ -66,6 +66,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
     TextView textview;
     CardView addFriendCardView;
 
+    int groupAdminPosition = 0;
+
     public GroupDetailListAdapter(Context context, List<UserProfileProperties> groupParticipantList, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem) {
         layoutInflater = LayoutInflater.from(context);
         initVaribles();
@@ -188,8 +190,11 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             this.username.setText(userProfile.getUsername());
 
             //Admin grup box degeri eklenecek
-            if (groupRequestResultResultArrayItem.getGroupAdmin().equals(userProfile.getUserid()))
+            if (groupRequestResultResultArrayItem.getGroupAdmin().equals(userProfile.getUserid())) {
                 adminDisplayBtn.setVisibility(View.VISIBLE);
+                groupAdminPosition = position;
+                Log.i("Info", "groupAdminPosition:" + groupAdminPosition);
+            }
             else
                 adminDisplayBtn.setVisibility(View.GONE);
 
@@ -250,8 +255,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                     addFriendCardView.setVisibility(View.GONE);
                     groupRequestResultResultArrayItem.setGroupAdmin(userid);
                     UserGroups.changeGroupAdmin(groupRequestResultResultArrayItem.getGroupid(), userid);
-                    notifyDataSetChanged();
-                    //DisplayGroupDetailActivity.reloadAdapter();
+                    notifyItemChanged(position);
+                    notifyItemChanged(groupAdminPosition);
                     SearchFragment.reloadAdapter();
                 }
 
