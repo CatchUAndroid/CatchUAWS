@@ -2,6 +2,7 @@ package com.uren.catchu.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.R;
 
@@ -158,7 +160,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(context, context.getResources().getString(R.string.error) + e.toString(), Toast.LENGTH_SHORT).show();
+                    CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.toString());
                 }
 
                 @Override
@@ -167,7 +169,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 }
             }, requestType, userid, requestedUserid);
 
-            friendRequestProcess.execute();
+            friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {

@@ -2,14 +2,19 @@ package com.uren.catchu.GeneralUtils.ImageCache;
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.R;
 
 import java.io.File;
@@ -29,6 +34,8 @@ import java.util.concurrent.Executors;
 
 import static com.uren.catchu.Constants.NumericConstants.friendImageShown;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
+import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
+import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
 public class ImageLoader {
 
@@ -41,18 +48,28 @@ public class ImageLoader {
     ExecutorService executorService;
     Handler handler = new Handler();//handler to display images in UI thread
     String fileChild;
+    Context context;
 
     public ImageLoader(Context context, String fileChild) {
         this.fileChild = fileChild;
         fileCache = new FileCache(context, fileChild);
         executorService = Executors.newFixedThreadPool(5);
+        this.context = context;
     }
 
     public void removeImageViewFromMap(String url){
         imageViewsss.remove(url);
     }
 
-    final int stub_id = R.drawable.man;
+    public int getImageId(){
+
+        if(fileChild.equals(friendsCacheDirectory))
+            return R.drawable.man;
+        else if(fileChild.equals(groupsCacheDirectory))
+            return R.drawable.user_groups;
+        else
+            return R.drawable.man;
+    }
 
     public void DisplayImage(String url, ImageView imageView, String displayType) {
 
@@ -60,26 +77,46 @@ public class ImageLoader {
         Bitmap bitmap = memoryCache.get(url);
 
         if (bitmap != null) {
-            if(displayType == displayRounded)
+            if(displayType == displayRounded) {
                 bitmap = BitmapConversion.getRoundedShape(bitmap, friendImageShown, friendImageShown, null);
+                imageView.setImageBitmap(bitmap);
 
-            imageView.setImageBitmap(bitmap);
+
+
+                /*Resources res = context.getResources();
+                RoundedBitmapDrawable dr =
+                        RoundedBitmapDrawableFactory.create(res, bitmap);
+                dr.setCornerRadius(Math.max(bitmap.getWidth(), bitmap.getHeight()) / 2.0f);
+                imageView.setImageDrawable(dr);*/
+
+
+                /*Picasso.with(context)
+                        //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                        .load(url)
+                        .transform(new CircleTransform())
+                        .into(imageView);*/
+
+            }else{
+                imageView.setImageBitmap(bitmap);
+            }
+                //imageView.setImageBitmap(bitmap);
         } else {
             queuePhoto(url, imageView, displayType);
 
             if (url != null)
-                new DownloadImageTask(imageView, displayType).execute(url);
-
+                new DownloadImageTask(imageView, displayType, url).execute(url);
         }
     }
 
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
         String displayType;
+        String url;
 
-        public DownloadImageTask(ImageView bmImage, String displayType) {
+        public DownloadImageTask(ImageView bmImage, String displayType, String url) {
             this.bmImage = bmImage;
             this.displayType = displayType;
+            this.url = url;
         }
 
         protected Bitmap doInBackground(String... urls) {
@@ -98,10 +135,25 @@ public class ImageLoader {
         protected void onPostExecute(Bitmap result) {
 
             if(result != null) {
-                if (displayType == displayRounded)
+                if (displayType == displayRounded) {
                     result = BitmapConversion.getRoundedShape(result, friendImageShown, friendImageShown, null);
+                    bmImage.setImageBitmap(result);
 
-                bmImage.setImageBitmap(result);
+                    /*Resources res = context.getResources();
+                    RoundedBitmapDrawable dr =
+                            RoundedBitmapDrawableFactory.create(res, result);
+                    dr.setCornerRadius(Math.max(result.getWidth(), result.getHeight()) / 2.0f);
+                    bmImage.setImageDrawable(dr);*/
+
+
+
+                    /*Picasso.with(context)
+                            .load(url)
+                            .transform(new CircleTransform())
+                            .into(bmImage);*/
+                }else
+                    //Picasso.with(context).load(url).into(bmImage);
+                    bmImage.setImageBitmap(result);
             }
         }
     }
@@ -240,11 +292,30 @@ public class ImageLoader {
             if (imageViewReused(photoToLoad))
                 return;
             if (bitmap != null) {
-                if(photoToLoad.displayType == displayRounded)
+                if(photoToLoad.displayType == displayRounded) {
                     bitmap = BitmapConversion.getRoundedShape(bitmap, friendImageShown, friendImageShown, null);
-                photoToLoad.imageView.setImageBitmap(bitmap);
+                    photoToLoad.imageView.setImageBitmap(bitmap);
+
+
+                    /*Resources res = context.getResources();
+                    RoundedBitmapDrawable dr =
+                            RoundedBitmapDrawableFactory.create(res, bitmap);
+                    dr.setCornerRadius(Math.max(bitmap.getWidth(), bitmap.getHeight()) / 2.0f);
+                    photoToLoad.imageView.setImageDrawable(dr);*/
+
+
+
+
+                    /*Picasso.with(context)
+                            //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+                            .load(photoToLoad.url)
+                            .transform(new CircleTransform())
+                            .into(photoToLoad.imageView);*/
+                }else
+                    //Picasso.with(context).load(photoToLoad.url).into(photoToLoad.imageView);
+                    photoToLoad.imageView.setImageBitmap(bitmap);
             } else
-                photoToLoad.imageView.setImageResource(stub_id);
+                photoToLoad.imageView.setImageResource(getImageId());
         }
     }
 

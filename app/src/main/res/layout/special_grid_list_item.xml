@@ -30,13 +30,23 @@
                 android:background="@drawable/img_border_blue"
                 android:src="@drawable/man" />
 
+
             <ImageView
+                android:id="@+id/deletePersonImgv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignEnd="@+id/specialPictureImgView"
+                android:layout_alignParentTop="true"
+                android:background="@drawable/img_border_white"
+                android:src="@drawable/cancel_gray" />
+
+            <!--ImageView
                 android:id="@+id/deletePersonImgv"
                 android:layout_width="22dp"
                 android:layout_height="22dp"
                 android:layout_alignEnd="@+id/specialPictureImgView"
                 android:layout_alignParentTop="true"
-                android:src="@drawable/ic_cancel_white_18dp" />
+                android:src="@drawable/ic_cancel_white_18dp" /-->
 
         </RelativeLayout>
 

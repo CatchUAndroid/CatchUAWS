@@ -8,6 +8,7 @@ import android.support.v4.app.ActivityCompat;
 
 import java.util.ArrayList;
 
+import static com.uren.catchu.Permissions.PermissionConstants.codeAccessFineLocationPermission;
 import static com.uren.catchu.Permissions.PermissionConstants.codeCameraPermission;
 import static com.uren.catchu.Permissions.PermissionConstants.codeImageGalleryPermission;
 import static com.uren.catchu.Permissions.PermissionConstants.codeRecordAudioPermission;
@@ -15,13 +16,13 @@ import static com.uren.catchu.Permissions.PermissionConstants.codeWriteExternalS
 
 public class PermissionModule {
 
-    private final Context mContext;
+    private Context mContext;
 
     public PermissionModule(Context context) {
         mContext = context;
     }
 
-    public void checkPermissions() {
+    /*public void checkPermissions() {
         ArrayList<String> permissionsNeeded = new ArrayList<>();
 
         if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA)
@@ -36,6 +37,10 @@ public class PermissionModule {
                 != PackageManager.PERMISSION_GRANTED) {
             permissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
         }
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
         if (!permissionsNeeded.isEmpty()) {
             requestPermission(permissionsNeeded.toArray(new String[permissionsNeeded.size()]));
         }
@@ -43,7 +48,7 @@ public class PermissionModule {
 
     private void requestPermission(String[] permissions) {
         ActivityCompat.requestPermissions((Activity) mContext, permissions, 125);
-    }
+    }*/
 
     //camera permission =================================================
     public boolean checkCameraPermission(){
@@ -52,10 +57,6 @@ public class PermissionModule {
             return false;
         }else
             return true;
-    }
-
-    public int getCameraPermissionCode(){
-        return codeCameraPermission;
     }
 
     //WriteExternalStorage permission =================================================
@@ -67,10 +68,6 @@ public class PermissionModule {
             return true;
     }
 
-    public int getWriteExternalStoragePermissionCode(){
-        return codeWriteExternalStoragePermission;
-    }
-
     //RecordAudio permission =================================================
     public boolean checkRecordAudioPermission(){
 
@@ -79,6 +76,26 @@ public class PermissionModule {
             return false;
         }else
             return true;
+    }
+
+    //AccessFineLocation permission =================================================
+    public boolean checkAccessFineLocationPermission(){
+
+        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }else
+            return true;
+    }
+
+    public int getWriteExternalStoragePermissionCode(){
+        return codeWriteExternalStoragePermission;
+    }
+    public int getAccessFineLocationCode(){
+        return codeAccessFineLocationPermission;
+    }
+
+    public int getCameraPermissionCode(){
+        return codeCameraPermission;
     }
 
     public int getRecordAudioPermissionCode(){

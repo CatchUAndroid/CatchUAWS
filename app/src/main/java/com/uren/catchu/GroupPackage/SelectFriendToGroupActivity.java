@@ -2,11 +2,15 @@ package com.uren.catchu.GroupPackage;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -14,26 +18,50 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
-import com.uren.catchu.GroupPackage.Fragments.FriendFragment;
+import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
+import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
+import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
+import com.uren.catchu.Singleton.UserFriends;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import catchu.model.FriendList;
+import catchu.model.GroupRequest;
+import catchu.model.GroupRequestGroupParticipantArrayItem;
+import catchu.model.GroupRequestResult;
+import catchu.model.UserProfileProperties;
+
+import static com.uren.catchu.Constants.StringConstants.ADD_PARTICIPANT_INTO_GROUP;
+import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LIST;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 public class SelectFriendToGroupActivity extends AppCompatActivity {
 
     Toolbar mToolBar;
 
-    ViewPager viewPager;
-    //String comingPageName = null;
-    String userid;
+    FloatingActionButton nextFab;
+
     public static Activity thisActivity;
 
     private static SelectedFriendList selectedFriendListInstance;
 
-    SpecialSelectTabAdapter adapter;
+    public static SelectFriendAdapter adapter;
+    String pendingActivityName;
+    String groupId;
+
+    ProgressDialog mProgressDialog;
+
+    public static RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,48 +78,91 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
         setSupportActionBar(mToolBar);
 
-        userid = AccountHolderInfo.getUserID();
-
+        getIntentValues(savedInstanceState);
         SelectedFriendList.setInstance(null);
 
-        FloatingActionButton nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
-        nextFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                checkSelectedPerson();
-            }
-        });
+        // TODO: 3.09.2018 - Resmi olmayan kullanicilar icin isim soyad bas harf ile resme ekleme yapalim. Uloader gibi
 
         initUI();
         getFriendSelectionPage();
+        addListeners();
     }
 
     private void initUI() {
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
+        recyclerView = findViewById(R.id.recyclerView);
     }
 
-    @Override
-    public void onStart(){
-        super.onStart();
-        reloadAdapter();
-    }
+    private void getIntentValues(Bundle savedInstanceState) {
 
-    private void reloadAdapter() {
+        Log.i("Info", "getIntentValues+++++++++++");
 
-        if(adapter.getItem(0) != null) {
-            FriendFragment friendFragment = new FriendFragment(SelectFriendToGroupActivity.this, userid, verticalShown);
-            adapter.updateFragment(0, friendFragment);
-            adapter.notifyDataSetChanged();
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                pendingActivityName = extras.getString(PUTEXTRA_ACTIVITY_NAME);
+            }
+        } else {
+            pendingActivityName = (String) savedInstanceState.getSerializable(PUTEXTRA_ACTIVITY_NAME);
         }
+
+        Intent i = getIntent();
+        groupId = (String) i.getSerializableExtra(PUTEXTRA_GROUP_ID);
+    }
+
+    public void addListeners(){
+
+        nextFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkSelectedPerson();
+            }
+        });
     }
 
     private void getFriendSelectionPage() {
 
-        adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
-        adapter.addFragment(new FriendFragment(SelectFriendToGroupActivity.this, userid, verticalShown)," ");
-        viewPager.setAdapter(adapter);
+        FriendList friendList = getUserFriends();
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new SelectFriendAdapter(this, friendList);
+        recyclerView.setAdapter(adapter);
+    }
+
+    public FriendList getUserFriends(){
+
+        FriendList friendListTemp = UserFriends.getFriendList();
+
+        if(pendingActivityName == null)
+            return friendListTemp;
+        else if(pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())){
+            if(DisplayGroupDetailActivity.groupParticipantList == null)
+                return friendListTemp;
+            else if(DisplayGroupDetailActivity.groupParticipantList.size() == 0)
+                return friendListTemp;
+            else{
+                return extractGroupParticipants(friendListTemp);
+            }
+        }else
+            return friendListTemp;
+    }
+
+    public FriendList extractGroupParticipants(FriendList friendListTemp){
+
+        for(UserProfileProperties userProfileProperties1 : DisplayGroupDetailActivity.groupParticipantList){
+
+            int index = 0;
+
+            for(UserProfileProperties userProfileProperties : friendListTemp.getResultArray()){
+
+                if(userProfileProperties.getUserid().equals(userProfileProperties1.getUserid())){
+                    friendListTemp.getResultArray().remove(index);
+                    break;
+                }
+                index = index + 1;
+            }
+        }
+        return friendListTemp;
     }
 
     public void checkSelectedPerson(){
@@ -103,26 +174,64 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
             return;
         }
 
-        /*if(comingPageName != null){
-            if(comingPageName.equals(DisplayGroupDetail.class.getSimpleName())) {
-                addFriendToGroup();
+        if(pendingActivityName != null){
+            if(pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
+                addParticipantToGroup();
                 finish();
-            }
+            }else if(pendingActivityName.equals(AddGroupActivity.class.getSimpleName()))
+                startActivity(new Intent(this, AddGroupActivity.class));
         }else
-            startActivity(new Intent(this, AddGroupDetailActivity.class));*/
-
-        startActivity(new Intent(this, AddGroupActivity.class));
+            startActivity(new Intent(this, AddGroupActivity.class));
     }
 
-    private void addFriendToGroup() {
+    private void addParticipantToGroup() {
 
-       /* for(Friend friend : selectedFriendListInstance.getSelectedFriendList()) {
-            DisplayGroupDetail.addFriendToGroup(friend);
+        GroupRequest groupRequest = new GroupRequest();
+        groupRequest.setGroupid(groupId);
+        groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
+        groupRequest.setGroupParticipantArray(fillSelectedFriendList());
+
+        // TODO: 30.08.2018 - ProgressDialog yada progressbar ekleyelim... 
+        //mProgressDialog = new ProgressDialog(this);
+        //mProgressDialog.setMessage(getResources().getString(R.string.friendsAdding));
+        //mProgressDialog.show();
+
+        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                //if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
+                DisplayGroupDetailActivity.groupParticipantList.addAll(selectedFriendListInstance.getSelectedFriendList().getResultArray());
+                DisplayGroupDetailActivity.reloadAdapter();
+                DisplayGroupDetailActivity.personCntTv.setText(Integer.toString(DisplayGroupDetailActivity.getParticipantCount()));
+                finish();
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                //if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
+                CommonUtils.showToast(SelectFriendToGroupActivity.this, getResources().getString(R.string.error) + e.getMessage());
+            }
+
+            @Override
+            public void onTaskContinue() {
+
+            }
+        }, groupRequest);
+
+        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public List<GroupRequestGroupParticipantArrayItem> fillSelectedFriendList(){
+
+        List<GroupRequestGroupParticipantArrayItem> selectedFriendList = new ArrayList<>();
+
+        for(UserProfileProperties userProfileProperties : selectedFriendListInstance.getSelectedFriendList().getResultArray()){
+            GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
+            groupRequestGroupParticipantArrayItem.setParticipantUserid(userProfileProperties.getUserid());
+            selectedFriendList.add(groupRequestGroupParticipantArrayItem);
         }
 
-        FirebaseAddFriendToGroupAdapter addFriendToGroupAdapter =
-                new FirebaseAddFriendToGroupAdapter(selectedFriendListInstance.getSelectedFriendList(), group.getGroupID());
-        addFriendToGroupAdapter.addFriendsToGroup();*/
+        return selectedFriendList;
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
-public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder>{
+public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> {
 
     public ImageLoader imageLoader;
     View view;
@@ -81,16 +82,15 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             adminDisplayButton = (Button) view.findViewById(R.id.adminDisplayButton);
             specialListLinearLayout = (LinearLayout) view.findViewById(R.id.specialListLinearLayout);
 
-            specialListLinearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+
+            specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public boolean onLongClick(View v) {
+                public void onClick(View v) {
 
                     hideKeyBoard(itemView);
                     ViewGroup viewGroup = (ViewGroup) v;
 
                     showGroupDetail();
-
-                    return true;
                 }
             });
         }
@@ -121,7 +121,6 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                         CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
                                 context.getResources().getString(R.string.technicalError));
                     }
-
                 }
             });
 
@@ -129,7 +128,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             alert.show();
         }
 
-        public void exitFromGroup(){
+        public void exitFromGroup() {
 
             final GroupRequest groupRequest = new GroupRequest();
             groupRequest.setRequestType(EXIT_GROUP);
@@ -155,7 +154,8 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
                 }
             }, groupRequest);
-            groupResultProcess.execute();
+
+            groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {
@@ -171,15 +171,11 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             Log.i("Info", "  >>groupRequestResultResultArrayItem.getGroupid()   :" + groupRequestResultResultArrayItem.getGroupid());
             Log.i("Info", "  >>==============================");
 
-
-            try {
-                if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID()))
-                    adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
-                else
-                    adminDisplayButton.setVisibility(View.GONE);
-            }catch (NullPointerException e){
+            if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID())) {
+                adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
+                adminDisplayButton.setVisibility(View.VISIBLE);
+            } else
                 adminDisplayButton.setVisibility(View.GONE);
-            }
         }
     }
 
@@ -190,9 +186,9 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         holder.setData(groupRequestResultResultArrayItem, position);
     }
 
-    public void hideKeyBoard(View view){
+    public void hideKeyBoard(View view) {
 
-        InputMethodManager inputMethodManager =(InputMethodManager)context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 

@@ -45,7 +45,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     FriendList friendList;
     SelectedFriendList selectedFriendList;
 
-    //ViewPager viewPagerHorizontal;
     RecyclerView horRecyclerView;
     LinearLayoutManager linearLayoutManager;
 
@@ -53,8 +52,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
     private static final int add_type = 1;
     private static final int remove_type = 0;
-
-    public int horAdapterPosition = 0;
 
     SelectedItemAdapter selectedItemAdapter = null;
 
@@ -96,7 +93,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         TextView nameTextView;
         TextView usernameTextView;
         ImageView profilePicImgView;
-        //CheckBox selectCheckBox;
         RadioButton selectRadioBtn;
         LinearLayout specialListLinearLayout;
         UserProfileProperties selectedFriend;
@@ -121,13 +117,11 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                     if (selectRadioBtn.isChecked()) {
                         selectRadioBtn.setChecked(false);
                         selectedFriendList.removeFriend(selectedFriend);
-                        //checkHorizontalAdapter(remove_type);
-                        checkHorizontalAdapter1(remove_type, selectedFriend, position);
+                        checkHorizontalAdapter(remove_type, selectedFriend, position);
                     } else {
                         selectRadioBtn.setChecked(true);
                         selectedFriendList.addFriend(selectedFriend);
-                        //checkHorizontalAdapter(add_type);
-                        checkHorizontalAdapter1(add_type, selectedFriend, position);
+                        checkHorizontalAdapter(add_type, selectedFriend, position);
                     }
                 }
             });
@@ -137,18 +131,19 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 public void onClick(View v) {
                     hideKeyBoard(itemView);
                     if (selectRadioBtn.isChecked()) {
-                        selectedFriendList.addFriend(selectedFriend);
-                        //checkHorizontalAdapter(add_type);
-                        checkHorizontalAdapter1(add_type, selectedFriend, position);
+                        if (!selectedFriendList.isUserInList(selectedFriend.getUserid())) {
+                            selectedFriendList.addFriend(selectedFriend);
+                            checkHorizontalAdapter(add_type, selectedFriend, position);
+                        }
                     } else {
-                        selectedFriendList.removeFriend(selectedFriend);
-                        //checkHorizontalAdapter(remove_type);
-                        checkHorizontalAdapter1(remove_type, selectedFriend, position);
+                        if (selectedFriendList.isUserInList(selectedFriend.getUserid())) {
+                            selectedFriendList.removeFriend(selectedFriend);
+                            checkHorizontalAdapter(remove_type, selectedFriend, position);
+                        }
                     }
                 }
             });
         }
-
 
         public void setData(UserProfileProperties selectedFriend, int position) {
             this.nameTextView.setText(selectedFriend.getName());
@@ -156,44 +151,27 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             this.position = position;
             this.selectedFriend = selectedFriend;
             imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), profilePicImgView, displayRounded);
-            updateSelectedPerson();
+            updateRadioButtonValue();
         }
 
-        public void updateSelectedPerson() {
+        public void updateRadioButtonValue() {
 
             if (selectedFriendList.getSelectedFriendList().getResultArray() == null)
                 return;
 
-            for (int index = 0; index < selectedFriendList.getSize(); index++) {
-                if (selectedFriend.getUserid().equals(selectedFriendList.getFriend(index).getUserid()))
-                    selectRadioBtn.setChecked(true);
-            }
+            if (selectedFriendList.isUserInList(selectedFriend.getUserid()))
+                selectRadioBtn.setChecked(true);
+            else
+                selectRadioBtn.setChecked(false);
         }
 
-        public void checkGUIElement(int type){
-
-            //if(type == add_type)
-            //    return;
-
-            selectRadioBtn.setChecked(false);
-            selectedFriendList.removeFriend(selectedFriend);
-        }
-
-        public void checkHorizontalAdapter1(final int type, UserProfileProperties selectedFriend, int vertPosition) {
+        public void checkHorizontalAdapter(final int type, UserProfileProperties selectedFriend, int vertPosition) {
 
             selectedItemAdapter = new SelectedItemAdapter(context, new ClickCallback() {
                 @Override
-                public void onItemClick(int horPosition) {
-                    Log.i("Info", "ClickCallback position:" + horPosition);
+                public void onItemClick() {
 
-                    //selectedItemAdapter.notifyItemRemoved(horPosition);
-                    //selectedItemAdapter.notifyItemRangeChanged(horPosition, getItemCount());
-
-                    selectedItemAdapter.notifyDataSetChanged();
-
-                    checkGUIElement(type);
-
-
+                    SelectFriendAdapter.this.notifyDataSetChanged();
 
                     if (selectedFriendList.getSize() == 0) {
                         horRecyclerView.setVisibility(View.GONE);
@@ -205,30 +183,17 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 horRecyclerView.setVisibility(View.VISIBLE);
                 horRecyclerView.setAdapter(selectedItemAdapter);
                 horAdapterUpdateChk = true;
-            }else {
-                if(type == add_type) {
-                    horRecyclerView.setAdapter(selectedItemAdapter);
-                    horRecyclerView.setVisibility(View.VISIBLE);
-                    //selectedItemAdapter.notifyItemInserted(selectedItemAdapter.getItemCount() + 1);
-                    //selectedItemAdapter.notifyItemRangeChanged(selectedItemAdapter.getItemCount() + 1, selectedItemAdapter.getItemCount());
-                }else {
-                    horRecyclerView.setAdapter(selectedItemAdapter);
+            } else {
+                // TODO: 31.08.2018 - Burada notifyDataSetChanged yemedi, nedenini bir ara inceleyelim???
+                horRecyclerView.setAdapter(selectedItemAdapter);
+                //selectedItemAdapter.notifyDataSetChanged();
 
-                    if (selectedFriendList.getSize() == 0) {
-                        horRecyclerView.setVisibility(View.GONE);
-                    }
+                if (selectedFriendList.getSize() == 0) {
+                    horRecyclerView.setVisibility(View.GONE);
+                } else if (horRecyclerView.getVisibility() == View.GONE) {
+                    horRecyclerView.setVisibility(View.VISIBLE);
                 }
             }
-
-            //horRecyclerView.setAdapter(selectedItemAdapter);
-
-
-            //if(type == add_type){
-            //    horRecyclerView.setVisibility(View.VISIBLE);
-            //}else {
-            //    if(selectedFriendList.getSize() == 0)
-            //        horRecyclerView.setVisibility(View.GONE);
-            // }
         }
     }
 

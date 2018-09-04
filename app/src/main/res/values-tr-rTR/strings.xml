@@ -37,12 +37,31 @@
     <string name="upperNo">HAYIR</string>
     <string name="lowerYes">Evet</string>
     <string name="lowerNo">Hayır</string>
+    <string name="youText">Siz</string>
+    <string name="removeFromGroup">  Gruptan Çikar</string>
+    <string name="viewTheProfile">  Profil Görüntüle</string>
+    <string name="createdAt">Oluşturuldu:</string>
+    <string name="changeAsAdmin">Admin olarak değiştir</string>
+    <string name="friendsAdding">Katılımcılar ekleniyor...</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
     <string name="addGroup">Yeni Grup</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
+    <string name="giveNewName">Yeni Isim Girin</string>
+    <string name="groupPhotoChanging">Değiştiriliyor...</string>
+
+    <!-- Location Settings constants-->
+    <string name="gpsSettings">GPS Ayarları</string>
+    <string name="gpsSettingMessage">GPS etkin değil. Konumu etkinleştirmek ve almak için ayarlara tıklayın, lütfen GPS"i açtıktan sonra uygulamayı tekrar başlatın.</string>
+    <string name="settings">Ayarlar</string>
+
+    <!-- Share tab item constants-->
+    <string name="gallery">Galeri</string>
+    <string name="photo">Fotoğraf</string>
+    <string name="video">Video</string>
+    <string name="text">Text</string>
 
     <array name="gender">
         <item>Erkek</item>

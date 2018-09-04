@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -106,7 +107,7 @@ public class PersonFragment extends Fragment {
             }
         }, userid, searchText);
 
-        searchResultProcess.execute();
+        searchResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void getData(){
@@ -114,10 +115,7 @@ public class PersonFragment extends Fragment {
         switch (viewType){
             case verticalShown:
 
-                UserDetailAdapter userDetailAdapter = null;
-
-                userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult, userid);
-
+                UserDetailAdapter userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult, userid);
                 personRecyclerView.setAdapter(userDetailAdapter);
                 linearLayoutManager = new LinearLayoutManager(context);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -132,6 +130,7 @@ public class PersonFragment extends Fragment {
             case gridShown:
                 //FriendGridListAdapter friendGridListAdapter = new FriendGridListAdapter(context, instance.getFriendList());
                 //personRecyclerView.setAdapter(friendGridListAdapter);
+
                 gridLayoutManager =new GridLayoutManager(context, 4);
                 personRecyclerView.setLayoutManager(gridLayoutManager);
                 break;

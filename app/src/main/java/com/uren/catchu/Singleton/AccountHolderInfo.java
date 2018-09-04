@@ -1,5 +1,6 @@
 package com.uren.catchu.Singleton;
 
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
@@ -110,7 +111,8 @@ public class AccountHolderInfo {
 
             }
         }, userid);
-        loadUserDetail.execute();
+
+        loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 }
