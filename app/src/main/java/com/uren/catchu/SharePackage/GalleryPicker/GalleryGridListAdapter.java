@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -15,11 +17,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.MainShareActivity;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridListAdapter.MyViewHolder> {
@@ -131,7 +136,26 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         origin.startActivityForResult(Intent.createChooser(intent,
-                context.getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
+                context.getResources().getString(R.string.selectPicture)), permissionModule.getShareGalleryPickerPerm());
+    }
+
+    public static void manageProfilePicChoosen(Intent data) {
+
+        Log.i("Info", "manageProfilePicChoosen++++++++++++++++++++++++++++++++");
+
+
+        Uri pictureUri = data.getData();
+        imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
+        try {
+            profileImageStream = getContentResolver().openInputStream(groupPictureUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        groupPhotoBitmap = BitmapFactory.decodeStream(profileImageStream);
+        getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
+        groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
+
+        groupPictureImgv.setImageBitmap(groupPhotoBitmap);
     }
 
 }

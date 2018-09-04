@@ -329,6 +329,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
             }
 
+
             @Override
             public void onTaskContinue() {
 

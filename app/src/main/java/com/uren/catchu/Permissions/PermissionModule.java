@@ -12,6 +12,7 @@ import static com.uren.catchu.Permissions.PermissionConstants.codeAccessFineLoca
 import static com.uren.catchu.Permissions.PermissionConstants.codeCameraPermission;
 import static com.uren.catchu.Permissions.PermissionConstants.codeImageGalleryPermission;
 import static com.uren.catchu.Permissions.PermissionConstants.codeRecordAudioPermission;
+import static com.uren.catchu.Permissions.PermissionConstants.codeShareGalleryPickerPerm;
 import static com.uren.catchu.Permissions.PermissionConstants.codeWriteExternalStoragePermission;
 
 public class PermissionModule {
@@ -104,6 +105,10 @@ public class PermissionModule {
 
     public int getImageGalleryPermission(){
         return codeImageGalleryPermission;
+    }
+
+    public int getShareGalleryPickerPerm(){
+        return codeShareGalleryPickerPerm;
     }
 
 }
