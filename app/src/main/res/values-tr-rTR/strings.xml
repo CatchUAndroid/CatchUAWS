@@ -44,4 +44,10 @@
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
 
+    <array name="gender">
+        <item>Erkek</item>
+        <item>Kadın</item>
+        <item>Belirtilmemiş</item>
+    </array>
+
 </resources>
