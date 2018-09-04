@@ -65,5 +65,18 @@
     <string name="cancel">Cancel</string>
     <string name="giveNewName">Write New Name</string>
     <string name="groupPhotoChanging">Photo is changing...</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- Location Settings constants-->
+    <string name="gpsSettings">GPS Settings</string>
+    <string name="gpsSettingMessage">GPS is not enabled. Click on setting to enable and get location, please start app again after turning on GPS.</string>
+    <string name="settings">Settings</string>
+
+    <!-- Share tab item constants-->
+    <string name="gallery">Gallery</string>
+    <string name="photo">Photo</string>
+    <string name="video">Video</string>
+    <string name="text">Text</string>
+
 
 </resources>

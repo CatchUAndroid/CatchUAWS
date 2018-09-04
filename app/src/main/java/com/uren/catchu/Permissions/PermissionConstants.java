@@ -6,5 +6,6 @@ public class PermissionConstants {
     public static final int codeCameraPermission = 1002;
     public static final int codeRecordAudioPermission = 1003;
     public static final int codeImageGalleryPermission = 1004;
+    public static final int codeAccessFineLocationPermission = 1005;
 
 }

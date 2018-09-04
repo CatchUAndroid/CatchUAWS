@@ -27,6 +27,9 @@ dependencies {
     implementation 'com.android.support:support-vector-drawable:26.1.0'
     implementation 'com.android.support:animated-vector-drawable:26.1.0'
 
+    implementation 'com.google.android.gms:play-services-maps:12.0.0'
+    implementation 'com.google.android.gms:play-services-location:12.0.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -62,6 +65,8 @@ dependencies {
 
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.+'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.6.+'
+
+    compile 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
 
     //Http Multipart dependencies
     //implementation 'org.apache.httpcomponents:httpcore:4.4'

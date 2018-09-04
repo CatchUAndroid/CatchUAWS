@@ -52,4 +52,15 @@
     <string name="giveNewName">Yeni Isim Girin</string>
     <string name="groupPhotoChanging">Değiştiriliyor...</string>
 
+    <!-- Location Settings constants-->
+    <string name="gpsSettings">GPS Ayarları</string>
+    <string name="gpsSettingMessage">GPS etkin değil. Konumu etkinleştirmek ve almak için ayarlara tıklayın, lütfen GPS"i açtıktan sonra uygulamayı tekrar başlatın.</string>
+    <string name="settings">Ayarlar</string>
+
+    <!-- Share tab item constants-->
+    <string name="gallery">Galeri</string>
+    <string name="photo">Fotoğraf</string>
+    <string name="video">Video</string>
+    <string name="text">Text</string>
+
 </resources>

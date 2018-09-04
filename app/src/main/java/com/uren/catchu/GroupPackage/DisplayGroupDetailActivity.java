@@ -88,8 +88,8 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     GroupRequestResult groupRequestResult;
     public static GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
 
-    private static final int adapterCameraSelected = 0;
-    private static final int adapterGallerySelected = 1;
+    private static final int CODE_CAMERA_SELECTED = 0;
+    private static final int CODE_GALLERY_SELECTED = 1;
 
     public int photoChoosenType;
     PermissionModule permissionModule;
@@ -352,14 +352,14 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
 
-                if (item == adapterCameraSelected) {
+                if (item == CODE_CAMERA_SELECTED) {
 
-                    photoChoosenType = adapterCameraSelected;
+                    photoChoosenType = CODE_CAMERA_SELECTED;
                     startCameraProcess();
 
-                } else if (item == adapterGallerySelected) {
+                } else if (item == CODE_GALLERY_SELECTED) {
 
-                    photoChoosenType = adapterGallerySelected;
+                    photoChoosenType = CODE_GALLERY_SELECTED;
                     startGalleryProcess();
 
                 } else
@@ -421,12 +421,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
         Log.i("Info", "manageProfilePicChoosen++++++++++++++++++++++++++++++++");
 
-        if (photoChoosenType == adapterCameraSelected) {
+        if (photoChoosenType == CODE_CAMERA_SELECTED) {
 
             groupPhotoBitmap = (Bitmap) data.getExtras().get("data");
             getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
 
-        } else if (photoChoosenType == adapterGallerySelected) {
+        } else if (photoChoosenType == CODE_GALLERY_SELECTED) {
 
             groupPictureUri = data.getData();
             imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
@@ -461,6 +461,9 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     public void updateGroup() {
 
+        mProgressDialog.setMessage(getResources().getString(R.string.groupPhotoChanging));
+        dialogShow();
+
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -482,7 +485,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                                 updateGroupToNeoJ(commonS3BucketResult.getDownloadUrl());
                             else {
                                 InputStream is = urlConnection.getErrorStream();
-                                CommonUtils.showToast(context, is.toString());
+                                CommonUtils.showToastLong(context, getResources().getString(R.string.error) + is.toString());
                             }
                         } catch (IOException e) {
                             CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
@@ -517,6 +520,14 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    public void dialogShow() {
+        if (!mProgressDialog.isShowing()) mProgressDialog.show();
+    }
+
+    public void dialogDismiss() {
+        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
+    }
+
     public void updateGroupToNeoJ(final String photoNewUrl) {
 
         final GroupRequest groupRequest = new GroupRequest();
@@ -529,9 +540,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         groupRequest.setUserid(AccountHolderInfo.getUserID());
         groupRequest.setGroupPhotoUrl(photoNewUrl);
 
-        mProgressDialog.setMessage(getResources().getString(R.string.groupPhotoChanging));
-        mProgressDialog.show();
-
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -539,12 +547,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                 imageLoader.removeImageViewFromMap(groupRequestResultResultArrayItem.getGroupPhotoUrl());
                 setGroupImage(photoNewUrl);
                 SearchFragment.reloadAdapter();
-                mProgressDialog.dismiss();
+                dialogDismiss();
             }
 
             @Override
             public void onFailure(Exception e) {
-                mProgressDialog.dismiss();
+                dialogDismiss();
                 CommonUtils.showToast(DisplayGroupDetailActivity.this, getResources().getString(R.string.error) + e.getMessage());
             }
 

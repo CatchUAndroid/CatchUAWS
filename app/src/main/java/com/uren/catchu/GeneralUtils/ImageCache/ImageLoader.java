@@ -34,6 +34,8 @@ import java.util.concurrent.Executors;
 
 import static com.uren.catchu.Constants.NumericConstants.friendImageShown;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
+import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
+import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
 public class ImageLoader {
 
@@ -59,7 +61,15 @@ public class ImageLoader {
         imageViewsss.remove(url);
     }
 
-    final int stub_id = R.drawable.man;
+    public int getImageId(){
+
+        if(fileChild.equals(friendsCacheDirectory))
+            return R.drawable.man;
+        else if(fileChild.equals(groupsCacheDirectory))
+            return R.drawable.user_groups;
+        else
+            return R.drawable.man;
+    }
 
     public void DisplayImage(String url, ImageView imageView, String displayType) {
 
@@ -305,7 +315,7 @@ public class ImageLoader {
                     //Picasso.with(context).load(photoToLoad.url).into(photoToLoad.imageView);
                     photoToLoad.imageView.setImageBitmap(bitmap);
             } else
-                photoToLoad.imageView.setImageResource(stub_id);
+                photoToLoad.imageView.setImageResource(getImageId());
         }
     }
 

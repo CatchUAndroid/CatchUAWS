@@ -81,6 +81,8 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         getIntentValues(savedInstanceState);
         SelectedFriendList.setInstance(null);
 
+        // TODO: 3.09.2018 - Resmi olmayan kullanicilar icin isim soyad bas harf ile resme ekleme yapalim. Uloader gibi
+
         initUI();
         getFriendSelectionPage();
         addListeners();

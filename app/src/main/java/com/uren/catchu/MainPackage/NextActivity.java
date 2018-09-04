@@ -32,6 +32,7 @@ import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.MainShareActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserFriends;
 import com.uren.catchu.Singleton.UserGroups;

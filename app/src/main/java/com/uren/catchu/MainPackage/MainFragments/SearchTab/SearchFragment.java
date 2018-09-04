@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -84,6 +85,8 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private TextView txtAddGroup;
     private Boolean refreshSearch = true;
 
+    PermissionModule permissionModule;
+
     // TODO(BUG) - Tab degistirip tekrar search e geldigimizde Person fragment ve Group Fragment funclar calismiyor
 
     @Override
@@ -108,18 +111,10 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
             refreshSearch = false;
         }
 
-        PermissionModule permissionModule = new PermissionModule(context);
-        permissionModule.checkPermissions();
+        permissionModule = new PermissionModule(context);
+        permissionModule.checkWriteExternalStoragePermission();
 
         return view;
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-
-       // if(adapter != null)
-       //     adapter.notifyDataSetChanged();
     }
 
     private void initializeItems() {
@@ -273,7 +268,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
         adapter.updateFragment(personFragmentTab, personFragment);
         personFragment.getSearchResult(userid, searchText);
-        //reloadAdapter();
     }
 
     public static void reloadAdapter() {

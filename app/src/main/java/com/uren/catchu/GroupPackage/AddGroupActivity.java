@@ -101,6 +101,7 @@ import catchu.model.UserProfileProperties;
 import static com.amazonaws.auth.policy.Principal.WebIdentityProviders.Amazon;
 import static com.uren.catchu.Constants.StringConstants.CREATE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
+import static com.uren.catchu.Constants.StringConstants.defSpace;
 import static com.uren.catchu.Constants.StringConstants.gridShown;
 
 public class AddGroupActivity extends AppCompatActivity {
@@ -130,6 +131,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
     RelativeLayout addGroupDtlRelLayout;
     Context context;
+    String downloadUrl = defSpace;
 
     List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
     GroupRequest groupRequest;
@@ -138,6 +140,8 @@ public class AddGroupActivity extends AppCompatActivity {
 
     private static final int adapterCameraSelected = 0;
     private static final int adapterGallerySelected = 1;
+
+    TextView participantSize;
 
     //ProgressBar progressBar;
 
@@ -162,19 +166,20 @@ public class AddGroupActivity extends AppCompatActivity {
 
         selectedFriendListInstance = SelectedFriendList.getInstance();
 
-        TextView participantSize = (TextView) findViewById(R.id.participantSize);
-        participantSize.setText(Integer.toString(selectedFriendListInstance.getSize()));
+        initUI();
+        addListeners();
+        openPersonSelectionPage();
+    }
 
+    public void initUI(){
+        participantSize = (TextView) findViewById(R.id.participantSize);
         groupPictureImgv = (ImageView) findViewById(R.id.groupPictureImgv);
         saveGroupInfoFab = (FloatingActionButton) findViewById(R.id.saveGroupInfoFab);
         groupNameEditText = (EditText) findViewById(R.id.groupNameEditText);
         addGroupDtlRelLayout = (RelativeLayout) findViewById(R.id.addGroupDtlRelLayout);
         recyclerView = findViewById(R.id.recyclerView);
-        //progressBar = findViewById(R.id.progressBar);
 
-        addListeners();
-
-        openPersonSelectionPage();
+        participantSize.setText(Integer.toString(selectedFriendListInstance.getSize()));
     }
 
     public void addListeners() {
@@ -194,7 +199,13 @@ public class AddGroupActivity extends AppCompatActivity {
                     return;
                 }
 
-                saveGroupToAmazon();
+                mProgressDialog.setMessage(getResources().getString(R.string.groupIsCreating));
+                dialogShow();
+
+                if (getGroupPhotoBitmapOrjinal != null)
+                    saveGroupToAmazon();
+                else
+                    processSaveGroup();
             }
         });
 
@@ -280,7 +291,7 @@ public class AddGroupActivity extends AppCompatActivity {
             checkCameraPermission();
     }
 
-    public void checkCameraPermission(){
+    public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
             requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
         else {
@@ -348,21 +359,21 @@ public class AddGroupActivity extends AppCompatActivity {
 
         Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
 
-        if(requestCode == permissionModule.getWriteExternalStoragePermissionCode()){
+        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkCameraPermission();
             }
-        }else if(requestCode == permissionModule.getCameraPermissionCode()){
+        } else if (requestCode == permissionModule.getCameraPermissionCode()) {
             Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
             startActivityForResult(intent, permissionModule.getCameraPermissionCode());
-        }else
+        } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 
-    public void processSaveGroup(String downloadUrl) {
+    public void processSaveGroup() {
 
         fillGroupParticipants();
-        fillGroupDetail(downloadUrl);
+        fillGroupDetail();
         saveGroupToNeoJ();
     }
 
@@ -377,7 +388,7 @@ public class AddGroupActivity extends AppCompatActivity {
         }
     }
 
-    private void fillGroupDetail(String downloadUrl) {
+    private void fillGroupDetail() {
 
         groupRequest = new GroupRequest();
         groupRequest.setUserid(AccountHolderInfo.getUserID());
@@ -387,18 +398,15 @@ public class AddGroupActivity extends AppCompatActivity {
         groupRequest.setGroupPhotoUrl(downloadUrl);
     }
 
-    public void dialogShow(){
-        if(!mProgressDialog.isShowing()) mProgressDialog.show();
+    public void dialogShow() {
+        if (!mProgressDialog.isShowing()) mProgressDialog.show();
     }
 
-    public void dialogDismiss(){
-        if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
+    public void dialogDismiss() {
+        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     }
 
-    public void saveGroupToAmazon(){
-
-        mProgressDialog.setMessage(getResources().getString(R.string.groupIsCreating));
-        dialogShow();
+    public void saveGroupToAmazon() {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -416,13 +424,14 @@ public class AddGroupActivity extends AppCompatActivity {
                         HttpURLConnection urlConnection = (HttpURLConnection) object;
 
                         try {
-                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK)
-                                processSaveGroup(commonS3BucketResult.getDownloadUrl());
-                            else {
+                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                                downloadUrl = commonS3BucketResult.getDownloadUrl();
+                                processSaveGroup();
+                            } else {
                                 InputStream is = urlConnection.getErrorStream();
                                 CommonUtils.showToast(context, is.toString());
                             }
-                        }catch (IOException e){
+                        } catch (IOException e) {
                             dialogDismiss();
                             CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
                         }
@@ -487,7 +496,7 @@ public class AddGroupActivity extends AppCompatActivity {
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void addGroupToUsersGroup(GroupRequestResult groupRequestResult){
+    public void addGroupToUsersGroup(GroupRequestResult groupRequestResult) {
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
         groupRequestResultResultArrayItem.setGroupAdmin(groupRequestResult.getResultArray().get(0).getGroupAdmin());
         groupRequestResultResultArrayItem.setGroupid(groupRequestResult.getResultArray().get(0).getGroupid());
