@@ -66,7 +66,7 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.+'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.6.+'
 
-    compile 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
+    implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
 
     //Http Multipart dependencies
     //implementation 'org.apache.httpcomponents:httpcore:4.4'

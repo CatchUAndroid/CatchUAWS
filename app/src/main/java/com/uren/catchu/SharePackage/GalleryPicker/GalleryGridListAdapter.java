@@ -144,18 +144,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         Log.i("Info", "manageProfilePicChoosen++++++++++++++++++++++++++++++++");
 
 
-        Uri pictureUri = data.getData();
-        imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
-        try {
-            profileImageStream = getContentResolver().openInputStream(groupPictureUri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        groupPhotoBitmap = BitmapFactory.decodeStream(profileImageStream);
-        getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
-        groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
-
-        groupPictureImgv.setImageBitmap(groupPhotoBitmap);
     }
 
 }
