@@ -10,6 +10,7 @@ public class NumericConstants {
     public static final int CODE_ADD_VALUE = 0;
     public static final int CODE_REMOVE_VALUE = 1;
     public static final int CODE_CHANGE_VALUE = 2;
+    public static final int RESPONSE_OK = 1;
 
 
 

@@ -7,7 +7,13 @@ import android.util.Log;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
 
+import java.math.BigDecimal;
+
+import catchu.model.Response;
 import catchu.model.UserProfile;
+
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
 
 public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
 
@@ -29,8 +35,18 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            instance.client.usersPost(userProfile);
-            return userProfile;
+
+            Response rsp = instance.client.usersPost(userProfile);
+
+
+            if(rsp.getError().getCode().intValue() == RESPONSE_OK){
+                Log.i("-> update response ", "successful");
+                return userProfile;
+            }else{
+                Log.i("-> update response ", "fail");
+                return null;
+            }
+
         } catch (Exception e) {
             mException = e;
             e.printStackTrace();
