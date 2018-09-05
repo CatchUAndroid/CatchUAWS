@@ -27,6 +27,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -157,7 +158,11 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
 
                 switch (tab.getPosition()) {
                     case TAB_VIDEO:
+                        hideKeyBoard();
                         videoPickerFrag.openCamera();
+                        break;
+                    case TAB_PHOTO:
+                        hideKeyBoard();
                         break;
                     default:
                         break;
@@ -174,8 +179,14 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
 
             }
         });
+    }
 
+    public void hideKeyBoard() {
 
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     public void checkWriteStoragePermission() {
@@ -239,17 +250,14 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
 
             Location location = locationTrackObj.getLocation();
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
-                    LatLng(location.getLatitude(),
-                    location.getLongitude()), 17));
+            if(location != null) {
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
+                        LatLng(location.getLatitude(),
+                        location.getLongitude()), 17));
 
-            LatLng latLng;
-            if (location != null)
-                latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            else
-                latLng = new LatLng(0.0, 0.0);
-
-            mapRipple = new MapRipple(mMap, latLng, MainShareActivity.this);
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                mapRipple = new MapRipple(mMap, latLng, MainShareActivity.this);
+            }
         }
     }
 
