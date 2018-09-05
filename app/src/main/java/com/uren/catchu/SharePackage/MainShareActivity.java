@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
@@ -46,14 +47,14 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.N
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.GalleryGridListAdapter;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
+import com.uren.catchu.SharePackage.Interfaces.OnActivityResult;
+import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
+import com.uren.catchu.SharePackage.VideoPicker.VideoPickerFrag;
 
 import java.util.List;
 
 import butterknife.BindView;
-
-import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class MainShareActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -71,6 +72,15 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
     SupportMapFragment mapFragment;
     ViewGroup.LayoutParams collapsingToolbarLayoutLayoutParams;
     int collapsingLayoutDefaultHeightSize;
+
+    GalleryPickerFrag galleryPickerFrag;
+    TextPickerFrag textPickerFrag;
+    VideoPickerFrag videoPickerFrag;
+
+    //Tab constants
+    private static final int TAB_TEXT = 0;
+    private static final int TAB_PHOTO = 1;
+    private static final int TAB_VIDEO = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +150,32 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
             }
         });*/
 
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+                switch (tab.getPosition()) {
+                    case TAB_VIDEO:
+                        videoPickerFrag.openCamera();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+
     }
 
     public void checkWriteStoragePermission() {
@@ -166,18 +202,13 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
 
         SpecialSelectTabAdapter adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
 
-        GalleryPickerFrag galleryPickerFrag = new GalleryPickerFrag();
+        galleryPickerFrag = new GalleryPickerFrag();
+        textPickerFrag = new TextPickerFrag();
+        videoPickerFrag = new VideoPickerFrag();
 
-        NewsList n1 = new NewsList();
-        NewsList n2 = new NewsList();
-        NewsList n3 = new NewsList();
-        NewsList n4 = new NewsList();
-        NewsList n5 = new NewsList();
-
-        adapter.addFragment(n1, getResources().getString(R.string.text));
-        adapter.addFragment(galleryPickerFrag, getResources().getString(R.string.gallery));
-        adapter.addFragment(n2, getResources().getString(R.string.photo));
-        adapter.addFragment(n3, getResources().getString(R.string.video));
+        adapter.addFragment(textPickerFrag, getResources().getString(R.string.text));
+        adapter.addFragment(galleryPickerFrag, getResources().getString(R.string.photo));
+        adapter.addFragment(videoPickerFrag, getResources().getString(R.string.video));
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -236,16 +267,27 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
             locationManager.removeUpdates(locationTrackObj);
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         Log.i("Info", "MainShareActivity onActivityResult");
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == permissionModule.getShareGalleryPickerPerm()) {
-                GalleryGridListAdapter.manageProfilePicChoosen(data);
+
+                galleryPickerFrag.gridListAdapter.manageProfilePicChoosen(data);
+
             } else
                 CommonUtils.showToast(MainShareActivity.this, getResources().getString(R.string.technicalError) + requestCode);
         }
+    }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(galleryPickerFrag.gridListAdapter != null){
+            galleryPickerFrag.gridListAdapter.onActivityResult(requestCode,resultCode,data);
+        }
     }
+
 }

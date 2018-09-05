@@ -53,6 +53,7 @@ import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.HttpHandler;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
@@ -330,12 +331,10 @@ public class AddGroupActivity extends AppCompatActivity {
         if (photoChoosenType == adapterCameraSelected) {
 
             groupPhotoBitmap = (Bitmap) data.getExtras().get("data");
-            getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
-            groupPictureUri = UriAdapter.getImageUri(getApplicationContext(), groupPhotoBitmap);
-            imageRealPath = UriAdapter.getRealPathFromCameraURI(groupPictureUri, this);
+            groupPictureUri = data.getData();
+            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
+            getGroupPhotoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, groupPhotoBitmap);
             groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
-            groupPhotoBitmap = BitmapConversion.getBitmapOriginRotate(groupPhotoBitmap, imageRealPath);
-
         } else if (photoChoosenType == adapterGallerySelected) {
 
             groupPictureUri = data.getData();
@@ -346,7 +345,7 @@ public class AddGroupActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             groupPhotoBitmap = BitmapFactory.decodeStream(profileImageStream);
-            getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
+            getGroupPhotoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, groupPhotoBitmap);
             groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
         }
 

@@ -27,8 +27,6 @@ import butterknife.ButterKnife;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 @SuppressLint("ValidFragment")
 public class GroupFragment extends Fragment {
 

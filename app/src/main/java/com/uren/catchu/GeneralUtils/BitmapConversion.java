@@ -19,8 +19,10 @@ public class BitmapConversion extends AppCompatActivity {
 
         Bitmap orientedBitmap;
 
-        if(imagePath != null)
-            orientedBitmap = ExifUtil.rotateBitmap(imagePath, scaleBitmapImage);
+        if(imagePath != null) {
+            //orientedBitmap = ExifUtil.rotateBitmap(imagePath, scaleBitmapImage);
+            orientedBitmap = ExifUtil.rotateImageIfRequired(imagePath, scaleBitmapImage);
+        }
         else
             orientedBitmap = scaleBitmapImage;
 
@@ -49,7 +51,8 @@ public class BitmapConversion extends AppCompatActivity {
 
     public static Bitmap getBitmapOriginRotate(Bitmap scaleBitmapImage, String imagePath){
 
-        Bitmap orientedBitmap = ExifUtil.rotateBitmap(imagePath, scaleBitmapImage);
+        //Bitmap orientedBitmap = ExifUtil.rotateBitmap(imagePath, scaleBitmapImage);
+        Bitmap orientedBitmap = ExifUtil.rotateImageIfRequired(imagePath, scaleBitmapImage);
         return orientedBitmap;
     }
 

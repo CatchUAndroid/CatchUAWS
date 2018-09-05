@@ -22,6 +22,8 @@
     <color name="red">#FE3824</color>
     <color name="text_shadow">#7F000000</color>
     <color name="text_shadow_white">#FFFFFF</color>
+    <color name="egg_shell">#EFEEED</color>
+    <color name="red_record">#CE0B24</color>
 
     <!--Indigo 500-->
     <color name="primary_500">#3F51B5</color>

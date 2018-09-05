@@ -26,7 +26,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.SearchResult;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.gridShown;
 import static com.uren.catchu.Constants.StringConstants.horizontalShown;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
@@ -86,7 +85,7 @@ public class PersonFragment extends Fragment {
 
     public void getSearchResult(String userid, String searchText){
 
-        SearchResultProcess searchResultProcess = new SearchResultProcess(getApplicationContext(), new OnEventListener<SearchResult>() {
+        SearchResultProcess searchResultProcess = new SearchResultProcess(context, new OnEventListener<SearchResult>() {
 
             @Override
             public void onSuccess(SearchResult object) {

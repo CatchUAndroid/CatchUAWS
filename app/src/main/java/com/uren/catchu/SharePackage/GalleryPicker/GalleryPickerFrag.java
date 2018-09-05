@@ -14,6 +14,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.uren.catchu.R;
 
@@ -26,7 +28,10 @@ import butterknife.ButterKnife;
 @SuppressLint("ValidFragment")
 public class GalleryPickerFrag extends Fragment {
 
-    RecyclerView personRecyclerView;
+    RecyclerView specialRecyclerView;
+    RelativeLayout photoRelLayout;
+    ImageView imageView;
+    ImageView cancelImageView;
 
     private View mView;
     private ArrayList<File> mFiles;
@@ -39,10 +44,10 @@ public class GalleryPickerFrag extends Fragment {
     private static final String EXTENSION_PNG = ".png";
 
     private static final int MARGING_GRID = 2;
-    private static final int maxImageCount = 23;
+    private static final int maxImageCount = 22;
     private static final int spanCount = 3;
 
-    GalleryGridListAdapter gridListAdapter;
+    public GalleryGridListAdapter gridListAdapter;
 
 
     @Override
@@ -62,19 +67,21 @@ public class GalleryPickerFrag extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        personRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
+        specialRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
+        photoRelLayout = mView.findViewById(R.id.photoRelLayout);
+        imageView = mView.findViewById(R.id.imageView);
+        cancelImageView = mView.findViewById(R.id.cancelImageView);
         getData();
     }
 
     public void getData() {
 
         fetchMedia();
-
-        gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles);
-        personRecyclerView.setAdapter(gridListAdapter);
+        gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this);
+        specialRecyclerView.setAdapter(gridListAdapter);
         gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
-        personRecyclerView.addItemDecoration(addItemDecoration());
-        personRecyclerView.setLayoutManager(gridLayoutManager);
+        specialRecyclerView.addItemDecoration(addItemDecoration());
+        specialRecyclerView.setLayoutManager(gridLayoutManager);
     }
 
     private RecyclerView.ItemDecoration addItemDecoration() {

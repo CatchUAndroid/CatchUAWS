@@ -24,10 +24,9 @@
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/htab_collapse_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="150dp"
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
                 app:titleEnabled="false">
 
                 <fragment
@@ -42,11 +41,14 @@
             <android.support.design.widget.TabLayout
                 android:id="@+id/htab_tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="bottom"
                 app:tabIndicatorColor="@android:color/black"
+                app:tabIndicatorHeight="5dp"
                 app:tabSelectedTextColor="@android:color/holo_blue_bright"
-                app:tabTextColor="@color/green"/>
+                app:tabTextColor="@color/white"
+                app:tabGravity="fill"
+                android:background="@color/tintColor"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -55,7 +57,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -32,6 +32,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
@@ -64,7 +65,7 @@ import static com.uren.catchu.Constants.StringConstants.UPDATE_GROUP_INFO;
 import static com.uren.catchu.Constants.StringConstants.displayRectangle;
 import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
-public class DisplayGroupDetailActivity extends AppCompatActivity implements GroupDetailListAdapter.ItemClickListener{
+public class DisplayGroupDetailActivity extends AppCompatActivity implements GroupDetailListAdapter.ItemClickListener {
 
 
     ImageView groupPictureImgV;
@@ -191,7 +192,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         personCntTv.setText(Integer.toString(groupParticipantList.size()));
     }
 
-    public static int getParticipantCount(){
+    public static int getParticipantCount() {
         return groupParticipantList.size();
     }
 
@@ -425,7 +426,9 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         if (photoChoosenType == CODE_CAMERA_SELECTED) {
 
             groupPhotoBitmap = (Bitmap) data.getExtras().get("data");
-            getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
+            groupPictureUri = data.getData();
+            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
+            getGroupPhotoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, groupPhotoBitmap);
 
         } else if (photoChoosenType == CODE_GALLERY_SELECTED) {
 

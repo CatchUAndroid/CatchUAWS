@@ -1,14 +1,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/specialSelectRelLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/specialSelectRelLayout">
+    android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
+        android:id="@+id/specialRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/specialRecyclerView">
+        android:layout_height="match_parent">
+
     </android.support.v7.widget.RecyclerView>
 
-    <include layout="@layout/layout_progress_bar"/>
+    <include layout="@layout/layout_progress_bar" />
+
+    <RelativeLayout
+        android:id="@+id/photoRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/gallery" />
+
+        <ImageView
+            android:id="@+id/cancelImageView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/img_border_white"
+            android:src="@drawable/cancel_gray" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

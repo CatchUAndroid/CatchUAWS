@@ -88,7 +88,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         myViewHolder.setData(userProfileProperties, position);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class MyViewHolder extends RecyclerView.ViewHolder{
 
         TextView nameTextView;
         TextView usernameTextView;

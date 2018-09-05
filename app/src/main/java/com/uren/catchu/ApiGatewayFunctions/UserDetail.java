@@ -26,7 +26,6 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-
             UserProfile userProfile = instance.client.usersGet(userid);
             return userProfile;
         } catch (Exception e) {
