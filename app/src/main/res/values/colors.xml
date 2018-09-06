@@ -32,6 +32,6 @@
     <!--Pink 500-->
 
     <color name="dot_dark_screen3">#ff0000</color>
-
+    <color name="statusFollowing">#1565C0</color>
 
 </resources>

@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -35,10 +36,13 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
+import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
@@ -48,18 +52,29 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.util.Calendar;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.CommonS3BucketResult;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_FAIL;
+import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_OK;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
+import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
+
+import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
+import static com.uren.catchu.Constants.StringConstants.defSpace;
 
 public class UserEditFragment extends BaseFragment
         implements View.OnClickListener {
@@ -67,6 +82,8 @@ public class UserEditFragment extends BaseFragment
     View mView;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private UserProfile userProfile;
+    UserProfileProperties userProfileProperties ;
+    UserProfile tempUser;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -126,15 +143,13 @@ public class UserEditFragment extends BaseFragment
     ArrayAdapter<String> genderSpinnerAdapter;
 
     //Change Image variables
+    String downloadUrl = defSpace;
+    PhotoSelectAdapter photoSelectAdapter;
     private int adapterCameraSelected = 0;
     private int adapterGallerySelected = 1;
     public int photoChoosenType;
     PermissionModule permissionModule;
-    private Bitmap groupPhotoBitmap = null;
-    private Bitmap getGroupPhotoBitmapOrjinal = null;
-    private Uri groupPictureUri = null;
-    private String imageRealPath;
-    private InputStream profileImageStream;
+
 
     public UserEditFragment() {
 
@@ -147,12 +162,12 @@ public class UserEditFragment extends BaseFragment
         mView = inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
         ButterKnife.bind(this, mView);
 
-        setUpToolbar();
+        init();
 
         return mView;
     }
 
-    private void setUpToolbar() {
+    private void init() {
 
         txtSave.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
@@ -165,6 +180,10 @@ public class UserEditFragment extends BaseFragment
 
         setBirthDayDataSetListener();
         setGenderClickListener();
+
+        profilPicChanged = false;
+        tempUser = new UserProfile();
+        userProfileProperties = new UserProfileProperties();
 
 
     }
@@ -323,7 +342,6 @@ public class UserEditFragment extends BaseFragment
 
     }
 
-    UserProfileProperties userProfileProperties = new UserProfileProperties();
     private void editProfileConfirmClicked() {
 
         final UserProfile userProfile = AccountHolderInfo.getInstance().getUser();
@@ -373,15 +391,104 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setGender(selectedGender);
         }
 
-        UserProfile tempUser = new UserProfile();
-        tempUser.setUserInfo(userProfileProperties);
-        tempUser.setRequestType("USER_PROFILE_UPDATE");
 
-        updateUserProfile(tempUser);
+        updateUserProfile2();
 
     }
 
-    private void updateUserProfile(UserProfile tempUser) {
+    private void updateUserProfile2() {
+
+        if(profilPicChanged){
+
+            savePicToS3_and_updateUserProfile();
+
+
+        }else{
+
+            updateUserProfile();
+
+
+        }
+
+
+
+
+    }
+
+    private void savePicToS3_and_updateUserProfile() {
+
+        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                final CommonS3BucketResult commonS3BucketResult = (CommonS3BucketResult) object;
+
+                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getFileExtention());
+                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getSignedUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getDownloadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
+
+                UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        HttpURLConnection urlConnection = (HttpURLConnection) object;
+
+                        try {
+                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                                downloadUrl = commonS3BucketResult.getDownloadUrl();
+                                userProfileProperties.setProfilePhotoUrl(downloadUrl);
+                                Log.i("downloadUrl ", downloadUrl);
+                                updateUserProfile();
+
+                            } else {
+                                InputStream is = urlConnection.getErrorStream();
+                                //CommonUtils.showToast(context, is.toString());
+                            }
+                        } catch (IOException e) {
+                            //dialogDismiss();
+                            //CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
+                        }
+
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+                        progressBar.setVisibility(View.VISIBLE);
+                    }
+                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getSignedUrl());
+
+                uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onTaskContinue() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }, JPG_TYPE);
+
+        signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
+
+    }
+
+    private void updateUserProfile() {
+
+        tempUser.setUserInfo(userProfileProperties);
+        tempUser.setRequestType(USER_PROFILE_UPDATE);
+
+        Log.i("tempUser-Url ", tempUser.getUserInfo().getProfilePhotoUrl() );
 
         //Asenkron Task başlatır.
         UpdateUserProfile updateUserProfile = new UpdateUserProfile(getActivity(), new OnEventListener<UserProfile>() {
@@ -400,20 +507,18 @@ public class UserEditFragment extends BaseFragment
                     userProfile.getUserInfo().setGender(up.getUserInfo().getGender());
                     userProfile.getUserInfo().setProfilePhotoUrl(up.getUserInfo().getProfilePhotoUrl());
 
-
                 }
 
                 progressBar.setVisibility(View.GONE);
+                showResultDialog(UPDATE_RESULT_OK);
 
-                //Go back
-                ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
-                getActivity().onBackPressed();
             }
 
             @Override
             public void onFailure(Exception e) {
                 Log.i("update", "fail");
                 progressBar.setVisibility(View.GONE);
+                showResultDialog(UPDATE_RESULT_FAIL);
 
             }
 
@@ -425,6 +530,57 @@ public class UserEditFragment extends BaseFragment
 
         updateUserProfile.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+
+    }
+
+    public void hideKeyBoard(){
+
+        Log.i("Info", "hideKeyBoard");
+
+        if(getActivity().getCurrentFocus() != null){
+            InputMethodManager inputMethodManager =(InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
+
+
+    }
+
+    private void showResultDialog(final int result) {
+
+        hideKeyBoard();
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Dialog_Alert);
+        builder.setTitle("OPPS!");
+
+        if(result == UPDATE_RESULT_OK){
+            builder.setMessage("Profil başarıyla güncellendi");
+        }
+        else{
+            builder.setIcon(R.drawable.toast_error_icon);
+            builder.setMessage("Profil güncelleme başarısız");
+        }
+
+        builder.setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+
+                if(result == UPDATE_RESULT_OK){
+                    //Go back
+                    ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
+                    getActivity().onBackPressed();
+                }
+                else{
+                    //do nothing
+                }
+
+
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
 
     }
 
@@ -507,57 +663,42 @@ public class UserEditFragment extends BaseFragment
                 getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
+    boolean profilPicChanged;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
 
+            profilPicChanged = true;
+
             if (requestCode == permissionModule.getCameraPermissionCode()) {
-                manageProfilePicChoosen(data);
+                photoSelectAdapter = new PhotoSelectAdapter((NextActivity) getActivity(), data, CAMERA_TEXT);
+                manageProfilePicChoosen();
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
-                manageProfilePicChoosen(data);
+                photoSelectAdapter = new PhotoSelectAdapter((NextActivity) getActivity(), data, GALLERY_TEXT);
+                manageProfilePicChoosen();
             } else
                 CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError) + requestCode);
         }
     }
 
 
-    private void manageProfilePicChoosen(Intent data) {
-
-        Log.i("Info", "manageProfilePicChoosen++++++++++++++++++++++++++++++++");
-
-        if (photoChoosenType == adapterCameraSelected) {
-
-            groupPhotoBitmap = (Bitmap) data.getExtras().get("data");
-            getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
-            groupPictureUri = UriAdapter.getImageUri(getApplicationContext(), groupPhotoBitmap);
-            imageRealPath = UriAdapter.getRealPathFromCameraURI(groupPictureUri, getActivity());
-            groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
-            groupPhotoBitmap = BitmapConversion.getBitmapOriginRotate(groupPhotoBitmap, imageRealPath);
-
-        } else if (photoChoosenType == adapterGallerySelected) {
-
-            groupPictureUri = data.getData();
-            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
-            try {
-                profileImageStream = getActivity().getContentResolver().openInputStream(groupPictureUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            groupPhotoBitmap = BitmapFactory.decodeStream(profileImageStream);
-            getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
-            groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
-        }
-
+    private void manageProfilePicChoosen() {
 
         //Profile picture
         Picasso.with(getActivity())
                 //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                .load(groupPictureUri)
+                .load(photoSelectAdapter.getPictureUri())
                 .transform(new CircleTransform())
                 .into(imgProfile);
 
-        userProfileProperties.setProfilePhotoUrl(groupPictureUri.toString());
+
+    }
+
+
+    public void savePicToS3() {
+
 
     }
 

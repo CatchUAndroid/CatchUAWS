@@ -85,5 +85,9 @@
     <string name="video">Video</string>
     <string name="text">Text</string>
 
+    <string name="signOut">Sign Out</string>
+    <string name="followers">Followers</string>
+    <string name="followings">Followings</string>
+
 
 </resources>

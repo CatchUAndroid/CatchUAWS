@@ -5,91 +5,73 @@
     android:layout_height="match_parent"
     tools:context=".MainPackage.MainFragments.Profile.SubFragments.SettingsFragment">
 
+    <include layout="@layout/layout_progress_bar" />
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorPrimary">
-
-        <LinearLayout
-            android:id="@+id/l1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:orientation="vertical"
-            android:weightSum="4">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.5">
-
-            </LinearLayout>
-
-            <!-- değişiklikler burada yapılmalı/-->
-            <LinearLayout
-                android:id="@+id/l2"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginBottom="20dp"
-                android:layout_weight="3"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="30dp">
-
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:paddingLeft="10dp"
-                        android:src="@mipmap/search" />
-
-
-                    <EditText
-                        android:id="@+id/editTextSearch"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:layout_marginLeft="30dp"
-                        android:layout_marginRight="30dp"
-                        android:gravity="left"
-                        android:hint="Ara"
-                        android:inputType="text"
-                        android:paddingStart="10dp"
-                        android:textColor="@color/white"
-                        android:textColorHint="@color/clearWhite" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:paddingRight="30dp"
-                        android:src="@mipmap/cancel2"
-                        android:visibility="gone" />
-
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-
-
-    </android.support.v7.widget.Toolbar>
-
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="FOLLOWER fragment" />
+        android:orientation="vertical">
+
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:background="@color/colorPrimary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:weightSum="5">
+
+                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="0.7"
+                    android:gravity="left"
+                    android:src="@drawable/back_arrow2" />
+
+                <TextView
+                    android:id="@+id/toolbarTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="3.3"
+                    android:gravity="center|left"
+                    android:text="@string/followers"
+                    android:textColor="@android:color/white"
+                    android:textSize="25sp" />
+
+                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                    android:id="@+id/imgAddFollower"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:src="@drawable/add_person" />
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/follower_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+
+    </LinearLayout>
+
+
 
 </RelativeLayout>

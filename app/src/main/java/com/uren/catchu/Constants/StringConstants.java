@@ -55,5 +55,12 @@ public class StringConstants {
     public static final String CAMERA_TEXT = "CAMERA";
     public static final String GALLERY_TEXT = "GALLERY";
 
+    //UserProfile Request Types
+    public static final String USER_PROFILE_UPDATE = "USER_PROFILE_UPDATE";
+
+    //Follow Request Types
+    public static final String GET_USER_FOLLOWERS = "GET_USER_FOLLOWERS";
+    public static final String GET_USER_FOLLOWINGS = "GET_USER_FOLLOWINGS";
+
 
 }

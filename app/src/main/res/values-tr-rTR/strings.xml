@@ -69,4 +69,8 @@
         <item>Belirtilmemiş</item>
     </array>
 
+    <string name="signOut">Çıkış yap</string>
+    <string name="followers">Takipçiler</string>
+    <string name="followings">Takiptesin</string>
+
 </resources>

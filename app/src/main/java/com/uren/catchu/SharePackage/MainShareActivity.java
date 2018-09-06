@@ -282,12 +282,6 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
         }
     }*/
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(galleryPickerFrag.gridListAdapter != null){
-            galleryPickerFrag.gridListAdapter.onActivityResult(requestCode,resultCode,data);
-        }
-    }
+
 
 }
