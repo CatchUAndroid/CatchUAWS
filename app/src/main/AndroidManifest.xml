@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -57,6 +57,7 @@
         <activity android:name=".GroupPackage.AddGroupActivity" />
         <activity android:name=".GroupPackage.SelectFriendToGroupActivity" />
         <activity android:name=".GroupPackage.DisplayGroupDetailActivity" />
+        <activity android:name=".SharePackage.VideoPicker.WillDelete.AudioRecorderActivity" />
         <activity
             android:name=".GroupPackage.EditGroupNameActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -73,7 +74,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".SharePackage.VideoPicker.VideoTestActivity"></activity>
+        <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
+        <activity android:name=".SharePackage.ShareDetailActivity"></activity>
     </application>
 
 </manifest>

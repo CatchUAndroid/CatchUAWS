@@ -3,7 +3,7 @@ package com.uren.catchu.Constants;
 public class StringConstants {
 
     public static final String APP_NAME = "CatchU";
-    public static final String defSpace = " ";
+    public static final String SPACE_VALUE = " ";
 
     //image display type
     public static final String displayRounded = "rounded";
@@ -55,6 +55,7 @@ public class StringConstants {
 
     public static final String CAMERA_TEXT = "CAMERA";
     public static final String GALLERY_TEXT = "GALLERY";
+    public static final String FROM_FILE_TEXT = "FROM_FILE";
 
 
 }

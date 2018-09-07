@@ -277,8 +277,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //getSearchResult(userid, defSpace);
     }
 
     @Override

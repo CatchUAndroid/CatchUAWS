@@ -102,7 +102,7 @@ import catchu.model.UserProfileProperties;
 import static com.amazonaws.auth.policy.Principal.WebIdentityProviders.Amazon;
 import static com.uren.catchu.Constants.StringConstants.CREATE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
-import static com.uren.catchu.Constants.StringConstants.defSpace;
+import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.gridShown;
 
 public class AddGroupActivity extends AppCompatActivity {
@@ -132,7 +132,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
     RelativeLayout addGroupDtlRelLayout;
     Context context;
-    String downloadUrl = defSpace;
+    String downloadUrl = SPACE_VALUE;
 
     List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
     GroupRequest groupRequest;

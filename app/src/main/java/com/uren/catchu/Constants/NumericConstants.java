@@ -1,5 +1,7 @@
 package com.uren.catchu.Constants;
 
+import java.security.PublicKey;
+
 public class NumericConstants {
 
     //Bitmap circular constants
@@ -11,6 +13,8 @@ public class NumericConstants {
     public static final int CODE_REMOVE_VALUE = 1;
     public static final int CODE_CHANGE_VALUE = 2;
     public static final int RESPONSE_OK = 1;
+
+    public static final int MAX_VIDEO_DURATION = 5;
 
 
 

@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -41,6 +43,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.ShareRequestProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GroupPackage.AddGroupActivity;
@@ -51,28 +55,23 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
 import com.uren.catchu.SharePackage.Interfaces.OnActivityResult;
 import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
+import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.VideoPickerFrag;
+import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.ShareItems;
 
 import java.util.List;
 
 import butterknife.BindView;
+import catchu.model.ShareRequest;
 
-public class MainShareActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MainShareActivity extends FragmentActivity{
 
     TabLayout tabLayout;
     ViewPager viewPager;
-    CollapsingToolbarLayout collapsingToolbarLayout;
     AppBarLayout appBarLayout;
-
-    private GoogleMap mMap;
+    FloatingActionButton nextButton;
     PermissionModule permissionModule;
-
-    LocationManager locationManager;
-    private LocationTrackerAdapter locationTrackObj;
-    private MapRipple mapRipple;
-    SupportMapFragment mapFragment;
-    ViewGroup.LayoutParams collapsingToolbarLayoutLayoutParams;
-    int collapsingLayoutDefaultHeightSize;
 
     GalleryPickerFrag galleryPickerFrag;
     TextPickerFrag textPickerFrag;
@@ -83,6 +82,9 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
     private static final int TAB_PHOTO = 1;
     private static final int TAB_VIDEO = 2;
 
+    private int tabSelectedPosition = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,41 +92,25 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
 
         permissionModule = new PermissionModule(MainShareActivity.this);
 
-        mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
         initVariables();
         addListeners();
-        checkCanGetLocation();
-        getCollapsingBarHeight();
         checkWriteStoragePermission();
-
     }
 
     private void initVariables() {
         tabLayout = findViewById(R.id.htab_tabs);
         viewPager = findViewById(R.id.htab_viewpager);
-        collapsingToolbarLayout = findViewById(R.id.htab_collapse_toolbar);
         appBarLayout = findViewById(R.id.htab_appbar);
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        locationTrackObj = new LocationTrackerAdapter(MainShareActivity.this);
-    }
-
-    private void getCollapsingBarHeight() {
-        collapsingToolbarLayoutLayoutParams = collapsingToolbarLayout.getLayoutParams();
-        collapsingLayoutDefaultHeightSize = collapsingToolbarLayoutLayoutParams.height;
+        nextButton = findViewById(R.id.nextButton);
+        ShareItems.setInstance(null);
+        ShareItems.getInstance();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == permissionModule.getAccessFineLocationCode()) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initializeMap(mMap);
-            }
-        } else if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
+        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setUpPager();
             } else
@@ -134,32 +120,16 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
 
     private void addListeners() {
 
-        // TODO: 3.09.2018 - Scroll yaptigimizda harita uzerinde current loc yukarda kaliyor.
-
-        /*appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-            @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-                //Log.i("Info", "befOffsetValue:" + Integer.toString(befOffsetValue));
-                Log.i("Info", "verticalOffset:" + Integer.toString(verticalOffset));
-
-                ViewGroup.LayoutParams params = appBarLayout.getLayoutParams();
-
-                collapsingToolbarLayoutLayoutParams.height = params.height;
-                collapsingToolbarLayout.setLayoutParams(collapsingToolbarLayoutLayoutParams);
-
-
-            }
-        });*/
-
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
+                tabSelectedPosition = tab.getPosition();
+
                 switch (tab.getPosition()) {
                     case TAB_VIDEO:
                         hideKeyBoard();
-                        videoPickerFrag.openCamera();
+                        //videoPickerFrag.openCamera();
                         break;
                     case TAB_PHOTO:
                         hideKeyBoard();
@@ -177,6 +147,16 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
 
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (CheckShareItems.shareIsPossible())
+                    startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
+                else
+                    CommonUtils.showToast(MainShareActivity.this, getResources().getString(R.string.pleaseAddShareItem));
             }
         });
     }
@@ -199,16 +179,6 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
             setUpPager();
     }
 
-    private void checkCanGetLocation() {
-
-        if (!locationTrackObj.canGetLocation())
-            locationTrackObj.showSettingsAlert();
-        else {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                permissionModule.checkAccessFineLocationPermission();
-        }
-    }
-
     private void setUpPager() {
 
         SpecialSelectTabAdapter adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
@@ -226,75 +196,13 @@ public class MainShareActivity extends FragmentActivity implements OnMapReadyCal
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (permissionModule.checkAccessFineLocationPermission())
-                initializeMap(mMap);
-            else
-                ActivityCompat.requestPermissions(MainShareActivity.this,
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        permissionModule.getAccessFineLocationCode());
-        } else
-            initializeMap(mMap);
-    }
-
-    private void initializeMap(GoogleMap mMap) {
-        if (mMap != null) {
-            mMap.getUiSettings().setScrollGesturesEnabled(true);
-            mMap.getUiSettings().setAllGesturesEnabled(true);
-
-            if (permissionModule.checkAccessFineLocationPermission())
-                mMap.setMyLocationEnabled(true);
-
-            Location location = locationTrackObj.getLocation();
-
-            if(location != null) {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
-                        LatLng(location.getLatitude(),
-                        location.getLongitude()), 17));
-
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mapRipple = new MapRipple(mMap, latLng, MainShareActivity.this);
-            }
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);
-    }
-
-    /*@Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        Log.i("Info", "MainShareActivity onActivityResult");
-        if (resultCode == Activity.RESULT_OK) {
-
-            if (requestCode == permissionModule.getShareGalleryPickerPerm()) {
-
-                galleryPickerFrag.gridListAdapter.manageProfilePicChoosen(data);
-
-            } else
-                CommonUtils.showToast(MainShareActivity.this, getResources().getString(R.string.technicalError) + requestCode);
-        }
-    }*/
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(galleryPickerFrag.gridListAdapter != null){
-            galleryPickerFrag.gridListAdapter.onActivityResult(requestCode,resultCode,data);
+
+        if (tabSelectedPosition == TAB_PHOTO) {
+            if (galleryPickerFrag.gridListAdapter != null) {
+                galleryPickerFrag.gridListAdapter.onActivityResult(requestCode, resultCode, data);
+            }
         }
     }
 
