@@ -75,7 +75,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
-        <activity android:name=".SharePackage.ShareDetailActivity"></activity>
+        <activity android:name=".SharePackage.ShareDetailActivity" />
+        <activity android:name=".SharePackage.SelectGroupActivity"></activity>
     </application>
 
 </manifest>

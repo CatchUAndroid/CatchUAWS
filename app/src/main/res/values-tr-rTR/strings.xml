@@ -30,7 +30,7 @@
     <string name="openCamera">Kamerayı Aç</string>
     <string name="openGallery">Galeriden Seç</string>
     <string name="chooseProfilePhoto">Profil fotoğrafı seçin</string>
-    <string name="groupInformation">Group Bilgileri</string>
+    <string name="groupInformation">Grup Bilgileri</string>
     <string name="deleteGroup">Grubu Sil</string>
     <string name="exitFromGroup">Gruptan Çık</string>
     <string name="areYouSureExitFromGroup">Gruptan çıkmak istediğinize emin misiniz?</string>
@@ -46,6 +46,8 @@
     <string name="friendsAdding">Katılımcılar ekleniyor...</string>
     <string name="giveCameraPermission">Kamerayı kullanmak için izin gerekmektedir</string>
     <string name="pleaseAddShareItem">Paylaşım yapabilmek için video, resim yada text eklemelisiniz !</string>
+    <string name="selectGroup">Grup Seç</string>
+    <string name="selectAll">Hepsini Seç</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

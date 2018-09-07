@@ -1,5 +1,6 @@
 package com.uren.catchu.SharePackage;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -7,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
@@ -28,12 +30,20 @@ import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.ShareRequestProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GroupPackage.AddGroupActivity;
+import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.ShareItems;
 
 import catchu.model.ShareRequest;
+
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_COUNT;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COUNT;
 
 public class ShareDetailActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -53,6 +63,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private TextView friendShareTv;
     private TextView groupsShareTv;
     private TextView justShareMeTv;
+    private TextView selFriCntTv;
 
     private static final int CODE_PUBLIC_SHARED = 0;
     private static final int CODE_FRIEND_SHARED = 1;
@@ -60,9 +71,15 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private static final int CODE_JUSTME_SHARED = 3;
 
     private int selectedItem = 0;
+    private int selectedFriendCount = 0;
+    private int selectedGroupCount = 0;
 
     private static final int selectedColorCode = R.color.background;
     private static final int unSelectedColorCode = R.color.white;
+
+    private static final int REQUEST_CODE_FRIEND_SELECTION = 1001;
+    private static final int REQUEST_CODE_GROUP_SELECTION = 1002;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +114,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         friendShareTv = findViewById(R.id.friendShareTv);
         groupsShareTv = findViewById(R.id.groupsShareTv);
         justShareMeTv = findViewById(R.id.justMeShareTv);
+        selFriCntTv = findViewById(R.id.selFriCntTv);
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this);
         ShareItems.setInstance(null);
@@ -119,8 +137,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 friendShareImgv.startAnimation(AnimationUtils.loadAnimation(ShareDetailActivity.this, R.anim.image_click));
                 selectedItem = CODE_FRIEND_SHARED;
                 manageSelectedItem();
-                startActivity(new Intent(ShareDetailActivity.this, SelectFriendToGroupActivity.class));
-
+                startSelectFriendActivity();
             }
         });
 
@@ -130,6 +147,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 groupsShareImgv.startAnimation(AnimationUtils.loadAnimation(ShareDetailActivity.this, R.anim.image_click));
                 selectedItem = CODE_GROUP_SHARED;
                 manageSelectedItem();
+                startSelectGroupActivity();
             }
         });
 
@@ -143,6 +161,50 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         });
     }
 
+    private void startSelectGroupActivity() {
+        Intent intent = new Intent(getApplicationContext(), SelectGroupActivity.class);
+        intent.putExtra(PUTEXTRA_ACTIVITY_NAME, ShareDetailActivity.class.getSimpleName());
+        startActivityForResult(intent, REQUEST_CODE_GROUP_SELECTION);
+    }
+
+    private void startSelectFriendActivity() {
+        Intent intent = new Intent(getApplicationContext(), SelectFriendToGroupActivity.class);
+        intent.putExtra(PUTEXTRA_ACTIVITY_NAME, ShareDetailActivity.class.getSimpleName());
+        startActivityForResult(intent, REQUEST_CODE_FRIEND_SELECTION);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == REQUEST_CODE_FRIEND_SELECTION) {
+                selectedFriendCount = (int) data.getSerializableExtra(PUTEXTRA_SHARE_FRIEND_COUNT);
+
+                selFriCntTv.setText(Integer.toString(selectedFriendCount));
+
+                if(selectedFriendCount > 0)
+                    selFriCntTv.setVisibility(View.VISIBLE);
+                else {
+                    selFriCntTv.setVisibility(View.GONE);
+                    publicShareImgv.startAnimation(AnimationUtils.loadAnimation(ShareDetailActivity.this, R.anim.image_click));
+                    selectedItem = CODE_PUBLIC_SHARED;
+                    setViewColor(publicShareImgv, publicShareTv, selectedColorCode);
+                    setViewColor(friendShareImgv, friendShareTv, unSelectedColorCode);
+                }
+            }else if(requestCode == REQUEST_CODE_GROUP_SELECTION){
+                selectedGroupCount = (int) data.getSerializableExtra(PUTEXTRA_SHARE_GROUP_COUNT);
+
+                if(selectedGroupCount == 0){
+                    publicShareImgv.startAnimation(AnimationUtils.loadAnimation(ShareDetailActivity.this, R.anim.image_click));
+                    selectedItem = CODE_PUBLIC_SHARED;
+                    setViewColor(publicShareImgv, publicShareTv, selectedColorCode);
+                    setViewColor(groupsShareImgv, groupsShareTv, unSelectedColorCode);
+                }
+            }
+        }
+    }
+
     public void manageSelectedItem() {
         switch (selectedItem) {
             case CODE_PUBLIC_SHARED:
@@ -150,6 +212,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 setViewColor(friendShareImgv, friendShareTv, unSelectedColorCode);
                 setViewColor(groupsShareImgv, groupsShareTv, unSelectedColorCode);
                 setViewColor(justShareMeImgv, justShareMeTv, unSelectedColorCode);
+                selFriCntTv.setVisibility(View.GONE);
+                selectedFriendCount = 0;
 
                 break;
             case CODE_FRIEND_SHARED:
@@ -164,6 +228,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 setViewColor(friendShareImgv, friendShareTv, unSelectedColorCode);
                 setViewColor(groupsShareImgv, groupsShareTv, selectedColorCode);
                 setViewColor(justShareMeImgv, justShareMeTv, unSelectedColorCode);
+                selFriCntTv.setVisibility(View.GONE);
+                selectedFriendCount = 0;
 
                 break;
             case CODE_JUSTME_SHARED:
@@ -171,6 +237,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 setViewColor(friendShareImgv, friendShareTv, unSelectedColorCode);
                 setViewColor(groupsShareImgv, groupsShareTv, unSelectedColorCode);
                 setViewColor(justShareMeImgv, justShareMeTv, selectedColorCode);
+                selFriCntTv.setVisibility(View.GONE);
+                selectedFriendCount = 0;
                 break;
 
             default:
@@ -273,8 +341,9 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             locationManager.removeUpdates(locationTrackObj);
     }
 
-    public void setViewColor(ImageView imageView, TextView textView, int colorCode){
+    public void setViewColor(ImageView imageView, TextView textView, int colorCode) {
         imageView.setColorFilter(ContextCompat.getColor(ShareDetailActivity.this, colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
         textView.setTextColor(getResources().getColor(colorCode, null));
     }
+
 }

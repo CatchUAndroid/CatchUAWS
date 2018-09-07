@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -34,7 +36,7 @@ import catchu.model.UserProfileProperties;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
 
-public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapter.MyViewHolder> {
+public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapter.MyViewHolder> implements Filterable {
 
     View view;
     LayoutInflater layoutInflater;
@@ -44,6 +46,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     Activity activity;
     FriendList friendList;
     SelectedFriendList selectedFriendList;
+    FriendList orginalFriendList;
 
     RecyclerView horRecyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -59,6 +62,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.friendList = friendList;
+        this.orginalFriendList = friendList;
         activity = (Activity) context;
         imageLoader = new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
         selectedFriendList = SelectedFriendList.getInstance();
@@ -88,7 +92,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         myViewHolder.setData(userProfileProperties, position);
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameTextView;
         TextView usernameTextView;
@@ -195,6 +199,47 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 }
             }
         }
+    }
+
+    public void updateAdapter(String searchText) {
+        getFilter().filter(searchText);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String searchString = charSequence.toString();
+
+                if (searchString.isEmpty())
+                    friendList = orginalFriendList;
+                else {
+
+                    FriendList tempFriendList = new FriendList();
+                    List<UserProfileProperties> userList = new ArrayList<>();
+                    tempFriendList.setResultArray(userList);
+
+                    for (UserProfileProperties userProfileProperties : orginalFriendList.getResultArray()) {
+                        if (userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase()))
+                            tempFriendList.getResultArray().add(userProfileProperties);
+                    }
+
+                    friendList = tempFriendList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = (FriendList) friendList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                friendList = (FriendList) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public void hideKeyBoard(View view) {

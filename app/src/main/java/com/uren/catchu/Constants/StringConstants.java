@@ -27,6 +27,8 @@ public class StringConstants {
     public static final String PUTEXTRA_GROUP_ID = "GROUP_ID";
     public static final String PUTEXTRA_GROUP_NAME = "GROUP_NAME";
     public static final String PUTEXTRA_ACTIVITY_NAME = "ACTIVITY_NAME";
+    public static final String PUTEXTRA_SHARE_FRIEND_COUNT = "SHARE_FRIEND_COUNT";
+    public static final String PUTEXTRA_SHARE_GROUP_COUNT = "SHARE_GROUP_COUNT";
 
 
     //Group Request Types
@@ -45,6 +47,13 @@ public class StringConstants {
     public static final String FRIEND_CREATE_FOLLOW_DIRECTLY = "createFollowDirectly";
     public static final String FRIEND_DELETE_FOLLOW = "deleteFollow";
     public static final String FRIEND_DELETE_PENDING_FOLLOW_REQUEST = "deletePendingFollowRequest";
+
+
+    //Share privacy types
+    public static final String SHARE_TYPE_EVERYONE = "EVERYONE";
+    public static final String SHARE_TYPE_ALL_FOLLOWERS = "ALL_FOLLOWERS";
+    public static final String SHARE_TYPE_CUSTOM = "CUSTOM";
+    public static final String SHARE_TYPE_SELF = "SELF";
 
     //Animation Tags
     public static final String AnimateLeftToRight = "AnimateLeftToRight";

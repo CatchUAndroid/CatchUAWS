@@ -3,6 +3,7 @@ package com.uren.catchu.GroupPackage;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
@@ -12,9 +13,16 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
@@ -25,7 +33,9 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.UserFriends;
@@ -43,13 +53,16 @@ import static com.uren.catchu.Constants.StringConstants.ADD_PARTICIPANT_INTO_GRO
 import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LIST;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_COUNT;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 public class SelectFriendToGroupActivity extends AppCompatActivity {
 
-    Toolbar mToolBar;
-
+    /*TextView friendCountTv;*/
     FloatingActionButton nextFab;
+    ImageView imgCancelSearch;
+    EditText editTextSearch;
+    //CheckBox selectAllCb;
 
     public static Activity thisActivity;
 
@@ -58,10 +71,13 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     public static SelectFriendAdapter adapter;
     String pendingActivityName;
     String groupId;
+    FriendList friendList;
 
     ProgressDialog mProgressDialog;
 
     public static RecyclerView recyclerView;
+
+    // TODO: 3.09.2018 - Resmi olmayan kullanicilar icin isim soyad bas harf ile resme ekleme yapalim. Uloader gibi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,19 +86,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
         thisActivity = this;
 
-        mToolBar = (Toolbar) findViewById(R.id.toolbarLayout);
-        mToolBar.setSubtitle(getResources().getString(R.string.addPersonToGroup));
-        mToolBar.setNavigationIcon(R.drawable.back_arrow);
-        mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
-        mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
-        mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
-        setSupportActionBar(mToolBar);
-
         getIntentValues(savedInstanceState);
-        SelectedFriendList.setInstance(null);
-
-        // TODO: 3.09.2018 - Resmi olmayan kullanicilar icin isim soyad bas harf ile resme ekleme yapalim. Uloader gibi
-
         initUI();
         getFriendSelectionPage();
         addListeners();
@@ -92,15 +96,17 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
         nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
         recyclerView = findViewById(R.id.recyclerView);
+        //friendCountTv = findViewById(R.id.friendCountTv);
+        imgCancelSearch = (ImageView) findViewById(R.id.imgCancelSearch);
+        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+        //selectAllCb = findViewById(R.id.selectAllCb);
+        SelectedFriendList.setInstance(null);
     }
 
     private void getIntentValues(Bundle savedInstanceState) {
-
-        Log.i("Info", "getIntentValues+++++++++++");
-
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
-            if(extras != null) {
+            if (extras != null) {
                 pendingActivityName = extras.getString(PUTEXTRA_ACTIVITY_NAME);
             }
         } else {
@@ -111,51 +117,84 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         groupId = (String) i.getSerializableExtra(PUTEXTRA_GROUP_ID);
     }
 
-    public void addListeners(){
-
+    public void addListeners() {
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 checkSelectedPerson();
             }
         });
+
+        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editTextSearch.setText("");
+                imgCancelSearch.setVisibility(View.GONE);
+            }
+        });
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().isEmpty())
+                    imgCancelSearch.setVisibility(View.VISIBLE);
+                else
+                    imgCancelSearch.setVisibility(View.GONE);
+
+                adapter.updateAdapter(s.toString());
+            }
+        });
     }
 
-    private void getFriendSelectionPage() {
+    /*public void setFriendCountTextView() {
+        friendCountTv.setText(Integer.toString(friendList.getResultArray().size()));
+    }*/
 
-        FriendList friendList = getUserFriends();
+    private void getFriendSelectionPage() {
+        friendList = getUserFriends();
+        /*setFriendCountTextView();*/
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendAdapter(this, friendList);
         recyclerView.setAdapter(adapter);
     }
 
-    public FriendList getUserFriends(){
+    public FriendList getUserFriends() {
 
         FriendList friendListTemp = UserFriends.getFriendList();
 
-        if(pendingActivityName == null)
+        if (pendingActivityName == null)
             return friendListTemp;
-        else if(pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())){
-            if(DisplayGroupDetailActivity.groupParticipantList == null)
+        else if (pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
+            if (DisplayGroupDetailActivity.groupParticipantList == null)
                 return friendListTemp;
-            else if(DisplayGroupDetailActivity.groupParticipantList.size() == 0)
+            else if (DisplayGroupDetailActivity.groupParticipantList.size() == 0)
                 return friendListTemp;
-            else{
+            else {
                 return extractGroupParticipants(friendListTemp);
             }
-        }else
+        } else if (pendingActivityName.equals(NextActivity.class.getSimpleName())) {
+            return friendListTemp;
+        } else
             return friendListTemp;
     }
 
-    public FriendList extractGroupParticipants(FriendList friendListTemp){
+    public FriendList extractGroupParticipants(FriendList friendListTemp) {
 
-        for(UserProfileProperties userProfileProperties1 : DisplayGroupDetailActivity.groupParticipantList){
+        for (UserProfileProperties userProfileProperties1 : DisplayGroupDetailActivity.groupParticipantList) {
 
             int index = 0;
 
-            for(UserProfileProperties userProfileProperties : friendListTemp.getResultArray()){
+            for (UserProfileProperties userProfileProperties : friendListTemp.getResultArray()) {
 
-                if(userProfileProperties.getUserid().equals(userProfileProperties1.getUserid())){
+                if (userProfileProperties.getUserid().equals(userProfileProperties1.getUserid())) {
                     friendListTemp.getResultArray().remove(index);
                     break;
                 }
@@ -165,7 +204,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         return friendListTemp;
     }
 
-    public void checkSelectedPerson(){
+    public void checkSelectedPerson() {
 
         selectedFriendListInstance = SelectedFriendList.getInstance();
 
@@ -174,14 +213,25 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
             return;
         }
 
-        if(pendingActivityName != null){
-            if(pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
+        if (pendingActivityName != null) {
+            if (pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
                 addParticipantToGroup();
                 finish();
-            }else if(pendingActivityName.equals(AddGroupActivity.class.getSimpleName()))
+            } else if (pendingActivityName.equals(ShareDetailActivity.class.getSimpleName())) {
+                setResultForShareActivity();
+                finish();
+            } else if (pendingActivityName.equals(NextActivity.class.getSimpleName())) {
                 startActivity(new Intent(this, AddGroupActivity.class));
-        }else
-            startActivity(new Intent(this, AddGroupActivity.class));
+            }
+        } else
+            CommonUtils.showToastLong(SelectFriendToGroupActivity.this, getResources().getString(R.string.error) +
+                    getResources().getString(R.string.technicalError));
+    }
+
+    private void setResultForShareActivity() {
+        Intent intent = new Intent();
+        intent.putExtra(PUTEXTRA_SHARE_FRIEND_COUNT, SelectedFriendList.getInstance().getSize());
+        setResult(RESULT_OK, intent);
     }
 
     private void addParticipantToGroup() {
@@ -221,11 +271,11 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public List<GroupRequestGroupParticipantArrayItem> fillSelectedFriendList(){
+    public List<GroupRequestGroupParticipantArrayItem> fillSelectedFriendList() {
 
         List<GroupRequestGroupParticipantArrayItem> selectedFriendList = new ArrayList<>();
 
-        for(UserProfileProperties userProfileProperties : selectedFriendListInstance.getSelectedFriendList().getResultArray()){
+        for (UserProfileProperties userProfileProperties : selectedFriendListInstance.getSelectedFriendList().getResultArray()) {
             GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
             groupRequestGroupParticipantArrayItem.setParticipantUserid(userProfileProperties.getUserid());
             selectedFriendList.add(groupRequestGroupParticipantArrayItem);
@@ -238,10 +288,23 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                SelectedFriendList.setInstance(null);
+                if (pendingActivityName.equals(ShareDetailActivity.class.getSimpleName()))
+                    setResultForShareActivity();
+
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        SelectedFriendList.setInstance(null);
+        if (pendingActivityName.equals(ShareDetailActivity.class.getSimpleName()))
+            setResultForShareActivity();
+
+        super.onBackPressed();
     }
 }

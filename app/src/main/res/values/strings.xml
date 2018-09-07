@@ -64,6 +64,8 @@
     <string name="friendsAdding">Participants adding...</string>
     <string name="giveCameraPermission">You have to give permission to use the camera</string>
     <string name="pleaseAddShareItem">You must add video, picture or text to share!</string>
+    <string name="selectGroup">Select Group</string>
+    <string name="selectAll">Select All</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
