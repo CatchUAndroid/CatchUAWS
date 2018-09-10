@@ -462,7 +462,7 @@ public class AddGroupActivity extends AppCompatActivity {
             public void onTaskContinue() {
 
             }
-        }, JPG_TYPE);
+        }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

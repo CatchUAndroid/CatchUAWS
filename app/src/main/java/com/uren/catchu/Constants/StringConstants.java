@@ -61,6 +61,7 @@ public class StringConstants {
 
     //Image Extension Types
     public static final String JPG_TYPE = "jpg";
+    public static final String MP4_TYPE = "mp4";
 
     public static final String CAMERA_TEXT = "CAMERA";
     public static final String GALLERY_TEXT = "GALLERY";

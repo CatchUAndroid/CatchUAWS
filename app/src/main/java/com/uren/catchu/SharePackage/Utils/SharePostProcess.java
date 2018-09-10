@@ -21,7 +21,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-import catchu.model.CommonS3BucketResult;
+import catchu.model.BucketUploadResult;
+import catchu.model.Share;
 import catchu.model.ShareRequest;
 
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
@@ -64,14 +65,14 @@ public class SharePostProcess {
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final CommonS3BucketResult commonS3BucketResult = (CommonS3BucketResult) object;
+                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
                 UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
                     @Override
                     public void onSuccess(Object object) {
                         HttpURLConnection urlConnection = (HttpURLConnection) object;
                         try {
                             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                ShareItems.getInstance().getShare().setImageUrl(commonS3BucketResult.getDownloadUrl());
+                                ShareItems.getInstance().getShare().setImageUrl(commonS3BucketResult.getImages().get(0).getDownloadUrl());
                                 saveShareItemsToNeoJ();
                             } else {
                                 dialogDismiss();
@@ -95,7 +96,7 @@ public class SharePostProcess {
                     @Override
                     public void onTaskContinue() {
                     }
-                }, ShareItems.getInstance().getPhotoSelectAdapter().getPhotoBitmapOrjinal(), commonS3BucketResult.getSignedUrl());
+                }, ShareItems.getInstance().getPhotoSelectAdapter().getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
@@ -110,7 +111,7 @@ public class SharePostProcess {
             public void onTaskContinue() {
 
             }
-        }, JPG_TYPE);
+        }, 1, 0);
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

@@ -74,8 +74,8 @@ import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 
+import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
-import static com.uren.catchu.Constants.StringConstants.defSpace;
 
 public class UserEditFragment extends BaseFragment
         implements View.OnClickListener {
@@ -144,7 +144,7 @@ public class UserEditFragment extends BaseFragment
     ArrayAdapter<String> genderSpinnerAdapter;
 
     //Change Image variables
-    String downloadUrl = defSpace;
+    String downloadUrl = SPACE_VALUE;
     PhotoSelectAdapter photoSelectAdapter;
     private int adapterCameraSelected = 0;
     private int adapterGallerySelected = 1;
@@ -476,7 +476,7 @@ public class UserEditFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, JPG_TYPE);
+        }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

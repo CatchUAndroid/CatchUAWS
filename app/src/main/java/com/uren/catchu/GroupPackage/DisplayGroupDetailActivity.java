@@ -519,7 +519,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             public void onTaskContinue() {
 
             }
-        }, JPG_TYPE);
+        }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
