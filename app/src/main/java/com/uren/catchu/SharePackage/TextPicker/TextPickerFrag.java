@@ -2,6 +2,7 @@ package com.uren.catchu.SharePackage.TextPicker;
 
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,12 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.ShareItems;
 
 import butterknife.ButterKnife;
+
+import static com.uren.catchu.GeneralUtils.BitmapConversion.getScreenShot;
 
 @SuppressLint("ValidFragment")
 public class TextPickerFrag extends Fragment {
@@ -65,7 +71,17 @@ public class TextPickerFrag extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                ShareItems.getShare().setText(s.toString());
+                ShareItems.getInstance().getShare().setText(s.toString());
+
+                Bitmap editTextBitmap;
+
+                if(!s.toString().isEmpty()){
+                    editTextBitmap = BitmapConversion.getScreenShot(textEditText);
+                    editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);
+                }else
+                    editTextBitmap = null;
+
+                ShareItems.getInstance().setTextBitmap(editTextBitmap);
             }
         });
 

@@ -1,14 +1,23 @@
 package com.uren.catchu.SharePackage.Utils;
 
+import android.content.Context;
 import android.util.Log;
 
+import com.uren.catchu.R;
 import com.uren.catchu.Singleton.ShareItems;
 
 import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 
 public class CheckShareItems {
 
-    public static boolean shareIsPossible(){
+    Context context;
+    String errorMessage = "";
+
+    public CheckShareItems(Context context){
+        this.context = context;
+    }
+
+    public boolean shareIsPossible(){
 
         if(ShareItems.getInstance().getShare().getImageUrl() != null) {
             if (!ShareItems.getInstance().getShare().getImageUrl().trim().equals(""))
@@ -20,6 +29,24 @@ public class CheckShareItems {
                 return true;
         }
 
+        errorMessage = context.getResources().getString(R.string.pleaseAddShareItem);
         return false;
+    }
+
+    public boolean isLocationLoaded(){
+        if(ShareItems.getInstance().getLocation() == null) {
+            errorMessage = context.getResources().getString(R.string.locationIsEmpty);
+            return false;
+        }
+
+        return true;
+    }
+
+    public String getErrMessage() {
+        return errorMessage;
+    }
+
+    public void setErrMessage(String errMessage) {
+        errorMessage = errMessage;
     }
 }

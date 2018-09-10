@@ -27,7 +27,7 @@ public class PhotoSelectAdapter {
     Intent data;
     String selectedItemText;
 
-    Uri pictureUri;
+    Uri pictureUri = null;
     String imageRealPath;
     Bitmap photoBitmap;
     Bitmap photoBitmapOrjinal = null;
@@ -47,6 +47,9 @@ public class PhotoSelectAdapter {
         managePicFromUri();
     }
 
+    public PhotoSelectAdapter() {
+    }
+    
     private void managePicFromUri() {
         try {
             photoBitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), pictureUri);

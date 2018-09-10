@@ -58,11 +58,11 @@ import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 public class SelectFriendToGroupActivity extends AppCompatActivity {
 
-    /*TextView friendCountTv;*/
+    TextView friendCountTv;
     FloatingActionButton nextFab;
     ImageView imgCancelSearch;
     EditText editTextSearch;
-    //CheckBox selectAllCb;
+    CheckBox selectAllCb;
 
     public static Activity thisActivity;
 
@@ -76,6 +76,9 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
 
     public static RecyclerView recyclerView;
+
+    public static final int CODE_SELECT_ALL = 0;
+    public static final int CODE_UNSELECT_ALL = 1;
 
     // TODO: 3.09.2018 - Resmi olmayan kullanicilar icin isim soyad bas harf ile resme ekleme yapalim. Uloader gibi
 
@@ -96,10 +99,10 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
         nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
         recyclerView = findViewById(R.id.recyclerView);
-        //friendCountTv = findViewById(R.id.friendCountTv);
+        friendCountTv = findViewById(R.id.friendCountTv);
         imgCancelSearch = (ImageView) findViewById(R.id.imgCancelSearch);
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);
-        //selectAllCb = findViewById(R.id.selectAllCb);
+        selectAllCb = findViewById(R.id.selectAllCb);
         SelectedFriendList.setInstance(null);
     }
 
@@ -152,15 +155,26 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
                 adapter.updateAdapter(s.toString());
             }
         });
+
+        selectAllCb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (selectAllCb.isChecked())
+                    adapter.updateAdapterForSelectAll(CODE_SELECT_ALL);
+                else
+                    adapter.updateAdapterForSelectAll(CODE_UNSELECT_ALL);
+            }
+        });
     }
 
-    /*public void setFriendCountTextView() {
+    public void setFriendCountTextView() {
         friendCountTv.setText(Integer.toString(friendList.getResultArray().size()));
-    }*/
+    }
 
     private void getFriendSelectionPage() {
         friendList = getUserFriends();
-        /*setFriendCountTextView();*/
+        setFriendCountTextView();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendAdapter(this, friendList);
         recyclerView.setAdapter(adapter);

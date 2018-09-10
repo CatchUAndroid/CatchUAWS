@@ -66,6 +66,9 @@
     <string name="pleaseAddShareItem">You must add video, picture or text to share!</string>
     <string name="selectGroup">Select Group</string>
     <string name="selectAll">Select All</string>
+    <string name="share">SHARE</string>
+    <string name="locationIsEmpty">Location information is required to share</string>
+    <string name="shareIsProcessing">Sharing...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -7,6 +7,7 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,6 +83,12 @@ public class BitmapConversion extends AppCompatActivity {
         String encImage = Base64.encodeToString(b, Base64.DEFAULT);
 
         return encImage;
+    }
 
+    public static Bitmap getScreenShot(View view) {
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 }

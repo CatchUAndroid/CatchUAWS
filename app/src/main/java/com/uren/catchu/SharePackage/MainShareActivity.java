@@ -1,71 +1,31 @@
 package com.uren.catchu.SharePackage;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.graphics.Palette;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import com.arsy.maps_library.MapRipple;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.ShareRequestProcess;
-import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GroupPackage.AddGroupActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
-import com.uren.catchu.SharePackage.Interfaces.OnActivityResult;
 import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.VideoPickerFrag;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.ShareItems;
 
-import java.util.List;
-
-import butterknife.BindView;
-import catchu.model.ShareRequest;
-
-public class MainShareActivity extends FragmentActivity{
+public class MainShareActivity extends FragmentActivity {
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -153,10 +113,11 @@ public class MainShareActivity extends FragmentActivity{
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (CheckShareItems.shareIsPossible())
+                CheckShareItems checkShareItems = new CheckShareItems(MainShareActivity.this);
+                if (checkShareItems.shareIsPossible()) {
                     startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
-                else
-                    CommonUtils.showToast(MainShareActivity.this, getResources().getString(R.string.pleaseAddShareItem));
+                } else
+                    CommonUtils.showToast(MainShareActivity.this, checkShareItems.getErrMessage());
             }
         });
     }
