@@ -88,8 +88,12 @@
     <string name="signOut">Sign Out</string>
     <string name="followers">Followers</string>
     <string name="followings">Followings</string>
-    <string name="takip_et">Takip et</string>
-    <string name="takip_ediliyor">Takip ediliyor</string>
+    <string name="follow">Follow</string>
+    <string name="following">Following</string>
+    <string name="request_sended">Request sent</string>
+    <string name="cancel_following">Remove from followings?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
 
 </resources>

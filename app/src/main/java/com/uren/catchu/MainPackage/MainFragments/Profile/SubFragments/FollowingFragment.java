@@ -145,11 +145,14 @@ public class FollowingFragment extends Fragment
 
     private void setUpRecyclerView(FollowInfo followInfo) {
 
-
+        //Takip edilenlerin isFollow degerleri set edilir.
+        for(FollowInfoResultArrayItem item:followInfo.getResultArray()){
+            item.setIsFollow(true);
+        }
 
 
         FollowAdapter followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray());
-        FollowInfoResultArrayItem a = followInfo.getResultArray().get(0);
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         following_recyclerView.setLayoutManager(mLayoutManager);
         following_recyclerView.setAdapter(followAdapter);

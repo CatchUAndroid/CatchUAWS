@@ -138,13 +138,13 @@ implements View.OnClickListener{
 
     private void setUpRecyclerView(FollowInfo followInfo) {
 
-        /*
+
         FollowAdapter followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray());
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         follower_recyclerView.setLayoutManager(mLayoutManager);
         follower_recyclerView.setAdapter(followAdapter);
-*/
+
 
     }
 
