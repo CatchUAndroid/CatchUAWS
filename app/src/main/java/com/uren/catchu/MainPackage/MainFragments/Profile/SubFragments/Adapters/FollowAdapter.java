@@ -1,8 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,47 +16,20 @@ import com.uren.catchu.R;
 
 import java.util.List;
 
+import catchu.model.FollowInfo;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.UserProfileProperties;
 
 public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHolder> {
 
     private Context context;
-    private List<UserProfileProperties> followList;
+    private List<FollowInfoResultArrayItem> followList;
 
-    public FollowAdapter(Context context, List<UserProfileProperties> followList) {
+    public FollowAdapter(Context context, List<FollowInfoResultArrayItem> followList) {
 
         this.context = context;
         this.followList = followList;
     }
-
-
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        TextView profileName;
-        ImageView profileImage;
-        Button btnFollowStatus;
-
-        public MyViewHolder(View view) {
-            super(view);
-            profileName = (TextView) view.findViewById(R.id.profile_name);
-            profileImage = (ImageView) view.findViewById(R.id.profile_image);
-            btnFollowStatus = (Button)  view.findViewById(R.id.btnFollowStatus);
-
-            btnFollowStatus.setOnClickListener(this);
-
-        }
-
-        @Override
-        public void onClick(View v) {
-
-            if(v == btnFollowStatus){
-
-                btnFollowStatus.setBackgroundColor(Color.BLUE);
-            }
-
-        }
-    }
-
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -67,16 +39,87 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
         return new MyViewHolder(itemView);
     }
 
+
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+
+        TextView profileName;
+        ImageView profileImage;
+        Button btnFollowStatus;
+        CardView cardView;
+        UserProfileProperties u;
+
+        int position;
+
+        public MyViewHolder(View view) {
+            super(view);
+            profileName = (TextView) view.findViewById(R.id.profile_name);
+            profileImage = (ImageView) view.findViewById(R.id.profile_image);
+            btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
+            cardView = (CardView) view.findViewById(R.id.card_view);
+
+            btnFollowStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    /*
+                    btnFollowStatus.setText(R.string.takip_ediliyor);
+                    u.setName("X");
+                    followList.get(position).setName("X");
+                    notifyItemChanged(position, u.getName());
+                    */
+
+                }
+            });
+
+        }
+
+        public void setData(FollowInfoResultArrayItem selectedFriend, int position) {
+
+            /*this.profileName.setText(selectedFriend);
+            this.u= selectedFriend;
+            this.position=position;
+
+            Picasso.with(context)
+                    .load(u.getProfilePhotoUrl())
+                    .transform(new CircleTransform())
+                    .into(profileImage);
+
+            updateUIValue();
+            */
+        }
+
+
+
+        public void updateUIValue(){
+
+
+                if(u.getName().equals("X")){
+                    btnFollowStatus.setText(R.string.takip_ediliyor);
+                }else{
+                    btnFollowStatus.setText(R.string.takip_et);
+                }
+
+        }
+
+    }
+
+
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-        UserProfileProperties userProfileProperties = followList.get(position);
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        holder.profileName.setText(userProfileProperties.getName());
 
-        Picasso.with(context)
-                .load(userProfileProperties.getProfilePhotoUrl())
-                .transform(new CircleTransform())
-                .into(holder.profileImage);
+
+
+
+
+        FollowInfoResultArrayItem followInfoResultArrayItem = followList.get(position);
+        holder.setData(followInfoResultArrayItem, position);
+
+
+
+
+
+
+
 
 
     }

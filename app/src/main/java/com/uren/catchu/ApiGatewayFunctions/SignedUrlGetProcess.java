@@ -5,11 +5,11 @@ import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
-import catchu.model.CommonS3BucketResult;
+import catchu.model.BucketUploadResult;
 
-public class SignedUrlGetProcess extends AsyncTask<Void, Void, CommonS3BucketResult> {
+public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResult> {
 
-    private OnEventListener<CommonS3BucketResult> mCallBack;
+    private OnEventListener<BucketUploadResult> mCallBack;
     public Exception mException;
     public String extensionType;
 
@@ -19,11 +19,11 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, CommonS3BucketRes
     }
 
     @Override
-    protected CommonS3BucketResult doInBackground(Void... voids) {
+    protected BucketUploadResult doInBackground(Void... voids) {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            CommonS3BucketResult commonS3BucketResult = instance.client.commonSignedurlGet(extensionType);
+            BucketUploadResult commonS3BucketResult = instance.client.commonSignedurlGet("1", "0", "", extensionType);
             return commonS3BucketResult;
 
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, CommonS3BucketRes
     }
 
     @Override
-    protected void onPostExecute(CommonS3BucketResult commonS3BucketResult) {
+    protected void onPostExecute(BucketUploadResult commonS3BucketResult) {
         super.onPostExecute(commonS3BucketResult);
 
         if (mCallBack != null) {

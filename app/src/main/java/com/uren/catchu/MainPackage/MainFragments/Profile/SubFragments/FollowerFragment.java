@@ -112,7 +112,7 @@ implements View.OnClickListener{
                 Log.i("count ", String.valueOf(resp.getResultArray().size()) );
                 for(int i=0; i< resp.getResultArray().size(); i++){
                     int a = i+1;
-                    Log.i("follower-"+ a+ " :", resp.getResultArray().get(i).getName());
+                    //Log.i("follower-"+ a+ " :", resp.getResultArray().get(i));
 
                 }
 
@@ -138,12 +138,13 @@ implements View.OnClickListener{
 
     private void setUpRecyclerView(FollowInfo followInfo) {
 
+        /*
         FollowAdapter followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray());
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         follower_recyclerView.setLayoutManager(mLayoutManager);
         follower_recyclerView.setAdapter(followAdapter);
-
+*/
 
     }
 

@@ -7,6 +7,7 @@ import android.util.Log;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.FollowInfo;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Response;
 import catchu.model.UserProfile;
 
@@ -40,6 +41,7 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
                 Log.i("-> update response ", "successful");
                 return rsp;
+
             }else{
                 Log.i("-> update response ", "fail");
                 return null;

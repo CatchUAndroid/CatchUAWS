@@ -49,7 +49,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.CommonS3BucketResult;
+import catchu.model.BucketUploadResult;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -471,11 +471,11 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final CommonS3BucketResult commonS3BucketResult = (CommonS3BucketResult) object;
+                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
 
-                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getFileExtention());
-                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getSignedUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getDownloadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
+                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getImages().get(0).getDownloadUrl());
                 Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
 
                 UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
@@ -486,7 +486,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                         try {
                             // TODO: 30.08.2018 - Grup fotosu guncellendi, S3 den silme akisi nasil olacak...
                             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK)
-                                updateGroupToNeoJ(commonS3BucketResult.getDownloadUrl());
+                                updateGroupToNeoJ(commonS3BucketResult.getImages().get(0).getDownloadUrl());
                             else {
                                 InputStream is = urlConnection.getErrorStream();
                                 CommonUtils.showToastLong(context, getResources().getString(R.string.error) + is.toString());
@@ -505,7 +505,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                     public void onTaskContinue() {
 
                     }
-                }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getSignedUrl());
+                }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

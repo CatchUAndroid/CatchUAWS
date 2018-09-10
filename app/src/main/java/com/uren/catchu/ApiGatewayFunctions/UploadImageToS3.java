@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import catchu.model.CommonS3BucketResult;
 
 public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
 

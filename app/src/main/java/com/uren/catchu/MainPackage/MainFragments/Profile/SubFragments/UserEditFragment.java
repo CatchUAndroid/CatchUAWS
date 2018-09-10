@@ -61,7 +61,8 @@ import java.util.Calendar;
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.CommonS3BucketResult;
+import catchu.model.BucketUpload;
+import catchu.model.BucketUploadResult;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
@@ -420,11 +421,11 @@ public class UserEditFragment extends BaseFragment
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final CommonS3BucketResult commonS3BucketResult = (CommonS3BucketResult) object;
+                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
 
-                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getFileExtention());
-                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getSignedUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getDownloadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
+                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getImages().get(0).getDownloadUrl());
                 Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
 
                 UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
@@ -435,7 +436,7 @@ public class UserEditFragment extends BaseFragment
                         try {
                             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
 
-                                downloadUrl = commonS3BucketResult.getDownloadUrl();
+                                downloadUrl = commonS3BucketResult.getImages().get(0).getDownloadUrl();
                                 userProfileProperties.setProfilePhotoUrl(downloadUrl);
                                 Log.i("downloadUrl ", downloadUrl);
                                 updateUserProfile();
@@ -461,7 +462,7 @@ public class UserEditFragment extends BaseFragment
                     public void onTaskContinue() {
                         progressBar.setVisibility(View.VISIBLE);
                     }
-                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getSignedUrl());
+                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

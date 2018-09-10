@@ -26,6 +26,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FollowInfo;
+import catchu.model.FollowInfoResultArrayItem;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
@@ -115,7 +116,7 @@ public class FollowingFragment extends Fragment
 
                 for (int i = 0; i < resp.getResultArray().size(); i++) {
                     int a = i + 1;
-                    Log.i("following-" + a + " :", resp.getResultArray().get(i).getName());
+                    //Log.i("following-" + a + " :", resp.getResultArray().get(i));
 
                 }
 
@@ -144,8 +145,11 @@ public class FollowingFragment extends Fragment
 
     private void setUpRecyclerView(FollowInfo followInfo) {
 
-        FollowAdapter followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray());
 
+
+
+        FollowAdapter followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray());
+        FollowInfoResultArrayItem a = followInfo.getResultArray().get(0);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         following_recyclerView.setLayoutManager(mLayoutManager);
         following_recyclerView.setAdapter(followAdapter);

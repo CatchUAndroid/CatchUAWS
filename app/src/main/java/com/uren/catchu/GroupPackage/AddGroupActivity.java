@@ -91,7 +91,7 @@ import java.util.Scanner;
 
 import butterknife.BindView;
 import catchu.CatchUMobileAPIClient;
-import catchu.model.CommonS3BucketResult;
+import catchu.model.BucketUploadResult;
 import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
@@ -410,12 +410,13 @@ public class AddGroupActivity extends AppCompatActivity {
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final CommonS3BucketResult commonS3BucketResult = (CommonS3BucketResult) object;
+                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
 
-                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getFileExtention());
-                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getSignedUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getDownloadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
+                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());
+                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getImages().get(0).getDownloadUrl());
                 Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
+
 
                 UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
                     @Override
@@ -424,7 +425,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
                         try {
                             if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                downloadUrl = commonS3BucketResult.getDownloadUrl();
+                                downloadUrl = commonS3BucketResult.getImages().get(0).getDownloadUrl();
                                 processSaveGroup();
                             } else {
                                 InputStream is = urlConnection.getErrorStream();
@@ -446,7 +447,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     public void onTaskContinue() {
 
                     }
-                }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getSignedUrl());
+                }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

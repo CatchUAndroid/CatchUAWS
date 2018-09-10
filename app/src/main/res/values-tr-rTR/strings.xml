@@ -72,5 +72,7 @@
     <string name="signOut">Çıkış yap</string>
     <string name="followers">Takipçiler</string>
     <string name="followings">Takiptesin</string>
+    <string name="takip_et">Takip et</string>
+    <string name="takip_ediliyor">Takip ediliyor</string>
 
 </resources>
