@@ -14,8 +14,11 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,18 +28,27 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.SelectGroupActivity;
+import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.SelectedGroupList;
 
+import java.security.acl.Group;
+import java.util.ArrayList;
+import java.util.List;
+
+import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
-public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> {
+public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> implements Filterable{
 
     public ImageLoader imageLoader;
     View view;
@@ -44,7 +56,11 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     Context context;
 
     private GroupRequestResult groupRequestResult;
+    GroupRequestResult orgGroupRequestResult;
     Activity activity;
+    String pendingActivityName;
+    GroupRequestResultResultArrayItem seledtedGroup;
+    int beforeSelectedPosition = -1;
 
     private static final int SHOW_GROUP_DETAIL = 0;
     private static final int EXIT_FROM_GROUP = 1;
@@ -52,8 +68,11 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     public UserGroupsListAdapter(Context context, GroupRequestResult groupRequestResult) {
         layoutInflater = LayoutInflater.from(context);
         this.groupRequestResult = groupRequestResult;
+        this.orgGroupRequestResult = groupRequestResult;
         this.context = context;
         activity = (Activity) context;
+        pendingActivityName = context.getClass().getSimpleName();
+        Log.i("Info", "pendingActivityName:" + pendingActivityName);
         imageLoader = new ImageLoader(context.getApplicationContext(), groupsCacheDirectory);
     }
 
@@ -70,7 +89,8 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         TextView groupnameTextView;
         ImageView groupPicImgView;
         Button adminDisplayButton;
-        LinearLayout specialListLinearLayout;
+        LinearLayout groupSelectMainLinLay;
+        RadioButton selectGroupRb;
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
         int position = 0;
 
@@ -80,10 +100,13 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             groupPicImgView = (ImageView) view.findViewById(R.id.groupPicImgView);
             groupnameTextView = (TextView) view.findViewById(R.id.groupnameTextView);
             adminDisplayButton = (Button) view.findViewById(R.id.adminDisplayButton);
-            specialListLinearLayout = (LinearLayout) view.findViewById(R.id.specialListLinearLayout);
+            groupSelectMainLinLay = (LinearLayout) view.findViewById(R.id.groupSelectMainLinLay);
+            selectGroupRb = view.findViewById(R.id.selectGroupRb);
 
+            if(pendingActivityName.equals(SelectGroupActivity.class.getSimpleName()))
+                selectGroupRb.setVisibility(View.VISIBLE);
 
-            specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
+            /*groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -92,7 +115,46 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
                     showGroupDetail();
                 }
+            });*/
+
+            groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(pendingActivityName.equals(SelectGroupActivity.class.getSimpleName())) {
+                        selectGroupRb.setChecked(true);
+                        manageSelectedItem();
+                    }
+                }
             });
+
+            groupSelectMainLinLay.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showGroupDetail();
+                    return false;
+                }
+            });
+
+            selectGroupRb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    manageSelectedItem();
+                }
+            });
+        }
+
+        public void manageSelectedItem(){
+            seledtedGroup = groupRequestResultResultArrayItem;
+
+            notifyItemChanged(position);
+
+            if (beforeSelectedPosition > -1)
+                notifyItemChanged(beforeSelectedPosition);
+
+            beforeSelectedPosition = position;
+            List<GroupRequestResultResultArrayItem> itemList = new ArrayList<>();
+            itemList.add(groupRequestResultResultArrayItem);
+            SelectedGroupList.getInstance().setGroupRequestResultList(itemList);
         }
 
         private void showGroupDetail() {
@@ -171,6 +233,20 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             Log.i("Info", "  >>groupRequestResultResultArrayItem.getGroupid()   :" + groupRequestResultResultArrayItem.getGroupid());
             Log.i("Info", "  >>==============================");
 
+            setAdminButtonValues();
+            setRadioButtonValues();
+        }
+
+        public void setRadioButtonValues(){
+            if(seledtedGroup != null && groupRequestResultResultArrayItem != null) {
+                if (seledtedGroup.getGroupid().equals(groupRequestResultResultArrayItem.getGroupid()))
+                    selectGroupRb.setChecked(true);
+                else
+                    selectGroupRb.setChecked(false);
+            }
+        }
+
+        public void setAdminButtonValues(){
             if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID())) {
                 adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
                 adminDisplayButton.setVisibility(View.VISIBLE);
@@ -186,11 +262,11 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         holder.setData(groupRequestResultResultArrayItem, position);
     }
 
-    public void hideKeyBoard(View view) {
+    /*public void hideKeyBoard(View view) {
 
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+    }*/
 
     public long getItemId(int position) {
         return position;
@@ -199,5 +275,45 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     @Override
     public int getItemCount() {
         return groupRequestResult.getResultArray().size();
+    }
+
+    public void updateAdapter(String searchText) {
+        getFilter().filter(searchText);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                String searchString = charSequence.toString();
+
+                if (searchString.isEmpty())
+                    groupRequestResult = orgGroupRequestResult;
+                else {
+                    GroupRequestResult tempGroupRequestResult = new GroupRequestResult();
+                    List<GroupRequestResultResultArrayItem> listItem = new ArrayList<>();
+                    tempGroupRequestResult.setResultArray(listItem);
+
+                    for (GroupRequestResultResultArrayItem item : orgGroupRequestResult.getResultArray()) {
+                        if (item.getName().toLowerCase().contains(searchString.toLowerCase()))
+                            tempGroupRequestResult.getResultArray().add(item);
+                    }
+
+                    groupRequestResult = tempGroupRequestResult;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = (GroupRequestResult) groupRequestResult;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                groupRequestResult = (GroupRequestResult) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 }

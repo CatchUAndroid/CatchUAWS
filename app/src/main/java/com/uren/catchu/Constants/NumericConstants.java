@@ -12,6 +12,8 @@ public class NumericConstants {
     public static final int CODE_CHANGE_VALUE = 2;
     public static final int RESPONSE_OK = 1;
 
+    public static final int MAX_VIDEO_DURATION = 5;
+
     //DialogBox Results
     public static final int UPDATE_RESULT_OK = 1;
     public static final int UPDATE_RESULT_FAIL = 0;

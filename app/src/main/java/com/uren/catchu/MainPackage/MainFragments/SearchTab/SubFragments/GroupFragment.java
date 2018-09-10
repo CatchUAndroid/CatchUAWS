@@ -34,7 +34,6 @@ public class GroupFragment extends Fragment {
 
     private View mView;
     String userid;
-    String requestType;
     ViewGroup mContainer;
     LayoutInflater mLayoutInflater;
 
@@ -50,9 +49,8 @@ public class GroupFragment extends Fragment {
     public ProgressBar progressBar;
 
     @SuppressLint("ValidFragment")
-    public GroupFragment(Context context, String userid, String requestType) {
+    public GroupFragment(Context context, String userid) {
         this.userid = userid;
-        this.requestType = requestType;
         this.context = context;
     }
 

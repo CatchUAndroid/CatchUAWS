@@ -28,6 +28,7 @@
     <string name="friends">FRIENDS</string>
     <string name="groups">GROUPS</string>
     <string name="error">Error:</string>
+    <string name="info">Info:</string>
     <string name="addNewGroup">New Group</string>
     <string name="addPersonToGroup">Add Friend to Group</string>
     <string name="selectLeastOneFriend">You must choose at least 1 person!</string>
@@ -61,6 +62,13 @@
     <string name="createdAt">Created at:</string>
     <string name="changeAsAdmin">Make Group Admin</string>
     <string name="friendsAdding">Participants adding...</string>
+    <string name="giveCameraPermission">You have to give permission to use the camera</string>
+    <string name="pleaseAddShareItem">You must add video, picture or text to share!</string>
+    <string name="selectGroup">Select Group</string>
+    <string name="selectAll">Select All</string>
+    <string name="share">SHARE</string>
+    <string name="locationIsEmpty">Location information is required to share</string>
+    <string name="shareIsProcessing">Sharing...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -84,6 +92,12 @@
     <string name="photo">Photo</string>
     <string name="video">Video</string>
     <string name="text">Text</string>
+
+    <!-- Whose for will be shared -->
+    <string name="publicShareText">Public</string>
+    <string name="friendsShareText">Friends</string>
+    <string name="groupsShareText">Groups</string>
+    <string name="justMeShareText">Just Me</string>
 
     <string name="signOut">Sign Out</string>
     <string name="followers">Followers</string>

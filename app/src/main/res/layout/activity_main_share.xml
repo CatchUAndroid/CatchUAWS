@@ -1,7 +1,6 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profileMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -20,23 +19,6 @@
             android:background="?attr/colorPrimary"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/htab_collapse_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:titleEnabled="false">
-
-                <fragment
-                    xmlns:android="http://schemas.android.com/apk/res/android"
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-
-            </android.support.design.widget.CollapsingToolbarLayout>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/htab_tabs"
@@ -60,6 +42,16 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/nextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="15dp"
+        android:layout_marginRight="15dp"
+        android:src="@drawable/forward_arrow" />
 
-</FrameLayout>
+
+</RelativeLayout>
 

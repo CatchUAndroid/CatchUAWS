@@ -124,7 +124,6 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public void fillSingletonClasses() {
-
         AccountHolderInfo.setInstance(null);
         AccountHolderInfo.getInstance();
 
@@ -255,7 +254,7 @@ public class NextActivity extends AppCompatActivity implements
 
     private void setTransactionOption() {
 
-        if(transactionOptions == null){
+        if (transactionOptions == null) {
             transactionOptions = FragNavTransactionOptions.newBuilder().build();
         }
 
