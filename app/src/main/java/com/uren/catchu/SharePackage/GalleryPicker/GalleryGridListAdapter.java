@@ -89,7 +89,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     }
 
     private void addListeners() {
-
         galleryPickerFrag.cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +101,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     @Override
     public GalleryGridListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         view = layoutInflater.inflate(R.layout.media_item_view, parent, false);
         GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
         return holder;
@@ -110,7 +108,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
         if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
