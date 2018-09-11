@@ -7,11 +7,8 @@ import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,45 +31,39 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
-import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
-import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.util.Calendar;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.BucketUpload;
 import catchu.model.BucketUploadResult;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_FAIL;
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_OK;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
-import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 
 import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
@@ -83,19 +74,27 @@ public class UserEditFragment extends BaseFragment
     View mView;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private UserProfile userProfile;
-    UserProfileProperties userProfileProperties ;
-    UserProfile tempUser;
+    private UserProfile tempUser;
+    private UserProfileProperties userProfileProperties ;
+
+    private String selectedGender;
+    private ArrayAdapter<String> genderSpinnerAdapter;
+
+    //Change Image variables
+    private String downloadUrl = SPACE_VALUE;
+    private PhotoSelectAdapter photoSelectAdapter;
+    private int adapterCameraSelected = 0;
+    private int adapterGallerySelected = 1;
+    private int photoChoosenType;
+    private PermissionModule permissionModule;
+    private  boolean profilPicChanged;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
-
     @BindView(R.id.toolbarLayout)
     Toolbar mToolBar;
     @BindView(R.id.toolbarTitle)
     TextView toolbarTitle;
-
-
     //@BindView(R.id.rlCoverPicture)
     //RelativeLayout rlCoverPicture;
     @BindView(R.id.rlProfilePicture)
@@ -139,18 +138,6 @@ public class UserEditFragment extends BaseFragment
 
     @BindArray(R.array.gender)
     String[] GENDERS;
-
-    String selectedGender;
-    ArrayAdapter<String> genderSpinnerAdapter;
-
-    //Change Image variables
-    String downloadUrl = SPACE_VALUE;
-    PhotoSelectAdapter photoSelectAdapter;
-    private int adapterCameraSelected = 0;
-    private int adapterGallerySelected = 1;
-    public int photoChoosenType;
-    PermissionModule permissionModule;
-
 
     public UserEditFragment() {
 
@@ -229,36 +216,9 @@ public class UserEditFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //setUpRecyclerView();
 
         updateUI();
 
-        /*
-        Button btn = (Button) view.findViewById(R.id.btnBack);
-        Button btnbtnNextFrag = (Button) view.findViewById(R.id.btnNextFrag);
-
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btnbtnNextFrag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mFragmentNavigation != null) {
-
-                    mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
-
-                    //mFragmentNavigation.pushFragment(new UserEditFragment());
-
-                }
-            }
-        });
-        */
     }
 
     private void updateUI() {
@@ -276,8 +236,7 @@ public class UserEditFragment extends BaseFragment
         selectedGender = userProfile.getUserInfo().getGender();
 
 
-        // TODO : Update Cover picture
-
+        // TODO : NT: Update Cover picture
 
         //Profile picture
         Picasso.with(getActivity())
@@ -392,30 +351,20 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setGender(selectedGender);
         }
 
-
-        updateUserProfile2();
+        updateOperation();
 
     }
 
-    private void updateUserProfile2() {
+    private void updateOperation() {
 
         if(profilPicChanged){
-
             savePicToS3_and_updateUserProfile();
-
-
         }else{
-
             updateUserProfile();
-
-
         }
-
-
-
-
     }
 
+    // TODO: 11.9.2018 NT: uğur buraları class yaptığını söyledi, implemente edilebliyosa et
     private void savePicToS3_and_updateUserProfile() {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
@@ -462,7 +411,7 @@ public class UserEditFragment extends BaseFragment
                     public void onTaskContinue() {
                         progressBar.setVisibility(View.VISIBLE);
                     }
-                }, photoSelectAdapter.getPhotoBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -479,8 +428,6 @@ public class UserEditFragment extends BaseFragment
         }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
 
     }
 
@@ -531,7 +478,6 @@ public class UserEditFragment extends BaseFragment
 
         updateUserProfile.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-
     }
 
     public void hideKeyBoard(){
@@ -542,7 +488,6 @@ public class UserEditFragment extends BaseFragment
             InputMethodManager inputMethodManager =(InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
         }
-
 
     }
 
@@ -576,7 +521,6 @@ public class UserEditFragment extends BaseFragment
                     //do nothing
                 }
 
-
             }
         });
 
@@ -587,20 +531,17 @@ public class UserEditFragment extends BaseFragment
 
 
     private void coverPictureClicked() {
-
-
     }
 
     private void profilePictureClicked() {
 
         permissionModule = new PermissionModule(getActivity());
-
-        startChooseImageProc();
+        chooseImageProcess();
 
     }
 
 
-    private void startChooseImageProc() {
+    private void chooseImageProcess() {
 
         Log.i("Info", "startChooseImageProc++++++++++++++++++++++++++++++++");
 
@@ -664,7 +605,7 @@ public class UserEditFragment extends BaseFragment
                 getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
-    boolean profilPicChanged;
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -687,11 +628,18 @@ public class UserEditFragment extends BaseFragment
 
     private void manageProfilePicChoosen() {
 
+        /*
         //Profile picture
         Picasso.with(getActivity())
                 //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
                 .load(photoSelectAdapter.getPictureUri())
                 .transform(new CircleTransform())
+                .into(imgProfile);
+            */
+
+        Glide.with(getActivity())
+                .load(photoSelectAdapter.getPictureUri())
+                .apply(RequestOptions.circleCropTransform())
                 .into(imgProfile);
 
 

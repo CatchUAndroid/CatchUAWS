@@ -19,7 +19,4 @@ public class NumericConstants {
     public static final int UPDATE_RESULT_FAIL = 0;
 
 
-
-
-
 }

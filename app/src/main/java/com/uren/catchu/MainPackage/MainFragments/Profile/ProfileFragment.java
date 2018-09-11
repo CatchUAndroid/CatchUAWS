@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
@@ -25,22 +24,20 @@ import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.regions.Regions;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
-import com.uren.catchu.FragmentControllers.FragNavController;
-import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
-import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -49,6 +46,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
@@ -58,11 +56,12 @@ public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    UserProfile userProfile;
+    UserProfile myProfile;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+    // TODO: 11.9.2018 NT:constant kaldırılacak
     String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
     @BindView(R.id.htab_tabs)
@@ -83,12 +82,18 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.txtFollowingCnt)
     TextView txtFollowingCnt;
 
-
     @BindView(R.id.imgUserEdit)
     ClickableImageView imgUserEdit;
     @BindView(R.id.imgSettings)
     ClickableImageView imgSettings;
 
+    public static ProfileFragment newInstance(FollowInfoRowItem rowItem) {
+        Bundle args = new Bundle();
+        args.putSerializable(ARGS_INSTANCE, rowItem);
+        ProfileFragment fragment = new ProfileFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,15 +104,12 @@ public class ProfileFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
         if (mView == null) {
-
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
 
             setCollapsingToolbar();
             setUpPager();
-
         }
 
         return mView;
@@ -184,42 +186,41 @@ public class ProfileFragment extends BaseFragment
         imgSettings.setOnClickListener(this);
         txtFollowerCnt.setOnClickListener(this);
         txtFollowingCnt.setOnClickListener(this);
+
     }
 
     private void updateUI() {
 
         if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-            userProfile = AccountHolderInfo.getInstance().getUser();
-            setProfileDetail();
+            myProfile = AccountHolderInfo.getInstance().getUser();
+            setProfileDetail(myProfile);
         } else {
-            getProfileDetail();
+            getProfileDetail(userid);
         }
 
     }
 
-    private void setProfileDetail() {
+    private void setProfileDetail(UserProfile user) {
 
-        toolbarTitle.setText(userProfile.getUserInfo().getName());
+        toolbarTitle.setText(user.getUserInfo().getName());
 
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + userProfile.getUserInfo().getName() + "!!");
+        CommonUtils.showToast(getActivity(), "Hoş geldin " + user.getUserInfo().getName() + "!!");
 
-        Log.i("name ", userProfile.getUserInfo().getName());
-        Log.i("username ", userProfile.getUserInfo().getUsername());
-        Log.i("userId ", userProfile.getUserInfo().getUserid());
-        Log.i("isPrivateAcc ", userProfile.getUserInfo().getIsPrivateAccount().toString());
-        Log.i("profilePicUrl ", userProfile.getUserInfo().getProfilePhotoUrl());
+        Log.i("name ", user.getUserInfo().getName());
+        Log.i("username ", user.getUserInfo().getUsername());
+        Log.i("userId ", user.getUserInfo().getUserid());
+        Log.i("isPrivateAcc ", user.getUserInfo().getIsPrivateAccount().toString());
+        Log.i("profilePicUrl ", user.getUserInfo().getProfilePhotoUrl());
 
 
-
-        Picasso.with(getActivity())
-                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                .load(userProfile.getUserInfo().getProfilePhotoUrl())
-                .transform(new CircleTransform())
+        Glide.with(getActivity())
+                .load(user.getUserInfo().getProfilePhotoUrl())
+                .apply(RequestOptions.circleCropTransform())
                 .into(imgProfile);
 
-        txtUserName.setText(userProfile.getUserInfo().getUsername());
-        txtFollowerCnt.setText(userProfile.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
-        txtFollowingCnt.setText(userProfile.getRelationCountInfo().getFollowingCount() + "\n" + "following");
+        txtUserName.setText(user.getUserInfo().getUsername());
+        txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
+        txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + "following");
 
     }
 
@@ -250,35 +251,38 @@ public class ProfileFragment extends BaseFragment
 
     }
 
-    private void getProfileDetail() {
+    private void getProfileDetail(String userID) {
 
-        if (userProfile == null) {
+        Log.i("gidilen UserId", userID);
+
+        if (myProfile == null) {
 
             //Asenkron Task başlatır.
             UserDetail loadUserDetail = new UserDetail(getApplicationContext(), new OnEventListener<UserProfile>() {
 
                 @Override
-                public void onSuccess(UserProfile u) {
+                public void onSuccess(UserProfile up) {
                     Log.i("userDetail", "successful");
                     progressBar.setVisibility(View.GONE);
-                    userProfile = u;
-                    setProfileDetail();
+                    myProfile = up;
+                    setProfileDetail(up);
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     progressBar.setVisibility(View.GONE);
-
                 }
 
                 @Override
                 public void onTaskContinue() {
                     progressBar.setVisibility(View.VISIBLE);
                 }
-            }, userid);
+            }, userID);
+
             loadUserDetail.execute();
+
         } else {
-            setProfileDetail();
+            setProfileDetail(myProfile);
         }
 
     }

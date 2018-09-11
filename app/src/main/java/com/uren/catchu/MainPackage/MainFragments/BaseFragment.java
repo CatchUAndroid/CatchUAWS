@@ -14,6 +14,10 @@ public class BaseFragment extends Fragment {
 
     public FragmentNavigation mFragmentNavigation;
 
+    public FragmentNavigation getmFragmentNavigation() {
+        return mFragmentNavigation;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
