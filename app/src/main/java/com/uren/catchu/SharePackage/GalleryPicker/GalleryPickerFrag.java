@@ -76,7 +76,7 @@ public class GalleryPickerFrag extends Fragment {
     public void getData() {
 
         fetchMedia();
-        //gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this);
+        gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this);
         specialRecyclerView.setAdapter(gridListAdapter);
         gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
         specialRecyclerView.addItemDecoration(addItemDecoration());

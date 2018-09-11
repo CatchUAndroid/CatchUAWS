@@ -20,6 +20,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +38,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.common.api.ResultCallback;
@@ -79,6 +82,7 @@ import com.uren.catchu.Singleton.UserFriends;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 
 
@@ -366,11 +370,15 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 }
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, GALLERY_TEXT);
-                setGalleryImageView(photoSelectAdapter.getPhotoRoundedBitmap());
+                //setGalleryImageView(photoSelectAdapter.getPhotoRoundedBitmap());
+                setGalleryImageView2();
+                //setGalleryImageView(photoSelectAdapter.getRoundedBitmapDrawable());
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, CAMERA_TEXT);
-                setGalleryImageView(photoSelectAdapter.getPhotoRoundedBitmap());
+                //setGalleryImageView(photoSelectAdapter.getPhotoRoundedBitmap());
+                setGalleryImageView2();
+                //setGalleryImageView(photoSelectAdapter.getRoundedBitmapDrawable());
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             }
         }
@@ -383,6 +391,14 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
 
     public void setGalleryImageView(Bitmap bitmap) {
         galleryImgv.setImageBitmap(bitmap);
+        //galleryImgv.setImageDrawable(roundedBitmapDrawable);
+        deleteGalleryImgv.setVisibility(View.VISIBLE);
+        addGalleryImgv.setVisibility(View.GONE);
+    }
+
+    public void setGalleryImageView2() {
+        Glide.with(ShareDetailActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
+        //galleryImgv.setImageDrawable(roundedBitmapDrawable);
         deleteGalleryImgv.setVisibility(View.VISIBLE);
         addGalleryImgv.setVisibility(View.GONE);
     }
@@ -467,6 +483,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
 
             Location location = locationTrackObj.getLocation();
             if (location != null) {
+                setShareItemsLocation(location);
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
                         LatLng(location.getLatitude(),
                         location.getLongitude()), 17));
@@ -474,6 +491,13 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 mapRipple = new MapRipple(mMap, latLng, ShareDetailActivity.this);
             }
         }
+    }
+
+    public void setShareItemsLocation(Location location){
+        catchu.model.Location tempLoc = new catchu.model.Location();
+        tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+        tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+        ShareItems.getInstance().getShare().setLocation(tempLoc);
     }
 
     private void checkCanGetLocation() {
@@ -559,7 +583,9 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         }
 
         if (ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri() != null) {
-            galleryImgv.setImageBitmap(ShareItems.getInstance().getPhotoSelectAdapter().getPhotoRoundedBitmap());
+            Glide.with(ShareDetailActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
+            //galleryImgv.setImageBitmap(ShareItems.getInstance().getPhotoSelectAdapter().getPhotoRoundedBitmap());
+            //galleryImgv.setImageDrawable(ShareItems.getInstance().getPhotoSelectAdapter().getRoundedBitmapDrawable());
             addGalleryImgv.setVisibility(View.GONE);
             deleteGalleryImgv.setVisibility(View.VISIBLE);
         } else {
@@ -645,8 +671,13 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                     deleteTextImgv.setVisibility(View.GONE);
                 } else {
                     editTextBitmap = BitmapConversion.getScreenShot(noteTextEditText);
-                    editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);
-                    textImgv.setImageBitmap(editTextBitmap);
+                    /*editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);*/
+                    //RoundedBitmapDrawable r = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null, ShareDetailActivity.this);
+
+                    Glide.with(ShareDetailActivity.this).load(editTextBitmap).apply(RequestOptions.circleCropTransform()).into(textImgv);
+
+                    /*textImgv.setImageBitmap(editTextBitmap);*/
+                    //textImgv.setImageDrawable(r);
                     addTextImgv.setVisibility(View.GONE);
                     deleteTextImgv.setVisibility(View.VISIBLE);
                 }

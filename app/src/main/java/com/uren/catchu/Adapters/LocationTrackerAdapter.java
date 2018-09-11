@@ -48,12 +48,12 @@ public class LocationTrackerAdapter implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.i("Info", "Location changed lat :" + location.getLatitude());
         Log.i("Info", "Location changed long:" + location.getLongitude());
-        CommonUtils.showToast(mContext, "Location changed lat :" + location.getLatitude());
+        /*CommonUtils.showToast(mContext, "Location changed lat :" + location.getLatitude());*/
 
         catchu.model.Location locationModel = new catchu.model.Location();
         locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-        ShareItems.getInstance().setLocation(locationModel);
+        ShareItems.getInstance().getShare().setLocation(locationModel);
     }
 
     @Override

@@ -1,24 +1,18 @@
 package com.uren.catchu.GeneralUtils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.view.View;
-
 import com.uren.catchu.R;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
-import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class PhotoSelectAdapter {
@@ -31,7 +25,6 @@ public class PhotoSelectAdapter {
     String imageRealPath;
     Bitmap photoBitmap;
     Bitmap photoBitmapOrjinal = null;
-    Bitmap photoRoundedBitmap = null;
     InputStream inputStream = null;
 
     public PhotoSelectAdapter(Context context, Intent data, String selectedItemText) {
@@ -60,7 +53,8 @@ public class PhotoSelectAdapter {
         }
         imageRealPath = UriAdapter.getPathFromGalleryUri(context, pictureUri);
         photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
-        photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);
+        /*photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);*/
+
     }
 
     public void managePictureChoosen() {
@@ -70,7 +64,7 @@ public class PhotoSelectAdapter {
             pictureUri = data.getData();
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, pictureUri);
             photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
-            photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);
+            /*photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);*/
         } else if (selectedItemText == GALLERY_TEXT) {
             pictureUri = data.getData();
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, pictureUri);
@@ -83,9 +77,7 @@ public class PhotoSelectAdapter {
             }
             photoBitmap = BitmapFactory.decodeStream(inputStream);
             photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
-            photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);
-        } else if (selectedItemText == FROM_FILE_TEXT) {
-
+            /*photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);*/
         }
     }
 
@@ -105,7 +97,7 @@ public class PhotoSelectAdapter {
         return photoBitmapOrjinal;
     }
 
-    public Bitmap getPhotoRoundedBitmap() {
+    /*public Bitmap getPhotoRoundedBitmap() {
         return photoRoundedBitmap;
-    }
+    }*/
 }

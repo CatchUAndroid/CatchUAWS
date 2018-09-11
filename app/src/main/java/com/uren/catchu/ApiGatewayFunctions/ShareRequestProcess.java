@@ -27,7 +27,7 @@ public class ShareRequestProcess extends AsyncTask<Void, Void, ShareResponse> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            ShareResponse shareResponse = instance.client.sharesShareidPost("", shareRequest);
+            ShareResponse shareResponse = (ShareResponse) instance.client.sharesShareidPost(" ", shareRequest);
             return shareResponse;
 
         } catch (Exception e) {

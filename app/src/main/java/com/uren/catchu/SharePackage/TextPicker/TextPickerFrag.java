@@ -17,8 +17,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.ShareItems;
 
 import butterknife.ButterKnife;
@@ -77,7 +80,7 @@ public class TextPickerFrag extends Fragment {
 
                 if(!s.toString().isEmpty()){
                     editTextBitmap = BitmapConversion.getScreenShot(textEditText);
-                    editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);
+                    /*editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);*/
                 }else
                     editTextBitmap = null;
 

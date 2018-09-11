@@ -20,7 +20,6 @@ public class ShareItems {
     private static Share share;
     private static PhotoSelectAdapter photoSelectAdapter;
     private static Bitmap textBitmap;
-    private static Location location;
 
     public static ShareItems getInstance(){
 
@@ -65,11 +64,4 @@ public class ShareItems {
         ShareItems.textBitmap = textBitmap;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        ShareItems.location = location;
-    }
 }

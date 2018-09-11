@@ -462,7 +462,7 @@ public class UserEditFragment extends BaseFragment
                     public void onTaskContinue() {
                         progressBar.setVisibility(View.VISIBLE);
                     }
-                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, photoSelectAdapter.getPhotoBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

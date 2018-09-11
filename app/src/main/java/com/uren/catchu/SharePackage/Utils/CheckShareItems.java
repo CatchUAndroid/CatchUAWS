@@ -34,7 +34,7 @@ public class CheckShareItems {
     }
 
     public boolean isLocationLoaded(){
-        if(ShareItems.getInstance().getLocation() == null) {
+        if(ShareItems.getInstance().getShare().getLocation() == null) {
             errorMessage = context.getResources().getString(R.string.locationIsEmpty);
             return false;
         }

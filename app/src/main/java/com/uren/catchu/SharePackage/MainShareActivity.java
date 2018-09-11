@@ -23,6 +23,7 @@ import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
 import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.VideoPickerFrag;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.ShareItems;
 
 public class MainShareActivity extends FragmentActivity {
@@ -64,6 +65,7 @@ public class MainShareActivity extends FragmentActivity {
         nextButton = findViewById(R.id.nextButton);
         ShareItems.setInstance(null);
         ShareItems.getInstance();
+        ShareItems.getInstance().getShare().setUserid(AccountHolderInfo.getUserID());
     }
 
     @Override

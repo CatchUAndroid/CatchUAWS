@@ -16,6 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.UriAdapter;
@@ -114,7 +116,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
                 if (selectedPosition == CODE_GALLERY_POSITION)
                     startGalleryProcess();
-                else if(selectedPosition == CODE_CAMERA_POSITION)
+                else if (selectedPosition == CODE_CAMERA_POSITION)
                     startCameraProcess();
                 else
                     startGalleryProcess();
@@ -129,27 +131,23 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-
         if (resultCode == Activity.RESULT_OK) {
-
             if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectAdapter = new PhotoSelectAdapter(context, data, GALLERY_TEXT);
-                setSelectedImageView(photoSelectAdapter.getPhotoBitmapOrjinal());
+                setSelectedImageView();
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
 
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(context, data, CAMERA_TEXT);
-                setSelectedImageView(photoSelectAdapter.getPhotoBitmapOrjinal());
+                setSelectedImageView();
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             } else
                 CommonUtils.showToast(context, context.getResources().getString(R.string.technicalError) + requestCode);
         }
-
         return false;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder{
-
+    class MyViewHolder extends RecyclerView.ViewHolder {
         File selectedFile;
         int position = 0;
         ImageView specialProfileImgView;
@@ -174,18 +172,9 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         }
 
         public void showSelectedPicture() {
-
-            Picasso.with(context)
-                    .load(Uri.fromFile(selectedFile))
-                    .resize(500, 500)
-                    .centerCrop()
-                    .noFade()
-                    .into(galleryPickerFrag.imageView);
-
             galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
             galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
-            photoSelectAdapter = new PhotoSelectAdapter(context, Uri.fromFile(selectedFile));
-            ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
+            Glide.with(context).load(Uri.fromFile(selectedFile)).into(galleryPickerFrag.imageView);
         }
 
         public void setData(File selectedFile, int position) {
@@ -197,12 +186,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             } else if (position == CODE_CAMERA_POSITION) {
                 specialProfileImgView.setImageResource(R.drawable.camera);
             } else
-                Picasso.with(context)
-                        .load(Uri.fromFile(selectedFile))
-                        .resize(500, 500)
-                        .centerCrop()
-                        .noFade()
-                        .into(specialProfileImgView);
+                Glide.with(context).load(Uri.fromFile(selectedFile)).into(specialProfileImgView);
         }
     }
 
@@ -248,8 +232,8 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
                     permissionModule.getCameraPermissionCode());
     }
 
-    public void setSelectedImageView(Bitmap bitmap) {
-        galleryPickerFrag.imageView.setImageBitmap(bitmap);
+    public void setSelectedImageView() {
+        Glide.with(context).load(photoSelectAdapter.getPictureUri()).into(galleryPickerFrag.imageView);
         galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
         galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
     }

@@ -81,6 +81,7 @@ public class SharePostProcess {
                             }
                         } catch (IOException e) {
                             dialogDismiss();
+                            Log.i("Info", "Paylasim Exception yedi4:" + e.getMessage());
                             CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
                             sharePostCallback.onFailed(e);
                         }
@@ -89,6 +90,7 @@ public class SharePostProcess {
                     @Override
                     public void onFailure(Exception e) {
                         dialogDismiss();
+                        Log.i("Info", "Paylasim Exception yedi3:" + e.getMessage());
                         CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
                         sharePostCallback.onFailed(e);
                     }
@@ -96,13 +98,14 @@ public class SharePostProcess {
                     @Override
                     public void onTaskContinue() {
                     }
-                }, ShareItems.getInstance().getPhotoSelectAdapter().getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, ShareItems.getInstance().getPhotoSelectAdapter().getPhotoBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
             @Override
             public void onFailure(Exception e) {
                 dialogDismiss();
+                Log.i("Info", "Paylasim Exception yedi2:" + e.getMessage());
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
                 sharePostCallback.onFailed(e);
             }
@@ -123,12 +126,13 @@ public class SharePostProcess {
             @Override
             public void onSuccess(Object object) {
                 Log.i("Info", "Paylasim ok");
+                dialogDismiss();
                 sharePostCallback.onSuccess();
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.i("Info", "Paylasim Exception yedi:" + e.getMessage());
+                Log.i("Info", "Paylasim Exception yedi1:" + e.getMessage());
                 dialogDismiss();
                 sharePostCallback.onFailed(e);
             }
