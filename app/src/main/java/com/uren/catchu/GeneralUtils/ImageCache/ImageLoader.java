@@ -12,6 +12,8 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CircleTransform;
@@ -78,8 +80,10 @@ public class ImageLoader {
 
         if (bitmap != null) {
             if(displayType == displayRounded) {
-                bitmap = BitmapConversion.getRoundedShape(bitmap, friendImageShown, friendImageShown, null);
-                imageView.setImageBitmap(bitmap);
+                //bitmap = BitmapConversion.getRoundedShape(bitmap, friendImageShown, friendImageShown, null);
+                //imageView.setImageBitmap(bitmap);
+
+                Glide.with(context).load(bitmap).apply(RequestOptions.circleCropTransform()).into(imageView);
 
 
 
@@ -136,8 +140,11 @@ public class ImageLoader {
 
             if(result != null) {
                 if (displayType == displayRounded) {
-                    result = BitmapConversion.getRoundedShape(result, friendImageShown, friendImageShown, null);
-                    bmImage.setImageBitmap(result);
+                    //result = BitmapConversion.getRoundedShape(result, friendImageShown, friendImageShown, null);
+                    //bmImage.setImageBitmap(result);
+
+                    Glide.with(context).load(result).apply(RequestOptions.circleCropTransform()).into(bmImage);
+
 
                     /*Resources res = context.getResources();
                     RoundedBitmapDrawable dr =
@@ -293,8 +300,10 @@ public class ImageLoader {
                 return;
             if (bitmap != null) {
                 if(photoToLoad.displayType == displayRounded) {
-                    bitmap = BitmapConversion.getRoundedShape(bitmap, friendImageShown, friendImageShown, null);
-                    photoToLoad.imageView.setImageBitmap(bitmap);
+                    //bitmap = BitmapConversion.getRoundedShape(bitmap, friendImageShown, friendImageShown, null);
+                    //photoToLoad.imageView.setImageBitmap(bitmap);
+
+                    Glide.with(context).load(bitmap).apply(RequestOptions.circleCropTransform()).into(photoToLoad.imageView);
 
 
                     /*Resources res = context.getResources();

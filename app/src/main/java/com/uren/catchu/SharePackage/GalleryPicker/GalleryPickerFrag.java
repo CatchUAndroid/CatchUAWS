@@ -44,11 +44,10 @@ public class GalleryPickerFrag extends Fragment {
     private static final String EXTENSION_PNG = ".png";
 
     private static final int MARGING_GRID = 2;
-    private static final int maxImageCount = 22;
-    private static final int spanCount = 3;
+    private static final int maxImageCount = 30;
+    private static final int spanCount = 4;
 
     public GalleryGridListAdapter gridListAdapter;
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,11 +76,13 @@ public class GalleryPickerFrag extends Fragment {
     public void getData() {
 
         fetchMedia();
-        //gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this);
+        gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this);
         specialRecyclerView.setAdapter(gridListAdapter);
         gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
         specialRecyclerView.addItemDecoration(addItemDecoration());
         specialRecyclerView.setLayoutManager(gridLayoutManager);
+
+        // TODO: 6.09.2018 - Recycler view da resimler dikdortgen aciliyor. xml de kullanilan ConstraintLayout cozum olabilir.
     }
 
     private RecyclerView.ItemDecoration addItemDecoration() {
@@ -92,7 +93,8 @@ public class GalleryPickerFrag extends Fragment {
                 outRect.left = MARGING_GRID;
                 outRect.right = MARGING_GRID;
                 outRect.bottom = MARGING_GRID;
-                if (parent.getChildLayoutPosition(view) >= 0 && parent.getChildLayoutPosition(view) <= 3) {
+                if (parent.getChildLayoutPosition(view) >= 0 && parent.getChildLayoutPosition(view) <= 3)
+                {
                     outRect.top = MARGING_GRID;
                 }
             }

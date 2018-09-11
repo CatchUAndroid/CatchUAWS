@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
@@ -44,6 +45,7 @@ import butterknife.ButterKnife;
 import catchu.model.SearchResult;
 
 import static com.uren.catchu.Constants.StringConstants.GET_AUTHENTICATED_USER_GROUP_LIST;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.propGroups;
 import static com.uren.catchu.Constants.StringConstants.propPersons;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
@@ -135,7 +137,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private void setupViewPager(final ViewPager viewPager) {
 
         personFragment = new PersonFragment(userid, verticalShown, "A", context);
-        groupFragment = new GroupFragment(context, userid, GET_AUTHENTICATED_USER_GROUP_LIST);
+        groupFragment = new GroupFragment(context, userid);
 
         adapter = new SpecialSelectTabAdapter(getFragmentManager());
         adapter.addFragment(personFragment, getResources().getString(R.string.friends));
@@ -259,8 +261,11 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
         if (UserFriends.getInstance(AccountHolderInfo.getUserID()).getSize() == 0)
             CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
-        else
-            startActivity(new Intent(context, SelectFriendToGroupActivity.class));
+        else {
+            Intent intent = new Intent(context, SelectFriendToGroupActivity.class);
+            intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
+            startActivity(intent);
+        }
 
     }
 
@@ -277,8 +282,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        //getSearchResult(userid, defSpace);
     }
 
     @Override

@@ -45,6 +45,8 @@ import com.amazonaws.http.HttpRequest;
 import com.amazonaws.http.HttpResponse;
 import com.amazonaws.mobile.client.AWSMobileClient;
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -55,8 +57,11 @@ import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.HttpHandler;
+import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
+import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
+import com.uren.catchu.GroupPackage.Utils.SaveGroupProcess;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -100,16 +105,16 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 
 import static com.amazonaws.auth.policy.Principal.WebIdentityProviders.Amazon;
+import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.CREATE_GROUP;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
-import static com.uren.catchu.Constants.StringConstants.defSpace;
+import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.gridShown;
 
 public class AddGroupActivity extends AppCompatActivity {
 
     Toolbar mToolBar;
-    //ViewPager viewPager;
-    //TabLayout tabLayout;
     public static RecyclerView recyclerView;
     public static FriendGridListAdapter adapter;
     FloatingActionButton saveGroupInfoFab;
@@ -117,40 +122,29 @@ public class AddGroupActivity extends AppCompatActivity {
 
     private ImageView groupPictureImgv;
 
-    private static SelectedFriendList selectedFriendListInstance;
-
     public int photoChoosenType;
 
-    private Bitmap groupPhotoBitmap = null;
-    private Bitmap getGroupPhotoBitmapOrjinal = null;
-
-    private Uri groupPictureUri = null;
-    private String imageRealPath;
-    private InputStream profileImageStream;
-
-    ProgressDialog mProgressDialog;
-
     RelativeLayout addGroupDtlRelLayout;
-    Context context;
-    String downloadUrl = defSpace;
-
-    List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
-    GroupRequest groupRequest;
-
     PermissionModule permissionModule;
 
     private static final int adapterCameraSelected = 0;
     private static final int adapterGallerySelected = 1;
 
     TextView participantSize;
-
-    //ProgressBar progressBar;
+    PhotoSelectAdapter photoSelectAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
 
+        initToolbar();
+        initUI();
+        addListeners();
+        openPersonSelectionPage();
+    }
+
+    public void initToolbar() {
         mToolBar = (Toolbar) findViewById(R.id.toolbarLayout);
         mToolBar.setTitle(getResources().getString(R.string.addNewGroup));
         mToolBar.setSubtitle(getResources().getString(R.string.addGroupName));
@@ -159,28 +153,17 @@ public class AddGroupActivity extends AppCompatActivity {
         mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
         mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
         setSupportActionBar(mToolBar);
-
-        mProgressDialog = new ProgressDialog(this);
-        context = this;
-
-        permissionModule = new PermissionModule(context);
-
-        selectedFriendListInstance = SelectedFriendList.getInstance();
-
-        initUI();
-        addListeners();
-        openPersonSelectionPage();
     }
 
-    public void initUI(){
+    public void initUI() {
         participantSize = (TextView) findViewById(R.id.participantSize);
         groupPictureImgv = (ImageView) findViewById(R.id.groupPictureImgv);
         saveGroupInfoFab = (FloatingActionButton) findViewById(R.id.saveGroupInfoFab);
         groupNameEditText = (EditText) findViewById(R.id.groupNameEditText);
         addGroupDtlRelLayout = (RelativeLayout) findViewById(R.id.addGroupDtlRelLayout);
         recyclerView = findViewById(R.id.recyclerView);
-
-        participantSize.setText(Integer.toString(selectedFriendListInstance.getSize()));
+        participantSize.setText(Integer.toString(SelectedFriendList.getInstance().getSize()));
+        permissionModule = new PermissionModule(AddGroupActivity.this);
     }
 
     public void addListeners() {
@@ -199,14 +182,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.pleaseWriteGroupName));
                     return;
                 }
-
-                mProgressDialog.setMessage(getResources().getString(R.string.groupIsCreating));
-                dialogShow();
-
-                if (getGroupPhotoBitmapOrjinal != null)
-                    saveGroupToAmazon();
-                else
-                    processSaveGroup();
+                saveGroup();
             }
         });
 
@@ -219,14 +195,12 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     public void hideKeyBoard() {
-
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
     private void openPersonSelectionPage() {
-
-        adapter = new FriendGridListAdapter(this, selectedFriendListInstance.getSelectedFriendList());
+        adapter = new FriendGridListAdapter(this, SelectedFriendList.getInstance().getSelectedFriendList());
         recyclerView.setAdapter(adapter);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -247,16 +221,11 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     private void startChooseImageProc() {
-
-        Log.i("Info", "startChooseImageProc++++++++++++++++++++++++++++++++");
-
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
         adapter.add("  " + getResources().getString(R.string.openCamera));
         adapter.add("  " + getResources().getString(R.string.openGallery));
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
         builder.setTitle(getResources().getString(R.string.chooseProfilePhoto));
-
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
 
@@ -274,7 +243,6 @@ public class AddGroupActivity extends AppCompatActivity {
                     CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.technicalError));
             }
         });
-
         AlertDialog alert = builder.create();
         alert.show();
     }
@@ -302,7 +270,6 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     private void startGalleryProcess() {
-
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -316,40 +283,14 @@ public class AddGroupActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == permissionModule.getCameraPermissionCode()) {
-                manageProfilePicChoosen(data);
+                photoSelectAdapter = new PhotoSelectAdapter(AddGroupActivity.this, data, CAMERA_TEXT);
+                Glide.with(AddGroupActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
-                manageProfilePicChoosen(data);
+                photoSelectAdapter = new PhotoSelectAdapter(AddGroupActivity.this, data, GALLERY_TEXT);
+                Glide.with(AddGroupActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
             } else
                 CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.technicalError) + requestCode);
         }
-    }
-
-    private void manageProfilePicChoosen(Intent data) {
-
-        Log.i("Info", "manageProfilePicChoosen++++++++++++++++++++++++++++++++");
-
-        if (photoChoosenType == adapterCameraSelected) {
-
-            groupPhotoBitmap = (Bitmap) data.getExtras().get("data");
-            groupPictureUri = data.getData();
-            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
-            getGroupPhotoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, groupPhotoBitmap);
-            groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
-        } else if (photoChoosenType == adapterGallerySelected) {
-
-            groupPictureUri = data.getData();
-            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
-            try {
-                profileImageStream = getContentResolver().openInputStream(groupPictureUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            groupPhotoBitmap = BitmapFactory.decodeStream(profileImageStream);
-            getGroupPhotoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, groupPhotoBitmap);
-            groupPhotoBitmap = BitmapConversion.getRoundedShape(groupPhotoBitmap, 600, 600, imageRealPath);
-        }
-
-        groupPictureImgv.setImageBitmap(groupPhotoBitmap);
     }
 
     @Override
@@ -369,156 +310,25 @@ public class AddGroupActivity extends AppCompatActivity {
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 
-    public void processSaveGroup() {
 
-        fillGroupParticipants();
-        fillGroupDetail();
-        saveGroupToNeoJ();
-    }
-
-    private void fillGroupParticipants() {
-
-        participantArrayItems = new ArrayList<GroupRequestGroupParticipantArrayItem>();
-
-        for (UserProfileProperties userProfileProperties : selectedFriendListInstance.getSelectedFriendList().getResultArray()) {
-            GroupRequestGroupParticipantArrayItem group = new GroupRequestGroupParticipantArrayItem();
-            group.setParticipantUserid(userProfileProperties.getUserid());
-            participantArrayItems.add(group);
-        }
-    }
-
-    private void fillGroupDetail() {
-
-        groupRequest = new GroupRequest();
-        groupRequest.setUserid(AccountHolderInfo.getUserID());
-        groupRequest.setGroupName(groupNameEditText.getText().toString());
-        groupRequest.setRequestType(CREATE_GROUP);
-        groupRequest.setGroupParticipantArray(participantArrayItems);
-        groupRequest.setGroupPhotoUrl(downloadUrl);
-    }
-
-    public void dialogShow() {
-        if (!mProgressDialog.isShowing()) mProgressDialog.show();
-    }
-
-    public void dialogDismiss() {
-        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
-    }
-
-    public void saveGroupToAmazon() {
-
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+    public void saveGroup() {
+        SaveGroupProcess saveGroupProcess = new SaveGroupProcess(AddGroupActivity.this, photoSelectAdapter, groupNameEditText.getText().toString(), new SaveGroupCallback() {
             @Override
-            public void onSuccess(Object object) {
-                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
-
-                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
-                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getImages().get(0).getDownloadUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
-
-
-                UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
-                    @Override
-                    public void onSuccess(Object object) {
-                        HttpURLConnection urlConnection = (HttpURLConnection) object;
-
-                        try {
-                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                downloadUrl = commonS3BucketResult.getImages().get(0).getDownloadUrl();
-                                processSaveGroup();
-                            } else {
-                                InputStream is = urlConnection.getErrorStream();
-                                CommonUtils.showToast(context, is.toString());
-                            }
-                        } catch (IOException e) {
-                            dialogDismiss();
-                            CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        dialogDismiss();
-                        CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-                    }
-
-                    @Override
-                    public void onTaskContinue() {
-
-                    }
-                }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getImages().get(0).getUploadUrl());
-
-                uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                dialogDismiss();
-                CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-            }
-
-            @Override
-            public void onTaskContinue() {
-
-            }
-        }, JPG_TYPE);
-
-        signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void saveGroupToNeoJ() {
-
-        Log.i("Info", "saveGroupToAWS+++++++++++++++++++++++++++++++");
-
-
-        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                GroupRequestResult groupRequestResult = (GroupRequestResult) object;
-                addGroupToUsersGroup(groupRequestResult);
+            public void onSuccess() {
                 returnPreviousActivity();
             }
 
             @Override
-            public void onFailure(Exception e) {
-                //progressBar.setVisibility(View.GONE);
-                dialogDismiss();
-                CommonUtils.showToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+            public void onFailed(Exception e) {
+                CommonUtils.showToastLong(AddGroupActivity.this, getResources().getString(R.string.error) + e.getMessage());
             }
-
-            @Override
-            public void onTaskContinue() {
-                //progressBar.setVisibility(View.VISIBLE);
-            }
-        }, groupRequest);
-
-        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void addGroupToUsersGroup(GroupRequestResult groupRequestResult) {
-        GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
-        groupRequestResultResultArrayItem.setGroupAdmin(groupRequestResult.getResultArray().get(0).getGroupAdmin());
-        groupRequestResultResultArrayItem.setGroupid(groupRequestResult.getResultArray().get(0).getGroupid());
-        groupRequestResultResultArrayItem.setGroupPhotoUrl(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl());
-        groupRequestResultResultArrayItem.setName(groupRequestResult.getResultArray().get(0).getName());
-        groupRequestResultResultArrayItem.setCreateAt(groupRequestResult.getResultArray().get(0).getCreateAt());
-        UserGroups.addGroupToRequestResult(groupRequestResultResultArrayItem);
-        SearchFragment.reloadAdapter();
+        });
     }
 
     private void returnPreviousActivity() {
-
-        // TODO: 9.08.2018 - Burada  NextActivity ye mi gitmeli yoksa acik 2 activity kill mi edilmeli bakalim...
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                //progressBar.setVisibility(View.GONE);
-                dialogDismiss();
-                //Intent intent = new Intent(getApplicationContext(), NextActivity.class);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //startActivity(intent);
                 finish();
                 SelectFriendToGroupActivity.thisActivity.finish();
             }

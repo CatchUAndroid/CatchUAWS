@@ -1,29 +1,34 @@
 package com.uren.catchu.GeneralUtils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
+import android.view.View;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 public class BitmapConversion extends AppCompatActivity {
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int Width, int Height, String imagePath) {
+    /*public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int Width, int Height, String imagePath) {
 
         Bitmap orientedBitmap;
 
-        if(imagePath != null) {
-            //orientedBitmap = ExifUtil.rotateBitmap(imagePath, scaleBitmapImage);
+        if (imagePath != null) {
             orientedBitmap = ExifUtil.rotateImageIfRequired(imagePath, scaleBitmapImage);
-        }
-        else
+        } else
             orientedBitmap = scaleBitmapImage;
 
         int targetWidth = Width;
@@ -47,41 +52,27 @@ public class BitmapConversion extends AppCompatActivity {
                 new Rect(0, 0, targetWidth, targetHeight), null);
 
         return targetBitmap;
-    }
+    }*/
 
-    public static Bitmap getBitmapOriginRotate(Bitmap scaleBitmapImage, String imagePath){
+    /*public static RoundedBitmapDrawable getRoundedDrawable(Bitmap scaleBitmapImage, int Width, int Height, String imagePath, Context context) {
 
-        //Bitmap orientedBitmap = ExifUtil.rotateBitmap(imagePath, scaleBitmapImage);
-        Bitmap orientedBitmap = ExifUtil.rotateImageIfRequired(imagePath, scaleBitmapImage);
-        return orientedBitmap;
-    }
+        Bitmap orientedBitmap;
 
-    public static String encodeBase64FromBitmap(Bitmap bm)
-    {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
+        if (imagePath != null)
+            orientedBitmap = ExifUtil.rotateImageIfRequired(imagePath, scaleBitmapImage);
+        else
+            orientedBitmap = scaleBitmapImage;
 
-        return encImage;
-    }
+        RoundedBitmapDrawable targetBitmap = RoundedBitmapDrawableFactory.create(context.getResources(), orientedBitmap);
+        targetBitmap.setCircular(true);
+        targetBitmap.setAntiAlias(true);
+        return targetBitmap;
+    }*/
 
-    public static String encodeBase64FromFilepath(String path)
-    {
-        File imagefile = new File(path);
-        FileInputStream fis = null;
-        try{
-            fis = new FileInputStream(imagefile);
-        }catch(FileNotFoundException e){
-            e.printStackTrace();
-        }
-        Bitmap bm = BitmapFactory.decodeStream(fis);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG,100,baos);
-        byte[] b = baos.toByteArray();
-        String encImage = Base64.encodeToString(b, Base64.DEFAULT);
-
-        return encImage;
-
+    public static Bitmap getScreenShot(View view) {
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
+        return bitmap;
     }
 }

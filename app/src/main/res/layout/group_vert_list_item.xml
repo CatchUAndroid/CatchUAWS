@@ -11,7 +11,7 @@
     android:id="@+id/groupRootCardView">
 
     <LinearLayout
-        android:id="@+id/specialListLinearLayout"
+        android:id="@+id/groupSelectMainLinLay"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white"
@@ -27,31 +27,50 @@
             android:background="@drawable/img_border_blue"
             android:src="@drawable/man" />
 
-        <TextView
-            android:id="@+id/groupnameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="30dp"
-            android:textStyle="bold|italic" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right|center">
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/adminDisplayButton"
-                android:layout_width="wrap_content"
-                android:layout_marginRight="20dp"
-                android:layout_height="30dp"
+            <TextView
+                android:id="@+id/groupnameTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/ripple_button_admin"
-                android:textAllCaps="false"
-                android:textColor="@color/green"
-                android:textSize="10sp"
-                android:textStyle="normal|bold|italic" />
+                android:layout_marginLeft="20dp"
+                android:layout_weight="10"
+                android:textSize="12dp"
+                android:textStyle="italic|bold" />
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="6">
+
+                <Button
+                    android:id="@+id/adminDisplayButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ripple_button_admin"
+                    android:textAllCaps="false"
+                    android:textColor="@color/green"
+                    android:textSize="10sp"
+                    android:textStyle="normal|bold|italic" />
+            </LinearLayout>
+
+            <RadioButton
+                android:id="@+id/selectGroupRb"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right|center"
+                android:layout_weight="2"
+                android:scaleX="0.7"
+                android:scaleY="0.7"
+                android:visibility="gone"/>
         </LinearLayout>
 
     </LinearLayout>

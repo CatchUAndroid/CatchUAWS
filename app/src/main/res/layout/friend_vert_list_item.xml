@@ -63,7 +63,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/selectRadioBtn"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginRight="20dp"
+                android:scaleX="0.7"
+                android:scaleY="0.7" />
             
         </LinearLayout>
 

@@ -10,6 +10,7 @@
     <string name="friends">ARKADAŞLAR</string>
     <string name="groups">GRUPLAR</string>
     <string name="error">Hata:</string>
+    <string name="info">Bilgi:</string>
     <string name="addNewGroup">Yeni Grup</string>
     <string name="addPersonToGroup">Katılımcı Ekle</string>
     <string name="selectLeastOneFriend">En az 1 kişi seçmelisiniz!</string>
@@ -29,7 +30,7 @@
     <string name="openCamera">Kamerayı Aç</string>
     <string name="openGallery">Galeriden Seç</string>
     <string name="chooseProfilePhoto">Profil fotoğrafı seçin</string>
-    <string name="groupInformation">Group Bilgileri</string>
+    <string name="groupInformation">Grup Bilgileri</string>
     <string name="deleteGroup">Grubu Sil</string>
     <string name="exitFromGroup">Gruptan Çık</string>
     <string name="areYouSureExitFromGroup">Gruptan çıkmak istediğinize emin misiniz?</string>
@@ -43,6 +44,13 @@
     <string name="createdAt">Oluşturuldu:</string>
     <string name="changeAsAdmin">Admin olarak değiştir</string>
     <string name="friendsAdding">Katılımcılar ekleniyor...</string>
+    <string name="giveCameraPermission">Kamerayı kullanmak için izin gerekmektedir</string>
+    <string name="pleaseAddShareItem">Paylaşım yapabilmek için video, resim yada text eklemelisiniz !</string>
+    <string name="selectGroup">Grup Seç</string>
+    <string name="selectAll">Hepsini Seç</string>
+    <string name="share">PAYLAŞ</string>
+    <string name="locationIsEmpty">Paylaşım için lokasyon bilgisi zorunludur</string>
+    <string name="shareIsProcessing">Paylaşılıyor...</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -51,6 +59,13 @@
     <string name="cancel">İptal</string>
     <string name="giveNewName">Yeni Isim Girin</string>
     <string name="groupPhotoChanging">Değiştiriliyor...</string>
+
+
+    <!-- Whose for will be shared -->
+    <string name="publicShareText">Herkese Açik</string>
+    <string name="friendsShareText">Arkadaşlar</string>
+    <string name="groupsShareText">Gruplar</string>
+    <string name="justMeShareText">Sadece Ben</string>
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Ayarları</string>

@@ -7,15 +7,24 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BucketUploadResult;
 
+import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
+import static com.uren.catchu.Constants.StringConstants.MP4_TYPE;
+
 public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResult> {
 
     private OnEventListener<BucketUploadResult> mCallBack;
     public Exception mException;
-    public String extensionType;
+    public String imageExtensionType;
+    public String videoExtensionType;
+    public String imageCount;
+    public String videoCount;
 
-    public SignedUrlGetProcess(OnEventListener callback,String extensionType) {
-        this.extensionType = extensionType;
+    public SignedUrlGetProcess(OnEventListener callback,int imageCount, int videoCount) {
+        this.imageExtensionType = JPG_TYPE;
+        this.videoExtensionType = MP4_TYPE;
         this.mCallBack = callback;
+        this.imageCount = Integer.toString(imageCount);
+        this.videoCount = Integer.toString(videoCount);
     }
 
     @Override
@@ -23,7 +32,7 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResul
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            BucketUploadResult commonS3BucketResult = instance.client.commonSignedurlGet("1", "0", "", extensionType);
+            BucketUploadResult commonS3BucketResult = instance.client.commonSignedurlGet(imageCount, videoCount, videoExtensionType, imageExtensionType);
             return commonS3BucketResult;
 
         } catch (Exception e) {

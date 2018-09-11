@@ -250,8 +250,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         groupPictureImgV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil( context, permissionModule, (Activity) context,
-                //        600, 600, groupPictureImgV);
                 // TODO: 30.08.2018 -  startChooseImageProc ve sonrasini moduler nasil yapariz bakalim...
                 startChooseImageProc();
             }
@@ -519,7 +517,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             public void onTaskContinue() {
 
             }
-        }, JPG_TYPE);
+        }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -55,6 +55,8 @@ public class EditGroupNameActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
 
+    // TODO: 6.09.2018 - Grup listeleme ekraninda maz size ne oluyor kontrol edilecek. Grup admin buyonu kayiyordu.
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

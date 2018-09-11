@@ -67,7 +67,7 @@ public class SelectedFriendList {
 
     public void clearFriendList(){
         if(friendList.getResultArray().size() > 0) {
-            friendList.setResultArray(null);
+            friendList.setResultArray(new ArrayList<UserProfileProperties>());
         }
     }
 }

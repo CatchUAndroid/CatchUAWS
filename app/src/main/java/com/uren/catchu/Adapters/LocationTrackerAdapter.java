@@ -12,12 +12,18 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.ShareItems;
+
+import java.math.BigDecimal;
+
+import static com.uren.catchu.SharePackage.ShareDetailActivity.REQUEST_CODE_ENABLE_LOCATION;
 
 public class LocationTrackerAdapter implements LocationListener {
 
@@ -42,7 +48,12 @@ public class LocationTrackerAdapter implements LocationListener {
     public void onLocationChanged(Location location) {
         Log.i("Info", "Location changed lat :" + location.getLatitude());
         Log.i("Info", "Location changed long:" + location.getLongitude());
-        CommonUtils.showToast(mContext, "Location changed lat :" + location.getLatitude());
+        /*CommonUtils.showToast(mContext, "Location changed lat :" + location.getLatitude());*/
+
+        catchu.model.Location locationModel = new catchu.model.Location();
+        locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+        locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+        ShareItems.getInstance().getShare().setLocation(locationModel);
     }
 
     @Override
@@ -136,7 +147,7 @@ public class LocationTrackerAdapter implements LocationListener {
         return location;
     }
 
-    public void showSettingsAlert() {
+    /*public void showSettingsAlert() {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
         alertDialog.setTitle(mContext.getResources().getString(R.string.gpsSettings));
@@ -153,5 +164,5 @@ public class LocationTrackerAdapter implements LocationListener {
 
 
         alertDialog.show();
-    }
+    }*/
 }

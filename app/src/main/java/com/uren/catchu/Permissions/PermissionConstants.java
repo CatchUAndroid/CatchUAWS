@@ -12,5 +12,6 @@ public class PermissionConstants {
     public static final int codeRecordAudioPermission = 2001;
     public static final int codeImageGalleryPermission = 2002;
     public static final int codeShareGalleryPickerPerm = 2003;
+    public static final int codeVideoGalerySelectedPerm = 2004;
 
 }

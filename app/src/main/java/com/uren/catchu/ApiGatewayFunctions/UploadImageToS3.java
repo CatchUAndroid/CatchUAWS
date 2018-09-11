@@ -37,7 +37,8 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("PUT");
-            connection.setRequestProperty("Content-Type", "application/octet-stream");
+            //connection.setRequestProperty("Content-Type", "application/octet-stream");
+            connection.setRequestProperty("Content-Type", "image/jpg");
             OutputStream output = connection.getOutputStream();
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();

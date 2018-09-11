@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:background="@color/transparentBlack"
+    android:id="@+id/noteTextMainLayout">
+
+    <ImageView
+        android:id="@+id/cancelTextImgv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/img_border_white"
+        android:src="@drawable/cancel_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="50dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Note"
+            android:textColor="@color/background_white"
+            android:textStyle="normal|bold|italic"
+            android:background="@drawable/white_border_not_rounded"/>
+
+        <ScrollView
+            android:id="@+id/noteScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="10"
+            android:layout_marginTop="2dp"
+            android:background="@color/white">
+
+            <EditText
+                android:id="@+id/noteTextEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/background_white"
+                android:cursorVisible="false"
+                android:maxLines="20"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp" />
+
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/approveImgv"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/approve_icon_96"
+                android:background="@drawable/img_border_white"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

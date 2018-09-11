@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -18,7 +20,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,6 +60,7 @@
         <activity android:name=".GroupPackage.AddGroupActivity" />
         <activity android:name=".GroupPackage.SelectFriendToGroupActivity" />
         <activity android:name=".GroupPackage.DisplayGroupDetailActivity" />
+        <activity android:name=".SharePackage.VideoPicker.WillDelete.AudioRecorderActivity" />
         <activity
             android:name=".GroupPackage.EditGroupNameActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -72,7 +77,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".SharePackage.VideoPicker.VideoTestActivity"></activity>
+        <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
+        <activity android:name=".SharePackage.ShareDetailActivity" />
+        <activity android:name=".SharePackage.SelectGroupActivity"></activity>
     </application>
 
 </manifest>
