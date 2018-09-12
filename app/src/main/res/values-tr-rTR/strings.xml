@@ -93,6 +93,7 @@
     <string name="cancel_following">Takip etmeyi bırak?</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
+    <string name="feed">Paylaşımlar</string>
 
 
 </resources>

@@ -1,38 +1,30 @@
 package com.uren.catchu.MainPackage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.AddPinFragment;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.HomeFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.MainShareActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserFriends;
 import com.uren.catchu.Singleton.UserGroups;
@@ -336,7 +328,7 @@ public class NextActivity extends AppCompatActivity implements
         switch (index) {
 
             case FragNavController.TAB1:
-                return new HomeFragment();
+                return new FeedFragment();
             case FragNavController.TAB2:
                 return new SearchFragment();
             case FragNavController.TAB3:

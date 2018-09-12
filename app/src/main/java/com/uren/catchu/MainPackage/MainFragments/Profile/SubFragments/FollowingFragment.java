@@ -159,7 +159,7 @@ public class FollowingFragment extends BaseFragment
 
         followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray(), rowItemClickListener);
 
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         following_recyclerView.setLayoutManager(mLayoutManager);
         following_recyclerView.setAdapter(followAdapter);
 
