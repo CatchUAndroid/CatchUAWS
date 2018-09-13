@@ -60,6 +60,8 @@ import com.uren.catchu.Singleton.ShareItems;
 import java.io.File;
 import java.util.ArrayList;
 
+import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
@@ -76,9 +78,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     PermissionModule permissionModule;
     GalleryPickerFrag galleryPickerFrag;
-
-    final int CODE_GALLERY_POSITION = 0;
-    final int CODE_CAMERA_POSITION = 1;
 
     PhotoSelectAdapter photoSelectAdapter;
 

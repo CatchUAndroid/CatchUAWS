@@ -28,6 +28,9 @@ import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 
+import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
+
 
 @SuppressLint("ValidFragment")
 public class GalleryPickerFrag extends Fragment {
@@ -159,9 +162,9 @@ public class GalleryPickerFrag extends Fragment {
         if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                if (gridListAdapter.selectedPosition == gridListAdapter.CODE_GALLERY_POSITION)
+                if (gridListAdapter.selectedPosition == CODE_GALLERY_POSITION)
                     gridListAdapter.startGalleryProcess();
-                else if (gridListAdapter.selectedPosition == gridListAdapter.CODE_CAMERA_POSITION)
+                else if (gridListAdapter.selectedPosition == CODE_CAMERA_POSITION)
                     gridListAdapter.startCameraProcess();
                 else
                     gridListAdapter.startGalleryProcess();

@@ -69,6 +69,9 @@
     <string name="share">SHARE</string>
     <string name="locationIsEmpty">Location information is required to share</string>
     <string name="shareIsProcessing">Sharing...</string>
+    <string name="videoDurationWarning">Maximum duration for video :</string>
+    <string name="secondShort">sec</string>
+    <string name="secondLong">second(s)</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

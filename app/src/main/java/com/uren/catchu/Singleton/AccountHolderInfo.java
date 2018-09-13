@@ -50,15 +50,16 @@ public class AccountHolderInfo {
 
     public static String getUserID() {
 
-        if(!awsUserId.isEmpty())
-            return awsUserId;
+        if(awsUserId != null) {
+            if (!awsUserId.isEmpty())
+                return awsUserId;
+        }
 
         if(accountHolderInfoInstance == null){
             accountHolderInfoInstance = new AccountHolderInfo();
             return accountHolderInfoInstance.userProfile.getUserInfo().getUserid();
         }
 
-        // TODO: 8.08.2018 --> Burada duzenleme gerekecek. Array olmasina gerek yok dedik...
         if(!accountHolderInfoInstance.userProfile.getUserInfo().getUserid().isEmpty())
             return accountHolderInfoInstance.userProfile.getUserInfo().getUserid();
         else

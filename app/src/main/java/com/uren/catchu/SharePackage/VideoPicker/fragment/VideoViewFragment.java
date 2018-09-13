@@ -54,7 +54,9 @@ public class VideoViewFragment extends Fragment {
     private VideoView videoView;
     Intent data;
     MediaPlayer mediaPlayer;
-    int mediaLen = 0;
+    boolean mediaPlayerPlayFinished = false;
+    int mediaPlayerTotalLen;
+    boolean mediaPlayerIsPlaying = false;
 
     @SuppressLint("ValidFragment")
     public VideoViewFragment(Intent data) {
@@ -96,15 +98,22 @@ public class VideoViewFragment extends Fragment {
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (playVideoImgv.getVisibility() == View.GONE) {
-                    playVideoImgv.setVisibility(View.VISIBLE);
-                    mediaPlayer.pause();
-                    mediaLen = mediaPlayer.getCurrentPosition();
-                }
-                else {
+                if(mediaPlayerPlayFinished) {
                     playVideoImgv.setVisibility(View.GONE);
-                    mediaPlayer.seekTo(mediaLen);
+                    mediaPlayer.seekTo(mediaPlayerTotalLen);
                     mediaPlayer.start();
+                    mediaPlayerIsPlaying = true;
+                    mediaPlayerPlayFinished = false;
+                }else {
+                    if (mediaPlayerIsPlaying) {
+                        playVideoImgv.setVisibility(View.VISIBLE);
+                        mediaPlayer.pause();
+                        mediaPlayerIsPlaying = false;
+                    } else {
+                        playVideoImgv.setVisibility(View.GONE);
+                        mediaPlayer.start();
+                        mediaPlayerIsPlaying = true;
+                    }
                 }
                 return false;
             }
@@ -138,6 +147,16 @@ public class VideoViewFragment extends Fragment {
                 mediaPlayer.start();
                 cancelImageView.setVisibility(View.VISIBLE);
                 playVideoImgv.setVisibility(View.GONE);
+                mediaPlayerTotalLen = mediaPlayer.getCurrentPosition();
+
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        playVideoImgv.setVisibility(View.VISIBLE);
+                        mediaPlayerPlayFinished = true;
+                        mediaPlayerIsPlaying = false;
+                    }
+                });
             }
         });
     }

@@ -1,32 +1,22 @@
 package com.uren.catchu.SharePackage;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.AsyncTask;
+import android.net.Uri;
 import android.os.Build;
-import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,70 +24,42 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsResult;
-import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.ShareRequestProcess;
-import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
-import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.Interfaces.DialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
-import com.uren.catchu.GroupPackage.AddGroupActivity;
-import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Interfaces.SharePostCallback;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.Utils.SharePostProcess;
-import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.ShareItems;
-import com.uren.catchu.Singleton.UserFriends;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
 
 
+import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
-import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
-import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_COUNT;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COUNT;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 public class ShareDetailActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -154,8 +116,6 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private static final int galleryDefaultImageId = R.drawable.gallery_icon_512;
     private static final int videoDefaultImageId = R.drawable.video_icon_96;
 
-    private static final int CODE_GALLERY_POSITION = 0;
-    private static final int CODE_CAMERA_POSITION = 1;
 
     int selectedPosition = -1;
 
@@ -260,6 +220,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 addTextImgv.setVisibility(View.VISIBLE);
                 textImgv.setImageResource(textDefaultImageId);
                 ShareItems.getInstance().getShare().setText("");
+                //ShareBox.getInstance().setTextList(new ArrayList<String>());
+                //ShareBox.getInstance().setTextBitmapList(new ArrayList<Bitmap>());
             }
         });
 
@@ -270,6 +232,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 addGalleryImgv.setVisibility(View.VISIBLE);
                 galleryImgv.setImageResource(galleryDefaultImageId);
                 ShareItems.getInstance().setPhotoSelectAdapter(null);
+                //ShareBox.getInstance().setPhotoUriList(new ArrayList<Uri>());
             }
         });
 
@@ -330,20 +293,12 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     }
 
     private void giveInfoLocationPermission() {
-        CommonUtils.showInfoDialogBox(ShareDetailActivity.this, getResources().getString(R.string.locationIsEmpty), null, new DialogBoxCallback() {
+        DialogBoxUtil.showInfoDialogBox(ShareDetailActivity.this, getResources().getString(R.string.locationIsEmpty), null, new InfoDialogBoxCallback() {
             @Override
             public void okClick() {
                 ActivityCompat.requestPermissions(ShareDetailActivity.this,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         permissionModule.getAccessFineLocationCode());
-            }
-
-            @Override
-            public void yesClick() {
-            }
-
-            @Override
-            public void noClick() {
             }
         });
     }
@@ -391,11 +346,13 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 }
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, GALLERY_TEXT);
-                setGalleryImageView();
+                setGalleryImageView(data.getData());
+                //ShareBox.getInstance().addUriToPhotoList(data.getData());
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, CAMERA_TEXT);
-                setGalleryImageView();
+                setGalleryImageView(data.getData());
+                //ShareBox.getInstance().addUriToPhotoList(data.getData());
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             }
         }
@@ -406,8 +363,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    public void setGalleryImageView() {
-        Glide.with(ShareDetailActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
+    public void setGalleryImageView(Uri uri) {
+        Glide.with(ShareDetailActivity.this).load(uri).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
         deleteGalleryImgv.setVisibility(View.VISIBLE);
         addGalleryImgv.setVisibility(View.GONE);
     }
@@ -507,6 +464,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         ShareItems.getInstance().getShare().setLocation(tempLoc);
+        //ShareBox.getInstance().setLocation(tempLoc);
     }
 
     private void checkCanGetLocation() {
@@ -602,22 +560,17 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     }
 
     public void photoChosenManage() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        adapter.add("  " + getResources().getString(R.string.openGallery));
-        adapter.add("  " + getResources().getString(R.string.openCamera));
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == CODE_GALLERY_POSITION)
-                    checkGalleryProcess();
-                else if (item == CODE_CAMERA_POSITION)
-                    checkCameraProcess();
-                else
-                    CommonUtils.showToast(ShareDetailActivity.this, getResources().getString(R.string.technicalError));
+        DialogBoxUtil.photoChosenDialogBox(ShareDetailActivity.this, null, new PhotoChosenCallback() {
+            @Override
+            public void onGallerySelected() {
+                checkGalleryProcess();
+            }
+
+            @Override
+            public void onCameraSelected() {
+                checkCameraProcess();
             }
         });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     private void checkGalleryProcess() {
@@ -695,6 +648,4 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             }
         });
     }
-
-
 }

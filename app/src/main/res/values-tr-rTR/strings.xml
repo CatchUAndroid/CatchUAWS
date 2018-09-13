@@ -51,6 +51,9 @@
     <string name="share">PAYLAŞ</string>
     <string name="locationIsEmpty">Paylaşım için lokasyon bilgisi zorunludur</string>
     <string name="shareIsProcessing">Paylaşılıyor...</string>
+    <string name="videoDurationWarning">Video için max geçerli süre :</string>
+    <string name="secondShort">sn</string>
+    <string name="secondLong">saniye</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

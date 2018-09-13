@@ -55,6 +55,8 @@ import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.HttpHandler;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
@@ -119,17 +121,9 @@ public class AddGroupActivity extends AppCompatActivity {
     public static FriendGridListAdapter adapter;
     FloatingActionButton saveGroupInfoFab;
     EditText groupNameEditText;
-
     private ImageView groupPictureImgv;
-
-    public int photoChoosenType;
-
     RelativeLayout addGroupDtlRelLayout;
     PermissionModule permissionModule;
-
-    private static final int adapterCameraSelected = 0;
-    private static final int adapterGallerySelected = 1;
-
     TextView participantSize;
     PhotoSelectAdapter photoSelectAdapter;
 
@@ -221,30 +215,18 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     private void startChooseImageProc() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        adapter.add("  " + getResources().getString(R.string.openCamera));
-        adapter.add("  " + getResources().getString(R.string.openGallery));
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getResources().getString(R.string.chooseProfilePhoto));
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
+        DialogBoxUtil.photoChosenDialogBox(AddGroupActivity.this, getResources().
+                getString(R.string.chooseProfilePhoto), new PhotoChosenCallback() {
+            @Override
+            public void onGallerySelected() {
+                startGalleryProcess();
+            }
 
-                if (item == adapterCameraSelected) {
-
-                    photoChoosenType = adapterCameraSelected;
-                    startCameraProcess();
-
-                } else if (item == adapterGallerySelected) {
-
-                    photoChoosenType = adapterGallerySelected;
-                    startGalleryProcess();
-
-                } else
-                    CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.technicalError));
+            @Override
+            public void onCameraSelected() {
+                startCameraProcess();
             }
         });
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     public void startCameraProcess() {
