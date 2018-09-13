@@ -13,6 +13,13 @@ import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.uren.catchu.R;
 
 import java.util.List;
@@ -26,6 +33,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     private int videoCounter;
     MediaPlayer mediaPlayer;
     ImageView playVideoImgv;
+    private PlayerView item;
 
     public ViewPagerAdapter(Context context, List<String> imageList, List<String> videoList) {
         this.mContext = context;
@@ -39,18 +47,41 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup collection, int position) {
 
         View itemView;
+        PlayerView playerView;
+        SimpleExoPlayer player;
 
         if (videoCounter < videoList.size()) {
             //önce videolar bitene kadar eklenir
 
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.view_blue, collection, false);
-            VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem);
+
+            playerView = itemView.findViewById(R.id.playerView);
+            collection.addView(itemView);
+
+            player = ExoPlayerFactory.newSimpleInstance(mContext, new DefaultTrackSelector());
+            playerView.setPlayer(player);
+
+            DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext,
+                    Util.getUserAgent(mContext,"feed-demo"));
+
+            ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(defaultDataSourceFactory)
+                    .createMediaSource(Uri.parse(videoList.get(videoCounter)));
+
+            player.prepare(mediaSource);
+            player.setPlayWhenReady(false);
+            
+
+
+            /*VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem);
             collection.addView(itemView);
 
             playVideoImgv = itemView.findViewById(R.id.playVideoImgv);
             videoFeedItem.setVideoURI(Uri.parse(videoList.get(videoCounter)));
             videoFeedItem.requestFocus();
+
+
+
 
             videoFeedItem.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
@@ -72,7 +103,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     }
                 }
             });
-
+            */
             videoCounter++;
 
         } else if (imageCounter < imageList.size()) {
