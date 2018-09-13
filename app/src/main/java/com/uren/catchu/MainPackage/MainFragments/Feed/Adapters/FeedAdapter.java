@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.R;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -65,8 +66,20 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             //imgFeedData = (ImageView) view.findViewById(R.id.imgFeedData);
 
+            List<String> imageList;
+            imageList = new ArrayList<>();
+
+            List<String> videoList;
+            videoList = new ArrayList<>();
+
+            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
+            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
+
+            videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/small.mp4");
+
+
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-            viewPager.setAdapter(new ViewPagerAdapter(context));
+            viewPager.setAdapter(new ViewPagerAdapter(context, imageList, videoList));
 
 
         }
@@ -157,7 +170,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         };
 
         Random rand = new Random();
-        int  n = rand.nextInt(26);
+        int n = rand.nextInt(26);
 
         return link[n];
 
@@ -173,7 +186,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         };
 
         Random rand = new Random();
-        int  n = rand.nextInt(4);
+        int n = rand.nextInt(4);
 
         return username[n];
 
@@ -190,14 +203,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         };
 
         Random rand = new Random();
-        int  n = rand.nextInt(4);
+        int n = rand.nextInt(4);
 
         return username[n];
 
     }
-
-
-
 
 
 }
