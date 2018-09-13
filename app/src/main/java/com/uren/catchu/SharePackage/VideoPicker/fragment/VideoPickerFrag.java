@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -30,7 +31,10 @@ import android.widget.ToggleButton;
 import android.widget.VideoView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.FileAdapter;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Utils.CameraUtil;
@@ -71,8 +75,10 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
     String videoFilePath;
     MediaPlayer mediaPlayer;
     ImageView playVideoImgv;
-    int mediaLen;
     int cameraOrientation;
+    boolean mediaPlayerPlayFinished = false;
+    int mediaPlayerTotalLen;
+    boolean mediaPlayerIsPlaying = false;
 
     private int RESULT_CODE_VIDEO_GALLERY_SELECT = 1001;
 
@@ -134,7 +140,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                 cancelImageView.setVisibility(View.GONE);
                 camParamsLayout.setVisibility(View.VISIBLE);
 
-                if(videoViewRelLayout.getVisibility() == View.VISIBLE){
+                if (videoViewRelLayout.getVisibility() == View.VISIBLE) {
                     videoViewRelLayout.setVisibility(View.GONE);
                     texttureViewLayout.setVisibility(View.VISIBLE);
                 }
@@ -148,19 +154,9 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             public void onClick(View v) {
                 if (permissionModule.checkCameraPermission()) {
                     if (mToggleButton.isChecked()) {
-                        if(permissionModule.checkRecordAudioPermission()) {
-                            mToggleButton.setBackgroundResource(R.drawable.btn_capture_photo);
-                            cancelImageView.setVisibility(View.GONE);
-                            camParamsLayout.setVisibility(View.VISIBLE);
-
-                            try {
-                                Surface surface = new Surface(surfaceTexture);
-                                initRecorder(surface);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            mMediaRecorder.start();
-                        }else
+                        if (permissionModule.checkRecordAudioPermission()) {
+                            mediaRecorderIsReady();
+                        } else
                             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
                                     permissionModule.getRecordAudioPermissionCode());
                     } else
@@ -216,23 +212,39 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (playVideoImgv.getVisibility() == View.GONE) {
-                    playVideoImgv.setVisibility(View.VISIBLE);
-                    mediaPlayer.pause();
-                    mediaLen = mediaPlayer.getCurrentPosition();
-                }
-                else {
+                if(mediaPlayerPlayFinished) {
                     playVideoImgv.setVisibility(View.GONE);
-                    mediaPlayer.seekTo(mediaLen);
+                    mediaPlayer.seekTo(mediaPlayerTotalLen);
                     mediaPlayer.start();
+                    mediaPlayerIsPlaying = true;
+                    mediaPlayerPlayFinished = false;
+                }else {
+                    if (mediaPlayerIsPlaying) {
+                        playVideoImgv.setVisibility(View.VISIBLE);
+                        mediaPlayer.pause();
+                        mediaPlayerIsPlaying = false;
+                    } else {
+                        playVideoImgv.setVisibility(View.GONE);
+                        mediaPlayer.start();
+                        mediaPlayerIsPlaying = true;
+                    }
                 }
                 return false;
             }
         });
     }
 
-    public void checkCameraFlash(){
-        if(!CameraUtil.hasDeviceFlush(getActivity()))
+    private void mediaRecorderIsReady() {
+        mToggleButton.setBackgroundResource(R.drawable.btn_capture_photo);
+        cancelImageView.setVisibility(View.GONE);
+        camParamsLayout.setVisibility(View.VISIBLE);
+        Surface surface = new Surface(surfaceTexture);
+        initRecorder(surface);
+        mMediaRecorder.start();
+    }
+
+    public void checkCameraFlash() {
+        if (!CameraUtil.hasDeviceFlush(getActivity()))
             flashModeImgv.setVisibility(View.GONE);
     }
 
@@ -254,14 +266,9 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startGalleryForVideos();
             }
-        }else if (requestCode == permissionModule.getRecordAudioPermissionCode()) {
+        } else if (requestCode == permissionModule.getRecordAudioPermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Surface surface = new Surface(surfaceTexture);
-                try {
-                    initRecorder(surface);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                mediaRecorderIsReady();
             }
         }
     }
@@ -289,7 +296,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             changeCameraSwitchMode(Camera.CameraInfo.CAMERA_FACING_BACK);
     }
 
-    private void initRecorder(Surface surface) throws IOException {
+    private void initRecorder(Surface surface) {
         mCamera.unlock();
         videoFilePath = FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath();
         mMediaRecorder = new MediaRecorder();
@@ -302,18 +309,22 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         mMediaRecorder.setVideoEncodingBitRate(512 * 1000);
         mMediaRecorder.setVideoFrameRate(30);
         mMediaRecorder.setVideoSize(640, 480);
+        //mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH));
         mMediaRecorder.setOutputFile(videoFilePath);
         mMediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
         mMediaRecorder.setMaxDuration(MAX_VIDEO_DURATION * 1000);
         mMediaRecorder.setOrientationHint(cameraOrientation);
         mMediaRecorder.setOnInfoListener(this);
-        //mMediaRecorder.setProfile(CamcorderProfile.get(CamcorderProfile.QUALITY_480P));
 
         Log.i("Info", "FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath():" + videoFilePath);
 
         try {
             mMediaRecorder.prepare();
         } catch (IllegalStateException e) {
+            CommonUtils.showToastLong(getActivity(),
+                    getResources().getString(R.string.error) + e.getMessage());
+            e.printStackTrace();
+        } catch (IOException e) {
             CommonUtils.showToastLong(getActivity(),
                     getResources().getString(R.string.error) + e.getMessage());
             e.printStackTrace();
@@ -388,7 +399,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             playRecordedVideo();
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -461,20 +472,43 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                 mCamera = null;
                 isCameraPreviewing = false;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RESULT_CODE_VIDEO_GALLERY_SELECT) {
-                VideoViewFragment nextFrag = new VideoViewFragment(data);
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.videoPickerMainLayout, nextFrag, VideoPickerFrag.class.getName())
-                        .addToBackStack(null)
-                        .commit();
-            }
+            if (requestCode == RESULT_CODE_VIDEO_GALLERY_SELECT)
+                checkVideoDuration(data);
+        }
+    }
+
+    public void checkVideoDuration(Intent data) {
+        Uri uri = data.getData();
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(UriAdapter.getPathFromGalleryUri(getActivity(), uri));
+        //Bitmap bitmap = retriever.getFrameAtTime(100);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInMillisec = Long.parseLong(time);
+
+        if (timeInMillisec > (MAX_VIDEO_DURATION * 1000)) {
+            DialogBoxUtil.showInfoDialogBox(getActivity(),
+                    getActivity().getResources().getString(R.string.videoDurationWarning) +
+                            Integer.toString(MAX_VIDEO_DURATION) +
+                            getActivity().getResources().getString(R.string.secondShort)
+                    , null, new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+        } else {
+            VideoViewFragment nextFrag = new VideoViewFragment(data);
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.videoPickerMainLayout, nextFrag, VideoPickerFrag.class.getName())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
@@ -495,7 +529,17 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer = mp;
                 cancelImageView.setVisibility(View.VISIBLE);
-                playVideoImgv.setVisibility(View.VISIBLE);
+                playVideoImgv.setVisibility(View.GONE);
+                mediaPlayerTotalLen = mediaPlayer.getCurrentPosition();
+
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        playVideoImgv.setVisibility(View.VISIBLE);
+                        mediaPlayerPlayFinished = true;
+                        mediaPlayerIsPlaying = false;
+                    }
+                });
             }
         });
     }

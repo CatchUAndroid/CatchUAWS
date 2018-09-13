@@ -52,8 +52,6 @@ public class PhotoSelectAdapter {
         }
         imageRealPath = UriAdapter.getPathFromGalleryUri(context, pictureUri);
         photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
-        /*photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);*/
-
     }
 
     public void managePictureChoosen() {
@@ -63,7 +61,6 @@ public class PhotoSelectAdapter {
             pictureUri = data.getData();
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, pictureUri);
             photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
-            /*photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);*/
         } else if (selectedItemText == GALLERY_TEXT) {
             pictureUri = data.getData();
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, pictureUri);
@@ -76,7 +73,6 @@ public class PhotoSelectAdapter {
             }
             photoBitmap = BitmapFactory.decodeStream(inputStream);
             photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
-            /*photoRoundedBitmap = BitmapConversion.getRoundedShape(photoBitmap, 600, 600, imageRealPath);*/
         }
     }
 
@@ -96,7 +92,4 @@ public class PhotoSelectAdapter {
         return photoBitmapOrjinal;
     }
 
-    /*public Bitmap getPhotoRoundedBitmap() {
-        return photoRoundedBitmap;
-    }*/
 }

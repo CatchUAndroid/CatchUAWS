@@ -9,6 +9,8 @@ import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 
+import java.util.ArrayList;
+
 import catchu.model.FriendList;
 import catchu.model.Location;
 import catchu.model.Share;
@@ -24,13 +26,11 @@ public class ShareItems {
     private static Uri videoUri;
 
     public static ShareItems getInstance(){
-
         if(shareItemsInstance == null) {
             share = new Share();
             photoSelectAdapter = new PhotoSelectAdapter();
             shareItemsInstance = new ShareItems();
         }
-
         return shareItemsInstance;
     }
 
