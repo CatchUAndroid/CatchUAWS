@@ -5,11 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
 
-import java.math.BigDecimal;
-
-import catchu.model.Response;
+import catchu.model.BaseResponse;
 import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
@@ -36,7 +33,7 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
 
         try {
 
-            Response rsp = instance.client.usersPost(userProfile);
+            BaseResponse rsp = instance.client.usersPost(userProfile);
 
 
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
