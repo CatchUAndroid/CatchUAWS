@@ -35,6 +35,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
@@ -394,24 +396,19 @@ public class OtherProfileFragment extends BaseFragment
 
     private void openDialogBox() {
 
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+        YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
+            public void yesClick() {
+                updateFollowStatus(FRIEND_DELETE_FOLLOW);
+            }
+
+            @Override
+            public void noClick() {
+
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(R.string.cancel_following).setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener).show();
-
+        DialogBoxUtil.showYesNoDialog(getContext(), "", getContext().getString(R.string.cancel_following), yesNoDialogBoxCallback);
 
     }
 

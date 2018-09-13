@@ -22,6 +22,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.R;
@@ -111,7 +113,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 @Override
                 public void onClick(View v) {
 
-                    rowItemClickListener.onClick(v,followListItem, position);
+                    rowItemClickListener.onClick(v, followListItem, position);
                 }
             });
 
@@ -148,23 +150,19 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
         private void openDialogBox() {
 
-            DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
                 @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    switch (which) {
-                        case DialogInterface.BUTTON_POSITIVE:
-                            updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                            break;
-                        case DialogInterface.BUTTON_NEGATIVE:
-                            //No button clicked
-                            break;
-                    }
+                public void yesClick() {
+                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                }
+
+                @Override
+                public void noClick() {
+
                 }
             };
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.cancel_following).setPositiveButton(R.string.yes, dialogClickListener)
-                    .setNegativeButton(R.string.no, dialogClickListener).show();
+            DialogBoxUtil.showYesNoDialog(context, "", context.getString(R.string.cancel_following), yesNoDialogBoxCallback);
 
         }
 
@@ -275,7 +273,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
         return followList.size();
     }
 
-    public void updateAdapterWithPosition(int position){
+    public void updateAdapterWithPosition(int position) {
 
         notifyItemChanged(position);
 
