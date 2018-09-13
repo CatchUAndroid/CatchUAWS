@@ -4,6 +4,8 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.content.Context;
 
 import android.media.Image;
+import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -51,10 +54,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         TextView txtName;
         TextView txtUserName;
         ViewPager viewPager;
-        ImageView imgFeedData;
-
         CardView cardView;
-        int position;
+        private int position;
+        View view;
 
         public MyViewHolder(View view) {
             super(view);
@@ -64,7 +66,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtUserName = (TextView) view.findViewById(R.id.txtUserName);
 
-            //imgFeedData = (ImageView) view.findViewById(R.id.imgFeedData);
+            this.view = view;
+
+            setViewPager();
+
+        }
+
+        private void setViewPager() {
 
             List<String> imageList;
             imageList = new ArrayList<>();
@@ -74,6 +82,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
             imageList.add("https://i.hizliresim.com/RDzzka.jpg");
+            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
+            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
 
             videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/video.mp4");
 
@@ -81,6 +91,56 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
             viewPager.setAdapter(new ViewPagerAdapter(context, imageList, videoList));
 
+            int totalDots = imageList.size() + videoList.size();
+            setSliderDotsPanel(totalDots);
+
+        }
+
+        private void setSliderDotsPanel(int totalDots) {
+
+            final int dotscount;
+            final ImageView[] dots;
+            LinearLayout sliderDotspanel;
+
+            dotscount = totalDots;
+            dots = new ImageView[dotscount];
+            sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
+
+            for (int i = 0; i < dotscount; i++) {
+
+                dots[i] = new ImageView(context);
+                dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.non_active_dot));
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(8, 0, 8, 0);
+                sliderDotspanel.addView(dots[i], params);
+
+            }
+
+            dots[0].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
+
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                    for (int i = 0; i < dotscount; i++) {
+                        dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.non_active_dot));
+                    }
+
+                    dots[position].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
 
         }
 
@@ -137,44 +197,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         return feedList.size();
     }
 
-    private String getRandomUrl() {
-
-        String[] link = {
-                "https://i.hizliresim.com/Q2O8gV.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/30.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/31.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/32.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/33.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/34.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/35.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/36.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/37.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/38.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/39.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/40.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/41.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/42.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/43.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/44.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/45.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/46.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/47.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/48.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/49.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/50.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/51.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/52.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/53.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/54.jpg",
-                "https://s3.amazonaws.com/catchumobilebucket/UserProfile/55.jpg"
-        };
-
-        Random rand = new Random();
-        int n = rand.nextInt(26);
-
-        return link[n];
-
-    }
 
     private String getRandomUser() {
 

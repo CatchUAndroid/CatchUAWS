@@ -60,7 +60,7 @@ public class FeedFragment extends BaseFragment {
 
         ArrayList<Integer> list = new ArrayList<Integer>();
 
-        for(int i=0; i< 2; i++){
+        for(int i=0; i< 15; i++){
             list.add(i+1);
         }
 

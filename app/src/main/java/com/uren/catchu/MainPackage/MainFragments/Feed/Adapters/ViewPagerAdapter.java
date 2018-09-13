@@ -3,13 +3,16 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.content.Context;
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,6 +35,9 @@ public class ViewPagerAdapter extends PagerAdapter {
     private List<String> videoList;
     private int imageCounter;
     private int videoCounter;
+    MediaPlayer mediaPlayer;
+    ImageView playVideoImgv;
+    int mediaLen = 0;
 
     public ViewPagerAdapter(Context context, List<String> imageList, List<String> videoList) {
         this.mContext = context;
@@ -49,23 +55,47 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         View itemView;
 
-        if(videoCounter < videoList.size()){
+        if (videoCounter < videoList.size()) {
             //önce videolar bitene kadar eklenir
 
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.view_blue, collection, false);
-            VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem) ;
+            VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem);
             collection.addView(itemView);
 
+            playVideoImgv = itemView.findViewById(R.id.playVideoImgv);
             videoFeedItem.setVideoURI(Uri.parse(videoList.get(videoCounter)));
-            videoFeedItem.start();
+            videoFeedItem.requestFocus();
+
+            videoFeedItem.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                public void onPrepared(MediaPlayer mp) {
+                    mediaPlayer = mp;
+                    mediaPlayer.start();
+                    playVideoImgv.setVisibility(View.GONE);
+                }
+            });
+
+            videoFeedItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (playVideoImgv.getVisibility() == View.GONE) {
+                        playVideoImgv.setVisibility(View.VISIBLE);
+                        mediaPlayer.pause();
+                    } else {
+                        playVideoImgv.setVisibility(View.GONE);
+                        mediaPlayer.start();
+                    }
+                }
+            });
+
             videoCounter++;
-        }else if (imageCounter < imageList.size()){
+
+        } else if (imageCounter < imageList.size()) {
             //sonra imagelar bitene kadar eklenir
 
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.view_green, collection, false);
-            ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem) ;
+            ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 
             Glide.with(mContext)
@@ -74,25 +104,24 @@ public class ViewPagerAdapter extends PagerAdapter {
                     .into(imgFeedItem);
 
             imageCounter++;
-        }else{
+
+        } else {
             //do nothing
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.view_red, collection, false);
         }
 
-
-        //collection.addView(layout);
         return itemView;
     }
 
     @Override
     public void destroyItem(ViewGroup collection, int position, Object view) {
-        collection.removeView((View) view);
+        // NT: kaydırma esnasında view'lar kayboldugu icin kapattım
+        //collection.removeView((View) view);
     }
 
     @Override
     public int getCount() {
-        //return ModelObject.values().length;
         return imageList.size() + videoList.size();
     }
 
@@ -103,10 +132,9 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        ModelObject customPagerEnum = ModelObject.values()[position];
-        return mContext.getString(customPagerEnum.getTitleResId());
+        String pageTitle = "Title";
+        return pageTitle;
     }
-
 
 }
 
