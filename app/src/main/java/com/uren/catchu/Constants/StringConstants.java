@@ -74,5 +74,8 @@ public class StringConstants {
     public static final String GET_USER_FOLLOWERS = "GET_USER_FOLLOWERS";
     public static final String GET_USER_FOLLOWINGS = "GET_USER_FOLLOWINGS";
 
+    public static final String CAMERA_FRONT = "1";
+    public static final String CAMERA_BACK = "0";
+
 
 }

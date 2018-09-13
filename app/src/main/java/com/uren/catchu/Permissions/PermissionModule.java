@@ -92,6 +92,7 @@ public class PermissionModule {
     public int getWriteExternalStoragePermissionCode(){
         return codeWriteExternalStoragePermission;
     }
+
     public int getAccessFineLocationCode(){
         return codeAccessFineLocationPermission;
     }

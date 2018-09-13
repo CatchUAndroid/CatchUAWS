@@ -4,9 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.design.widget.TabLayout;
@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -22,7 +23,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
 import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
-import com.uren.catchu.SharePackage.VideoPicker.VideoPickerFrag;
+import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.ShareItems;
 
@@ -31,8 +32,9 @@ public class MainShareActivity extends FragmentActivity {
     TabLayout tabLayout;
     ViewPager viewPager;
     AppBarLayout appBarLayout;
-    FloatingActionButton nextButton;
     PermissionModule permissionModule;
+    TextView cancelTv;
+    TextView nextTv;
 
     GalleryPickerFrag galleryPickerFrag;
     TextPickerFrag textPickerFrag;
@@ -44,7 +46,13 @@ public class MainShareActivity extends FragmentActivity {
     private static final int TAB_VIDEO = 2;
 
     private int tabSelectedPosition = 0;
+    boolean tabsCreated = false;
 
+    private int[] tabIcons = {
+            R.drawable.tab_text,
+            R.drawable.tab_gallery,
+            R.drawable.tab_video
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +64,24 @@ public class MainShareActivity extends FragmentActivity {
         initVariables();
         addListeners();
         checkWriteStoragePermission();
+        hideKeyBoard();
     }
 
     private void initVariables() {
         tabLayout = findViewById(R.id.htab_tabs);
         viewPager = findViewById(R.id.htab_viewpager);
         appBarLayout = findViewById(R.id.htab_appbar);
-        nextButton = findViewById(R.id.nextButton);
+        cancelTv = findViewById(R.id.cancelTv);
+        nextTv = findViewById(R.id.nextTv);
         ShareItems.setInstance(null);
         ShareItems.getInstance();
         ShareItems.getInstance().getShare().setUserid(AccountHolderInfo.getUserID());
+    }
+
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
     }
 
     @Override
@@ -81,20 +97,22 @@ public class MainShareActivity extends FragmentActivity {
     }
 
     private void addListeners() {
-
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if (tabsCreated)
+                    tab.getIcon().setColorFilter(getResources().getColor(R.color.white, null), PorterDuff.Mode.SRC_IN);
 
                 tabSelectedPosition = tab.getPosition();
 
                 switch (tab.getPosition()) {
                     case TAB_VIDEO:
                         hideKeyBoard();
-                        //videoPickerFrag.openCamera();
+                        videoPickerFrag.setFlashModeOff();
                         break;
                     case TAB_PHOTO:
                         hideKeyBoard();
+                        videoPickerFrag.setFlashModeOff();
                         break;
                     default:
                         break;
@@ -103,7 +121,8 @@ public class MainShareActivity extends FragmentActivity {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                if (tabsCreated)
+                    tab.getIcon().setColorFilter(getResources().getColor(R.color.black, null), PorterDuff.Mode.SRC_IN);
             }
 
             @Override
@@ -112,7 +131,7 @@ public class MainShareActivity extends FragmentActivity {
             }
         });
 
-        nextButton.setOnClickListener(new View.OnClickListener() {
+        nextTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CheckShareItems checkShareItems = new CheckShareItems(MainShareActivity.this);
@@ -122,10 +141,16 @@ public class MainShareActivity extends FragmentActivity {
                     CommonUtils.showToast(MainShareActivity.this, checkShareItems.getErrMessage());
             }
         });
+
+        cancelTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
     public void hideKeyBoard() {
-
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (getCurrentFocus() != null) {
             inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
@@ -133,7 +158,6 @@ public class MainShareActivity extends FragmentActivity {
     }
 
     public void checkWriteStoragePermission() {
-
         if (!permissionModule.checkWriteExternalStoragePermission())
             ActivityCompat.requestPermissions(MainShareActivity.this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -150,12 +174,14 @@ public class MainShareActivity extends FragmentActivity {
         textPickerFrag = new TextPickerFrag();
         videoPickerFrag = new VideoPickerFrag();
 
-        adapter.addFragment(textPickerFrag, getResources().getString(R.string.text));
-        adapter.addFragment(galleryPickerFrag, getResources().getString(R.string.photo));
-        adapter.addFragment(videoPickerFrag, getResources().getString(R.string.video));
+        adapter.addFragment(textPickerFrag,"" );
+        adapter.addFragment(galleryPickerFrag,"");
+        adapter.addFragment(videoPickerFrag,"");
 
         viewPager.setAdapter(adapter);
         tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+        tabsCreated = true;
     }
 
     @Override

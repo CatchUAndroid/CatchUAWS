@@ -342,13 +342,6 @@ public class NextActivity extends AppCompatActivity implements
     }
 
 /*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_main_activity_page, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
 
     @Override

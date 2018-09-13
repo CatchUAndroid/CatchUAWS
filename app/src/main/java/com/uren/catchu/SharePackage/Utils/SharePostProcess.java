@@ -20,10 +20,13 @@ import com.uren.catchu.Singleton.UserFriends;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import catchu.model.BucketUploadResult;
 import catchu.model.Share;
 import catchu.model.ShareRequest;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
@@ -98,7 +101,7 @@ public class SharePostProcess {
                     @Override
                     public void onTaskContinue() {
                     }
-                }, ShareItems.getInstance().getPhotoSelectAdapter().getPhotoBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, ShareItems.getInstance().getPhotoSelectAdapter().getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
 
@@ -121,6 +124,7 @@ public class SharePostProcess {
     private void saveShareItemsToNeoJ() {
         ShareRequest shareRequest = new ShareRequest();
         ShareItems.getInstance().getShare().setPrivacyType(getPostPrivacyType());
+        ShareItems.getInstance().getShare().setAllowList(getParticipantList());
         shareRequest.setShare(ShareItems.getInstance().getShare());
         ShareRequestProcess shareRequestProcess = new ShareRequestProcess(new OnEventListener() {
             @Override
@@ -143,6 +147,14 @@ public class SharePostProcess {
             }
         }, shareRequest);
         shareRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private List<UserProfileProperties> getParticipantList() {
+        List<UserProfileProperties> userProfilePropertiesList = new ArrayList<>();
+        if (selectedItem == ShareDetailActivity.CODE_FRIEND_SHARED){
+            userProfilePropertiesList.addAll(SelectedFriendList.getInstance().getSelectedFriendList().getResultArray());
+        }
+        return userProfilePropertiesList;
     }
 
     private String getPostPrivacyType() {

@@ -1,6 +1,7 @@
 package com.uren.catchu.Singleton;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -20,6 +21,7 @@ public class ShareItems {
     private static Share share;
     private static PhotoSelectAdapter photoSelectAdapter;
     private static Bitmap textBitmap;
+    private static Uri videoUri;
 
     public static ShareItems getInstance(){
 
@@ -64,4 +66,11 @@ public class ShareItems {
         ShareItems.textBitmap = textBitmap;
     }
 
+    public Uri getVideoUri() {
+        return videoUri;
+    }
+
+    public void setVideoUri(Uri videoUri) {
+        ShareItems.videoUri = videoUri;
+    }
 }

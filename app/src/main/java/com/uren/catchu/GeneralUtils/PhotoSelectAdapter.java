@@ -34,13 +34,12 @@ public class PhotoSelectAdapter {
         managePictureChoosen();
     }
 
+    public PhotoSelectAdapter(){}
+
     public PhotoSelectAdapter(Context context, Uri uri) {
         this.context = context;
         this.pictureUri = uri;
         managePicFromUri();
-    }
-
-    public PhotoSelectAdapter() {
     }
     
     private void managePicFromUri() {

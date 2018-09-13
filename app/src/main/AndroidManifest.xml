@@ -80,6 +80,7 @@
         <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
         <activity android:name=".SharePackage.ShareDetailActivity" />
         <activity android:name=".SharePackage.SelectGroupActivity"></activity>
+        <activity android:name=".SharePackage.VideoPicker.WillDelete.Camera2Activity"></activity>
     </application>
 
 </manifest>
