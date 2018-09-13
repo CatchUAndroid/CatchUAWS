@@ -102,44 +102,79 @@
                     android:paddingBottom="20dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:paddingTop="10dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris laoreet ipsum quis dolor aliquet sodales. Mauris tempus laoreet lorem." />
+                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. " />
 
-                <ImageView
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp">
+
+                </android.support.v4.view.ViewPager>
+
+                <!--ImageView
                     android:id="@+id/imgFeedData"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp"
-                    android:scaleType="fitXY" />
+                    android:layout_height="250dp"
+                    android:scaleType="fitXY" /-->
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
+                    android:gravity="left"
                     android:orientation="horizontal"
+                    android:padding="10dp"
                     android:weightSum="3">
 
-
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_height="20dp"
+                        android:layout_weight="0.5"
                         android:src="@mipmap/icon_like"
-                        android:tint="@color/oceanBlue"/>
+                        android:tint="@color/oceanBlue" />
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_height="20dp"
+                        android:layout_weight="0.5"
                         android:src="@mipmap/icon_comment"
-                        android:tint="@color/oceanBlue"
-                        />
+                        android:tint="@color/oceanBlue" />
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_height="20dp"
+                        android:layout_weight="0.5"
                         android:src="@mipmap/icon_share"
-                        android:tint="@color/oceanBlue"/>
+                        android:tint="@color/oceanBlue" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="780.423 likes"
+                        android:textColor="@color/oceanBlue" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="10dp"
+                        android:text="View all 4 comments"
+                        android:textColor="@color/oceanBlue" />
 
 
                 </LinearLayout>

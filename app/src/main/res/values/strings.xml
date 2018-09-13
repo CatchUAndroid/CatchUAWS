@@ -110,5 +110,10 @@
     <string name="no">No</string>
     <string name="feed">Feeds</string>
 
+    <string name="red">Red</string>
+    <string name="blue">Blue</string>
+    <string name="green">Green</string>
+
+
 
 </resources>
