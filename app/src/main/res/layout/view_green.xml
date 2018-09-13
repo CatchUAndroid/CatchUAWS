@@ -10,17 +10,6 @@
         android:layout_height="match_parent"
         android:id="@+id/imgFeedItem"
         android:scaleType="fitXY"/>
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Image View"
-        android:layout_gravity="center_horizontal"
-        android:textSize="28sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
-        android:layout_centerVertical="true"
-        android:id="@+id/textView" />
+    
 
 </RelativeLayout>

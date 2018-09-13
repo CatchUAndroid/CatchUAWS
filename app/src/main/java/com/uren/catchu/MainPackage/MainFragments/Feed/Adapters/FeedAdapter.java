@@ -75,7 +75,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
             imageList.add("https://i.hizliresim.com/RDzzka.jpg");
 
-            videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/small.mp4");
+            videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/video.mp4");
 
 
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
