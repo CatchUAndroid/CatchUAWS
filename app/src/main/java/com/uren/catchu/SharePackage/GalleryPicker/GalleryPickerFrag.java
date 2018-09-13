@@ -66,8 +66,10 @@ public class GalleryPickerFrag extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_special_select, container, false);
-        ButterKnife.bind(this, mView);
+        if(mView == null) {
+            mView = inflater.inflate(R.layout.fragment_special_select, container, false);
+            ButterKnife.bind(this, mView);
+        }
         return mView;
     }
 
