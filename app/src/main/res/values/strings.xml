@@ -81,6 +81,8 @@
     <string name="giveNewName">Write New Name</string>
     <string name="groupPhotoChanging">Photo is changing...</string>
     <string name="title_activity_maps">Map</string>
+    <string name="ok">OK</string>
+    <string name="next">Next</string>
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Settings</string>
@@ -105,5 +107,16 @@
     <string name="takip_et">Takip et</string>
     <string name="takip_ediliyor">Takip ediliyor</string>
 
+
+    <string name="record">Record</string>
+    <string name="stop">Stop</string>
+    <string name="description_info">Info</string>
+    <string name="permission_request">This sample needs permission for camera and audio recording.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+
+    <!-- Flash options-->
+    <string name="flash_auto">Flash auto</string>
+    <string name="flash_off">Flash off</string>
+    <string name="flash_on">Flash on</string>
 
 </resources>

@@ -1,18 +1,28 @@
-package com.uren.catchu.SharePackage.VideoPicker;
+package com.uren.catchu.SharePackage.VideoPicker.WillDelete;
 
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
+import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCaptureSession;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraDevice;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CaptureRequest;
+import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -25,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -42,9 +53,11 @@ import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.MainShareActivity;
 import com.uren.catchu.SharePackage.VideoPicker.WillDelete.AudioRecorderActivity;
+import com.uren.catchu.SharePackage.VideoPicker.WillDelete.Camera2Activity;
 import com.uren.catchu.SharePackage.VideoPicker.WillDelete.VideoTestActivity;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import butterknife.ButterKnife;
 
@@ -57,12 +70,18 @@ import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 
 @SuppressLint("ValidFragment")
-public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback, MediaRecorder.OnInfoListener {
+public class VideoPickerFrag2 extends Fragment implements MediaRecorder.OnInfoListener {
+
+    //, TextureView.SurfaceTextureListener
 
     private MediaRecorder mMediaRecorder;
-    private Camera mCamera;
-    private SurfaceView mSurfaceView;
-    private SurfaceHolder mHolder;
+    //private Camera mCamera;
+    //private SurfaceView mSurfaceView;
+    //private SurfaceHolder mHolder;
+    CameraManager cameraManager;
+    CameraDevice mCameraDevice;
+    private Surface mSurface;
+    TextureView textureView;
     private ToggleButton mToggleButton;
     private ImageView galleryImgv;
     ImageView cancelImageView;
@@ -80,29 +99,32 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
         super.onCreate(savedInstanceState);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        mView = inflater.inflate(R.layout.video_picker, container, false);
+        mView = inflater.inflate(R.layout.video_picker_deneme, container, false);
         ButterKnife.bind(this, mView);
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         getActivity().getWindow().setFormat(PixelFormat.UNKNOWN);
         initUI();
-        setHolderProperties();
+        /*setHolderProperties();*/
         addListeners();
+        /*textureView.setSurfaceTextureListener(this);*/
     }
 
     private void initUI() {
-        mSurfaceView = (SurfaceView) mView.findViewById(R.id.surfaceView);
+        //textureView = (TextureView) mView.findViewById(R.id.textureView);
         cancelImageView = mView.findViewById(R.id.cancelImageView);
         mToggleButton = (ToggleButton) mView.findViewById(R.id.toggleRecordingButton);
-        mSurfaceView = (SurfaceView) mView.findViewById(R.id.surfaceView);
         galleryImgv = mView.findViewById(R.id.galleryImgv);
         videoView = mView.findViewById(R.id.videoView);
         videoViewRelLayout = mView.findViewById(R.id.videoViewRelLayout);
@@ -111,11 +133,11 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
         permissionModule = new PermissionModule(getActivity());
     }
 
-    public void setHolderProperties() {
-        mHolder = mSurfaceView.getHolder();
-        mHolder.addCallback(this);
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-    }
+//    public void setHolderProperties() {
+//        mHolder = mSurfaceView.getHolder();
+//        mHolder.addCallback(this);
+//        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//    }
 
     private void addListeners() {
         cancelImageView.setOnClickListener(new View.OnClickListener() {
@@ -129,8 +151,8 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
                     videoViewRelLayout.setVisibility(View.GONE);
                     openCamera();
                     videoGallerySelected = false;
-                } else
-                    previewCamera();
+                } /*else
+                    previewCamera();*/
             }
         });
 
@@ -140,7 +162,7 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
                 if (permissionModule.checkCameraPermission()) {
                     if (mToggleButton.isChecked()) {
 
-                        mToggleButton.setBackgroundResource(R.drawable.btn_capture_photo);
+                        /*mToggleButton.setBackgroundResource(R.drawable.btn_capture_photo);
                         cancelImageView.setVisibility(View.GONE);
 
                         try {
@@ -149,12 +171,15 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
                             e.printStackTrace();
                         }
 
-                        mMediaRecorder.start();
+                        mMediaRecorder.start();*/
+
+                        startActivity(new Intent(getActivity(), Camera2Activity.class));
+
+
                     } else
                         stopRecorderProcess();
                 } else
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.CAMERA},
+                    requestPermissions(new String[]{Manifest.permission.CAMERA},
                             permissionModule.getCameraPermissionCode());
             }
         });
@@ -166,17 +191,16 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
                 if (permissionModule.checkWriteExternalStoragePermission()) {
                     startGalleryForVideos();
                 } else
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String[]{Manifest.permission.CAMERA},
+                    requestPermissions(new String[]{Manifest.permission.CAMERA},
                             permissionModule.getWriteExternalStoragePermissionCode());
             }
         });
     }
 
+    // TODO: 11.09.2018 - GalleryPicker dan baslatilan permission burayi tetikliyor.
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == permissionModule.getCameraPermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
@@ -196,20 +220,77 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
     }
 
     public void openCamera() {
-        if (mCamera == null) {
-            mCamera = Camera.open();
-            checkCameraRotation();
-            previewCamera();
+        if (cameraManager == null) {
+            cameraManager = (CameraManager) getActivity().getSystemService(Context.CAMERA_SERVICE);
+
+            if (permissionModule.checkCameraPermission()) {
+                try {
+                    String cameraId = cameraManager.getCameraIdList()[0];
+                    cameraManager.openCamera(cameraId, new CameraDevice.StateCallback() {
+                        @Override
+                        public void onOpened(@NonNull CameraDevice camera) {
+                            mCameraDevice = camera;
+                            startCameraPreview();
+                        }
+
+                        @Override
+                        public void onDisconnected(@NonNull CameraDevice camera) {
+
+                        }
+
+                        @Override
+                        public void onError(@NonNull CameraDevice camera, int error) {
+
+                        }
+                    }, null);
+
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Log.i("Info", "Don't have permission to camera!");
+            }
+            Log.i("Info", "Open Camera end");
         }
     }
 
+    private void startCameraPreview() {
+        if (mSurface != null && mCameraDevice != null) {
+            try {
+                mCameraDevice.createCaptureSession(Arrays.asList(mSurface), cameraSessionStateCallback, null);
+            } catch (CameraAccessException e) {
+                Log.i("Info", "startCameraPreview exception:" + e);
+            }
+        }
+    }
+
+    private CameraCaptureSession.StateCallback cameraSessionStateCallback = new CameraCaptureSession.StateCallback() {
+        @Override
+        public void onConfigured(CameraCaptureSession session) {
+            try {
+                CaptureRequest.Builder captureRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+                captureRequestBuilder.addTarget(mSurface);
+                CaptureRequest captureRequest = captureRequestBuilder.build();
+                session.setRepeatingRequest(captureRequest, cameraSessionCaptureCallback, null);
+            } catch (CameraAccessException e) {
+                Log.w("Info", "CameraCaptureSession.StateCallback:" + e);
+            }
+        }
+
+        @Override
+        public void onConfigureFailed(CameraCaptureSession session) {
+        }
+    };
+
+    private CameraCaptureSession.CaptureCallback cameraSessionCaptureCallback = new CameraCaptureSession.CaptureCallback() {
+    };
+
+
     private void initRecorder(Surface surface) throws IOException {
-        // It is very important to unlock the camera before doing setCamera
-        // or it will results in a black preview
-        mCamera.unlock();
+        //mCamera.unlock();
         mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setPreviewDisplay(surface);
-        mMediaRecorder.setCamera(mCamera);
+        //mMediaRecorder.setCamera(mCamera);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         mMediaRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
@@ -219,6 +300,7 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
         mMediaRecorder.setOutputFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath());
         mMediaRecorder.setMaxDuration(MAX_VIDEO_DURATION * 1000);
         mMediaRecorder.setOnInfoListener(this);
+
 
         Log.i("Info", "FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath():" +
                 FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath());
@@ -232,7 +314,7 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
         }
     }
 
-    private void checkCameraRotation() {
+    /*private void checkCameraRotation() {
 
         Display display = ((WindowManager) getActivity().getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 
@@ -251,18 +333,16 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
         if (display.getRotation() == Surface.ROTATION_270) {
             mCamera.setDisplayOrientation(180);
         }
-    }
+    }*/
 
-    public void previewCamera() {
+    /*public void previewCamera() {
         try {
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
         } catch (Exception e) {
-            CommonUtils.showToastLong(getActivity(),
-                    getResources().getString(R.string.error) + e.getMessage());
             e.printStackTrace();
         }
-    }
+    }*/
 
     public void stopRecorderProcess() {
         mToggleButton.setBackgroundResource(R.drawable.btn_capture_video);
@@ -273,18 +353,17 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
             mMediaRecorder.reset();
         }
 
-        if (mCamera != null)
-            mCamera.stopPreview();
+        /*if (mCamera != null)
+            mCamera.stopPreview();*/
     }
 
-    @Override
+    /*@Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (permissionModule.checkCameraPermission()) {
             if (!videoGallerySelected)
                 openCamera();
         } else
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.CAMERA},
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
                     permissionModule.getCameraPermissionCode());
     }
 
@@ -296,20 +375,20 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 
-    }
+    }*/
 
-    private void shutdown() {
+    public void shutdown() {
         if (mMediaRecorder != null) {
             mMediaRecorder.reset();
             mMediaRecorder.release();
             mMediaRecorder = null;
         }
 
-        if (mCamera != null) {
+        /*if (mCamera != null) {
             mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
-        }
+        }*/
     }
 
     @Override
@@ -360,4 +439,43 @@ public class VideoPickerFrag extends Fragment implements SurfaceHolder.Callback,
     }
 
 
+
+
+
+   /* @Override
+    public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+        mSurface = new Surface(surface);
+        startCameraPreview();
+        if (permissionModule.checkCameraPermission()) {
+            if (!videoGallerySelected)
+                openCamera();
+        } else
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    permissionModule.getCameraPermissionCode());
+    }
+
+    @Override
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+
+    }
+
+    @Override
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        shutdown();
+        return false;
+    }
+
+    @Override
+    public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+
+    }*/
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (mCameraDevice != null) {
+            mCameraDevice.close();
+        }
+    }
 }

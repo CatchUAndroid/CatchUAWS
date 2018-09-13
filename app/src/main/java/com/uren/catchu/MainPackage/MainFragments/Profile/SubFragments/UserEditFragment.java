@@ -705,7 +705,7 @@ public class UserEditFragment extends BaseFragment
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
 

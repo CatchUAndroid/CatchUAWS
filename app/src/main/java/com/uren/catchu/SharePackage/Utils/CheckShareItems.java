@@ -19,10 +19,8 @@ public class CheckShareItems {
 
     public boolean shareIsPossible(){
 
-        if(ShareItems.getInstance().getShare().getImageUrl() != null) {
-            if (!ShareItems.getInstance().getShare().getImageUrl().trim().equals(""))
-                return true;
-        }
+        if(ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri() != null)
+            return true;
 
         if(ShareItems.getInstance().getShare().getText() != null) {
             if (!ShareItems.getInstance().getShare().getText().trim().equals(""))

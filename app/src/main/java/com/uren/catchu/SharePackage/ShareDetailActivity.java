@@ -66,6 +66,7 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.Interfaces.DialogBoxCallback;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GroupPackage.AddGroupActivity;
 import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
@@ -84,7 +85,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-
 
 
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
@@ -158,7 +158,6 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private static final int CODE_CAMERA_POSITION = 1;
 
     int selectedPosition = -1;
-    LayoutInflater noteTextInflater = null;
 
     PhotoSelectAdapter photoSelectAdapter;
     View noteTextLayout = null;
@@ -313,7 +312,10 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 if (!checkShareItems.isLocationLoaded()) {
-                    CommonUtils.showToastLong(ShareDetailActivity.this, checkShareItems.getErrMessage());
+                    if (!permissionModule.checkAccessFineLocationPermission()) {
+                        giveInfoLocationPermission();
+                    } else
+                        CommonUtils.showToastLong(ShareDetailActivity.this, checkShareItems.getErrMessage());
                     return;
                 }
 
@@ -323,6 +325,25 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 }
 
                 sharePost();
+            }
+        });
+    }
+
+    private void giveInfoLocationPermission() {
+        CommonUtils.showInfoDialogBox(ShareDetailActivity.this, getResources().getString(R.string.locationIsEmpty), null, new DialogBoxCallback() {
+            @Override
+            public void okClick() {
+                ActivityCompat.requestPermissions(ShareDetailActivity.this,
+                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                        permissionModule.getAccessFineLocationCode());
+            }
+
+            @Override
+            public void yesClick() {
+            }
+
+            @Override
+            public void noClick() {
             }
         });
     }
@@ -370,15 +391,11 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 }
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, GALLERY_TEXT);
-                //setGalleryImageView(photoSelectAdapter.getPhotoRoundedBitmap());
-                setGalleryImageView2();
-                //setGalleryImageView(photoSelectAdapter.getRoundedBitmapDrawable());
+                setGalleryImageView();
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, CAMERA_TEXT);
-                //setGalleryImageView(photoSelectAdapter.getPhotoRoundedBitmap());
-                setGalleryImageView2();
-                //setGalleryImageView(photoSelectAdapter.getRoundedBitmapDrawable());
+                setGalleryImageView();
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
             }
         }
@@ -389,16 +406,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    public void setGalleryImageView(Bitmap bitmap) {
-        galleryImgv.setImageBitmap(bitmap);
-        //galleryImgv.setImageDrawable(roundedBitmapDrawable);
-        deleteGalleryImgv.setVisibility(View.VISIBLE);
-        addGalleryImgv.setVisibility(View.GONE);
-    }
-
-    public void setGalleryImageView2() {
+    public void setGalleryImageView() {
         Glide.with(ShareDetailActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
-        //galleryImgv.setImageDrawable(roundedBitmapDrawable);
         deleteGalleryImgv.setVisibility(View.VISIBLE);
         addGalleryImgv.setVisibility(View.GONE);
     }
@@ -493,7 +502,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         }
     }
 
-    public void setShareItemsLocation(Location location){
+    public void setShareItemsLocation(Location location) {
         catchu.model.Location tempLoc = new catchu.model.Location();
         tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
@@ -574,7 +583,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
 
     private void setShareItems() {
         if (ShareItems.getInstance().getTextBitmap() != null) {
-            textImgv.setImageBitmap(ShareItems.getInstance().getTextBitmap());
+            Glide.with(ShareDetailActivity.this).load(ShareItems.getInstance().getTextBitmap()).apply(RequestOptions.circleCropTransform()).into(textImgv);
             addTextImgv.setVisibility(View.GONE);
             deleteTextImgv.setVisibility(View.VISIBLE);
         } else {
@@ -583,9 +592,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         }
 
         if (ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri() != null) {
-            Glide.with(ShareDetailActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
-            //galleryImgv.setImageBitmap(ShareItems.getInstance().getPhotoSelectAdapter().getPhotoRoundedBitmap());
-            //galleryImgv.setImageDrawable(ShareItems.getInstance().getPhotoSelectAdapter().getRoundedBitmapDrawable());
+            Glide.with(ShareDetailActivity.this).load(ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
             addGalleryImgv.setVisibility(View.GONE);
             deleteGalleryImgv.setVisibility(View.VISIBLE);
         } else {
@@ -671,13 +678,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                     deleteTextImgv.setVisibility(View.GONE);
                 } else {
                     editTextBitmap = BitmapConversion.getScreenShot(noteTextEditText);
-                    /*editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);*/
-                    //RoundedBitmapDrawable r = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null, ShareDetailActivity.this);
-
                     Glide.with(ShareDetailActivity.this).load(editTextBitmap).apply(RequestOptions.circleCropTransform()).into(textImgv);
-
-                    /*textImgv.setImageBitmap(editTextBitmap);*/
-                    //textImgv.setImageDrawable(r);
                     addTextImgv.setVisibility(View.GONE);
                     deleteTextImgv.setVisibility(View.VISIBLE);
                 }
