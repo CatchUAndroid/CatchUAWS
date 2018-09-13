@@ -44,8 +44,10 @@ public class TextPickerFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.text_picker, container, false);
-        ButterKnife.bind(this, mView);
+        if(mView == null) {
+            mView = inflater.inflate(R.layout.text_picker, container, false);
+            ButterKnife.bind(this, mView);
+        }
         return mView;
     }
 
