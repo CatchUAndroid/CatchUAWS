@@ -18,8 +18,12 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.SizeReadyCallback;
+import com.bumptech.glide.request.transition.Transition;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -59,8 +63,7 @@ import java.util.ArrayList;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
-public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridListAdapter.MyViewHolder> implements
-        ActivityCompat.OnRequestPermissionsResultCallback, PreferenceManager.OnActivityResultListener {
+public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridListAdapter.MyViewHolder> implements PreferenceManager.OnActivityResultListener {
 
     private ArrayList<File> fileList;
     View view;
@@ -74,8 +77,8 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     PermissionModule permissionModule;
     GalleryPickerFrag galleryPickerFrag;
 
-    private static final int CODE_GALLERY_POSITION = 0;
-    private static final int CODE_CAMERA_POSITION = 1;
+    final int CODE_GALLERY_POSITION = 0;
+    final int CODE_CAMERA_POSITION = 1;
 
     PhotoSelectAdapter photoSelectAdapter;
 
@@ -102,11 +105,15 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     @Override
     public GalleryGridListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = layoutInflater.inflate(R.layout.media_item_view, parent, false);
-        GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
-        return holder;
+        /*GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
+        return holder;*/
+
+        int width = parent.getMeasuredHeight() / 4;
+        view.setMinimumHeight(width);
+        return new GalleryGridListAdapter.MyViewHolder(view);
     }
 
-    @Override
+    /*@Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -124,7 +131,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             }
         } else
             CommonUtils.showToast(context, context.getString(R.string.technicalError) + requestCode);
-    }
+    }*/
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -133,7 +140,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
                 photoSelectAdapter = new PhotoSelectAdapter(context, data, GALLERY_TEXT);
                 setSelectedImageView();
                 ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
-
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(context, data, CAMERA_TEXT);
                 setSelectedImageView();
@@ -169,9 +175,13 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         }
 
         public void showSelectedPicture() {
+            Log.i("Info", "Position:" + position + " - filelen:" + selectedFile.length());
             galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
             galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
+            galleryPickerFrag.initImageView();
             Glide.with(context).load(Uri.fromFile(selectedFile)).into(galleryPickerFrag.imageView);
+            photoSelectAdapter = new PhotoSelectAdapter(context, Uri.fromFile(selectedFile));
+            ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
         }
 
         public void setData(File selectedFile, int position) {
@@ -182,8 +192,12 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
                 specialProfileImgView.setImageResource(R.drawable.gallery);
             } else if (position == CODE_CAMERA_POSITION) {
                 specialProfileImgView.setImageResource(R.drawable.camera);
-            } else
-                Glide.with(context).load(Uri.fromFile(selectedFile)).into(specialProfileImgView);
+            } else {
+                Log.i("Info", "selectedFile:" + Uri.fromFile(selectedFile).toString() + "-position:" + position);
+                //Glide.with(context).load(Uri.fromFile(selectedFile)).into(specialProfileImgView);
+
+                Glide.with(context).load(selectedFile).into(specialProfileImgView);
+            }
         }
     }
 
@@ -210,8 +224,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         if (permissionModule.checkWriteExternalStoragePermission())
             startGalleryProcess();
         else
-            ActivityCompat.requestPermissions((FragmentActivity) context,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     permissionModule.getWriteExternalStoragePermissionCode());
     }
 
@@ -224,18 +237,18 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         if (permissionModule.checkCameraPermission())
             startCameraProcess();
         else
-            ActivityCompat.requestPermissions((FragmentActivity) context,
-                    new String[]{Manifest.permission.CAMERA},
+            galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.CAMERA},
                     permissionModule.getCameraPermissionCode());
     }
 
     public void setSelectedImageView() {
+        galleryPickerFrag.initImageView();
         Glide.with(context).load(photoSelectAdapter.getPictureUri()).into(galleryPickerFrag.imageView);
         galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
         galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
     }
 
-    private void startGalleryProcess() {
+    public void startGalleryProcess() {
         Activity origin = (Activity) context;
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -250,8 +263,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
             origin.startActivityForResult(intent, permissionModule.getCameraPermissionCode());
         } else
-            ActivityCompat.requestPermissions((FragmentActivity) context,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+            galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     permissionModule.getWriteExternalStoragePermissionCode());
     }
 }

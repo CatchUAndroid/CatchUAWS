@@ -2,7 +2,9 @@ package com.uren.catchu.GeneralUtils;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -25,6 +27,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.uren.catchu.GeneralUtils.Interfaces.DialogBoxCallback;
+import com.uren.catchu.R;
 
 import java.io.ByteArrayOutputStream;
 
@@ -201,6 +206,23 @@ public class CommonUtils {
             // no camera on this device
             return false;
         }
+    }
+
+    public static void showInfoDialogBox(Context context, String message, String title, final DialogBoxCallback dialogBoxCallback){
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+
+        if (title != null)
+            alertDialog.setTitle(title);
+
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getResources().getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        dialogBoxCallback.okClick();
+                    }
+                });
+        alertDialog.show();
     }
 
 }
