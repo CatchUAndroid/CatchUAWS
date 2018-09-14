@@ -76,7 +76,7 @@ public class TextPickerFrag extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                ShareItems.getInstance().getShare().setText(s.toString());
+                //ShareItems.getInstance().getShare().setText(s.toString()); ugurfix
 
                 Bitmap editTextBitmap;
 

@@ -7,6 +7,8 @@ import android.util.Log;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.FollowInfo;
+import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 

@@ -219,9 +219,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 deleteTextImgv.setVisibility(View.GONE);
                 addTextImgv.setVisibility(View.VISIBLE);
                 textImgv.setImageResource(textDefaultImageId);
-                ShareItems.getInstance().getShare().setText("");
-                //ShareBox.getInstance().setTextList(new ArrayList<String>());
-                //ShareBox.getInstance().setTextBitmapList(new ArrayList<Bitmap>());
+                ShareItems.getInstance().getPost().setMessage(" ");
             }
         });
 
@@ -231,8 +229,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 deleteGalleryImgv.setVisibility(View.GONE);
                 addGalleryImgv.setVisibility(View.VISIBLE);
                 galleryImgv.setImageResource(galleryDefaultImageId);
-                ShareItems.getInstance().setPhotoSelectAdapter(null);
-                //ShareBox.getInstance().setPhotoUriList(new ArrayList<Uri>());
+
+                //ShareItems.getInstance().setPhotoSelectAdapter(null); ugurfix
             }
         });
 
@@ -347,13 +345,11 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, GALLERY_TEXT);
                 setGalleryImageView(data.getData());
-                //ShareBox.getInstance().addUriToPhotoList(data.getData());
-                ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
+                //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(ShareDetailActivity.this, data, CAMERA_TEXT);
                 setGalleryImageView(data.getData());
-                //ShareBox.getInstance().addUriToPhotoList(data.getData());
-                ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
+                //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
             }
         }
 
@@ -463,8 +459,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         catchu.model.Location tempLoc = new catchu.model.Location();
         tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-        ShareItems.getInstance().getShare().setLocation(tempLoc);
-        //ShareBox.getInstance().setLocation(tempLoc);
+        //ShareItems.getInstance().getShare().setLocation(tempLoc); ugurfix
     }
 
     private void checkCanGetLocation() {
@@ -549,14 +544,14 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             deleteTextImgv.setVisibility(View.GONE);
         }
 
-        if (ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri() != null) {
+        /*if (ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri() != null) {
             Glide.with(ShareDetailActivity.this).load(ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri()).apply(RequestOptions.circleCropTransform()).into(galleryImgv);
             addGalleryImgv.setVisibility(View.GONE);
             deleteGalleryImgv.setVisibility(View.VISIBLE);
         } else {
             addGalleryImgv.setVisibility(View.VISIBLE);
             deleteGalleryImgv.setVisibility(View.GONE);
-        }
+        }*/ // ugurfix
     }
 
     public void photoChosenManage() {
@@ -619,7 +614,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         ImageView approveImgv = noteTextLayout.findViewById(R.id.approveImgv);
         ImageView cancelTextImgv = noteTextLayout.findViewById(R.id.cancelTextImgv);
         final EditText noteTextEditText = noteTextLayout.findViewById(R.id.noteTextEditText);
-        noteTextEditText.setText(ShareItems.getInstance().getShare().getText());
+        //noteTextEditText.setText(ShareItems.getInstance().getShare().getText()); ugurfix
         shareMainLayout.addView(noteTextLayout);
         approveImgv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -635,7 +630,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                     addTextImgv.setVisibility(View.GONE);
                     deleteTextImgv.setVisibility(View.VISIBLE);
                 }
-                ShareItems.getInstance().getShare().setText(noteTextEditText.getText().toString());
+                //ShareItems.getInstance().getShare().setText(noteTextEditText.getText().toString()); ugurfix
                 ShareItems.getInstance().setTextBitmap(editTextBitmap);
                 shareMainLayout.removeView(noteTextLayout);
             }

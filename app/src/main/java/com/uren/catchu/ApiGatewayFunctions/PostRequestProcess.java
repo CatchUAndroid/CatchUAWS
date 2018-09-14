@@ -7,13 +7,13 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import catchu.model.PostRequest;
 import catchu.model.PostResponse;
 
-public class ShareRequestProcess extends AsyncTask<Void, Void, PostResponse> {
+public class PostRequestProcess extends AsyncTask<Void, Void, PostResponse> {
 
     private OnEventListener<PostResponse> mCallBack;
     public Exception mException;
     public PostRequest postRequest;
 
-    public ShareRequestProcess(OnEventListener callback, PostRequest postRequest) {
+    public PostRequestProcess(OnEventListener callback, PostRequest postRequest) {
         this.postRequest = postRequest;
         this.mCallBack = callback;
     }
