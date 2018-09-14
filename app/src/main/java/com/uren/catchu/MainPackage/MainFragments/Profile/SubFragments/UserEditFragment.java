@@ -1,19 +1,32 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,39 +44,31 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
-import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.denemeee.ToastUtils;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
+import java.io.File;
 import java.util.Calendar;
 
 import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.BucketUploadResult;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_FAIL;
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_OK;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
-import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
@@ -357,15 +362,15 @@ public class UserEditFragment extends BaseFragment
 
     private void updateOperation() {
 
-        /*if(profilPicChanged){
-            savePicToS3_and_updateUserProfile();
+        if(profilPicChanged){
+            //savePicToS3_and_updateUserProfile(); //UNT3
         }else{
             updateUserProfile();
-        }*/ // ugurfix
+        }
     }
-
+/*
     // TODO: 11.9.2018 NT: uğur buraları class yaptığını söyledi, implemente edilebliyosa et
-    /*private void savePicToS3_and_updateUserProfile() {
+    private void savePicToS3_and_updateUserProfile() {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -411,7 +416,7 @@ public class UserEditFragment extends BaseFragment
                     public void onTaskContinue() {
                         progressBar.setVisibility(View.VISIBLE);
                     }
-                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, commonS3BucketResult.getImages().get(0).getUploadUrl(), );
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -429,8 +434,8 @@ public class UserEditFragment extends BaseFragment
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-    }*/ // ugurfix
-
+    }
+*/
     private void updateUserProfile() {
 
         tempUser.setUserInfo(userProfileProperties);
@@ -535,12 +540,390 @@ public class UserEditFragment extends BaseFragment
 
     private void profilePictureClicked() {
 
+        /** #unt3
         permissionModule = new PermissionModule(getActivity());
         chooseImageProcess();
+        */
+
+        yeniTasarımDeneme();
 
     }
 
+    private void yeniTasarımDeneme() {
 
+        chooseImageProcess();
+    }
+
+
+    private static final int CODE_GALLERY_REQUEST = 0xa0;
+    private static final int CODE_CAMERA_REQUEST = 0xa1;
+    private static final int CODE_RESULT_REQUEST = 0xa2;
+    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
+    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
+    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
+    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+    private Uri imageUri;
+    private Uri cropImageUri;
+    private static final int OUTPUT_X = 480;
+    private static final int OUTPUT_Y = 480;
+
+    private static final String TAG = "PhotoImageFragment";
+
+
+
+    private void chooseImageProcess() {
+
+        Log.i("Info", "startChooseImageProc++++++++++++++++++++++++++++++++");
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
+        adapter.add("  " + getResources().getString(R.string.openCamera));
+        adapter.add("  " + getResources().getString(R.string.openGallery));
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        builder.setTitle(getResources().getString(R.string.chooseProfilePhoto));
+
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (item == adapterCameraSelected) {
+
+                    photoChoosenType = adapterCameraSelected;
+                    autoObtainCameraPermission();
+
+                } else if (item == adapterGallerySelected) {
+
+                    photoChoosenType = adapterGallerySelected;
+                    autoObtainStoragePermission();
+
+                } else
+                    CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError));
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+
+    /**
+     * Dinamik uygulama -sdcard -Okuma ve yazma izinleri
+     */
+    private void autoObtainStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
+            } else {
+                openPic(getActivity(), CODE_GALLERY_REQUEST);
+            }
+        } else {
+            openPic(getActivity(), CODE_GALLERY_REQUEST);
+        }
+    }
+
+    /**
+     * Kamera izinlerine erişim isteme
+     */
+    private void autoObtainCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
+                    || ContextCompat
+                    .checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
+                    ToastUtils.showShort(getActivity(), "Bir kere reddettin/Ayarlardan açınız");
+                }
+                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
+            } else {//Fotoğraf çekmek için sistem kamerasını doğrudan arama izni var
+                if (hasSdcard()) {
+                    imageUri = Uri.fromFile(fileUri);
+                    //通过FileProvider创建一个content类型的Uri
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        imageUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", fileUri);
+                    }
+                    takePicture(getActivity(), imageUri, CODE_CAMERA_REQUEST);
+                } else {
+                    ToastUtils.showShort(getActivity(), "Cihazda bir SD kart yok！");
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            /*Fotoğraf iznini geri aramak için sistem kamerasını çağırın.*/
+            case CAMERA_PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (hasSdcard()) {
+                        imageUri = Uri.fromFile(fileUri);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                            //通过FileProvider创建一个content类型的Uri
+                            imageUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", fileUri);
+                        }
+                        takePicture(getActivity(), imageUri, CODE_CAMERA_REQUEST);
+                    } else {
+                        ToastUtils.showShort(getActivity(), "Cihazda external storage yok！");
+                    }
+                } else {
+                    ToastUtils.showShort(getActivity(), "Lütfen kameranın açılmasına izin verin！！");
+                }
+                break;
+            }
+            //Sistem fotoğraf albümü uygulamasını çağırın -Sdcard - İzin geri araması
+            case STORAGE_PERMISSIONS_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    openPic(getActivity(), CODE_GALLERY_REQUEST);
+                } else {
+                    ToastUtils.showShort(getActivity(), "Lütfen işleme izin verin SDCard！！");
+                }
+                break;
+            default:
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode != -1) {
+            Log.e(TAG, "onActivityResult: resultCode!=RESULT_OK");
+            return;
+        }
+        switch (requestCode) {
+            //Kamera dönüş
+            case CODE_CAMERA_REQUEST:
+                cropImageUri = Uri.fromFile(fileCropUri);
+                cropImageUri(getActivity(), imageUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
+                break;
+            //Albüm dönüşü
+            case CODE_GALLERY_REQUEST:
+
+                if (hasSdcard()) {
+                    cropImageUri = Uri.fromFile(fileCropUri);
+                    Uri newUri = Uri.parse(getPath(getActivity(), data.getData()));
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        newUri = FileProvider.getUriForFile(getContext(), "com.uren.catchu", new File(newUri.getPath()));
+                    }
+                    cropImageUri(getActivity(), newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
+                } else {
+                    ToastUtils.showShort(getActivity(), "Ekipman yok SD卡！");
+                }
+                break;
+            //result
+            case CODE_RESULT_REQUEST:
+                Bitmap bitmap = getBitmapFromUri(cropImageUri, getActivity());
+                if (bitmap != null) {
+                    showImages(bitmap);
+                }
+                break;
+            default:
+        }
+    }
+
+    private void showImages(Bitmap bitmap) {
+        imgProfile.setImageBitmap(bitmap);
+    }
+
+    /**
+     * Cihazın mevcut olup olmadığını kontrol et SDCard
+     Araç yöntemi
+     */
+    public static boolean hasSdcard() {
+        String state = Environment.getExternalStorageState();
+        return state.equals(Environment.MEDIA_MOUNTED);
+    }
+
+
+    public void takePicture(Activity activity, Uri imageUri, int requestCode) {
+        //调用系统相机
+        Intent intentCamera = new Intent();
+        intentCamera.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        //Fotoğraf sonuçlarını kaydet photo_file的Uri中，Albümde saklanmıyor
+        intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intentCamera, requestCode);
+    }
+
+    /**
+     * @param fragment    当前fragment
+     * @param requestCode Albüm için istek kodunu aç
+     */
+    public void openPic(Activity fragment, int requestCode) {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        photoPickerIntent.setType("image/*");
+        startActivityForResult(photoPickerIntent, requestCode);
+    }
+    /**
+     * @param fragment    当前fragment
+     * @param orgUri      剪裁原图的Uri
+     * @param desUri      剪裁后的图片的Uri
+     * @param aspectX     X方向的比例
+     * @param aspectY     Y方向的比例
+     * @param width       剪裁图片的宽度
+     * @param height      剪裁图片高度
+     * @param requestCode 剪裁图片的请求码
+     */
+    public  void cropImageUri(Activity fragment, Uri orgUri, Uri desUri, int aspectX, int aspectY, int width, int height, int requestCode) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        }
+        intent.setDataAndType(orgUri, "image/*");
+        //发送裁剪信号
+        intent.putExtra("crop", "true");
+        intent.putExtra("aspectX", aspectX);
+        intent.putExtra("aspectY", aspectY);
+        intent.putExtra("outputX", width);
+        intent.putExtra("outputY", height);
+        intent.putExtra("scale", true);
+        //将剪切的图片保存到目标Uri中
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, desUri);
+        //1-false用uri返回图片
+        //2-true直接用bitmap返回图片（此种只适用于小图片，返回图片过大会报错）
+        intent.putExtra("return-data", false);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("noFaceDetection", true);
+        startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 读取uri所在的图片
+     *
+     * @param uri      图片对应的Uri
+     * @param mContext 上下文对象
+     * @return 获取图像的Bitmap
+     */
+    public static Bitmap getBitmapFromUri(Uri uri, Context mContext) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
+            return bitmap;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * @param context 上下文对象
+     * @param uri     当前相册照片的Uri
+     * @return 解析后的Uri对应的String
+     */
+    @SuppressLint("NewApi")
+    public static String getPath(final Context context, final Uri uri) {
+
+        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
+        String pathHead = "file:///";
+        // DocumentProvider
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+                if ("primary".equalsIgnoreCase(type)) {
+                    return pathHead + Environment.getExternalStorageDirectory() + "/" + split[1];
+                }
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
+
+                final String id = DocumentsContract.getDocumentId(uri);
+
+                final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return pathHead + getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+                }
+
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{split[1]};
+
+                return pathHead + getDataColumn(context, contentUri, selection, selectionArgs);
+            }
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            return pathHead + getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return pathHead + uri.getPath();
+        }
+        return null;
+    }
+
+    /**
+     * Get the value of the data column for this Uri. This is useful for
+     * MediaStore Uris, and other file-based ContentProviders.
+     *
+     * @param context       The context.
+     * @param uri           The Uri to query.
+     * @param selection     (Optional) Filter used in the query.
+     * @param selectionArgs (Optional) Selection arguments used in the query.
+     * @return The value of the _data column, which is typically a file path.
+     */
+    private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
+
+        Cursor cursor = null;
+        final String column = "_data";
+        final String[] projection = {column};
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int column_index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(column_index);
+            }
+        } finally {
+            if (cursor != null)
+                cursor.close();
+        }
+        return null;
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is ExternalStorageProvider.
+     */
+    private static boolean isExternalStorageDocument(Uri uri) {
+        return "com.android.externalstorage.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is DownloadsProvider.
+     */
+    private static boolean isDownloadsDocument(Uri uri) {
+        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
+    }
+
+    /**
+     * @param uri The Uri to check.
+     * @return Whether the Uri authority is MediaProvider.
+     */
+    private static boolean isMediaDocument(Uri uri) {
+        return "com.android.providers.media.documents".equals(uri.getAuthority());
+    }
+
+
+
+
+/** denemek için kapatıldı
+ *
     private void chooseImageProcess() {
 
         Log.i("Info", "startChooseImageProc++++++++++++++++++++++++++++++++");
@@ -628,14 +1011,6 @@ public class UserEditFragment extends BaseFragment
 
     private void manageProfilePicChoosen() {
 
-        /*
-        //Profile picture
-        Picasso.with(getActivity())
-                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
-                .load(photoSelectAdapter.getPictureUri())
-                .transform(new CircleTransform())
-                .into(imgProfile);
-            */
 
         Glide.with(getActivity())
                 .load(photoSelectAdapter.getPictureUri())
@@ -667,6 +1042,5 @@ public class UserEditFragment extends BaseFragment
         } else
             CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError) + requestCode);
     }
-
-
+*/
 }

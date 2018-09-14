@@ -74,6 +74,7 @@ public class PhotoSelectAdapter {
             photoBitmap = BitmapFactory.decodeStream(inputStream);
             photoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, photoBitmap);
         }
+
     }
 
     public Uri getPictureUri() {

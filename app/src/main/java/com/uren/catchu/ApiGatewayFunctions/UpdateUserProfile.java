@@ -9,6 +9,7 @@ import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
 
 import java.math.BigDecimal;
 
+import catchu.model.BaseResponse;
 import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
@@ -35,7 +36,7 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
 
         try {
 
-            /*Response rsp = instance.client.usersPost(userProfile);
+            BaseResponse rsp = instance.client.usersPost(userProfile);
 
 
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
@@ -44,7 +45,7 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
             }else{
                 Log.i("-> update response ", "fail");
                 return null;
-            }*/ // ugurfix
+            }
 
         } catch (Exception e) {
             mException = e;
