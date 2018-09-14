@@ -96,7 +96,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             public void onClick(View v) {
                 galleryPickerFrag.photoRelLayout.setVisibility(View.GONE);
                 galleryPickerFrag.specialRecyclerView.setVisibility(View.VISIBLE);
-                ShareItems.getInstance().setPhotoSelectAdapter(null);
+                //ShareItems.getInstance().setPhotoSelectAdapter(null); ugurfix
             }
         });
     }
@@ -138,11 +138,11 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectAdapter = new PhotoSelectAdapter(context, data, GALLERY_TEXT);
                 setSelectedImageView();
-                ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
+                //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectAdapter = new PhotoSelectAdapter(context, data, CAMERA_TEXT);
                 setSelectedImageView();
-                ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
+                //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
             } else
                 CommonUtils.showToast(context, context.getResources().getString(R.string.technicalError) + requestCode);
         }
@@ -180,7 +180,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             galleryPickerFrag.initImageView();
             Glide.with(context).load(Uri.fromFile(selectedFile)).into(galleryPickerFrag.imageView);
             photoSelectAdapter = new PhotoSelectAdapter(context, Uri.fromFile(selectedFile));
-            ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter);
+            //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
         }
 
         public void setData(File selectedFile, int position) {

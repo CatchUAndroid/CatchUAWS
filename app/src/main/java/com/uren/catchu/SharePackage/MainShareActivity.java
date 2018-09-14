@@ -75,7 +75,7 @@ public class MainShareActivity extends FragmentActivity {
         nextTv = findViewById(R.id.nextTv);
         ShareItems.setInstance(null);
         ShareItems.getInstance();
-        ShareItems.getInstance().getShare().setUserid(AccountHolderInfo.getUserID());
+        //ShareItems.getInstance().getShare().setUserid(AccountHolderInfo.getUserID()); ugurfix
     }
 
     private void setupTabIcons() {

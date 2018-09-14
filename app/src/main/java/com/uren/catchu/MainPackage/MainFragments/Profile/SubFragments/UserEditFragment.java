@@ -357,15 +357,15 @@ public class UserEditFragment extends BaseFragment
 
     private void updateOperation() {
 
-        if(profilPicChanged){
+        /*if(profilPicChanged){
             savePicToS3_and_updateUserProfile();
         }else{
             updateUserProfile();
-        }
+        }*/ // ugurfix
     }
 
     // TODO: 11.9.2018 NT: uğur buraları class yaptığını söyledi, implemente edilebliyosa et
-    private void savePicToS3_and_updateUserProfile() {
+    /*private void savePicToS3_and_updateUserProfile() {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -429,7 +429,7 @@ public class UserEditFragment extends BaseFragment
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-    }
+    }*/ // ugurfix
 
     private void updateUserProfile() {
 

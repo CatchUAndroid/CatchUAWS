@@ -121,7 +121,7 @@ public class AddGroupActivity extends AppCompatActivity {
     public static FriendGridListAdapter adapter;
     FloatingActionButton saveGroupInfoFab;
     EditText groupNameEditText;
-    private ImageView groupPictureImgv;
+    ImageView groupPictureImgv;
     RelativeLayout addGroupDtlRelLayout;
     PermissionModule permissionModule;
     TextView participantSize;
