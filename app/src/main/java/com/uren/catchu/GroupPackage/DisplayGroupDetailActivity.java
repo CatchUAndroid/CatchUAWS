@@ -410,7 +410,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             if (requestCode == permissionModule.getCameraPermissionCode() ||
                     requestCode == permissionModule.getImageGalleryPermission()) {
                 manageProfilePicChoosen(data);
-                updateGroup();
+                //updateGroup(); ugurfix
             } else
                 CommonUtils.showToastLong(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError) + requestCode);
         } else
@@ -461,7 +461,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 
-    public void updateGroup() {
+    /*public void updateGroup() {
 
         mProgressDialog.setMessage(getResources().getString(R.string.groupPhotoChanging));
         dialogShow();
@@ -520,7 +520,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    }*/
 
     public void dialogShow() {
         if (!mProgressDialog.isShowing()) mProgressDialog.show();

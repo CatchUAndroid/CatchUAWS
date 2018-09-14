@@ -53,7 +53,7 @@ public class LocationTrackerAdapter implements LocationListener {
         catchu.model.Location locationModel = new catchu.model.Location();
         locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
         locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-        ShareItems.getInstance().getShare().setLocation(locationModel);
+        //ShareItems.getInstance().getShare().setLocation(locationModel); ugurfix
     }
 
     @Override

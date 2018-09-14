@@ -73,4 +73,8 @@ public class StringConstants {
     //Follow Request Types
     public static final String GET_USER_FOLLOWERS = "GET_USER_FOLLOWERS";
     public static final String GET_USER_FOLLOWINGS = "GET_USER_FOLLOWINGS";
+
+    // Upload media types
+    public static final String VIDEO_TYPE = "video";
+    public static final String IMAGE_TYPE = "image";
 }

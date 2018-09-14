@@ -146,7 +146,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                     videoFile.delete();
                     videoFile = null;
                     videoFilePath = null;
-                    ShareItems.getInstance().setVideoUri(null);
+                    //ShareItems.getInstance().setVideoUri(null); ugurfix
                 }
 
                 if (videoViewRelLayout.getVisibility() == View.VISIBLE) {
@@ -409,7 +409,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
             texttureViewLayout.setVisibility(View.GONE);
             videoViewRelLayout.setVisibility(View.VISIBLE);
-            ShareItems.getInstance().setVideoUri(videoUri);
+            //ShareItems.getInstance().setVideoUri(videoUri); ugurfix
             playRecordedVideo();
 
 

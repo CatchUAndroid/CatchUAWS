@@ -8,27 +8,28 @@ import android.util.Log;
 import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
+import com.uren.catchu.Singleton.Share.MediaBoxItem;
 
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 import catchu.model.FriendList;
 import catchu.model.Location;
-import catchu.model.Share;
-import catchu.model.ShareRequest;
+import catchu.model.Post;
 import catchu.model.UserProfileProperties;
 
-public class ShareItems {
+public class ShareItems{
 
     private static ShareItems shareItemsInstance = null;
-    private static Share share;
-    private static PhotoSelectAdapter photoSelectAdapter;
+    private static Post post;
+    private static List<MediaBoxItem> mediaBoxItems;
     private static Bitmap textBitmap;
-    private static Uri videoUri;
 
     public static ShareItems getInstance(){
         if(shareItemsInstance == null) {
-            share = new Share();
-            photoSelectAdapter = new PhotoSelectAdapter();
+            post = new Post();
+            mediaBoxItems = new ArrayList<>();
             shareItemsInstance = new ShareItems();
         }
         return shareItemsInstance;
@@ -41,21 +42,12 @@ public class ShareItems {
         shareItemsInstance = shareItems;
     }
 
-    public Share getShare() {
-        return share;
+    public Post getPost() {
+        return post;
     }
 
-    public void setShare(Share share) {
-        ShareItems.share = share;
-    }
-
-
-    public PhotoSelectAdapter getPhotoSelectAdapter() {
-        return photoSelectAdapter;
-    }
-
-    public void setPhotoSelectAdapter(PhotoSelectAdapter photoSelectAdapter) {
-        ShareItems.photoSelectAdapter = photoSelectAdapter;
+    public void setPost(Post post) {
+        ShareItems.post = post;
     }
 
     public Bitmap getTextBitmap() {
@@ -66,11 +58,19 @@ public class ShareItems {
         ShareItems.textBitmap = textBitmap;
     }
 
-    public Uri getVideoUri() {
-        return videoUri;
+    public List<MediaBoxItem> getMediaBoxItems() {
+        return mediaBoxItems;
     }
 
-    public void setVideoUri(Uri videoUri) {
-        ShareItems.videoUri = videoUri;
+    public void setMediaBoxItems(List<MediaBoxItem> mediaBoxItems) {
+        ShareItems.mediaBoxItems = mediaBoxItems;
+    }
+
+    public void addMediaBox(MediaBoxItem mediaBoxItem){
+        mediaBoxItems.add(mediaBoxItem);
+    }
+
+    public void removeMediaBox(MediaBoxItem mediaBoxItem){
+        mediaBoxItems.remove((MediaBoxItem)mediaBoxItem);
     }
 }

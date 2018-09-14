@@ -75,11 +75,11 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
         if (videoCounter < videoList.size()) {
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.view_blue, collection, false);
-            VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem);
+            //VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem); ugurfix
             collection.addView(itemView);
 
             playVideoImgv = itemView.findViewById(R.id.playVideoImgv);
-            videoFeedItem.setVideoURI(videoList.get(videoCounter));
+            /*videoFeedItem.setVideoURI(videoList.get(videoCounter));
             videoFeedItem.requestFocus();
 
             videoFeedItem.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -101,7 +101,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
                         mediaPlayer.start();
                     }
                 }
-            });
+            });*/ // ugurfix
 
             videoCounter++;
 

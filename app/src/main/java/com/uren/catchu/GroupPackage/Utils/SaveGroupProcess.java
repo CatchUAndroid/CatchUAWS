@@ -52,10 +52,10 @@ public class SaveGroupProcess {
         mProgressDialog.setMessage(context.getResources().getString(R.string.groupIsCreating));
         dialogShow();
 
-        if(photoSelectAdapter.getPictureUri() != null)
+        /*if(photoSelectAdapter.getPictureUri() != null)
             saveGroupImageToS3();
         else
-            processSaveGroup(" ");
+            processSaveGroup(" ");*/ //ugurfix
     }
 
     public void dialogShow() {
@@ -66,7 +66,7 @@ public class SaveGroupProcess {
         if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     }
 
-    public void saveGroupImageToS3() {
+    /*public void saveGroupImageToS3() {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -122,7 +122,7 @@ public class SaveGroupProcess {
         }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    }*/  // ugurfix
 
     public void processSaveGroup(String downloadUrl) {
 

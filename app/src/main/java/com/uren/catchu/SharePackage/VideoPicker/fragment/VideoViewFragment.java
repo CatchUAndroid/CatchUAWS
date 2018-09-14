@@ -90,7 +90,7 @@ public class VideoViewFragment extends Fragment {
             public void onClick(View v) {
                 cancelImageView.setVisibility(View.GONE);
                 videoView.stopPlayback();
-                ShareItems.getInstance().setVideoUri(null);
+                //ShareItems.getInstance().setVideoUri(null); ugurfix
                 getActivity().onBackPressed();
             }
         });
@@ -130,7 +130,7 @@ public class VideoViewFragment extends Fragment {
 
     public void manageVideoFromGallery() {
         videoUri = data.getData();
-        ShareItems.getInstance().setVideoUri(videoUri);
+        //ShareItems.getInstance().setVideoUri(videoUri); ugurfix
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();

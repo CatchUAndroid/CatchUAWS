@@ -465,7 +465,7 @@ public class VideoPickerFrag3 extends Fragment implements MediaRecorder.OnInfoLi
 
     public void playRecordedVideo() {
         videoUri = Uri.parse(videoFilePath);
-        ShareItems.getInstance().setVideoUri(videoUri);
+        //ShareItems.getInstance().setVideoUri(videoUri); ugurfix
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();
