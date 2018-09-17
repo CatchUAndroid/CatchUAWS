@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -46,7 +45,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
 
         if(textCounter < textBitmapList.size()){
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_green, collection, false);
+                    .inflate(R.layout.viewPager_image, collection, false);
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 
@@ -60,7 +59,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
 
         if (imageCounter < imageList.size()) {
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_green, collection, false);
+                    .inflate(R.layout.viewPager_image, collection, false);
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 
@@ -74,7 +73,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
 
         if (videoCounter < videoList.size()) {
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_blue, collection, false);
+                    .inflate(R.layout.viewPager_video, collection, false);
             //VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem); ugurfix
             collection.addView(itemView);
 
@@ -109,7 +108,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
             //sonra imagelar bitene kadar eklenir
 
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_green, collection, false);
+                    .inflate(R.layout.viewPager_image, collection, false);
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 

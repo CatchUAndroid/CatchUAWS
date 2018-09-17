@@ -144,6 +144,7 @@ public class UserEditFragment extends BaseFragment
     String[] GENDERS;
 
     //todo : NT - request kodları permissionConstanstan çekilmeli
+    // photo select variables
     private static final int CODE_GALLERY_REQUEST = 0xa0;
     private static final int CODE_CAMERA_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;

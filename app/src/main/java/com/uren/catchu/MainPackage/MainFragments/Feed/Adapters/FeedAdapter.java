@@ -3,8 +3,8 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.content.Context;
 
-import android.media.Image;
-import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -19,23 +19,28 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import butterknife.BindView;
+import catchu.model.Media;
+import catchu.model.Post;
+
+import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
 
     private Context context;
-    private List<Integer> feedList;
+    private List<Post> postList;
 
-    public FeedAdapter(Context context, List<Integer> feedList) {
+    public FeedAdapter(Context context, List<Post> postList) {
 
         this.context = context;
-        this.feedList = feedList;
+        this.postList = postList;
 
     }
 
@@ -74,24 +79,19 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         private void setViewPager() {
 
-            List<String> imageList;
-            imageList = new ArrayList<>();
+            List<Media> mediaList;
+            mediaList = new ArrayList<>();
 
-            List<String> videoList;
-            videoList = new ArrayList<>();
+            for(int i=0; i<postList.size(); i++){
+                mediaList.addAll(postList.get(i).getAttachments());
+            }
 
-            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
-            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
-            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
-            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
-
-            videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/video.mp4");
-
+            FragmentManager fragmentManager = ((NextActivity)context).getSupportFragmentManager();
 
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-            viewPager.setAdapter(new ViewPagerAdapter(context, imageList, videoList));
+            viewPager.setAdapter(new ViewPagerAdapter(fragmentManager, mediaList));
 
-            int totalDots = imageList.size() + videoList.size();
+            int totalDots = mediaList.size();
             setSliderDotsPanel(totalDots);
 
         }
@@ -145,20 +145,18 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         }
 
 
-        public void setData(int rowItem, int position) {
+        public void setData(Post post, int position) {
 
             //this.profileName.setText(String.valueOf(rowItem));
             this.position = position;
 
-            String geciciUrl = "https://s3.amazonaws.com/catchumobilebucket/UserProfile/30.jpg";
-
             Glide.with(context)
-                    .load(geciciUrl)
+                    .load(post.getUser().getProfilePhotoUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(imgProfilePic);
 
-            this.txtName.setText(getRandomUser());
-            this.txtUserName.setText(getRandomUsername());
+            this.txtName.setText(post.getUser().getUsername());
+            this.txtUserName.setText(post.getUser().getUsername());
 
 
             /*
@@ -186,50 +184,16 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        int sayi = feedList.get(position);
-        Log.i("sayi ", String.valueOf(sayi));
-        holder.setData(sayi, position);
+        Post post = postList.get(position);
+        holder.setData(post, position);
 
     }
 
     @Override
     public int getItemCount() {
-        return feedList.size();
+        return postList.size();
     }
 
-
-    private String getRandomUser() {
-
-        String[] username = {
-                "Nurullah Topaloglu",
-                "Remzi Yıldırım",
-                "Erkut Baş",
-                "Uğur Göğebakan"
-        };
-
-        Random rand = new Random();
-        int n = rand.nextInt(4);
-
-        return username[n];
-
-    }
-
-    private String getRandomUsername() {
-
-        String[] username = {
-                "@besiktas",
-                "@fenerbahce",
-                "@trabzonspor",
-                "@galatasaray",
-                "@sivasspor",
-        };
-
-        Random rand = new Random();
-        int n = rand.nextInt(4);
-
-        return username[n];
-
-    }
 
 
 }
