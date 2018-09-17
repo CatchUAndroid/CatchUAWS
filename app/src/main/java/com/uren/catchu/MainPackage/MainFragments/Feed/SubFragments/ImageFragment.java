@@ -38,7 +38,7 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.viewPager_image, container, false);
+        View view = inflater.inflate(R.layout.viewpager_image, container, false);
 
 
         ImageView imgFeedItem = (ImageView) view.findViewById(R.id.imgFeedItem);

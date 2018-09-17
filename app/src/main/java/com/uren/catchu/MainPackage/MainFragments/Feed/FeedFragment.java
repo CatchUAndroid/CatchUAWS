@@ -108,6 +108,12 @@ public class FeedFragment extends BaseFragment {
         ArrayList<Post> postList = new ArrayList<Post>();
         for(int i=0; i< postListResponse.getItems().size(); i++ ){
             postList.add(postListResponse.getItems().get(i));
+            postList.add(postListResponse.getItems().get(i));
+            postList.add(postListResponse.getItems().get(i));
+            postList.add(postListResponse.getItems().get(i));
+            postList.add(postListResponse.getItems().get(i));
+            postList.add(postListResponse.getItems().get(i));
+            postList.add(postListResponse.getItems().get(i));
         }
 
         feedAdapter = new FeedAdapter(getActivity(), postList);

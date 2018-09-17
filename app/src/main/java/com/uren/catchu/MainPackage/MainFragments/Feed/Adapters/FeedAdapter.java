@@ -61,6 +61,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         ViewPager viewPager;
         CardView cardView;
         private int position;
+        List<Media> mediaList;
         View view;
 
         public MyViewHolder(View view) {
@@ -73,18 +74,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             this.view = view;
 
-            setViewPager();
+
 
         }
 
         private void setViewPager() {
 
-            List<Media> mediaList;
             mediaList = new ArrayList<>();
-
-            for(int i=0; i<postList.size(); i++){
-                mediaList.addAll(postList.get(i).getAttachments());
-            }
+            mediaList.addAll(postList.get(position).getAttachments());
 
             FragmentManager fragmentManager = ((NextActivity)context).getSupportFragmentManager();
 
@@ -157,6 +154,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             this.txtName.setText(post.getUser().getUsername());
             this.txtUserName.setText(post.getUser().getUsername());
+
+            setViewPager();
+
 
 
             /*

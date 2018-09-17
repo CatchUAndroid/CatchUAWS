@@ -45,7 +45,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
 
         if(textCounter < textBitmapList.size()){
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.viewPager_image, collection, false);
+                    .inflate(R.layout.viewpager_image, collection, false);
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 
@@ -59,7 +59,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
 
         if (imageCounter < imageList.size()) {
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.viewPager_image, collection, false);
+                    .inflate(R.layout.viewpager_image, collection, false);
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 
@@ -73,7 +73,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
 
         if (videoCounter < videoList.size()) {
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.viewPager_video, collection, false);
+                    .inflate(R.layout.viewpager_video, collection, false);
             //VideoView videoFeedItem = (VideoView) itemView.findViewById(R.id.videoFeedItem); ugurfix
             collection.addView(itemView);
 
@@ -108,7 +108,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter{
             //sonra imagelar bitene kadar eklenir
 
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.viewPager_image, collection, false);
+                    .inflate(R.layout.viewpager_image, collection, false);
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             collection.addView(itemView);
 
