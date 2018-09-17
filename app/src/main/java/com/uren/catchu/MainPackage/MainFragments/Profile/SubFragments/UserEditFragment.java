@@ -1,16 +1,12 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,8 +15,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -56,7 +50,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.denemeee.ToastUtils;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -623,7 +616,7 @@ public class UserEditFragment extends BaseFragment
                     .checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
                 if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-                    ToastUtils.showShort(getActivity(), "Bir kere reddettin/Ayarlardan açınız");
+                    CommonUtils.showToast(getContext(), "Bir kere reddettin/Ayarlardan açınız");
                 }
                 requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
             } else {//Fotoğraf çekmek için sistem kamerasını doğrudan arama izni var
@@ -635,7 +628,7 @@ public class UserEditFragment extends BaseFragment
                     }
                     PhotoSelectUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
                 } else {
-                    ToastUtils.showShort(getActivity(), "Cihazda bir SD kart yok！");
+                    CommonUtils.showToast(getContext(), "Cihazda bir SD kart yok");
                 }
             }
         }
@@ -657,10 +650,10 @@ public class UserEditFragment extends BaseFragment
                         }
                         PhotoSelectUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
                     } else {
-                        ToastUtils.showShort(getActivity(), "Cihazda bir SD kart yok！");
+                        CommonUtils.showToast(getContext(), "Cihazda bir SD kart yok");
                     }
                 } else {
-                    ToastUtils.showShort(getActivity(), "Lütfen kameranın açılmasına izin verin！！");
+                    CommonUtils.showToast(getContext(), "Lütfen kameranın açılmasına izin verin!!");
                 }
                 break;
             }
@@ -669,7 +662,7 @@ public class UserEditFragment extends BaseFragment
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     PhotoSelectUtils.openPic(this, CODE_GALLERY_REQUEST);
                 } else {
-                    ToastUtils.showShort(getActivity(), "Lütfen işleme izin verin SDCard！！");
+                    CommonUtils.showToast(getContext(), "Lütfen işleme izin verin storage-izni!!");
                 }
                 break;
             default:
@@ -701,7 +694,7 @@ public class UserEditFragment extends BaseFragment
                     }
                     PhotoSelectUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                 } else {
-                    ToastUtils.showShort(getActivity(), "Ekipman yok SD");
+                    CommonUtils.showToast(getContext(), "External storage bulunamadı");
                 }
                 break;
             //result
