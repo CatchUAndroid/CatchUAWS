@@ -4,11 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,52 +13,28 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.target.SizeReadyCallback;
-import com.bumptech.glide.request.transition.Transition;
-import com.squareup.picasso.Picasso;
-import com.uren.catchu.GeneralUtils.BitmapConversion;
-import com.uren.catchu.GeneralUtils.CircleTransform;
-import com.uren.catchu.GeneralUtils.UriAdapter;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.MainShareActivity;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
-import com.squareup.picasso.Picasso;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
-import com.uren.catchu.Permissions.PermissionModule;
-import com.uren.catchu.R;
-import com.uren.catchu.Singleton.ShareItems;
+import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
-import java.io.File;
-import java.util.ArrayList;
+import catchu.model.Media;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridListAdapter.MyViewHolder> implements PreferenceManager.OnActivityResultListener {
@@ -79,7 +51,8 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     PermissionModule permissionModule;
     GalleryPickerFrag galleryPickerFrag;
 
-    PhotoSelectAdapter photoSelectAdapter;
+    //PhotoSelectAdapter photoSelectAdapter;
+    PhotoSelectUtil photoSelectUtil;
 
     public GalleryGridListAdapter(Context context, ArrayList<File> fileList, GalleryPickerFrag galleryPickerFrag) {
         layoutInflater = LayoutInflater.from(context);
@@ -96,7 +69,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             public void onClick(View v) {
                 galleryPickerFrag.photoRelLayout.setVisibility(View.GONE);
                 galleryPickerFrag.specialRecyclerView.setVisibility(View.VISIBLE);
-                //ShareItems.getInstance().setPhotoSelectAdapter(null); ugurfix
+                ShareItems.getInstance().clearImageShareItemBox();
             }
         });
     }
@@ -104,49 +77,38 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     @Override
     public GalleryGridListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         view = layoutInflater.inflate(R.layout.media_item_view, parent, false);
-        /*GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
-        return holder;*/
+        GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
+        return holder;
 
-        int width = parent.getMeasuredHeight() / 4;
+       /* int width = parent.getMeasuredHeight() / 4;
         view.setMinimumHeight(width);
-        return new GalleryGridListAdapter.MyViewHolder(view);
+        return new GalleryGridListAdapter.MyViewHolder(view);*/
     }
-
-    /*@Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                if (selectedPosition == CODE_GALLERY_POSITION)
-                    startGalleryProcess();
-                else if (selectedPosition == CODE_CAMERA_POSITION)
-                    startCameraProcess();
-                else
-                    startGalleryProcess();
-            }
-        } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCameraProcess();
-            }
-        } else
-            CommonUtils.showToast(context, context.getString(R.string.technicalError) + requestCode);
-    }*/
 
     @Override
     public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == permissionModule.getImageGalleryPermission()) {
-                photoSelectAdapter = new PhotoSelectAdapter(context, data, GALLERY_TEXT);
+                photoSelectUtil = new PhotoSelectUtil(context, data, GALLERY_TEXT);
+                fillImageShareItemBox();
                 setSelectedImageView();
-                //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-                photoSelectAdapter = new PhotoSelectAdapter(context, data, CAMERA_TEXT);
+                photoSelectUtil = new PhotoSelectUtil(context, data, CAMERA_TEXT);
+                fillImageShareItemBox();
                 setSelectedImageView();
-                //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
             } else
-                CommonUtils.showToast(context, context.getResources().getString(R.string.technicalError) + requestCode);
+                DialogBoxUtil.showErrorDialog(context,  "GalleryGridListAdapter:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() { }
+                });
         }
         return false;
+    }
+
+    public void fillImageShareItemBox() {
+        ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
+        ShareItems.getInstance().clearImageShareItemBox();
+        ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -179,8 +141,8 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
             galleryPickerFrag.initImageView();
             Glide.with(context).load(Uri.fromFile(selectedFile)).into(galleryPickerFrag.imageView);
-            photoSelectAdapter = new PhotoSelectAdapter(context, Uri.fromFile(selectedFile));
-            //ShareItems.getInstance().setPhotoSelectAdapter(photoSelectAdapter); ugurfix
+            photoSelectUtil = new PhotoSelectUtil(context, Uri.fromFile(selectedFile), FROM_FILE_TEXT);
+            fillImageShareItemBox();
         }
 
         public void setData(File selectedFile, int position) {
@@ -193,8 +155,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
                 specialProfileImgView.setImageResource(R.drawable.camera);
             } else {
                 Log.i("Info", "selectedFile:" + Uri.fromFile(selectedFile).toString() + "-position:" + position);
-                //Glide.with(context).load(Uri.fromFile(selectedFile)).into(specialProfileImgView);
-
                 Glide.with(context).load(selectedFile).into(specialProfileImgView);
             }
         }
@@ -242,7 +202,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     public void setSelectedImageView() {
         galleryPickerFrag.initImageView();
-        Glide.with(context).load(photoSelectAdapter.getPictureUri()).into(galleryPickerFrag.imageView);
+        Glide.with(context).load(photoSelectUtil.getMediaUri()).into(galleryPickerFrag.imageView);
         galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
         galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
     }

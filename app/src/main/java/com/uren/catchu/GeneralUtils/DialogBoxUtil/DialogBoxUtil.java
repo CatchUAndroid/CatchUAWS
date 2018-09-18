@@ -77,4 +77,22 @@ public class DialogBoxUtil {
         AlertDialog alert = builder.create();
         alert.show();
     }
+
+    public static void showErrorDialog(Context context, String errMessage, final InfoDialogBoxCallback infoDialogBoxCallback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+        builder.setTitle(context.getResources().getString(R.string.errorUpper));
+        builder.setIcon(R.drawable.toast_error_icon);
+        builder.setMessage(errMessage);
+
+        builder.setNeutralButton(context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                infoDialogBoxCallback.okClick();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
 }

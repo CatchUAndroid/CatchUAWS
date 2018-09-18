@@ -1,8 +1,11 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -22,28 +25,14 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
     private OnEventListener<HttpURLConnection> mCallBack;
     public Exception mException;
     public String uploadUrl;
-    public String mediaUrl;
+    //public Uri mediaUri;
     public Bitmap bitmap;
+    //Context context;
 
-    public UploadImageToS3(OnEventListener callback, String uploadUrl, String mediaUrl) {
+    public UploadImageToS3(OnEventListener callback, Bitmap bitmap, String uploadUrl) {
         this.mCallBack = callback;
+        this.bitmap = bitmap;
         this.uploadUrl = uploadUrl;
-        this.mediaUrl = mediaUrl;
-        getBitmapFromUrl();
-    }
-
-    private void getBitmapFromUrl() {
-        URL url = null;
-        try {
-            url = new URL(mediaUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-        try {
-            this.bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

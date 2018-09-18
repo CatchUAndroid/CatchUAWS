@@ -39,7 +39,6 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Utils.CameraUtil;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoViewFragment;
-import com.uren.catchu.Singleton.ShareItems;
 
 import java.io.IOException;
 
