@@ -48,7 +48,6 @@ import android.widget.VideoView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FileAdapter;
-import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.MainShareActivity;

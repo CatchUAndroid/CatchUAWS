@@ -39,7 +39,6 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -121,8 +120,6 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
 
 
     int selectedPosition = -1;
-
-    //PhotoSelectAdapter photoSelectAdapter;
     PhotoSelectUtil photoSelectUtil;
     View noteTextLayout = null;
     CheckShareItems checkShareItems;

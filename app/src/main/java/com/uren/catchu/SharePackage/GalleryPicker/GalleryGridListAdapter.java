@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import android.preference.PreferenceManager;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
@@ -50,8 +49,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     PermissionModule permissionModule;
     GalleryPickerFrag galleryPickerFrag;
-
-    //PhotoSelectAdapter photoSelectAdapter;
     PhotoSelectUtil photoSelectUtil;
 
     public GalleryGridListAdapter(Context context, ArrayList<File> fileList, GalleryPickerFrag galleryPickerFrag) {

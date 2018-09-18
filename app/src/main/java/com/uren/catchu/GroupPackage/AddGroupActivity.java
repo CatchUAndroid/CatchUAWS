@@ -60,7 +60,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.HttpHandler;
-import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
@@ -127,7 +126,6 @@ public class AddGroupActivity extends AppCompatActivity {
     RelativeLayout addGroupDtlRelLayout;
     PermissionModule permissionModule;
     TextView participantSize;
-    //PhotoSelectAdapter photoSelectAdapter;
     PhotoSelectUtil photoSelectUtil;
 
     @Override

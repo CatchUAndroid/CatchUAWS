@@ -205,17 +205,7 @@ public class SharePostProcess {
         postRequest = new PostRequest();
         ShareItems.getInstance().getPost().setPrivacyType(getPostPrivacyType());
         ShareItems.getInstance().getPost().setAllowList(getParticipantList());
-
-
-        //fillPostMediaList();
-
-
-
-
-
         postRequest.setPost(ShareItems.getInstance().getPost());
-
-
 
         PostRequestProcess postRequestProcess = new PostRequestProcess(new OnEventListener() {
             @Override
@@ -239,16 +229,6 @@ public class SharePostProcess {
         }, postRequest);
         postRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
-
-    /*private void fillPostMediaList() {
-        List<Media> mediaList = new ArrayList<>();
-
-        for (Media media : ShareItems.getInstance().getPost().getAttachments()) {
-            mediaList.add(media);
-        }
-
-        ShareItems.getInstance().getPost().setAttachments(mediaList);
-    }*/
 
     private List<User> getParticipantList() {
         List<User> userList = new ArrayList<>();
