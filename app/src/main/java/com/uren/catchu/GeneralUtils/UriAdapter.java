@@ -11,6 +11,9 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+
+import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -238,13 +241,22 @@ public class UriAdapter extends AppCompatActivity {
         }
     }
 
-    public static String getRealPathFromCameraURI(Uri contentUri, Activity activity) {
-        String[] proj = {MediaStore.Images.Media.DATA};
-        Cursor cursor = activity.managedQuery(contentUri, proj, null, null, null);
-        int column_index = cursor
-                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
+    public static String getRealPathFromURI(Uri contentUri, Context context) {
+        String res = null;
+        try {
+            String[] proj = {MediaStore.Images.Media.DATA};
+            Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+            if (cursor.moveToFirst()) {
+                ;
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                res = cursor.getString(column_index);
+            }
+            cursor.close();
+        }catch (Exception e){
+            Log.i("Info", "getRealPathFromURI e:" + e.getMessage() + "-" + e);
+            e.printStackTrace();
+        }
+        return res;
     }
 
 }

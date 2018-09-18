@@ -1,48 +1,29 @@
 package com.uren.catchu.SharePackage.VideoPicker.fragment;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.SurfaceTexture;
-import android.hardware.Camera;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.Surface;
-import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.MediaController;
-import android.widget.RelativeLayout;
-import android.widget.ToggleButton;
 import android.widget.VideoView;
 
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FileAdapter;
-import com.uren.catchu.Permissions.PermissionModule;
+import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.ShareItems;
-
-import java.io.IOException;
+import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import butterknife.ButterKnife;
+import catchu.model.Media;
 
-import static android.content.Context.WINDOW_SERVICE;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 @SuppressLint("ValidFragment")
 public class VideoViewFragment extends Fragment {
@@ -90,7 +71,7 @@ public class VideoViewFragment extends Fragment {
             public void onClick(View v) {
                 cancelImageView.setVisibility(View.GONE);
                 videoView.stopPlayback();
-                //ShareItems.getInstance().setVideoUri(null); ugurfix
+                ShareItems.getInstance().clearVideoShareItemBox();
                 getActivity().onBackPressed();
             }
         });
@@ -130,7 +111,7 @@ public class VideoViewFragment extends Fragment {
 
     public void manageVideoFromGallery() {
         videoUri = data.getData();
-        //ShareItems.getInstance().setVideoUri(videoUri); ugurfix
+        addVideoShareItemList();
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();
@@ -159,5 +140,12 @@ public class VideoViewFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public void addVideoShareItemList(){
+        ShareItems.getInstance().clearVideoShareItemBox();
+        VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), videoUri, null, GALLERY_TEXT);
+        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
+        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
 }

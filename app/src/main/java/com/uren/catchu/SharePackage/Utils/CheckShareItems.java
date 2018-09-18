@@ -1,12 +1,9 @@
 package com.uren.catchu.SharePackage.Utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.ShareItems;
-
-import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 public class CheckShareItems {
 
@@ -18,25 +15,25 @@ public class CheckShareItems {
     }
 
     public boolean shareIsPossible(){
-
-        /*if(ShareItems.getInstance().getPhotoSelectAdapter().getPictureUri() != null)
+        if(ShareItems.getInstance().getImageShareItemBoxes().size() > 0)
             return true;
 
-        if(ShareItems.getInstance().getShare().getText() != null) {
-            if (!ShareItems.getInstance().getShare().getText().trim().equals(""))
-                return true;
-        }*/ // ugurfix
+        if(ShareItems.getInstance().getVideoShareItemBoxes().size() > 0)
+            return true;
 
+        if(ShareItems.getInstance().getPost().getMessage() != null){
+            if(!ShareItems.getInstance().getPost().getMessage().trim().equals(""))
+                return true;
+        }
         errorMessage = context.getResources().getString(R.string.pleaseAddShareItem);
         return false;
     }
 
     public boolean isLocationLoaded(){
-        /*if(ShareItems.getInstance().getShare().getLocation() == null) {
+        if(ShareItems.getInstance().getPost().getLocation() == null){
             errorMessage = context.getResources().getString(R.string.locationIsEmpty);
             return false;
-        }*/ //ugurfix
-
+        }
         return true;
     }
 
