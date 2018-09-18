@@ -11,6 +11,7 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
@@ -36,26 +37,26 @@ import static com.uren.catchu.Constants.StringConstants.CREATE_GROUP;
 public class SaveGroupProcess {
 
     Context context;
-    PhotoSelectAdapter photoSelectAdapter;
+    PhotoSelectUtil photoSelectUtil;
     ProgressDialog mProgressDialog;
     List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
     GroupRequest groupRequest;
     String groupName;
     SaveGroupCallback saveGroupCallback;
 
-    public SaveGroupProcess(Context context, PhotoSelectAdapter photoSelectAdapter, String groupName, SaveGroupCallback saveGroupCallback){
+    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, SaveGroupCallback saveGroupCallback){
         this.context = context;
-        this.photoSelectAdapter = photoSelectAdapter;
+        this.photoSelectUtil = photoSelectUtil;
         this.groupName = groupName;
         this.saveGroupCallback = saveGroupCallback;
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage(context.getResources().getString(R.string.groupIsCreating));
         dialogShow();
 
-        /*if(photoSelectAdapter.getPictureUri() != null)
+        if(photoSelectUtil.getMediaUri() != null)
             saveGroupImageToS3();
         else
-            processSaveGroup(" ");*/ //ugurfix
+            processSaveGroup(" ");
     }
 
     public void dialogShow() {
@@ -66,7 +67,7 @@ public class SaveGroupProcess {
         if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     }
 
-    /*public void saveGroupImageToS3() {
+    public void saveGroupImageToS3() {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -103,7 +104,7 @@ public class SaveGroupProcess {
                     public void onTaskContinue() {
 
                     }
-                }, photoSelectAdapter.getPhotoBitmapOrjinal(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -122,7 +123,7 @@ public class SaveGroupProcess {
         }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }*/  // ugurfix
+    }
 
     public void processSaveGroup(String downloadUrl) {
 

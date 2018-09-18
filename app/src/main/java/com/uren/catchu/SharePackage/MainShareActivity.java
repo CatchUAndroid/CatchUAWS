@@ -25,7 +25,9 @@ import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.ShareItems;
+import com.uren.catchu.Singleton.Share.ShareItems;
+
+import catchu.model.User;
 
 public class MainShareActivity extends FragmentActivity {
 
@@ -75,7 +77,15 @@ public class MainShareActivity extends FragmentActivity {
         nextTv = findViewById(R.id.nextTv);
         ShareItems.setInstance(null);
         ShareItems.getInstance();
-        //ShareItems.getInstance().getShare().setUserid(AccountHolderInfo.getUserID()); ugurfix
+        setShareItemUser();
+    }
+
+    private void setShareItemUser() {
+        User user = new User();
+        user.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+        user.setUserid(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+        user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
+        ShareItems.getInstance().getPost().setUser(user);
     }
 
     private void setupTabIcons() {

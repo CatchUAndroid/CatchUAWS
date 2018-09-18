@@ -56,10 +56,12 @@ import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.HttpHandler;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
@@ -125,7 +127,8 @@ public class AddGroupActivity extends AppCompatActivity {
     RelativeLayout addGroupDtlRelLayout;
     PermissionModule permissionModule;
     TextView participantSize;
-    PhotoSelectAdapter photoSelectAdapter;
+    //PhotoSelectAdapter photoSelectAdapter;
+    PhotoSelectUtil photoSelectUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,13 +268,16 @@ public class AddGroupActivity extends AppCompatActivity {
         if (resultCode == Activity.RESULT_OK) {
 
             if (requestCode == permissionModule.getCameraPermissionCode()) {
-                photoSelectAdapter = new PhotoSelectAdapter(AddGroupActivity.this, data, CAMERA_TEXT);
-                Glide.with(AddGroupActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
+                photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, CAMERA_TEXT);
+                Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
-                photoSelectAdapter = new PhotoSelectAdapter(AddGroupActivity.this, data, GALLERY_TEXT);
-                Glide.with(AddGroupActivity.this).load(photoSelectAdapter.getPictureUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
+                photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, GALLERY_TEXT);
+                Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
             } else
-                CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.technicalError) + requestCode);
+                DialogBoxUtil.showErrorDialog(AddGroupActivity.this,  "AddGroupActivity:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() { }
+                });
         }
     }
 
@@ -294,7 +300,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
 
     public void saveGroup() {
-        SaveGroupProcess saveGroupProcess = new SaveGroupProcess(AddGroupActivity.this, photoSelectAdapter, groupNameEditText.getText().toString(), new SaveGroupCallback() {
+        SaveGroupProcess saveGroupProcess = new SaveGroupProcess(AddGroupActivity.this, photoSelectUtil, groupNameEditText.getText().toString(), new SaveGroupCallback() {
             @Override
             public void onSuccess() {
                 returnPreviousActivity();

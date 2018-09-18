@@ -34,6 +34,7 @@ import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
@@ -55,7 +56,9 @@ import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LIST;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
@@ -106,6 +109,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     ProgressBar progressBar;
     public static RecyclerView recyclerView;
+    PhotoSelectUtil photoSelectUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -407,41 +411,18 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == permissionModule.getCameraPermissionCode() ||
-                    requestCode == permissionModule.getImageGalleryPermission()) {
-                manageProfilePicChoosen(data);
-                //updateGroup(); ugurfix
+            if (requestCode == permissionModule.getCameraPermissionCode()) {
+                photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, CAMERA_TEXT);
+                groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
+                updateGroup();
+            } else if (requestCode == permissionModule.getImageGalleryPermission()) {
+                photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, GALLERY_TEXT);
+                groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
+                updateGroup();
             } else
                 CommonUtils.showToastLong(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError) + requestCode);
         } else
             CommonUtils.showToastLong(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError) + requestCode + resultCode);
-    }
-
-    private void manageProfilePicChoosen(Intent data) {
-
-        Log.i("Info", "manageProfilePicChoosen++++++++++++++++++++++++++++++++");
-
-        if (photoChoosenType == CODE_CAMERA_SELECTED) {
-
-            groupPhotoBitmap = (Bitmap) data.getExtras().get("data");
-            groupPictureUri = data.getData();
-            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
-            getGroupPhotoBitmapOrjinal = ExifUtil.rotateImageIfRequired(imageRealPath, groupPhotoBitmap);
-
-        } else if (photoChoosenType == CODE_GALLERY_SELECTED) {
-
-            groupPictureUri = data.getData();
-            imageRealPath = UriAdapter.getPathFromGalleryUri(getApplicationContext(), groupPictureUri);
-            try {
-                profileImageStream = getContentResolver().openInputStream(groupPictureUri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            groupPhotoBitmap = BitmapFactory.decodeStream(profileImageStream);
-            getGroupPhotoBitmapOrjinal = groupPhotoBitmap;
-        }
-
-        //groupPictureImgV.setImageBitmap(getGroupPhotoBitmapOrjinal);
     }
 
     @Override
@@ -461,7 +442,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 
-    /*public void updateGroup() {
+    public void updateGroup() {
 
         mProgressDialog.setMessage(getResources().getString(R.string.groupPhotoChanging));
         dialogShow();
@@ -503,7 +484,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                     public void onTaskContinue() {
 
                     }
-                }, getGroupPhotoBitmapOrjinal, commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
@@ -520,7 +501,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         }, 1, 0);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }*/
+    }
 
     public void dialogShow() {
         if (!mProgressDialog.isShowing()) mProgressDialog.show();

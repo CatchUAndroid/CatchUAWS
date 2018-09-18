@@ -92,5 +92,4 @@ public class PhotoSelectAdapter {
     public Bitmap getPhotoBitmapOrjinal() {
         return photoBitmapOrjinal;
     }
-
 }

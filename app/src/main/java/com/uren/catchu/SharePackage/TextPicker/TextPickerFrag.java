@@ -13,20 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareDetailActivity;
-import com.uren.catchu.Singleton.ShareItems;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import butterknife.ButterKnife;
-
-import static com.uren.catchu.GeneralUtils.BitmapConversion.getScreenShot;
 
 @SuppressLint("ValidFragment")
 public class TextPickerFrag extends Fragment {
@@ -76,13 +69,11 @@ public class TextPickerFrag extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                //ShareItems.getInstance().getShare().setText(s.toString()); ugurfix
-
+                ShareItems.getInstance().getPost().setMessage(s.toString());
                 Bitmap editTextBitmap;
 
                 if(!s.toString().isEmpty()){
                     editTextBitmap = BitmapConversion.getScreenShot(textEditText);
-                    /*editTextBitmap = BitmapConversion.getRoundedShape(editTextBitmap, 600, 600, null);*/
                 }else
                     editTextBitmap = null;
 

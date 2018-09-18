@@ -10,6 +10,7 @@
     <string name="friends">ARKADAŞLAR</string>
     <string name="groups">GRUPLAR</string>
     <string name="error">Hata:</string>
+    <string name="errorUpper">HATA</string>
     <string name="info">Bilgi:</string>
     <string name="addNewGroup">Yeni Grup</string>
     <string name="addPersonToGroup">Katılımcı Ekle</string>
@@ -54,6 +55,8 @@
     <string name="videoDurationWarning">Video için max geçerli süre :</string>
     <string name="secondShort">sn</string>
     <string name="secondLong">saniye</string>
+    <string name="photoSelectTypeUnknown">Fotoğraf seçim tipi hatalı!</string>
+    <string name="videoSelectTypeUnknown">Video seçim tipi hatalı!</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

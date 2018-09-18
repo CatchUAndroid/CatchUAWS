@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
@@ -12,6 +13,7 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -34,20 +36,25 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.UriAdapter;
+import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CameraUtil;
 import com.uren.catchu.SharePackage.VideoPicker.Adapters.VideoFileAdapter;
-import com.uren.catchu.Singleton.ShareItems;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.io.File;
 import java.io.IOException;
 
 import butterknife.ButterKnife;
+import catchu.model.Media;
 
 import static android.content.Context.WINDOW_SERVICE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
+import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 @SuppressLint("ValidFragment")
 public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoListener, TextureView.SurfaceTextureListener {
@@ -146,7 +153,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                     videoFile.delete();
                     videoFile = null;
                     videoFilePath = null;
-                    //ShareItems.getInstance().setVideoUri(null); ugurfix
+                    ShareItems.getInstance().clearVideoShareItemBox();
                 }
 
                 if (videoViewRelLayout.getVisibility() == View.VISIBLE) {
@@ -409,13 +416,19 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
             texttureViewLayout.setVisibility(View.GONE);
             videoViewRelLayout.setVisibility(View.VISIBLE);
-            //ShareItems.getInstance().setVideoUri(videoUri); ugurfix
+            videoUri = Uri.parse(videoFilePath);
+            addVideoShareItemList();
             playRecordedVideo();
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void addVideoShareItemList() {
+        ShareItems.getInstance().clearVideoShareItemBox();
+        VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), videoUri,videoFilePath, CAMERA_TEXT);
+        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
+        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
 
     @Override
@@ -486,7 +499,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                 isCameraPreviewing = false;
             }
 
-            if(mediaPlayer != null){
+            if (mediaPlayer != null) {
                 mediaPlayer = null;
             }
         } catch (Exception e) {
@@ -532,7 +545,6 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
     public void playRecordedVideo() {
 
         try {
-            videoUri = Uri.parse(videoFilePath);
             DisplayMetrics metrics = new DisplayMetrics();
             getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
             android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();
@@ -560,8 +572,8 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                     });
                 }
             });
-        }catch (Exception e){
-            Log.i("Info", "playRecordedVideo error:" +  e.getMessage());
+        } catch (Exception e) {
+            Log.i("Info", "playRecordedVideo error:" + e.getMessage());
         }
     }
 }
