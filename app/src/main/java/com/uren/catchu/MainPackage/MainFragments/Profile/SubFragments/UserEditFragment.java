@@ -459,7 +459,6 @@ public class UserEditFragment extends BaseFragment
                     if (PhotoSelectUtils.hasExternalStorage()) {
                         imageUri = Uri.fromFile(fileUri);
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            //通过FileProvider创建一个content类型的Uri
                             imageUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", fileUri);
                         }
                         PhotoSelectUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
