@@ -75,6 +75,8 @@
     <string name="secondLong">second(s)</string>
     <string name="photoSelectTypeUnknown">Photo Select Type is Unknown!</string>
     <string name="videoSelectTypeUnknown">Video Select Type is Unknown!</string>
+    <string name="profileUpdating">Profile updating...</string>
+    <string name="profileUpdateSuccessful">Profile Update is Successful</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

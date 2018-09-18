@@ -13,8 +13,8 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.Interfaces.SharePostCallback;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
@@ -35,7 +35,6 @@ import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
@@ -46,7 +45,7 @@ public class SharePostProcess {
 
     int selectedItem;
     Context context;
-    SharePostCallback sharePostCallback;
+    ServiceCompleteCallback serviceCompleteCallback;
     ProgressDialog mProgressDialog;
     int imageCount = 0;
     int videoCount = 0;
@@ -54,10 +53,10 @@ public class SharePostProcess {
     int uploadIndex = 0;
     PostRequest postRequest;
 
-    public SharePostProcess(Context context, int selectedItem, SharePostCallback sharePostCallback) {
+    public SharePostProcess(Context context, int selectedItem, ServiceCompleteCallback serviceCompleteCallback) {
         this.context = context;
         this.selectedItem = selectedItem;
-        this.sharePostCallback = sharePostCallback;
+        this.serviceCompleteCallback = serviceCompleteCallback;
         mProgressDialog = new ProgressDialog(context);
         getImageAndVideoCount();
         mProgressDialog.setMessage(context.getResources().getString(R.string.shareIsProcessing));
@@ -115,7 +114,7 @@ public class SharePostProcess {
                 dialogDismiss();
                 Log.i("Info", "Paylasim Exception yedi2:" + e.getMessage());
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-                sharePostCallback.onFailed(e);
+                serviceCompleteCallback.onFailed(e);
             }
 
             @Override
@@ -141,7 +140,7 @@ public class SharePostProcess {
                 dialogDismiss();
                 Log.i("Info", "Paylasim Exception yedi3:" + e.getMessage());
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-                sharePostCallback.onFailed(e);
+                serviceCompleteCallback.onFailed(e);
             }
 
             @Override
@@ -164,7 +163,7 @@ public class SharePostProcess {
                 dialogDismiss();
                 Log.i("Info", "Paylasim video Exception yedi3:" + e.getMessage());
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-                sharePostCallback.onFailed(e);
+                serviceCompleteCallback.onFailed(e);
             }
 
             @Override
@@ -191,13 +190,13 @@ public class SharePostProcess {
             } else {
                 dialogDismiss();
                 InputStream is = urlConnection.getErrorStream();
-                sharePostCallback.onFailed(new Exception(is.toString()));
+                serviceCompleteCallback.onFailed(new Exception(is.toString()));
             }
         } catch (IOException e) {
             dialogDismiss();
             Log.i("Info", "Paylasim Exception yedi4:" + e.getMessage());
             CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-            sharePostCallback.onFailed(e);
+            serviceCompleteCallback.onFailed(e);
         }
     }
 
@@ -212,14 +211,14 @@ public class SharePostProcess {
             public void onSuccess(Object object) {
                 Log.i("Info", "Paylasim ok");
                 dialogDismiss();
-                sharePostCallback.onSuccess();
+                serviceCompleteCallback.onSuccess();
             }
 
             @Override
             public void onFailure(Exception e) {
                 Log.i("Info", "Paylasim Exception yedi1:" + e.getMessage());
                 dialogDismiss();
-                sharePostCallback.onFailed(e);
+                serviceCompleteCallback.onFailed(e);
             }
 
             @Override

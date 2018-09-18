@@ -57,6 +57,8 @@
     <string name="secondLong">saniye</string>
     <string name="photoSelectTypeUnknown">Fotoğraf seçim tipi hatalı!</string>
     <string name="videoSelectTypeUnknown">Video seçim tipi hatalı!</string>
+    <string name="profileUpdating">Profil güncelleniyor...</string>
+    <string name="profileUpdateSuccessful">Profil Güncelleme Başarılı</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

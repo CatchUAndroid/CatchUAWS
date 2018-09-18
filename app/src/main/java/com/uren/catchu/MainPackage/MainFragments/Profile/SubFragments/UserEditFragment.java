@@ -46,13 +46,17 @@ import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.File;
@@ -78,20 +82,14 @@ public class UserEditFragment extends BaseFragment
     View mView;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
     private UserProfile userProfile;
-    private UserProfile tempUser;
     private UserProfileProperties userProfileProperties;
 
     private String selectedGender;
     private ArrayAdapter<String> genderSpinnerAdapter;
 
     //Change Image variables
-    private String downloadUrl = SPACE_VALUE;
-    private PhotoSelectAdapter photoSelectAdapter;
-    private int adapterCameraSelected = 0;
-    private int adapterGallerySelected = 1;
-    private int photoChoosenType;
-    private PermissionModule permissionModule;
     private boolean profilPicChanged;
+    Bitmap bitmap;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -157,19 +155,14 @@ public class UserEditFragment extends BaseFragment
     private static final int OUTPUT_X = 480;
     private static final int OUTPUT_Y = 480;
 
-    public UserEditFragment() {
-
-    }
+    public UserEditFragment() { }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mView = inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
         ButterKnife.bind(this, mView);
-
         init();
-
         return mView;
     }
 
@@ -188,30 +181,23 @@ public class UserEditFragment extends BaseFragment
         setGenderClickListener();
 
         profilPicChanged = false;
-        tempUser = new UserProfile();
         userProfileProperties = new UserProfileProperties();
 
 
     }
 
     private void setBirthDayDataSetListener() {
-
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                //Log.d(TAG, "onDateSet: mm/dd/yyy: " + month + "/" + day + "/" + year);
-
                 String date = month + "/" + day + "/" + year;
                 edtBirthDay.setText(date);
             }
         };
-
     }
 
-
     private void setGenderClickListener() {
-
         genderSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, GENDERS);
         genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderSpinnerAdapter);
@@ -221,7 +207,6 @@ public class UserEditFragment extends BaseFragment
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedGender = genderSpinner.getSelectedItem().toString();
                 Log.i("Info", "selectedGender:" + selectedGender);
-
             }
 
             @Override
@@ -234,36 +219,26 @@ public class UserEditFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         updateUI();
-
     }
 
     private void updateUI() {
-
         userProfile = AccountHolderInfo.getInstance().getUser();
-
         edtName.setText(userProfile.getUserInfo().getName());
         edtUserName.setText(userProfile.getUserInfo().getUsername());
         edtWebsite.setText(userProfile.getUserInfo().getWebsite());
         edtBirthDay.setText(userProfile.getUserInfo().getBirthday());
         edtEmail.setText(userProfile.getUserInfo().getEmail());
         edtPhone.setText(userProfile.getUserInfo().getPhone());
-
         genderSpinner.setSelection(genderSpinnerAdapter.getPosition(userProfile.getUserInfo().getGender()));
         selectedGender = userProfile.getUserInfo().getGender();
 
-
         // TODO : NT: Update Cover picture
 
-        //Profile picture
-        Picasso.with(getActivity())
-                //.load(userProfile.getResultArray().get(0).getProfilePhotoUrl())
+        Glide.with(getActivity())
                 .load(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl())
-                .transform(new CircleTransform())
+                .apply(RequestOptions.circleCropTransform())
                 .into(imgProfile);
-
-
     }
 
     @Override
@@ -295,8 +270,6 @@ public class UserEditFragment extends BaseFragment
 
 
     private void birthDayClicked() {
-
-
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
@@ -309,15 +282,11 @@ public class UserEditFragment extends BaseFragment
                 year, month, day);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
-
-
     }
 
     private void editProfileCancelClicked() {
-
         ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
         getActivity().onBackPressed();
-
     }
 
     private void editProfileConfirmClicked() {
@@ -370,184 +339,30 @@ public class UserEditFragment extends BaseFragment
         }
 
         updateOperation();
-
     }
 
     private void updateOperation() {
-
-        if (profilPicChanged) {
-            //savePicToS3_and_updateUserProfile(); //UNT3
-        } else {
-            updateUserProfile();
-        }
-    }
-
-    /*
-        // TODO: 11.9.2018 NT: uğur buraları class yaptığını söyledi, implemente edilebliyosa et
-        private void savePicToS3_and_updateUserProfile() {
-
-            SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
-                    final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
-
-                    Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
-                    Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());
-                    Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getImages().get(0).getDownloadUrl());
-                    Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
-
-                    UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
-                        @Override
-                        public void onSuccess(Object object) {
-                            HttpURLConnection urlConnection = (HttpURLConnection) object;
-
-                            try {
-                                if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-
-                                    downloadUrl = commonS3BucketResult.getImages().get(0).getDownloadUrl();
-                                    userProfileProperties.setProfilePhotoUrl(downloadUrl);
-                                    Log.i("downloadUrl ", downloadUrl);
-                                    updateUserProfile();
-
-                                } else {
-                                    InputStream is = urlConnection.getErrorStream();
-                                    //CommonUtils.showToast(context, is.toString());
-                                }
-                            } catch (IOException e) {
-                                //dialogDismiss();
-                                //CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-                            }
-
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onTaskContinue() {
-                            progressBar.setVisibility(View.VISIBLE);
-                        }
-                    }, commonS3BucketResult.getImages().get(0).getUploadUrl(), );
-
-                    uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onTaskContinue() {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            }, 1, 0);
-
-            signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-        }
-    */
-    private void updateUserProfile() {
-
-        tempUser.setUserInfo(userProfileProperties);
-        tempUser.setRequestType(USER_PROFILE_UPDATE);
-
-        Log.i("tempUser-Url ", tempUser.getUserInfo().getProfilePhotoUrl());
-
-        //Asenkron Task başlatır.
-        UpdateUserProfile updateUserProfile = new UpdateUserProfile(getActivity(), new OnEventListener<UserProfile>() {
-
+        new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
             @Override
-            public void onSuccess(UserProfile up) {
+            public void onSuccess() {
+                DialogBoxUtil.showSuccessDialogBox(getActivity(), getActivity().getResources().getString(R.string.profileUpdateSuccessful), null, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
 
-                if (up != null) {
-
-                    userProfile.getUserInfo().setName(up.getUserInfo().getName());
-                    userProfile.getUserInfo().setUsername(up.getUserInfo().getUsername());
-                    userProfile.getUserInfo().setWebsite(up.getUserInfo().getWebsite());
-                    userProfile.getUserInfo().setBirthday(up.getUserInfo().getBirthday());
-                    userProfile.getUserInfo().setEmail(up.getUserInfo().getEmail());
-                    userProfile.getUserInfo().setPhone(up.getUserInfo().getPhone());
-                    userProfile.getUserInfo().setGender(up.getUserInfo().getGender());
-                    userProfile.getUserInfo().setProfilePhotoUrl(up.getUserInfo().getProfilePhotoUrl());
-
-                }
-
-                progressBar.setVisibility(View.GONE);
-                showResultDialog(UPDATE_RESULT_OK);
-
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Exception e) {
-                Log.i("update", "fail");
-                progressBar.setVisibility(View.GONE);
-                showResultDialog(UPDATE_RESULT_FAIL);
-
+            public void onFailed(Exception e) {
+                DialogBoxUtil.showErrorDialog(getActivity(), e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
+                e.printStackTrace();
             }
-
-            @Override
-            public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
-            }
-        }, tempUser);
-
-        updateUserProfile.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-    }
-
-    public void hideKeyBoard() {
-
-        Log.i("Info", "hideKeyBoard");
-
-        if (getActivity().getCurrentFocus() != null) {
-            InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-        }
-
-    }
-
-    private void showResultDialog(final int result) {
-
-        hideKeyBoard();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), android.R.style.Theme_Material_Dialog_Alert);
-        builder.setTitle("OPPS!");
-
-        if (result == UPDATE_RESULT_OK) {
-            builder.setMessage("Profil başarıyla güncellendi");
-        } else {
-            builder.setIcon(R.drawable.toast_error_icon);
-            builder.setMessage("Profil güncelleme başarısız");
-        }
-
-        builder.setNeutralButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                dialog.dismiss();
-
-                if (result == UPDATE_RESULT_OK) {
-                    //Go back
-                    ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
-                    getActivity().onBackPressed();
-                } else {
-                    //do nothing
-                }
-
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-
-    }
-
-
-    private void coverPictureClicked() {
+        }, profilPicChanged, userProfileProperties, bitmap);
     }
 
     private void profilePictureClicked() {
@@ -573,7 +388,6 @@ public class UserEditFragment extends BaseFragment
 
 
     private void chooseImageProcess() {
-
         PhotoChosenCallback photoChosenCallback = new PhotoChosenCallback() {
             @Override
             public void onGallerySelected() {
@@ -587,7 +401,6 @@ public class UserEditFragment extends BaseFragment
         };
 
         DialogBoxUtil.photoChosenDialogBox(getContext(), "Choose Photo", photoChosenCallback);
-
     }
 
 
@@ -623,7 +436,7 @@ public class UserEditFragment extends BaseFragment
             } else {//Fotoğraf çekmek için sistem kamerasını doğrudan arama izni var
                 if (PhotoSelectUtils.hasExternalStorage()) {
                     imageUri = Uri.fromFile(fileUri);
-                    //通过FileProvider创建一个content类型的Uri
+
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         imageUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", fileUri);
                     }
@@ -700,7 +513,7 @@ public class UserEditFragment extends BaseFragment
                 break;
             //result
             case CODE_RESULT_REQUEST:
-                Bitmap bitmap = PhotoSelectUtils.getBitmapFromUri(cropImageUri, getActivity());
+                bitmap = PhotoSelectUtils.getBitmapFromUri(cropImageUri, getActivity());
                 if (bitmap != null) {
                     showImages(bitmap);
                 }

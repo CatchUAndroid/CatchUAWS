@@ -41,9 +41,9 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.Interfaces.SharePostCallback;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.Utils.SharePostProcess;
@@ -488,7 +488,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     }
 
     public void sharePost() {
-        new SharePostProcess(ShareDetailActivity.this, selectedItem, new SharePostCallback() {
+        new SharePostProcess(ShareDetailActivity.this, selectedItem, new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
                 CommonUtils.showToastLong(ShareDetailActivity.this, "Share is SUCCESSFUL");

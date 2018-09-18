@@ -29,8 +29,6 @@ import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_CO
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COUNT;
 
 public class SelectGroupActivity extends AppCompatActivity {
-
-    Toolbar mToolBar;
     FloatingActionButton nextFab;
     String pendingActivityName;
     RecyclerView recyclerView;
@@ -53,7 +51,6 @@ public class SelectGroupActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-        /*initToolbar();*/
         nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
         recyclerView = findViewById(R.id.recyclerView);
         imgCancelSearch = (ImageView) findViewById(R.id.imgCancelSearch);
@@ -61,16 +58,6 @@ public class SelectGroupActivity extends AppCompatActivity {
         SelectedGroupList.setInstance(null);
         SelectedGroupList.getInstance();
     }
-
-    /*private void initToolbar() {
-        mToolBar = (Toolbar) findViewById(R.id.toolbarLayout);
-        mToolBar.setTitle(getResources().getString(R.string.selectGroup));
-        mToolBar.setNavigationIcon(R.drawable.back_arrow);
-        mToolBar.setBackgroundColor(getResources().getColor(R.color.background, null));
-        mToolBar.setTitleTextColor(getResources().getColor(R.color.background_white, null));
-        mToolBar.setSubtitleTextColor(getResources().getColor(R.color.background_white, null));
-        setSupportActionBar(mToolBar);
-    }*/
 
     private void getIntentValues(Bundle savedInstanceState) {
         if (savedInstanceState == null) {

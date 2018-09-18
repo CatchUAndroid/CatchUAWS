@@ -34,6 +34,25 @@ public class DialogBoxUtil {
 
     public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setIcon(R.drawable.info_icon_512);
+
+        if (title != null)
+            alertDialog.setTitle(title);
+
+        alertDialog.setMessage(message);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getResources().getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        infoDialogBoxCallback.okClick();
+                    }
+                });
+        alertDialog.show();
+    }
+
+    public static void showSuccessDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setIcon(R.drawable.success_icon_480);
 
         if (title != null)
             alertDialog.setTitle(title);
