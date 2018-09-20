@@ -38,9 +38,9 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.viewpager_image, container, false);
+        View view = inflater.inflate(R.layout.view_red, container, false);
 
-
+/*
         ImageView imgFeedItem = (ImageView) view.findViewById(R.id.imgFeedItem);
 
         Glide.with(getContext())
@@ -48,7 +48,7 @@ public class ImageFragment extends Fragment {
                 .apply(RequestOptions.centerInsideTransform())
                 .into(imgFeedItem);
 
-
+*/
         return view;
     }
 }

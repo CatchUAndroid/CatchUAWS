@@ -44,8 +44,8 @@ public class VideoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.viewpager_video, container, false);
-
+        View view = inflater.inflate(R.layout.view_red, container, false);
+/*
         PlayerView playerView;
         SimpleExoPlayer player;
 
@@ -64,7 +64,7 @@ public class VideoFragment extends Fragment {
         player.prepare(mediaSource);
         player.setPlayWhenReady(false);
 
-
+*/
         return view;
     }
 }

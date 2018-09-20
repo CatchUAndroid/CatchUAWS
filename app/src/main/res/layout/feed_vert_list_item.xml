@@ -113,6 +113,14 @@
 
                 </android.support.v4.view.ViewPager>
 
+                <!--ImageView
+                    android:id="@+id/imgFeedData"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:scaleType="fitXY"
+                    android:background="@color/red"/-->
+
+
                 <LinearLayout
                     android:id="@+id/SliderDots"
                     android:layout_below="@+id/viewPager"
@@ -121,11 +129,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
-                <!--ImageView
-                    android:id="@+id/imgFeedData"
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:scaleType="fitXY" /-->
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

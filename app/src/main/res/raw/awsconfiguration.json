@@ -4,7 +4,7 @@
   "CredentialsProvider": {
     "CognitoIdentity": {
       "Default": {
-        "PoolId": "us-east-1:4b70fd39-588a-439a-9241-6f35cb1beeab",
+        "PoolId": "us-east-1:e9fd1928-3588-4bd9-b1ef-f5f43df4f787",
         "Region": "us-east-1"
       }
     }
@@ -14,15 +14,15 @@
   },
   "CognitoUserPool": {
     "Default": {
-      "PoolId": "us-east-1_hRbjCfiaw",
-      "AppClientId": "j565ng82efeb8737hqr9sq21f",
-      "AppClientSecret": "1cd7jq8t7t77jl8tbf6cre62gumik00jv168jjhb5im9o3aidijq",
+      "PoolId": "us-east-1_HwemZcynu",
+      "AppClientId": "4rlaph4ovs7lg4l930sdmj3nbb",
+      "AppClientSecret": "13gc52uha4bvk78hn61srdolr4k42acre5878hau5q4ve1a9mk0t",
       "Region": "us-east-1"
     }
   },
   "PinpointAnalytics": {
     "Default": {
-      "AppId": "973c1c7041e0493e930b8978d6b6aa47",
+      "AppId": "f6efe80330ae4062a1a389c2a607340e",
       "Region": "us-east-1"
     }
   },
@@ -30,9 +30,5 @@
     "Default": {
       "Region": "us-east-1"
     }
-  },
-  "FacebookSignIn": {
-    "AppId": "188399458686974",
-    "Permissions": "public_profile"
   }
 }

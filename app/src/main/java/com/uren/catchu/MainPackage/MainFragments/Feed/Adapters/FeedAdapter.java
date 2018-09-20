@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.content.Context;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +38,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     private Context context;
     private List<Post> postList;
 
+
     public FeedAdapter(Context context, List<Post> postList) {
 
         this.context = context;
@@ -61,7 +63,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         ViewPager viewPager;
         CardView cardView;
         private int position;
-        List<Media> mediaList;
+        private boolean viewPagerOk = false;
+
         View view;
 
         public MyViewHolder(View view) {
@@ -71,24 +74,29 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtUserName = (TextView) view.findViewById(R.id.txtUserName);
+            viewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
             this.view = view;
-
-
 
         }
 
         private void setViewPager() {
 
-            mediaList = new ArrayList<>();
-            mediaList.addAll(postList.get(position).getAttachments());
+            viewPagerOk=true;
 
-            FragmentManager fragmentManager = ((NextActivity)context).getSupportFragmentManager();
+            List<String> imageList;
+            imageList = new ArrayList<>();
+            List<String> videoList;
+            videoList = new ArrayList<>();
+            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
+            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
+            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
+            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
 
-            viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-            viewPager.setAdapter(new ViewPagerAdapter(fragmentManager, mediaList));
+            viewPager.setAdapter(new ViewPagerAdapter(context, imageList, videoList));
+            viewPager.setOffscreenPageLimit(imageList.size() + videoList.size());
 
-            int totalDots = mediaList.size();
+            int totalDots = imageList.size() + videoList.size();
             setSliderDotsPanel(totalDots);
 
         }
@@ -155,28 +163,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             this.txtName.setText(post.getUser().getUsername());
             this.txtUserName.setText(post.getUser().getUsername());
 
-            setViewPager();
+            if (!viewPagerOk)
+                setViewPager();
 
-
-
-            /*
-            String geciciFeedData ="https://i.hizliresim.com/Q2O8gV.jpg";
-
-            Glide.with(context)
-                    .load(geciciFeedData)
-                    .apply(RequestOptions.centerInsideTransform())
-                    .into(imgFeedData);
-            */
-
-
-            updateUIValue();
 
         }
 
-
-        public void updateUIValue() {
-
-        }
 
     }
 
@@ -185,7 +177,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
         Post post = postList.get(position);
+
         holder.setData(post, position);
+
 
     }
 
@@ -195,7 +189,4 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     }
 
 
-
 }
-
-

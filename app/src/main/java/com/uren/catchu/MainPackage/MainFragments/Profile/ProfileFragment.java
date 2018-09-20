@@ -20,10 +20,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.config.AWSConfiguration;
-import com.amazonaws.regions.Regions;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -41,14 +37,10 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFr
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
-import catchu.model.UserProfileProperties;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 
@@ -222,32 +214,6 @@ public class ProfileFragment extends BaseFragment
     }
 
 
-    private void getCurrentUserInfo() {
-
-        AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
-
-        JSONObject CognitoIdentity = configuration
-                .optJsonObject("CredentialsProvider")
-                .optJSONObject("CognitoIdentity")
-                .optJSONObject("Default");
-
-        String poolId = CognitoIdentity.opt("PoolId").toString();
-        String region = CognitoIdentity.opt("Region").toString();
-
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(), // Context
-                poolId, // Identity Pool ID
-                Regions.US_EAST_1 // Region
-        );
-
-        String identityId = credentialsProvider.getIdentityId();
-        Log.i("Identity Id ", identityId);
-        Log.i("Pool Id     ", poolId);
-        Log.i("Region      ", region);
-
-
-    }
-
     private void getProfileDetail(String userID) {
 
         Log.i("gidilen UserId", userID);
@@ -255,7 +221,7 @@ public class ProfileFragment extends BaseFragment
         if (myProfile == null) {
 
             //Asenkron Task başlatır.
-            UserDetail loadUserDetail = new UserDetail(getApplicationContext(), new OnEventListener<UserProfile>() {
+            UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
 
                 @Override
                 public void onSuccess(UserProfile up) {
@@ -309,11 +275,8 @@ public class ProfileFragment extends BaseFragment
     private void settingsClicked() {
 
         if (mFragmentNavigation != null) {
-
-            mFragmentNavigation.pushFragment(new SettingsFragment(), AnimateLeftToRight);
-
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-
+            mFragmentNavigation.pushFragment(new SettingsFragment(), AnimateLeftToRight);
         }
 
     }
@@ -321,11 +284,8 @@ public class ProfileFragment extends BaseFragment
     private void userEditClicked() {
 
         if (mFragmentNavigation != null) {
-
-            mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
-
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-
+            mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
         }
 
     }
@@ -333,11 +293,8 @@ public class ProfileFragment extends BaseFragment
     private void followerClicked() {
 
         if (mFragmentNavigation != null) {
-
-            mFragmentNavigation.pushFragment(new FollowerFragment(), AnimateRightToLeft);
-
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-
+            mFragmentNavigation.pushFragment(new FollowerFragment(), AnimateRightToLeft);
         }
 
     }
@@ -345,11 +302,8 @@ public class ProfileFragment extends BaseFragment
     private void followingClicked() {
 
         if (mFragmentNavigation != null) {
-
-            mFragmentNavigation.pushFragment(new FollowingFragment(), AnimateRightToLeft);
-
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-
+            mFragmentNavigation.pushFragment(new FollowingFragment(), AnimateRightToLeft);
         }
 
     }

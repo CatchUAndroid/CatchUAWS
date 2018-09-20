@@ -1,5 +1,6 @@
 package com.uren.catchu.Singleton;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
@@ -18,14 +19,13 @@ import java.util.Map;
 
 import catchu.model.UserProfile;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-
 public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
     private static String awsUserId;
     private static OnEventListener<AccountHolderInfo> mCallBack;
+    private static Context context;
 
     public static AccountHolderInfo getInstance() {
 
@@ -40,8 +40,9 @@ public class AccountHolderInfo {
         getProfileDetail(getUserIdFromCognito());
     }
 
-    public static void setInstance(AccountHolderInfo instance) {
+    public static void setInstance(AccountHolderInfo instance, Context context) {
         AccountHolderInfo.accountHolderInfoInstance = instance;
+        AccountHolderInfo.context = context;
     }
 
     public UserProfile getUser() {
@@ -79,32 +80,35 @@ public class AccountHolderInfo {
         String region = CognitoIdentity.opt("Region").toString();
 
         CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                getApplicationContext(), // Context
+                context, // Context
                 poolId, // Identity Pool ID
                 Regions.US_EAST_1 // Region
         );
 
+        Log.i("userId ", credentialsProvider.getIdentityId());
 
-        // TODO: 8.08.2018 --> Simdilik erkutun userid ile gidelim...
-        awsUserId = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
-        return "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
+        //20.9.2018 - userid ':' karakteri '-' ile replace edilecek dedik.
+        String editedUserId = credentialsProvider.getIdentityId().replaceFirst(":", "-");
+        Log.i("editedUserId ", editedUserId);
 
-        //String identityId = credentialsProvider.getIdentityId();
-        //return identityId;
+        awsUserId = editedUserId;
+        return awsUserId;
+
     }
 
     private void getProfileDetail(String userid) {
 
-        UserDetail loadUserDetail = new UserDetail(getApplicationContext(), new OnEventListener<UserProfile>() {
+        UserDetail loadUserDetail = new UserDetail(context, new OnEventListener<UserProfile>() {
 
             @Override
             public void onSuccess(UserProfile u) {
                 userProfile = u;
+                Log.i("first UserDetailProcess", "succesful");
             }
 
             @Override
             public void onFailure(Exception e) {
-
+                Log.i("first UserDetailProcess", "fail");
             }
 
             @Override

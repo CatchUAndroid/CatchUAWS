@@ -121,6 +121,7 @@ public class FeedFragment extends BaseFragment {
         feed_recyclerView.setLayoutManager(mLayoutManager);
         feed_recyclerView.setAdapter(feedAdapter);
 
+
     }
 
     private BaseRequest getBaseRequest() {

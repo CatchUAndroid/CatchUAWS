@@ -116,7 +116,7 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public void fillSingletonClasses() {
-        AccountHolderInfo.setInstance(null);
+        AccountHolderInfo.setInstance(null, getApplicationContext());
         AccountHolderInfo.getInstance();
 
         UserFriends.setInstance(null);
