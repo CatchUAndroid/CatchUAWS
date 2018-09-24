@@ -1,9 +1,11 @@
 package com.uren.catchu.SharePackage.GalleryPicker;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -12,10 +14,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -67,7 +71,7 @@ public class GalleryPickerFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(mView == null) {
-            mView = inflater.inflate(R.layout.fragment_special_select, container, false);
+            mView = inflater.inflate(R.layout.gallery_picker_layout, container, false);
             ButterKnife.bind(this, mView);
         }
         return mView;
@@ -80,6 +84,25 @@ public class GalleryPickerFrag extends Fragment {
         imageView = mView.findViewById(R.id.imageView);
         cancelImageView = mView.findViewById(R.id.cancelImageView);
         permissionModule = new PermissionModule(getActivity());
+
+
+
+        /*ViewTreeObserver vto = specialRecyclerView.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                *//*if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                    specialRecyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                } else {
+                    specialRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }*//*
+                int width  = specialRecyclerView.getMeasuredWidth();
+                int height = specialRecyclerView.getMeasuredHeight();
+
+            }
+        });*/
+
+
         getData();
     }
 
@@ -88,12 +111,26 @@ public class GalleryPickerFrag extends Fragment {
         fetchMedia();
         gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this);
         specialRecyclerView.setAdapter(gridListAdapter);
-        gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
+        AutoFitGridLayoutManager autoFitGridLayoutManager = new AutoFitGridLayoutManager(getActivity(), 500);
         specialRecyclerView.addItemDecoration(addItemDecoration());
-        specialRecyclerView.setLayoutManager(gridLayoutManager);
+        specialRecyclerView.setLayoutManager(autoFitGridLayoutManager);
+
+
+
+
+        /*gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
+        specialRecyclerView.addItemDecoration(addItemDecoration());
+        specialRecyclerView.setLayoutManager(gridLayoutManager);*/
 
         // TODO: 6.09.2018 - Recycler view da resimler dikdortgen aciliyor. xml de kullanilan ConstraintLayout cozum olabilir.
     }
+
+    /*public static int calculateNoOfColumns(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        int noOfColumns = (int) (dpWidth / 100);
+        return noOfColumns;
+    }*/
 
     public void initImageView() {
         imageView = mView.findViewById(R.id.imageView);

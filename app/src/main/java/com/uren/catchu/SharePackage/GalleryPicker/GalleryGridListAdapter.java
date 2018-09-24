@@ -5,7 +5,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +79,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
         return holder;
 
-       /* int width = parent.getMeasuredHeight() / 4;
+        /*int width = parent.getMeasuredHeight() / 4;
         view.setMinimumHeight(width);
         return new GalleryGridListAdapter.MyViewHolder(view);*/
     }
@@ -112,10 +114,12 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         File selectedFile;
         int position = 0;
         ImageView specialProfileImgView;
+        CardView photoCardView;
 
         public MyViewHolder(final View itemView) {
             super(itemView);
             specialProfileImgView = view.findViewById(R.id.mMediaThumb);
+            photoCardView = view.findViewById(R.id.photoCardView);
 
             specialProfileImgView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -147,9 +151,11 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             this.selectedFile = selectedFile;
 
             if (position == CODE_GALLERY_POSITION) {
-                specialProfileImgView.setImageResource(R.drawable.gallery);
+                specialProfileImgView.setImageResource(R.drawable.gallery_picker_icon);
+                photoCardView.setBackgroundColor(context.getResources().getColor(R.color.white, null));
             } else if (position == CODE_CAMERA_POSITION) {
-                specialProfileImgView.setImageResource(R.drawable.camera);
+                specialProfileImgView.setImageResource(R.drawable.camera_picker_icon);
+                photoCardView.setBackgroundColor(context.getResources().getColor(R.color.white, null));
             } else {
                 Log.i("Info", "selectedFile:" + Uri.fromFile(selectedFile).toString() + "-position:" + position);
                 Glide.with(context).load(selectedFile).into(specialProfileImgView);

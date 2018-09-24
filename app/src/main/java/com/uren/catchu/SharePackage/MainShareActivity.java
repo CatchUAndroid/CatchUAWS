@@ -23,6 +23,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
 import com.uren.catchu.SharePackage.TextPicker.TextPickerFrag;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
+import com.uren.catchu.SharePackage.VideoPicker.Utils.VideoFileListForDelete;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
@@ -146,6 +147,7 @@ public class MainShareActivity extends FragmentActivity {
             public void onClick(View v) {
                 CheckShareItems checkShareItems = new CheckShareItems(MainShareActivity.this);
                 if (checkShareItems.shareIsPossible()) {
+                    VideoFileListForDelete.getInstance().deleteAllFile();
                     startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
                 } else
                     CommonUtils.showToast(MainShareActivity.this, checkShareItems.getErrMessage());

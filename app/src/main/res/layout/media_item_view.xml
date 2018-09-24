@@ -30,18 +30,19 @@
 
 </android.support.v7.widget.CardView-->
 
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/personRootCardView"
-    android:layout_width="100dp"
-    android:layout_height="100dp">
+    android:id="@+id/photoCardView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/mMediaThumb"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/gallery" />
+        android:layout_margin="4dp"
+        android:scaleType="centerCrop" />
 
 
 </android.support.v7.widget.CardView>
