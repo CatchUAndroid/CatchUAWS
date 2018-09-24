@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,9 +13,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.ImageFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.VideoFragment;
@@ -51,8 +60,26 @@ public class ViewPagerAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup collection, int position) {
 
         View itemView = null;
+        PlayerView playerView;
+        SimpleExoPlayer player;
 
         if (videoCounter < videoList.size()) {
+
+            itemView = LayoutInflater.from(mContext)
+                    .inflate(R.layout.viewpager_video, collection, false);
+            playerView = itemView.findViewById(R.id.playerView);
+            collection.addView(itemView);
+            player = ExoPlayerFactory.newSimpleInstance(mContext, new DefaultTrackSelector());
+            playerView.setPlayer(player);
+            DefaultDataSourceFactory defaultDataSourceFactory = new DefaultDataSourceFactory(mContext,
+                    Util.getUserAgent(mContext,"feed-demo"));
+            ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(defaultDataSourceFactory)
+                    .createMediaSource(Uri.parse(videoList.get(videoCounter)));
+            player.prepare(mediaSource);
+            player.setPlayWhenReady(false);
+            player.seekTo(3);
+
+
             videoCounter++;
         } else if (imageCounter < imageList.size()) {
             //sonra imagelar bitene kadar eklenir
@@ -65,7 +92,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
             Glide.with(mContext)
                     .load(imageList.get(imageCounter))
-                    .apply(RequestOptions.centerInsideTransform())
+                    .apply(RequestOptions.centerCropTransform())
                     .into(imgFeedItem);
             imageCounter++;
         } else {

@@ -59,7 +59,8 @@ public class FeedFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
 
             init();
-            getPosts();
+            //getPosts();
+            setUpRecyclerView(null);
         }
 
         return mView;
@@ -103,9 +104,11 @@ public class FeedFragment extends BaseFragment {
 
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
-        Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
+        //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
 
         ArrayList<Post> postList = new ArrayList<Post>();
+
+        /* geçici olarak
         for(int i=0; i< postListResponse.getItems().size(); i++ ){
             postList.add(postListResponse.getItems().get(i));
             postList.add(postListResponse.getItems().get(i));
@@ -115,12 +118,20 @@ public class FeedFragment extends BaseFragment {
             postList.add(postListResponse.getItems().get(i));
             postList.add(postListResponse.getItems().get(i));
         }
+        */
+
+        /*silinecek*/
+        Post p = new Post();
+
+
+        for(int i=0; i<100; i++){
+            postList.add(p);
+        }
 
         feedAdapter = new FeedAdapter(getActivity(), postList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         feed_recyclerView.setLayoutManager(mLayoutManager);
         feed_recyclerView.setAdapter(feedAdapter);
-
 
     }
 

@@ -40,10 +40,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
 
     public FeedAdapter(Context context, List<Post> postList) {
-
         this.context = context;
         this.postList = postList;
-
     }
 
     @Override
@@ -60,10 +58,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         ImageView imgProfilePic;
         TextView txtName;
         TextView txtUserName;
-        ViewPager viewPager;
+        ViewPager viewPager=null;
         CardView cardView;
         private int position;
-        private boolean viewPagerOk = false;
 
         View view;
 
@@ -82,16 +79,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         private void setViewPager() {
 
-            viewPagerOk=true;
-
             List<String> imageList;
             imageList = new ArrayList<>();
             List<String> videoList;
             videoList = new ArrayList<>();
-            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
-            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
-            imageList.add("https://i.hizliresim.com/Q2O8gV.jpg");
-            imageList.add("https://i.hizliresim.com/RDzzka.jpg");
+            imageList.add("https://i.hizliresim.com/zMzaWB.png");
+            imageList.add("https://i.hizliresim.com/k6PG27.png");
+            imageList.add("https://i.hizliresim.com/mo94Vy.png");
+            imageList.add("https://i.hizliresim.com/BzBvVj.png");
+            videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/video.mp4");
 
             viewPager.setAdapter(new ViewPagerAdapter(context, imageList, videoList));
             viewPager.setOffscreenPageLimit(imageList.size() + videoList.size());
@@ -110,6 +106,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             dotscount = totalDots;
             dots = new ImageView[dotscount];
             sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
+            sliderDotspanel.removeAllViews();
 
             for (int i = 0; i < dotscount; i++) {
 
@@ -152,6 +149,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         public void setData(Post post, int position) {
 
+            /*
             //this.profileName.setText(String.valueOf(rowItem));
             this.position = position;
 
@@ -162,9 +160,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             this.txtName.setText(post.getUser().getUsername());
             this.txtUserName.setText(post.getUser().getUsername());
+            */
 
-            if (!viewPagerOk)
-                setViewPager();
+            //gecici
+            this.position = position;
+
+            Glide.with(context)
+                    .load("https://i.hizliresim.com/Q2O8gV.jpg")
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgProfilePic);
+
+            this.txtName.setText("Name");
+            this.txtUserName.setText("@name");
+
+
+            setViewPager();
 
 
         }
@@ -177,7 +187,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
         Post post = postList.get(position);
-
         holder.setData(post, position);
 
 
