@@ -37,7 +37,7 @@ public class FriendRequestProcess extends AsyncTask<Void, Void, FriendRequestLis
             friendRequest.setRequestType(requestType);
             friendRequest.setRequesterUserid(requesterUserid);
             friendRequest.setRequestedUserid(requestedUserid);
-            FriendRequestList friendRequestList = instance.client.requestProcessPost(friendRequest);
+            FriendRequestList friendRequestList = instance.client.followRequestPost(friendRequest);
             return friendRequestList;
 
         } catch (Exception e) {
