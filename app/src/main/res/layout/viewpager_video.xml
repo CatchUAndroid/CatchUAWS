@@ -25,12 +25,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <com.uren.autoplayvideo.NT_VideoImage
+                <com.uren.catchu.VideoPlay.VideoImage
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/colorPrimaryDark"
-                    android:id="@+id/myModel">
-                </com.uren.autoplayvideo.NT_VideoImage>
+                    android:id="@+id/videoImage">
+
+                </com.uren.catchu.VideoPlay.VideoImage>
 
                 <ImageView
                     android:id="@+id/img_playback"

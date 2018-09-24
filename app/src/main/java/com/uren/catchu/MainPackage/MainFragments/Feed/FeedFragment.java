@@ -2,6 +2,8 @@ package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.VideoPlay.CustomRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +43,8 @@ public class FeedFragment extends BaseFragment {
     FeedAdapter feedAdapter;
     UserProfileProperties myProfile;
 
-    @BindView(R.id.feed_recyclerView)
-    RecyclerView feed_recyclerView;
+    @BindView(R.id.rv_feed)
+    CustomRecyclerView recyclerView;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -110,13 +113,50 @@ public class FeedFragment extends BaseFragment {
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
         //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
-        
+
         ArrayList<Post> postList = setJunkData();
 
         feedAdapter = new FeedAdapter(getActivity(), getContext(), postList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        feed_recyclerView.setLayoutManager(mLayoutManager);
-        feed_recyclerView.setAdapter(feedAdapter);
+        recyclerView.setLayoutManager(mLayoutManager);
+
+        setRecyclerViewProperties(postList);
+
+    }
+
+    private void setRecyclerViewProperties(ArrayList<Post> postList) {
+        //todo before setAdapter
+        recyclerView.setActivity(getActivity());
+
+        //optional - to play only first visible video
+        recyclerView.setPlayOnlyFirstVideo(true); // false by default
+
+        //optional - by default we check if url ends with ".mp4". If your urls do not end with mp4, you can set this param to false and implement your own check to see if video points to url
+        recyclerView.setCheckForMp4(false); //true by default
+
+        //optional - download videos to local storage (requires "android.permission.WRITE_EXTERNAL_STORAGE" in manifest or ask in runtime)
+        recyclerView.setDownloadPath(Environment.getExternalStorageDirectory() + "/MyVideo"); // (Environment.getExternalStorageDirectory() + "/NT_Video") by default
+
+        recyclerView.setDownloadVideos(true); // false by default
+
+        recyclerView.setVisiblePercent(50); // percentage of View that needs to be visible to start playing
+
+        //extra - start downloading all videos in background before loading RecyclerView
+        List<String> urls = new ArrayList<>();
+        for (int i = 0; i < postList.size(); i++) {
+            for(int j = 0; j< postList.get(i).getAttachments().size(); j++){
+                Media media = postList.get(i).getAttachments().get(j);
+                urls.add(media.getUrl());
+            }
+        }
+
+        recyclerView.preDownload(urls);
+
+        recyclerView.setAdapter(feedAdapter);
+        //call this functions when u want to start autoplay on loading async lists (eg firebase)
+        recyclerView.smoothScrollBy(0, 1);
+        recyclerView.smoothScrollBy(0, -1);
+        //recyclerView.setItemViewCacheSize(mediaList.size());
 
     }
 

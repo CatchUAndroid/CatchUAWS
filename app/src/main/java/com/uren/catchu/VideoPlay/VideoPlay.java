@@ -5,13 +5,8 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.uren.autoplayvideo.NT_VideoImage;
 import com.uren.catchu.R;
-import com.uren.denemevideo.R;
-
 import java.util.concurrent.Callable;
-
 import butterknife.ButterKnife;
 
 public class VideoPlay {
@@ -39,7 +34,7 @@ public class VideoPlay {
 
     private void initItems() {
 
-        this.aah_vi = (VideoImage) itemView.findViewById(R.id.myModel);
+        this.aah_vi = (VideoImage) itemView.findViewById(R.id.videoImage);
         this.tv = ButterKnife.findById(itemView, R.id.tv);
         this.img_vol = ButterKnife.findById(itemView, R.id.img_vol);
         this.img_playback = ButterKnife.findById(itemView, R.id.img_playback);

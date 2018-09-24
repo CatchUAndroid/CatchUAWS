@@ -163,7 +163,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
             Glide.with(mContext)
                     .load(loadUrl)
-                    .apply(RequestOptions.centerInsideTransform())
+                    .apply(RequestOptions.fitCenterTransform())
                     .into(imgFeedItem);
 
 
