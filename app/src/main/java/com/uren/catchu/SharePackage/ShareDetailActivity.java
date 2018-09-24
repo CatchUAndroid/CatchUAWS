@@ -14,8 +14,10 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -42,8 +44,11 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.ViewPagerAdapter;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.Adapters.ShareItemsDisplayAdapter;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.Utils.SharePostProcess;
@@ -51,6 +56,8 @@ import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import catchu.model.Media;
@@ -93,6 +100,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private ImageView videoImgv;
     private ImageView deleteVideoImgv;
     private ImageView addVideoImgv;
+
+    private ViewPager viewPager;
 
     private LinearLayout mapLayout;
     private FrameLayout shareMainLayout;
@@ -140,6 +149,56 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         addListeners();
         setDefaultSelectedItem();
         setShareItems();
+        setViewPager();
+    }
+
+    private void setViewPager() {
+        List<Media> mediaList = new ArrayList<>();
+        mediaList.add(ShareItems.getInstance().getPost().getAttachments().get(0));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        viewPager.setAdapter(new ShareItemsDisplayAdapter(fragmentManager, mediaList));
+        int totalDots = mediaList.size();
+        setSliderDotsPanel(totalDots);
+    }
+
+    private void setSliderDotsPanel(int totalDots) {
+        final int dotscount;
+        final ImageView[] dots;
+        LinearLayout sliderDotspanel;
+        dotscount = totalDots;
+        dots = new ImageView[dotscount];
+        sliderDotspanel = (LinearLayout) findViewById(R.id.SliderDots);
+
+        for (int i = 0; i < dotscount; i++) {
+            dots[i] = new ImageView(ShareDetailActivity.this);
+            dots[i].setImageDrawable(ContextCompat.getDrawable(ShareDetailActivity.this, R.drawable.non_active_dot));
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            params.setMargins(8, 0, 8, 0);
+            sliderDotspanel.addView(dots[i], params);
+        }
+
+        dots[0].setImageDrawable(ContextCompat.getDrawable(ShareDetailActivity.this, R.drawable.active_dot));
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                for (int i = 0; i < dotscount; i++) {
+                    dots[i].setImageDrawable(ContextCompat.getDrawable(ShareDetailActivity.this, R.drawable.non_active_dot));
+                }
+                dots[position].setImageDrawable(ContextCompat.getDrawable(ShareDetailActivity.this, R.drawable.active_dot));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
     }
 
     private void setDefaultSelectedItem() {
@@ -170,6 +229,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         addVideoImgv = findViewById(R.id.addVideoImgv);
         shareMainLayout = findViewById(R.id.shareMainLayout);
         shareButton = findViewById(R.id.shareButton);
+        viewPager = findViewById(R.id.viewpager);
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this);
         checkShareItems = new CheckShareItems(ShareDetailActivity.this);
