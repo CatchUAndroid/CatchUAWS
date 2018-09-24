@@ -5,14 +5,14 @@ import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
-import catchu.model.BucketUploadResult;
+import catchu.model.BucketUploadResponse;
 
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.MP4_TYPE;
 
-public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResult> {
+public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResponse> {
 
-    private OnEventListener<BucketUploadResult> mCallBack;
+    private OnEventListener<BucketUploadResponse> mCallBack;
     public Exception mException;
     public String imageExtensionType;
     public String videoExtensionType;
@@ -28,11 +28,11 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResul
     }
 
     @Override
-    protected BucketUploadResult doInBackground(Void... voids) {
+    protected BucketUploadResponse doInBackground(Void... voids) {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            BucketUploadResult commonS3BucketResult = instance.client.commonSignedurlGet(imageCount, videoCount, videoExtensionType, imageExtensionType);
+            BucketUploadResponse commonS3BucketResult = instance.client.commonSignedurlGet(imageCount, videoCount, videoExtensionType, imageExtensionType);
             return commonS3BucketResult;
 
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadResul
     }
 
     @Override
-    protected void onPostExecute(BucketUploadResult commonS3BucketResult) {
+    protected void onPostExecute(BucketUploadResponse commonS3BucketResult) {
         super.onPostExecute(commonS3BucketResult);
 
         if (mCallBack != null) {

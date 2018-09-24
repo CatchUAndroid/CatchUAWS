@@ -28,7 +28,8 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.BucketUploadResult;
+import catchu.model.BucketUpload;
+import catchu.model.BucketUploadResponse;
 import catchu.model.Media;
 import catchu.model.PostRequest;
 import catchu.model.User;
@@ -86,7 +87,7 @@ public class SharePostProcess {
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
+                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
 
                 int counter = 0;
                 for (ImageShareItemBox imageShareItemBox : ShareItems.getInstance().getImageShareItemBoxes()) {

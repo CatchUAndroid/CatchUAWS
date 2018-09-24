@@ -50,7 +50,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.BucketUploadResult;
+import catchu.model.BucketUploadResponse;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -450,7 +450,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
+                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
 
                 Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
                 Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());

@@ -24,7 +24,7 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.BucketUploadResult;
+import catchu.model.BucketUploadResponse;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.GroupRequestResult;
@@ -71,7 +71,7 @@ public class SaveGroupProcess {
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
+                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
 
                 UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
                     @Override

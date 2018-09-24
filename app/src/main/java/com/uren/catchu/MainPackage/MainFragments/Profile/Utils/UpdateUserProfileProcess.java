@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 
-import catchu.model.BucketUploadResult;
+import catchu.model.BucketUploadResponse;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
@@ -61,7 +61,7 @@ public class UpdateUserProfileProcess {
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final BucketUploadResult commonS3BucketResult = (BucketUploadResult) object;
+                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
 
                 UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
                     @Override

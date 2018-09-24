@@ -47,6 +47,7 @@ import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.ADD_PARTICIPANT_INTO_GROUP;
@@ -249,7 +250,6 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     }
 
     private void addParticipantToGroup() {
-
         GroupRequest groupRequest = new GroupRequest();
         groupRequest.setGroupid(groupId);
         groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
