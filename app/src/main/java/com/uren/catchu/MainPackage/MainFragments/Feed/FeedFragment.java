@@ -18,14 +18,19 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.BaseRequest;
+import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
+
+import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 
 public class FeedFragment extends BaseFragment {
@@ -105,33 +110,42 @@ public class FeedFragment extends BaseFragment {
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
         //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
+        
+        ArrayList<Post> postList = setJunkData();
 
-        ArrayList<Post> postList = new ArrayList<Post>();
-
-        /* geçici olarak
-        for(int i=0; i< postListResponse.getItems().size(); i++ ){
-            postList.add(postListResponse.getItems().get(i));
-            postList.add(postListResponse.getItems().get(i));
-            postList.add(postListResponse.getItems().get(i));
-            postList.add(postListResponse.getItems().get(i));
-            postList.add(postListResponse.getItems().get(i));
-            postList.add(postListResponse.getItems().get(i));
-            postList.add(postListResponse.getItems().get(i));
-        }
-        */
-
-        /*silinecek*/
-        Post p = new Post();
-
-
-        for(int i=0; i<100; i++){
-            postList.add(p);
-        }
-
-        feedAdapter = new FeedAdapter(getActivity(), postList);
+        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         feed_recyclerView.setLayoutManager(mLayoutManager);
         feed_recyclerView.setAdapter(feedAdapter);
+
+    }
+
+    private ArrayList<Post> setJunkData() {
+
+        //Video
+        Media media1 = new Media();
+        media1.setUrl("http://res.cloudinary.com/krupen/video/upload/w_300,h_150,c_crop,q_70/v1491561340/hello_cuwgcb.mp4");
+        media1.setType(VIDEO_TYPE);
+
+        //Image
+        Media media2 = new Media();
+        media2.setUrl("https://i.hizliresim.com/mo94Vy.png");
+        media2.setType(IMAGE_TYPE);
+
+        List<Media> mediaList = new ArrayList<Media>();
+        mediaList.add(media1);
+        mediaList.add(media2);
+
+        Post post = new Post();
+        post.setAttachments(mediaList);
+
+        ArrayList<Post> postList = new ArrayList<Post>();
+
+        for (int i = 0; i < 100; i++) {
+            postList.add(post);
+        }
+
+        return postList;
 
     }
 

@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -35,12 +37,13 @@ import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
 
-    private Context context;
+    private Activity mActivity;
+    private Context mContext;
     private List<Post> postList;
 
-
-    public FeedAdapter(Context context, List<Post> postList) {
-        this.context = context;
+    public FeedAdapter(Activity activity, Context context, List<Post> postList) {
+        this.mActivity=activity;
+        this.mContext = context;
         this.postList = postList;
     }
 
@@ -58,7 +61,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         ImageView imgProfilePic;
         TextView txtName;
         TextView txtUserName;
-        ViewPager viewPager=null;
+        ViewPager viewPager;
         CardView cardView;
         private int position;
 
@@ -77,108 +80,31 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         }
 
-        private void setViewPager() {
 
-            List<String> imageList;
-            imageList = new ArrayList<>();
-            List<String> videoList;
-            videoList = new ArrayList<>();
-            imageList.add("https://i.hizliresim.com/zMzaWB.png");
-            imageList.add("https://i.hizliresim.com/k6PG27.png");
-            imageList.add("https://i.hizliresim.com/mo94Vy.png");
-            imageList.add("https://i.hizliresim.com/BzBvVj.png");
-            videoList.add("https://s3.eu-west-2.amazonaws.com/catchuappbucket/video.mp4");
-
-            viewPager.setAdapter(new ViewPagerAdapter(context, imageList, videoList));
-            viewPager.setOffscreenPageLimit(imageList.size() + videoList.size());
-
-            int totalDots = imageList.size() + videoList.size();
-            setSliderDotsPanel(totalDots);
-
-        }
-
-        private void setSliderDotsPanel(int totalDots) {
-
-            final int dotscount;
-            final ImageView[] dots;
-            LinearLayout sliderDotspanel;
-
-            dotscount = totalDots;
-            dots = new ImageView[dotscount];
-            sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
-            sliderDotspanel.removeAllViews();
-
-            for (int i = 0; i < dotscount; i++) {
-
-                dots[i] = new ImageView(context);
-                dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.non_active_dot));
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(8, 0, 8, 0);
-                sliderDotspanel.addView(dots[i], params);
-
-            }
-
-            dots[0].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
-
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int position) {
-
-                    for (int i = 0; i < dotscount; i++) {
-                        dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.non_active_dot));
-                    }
-
-                    dots[position].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.active_dot));
-
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int state) {
-
-                }
-            });
-
-        }
 
 
         public void setData(Post post, int position) {
 
-            /*
-            //this.profileName.setText(String.valueOf(rowItem));
             this.position = position;
 
-            Glide.with(context)
-                    .load(post.getUser().getProfilePhotoUrl())
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imgProfilePic);
-
-            this.txtName.setText(post.getUser().getUsername());
-            this.txtUserName.setText(post.getUser().getUsername());
-            */
-
-            //gecici
-            this.position = position;
-
-            Glide.with(context)
+            Glide.with(mContext)
                     .load("https://i.hizliresim.com/Q2O8gV.jpg")
                     .apply(RequestOptions.circleCropTransform())
                     .into(imgProfilePic);
-
             this.txtName.setText("Name");
             this.txtUserName.setText("@name");
 
-
-            setViewPager();
-
+            setViewPager(post);
 
         }
 
+        private void setViewPager(Post post) {
+
+            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
+            viewPager.setOffscreenPageLimit(post.getAttachments().size());
+            ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), view, mContext);
+
+        }
 
     }
 
@@ -188,7 +114,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         Post post = postList.get(position);
         holder.setData(post, position);
-
 
     }
 

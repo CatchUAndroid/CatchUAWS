@@ -1,34 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:background="@android:color/holo_blue_dark"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="8dp"
+    android:layout_marginTop="8dp"
+    android:gravity="center"
+    android:background="@color/colorPrimary">
 
-
-    <com.google.android.exoplayer2.ui.PlayerView
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/playerView">
+        card_view:cardElevation="4dp"
+        card_view:cardPreventCornerOverlap="false">
 
-    </com.google.android.exoplayer2.ui.PlayerView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <!--VideoView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/videoFeedItem"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" /-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/playVideoImgv"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/img_border_transparent"
-        android:padding="8dp"
-        android:src="@drawable/play_icon_96"
-        android:visibility="gone"
-        android:contentDescription="@string/video"/>
+                <com.uren.autoplayvideo.NT_VideoImage
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/colorPrimaryDark"
+                    android:id="@+id/myModel">
+                </com.uren.autoplayvideo.NT_VideoImage>
+
+                <ImageView
+                    android:id="@+id/img_playback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left|bottom"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_play"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/img_vol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/ic_unmute"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                tools:text="hello" />
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 
-</RelativeLayout>
+</LinearLayout>
