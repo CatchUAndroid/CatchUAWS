@@ -8,12 +8,14 @@ import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
@@ -38,6 +40,7 @@ public class MainShareActivity extends FragmentActivity {
     PermissionModule permissionModule;
     TextView cancelTv;
     TextView nextTv;
+    public static LinearLayout mainShareMainLayout;
 
     GalleryPickerFrag galleryPickerFrag;
     TextPickerFrag textPickerFrag;
@@ -76,9 +79,9 @@ public class MainShareActivity extends FragmentActivity {
         appBarLayout = findViewById(R.id.htab_appbar);
         cancelTv = findViewById(R.id.cancelTv);
         nextTv = findViewById(R.id.nextTv);
+        mainShareMainLayout = findViewById(R.id.mainShareMainLayout);
         ShareItems.setInstance(null);
         ShareItems.getInstance();
-        setShareItemUser();
     }
 
     private void setShareItemUser() {
@@ -147,6 +150,7 @@ public class MainShareActivity extends FragmentActivity {
             public void onClick(View v) {
                 CheckShareItems checkShareItems = new CheckShareItems(MainShareActivity.this);
                 if (checkShareItems.shareIsPossible()) {
+                    setShareItemUser();
                     VideoFileListForDelete.getInstance().deleteAllFile();
                     startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
                 } else
@@ -206,5 +210,4 @@ public class MainShareActivity extends FragmentActivity {
             }
         }
     }
-
 }

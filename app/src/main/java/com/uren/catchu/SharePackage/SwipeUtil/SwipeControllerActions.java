@@ -1,4 +1,4 @@
-package com.uren.catchu.SharePackage;
+package com.uren.catchu.SharePackage.SwipeUtil;
 
 public abstract class SwipeControllerActions {
 

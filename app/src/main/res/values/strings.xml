@@ -77,6 +77,8 @@
     <string name="videoSelectTypeUnknown">Video Select Type is Unknown!</string>
     <string name="profileUpdating">Profile updating...</string>
     <string name="profileUpdateSuccessful">Profile Update is Successful</string>
+    <string name="dragForDelete">Drag for Delete</string>
+    <string name="finish">Finish</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -466,7 +466,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-        Log.i("Info", "onSurfaceTextureUpdated");
+        //Log.i("Info", "onSurfaceTextureUpdated");
     }
 
     public void setFlashModeOff() {

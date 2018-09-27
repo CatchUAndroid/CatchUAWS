@@ -32,6 +32,7 @@ public class PhotoSelectUtil {
     static Context context;
     static Intent data;
     static String type;
+    static boolean portraitMode;
 
     public PhotoSelectUtil(Context context, Intent data, String type) {
         this.context = context;
@@ -45,6 +46,7 @@ public class PhotoSelectUtil {
         this.type = type;
         this.mediaUri = uri;
         routeSelection();
+        setPortraitMode();
     }
 
     private void routeSelection() {
@@ -99,6 +101,19 @@ public class PhotoSelectUtil {
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
+    public static void setPortraitMode(){
+        if(bitmap == null)
+            return;
+
+        int width = bitmap.getWidth();
+        int heigth = bitmap.getHeight();
+
+        if(heigth > width)
+            portraitMode = true;
+        else
+            portraitMode = false;
+    }
+
     public Bitmap getBitmap() {
         return bitmap;
     }
@@ -121,5 +136,13 @@ public class PhotoSelectUtil {
 
     public void setImageRealPath(String imageRealPath) {
         PhotoSelectUtil.imageRealPath = imageRealPath;
+    }
+
+    public boolean isPortraitMode() {
+        return portraitMode;
+    }
+
+    public void setPortraitMode(boolean portraitMode) {
+        PhotoSelectUtil.portraitMode = portraitMode;
     }
 }

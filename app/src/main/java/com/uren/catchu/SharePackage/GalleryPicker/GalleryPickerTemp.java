@@ -56,7 +56,7 @@ import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 
 
 @SuppressLint("ValidFragment")
-public class GalleryPickerFrag extends Fragment {
+public class GalleryPickerTemp extends Fragment {
 
     RecyclerView specialRecyclerView;
     RelativeLayout photoRelLayout;
@@ -65,7 +65,12 @@ public class GalleryPickerFrag extends Fragment {
     ImageView selectImageView;
     ImageView cancelImageView;
     ImageView addTextImgv;
+    ImageView brushImgv;
+    ViewPager colorViewPager;
+    LinearLayout dotsLayout;
+    LinearLayout colorPaletteLayout;
     EditText editText;
+    SeekBar seekBar;
 
     View mView;
     ArrayList<File> mFiles;
@@ -82,6 +87,8 @@ public class GalleryPickerFrag extends Fragment {
 
     public GalleryGridListAdapter gridListAdapter;
     PermissionModule permissionModule;
+    ColorPaletteAdapter colorPaletteAdapter;
+    private GestureDetector gestureDetector;
     View trashLayout = null;
 
     @Override
@@ -107,17 +114,59 @@ public class GalleryPickerFrag extends Fragment {
         photoRelLayout = mView.findViewById(R.id.photoRelLayout);
         selectImageView = mView.findViewById(R.id.selectImageView);
         cancelImageView = mView.findViewById(R.id.cancelImageView);
+        colorViewPager = mView.findViewById(R.id.colorViewPager);
+        dotsLayout = mView.findViewById(R.id.layoutDots);
+        colorPaletteLayout = mView.findViewById(R.id.colorPaletteLayout);
         addTextImgv = mView.findViewById(R.id.addTextImgv);
+        brushImgv = mView.findViewById(R.id.brushImgv);
+        seekBar = mView.findViewById(R.id.seekbar);
         permissionModule = new PermissionModule(getActivity());
+        gestureDetector = new GestureDetector(getActivity(), new SingleTapConfirm());
+        colorPalettePrepare();
         getData();
         addListeners();
     }
 
+    public void colorPalettePrepare() {
+        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), new ColorSelectCallback() {
+            @Override
+            public void onClick(int colorCode) {
+                brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
+                editText.setTextColor(getActivity().getResources().getColor(colorCode, null));
+            }
+        });
+        colorViewPager.setAdapter(colorPaletteAdapter);
+        addBottomDots(0);
+    }
+
     private void addListeners() {
+        colorViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                addBottomDots(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
         addTextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //colorPaletteLayout.setVisibility(View.VISIBLE);
+                //photoRelLayout.removeView(editText);
+                //seekBar.setVisibility(View.VISIBLE);
+                //addEditText();
+
                 startTextEditFragment("");
+
+
+
             }
         });
 
@@ -126,9 +175,29 @@ public class GalleryPickerFrag extends Fragment {
             public void onClick(View v) {
                 photoRelLayout.setVisibility(View.GONE);
                 specialRecyclerView.setVisibility(View.VISIBLE);
+                colorPaletteLayout.setVisibility(View.GONE);
                 ShareItems.getInstance().clearImageShareItemBox();
                 photoRelLayout.removeView(editText);
+                seekBar.setVisibility(View.GONE);
                 hideKeyBoard();
+            }
+        });
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (editText != null)
+                    editText.setTextSize(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
     }
@@ -136,7 +205,7 @@ public class GalleryPickerFrag extends Fragment {
     private void startTextEditFragment(String text) {
         TextEditFragment nextFrag = new TextEditFragment(text);
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.addPropRelLayout, nextFrag, TextEditFragment.class.getName())
+                .replace(R.id.parentRelLayout, nextFrag, TextEditFragment.class.getName())
                 .addToBackStack(null)
                 .commit();
     }
@@ -254,6 +323,8 @@ public class GalleryPickerFrag extends Fragment {
                 if (trashLayout != null) {
                     photoRelLayout.removeView(trashLayout);
                     photoSelectedLayout.setVisibility(View.VISIBLE);
+                    colorPaletteLayout.setVisibility(View.GONE);
+                    seekBar.setVisibility(View.GONE);
                     trashLayout = null;
                 }
             }
@@ -273,9 +344,30 @@ public class GalleryPickerFrag extends Fragment {
         imm.showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
+    private void addBottomDots(int currentPage) {
+        TextView[] dots;
+        dots = new TextView[colorPaletteAdapter.getCount()];
+
+        int cActive = getActivity().getResources().getColor(R.color.White, null);
+        int cInactive = getActivity().getResources().getColor(R.color.Silver, null);
+
+        dotsLayout.removeAllViews();
+
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new TextView(getActivity());
+            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setTextSize(35);
+            dots[i].setTextColor(cInactive);
+            dotsLayout.addView(dots[i]);
+        }
+
+        if (dots.length > 0)
+            dots[currentPage].setTextColor(cActive);
+    }
+
     public void getData() {
         fetchMedia();
-        gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this, new PhotoSelectCallback() {
+        /*gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerTemp.this, new PhotoSelectCallback() {
             @Override
             public void onSelect(Uri uri, boolean portraitMode) {
                 resetPhotoImageView(portraitMode);
@@ -283,7 +375,7 @@ public class GalleryPickerFrag extends Fragment {
                 specialRecyclerView.setVisibility(View.GONE);
                 photoRelLayout.setVisibility(View.VISIBLE);
             }
-        });
+        });*/
 
         specialRecyclerView.setAdapter(gridListAdapter);
         gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
@@ -369,4 +461,11 @@ public class GalleryPickerFrag extends Fragment {
             CommonUtils.showToast(getActivity(), getActivity().getString(R.string.technicalError) + requestCode);
     }
 
+    private class SingleTapConfirm extends SimpleOnGestureListener {
+
+        @Override
+        public boolean onSingleTapUp(MotionEvent event) {
+            return true;
+        }
+    }
 }
