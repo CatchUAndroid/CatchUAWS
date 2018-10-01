@@ -320,8 +320,7 @@ public class LoginActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancel()
-            {
+            public void onCancel() {
                 CommonUtils.LOG_NEREDEYIZ("facebook:onCancel");
                 Log.i("Info", "facebook:onCancel");
             }
@@ -535,7 +534,8 @@ public class LoginActivity extends AppCompatActivity
         loginUser.setName(mAuth.getCurrentUser().getProviderData().get(0).getDisplayName());
         //profile picture
         String profilePicture = mAuth.getCurrentUser().getProviderData().get(0).getPhotoUrl().toString();
-        profilePicture.replaceFirst("_normal", "");
+        profilePicture = profilePicture.replaceFirst("_normal", "");
+        Log.i("pr", profilePicture);
         loginUser.setProfilePhotoUrl(profilePicture);
         //username
         loginUser.setUsername(session.getUserName());
