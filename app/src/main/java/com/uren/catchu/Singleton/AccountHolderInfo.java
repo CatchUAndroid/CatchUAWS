@@ -21,9 +21,9 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    private static OnEventListener<AccountHolderInfo> mCallBack;
+    //private static OnEventListener<AccountHolderInfo> mCallBack;
     private static Context context;
-    private static String token;
+    //private static String token;
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
@@ -90,7 +90,6 @@ public class AccountHolderInfo {
         }, userid, token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public static String getUserIdFromFirebase() {
@@ -104,7 +103,6 @@ public class AccountHolderInfo {
     }
 
     public static void getToken(final TokenCallback tokenCallback) {
-
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
         tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

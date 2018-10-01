@@ -87,7 +87,7 @@ public class LocationTrackerAdapter implements LocationListener {
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, (android.location.LocationListener) this);
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
                 }
 
 
@@ -109,7 +109,7 @@ public class LocationTrackerAdapter implements LocationListener {
                         locationManager.requestLocationUpdates(
                                 LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, (android.location.LocationListener) mContext);
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
                     }
 
                     if (locationManager != null) {

@@ -170,7 +170,7 @@
     <string name="PLEASE_WAIT">"Please wait.."</string>
     <string name="PASSWORD_LINK_SEND_SUCCESS">Renew password link has sent to your email address.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
-
+    <string name="title_activity_maps2">Map</string>
 
 
 </resources>
