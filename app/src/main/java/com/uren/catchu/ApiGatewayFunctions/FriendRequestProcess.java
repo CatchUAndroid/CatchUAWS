@@ -19,12 +19,14 @@ public class FriendRequestProcess extends AsyncTask<Void, Void, FriendRequestLis
     public String requestType;
     public String requesterUserid;
     public String requestedUserid;
+    private String token;
 
-    public FriendRequestProcess(OnEventListener callback,String requestType, String requesterUserid, String requestedUserid) {
+    public FriendRequestProcess(OnEventListener callback,String requestType, String requesterUserid, String requestedUserid, String token) {
         this.requestType = requestType;
         this.requesterUserid = requesterUserid;
         this.requestedUserid = requestedUserid;
         this.mCallBack = callback;
+        this.token = token;
     }
 
     @Override
@@ -37,7 +39,7 @@ public class FriendRequestProcess extends AsyncTask<Void, Void, FriendRequestLis
             friendRequest.setRequestType(requestType);
             friendRequest.setRequesterUserid(requesterUserid);
             friendRequest.setRequestedUserid(requestedUserid);
-            FriendRequestList friendRequestList = instance.client.followRequestPost(friendRequest);
+            FriendRequestList friendRequestList = instance.client.followRequestPost(token, friendRequest);
             return friendRequestList;
 
         } catch (Exception e) {

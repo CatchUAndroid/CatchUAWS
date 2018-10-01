@@ -18,13 +18,15 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadRespo
     public String videoExtensionType;
     public String imageCount;
     public String videoCount;
+    private String token;
 
-    public SignedUrlGetProcess(OnEventListener callback,int imageCount, int videoCount) {
+    public SignedUrlGetProcess(OnEventListener callback,int imageCount, int videoCount, String token) {
         this.imageExtensionType = JPG_TYPE;
         this.videoExtensionType = MP4_TYPE;
         this.mCallBack = callback;
         this.imageCount = Integer.toString(imageCount);
         this.videoCount = Integer.toString(videoCount);
+        this.token = token;
     }
 
     @Override
@@ -32,7 +34,7 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadRespo
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            BucketUploadResponse commonS3BucketResult = instance.client.commonSignedurlGet(imageCount, videoCount, videoExtensionType, imageExtensionType);
+            BucketUploadResponse commonS3BucketResult = instance.client.commonSignedurlGet(token, imageCount, videoCount, videoExtensionType, imageExtensionType);
             return commonS3BucketResult;
 
         } catch (Exception e) {

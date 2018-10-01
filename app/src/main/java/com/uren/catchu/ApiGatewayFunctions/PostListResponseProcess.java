@@ -9,6 +9,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import catchu.model.BaseRequest;
 import catchu.model.PostListResponse;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
 public class PostListResponseProcess extends AsyncTask<Void, Void, PostListResponse> {
 
     private OnEventListener<PostListResponse> mCallBack;
@@ -18,15 +20,17 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
     public String latitude;
     public String radius;
     public BaseRequest baseRequest;
+    private String token;
 
     public PostListResponseProcess(Context context, OnEventListener callback,
-                                    BaseRequest baseRequest, String longitude, String latitude, String radius) {
+                                    BaseRequest baseRequest, String longitude, String latitude, String radius, String token) {
         mCallBack = callback;
         mContext = context;
         this.longitude = longitude;
         this.latitude = latitude;
         this.radius = radius;
         this.baseRequest = baseRequest;
+        this.token= token;
     }
 
 
@@ -36,8 +40,15 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            PostListResponse postListResponse = instance.client.postsGeolocationPost(baseRequest, longitude,latitude,radius);
-            return postListResponse;
+            //todo NT - servislere verilen parametreler düzenlenecek...
+            PostListResponse postListResponse = instance.client.postsGeolocationPost(token, baseRequest, longitude,latitude,radius, "", "");
+
+            if(postListResponse.getError().getCode().intValue() == RESPONSE_OK){
+                return postListResponse;
+            }else{
+                return null;
+            }
+
         } catch (Exception e) {
             mException = e;
             e.printStackTrace();

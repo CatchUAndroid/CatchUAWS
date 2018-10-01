@@ -32,6 +32,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -240,7 +241,18 @@ public class OtherProfileFragment extends BaseFragment
 
     }
 
-    private void getProfileDetail(String userID) {
+    private void getProfileDetail(final String userID) {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetProfileDetail(userID, token);
+            }
+        });
+
+    }
+
+    private void startGetProfileDetail(final String userID, String token) {
 
         Log.i("gidilen UserId", userID);
 
@@ -265,11 +277,12 @@ public class OtherProfileFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, userID);
+        }, userID, token);
 
         loadUserDetail.execute();
 
     }
+
 
     @Override
     public void onClick(View v) {
@@ -315,6 +328,17 @@ public class OtherProfileFragment extends BaseFragment
 
     private void updateFollowStatus(final String requestType) {
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startUpdateFollowStatus(requestType, token);
+            }
+        });
+
+    }
+
+    private void startUpdateFollowStatus(final String requestType, String token) {
+
         FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
             @Override
             public void onSuccess(FriendRequestList object) {
@@ -332,7 +356,8 @@ public class OtherProfileFragment extends BaseFragment
             }
         }, requestType
                 , AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                , selectedProfile.getUserid());
+                , selectedProfile.getUserid()
+                , token);
 
         friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

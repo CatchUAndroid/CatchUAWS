@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
@@ -192,10 +193,22 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
         public void exitFromGroup() {
 
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startExitFromGroupProcess(token);
+                }
+            });
+
+        }
+
+        private void startExitFromGroupProcess(String token) {
+
             final GroupRequest groupRequest = new GroupRequest();
             groupRequest.setRequestType(EXIT_GROUP);
             groupRequest.setUserid(AccountHolderInfo.getUserID());
             groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
+
 
             GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
                 @Override
@@ -215,9 +228,10 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 public void onTaskContinue() {
 
                 }
-            }, groupRequest);
+            }, groupRequest, token);
 
             groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {

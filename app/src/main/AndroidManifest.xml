@@ -92,8 +92,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".UgurDeneme.DragDropExample" />
-        <activity android:name=".SharePackage.GalleryPicker.DriveContent.RetreiveContent" />
+        <activity android:name=".LoginPackage.LoginActivity"></activity>
+        <activity android:name=".LoginPackage.RegisterActivity" />
+        <activity android:name=".LoginPackage.ForgetPasswordActivity" />
     </application>
 
 </manifest>

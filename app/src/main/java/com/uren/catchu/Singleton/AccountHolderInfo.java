@@ -2,20 +2,18 @@ package com.uren.catchu.Singleton;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.config.AWSConfiguration;
-import com.amazonaws.regions.Regions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
-
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 
 import catchu.model.UserProfile;
 
@@ -23,9 +21,15 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    private static String awsUserId;
     private static OnEventListener<AccountHolderInfo> mCallBack;
     private static Context context;
+    private static String token;
+
+
+
+    //Firebase
+    private static FirebaseAuth firebaseAuth;
+    private static String FBuserId;
 
     public static AccountHolderInfo getInstance() {
 
@@ -36,8 +40,9 @@ public class AccountHolderInfo {
     }
 
     public AccountHolderInfo() {
+        firebaseAuth = FirebaseAuth.getInstance();
         userProfile = new UserProfile();
-        getProfileDetail(getUserIdFromCognito());
+        getProfileDetail(getUserIdFromFirebase());
     }
 
     public static void setInstance(AccountHolderInfo instance, Context context) {
@@ -51,74 +56,82 @@ public class AccountHolderInfo {
 
     public static String getUserID() {
 
-        if(awsUserId != null) {
-            if (!awsUserId.isEmpty())
-                return awsUserId;
-        }
-
-        if(accountHolderInfoInstance == null){
-            accountHolderInfoInstance = new AccountHolderInfo();
-            return accountHolderInfoInstance.userProfile.getUserInfo().getUserid();
-        }
-
-        if(!accountHolderInfoInstance.userProfile.getUserInfo().getUserid().isEmpty())
-            return accountHolderInfoInstance.userProfile.getUserInfo().getUserid();
-        else
-            return getUserIdFromCognito();
+        return getUserIdFromFirebase();
     }
 
-    public static String getUserIdFromCognito() {
+    private void getProfileDetail(final String userid) {
 
-        AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
-
-        JSONObject CognitoIdentity = configuration
-                .optJsonObject("CredentialsProvider")
-                .optJSONObject("CognitoIdentity")
-                .optJSONObject("Default");
-
-        String poolId = CognitoIdentity.opt("PoolId").toString();
-        String region = CognitoIdentity.opt("Region").toString();
-
-        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
-                context, // Context
-                poolId, // Identity Pool ID
-                Regions.US_EAST_1 // Region
-        );
-
-        Log.i("userId ", credentialsProvider.getIdentityId());
-
-        //20.9.2018 - userid ':' karakteri '-' ile replace edilecek dedik.
-        String editedUserId = credentialsProvider.getIdentityId().replaceFirst(":", "-");
-        Log.i("editedUserId ", editedUserId);
-
-        awsUserId = editedUserId;
-        return awsUserId;
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetProfileDetail(userid, token);
+            }
+        });
 
     }
 
-    private void getProfileDetail(String userid) {
+    private void startGetProfileDetail(final String userid, String token) {
 
         UserDetail loadUserDetail = new UserDetail(context, new OnEventListener<UserProfile>() {
 
             @Override
-            public void onSuccess(UserProfile u) {
-                userProfile = u;
-                Log.i("first UserDetailProcess", "succesful");
+            public void onSuccess(UserProfile up) {
+
+                if(up.getUserInfo() == null){
+                    CommonUtils.LOG_OK_BUT_NULL("UserDetailProcess");
+                }else{
+                    userProfile = up;
+                    Log.i("UserDetailProcess", "OK");
+                    CommonUtils.LOG_OK("UserDetailProcess");
+
+                }
+
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.i("first UserDetailProcess", "fail");
+                CommonUtils.LOG_FAIL("UserDetailProcess", e.toString());
             }
 
             @Override
             public void onTaskContinue() {
 
             }
-        }, userid);
+        }, userid, token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
+
+    public static String getUserIdFromFirebase() {
+
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        FBuserId = currentUser.getUid();
+        return FBuserId;
+
+    }
+
+    public static FirebaseAuth getFirebaseAuth() {
+        return firebaseAuth;
+    }
+
+    public static void getToken(final TokenCallback tokenCallback) {
+
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
+        tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+            @Override
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful()) {
+                    tokenCallback.onTokenTaken(task.getResult().getToken());
+                } else {
+                    Log.i("info", "Token task operation fail");
+                }
+            }
+        });
+
+    }
+
 
 }
 

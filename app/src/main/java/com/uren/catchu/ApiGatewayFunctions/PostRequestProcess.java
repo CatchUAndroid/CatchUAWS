@@ -12,10 +12,12 @@ public class PostRequestProcess extends AsyncTask<Void, Void, PostResponse> {
     private OnEventListener<PostResponse> mCallBack;
     public Exception mException;
     public PostRequest postRequest;
+    private String token;
 
-    public PostRequestProcess(OnEventListener callback, PostRequest postRequest) {
+    public PostRequestProcess(OnEventListener callback, PostRequest postRequest, String token) {
         this.postRequest = postRequest;
         this.mCallBack = callback;
+        this.token = token;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class PostRequestProcess extends AsyncTask<Void, Void, PostResponse> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            PostResponse postResponse = (PostResponse) instance.client.postsPostidPost(" ", postRequest);
+            PostResponse postResponse = (PostResponse) instance.client.postsPostidPost(" ", token, postRequest);
             return postResponse;
 
         } catch (Exception e) {

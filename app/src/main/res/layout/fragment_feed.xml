@@ -42,13 +42,13 @@
 
         </android.support.v7.widget.Toolbar>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/feed_recyclerView"
+        <com.uren.catchu.VideoPlay.CustomRecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="10dp"
+            android:id="@+id/rv_feed">
 
-        </android.support.v7.widget.RecyclerView>
+        </com.uren.catchu.VideoPlay.CustomRecyclerView>
 
     </LinearLayout>
 

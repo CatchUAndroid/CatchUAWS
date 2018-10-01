@@ -2,13 +2,22 @@ package com.uren.catchu.Singleton;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.R;
+
+import java.util.Date;
+import java.util.concurrent.Executor;
 
 import catchu.model.FriendList;
 import catchu.model.FriendRequestList;
@@ -46,24 +55,39 @@ public class UserFriends {
 
     private void getFriends() {
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetFriends(token);
+            }
+        });
+
+    }
+
+    private void startGetFriends(String token) {
+
         FriendListRequestProcess friendListRequestProcess = new FriendListRequestProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 friendList = (FriendList) object;
-                Log.i("Info", "dd");
+                Log.i("**FriendListRequestProc", "OK");
             }
 
             @Override
             public void onFailure(Exception e) {
-
+                Log.i("**FriendListRequestProc", "FAIL - "+ e.toString());
             }
 
             @Override
             public void onTaskContinue() {
 
             }
-        }, userid);
+        }, userid, token);
 
         friendListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
+
+
+
 }

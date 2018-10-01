@@ -77,4 +77,9 @@ public class StringConstants {
     // Upload media types
     public static final String VIDEO_TYPE = "video";
     public static final String IMAGE_TYPE = "image";
+
+    //Image load types for feed viewPager
+    public static final String VIEWPAGER_VIDEO = "VIEWPAGER_VIDEO";
+    public static final String VIEWPAGER_IMAGE = "VIEWPAGER_IMAGE";
+
 }

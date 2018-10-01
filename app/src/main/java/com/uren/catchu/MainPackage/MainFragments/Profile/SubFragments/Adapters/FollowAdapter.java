@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
@@ -188,6 +189,17 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
         private void updateFollowStatus(final String requestType) {
 
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startUpdateFollowStatus(requestType, token);
+                }
+            });
+
+        }
+
+        private void startUpdateFollowStatus(final String requestType, String token) {
+
             FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
                 @Override
                 public void onSuccess(FriendRequestList object) {
@@ -205,9 +217,11 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 }
             }, requestType
                     , AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                    , followListItem.getUserid());
+                    , followListItem.getUserid()
+                    , token);
 
             friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
 
         private void updateFollowUI(String updateType) {

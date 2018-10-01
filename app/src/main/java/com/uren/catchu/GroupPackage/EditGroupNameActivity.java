@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
@@ -142,6 +143,17 @@ public class EditGroupNameActivity extends AppCompatActivity {
 
     public void changeGroupName(){
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startChangeGroupName(token);
+            }
+        });
+
+    }
+
+    private void startChangeGroupName(String token) {
+
         final GroupRequest groupRequest = new GroupRequest();
 
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
@@ -173,9 +185,10 @@ public class EditGroupNameActivity extends AppCompatActivity {
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void hideKeyBoard() {

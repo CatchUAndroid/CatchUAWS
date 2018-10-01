@@ -19,11 +19,13 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
     private Context mContext;
     public Exception mException;
     public FollowInfo followInfo;
+    private String token;
 
-    public FollowInfoProcess(Context context, OnEventListener callback, FollowInfo followInfo) {
+    public FollowInfoProcess(Context context, OnEventListener callback, FollowInfo followInfo, String token) {
         mCallBack = callback;
         mContext = context;
         this.followInfo = followInfo;
+        this.token = token;
     }
 
 
@@ -34,15 +36,11 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
 
         try {
 
-            FollowInfo rsp = instance.client.usersFollowPost(followInfo);
-
+            FollowInfo rsp = instance.client.usersFollowPost(token, followInfo);
 
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
-                Log.i("-> update response ", "successful");
                 return rsp;
-
             }else{
-                Log.i("-> update response ", "fail");
                 return null;
             }
 

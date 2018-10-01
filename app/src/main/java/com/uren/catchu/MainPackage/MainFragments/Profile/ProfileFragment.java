@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -40,6 +41,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
@@ -191,62 +193,83 @@ public class ProfileFragment extends BaseFragment
 
     private void setProfileDetail(UserProfile user) {
 
-        toolbarTitle.setText(user.getUserInfo().getName());
+        if (user.getUserInfo() != null) {
 
-        CommonUtils.showToast(getActivity(), "Hoş geldin " + user.getUserInfo().getName() + "!!");
+            Log.i("->UserInfo", user.getUserInfo().toString());
 
-        Log.i("name ", user.getUserInfo().getName());
-        Log.i("username ", user.getUserInfo().getUsername());
-        Log.i("userId ", user.getUserInfo().getUserid());
-        Log.i("isPrivateAcc ", user.getUserInfo().getIsPrivateAccount().toString());
-        Log.i("profilePicUrl ", user.getUserInfo().getProfilePhotoUrl());
+            if(user.getUserInfo().getName() != null){
+                toolbarTitle.setText(user.getUserInfo().getName());
+                CommonUtils.showToast(getActivity(), "Hoş geldin " + user.getUserInfo().getName() + "!!");
+            }
 
+            if(user.getUserInfo().getProfilePhotoUrl() != null){
+                Glide.with(getActivity())
+                        .load(user.getUserInfo().getProfilePhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imgProfile);
+            }
 
-        Glide.with(getActivity())
-                .load(user.getUserInfo().getProfilePhotoUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .into(imgProfile);
+            if(user.getUserInfo().getUsername() != null){
+                txtUserName.setText(user.getUserInfo().getUsername());
+            }
 
-        txtUserName.setText(user.getUserInfo().getUsername());
-        txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
-        txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + "following");
+        }
+
+        if(user.getRelationCountInfo() != null ){
+            Log.i("->UserRelationCountInfo", user.getRelationCountInfo().toString());
+            txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
+            txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + "following");
+        }
+
 
     }
 
 
-    private void getProfileDetail(String userID) {
-
-        Log.i("gidilen UserId", userID);
+    private void getProfileDetail(final String userID) {
 
         if (myProfile == null) {
 
-            //Asenkron Task başlatır.
-            UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
-
+            AccountHolderInfo.getToken(new TokenCallback() {
                 @Override
-                public void onSuccess(UserProfile up) {
-                    Log.i("userDetail", "successful");
-                    progressBar.setVisibility(View.GONE);
-                    myProfile = up;
-                    setProfileDetail(up);
+                public void onTokenTaken(String token) {
+                    startGetProfileDetail(userID, token);
                 }
-
-                @Override
-                public void onFailure(Exception e) {
-                    progressBar.setVisibility(View.GONE);
-                }
-
-                @Override
-                public void onTaskContinue() {
-                    progressBar.setVisibility(View.VISIBLE);
-                }
-            }, AccountHolderInfo.getUserID());
-
-            loadUserDetail.execute();
+            });
 
         } else {
             setProfileDetail(myProfile);
         }
+
+    }
+
+    private void startGetProfileDetail(final String userID, String token) {
+
+        Log.i("gidilen UserId", userID);
+
+        //Asenkron Task başlatır.
+        UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
+
+            @Override
+            public void onSuccess(UserProfile up) {
+                Log.i("userDetail", "successful");
+                progressBar.setVisibility(View.GONE);
+                myProfile = up;
+                setProfileDetail(up);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onTaskContinue() {
+                progressBar.setVisibility(View.VISIBLE);
+            }
+        }, AccountHolderInfo.getUserID(), token);
+
+        loadUserDetail.execute();
+
 
     }
 

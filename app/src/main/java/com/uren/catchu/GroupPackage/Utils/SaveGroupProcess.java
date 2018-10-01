@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -43,7 +44,7 @@ public class SaveGroupProcess {
     String groupName;
     SaveGroupCallback saveGroupCallback;
 
-    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, SaveGroupCallback saveGroupCallback){
+    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, SaveGroupCallback saveGroupCallback) {
         this.context = context;
         this.photoSelectUtil = photoSelectUtil;
         this.groupName = groupName;
@@ -52,7 +53,7 @@ public class SaveGroupProcess {
         mProgressDialog.setMessage(context.getResources().getString(R.string.groupIsCreating));
         dialogShow();
 
-        if(photoSelectUtil.getMediaUri() != null)
+        if (photoSelectUtil.getMediaUri() != null)
             saveGroupImageToS3();
         else
             processSaveGroup(" ");
@@ -67,6 +68,17 @@ public class SaveGroupProcess {
     }
 
     public void saveGroupImageToS3() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startSaveGroupImageToS3(token);
+            }
+        });
+
+    }
+
+    private void startSaveGroupImageToS3(String token) {
 
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -119,9 +131,10 @@ public class SaveGroupProcess {
             public void onTaskContinue() {
 
             }
-        }, 1, 0);
+        }, 1, 0, token);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void processSaveGroup(String downloadUrl) {
@@ -153,6 +166,19 @@ public class SaveGroupProcess {
     }
 
     public void saveGroupToNeoJ() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startSaveGroupToNeoJ(token);
+            }
+        });
+
+
+    }
+
+    private void startSaveGroupToNeoJ(String token) {
+
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -171,9 +197,10 @@ public class SaveGroupProcess {
             @Override
             public void onTaskContinue() {
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void addGroupToUsersGroup(GroupRequestResult groupRequestResult) {

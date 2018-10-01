@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
@@ -18,6 +19,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 import com.uren.catchu.Singleton.UserFriends;
@@ -84,6 +86,18 @@ public class SharePostProcess {
     }
 
     private void uploadMediasToS3() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startUploadMediaToS3(token);
+            }
+        });
+
+    }
+
+    private void startUploadMediaToS3(String token) {
+
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -122,7 +136,7 @@ public class SharePostProcess {
             public void onTaskContinue() {
 
             }
-        }, imageCount, videoCount);
+        }, imageCount, videoCount, token);
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
@@ -202,6 +216,18 @@ public class SharePostProcess {
     }
 
     private void saveShareItemsToNeoJ() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startsaveShareItemsToNeoJ(token);
+            }
+        });
+
+    }
+
+    private void startsaveShareItemsToNeoJ(String token) {
+
         postRequest = new PostRequest();
         ShareItems.getInstance().getPost().setPrivacyType(getPostPrivacyType());
         ShareItems.getInstance().getPost().setAllowList(getParticipantList());
@@ -226,8 +252,9 @@ public class SharePostProcess {
             public void onTaskContinue() {
 
             }
-        }, postRequest);
+        }, postRequest, token);
         postRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     private List<User> getParticipantList() {

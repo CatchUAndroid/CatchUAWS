@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,10 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
@@ -28,6 +33,8 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserFriends;
 import com.uren.catchu.Singleton.UserGroups;
+
+import java.util.Date;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -113,15 +120,28 @@ public class NextActivity extends AppCompatActivity implements
         });
 
         fillSingletonClasses();
+
     }
 
     public void fillSingletonClasses() {
+
+        getUserInfo();
+        getFriendList();
+        getGroupList();
+
+    }
+
+    private void getUserInfo() {
         AccountHolderInfo.setInstance(null, getApplicationContext());
         AccountHolderInfo.getInstance();
+    }
 
+    private void getFriendList() {
         UserFriends.setInstance(null);
         UserFriends.getInstance(AccountHolderInfo.getUserID());
+    }
 
+    private void getGroupList() {
         UserGroups.setInstance(null);
         UserGroups.getInstance(AccountHolderInfo.getUserID());
     }
