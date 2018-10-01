@@ -19,8 +19,10 @@ import android.widget.Toast;
 
 import com.uren.catchu.Adapters.UserDetailAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,7 +85,18 @@ public class PersonFragment extends Fragment {
         super.onStart();
     }
 
-    public void getSearchResult(String userid, String searchText){
+    public void getSearchResult(final String userid, final String searchText){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetProfileDetail(userid, searchText, token);
+            }
+        });
+
+    }
+
+    private void startGetProfileDetail(String userid, String searchText, String token) {
 
         SearchResultProcess searchResultProcess = new SearchResultProcess(context, new OnEventListener<SearchResult>() {
 
@@ -104,9 +117,11 @@ public class PersonFragment extends Fragment {
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, userid, searchText);
+        }, userid, searchText, token);
 
         searchResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
     }
 
     public void getData(){

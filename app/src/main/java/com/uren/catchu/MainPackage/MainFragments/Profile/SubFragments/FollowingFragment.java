@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -109,6 +110,17 @@ public class FollowingFragment extends BaseFragment
 
     private void getFollowingList() {
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetFollowingList(token);
+            }
+        });
+
+    }
+
+    private void startGetFollowingList(String token) {
+
         followInfo.setRequestType(GET_USER_FOLLOWINGS);
         followInfo.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
 
@@ -133,10 +145,9 @@ public class FollowingFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, followInfo);
+        }, followInfo, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
 
     }
 

@@ -1,21 +1,20 @@
 package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 
-import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 
-import java.util.List;
-
-import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
-import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.GET_AUTHENTICATED_USER_GROUP_LIST;
 
@@ -116,6 +115,17 @@ public class UserGroups {
 
     private void getGroupResult() {
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetGroupResult(token);
+            }
+        });
+
+    }
+
+    private void startGetGroupResult(String token) {
+
         final GroupRequest groupRequest = new GroupRequest();
         groupRequest.setUserid(userid);
         groupRequest.setRequestType(GET_AUTHENTICATED_USER_GROUP_LIST);
@@ -124,21 +134,22 @@ public class UserGroups {
 
             @Override
             public void onSuccess(GroupRequestResult object) {
-                Log.i("Info", "GroupResultProcess on success");
+                Log.i("**GroupResultProcess ", "OK");
                 groupRequestResult = (GroupRequestResult)object;
             }
 
             @Override
             public void onFailure(Exception e) {
-
+                Log.i("**GroupResultProcess ", "FAIL - "+ e.toString());
             }
 
             @Override
             public void onTaskContinue() {
 
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 }

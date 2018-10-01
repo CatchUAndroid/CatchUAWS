@@ -15,12 +15,18 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class CommonUtils {
+
+    public static String serverPrefix = "**";
+    public static String infoPrefix = "++";
+    public static String neredeyiz = "NEREDEYIZ";
+
 
     public static final void showToast(Context context, String message) {
 
@@ -194,5 +200,34 @@ public class CommonUtils {
             return false;
         }
     }
+
+    public static void LOG_OK(String proccessName){
+        if(proccessName.length()> 21){
+            proccessName = proccessName.substring(0, 21);
+        }
+        Log.i(serverPrefix + proccessName, "OK" );
+    }
+
+    public static void LOG_OK_BUT_NULL(String proccessName){
+        if(proccessName.length()> 21){
+            proccessName = proccessName.substring(0, 21);
+        }
+        Log.i(serverPrefix + proccessName, "SERVER:OK BUT DATA:NULL" );
+    }
+
+    public static void LOG_FAIL(String proccessName, String failDetail){
+        if(proccessName.length()> 21){
+            proccessName = proccessName.substring(0, 21);
+        }
+        Log.i(serverPrefix + proccessName, "FAIL - " + failDetail );
+    }
+
+    public static void LOG_NEREDEYIZ(String konum){
+        if(konum.length()> 21){
+            konum = konum.substring(0, 21);
+        }
+        Log.i(infoPrefix + neredeyiz, konum);
+    }
+
 
 }

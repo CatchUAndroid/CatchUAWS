@@ -21,11 +21,13 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
     private Context mContext;
     public Exception mException;
     public UserProfile userProfile;
+    private String token;
 
-    public UpdateUserProfile(Context context, OnEventListener callback, UserProfile userProfile) {
+    public UpdateUserProfile(Context context, OnEventListener callback, UserProfile userProfile, String token) {
         mCallBack = callback;
         mContext = context;
         this.userProfile = userProfile;
+        this.token = token;
     }
 
 
@@ -36,14 +38,12 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
 
         try {
 
-            BaseResponse rsp = instance.client.usersPost(userProfile);
+            BaseResponse rsp = instance.client.usersPost(token, userProfile);
 
 
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
-                Log.i("-> update response ", "successful");
                 return userProfile;
             }else{
-                Log.i("-> update response ", "fail");
                 return null;
             }
 

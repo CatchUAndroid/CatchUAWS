@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -163,6 +164,17 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     public void getGroupParticipants() {
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetGroupParticipants(token);
+            }
+        });
+
+    }
+
+    private void startGetGroupParticipants(String token) {
+
         GroupRequest groupRequest = new GroupRequest();
         groupRequest.setGroupid(this.groupId);
         groupRequest.setRequestType(GET_GROUP_PARTICIPANT_LIST);
@@ -187,9 +199,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void setParticipantCount() {
@@ -311,7 +324,18 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         alert.show();
     }
 
-    public void exitFromGroup(String userid) {
+    public void exitFromGroup(final String userid) {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startExitFromGroup(userid, token);
+            }
+        });
+
+    }
+
+    private void startExitFromGroup(String userid, String token) {
 
         final GroupRequest groupRequest = new GroupRequest();
         groupRequest.setRequestType(EXIT_GROUP);
@@ -337,9 +361,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             public void onTaskContinue() {
 
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     private void startChooseImageProc() {
@@ -447,6 +472,18 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         mProgressDialog.setMessage(getResources().getString(R.string.groupPhotoChanging));
         dialogShow();
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startUpdateGroup(token);
+            }
+        });
+
+
+    }
+
+    private void startUpdateGroup(String token) {
+
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -498,9 +535,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             public void onTaskContinue() {
 
             }
-        }, 1, 0);
+        }, 1, 0, token);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void dialogShow() {
@@ -512,6 +550,19 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     }
 
     public void updateGroupToNeoJ(final String photoNewUrl) {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startUpdateGroupToNeoJ(photoNewUrl, token);
+            }
+        });
+
+
+
+    }
+
+    private void startUpdateGroupToNeoJ(final String photoNewUrl, String token) {
 
         final GroupRequest groupRequest = new GroupRequest();
 
@@ -543,9 +594,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             public void onTaskContinue() {
 
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     @Override

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
@@ -67,8 +68,8 @@ public class FeedFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
 
             init();
-            //getPosts();
-            setUpRecyclerView(null);
+            getPosts();
+
         }
 
         return mView;
@@ -82,21 +83,36 @@ public class FeedFragment extends BaseFragment {
 
     private void getPosts() {
 
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetPosts(token);
+            }
+        });
+
+    }
+
+    private void startGetPosts(String token) {
+
         BaseRequest baseRequest = getBaseRequest();
         setLocationInfo();
 
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(PostListResponse postListResponse) {
-                Log.i("-> PostListProcess", "successful");
+
+                if(postListResponse == null){
+                    Log.i("**PostListResponseProce", "SERVER:OK BUT DATA:NULL");
+                }else{
+                    Log.i("**PostListResponseProce", "OK");
+                    setUpRecyclerView(postListResponse);
+                }
                 progressBar.setVisibility(View.GONE);
-                setUpRecyclerView(postListResponse);
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.i("-> PostListProcess", "fail");
-                Log.e("error", e.toString());
+                Log.i("**PostListResponseProce", "FAIL - " + e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -104,7 +120,7 @@ public class FeedFragment extends BaseFragment {
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, baseRequest, longitude, latitude, radius);
+        }, baseRequest, longitude, latitude, radius, token);
 
         postListResponseProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

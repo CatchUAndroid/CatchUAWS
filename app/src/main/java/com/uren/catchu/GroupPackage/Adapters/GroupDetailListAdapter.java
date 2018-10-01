@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
@@ -203,7 +204,19 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             imageLoader.DisplayImage(userProfile.getProfilePhotoUrl(), specialProfileImgView, displayRounded);
         }
 
-        public void exitFromGroup(String userid, final int position){
+        public void exitFromGroup(final String userid, final int position){
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startExitFromGroupProcess(userid, token);
+                }
+            });
+
+
+        }
+
+        private void startExitFromGroupProcess(String userid, String token) {
 
             final GroupRequest groupRequest = new GroupRequest();
             groupRequest.setRequestType(EXIT_GROUP);
@@ -231,12 +244,25 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 public void onTaskContinue() {
 
                 }
-            }, groupRequest);
+            }, groupRequest, token);
 
             groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
 
         public void changeAdministrator(final String userid){
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startChangeAdministrator(userid, token);
+                }
+            });
+
+        }
+
+        private void startChangeAdministrator(final String userid, String token) {
+
             final GroupRequest groupRequest = new GroupRequest();
 
             List<GroupRequestGroupParticipantArrayItem> list = new ArrayList<GroupRequestGroupParticipantArrayItem>();
@@ -248,6 +274,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             groupRequest.setUserid(AccountHolderInfo.getUserID());
             groupRequest.setGroupParticipantArray(list);
             groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
+
 
             GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
                 @Override
@@ -270,9 +297,10 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 public void onTaskContinue() {
 
                 }
-            }, groupRequest);
+            }, groupRequest, token);
 
             groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
     }
 

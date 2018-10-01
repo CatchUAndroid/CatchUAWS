@@ -1,81 +1,141 @@
 package com.uren.catchu;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.amazonaws.auth.AWSCredentialsProvider;
-import com.amazonaws.mobile.auth.core.IdentityHandler;
-import com.amazonaws.mobile.auth.core.IdentityManager;
-import com.amazonaws.mobile.auth.ui.SignInUI;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.AWSStartupHandler;
-import com.amazonaws.mobile.client.AWSStartupResult;
-import com.amazonaws.mobile.config.AWSConfiguration;
+import com.facebook.FacebookSdk;
+import com.google.firebase.auth.FirebaseAuth;
+import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterConfig;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.LoginPackage.LoginActivity;
+import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.NextActivity;
+import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import catchu.model.BaseRequest;
+import catchu.model.BaseResponse;
+import catchu.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AWSCredentialsProvider credentialsProvider;
-    private AWSConfiguration configuration;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        decideNextActivity();
+        CommonUtils.LOG_NEREDEYIZ("MainActivity");
+
+        initFacebookLogin();
+        initTwitterLogin();
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        if (firebaseAuth.getCurrentUser() == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        } else {
+            //checkUser();
+            startActivity(new Intent(this, NextActivity.class));
+            finish();
+        }
 
     }
 
-    private void decideNextActivity() {
+    private void initFacebookLogin() {
+        FacebookSdk.sdkInitialize(getApplicationContext());
+    }
 
+    private void initTwitterLogin() {
 
-        // Add a call to initialize AWSMobileClient
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(
+                getString(R.string.twitter_consumer_key),
+                getString(R.string.twitter_consumer_secret));
+
+        TwitterConfig twitterConfig = new TwitterConfig.Builder(this)
+                .twitterAuthConfig(authConfig)
+                .build();
+
+        Twitter.initialize(twitterConfig);
+
+    }
+
+    private void checkUser() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
             @Override
-            public void onComplete(AWSStartupResult awsStartupResult) {
-
-                Log.d("--->> INFO ", "AWSMobileClient is instantiated and you are connected to AWS!");
-
-                SignInUI signin = (SignInUI) AWSMobileClient.getInstance().getClient(MainActivity.this, SignInUI.class);
-                signin.login(MainActivity.this, NextActivity.class).execute();
+            public void onTokenTaken(String token) {
+                startCheckUser(token);
             }
-        }).execute();
+        });
+
+    }
+
+    private void startCheckUser(String token) {
+
+        CommonUtils.LOG_NEREDEYIZ("startCheckUser()");
+
+        User user = new User();
+        Bundle extras = getIntent().getExtras();
+
+        if (extras != null) {
+            LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
+            user.setUserid(loginUser.getUserId());
+            user.setUsername(loginUser.getUsername());
+            user.setEmail(loginUser.getEmail());
+        }else{
+            user.setUserid(firebaseAuth.getCurrentUser().getUid());
+            user.setEmail(firebaseAuth.getCurrentUser().getEmail());
+            user.setUsername("not_important_here");
+        }
 
 
-        /*
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
+
+
+
+
+
+        user.setUserid(user.getUserid());
+        user.setEmail(user.getEmail());
+        user.setUsername(user.getUsername());
+
+        Log.i("userId", user.getUserid());
+
+        BaseRequest baseRequest = new BaseRequest();
+        baseRequest.setUser(user);
+
+        LoginProcess loginProcess = new LoginProcess(this, new OnEventListener<BaseResponse>() {
+
             @Override
-            public void onComplete(AWSStartupResult awsStartupResult) {
+            public void onSuccess(BaseResponse baseResponse) {
 
-                // Obtain the reference to the AWSCredentialsProvider and AWSConfiguration objects
-                credentialsProvider = AWSMobileClient.getInstance().getCredentialsProvider();
-                configuration = AWSMobileClient.getInstance().getConfiguration();
-
-                // Use IdentityManager#getUserID to fetch the identity id.
-                IdentityManager.getDefaultIdentityManager().getUserID(new IdentityHandler() {
-                    @Override
-                    public void onIdentityId(String identityId) {
-                        Log.d("YourMainActivity", "Identity ID = " + identityId);
-
-                        // Use IdentityManager#getCachedUserID to
-                        //  fetch the locally cached identity id.
-                        final String cachedIdentityId =
-                                IdentityManager.getDefaultIdentityManager().getCachedUserID();
-                    }
-
-                    @Override
-                    public void handleError(Exception exception) {
-                        Log.d("YourMainActivity", "Error in retrieving the identity" + exception);
-                    }
-                });
+                if(baseResponse == null){
+                    CommonUtils.LOG_OK_BUT_NULL("LoginProcess");
+                }else{
+                    CommonUtils.LOG_OK("LoginProcess");
+                }
             }
-        }).execute();
 
-        // .. more code
-        */
+            @Override
+            public void onFailure(Exception e) {
+                CommonUtils.LOG_FAIL("LoginProcess", e.toString());
+            }
 
+            @Override
+            public void onTaskContinue() {
+
+            }
+        }, baseRequest, token);
+
+        loginProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
 

@@ -29,6 +29,7 @@ import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
@@ -250,12 +251,24 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     }
 
     private void addParticipantToGroup() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startAddParticipantToGroup(token);
+            }
+        });
+
+    }
+
+    private void startAddParticipantToGroup(String token) {
+
         GroupRequest groupRequest = new GroupRequest();
         groupRequest.setGroupid(groupId);
         groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
         groupRequest.setGroupParticipantArray(fillSelectedFriendList());
 
-        // TODO: 30.08.2018 - ProgressDialog yada progressbar ekleyelim... 
+        // TODO: 30.08.2018 - ProgressDialog yada progressbar ekleyelim...
         //mProgressDialog = new ProgressDialog(this);
         //mProgressDialog.setMessage(getResources().getString(R.string.friendsAdding));
         //mProgressDialog.show();
@@ -280,9 +293,10 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
             public void onTaskContinue() {
 
             }
-        }, groupRequest);
+        }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public List<GroupRequestGroupParticipantArrayItem> fillSelectedFriendList() {

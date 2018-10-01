@@ -16,13 +16,13 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="true"
-        android:largeHeap="true">
+        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,8 +79,8 @@
 
         <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
         <activity android:name=".SharePackage.ShareDetailActivity" />
-        <activity android:name=".SharePackage.SelectGroupActivity"></activity>
-        <activity android:name=".SharePackage.VideoPicker.WillDelete.Camera2Activity"></activity>
+        <activity android:name=".SharePackage.SelectGroupActivity" />
+        <activity android:name=".SharePackage.VideoPicker.WillDelete.Camera2Activity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -92,7 +92,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-
+        <activity android:name=".LoginPackage.LoginActivity"></activity>
+        <activity android:name=".LoginPackage.RegisterActivity" />
+        <activity android:name=".LoginPackage.ForgetPasswordActivity" />
     </application>
 
 </manifest>

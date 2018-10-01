@@ -4,7 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
@@ -14,10 +16,12 @@ public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult
     private OnEventListener<GroupRequestResult> mCallBack;
     public Exception mException;
     public GroupRequest groupRequest;
+    private String token;
 
-    public GroupResultProcess(OnEventListener callback, GroupRequest groupRequest) {
+    public GroupResultProcess(OnEventListener callback, GroupRequest groupRequest, String token) {
         this.mCallBack = callback;
         this.groupRequest = groupRequest;
+        this.token = token;
     }
 
     @Override
@@ -26,7 +30,8 @@ public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            GroupRequestResult groupRequestResult = instance.client.groupsPost(groupRequest);
+
+            GroupRequestResult groupRequestResult = instance.client.groupsPost(token, groupRequest);
             return groupRequestResult;
 
         } catch (Exception e) {

@@ -13,10 +13,10 @@ import android.widget.ProgressBar;
 
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWERS;
@@ -109,22 +108,40 @@ public class FollowerFragment extends BaseFragment
 
     private void getFollowerList() {
 
-
         followInfo.setRequestType(GET_USER_FOLLOWERS);
         followInfo.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+
+            @Override
+            public void onTokenTaken(String token) {
+                startFollowInfoProcess(token);
+            }
+
+        });
+
+
+    }
+
+    private void startFollowInfoProcess(String token) {
 
         FollowInfoProcess followInfoProcess = new FollowInfoProcess(getActivity(), new OnEventListener<FollowInfo>() {
             @Override
             public void onSuccess(FollowInfo resp) {
 
-                Log.i("count ", String.valueOf(resp.getResultArray().size()));
+                if(resp == null){
+                    Log.i("-> getFollowerList ", "FAIL");
+                }else{
+                    Log.i("-> getFollowerList ", "OK");
+                    setUpRecyclerView(resp);
+                }
 
-                setUpRecyclerView(resp);
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Exception e) {
+                Log.i("-> getFollowerList ", "FAIL");
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -132,7 +149,7 @@ public class FollowerFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, followInfo);
+        }, followInfo, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

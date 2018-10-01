@@ -1,9 +1,11 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
+import android.accounts.Account;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +14,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
+import com.facebook.login.LoginManager;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GetTokenResult;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -81,8 +90,19 @@ public class SettingsFragment extends Fragment
 
     private void signOutClicked() {
 
-        //AWS sign-out
-        IdentityManager.getDefaultIdentityManager().signOut();
+        //Normal users
+        FirebaseAuth firebaseAuth = AccountHolderInfo.getFirebaseAuth();
+        firebaseAuth.signOut();
+
+        //Facebook users
+        if(LoginManager.getInstance()!=null){
+            LoginManager.getInstance().logOut();
+        }
+
+        //Twitter users
+        if(TwitterCore.getInstance()!=null){
+            TwitterCore.getInstance().getSessionManager().clearActiveSession();
+        }
 
         getActivity().finish();
         startActivity(new Intent(getActivity(), MainActivity.class));

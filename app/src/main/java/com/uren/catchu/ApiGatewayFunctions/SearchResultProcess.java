@@ -17,12 +17,14 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
     public Exception mException;
     public String userid;
     public String searchText;
+    private String token;
 
-    public SearchResultProcess(Context context, OnEventListener callback, String userid, String searchText) {
+    public SearchResultProcess(Context context, OnEventListener callback, String userid, String searchText, String token) {
         this.mCallBack = callback;
         this.mContext = context;
         this.userid = userid;
         this.searchText = searchText;
+        this.token = token;
     }
 
     @Override
@@ -31,7 +33,7 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            SearchResult searchResult = instance.client.searchGet(userid, searchText);
+            SearchResult searchResult = instance.client.searchGet(userid, token, searchText);
             return searchResult;
 
         } catch (Exception e) {

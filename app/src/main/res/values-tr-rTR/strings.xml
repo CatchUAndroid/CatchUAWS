@@ -106,4 +106,35 @@
     <string name="feed">Paylaşımlar</string>
 
 
+    <!-- LoginActivity Constants-->
+    // Uygulama alanlari
+    <string name="username">Kullanıcı Adı</string>
+    <string name="email">Email</string>
+    <string name="password">Şifre</string>
+    <string name="login">Giriş</string>
+    <string name="createAccount">Kaydol</string>
+    <string name="forgetPassword">Şifremi unuttum?</string>
+    <string name="register">Kaydol</string>
+    <string name="newPassword">Şifre Sıfırlama</string>
+    <string name="sendLink">Link Gönder</string>
+    <string name="forgetPassText">Mail adresinize göndereceğimiz link ile şifrenizi sıfırlayabilirsiniz.</string>
+    <string name="rememberMe">Beni Hatırla</string>
+
+    // Mesajlar-Uyarılar
+    <string name="UNKNOWN_ERROR">İşlem tamamlanamadı!</string>
+    <string name="EMAIL_ERR_REQUIRED">Email boş olamaz!</string>
+    <string name="EMAIL_ERR_INVALID">Geçerli bir email adresi giriniz</string>
+    <string name="PASSWORD_ERR_REQUIRED">Şifre boş olamaz!</string>
+    <string name="PASSWORD_ERR_LENGTH">Şifre en az 6 karakter olmalıdır!</string>
+    <string name="USERNAME_ERR_REQUIRED">Kullanıcı adı boş olamaz!</string>
+    <string name="COLLISION_EXCEPTION">E-mail adresi kayıtlı. Lütfen başka e-mail adresi giriniz.</string>
+    <string name="INVALID_CREDENTIALS">Email veya şifre yanlış..</string>
+    <string name="INVALID_USER">Email adresi tanımlı değil..</string>
+    <string name="REGISTERING_USER">"Hesap oluşturuluyor.."</string>
+    <string name="LOGGING_USER">"Giriş yapılıyor.."</string>
+    <string name="PLEASE_WAIT">"Lütfen bekleyiniz.."</string>
+    <string name="PASSWORD_LINK_SEND_SUCCESS">Şifre sıfırlama linki e-mail adresinize gönderildi.</string>
+    <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
+
+
 </resources>

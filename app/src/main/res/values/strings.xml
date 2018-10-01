@@ -2,8 +2,8 @@
     <string name="app_name">CatchU</string>
     <string name="title_activity_authenticator">AuthenticatorActivity</string>
 
-    <string name="facebook_app_id">188399458686974</string>
-    <string name="fb_login_protocol_scheme">fb188399458686974</string>
+    <string name="facebook_app_id">1429718627133451</string>
+    <string name="fb_login_protocol_scheme">fb1429718627133451</string>
 
     <array name="tab_name">
         <item>Home</item>
@@ -135,5 +135,38 @@
     <string name="flash_auto">Flash auto</string>
     <string name="flash_off">Flash off</string>
     <string name="flash_on">Flash on</string>
+
+
+    <!-- LoginActivity constants-->
+    // App fields
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="createAccount">Create Account</string>
+    <string name="forgetPassword">Forget Password?</string>
+    <string name="register">Register</string>
+    <string name="newPassword">New Password</string>
+    <string name="sendLink">Send Link</string>
+    <string name="forgetPassText">We will send a link to your mail address. You can renew your password.</string>
+    <string name="rememberMe">Remember Me</string>
+
+    //Messages-Warnings
+    <string name="UNKNOWN_ERROR">Operation failed!</string>
+    <string name="EMAIL_ERR_REQUIRED">Email can not be empty!</string>
+    <string name="EMAIL_ERR_INVALID">Please type a valid email address!</string>
+    <string name="PASSWORD_ERR_REQUIRED">Password can not be empty!</string>
+    <string name="PASSWORD_ERR_LENGTH">Password length must be at least 6!</string>
+    <string name="USERNAME_ERR_REQUIRED">Username can not be empty!</string>
+    <string name="COLLISION_EXCEPTION">E-mail is already registered, please try another one!</string>
+    <string name="INVALID_CREDENTIALS">Email or password is wrong!</string>
+    <string name="INVALID_USER">Invalid email address</string>
+    <string name="REGISTERING_USER">"Registering user.."</string>
+    <string name="LOGGING_USER">"Logging in user.."</string>
+    <string name="PLEASE_WAIT">"Please wait.."</string>
+    <string name="PASSWORD_LINK_SEND_SUCCESS">Renew password link has sent to your email address.</string>
+    <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
+
+
 
 </resources>

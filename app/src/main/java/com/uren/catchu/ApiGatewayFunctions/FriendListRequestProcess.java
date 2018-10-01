@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FriendList;
 import catchu.model.FriendRequestList;
@@ -16,10 +17,12 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
     private OnEventListener<FriendList> mCallBack;
     public Exception mException;
     public String userid;
+    private String token;
 
-    public FriendListRequestProcess(OnEventListener callback, String userid) {
+    public FriendListRequestProcess(OnEventListener callback, String userid, String token) {
         this.mCallBack = callback;
         this.userid = userid;
+        this.token = token;
     }
 
     @Override
@@ -28,7 +31,7 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            FriendList friendList = instance.client.friendsGet(userid);
+            FriendList friendList = instance.client.friendsGet(userid, token);
             return friendList;
 
         } catch (Exception e) {

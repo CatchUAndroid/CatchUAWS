@@ -16,9 +16,11 @@ import android.widget.Toast;
 
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FriendRequestList;
 import catchu.model.RelationProperties;
@@ -63,7 +65,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
         for(int i=0; i < searchResult.getResultArray().size(); i++){
 
-            Log.i("Info", "   >>user name      :" + searchResult.getResultArray().get(i).getName());
+            Log.i("Info", "   >>loginUser name      :" + searchResult.getResultArray().get(i).getName());
             Log.i("Info", "   >>friend relation:" + searchResult.getResultArray().get(i).getFriendRelation());
             Log.i("Info", "   >>pend. request  :" + searchResult.getResultArray().get(i).getPendingFriendRequest());
             Log.i("Info", "   >>=====================================");
@@ -130,12 +132,26 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             }
         }
 
-        public void processFriendRequest(String requestType){
+        public void processFriendRequest(final String requestType){
 
             Log.i("Info", "processFriendRequest starts++++++++++++++++++++++++++");
             Log.i("Info", "   >>requestType    :" + requestType);
             Log.i("Info", "   >>userid         :" + userid);
             Log.i("Info", "   >>requestedUserid:" + requestedUserid);
+
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startFriendRequest(requestType, token);
+                }
+            });
+
+
+
+        }
+
+        private void startFriendRequest(String requestType, String token) {
 
             final FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
 
@@ -167,9 +183,10 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 public void onTaskContinue() {
 
                 }
-            }, requestType, userid, requestedUserid);
+            }, requestType, userid, requestedUserid, token);
 
             friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
         }
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {

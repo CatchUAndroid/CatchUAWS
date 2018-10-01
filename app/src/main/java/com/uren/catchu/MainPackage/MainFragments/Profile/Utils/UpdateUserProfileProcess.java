@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
@@ -58,6 +59,18 @@ public class UpdateUserProfileProcess {
     }
 
     public void uploadMediaToS3(){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startUploadMediaToS3(token);
+            }
+        });
+
+    }
+
+    private void startUploadMediaToS3(String token) {
+
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -106,12 +119,25 @@ public class UpdateUserProfileProcess {
             @Override
             public void onTaskContinue() {
             }
-        }, 1, 0);
+        }, 1, 0, token);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     public void updateUserProfile(){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startUpdateUserProfile(token);
+            }
+        });
+
+    }
+
+    private void startUpdateUserProfile(String token) {
+
         UserProfile tempUser = new UserProfile();
         tempUser.setUserInfo(userProfileProperties);
         tempUser.setRequestType(USER_PROFILE_UPDATE);
@@ -134,9 +160,10 @@ public class UpdateUserProfileProcess {
             @Override
             public void onTaskContinue() {
             }
-        }, tempUser);
+        }, tempUser, token);
 
         updateUserProfile.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     private void updateAccountHolderInfo(UserProfile up) {
