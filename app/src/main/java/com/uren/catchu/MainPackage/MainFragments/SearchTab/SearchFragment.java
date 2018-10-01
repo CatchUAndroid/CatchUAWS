@@ -100,7 +100,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-
         if (view == null) {
 
             view = inflater.inflate(R.layout.fragment_search, container, false);
@@ -108,7 +107,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
             context = getActivity();
             initializeItems();
-
         } else {
             refreshSearch = false;
         }
@@ -135,7 +133,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     private void setupViewPager(final ViewPager viewPager) {
-
         personFragment = new PersonFragment(userid, verticalShown, "A", context);
         groupFragment = new GroupFragment(context, userid);
 
@@ -239,26 +236,20 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
                     return;
                 }
 
-                //tab değistiğinde onTextChanged fonksiyonu tekrar çağrılıyor,
-                // kontrol text degisti ise durumunu kontrol için eklendi.
                 if (!tempSearchText.matches(searchText)) {
                     searchForPersons(tempSearchText);
                     imgCancelSearch.setVisibility(View.VISIBLE);
                     searchText = tempSearchText;
                 }
-
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-
-
     }
 
     public void addNewGroup() {
-
         if (UserFriends.getInstance(AccountHolderInfo.getUserID()).getSize() == 0)
             CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
         else {
@@ -266,11 +257,9 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
             intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
             startActivity(intent);
         }
-
     }
 
     public void searchForPersons(String searchText) {
-
         adapter.updateFragment(personFragmentTab, personFragment);
         personFragment.getSearchResult(userid, searchText);
     }

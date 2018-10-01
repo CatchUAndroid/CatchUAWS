@@ -27,6 +27,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.Interfaces.OnBackClicked;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -86,27 +87,11 @@ public class TextEditFragment extends Fragment{
     }
 
     private void addListeners() {
-        colorViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                addBottomDots(position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i("Info", "editText.getTextSize22():" + editText.getTextSize());
                 textCompleteCallback.textCompleted(editText);
-                //getActivity().getSupportFragmentManager().popBackStackImmediate(1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getActivity().onBackPressed();
             }
         });
@@ -121,28 +106,8 @@ public class TextEditFragment extends Fragment{
             }
         });
         colorViewPager.setAdapter(colorPaletteAdapter);
-        addBottomDots(0);
-    }
-
-    private void addBottomDots(int currentPage) {
-        TextView[] dots;
-        dots = new TextView[colorPaletteAdapter.getCount()];
-
-        int cActive = getActivity().getResources().getColor(R.color.White, null);
-        int cInactive = getActivity().getResources().getColor(R.color.Silver, null);
-
-        dotsLayout.removeAllViews();
-
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(getActivity());
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(35);
-            dots[i].setTextColor(cInactive);
-            dotsLayout.addView(dots[i]);
-        }
-
-        if (dots.length > 0)
-            dots[currentPage].setTextColor(cActive);
+        ViewPagerUtils.setSliderDotsPanelWithTextView(colorPaletteAdapter.getCount(), R.color.White,
+                R.color.Silver, getActivity(), colorViewPager, dotsLayout);
     }
 
     public void focusEditText() {

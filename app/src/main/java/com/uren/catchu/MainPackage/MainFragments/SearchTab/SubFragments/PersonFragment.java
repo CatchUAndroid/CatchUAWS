@@ -65,19 +65,15 @@ public class PersonFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         mView = inflater.inflate(R.layout.fragment_special_select, container, false);
         ButterKnife.bind(this, mView);
-
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         personRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
         getSearchResult(userid, searchText);
-
     }
 
     @Override
@@ -86,18 +82,15 @@ public class PersonFragment extends Fragment {
     }
 
     public void getSearchResult(final String userid, final String searchText){
-
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startGetProfileDetail(userid, searchText, token);
             }
         });
-
     }
 
     private void startGetProfileDetail(String userid, String searchText, String token) {
-
         SearchResultProcess searchResultProcess = new SearchResultProcess(context, new OnEventListener<SearchResult>() {
 
             @Override
@@ -120,8 +113,6 @@ public class PersonFragment extends Fragment {
         }, userid, searchText, token);
 
         searchResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
     }
 
     public void getData(){
