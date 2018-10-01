@@ -49,13 +49,16 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.auth.UserInfo;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
+import com.twitter.sdk.android.core.TwitterApiClient;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -71,6 +74,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import twitter4j.TwitterFactory;
@@ -366,8 +370,8 @@ public class LoginActivity extends AppCompatActivity
 
         //Test scenario
         //todo : NT - kaldırılacak
-        userEmail = "eaglent47@gmail.com";
-        userPassword = "1234567";
+        userEmail = "nurullaht@gmail.com";
+        userPassword = "N.t12345";
 
         //validation controls
         if (!checkValidation(userEmail, userPassword)) {
@@ -430,6 +434,7 @@ public class LoginActivity extends AppCompatActivity
     private void loginUser(final String userEmail, String userPassword) {
         final Context context = this;
 
+
         mAuth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
@@ -465,7 +470,6 @@ public class LoginActivity extends AppCompatActivity
     private void startMainPage() {
 
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
-        loginUser.setEmail(mAuth.getCurrentUser().getEmail());
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("LoginUser", loginUser);
@@ -489,7 +493,7 @@ public class LoginActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
 
                             Log.i("Info", "signInWithCredential Twitter:success");
-                            getTwitterUserInfo(session.getUserName());
+                            getTwitterUserInfo(session);
                             startMainPage();
 
                         } else {
@@ -504,7 +508,7 @@ public class LoginActivity extends AppCompatActivity
         });
     }
 
-    private void getTwitterUserInfo(String username) {
+    private void getTwitterUserInfo(TwitterSession session) {
 
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setOAuthConsumerKey(getResources().getString(R.string.twitter_consumer_key));
@@ -513,15 +517,28 @@ public class LoginActivity extends AppCompatActivity
         cb.setOAuthAccessTokenSecret(getResources().getString(R.string.twitter_token_secret));
         twitter4j.Twitter twitter = new TwitterFactory(cb.build()).getInstance();
 
-        try {
-            User twitterUser = twitter.showUser(username);
-            loginUser.setName(twitterUser.getName());
-            loginUser.setProfilePhotoUrl(twitterUser.getBiggerProfileImageURL());
-            loginUser.setUsername(twitterUser.getScreenName());
+        //Email
+        TwitterAuthClient client = new TwitterAuthClient();
+        client.requestEmail(session, new Callback<String>() {
+            @Override
+            public void success(Result<String> result) {
+                loginUser.setEmail(result.data);
+            }
 
-        } catch (twitter4j.TwitterException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void failure(TwitterException exception) {
+
+            }
+        });
+
+        //name
+        loginUser.setName(mAuth.getCurrentUser().getProviderData().get(0).getDisplayName());
+        //profile picture
+        String profilePicture = mAuth.getCurrentUser().getProviderData().get(0).getPhotoUrl().toString();
+        profilePicture.replaceFirst("_normal", "");
+        loginUser.setProfilePhotoUrl(profilePicture);
+        //username
+        loginUser.setUsername(session.getUserName());
 
     }
 
