@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
-            //checkUser();
+            checkUser();
             startActivity(new Intent(this, NextActivity.class));
             finish();
         }
@@ -87,27 +87,36 @@ public class MainActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
+
+            /**
+             * New user sign in
+             */
+
             LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
             user.setUserid(loginUser.getUserId());
             user.setUsername(loginUser.getUsername());
             user.setEmail(loginUser.getEmail());
-        }else{
+
+            if (loginUser.getName() != null && !loginUser.getName().isEmpty()) {
+                user.setName(loginUser.getName());
+            }
+
+            if (loginUser.getProfilePhotoUrl() != null && !loginUser.getProfilePhotoUrl().isEmpty()) {
+                user.setProfilePhotoUrl(loginUser.getProfilePhotoUrl());
+            }
+
+        } else {
+
+            /**
+             * Already signed-in
+             */
+
             user.setUserid(firebaseAuth.getCurrentUser().getUid());
             user.setEmail(firebaseAuth.getCurrentUser().getEmail());
             user.setUsername("not_important_here");
         }
 
-
-
-
-
-
-
-        user.setUserid(user.getUserid());
-        user.setEmail(user.getEmail());
-        user.setUsername(user.getUsername());
-
-        Log.i("userId", user.getUserid());
+        displayUserInfo(user);
 
         BaseRequest baseRequest = new BaseRequest();
         baseRequest.setUser(user);
@@ -117,9 +126,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(BaseResponse baseResponse) {
 
-                if(baseResponse == null){
+                if (baseResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("LoginProcess");
-                }else{
+                } else {
                     CommonUtils.LOG_OK("LoginProcess");
                 }
             }
@@ -136,6 +145,20 @@ public class MainActivity extends AppCompatActivity {
         }, baseRequest, token);
 
         loginProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void displayUserInfo(User user) {
+
+        Log.i("*******", "Current User *******");
+        Log.i("-> userId", user.getUserid());
+        Log.i("-> Email", user.getEmail());
+        if (user.getName() != null)
+            Log.i("-> Name", user.getName());
+        if (user.getUsername() != null)
+            Log.i("-> UserName", user.getUsername());
+        if (user.getProfilePhotoUrl() != null)
+            Log.i("-> ProfilePicUrl", user.getProfilePhotoUrl());
+
     }
 
 

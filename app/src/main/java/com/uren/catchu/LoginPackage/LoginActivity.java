@@ -464,7 +464,11 @@ public class LoginActivity extends AppCompatActivity
 
     private void startMainPage() {
 
+        loginUser.setUserId(mAuth.getCurrentUser().getUid());
+        loginUser.setEmail(mAuth.getCurrentUser().getEmail());
+
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("LoginUser", loginUser);
         startActivity(intent);
         finish();
 

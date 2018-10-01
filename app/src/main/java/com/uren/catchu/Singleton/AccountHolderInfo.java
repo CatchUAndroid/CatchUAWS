@@ -25,8 +25,6 @@ public class AccountHolderInfo {
     private static Context context;
     private static String token;
 
-
-
     //Firebase
     private static FirebaseAuth firebaseAuth;
     private static String FBuserId;
@@ -81,7 +79,6 @@ public class AccountHolderInfo {
                     CommonUtils.LOG_OK_BUT_NULL("UserDetailProcess");
                 }else{
                     userProfile = up;
-                    Log.i("UserDetailProcess", "OK");
                     CommonUtils.LOG_OK("UserDetailProcess");
 
                 }
