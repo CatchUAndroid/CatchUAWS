@@ -25,14 +25,11 @@ public class AccountHolderInfo {
     private static Context context;
     private static String token;
 
-
-
     //Firebase
     private static FirebaseAuth firebaseAuth;
     private static String FBuserId;
 
     public static AccountHolderInfo getInstance() {
-
         if (accountHolderInfoInstance == null) {
             accountHolderInfoInstance = new AccountHolderInfo();
         }
@@ -55,23 +52,19 @@ public class AccountHolderInfo {
     }
 
     public static String getUserID() {
-
         return getUserIdFromFirebase();
     }
 
     private void getProfileDetail(final String userid) {
-
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startGetProfileDetail(userid, token);
             }
         });
-
     }
 
     private void startGetProfileDetail(final String userid, String token) {
-
         UserDetail loadUserDetail = new UserDetail(context, new OnEventListener<UserProfile>() {
 
             @Override
@@ -83,9 +76,7 @@ public class AccountHolderInfo {
                     userProfile = up;
                     Log.i("UserDetailProcess", "OK");
                     CommonUtils.LOG_OK("UserDetailProcess");
-
                 }
-
             }
 
             @Override
@@ -104,11 +95,9 @@ public class AccountHolderInfo {
     }
 
     public static String getUserIdFromFirebase() {
-
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         FBuserId = currentUser.getUid();
         return FBuserId;
-
     }
 
     public static FirebaseAuth getFirebaseAuth() {
