@@ -74,7 +74,6 @@ public class AccountHolderInfo {
                     CommonUtils.LOG_OK_BUT_NULL("UserDetailProcess");
                 }else{
                     userProfile = up;
-                    Log.i("UserDetailProcess", "OK");
                     CommonUtils.LOG_OK("UserDetailProcess");
                 }
             }
