@@ -411,11 +411,9 @@ public class LoginActivity extends AppCompatActivity
         alert.setMessage(message);
         alert.setPositiveButton("OK", null);
         alert.show();
-
     }
 
     private void setUserInfo(String userName, String userEmail) {
-
         if (!userName.isEmpty() && !userName.equals("")) {
             loginUser.setUsername(userName);
         } else {
@@ -424,7 +422,6 @@ public class LoginActivity extends AppCompatActivity
 
         loginUser.setEmail(userEmail);
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
-
     }
 
     private void loginUser(final String userEmail, String userPassword) {
