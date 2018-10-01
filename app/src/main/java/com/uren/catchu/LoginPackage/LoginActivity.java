@@ -334,6 +334,7 @@ public class LoginActivity extends AppCompatActivity
         loginButton.performClick();
     }
 
+
     private void imgTwitterClicked() {
 
         twLoginClicked = true;
@@ -417,19 +418,6 @@ public class LoginActivity extends AppCompatActivity
 
     }
 
-    private void setUserInfo(String userName, String userEmail) {
-
-        if (!userName.isEmpty() && !userName.equals("")) {
-            loginUser.setUsername(userName);
-        } else {
-            loginUser.setUsername("default");
-        }
-
-        loginUser.setEmail(userEmail);
-        loginUser.setUserId(mAuth.getCurrentUser().getUid());
-
-    }
-
     private void loginUser(final String userEmail, String userPassword) {
         final Context context = this;
 
@@ -466,6 +454,19 @@ public class LoginActivity extends AppCompatActivity
                 });
     }
 
+    private void setUserInfo(String userName, String userEmail) {
+
+        if (!userName.isEmpty() && !userName.equals("")) {
+            loginUser.setUsername(userName);
+        } else {
+            loginUser.setUsername("default");
+        }
+
+        loginUser.setEmail(userEmail);
+        loginUser.setUserId(mAuth.getCurrentUser().getUid());
+
+    }
+
     private void startMainPage() {
 
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
@@ -476,6 +477,74 @@ public class LoginActivity extends AppCompatActivity
         finish();
 
     }
+
+    public void getFacebookuserInfo(final LoginResult loginResult) {
+
+        CommonUtils.LOG_NEREDEYIZ("getFacebookuserInfo");
+
+        GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+
+                        Log.i("Info", "Facebook response:" + response.toString());
+
+                        try {
+
+                            loginUser.setName(object.getString("name"));
+                            loginUser.setEmail(object.getString("email"));
+
+                            //fb profile pic
+                            String facebookUserId = object.getString("id");
+                            String url = "https://graph.facebook.com/" + facebookUserId + "/picture?type=large";
+                            loginUser.setProfilePhotoUrl(url);
+
+                            handleFacebookAccessToken(loginResult.getAccessToken());
+
+                        } catch (JSONException e) {
+                            Log.i("Info", "  >>JSONException error:" + e.toString());
+                        } catch (Exception e) {
+                            Log.i("Info", "  >>Profile error:" + e.toString());
+                        }
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender,birthday");
+        graphRequest.setParameters(parameters);
+        graphRequest.executeAsync();
+    }
+
+    private void handleFacebookAccessToken(AccessToken token) {
+
+        CommonUtils.LOG_NEREDEYIZ("onActivityResult");
+        Log.i("Info", "handleFacebookAccessToken starts:" + token);
+
+        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+
+        try {
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in loginUser's information
+
+                                Log.i("Info", "  >>signInWithCredential:success");
+                                startMainPage();
+
+                            } else {
+                                // If sign in fails, display a message to the loginUser.
+                                Log.i("Info", "  >>signInWithCredential:failure:" + task.getException());
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            Log.i("Info", "  >>handleFacebookAccessToken error:" + e.toString());
+        }
+    }
+
 
     private void handleTwitterSession(final TwitterSession session) {
 
@@ -542,42 +611,6 @@ public class LoginActivity extends AppCompatActivity
 
     }
 
-    public void getFacebookuserInfo(final LoginResult loginResult) {
-
-        CommonUtils.LOG_NEREDEYIZ("getFacebookuserInfo");
-
-        GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(),
-                new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-
-                        Log.i("Info", "Facebook response:" + response.toString());
-
-                        try {
-
-                            loginUser.setName(object.getString("name"));
-                            loginUser.setEmail(object.getString("email"));
-
-                            //fb profile pic
-                            String facebookUserId = object.getString("id");
-                            String url = "https://graph.facebook.com/" + facebookUserId + "/picture?type=large";
-                            loginUser.setProfilePhotoUrl(url);
-
-                            handleFacebookAccessToken(loginResult.getAccessToken());
-
-                        } catch (JSONException e) {
-                            Log.i("Info", "  >>JSONException error:" + e.toString());
-                        } catch (Exception e) {
-                            Log.i("Info", "  >>Profile error:" + e.toString());
-                        }
-                    }
-                });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,gender,birthday");
-        graphRequest.setParameters(parameters);
-        graphRequest.executeAsync();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -602,38 +635,6 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
 
-        CommonUtils.LOG_NEREDEYIZ("onActivityResult");
-        Log.i("Info", "handleFacebookAccessToken starts:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-
-        try {
-            mAuth.signInWithCredential(credential)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in loginUser's information
-
-                                Log.i("Info", "  >>signInWithCredential:success");
-
-                                FirebaseUser currentUser = mAuth.getCurrentUser();
-                                loginUser.setUserId(currentUser.getUid());
-
-                                startMainPage();
-
-                            } else {
-                                // If sign in fails, display a message to the loginUser.
-                                Log.i("Info", "  >>signInWithCredential:failure:" + task.getException());
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            Log.i("Info", "  >>handleFacebookAccessToken error:" + e.toString());
-        }
-    }
 
 }
