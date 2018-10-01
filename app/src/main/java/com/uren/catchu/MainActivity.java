@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
@@ -114,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
             user.setUserid(firebaseAuth.getCurrentUser().getUid());
             user.setEmail(firebaseAuth.getCurrentUser().getEmail());
             user.setUsername("not_important_here");
+
+
+            Log.i("eeeemail", firebaseAuth.getCurrentUser().getEmail());
+            Log.i("info", "burdayımm");
         }
 
         displayUserInfo(user);
