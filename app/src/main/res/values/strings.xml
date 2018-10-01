@@ -64,7 +64,7 @@
     <string name="changeAsAdmin">Make Group Admin</string>
     <string name="friendsAdding">Participants adding...</string>
     <string name="giveCameraPermission">You have to give permission to use the camera</string>
-    <string name="pleaseAddShareItem">You must add video, picture or text to share!</string>
+    <string name="pleaseAddShareItem">You must add video or picture to share!</string>
     <string name="selectGroup">Select Group</string>
     <string name="selectAll">Select All</string>
     <string name="share">SHARE</string>
@@ -79,6 +79,7 @@
     <string name="profileUpdateSuccessful">Profile Update is Successful</string>
     <string name="dragForDelete">Drag for Delete</string>
     <string name="finish">Finish</string>
+    <string name="typeToAddText">Type to Add Text...</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -93,6 +94,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="ok">OK</string>
     <string name="next">Next</string>
+    <string name="close">Close</string>
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Settings</string>

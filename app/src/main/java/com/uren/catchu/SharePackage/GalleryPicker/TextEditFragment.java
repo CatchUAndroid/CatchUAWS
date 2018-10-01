@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,6 +32,7 @@ import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
+import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TextCompleteCallback;
 import com.uren.catchu.SharePackage.Utils.ColorSelectCallback;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
@@ -40,17 +44,18 @@ public class TextEditFragment extends Fragment{
     View mView;
     Button finishButton;
     EditText editText;
-    SeekBar seekbar;
     ImageView brushImgv;
     ViewPager colorViewPager;
     LinearLayout dotsLayout;
-    String text;
+    TextView textView;
 
     ColorPaletteAdapter colorPaletteAdapter;
+    TextCompleteCallback textCompleteCallback;
 
     @SuppressLint("ValidFragment")
-    public TextEditFragment(String text){
-        this.text = text;
+    public TextEditFragment(View view, TextCompleteCallback textCompleteCallback){
+        this.textView = (TextView) view;
+        this.textCompleteCallback = textCompleteCallback;
     }
 
     @Override
@@ -72,7 +77,6 @@ public class TextEditFragment extends Fragment{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         finishButton = mView.findViewById(R.id.finishButton);
         editText = mView.findViewById(R.id.editText);
-        seekbar = mView.findViewById(R.id.seekbar);
         brushImgv = mView.findViewById(R.id.brushImgv);
         colorViewPager = mView.findViewById(R.id.colorViewPager);
         dotsLayout = mView.findViewById(R.id.layoutDots);
@@ -97,34 +101,19 @@ public class TextEditFragment extends Fragment{
             }
         });
 
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (editText != null)
-                    editText.setTextSize(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
-
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("Info", "editText.getTextSize22():" + editText.getTextSize());
+                textCompleteCallback.textCompleted(editText);
+                //getActivity().getSupportFragmentManager().popBackStackImmediate(1, FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 getActivity().onBackPressed();
             }
         });
     }
 
     public void colorPalettePrepare() {
-        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), new ColorSelectCallback() {
+        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), R.drawable.img_border,  new ColorSelectCallback() {
             @Override
             public void onClick(int colorCode) {
                 brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -157,9 +146,14 @@ public class TextEditFragment extends Fragment{
     }
 
     public void focusEditText() {
-        editText.setText(text);
+        setEditTextParams();
         editText.requestFocus();
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
+
+    private void setEditTextParams() {
+        editText.setText(textView.getText().toString());
+        editText.setTextColor(textView.getCurrentTextColor());
     }
 }

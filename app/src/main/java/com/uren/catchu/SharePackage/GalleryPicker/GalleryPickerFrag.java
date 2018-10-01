@@ -13,12 +13,14 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -35,12 +37,17 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.uren.catchu.GeneralUtils.BaseBackPressedListener;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.Interfaces.OnBackPressedListener;
+import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.PhotoSelectCallback;
+import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TextCompleteCallback;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TrashDragDropCallback;
+import com.uren.catchu.SharePackage.MainShareActivity;
 import com.uren.catchu.SharePackage.Utils.ColorSelectCallback;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoViewFragment;
@@ -56,16 +63,16 @@ import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 
 
 @SuppressLint("ValidFragment")
-public class GalleryPickerFrag extends Fragment {
-
+public class GalleryPickerFrag extends Fragment{
     RecyclerView specialRecyclerView;
     RelativeLayout photoRelLayout;
-    RelativeLayout parentRelLayout;
-    RelativeLayout photoSelectedLayout;
+    RelativeLayout addPropRelLayout;
+    RelativeLayout photoMainLayout;
     ImageView selectImageView;
     ImageView cancelImageView;
     ImageView addTextImgv;
-    EditText editText;
+    TextView textView;
+    SeekBar seekbar;
 
     View mView;
     ArrayList<File> mFiles;
@@ -101,104 +108,58 @@ public class GalleryPickerFrag extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        parentRelLayout = mView.findViewById(R.id.parentRelLayout);
         specialRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
-        photoSelectedLayout = mView.findViewById(R.id.photoSelectedLayout);
         photoRelLayout = mView.findViewById(R.id.photoRelLayout);
         selectImageView = mView.findViewById(R.id.selectImageView);
+        permissionModule = new PermissionModule(getActivity());
         cancelImageView = mView.findViewById(R.id.cancelImageView);
         addTextImgv = mView.findViewById(R.id.addTextImgv);
-        permissionModule = new PermissionModule(getActivity());
+        addPropRelLayout = mView.findViewById(R.id.addPropRelLayout);
+        photoMainLayout = mView.findViewById(R.id.photoMainLayout);
+        textView = mView.findViewById(R.id.textView);
+        seekbar = mView.findViewById(R.id.seekbar);
         getData();
         addListeners();
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
         addTextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startTextEditFragment("");
+                setDefaultTextView();
+                startTextEditFragment();
             }
         });
 
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                photoRelLayout.setVisibility(View.GONE);
-                specialRecyclerView.setVisibility(View.VISIBLE);
                 ShareItems.getInstance().clearImageShareItemBox();
-                photoRelLayout.removeView(editText);
-                hideKeyBoard();
+                photoMainLayout.setVisibility(View.GONE);
+                specialRecyclerView.setVisibility(View.VISIBLE);
+                setDefaultTextView();
             }
         });
-    }
 
-    private void startTextEditFragment(String text) {
-        TextEditFragment nextFrag = new TextEditFragment(text);
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.addPropRelLayout, nextFrag, TextEditFragment.class.getName())
-                .addToBackStack(null)
-                .commit();
-    }
-
-
-    public void resetPhotoImageView(boolean portraitMode) {
-        if (portraitMode)
-            selectImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        else
-            selectImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    public void addEditText() {
-        editText = new EditText(getActivity());
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        editText.setBackgroundColor(getActivity().getResources().getColor(R.color.transparent, null));
-        editText.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        editText.setTextColor(getActivity().getResources().getColor(R.color.White, null));
-        editText.setLayoutParams(layoutParams);
-        photoRelLayout.addView(editText);
-        focusEditText();
-
-        editText.setOnTouchListener(new View.OnTouchListener() {
-
-            private int CLICK_ACTION_THRESHOLD = 200;
-            private float startX;
-            private float startY;
-
+        textView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onTouch(View view, MotionEvent event) {
-
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        startX = event.getX();
-                        startY = event.getY();
-
-                        ClipData data = ClipData.newPlainText("", "");
-                        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                        view.startDrag(data, shadowBuilder, view, 0);
-                        if (photoSelectedLayout.getVisibility() == View.VISIBLE) {
-                            photoSelectedLayout.setVisibility(View.GONE);
-                            trashDragProcess();
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        float endX = event.getX();
-                        float endY = event.getY();
-                        if (isAClick(startX, endX, startY, endY)) {
-                            closeTrashLayout();
-                            focusEditText();
-                        }
-                        break;
+            public boolean onLongClick(View v) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+                v.startDrag(data, shadowBuilder, v, 0);
+                if (addPropRelLayout.getVisibility() == View.VISIBLE) {
+                    addPropRelLayout.setVisibility(View.GONE);
+                    trashDragProcess();
                 }
                 return false;
             }
+        });
 
-            private boolean isAClick(float startX, float endX, float startY, float endY) {
-                float differenceX = Math.abs(startX - endX);
-                float differenceY = Math.abs(startY - endY);
-                return !(differenceX > CLICK_ACTION_THRESHOLD/* =5 */ || differenceY > CLICK_ACTION_THRESHOLD);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startTextEditFragment();
             }
         });
 
@@ -207,7 +168,7 @@ public class GalleryPickerFrag extends Fragment {
             public boolean onDrag(View v, DragEvent event) {
                 int x = (int) event.getX();
                 int y = (int) event.getY();
-                final EditText draggedView = (EditText) event.getLocalState();
+                final TextView draggedView = (TextView) event.getLocalState();
 
                 switch (event.getAction()) {
                     case DragEvent.ACTION_DRAG_STARTED:
@@ -222,8 +183,8 @@ public class GalleryPickerFrag extends Fragment {
                     case DragEvent.ACTION_DROP:
                         Log.i("Info", "photoRelLayout ACTION_DROP");
                         closeTrashLayout();
-                        draggedView.setX((float) x - (draggedView.getWidth()/2));
-                        draggedView.setY((float) y - (draggedView.getHeight()/2));
+                        draggedView.setX((float) x - (draggedView.getWidth() / 2));
+                        draggedView.setY((float) y - (draggedView.getHeight() / 2));
                         return true;
                     case DragEvent.ACTION_DRAG_EXITED:
                         return true;
@@ -232,45 +193,87 @@ public class GalleryPickerFrag extends Fragment {
                 }
             }
         });
+
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (textView != null)
+                    textView.setTextSize(progress);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
     }
 
-    public void closeTrashLayout(){
+    private void setDefaultTextView() {
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+        textView.setTextColor(getActivity().getResources().getColor(R.color.White, null));
+        textView.setText(" ");
+        textView.setVisibility(View.GONE);
+        textView.setLayoutParams(layoutParams);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f);
+    }
+
+    private void startTextEditFragment() {
+        cancelImageView.setVisibility(View.GONE);
+        addTextImgv.setVisibility(View.GONE);
+        seekbar.setVisibility(View.GONE);
+        textView.setVisibility(View.GONE);
+
+        TextEditFragment nextFrag = new TextEditFragment(textView, new TextCompleteCallback() {
+            @Override
+            public void textCompleted(View view) {
+                cancelImageView.setVisibility(View.VISIBLE);
+                addTextImgv.setVisibility(View.VISIBLE);
+                EditText returnEditText = (EditText) view;
+                if (returnEditText != null) {
+                    if (!returnEditText.getText().toString().trim().isEmpty()) {
+                        textView.setTextColor(returnEditText.getCurrentTextColor());
+                        textView.setText(returnEditText.getText().toString());
+                        textView.setVisibility(View.VISIBLE);
+                        seekbar.setVisibility(View.VISIBLE);
+                    } else
+                        seekbar.setVisibility(View.GONE);
+                }
+            }
+        });
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.addPropRelLayout, nextFrag, TextEditFragment.class.getName())
+                .addToBackStack(TextEditFragment.class.getName())
+                .commit();
+    }
+
+    public void closeTrashLayout() {
         if (trashLayout != null) {
+            addPropRelLayout.setVisibility(View.VISIBLE);
             photoRelLayout.removeView(trashLayout);
-            photoSelectedLayout.setVisibility(View.VISIBLE);
             trashLayout = null;
         }
     }
 
     private void trashDragProcess() {
-        photoSelectedLayout.setVisibility(View.GONE);
-        trashLayout = getLayoutInflater().inflate(R.layout.text_drag_layout, photoSelectedLayout, false);
+        addPropRelLayout.setVisibility(View.GONE);
+        trashLayout = getLayoutInflater().inflate(R.layout.text_drag_layout, addPropRelLayout, false);
         ImageView trashImgv = trashLayout.findViewById(R.id.trashImgv);
         photoRelLayout.addView(trashLayout);
         trashImgv.setOnDragListener(new TrashDragListener(new TrashDragDropCallback() {
             @Override
             public void onDropped() {
-                photoRelLayout.removeView(editText);
+                addPropRelLayout.setVisibility(View.VISIBLE);
                 if (trashLayout != null) {
                     photoRelLayout.removeView(trashLayout);
-                    photoSelectedLayout.setVisibility(View.VISIBLE);
+                    setDefaultTextView();
+                    seekbar.setVisibility(View.GONE);
                     trashLayout = null;
                 }
             }
         }));
-    }
-
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getActivity().getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-    }
-
-    public void focusEditText() {
-        editText.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     public void getData() {
@@ -280,8 +283,9 @@ public class GalleryPickerFrag extends Fragment {
             public void onSelect(Uri uri, boolean portraitMode) {
                 resetPhotoImageView(portraitMode);
                 Glide.with(getActivity()).load(uri).into(selectImageView);
+                photoMainLayout.setVisibility(View.VISIBLE);
                 specialRecyclerView.setVisibility(View.GONE);
-                photoRelLayout.setVisibility(View.VISIBLE);
+                seekbar.setVisibility(View.GONE);
             }
         });
 
@@ -289,6 +293,13 @@ public class GalleryPickerFrag extends Fragment {
         gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
         specialRecyclerView.addItemDecoration(addItemDecoration());
         specialRecyclerView.setLayoutManager(gridLayoutManager);
+    }
+
+    public void resetPhotoImageView(boolean portraitMode) {
+        if (portraitMode)
+            selectImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        else
+            selectImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
     }
 
     private RecyclerView.ItemDecoration addItemDecoration() {
@@ -369,4 +380,9 @@ public class GalleryPickerFrag extends Fragment {
             CommonUtils.showToast(getActivity(), getActivity().getString(R.string.technicalError) + requestCode);
     }
 
+    public void textFragBackPressed(){
+        cancelImageView.setVisibility(View.VISIBLE);
+        addTextImgv.setVisibility(View.VISIBLE);
+        textView.setVisibility(View.VISIBLE);
+    }
 }

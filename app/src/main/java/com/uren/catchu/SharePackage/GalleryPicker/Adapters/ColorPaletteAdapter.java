@@ -20,10 +20,12 @@ public class ColorPaletteAdapter extends PagerAdapter {
     private LayoutInflater layoutInflater;
     private static final int colorListCount = 3;
     LinearLayout colorPaletteLayout;
+    int borderType;
 
-    public ColorPaletteAdapter(Context context, ColorSelectCallback colorSelectCallback) {
+    public ColorPaletteAdapter(Context context, int borderType, ColorSelectCallback colorSelectCallback) {
         this.context = context;
         this.colorSelectCallback = colorSelectCallback;
+        this.borderType = borderType;
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -63,7 +65,7 @@ public class ColorPaletteAdapter extends PagerAdapter {
 
             ImageView imageView = new ImageView(context);
             imageView.setLayoutParams(new LinearLayout.LayoutParams(90, 90));
-            imageView.setBackground(context.getResources().getDrawable(R.drawable.img_border, null));
+            imageView.setBackground(context.getResources().getDrawable(borderType, null));
             imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.black_circle, null));
             imageView.setColorFilter(ContextCompat.getColor(context, colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
             layout.addView(imageView);

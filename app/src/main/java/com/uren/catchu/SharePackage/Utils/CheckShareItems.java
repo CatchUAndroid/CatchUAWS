@@ -21,10 +21,6 @@ public class CheckShareItems {
         if(ShareItems.getInstance().getVideoShareItemBoxes().size() > 0)
             return true;
 
-        if(ShareItems.getInstance().getPost().getMessage() != null){
-            if(!ShareItems.getInstance().getPost().getMessage().trim().equals(""))
-                return true;
-        }
         errorMessage = context.getResources().getString(R.string.pleaseAddShareItem);
         return false;
     }

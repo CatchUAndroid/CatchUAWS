@@ -46,7 +46,7 @@
     <string name="changeAsAdmin">Admin olarak değiştir</string>
     <string name="friendsAdding">Katılımcılar ekleniyor...</string>
     <string name="giveCameraPermission">Kamerayı kullanmak için izin gerekmektedir</string>
-    <string name="pleaseAddShareItem">Paylaşım yapabilmek için video, resim yada text eklemelisiniz !</string>
+    <string name="pleaseAddShareItem">Paylaşım yapabilmek için video yada resim eklemelisiniz!</string>
     <string name="selectGroup">Grup Seç</string>
     <string name="selectAll">Hepsini Seç</string>
     <string name="share">PAYLAŞ</string>
@@ -61,6 +61,7 @@
     <string name="profileUpdateSuccessful">Profil Güncelleme Başarılı</string>
     <string name="dragForDelete">Silmek için Sürükle</string>
     <string name="finish">Bitir</string>
+    <string name="typeToAddText">Metin Ekle...</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -71,6 +72,7 @@
     <string name="groupPhotoChanging">Değiştiriliyor...</string>
     <string name="ok">TAMAM</string>
     <string name="next">İleri</string>
+    <string name="close">Kapat</string>
 
 
     <!-- Whose for will be shared -->

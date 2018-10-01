@@ -81,16 +81,20 @@ public class PhotoSelectUtil {
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
-    public static void onSelectFromGalleryResult() {
-        mediaUri = data.getData();
-        if (data != null) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-                imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-                bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void onSelectFromGalleryResult(){
+        try {
+            mediaUri = data.getData();
+            if (data != null) {
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+                    imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+                    bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
         }
     }
 

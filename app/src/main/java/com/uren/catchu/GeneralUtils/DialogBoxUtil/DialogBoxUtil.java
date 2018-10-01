@@ -3,6 +3,7 @@ package com.uren.catchu.GeneralUtils.DialogBoxUtil;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.view.Window;
 import android.widget.ArrayAdapter;
 
 import com.uren.catchu.R;
@@ -34,7 +35,7 @@ public class DialogBoxUtil {
 
     public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setIcon(R.drawable.info_icon_512);
+        alertDialog.setIcon(context.getResources().getDrawable(R.drawable.info_icon_512, null));
 
         if (title != null)
             alertDialog.setTitle(title);

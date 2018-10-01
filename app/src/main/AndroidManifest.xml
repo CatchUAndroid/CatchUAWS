@@ -93,6 +93,7 @@
         </provider>
 
         <activity android:name=".UgurDeneme.DragDropExample" />
+        <activity android:name=".SharePackage.GalleryPicker.DriveContent.RetreiveContent" />
     </application>
 
 </manifest>
