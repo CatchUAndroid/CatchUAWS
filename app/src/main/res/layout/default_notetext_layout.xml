@@ -24,17 +24,7 @@
         android:layout_margin="50dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="Note"
-            android:textColor="@color/background_white"
-            android:textStyle="normal|bold|italic"
-            android:background="@drawable/white_border_not_rounded"/>
-
-        <ScrollView
+        <!--ScrollView
             android:id="@+id/noteScrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -52,7 +42,55 @@
                 android:textCursorDrawable="@null"
                 android:textSize="16sp" />
 
+        </ScrollView-->
+
+        <ScrollView
+            android:id="@+id/noteScrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="10"
+            android:background="@drawable/layout_border_shape">
+
+            <EditText
+                android:id="@+id/noteTextEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="top"
+                android:hint="@string/typeToAddText"
+                android:inputType="textMultiLine"
+                android:lines="20"
+                android:maxLines="20"
+                android:cursorVisible="false"
+                android:minLines="6"
+                android:scrollbars="vertical"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                android:textColor="@color/White"
+                android:textColorHint="@color/transparent_white"
+                android:background="@color/transparent" />
+
+
         </ScrollView>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

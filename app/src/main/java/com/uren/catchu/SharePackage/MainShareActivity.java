@@ -1,6 +1,7 @@
 package com.uren.catchu.SharePackage;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
@@ -49,6 +50,7 @@ public class MainShareActivity extends FragmentActivity {
 
     private int tabSelectedPosition = 0;
     boolean tabsCreated = false;
+    public static Activity thisActivity;
 
     private int[] tabIcons = {
             R.drawable.tab_gallery,
@@ -59,6 +61,7 @@ public class MainShareActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_share);
+        thisActivity = this;
         initVariables();
         addListeners();
         checkWriteStoragePermission();

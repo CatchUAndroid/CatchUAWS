@@ -3,6 +3,7 @@ package com.uren.catchu.GeneralUtils.DialogBoxUtil;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 
@@ -114,5 +115,25 @@ public class DialogBoxUtil {
 
         AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public static void showInfoDialogWithLimitedTime(Context context, String title, String message, long timeInMs, final InfoDialogBoxCallback infoDialogBoxCallback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        if(title != null)
+            builder.setTitle(title);
+
+        builder.setIcon(R.drawable.success_icon_480);
+        builder.setMessage(message);
+        final AlertDialog alert = builder.create();
+        alert.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                alert.dismiss();
+                infoDialogBoxCallback.okClick();
+            }
+        }, timeInMs);
     }
 }

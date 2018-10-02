@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
@@ -49,19 +50,17 @@ public class NextActivity extends AppCompatActivity implements
         FragNavController.RootFragmentListener {
 
     private Context context;
-    String userid = "us-east-1:4af861e4-1cb6-4218-87e7-523c84bbfa96";
 
     private int onPauseCount = 0;
     private boolean onPausedInd = false;
+    public static Activity thisActivity;
+    public static int prevPosition = 0;
 
     @BindView(R.id.content_frame)
     FrameLayout contentFrame;
 
     public String ANIMATION_TAG;
     public FragNavTransactionOptions transactionOptions;
-
-    //@BindView(R.id.toolbar)
-    //Toolbar toolbar;
 
     private int[] mTabIconsSelected = {
             R.drawable.tab_home,
@@ -70,13 +69,10 @@ public class NextActivity extends AppCompatActivity implements
             R.drawable.tab_news,
             R.drawable.tab_profile};
 
-    @BindArray(R.array.tab_name)
-    String[] TABS;
+    public static String[] TABS;
+    public static TabLayout bottomTabLayout;
 
-    @BindView(R.id.bottom_tab_layout)
-    TabLayout bottomTabLayout;
-
-    private FragNavController mNavController;
+    private static FragNavController mNavController;
 
     private FragmentHistory fragmentHistory;
 
@@ -84,6 +80,7 @@ public class NextActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
+        thisActivity = this;
 
         initValues();
 
@@ -100,9 +97,7 @@ public class NextActivity extends AppCompatActivity implements
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
                 fragmentHistory.push(tab.getPosition());
-
                 switchTab(tab.getPosition());
             }
 
@@ -113,22 +108,18 @@ public class NextActivity extends AppCompatActivity implements
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
                 mNavController.clearStack();
                 switchTab(tab.getPosition());
             }
         });
 
         fillSingletonClasses();
-
     }
 
     public void fillSingletonClasses() {
-
         getUserInfo();
         getFriendList();
         getGroupList();
-
     }
 
     private void getUserInfo() {
@@ -147,20 +138,14 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     private void initValues() {
-
         onPausedInd = true;
         context = this;
         ButterKnife.bind(this);
+        bottomTabLayout = findViewById(R.id.bottom_tab_layout);
+        TABS = getResources().getStringArray(R.array.tab_name);
 
-        //initToolbar();
         setStatusBarTransparent();
         initTab();
-    }
-
-    private void initToolbar() {
-        //setSupportActionBar(toolbar);
-        //setStatusBarTransparent();
-
     }
 
     private void setStatusBarTransparent() {
@@ -212,14 +197,17 @@ public class NextActivity extends AppCompatActivity implements
         super.onStop();
     }
 
-    private void switchTab(int position) {
-
+    public static void switchTab(int position) {
         mNavController.switchTab(position);
 
+        if(position != mNavController.TAB3){
+            prevPosition = position;
+        }
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
     }
 
@@ -251,21 +239,21 @@ public class NextActivity extends AppCompatActivity implements
                 if (fragmentHistory.getStackSize() > 1) {
 
                     int position = fragmentHistory.popPrevious();
-                    switchTab(position);
-                    updateTabSelection(position);
-
+                    switchAndUpdateTabSelection(position);
                 } else {
-
-                    switchTab(0);
-                    updateTabSelection(0);
+                    switchAndUpdateTabSelection(0);
                     fragmentHistory.emptyStack();
                 }
             }
         }
     }
 
-    private void setTransactionOption() {
+    public static void switchAndUpdateTabSelection(int position){
+        switchTab(position);
+        updateTabSelection(position);
+    }
 
+    private void setTransactionOption() {
         if (transactionOptions == null) {
             transactionOptions = FragNavTransactionOptions.newBuilder().build();
         }
@@ -286,10 +274,9 @@ public class NextActivity extends AppCompatActivity implements
             default:
                 transactionOptions = null;
         }
-
     }
 
-    private void updateTabSelection(int currentTab) {
+    public static void updateTabSelection(int currentTab) {
 
         for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);

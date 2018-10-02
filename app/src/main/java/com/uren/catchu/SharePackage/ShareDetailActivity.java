@@ -25,6 +25,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
@@ -83,6 +84,14 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     SupportMapFragment mapFragment;
     LocationManager locationManager;
     private LocationTrackerAdapter locationTrackObj;
+    FrameLayout shareMainLayout;
+    LinearLayout shareMainLinearLayout;
+
+    //Update text views
+    View noteTextLayout;
+    ImageView approveTextImgv;
+    ImageView cancelTextImgv;
+    EditText updateTextEditText;
 
     private ImageView publicShareImgv;
     private ImageView friendShareImgv;
@@ -95,6 +104,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private TextView justShareMeTv;
     private TextView selFriCntTv;
     private TextView groupnameTv;
+
+    EditText mainEditText;
 
     private ViewPager viewPager;
     LinearLayout SliderDots;
@@ -194,6 +205,9 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         shareButton = findViewById(R.id.shareButton);
         viewPager = findViewById(R.id.viewPager);
         SliderDots = findViewById(R.id.SliderDots);
+        shareMainLayout = findViewById(R.id.shareMainLayout);
+        mainEditText = findViewById(R.id.mainEditText);
+        shareMainLinearLayout = findViewById(R.id.shareMainLinearLayout);
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this);
         checkShareItems = new CheckShareItems(ShareDetailActivity.this);
@@ -235,6 +249,13 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 justShareMeImgv.startAnimation(AnimationUtils.loadAnimation(ShareDetailActivity.this, R.anim.image_click));
                 selectedItem = CODE_JUSTME_SHARED;
                 manageSelectedItem();
+            }
+        });
+
+        mainEditText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateNoteText();
             }
         });
 
@@ -423,7 +444,15 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         new SharePostProcess(ShareDetailActivity.this, selectedItem, new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
-                CommonUtils.showToastLong(ShareDetailActivity.this, "Share is SUCCESSFUL");
+                DialogBoxUtil.showInfoDialogWithLimitedTime(ShareDetailActivity.this, null,
+                        getResources().getString(R.string.SHARE_IS_SUCCESSFUL), 2000, new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+                                ShareDetailActivity.this.finish();
+                                MainShareActivity.thisActivity.finish();
+                                NextActivity.switchAndUpdateTabSelection(NextActivity.prevPosition);
+                            }
+                        });
             }
 
             @Override
@@ -470,6 +499,37 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     public void setViewColor(ImageView imageView, TextView textView, int colorCode) {
         imageView.setColorFilter(ContextCompat.getColor(ShareDetailActivity.this, colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
         textView.setTextColor(getResources().getColor(colorCode, null));
+    }
+
+    public void updateNoteText() {
+        if(noteTextLayout == null){
+            noteTextLayout = getLayoutInflater().inflate(R.layout.default_notetext_layout, shareMainLayout, false);
+            approveTextImgv = noteTextLayout.findViewById(R.id.approveImgv);
+            cancelTextImgv = noteTextLayout.findViewById(R.id.cancelTextImgv);
+            updateTextEditText = noteTextLayout.findViewById(R.id.noteTextEditText);
+        }
+
+        updateTextEditText.setText(mainEditText.getText());
+        shareMainLayout.addView(noteTextLayout);
+        CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,false);
+
+        approveTextImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+                ShareItems.getInstance().getPost().setMessage(updateTextEditText.getText().toString());
+                shareMainLayout.removeView(noteTextLayout);
+                mainEditText.setText(updateTextEditText.getText());
+            }
+        });
+
+        cancelTextImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                shareMainLayout.removeView(noteTextLayout);
+                CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+            }
+        });
     }
 
     public void showSettingsAlert() {

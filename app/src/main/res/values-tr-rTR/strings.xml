@@ -139,6 +139,7 @@
     <string name="PLEASE_WAIT">"Lütfen bekleyiniz.."</string>
     <string name="PASSWORD_LINK_SEND_SUCCESS">Şifre sıfırlama linki e-mail adresinize gönderildi.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
+    <string name="SHARE_IS_SUCCESSFUL">Paylaşım Başarılı</string>
 
 
 </resources>

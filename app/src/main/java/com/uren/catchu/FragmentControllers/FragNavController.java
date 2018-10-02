@@ -124,18 +124,22 @@ public class FragNavController {
 
             detachCurrentFragment(ft);
 
+            // TODO: 2.10.2018 - ugur - ft.commit  ft.commitAllowingStateLoss() olarak degisti
             Fragment fragment = null;
             if (index == NO_TAB) {
-                ft.commit();
+                //ft.commit();
+                ft.commitAllowingStateLoss();
             } else {
                 //Attempt to reattach previous fragment
                 fragment = reattachPreviousFragment(ft);
                 if (fragment != null) {
-                    ft.commit();
+                    //ft.commit();
+                    ft.commitAllowingStateLoss();
                 } else {
                     fragment = getRootFragment(mSelectedTabIndex);
                     ft.add(mContainerId, fragment, generateTag(fragment));
-                    ft.commit();
+                    //ft.commit();
+                    ft.commitAllowingStateLoss();
                 }
             }
 
