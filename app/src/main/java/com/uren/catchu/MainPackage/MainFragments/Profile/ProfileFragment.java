@@ -3,6 +3,11 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -72,6 +77,8 @@ public class ProfileFragment extends BaseFragment
     TextView txtFollowerCnt;
     @BindView(R.id.txtFollowingCnt)
     TextView txtFollowingCnt;
+    @BindView(R.id.txtProfile)
+    TextView txtProfile;
 
     @BindView(R.id.imgUserEdit)
     ClickableImageView imgUserEdit;
@@ -197,31 +204,81 @@ public class ProfileFragment extends BaseFragment
 
             Log.i("->UserInfo", user.getUserInfo().toString());
 
-            if(user.getUserInfo().getName() != null){
+            if (user.getUserInfo().getName() != null) {
                 toolbarTitle.setText(user.getUserInfo().getName());
                 CommonUtils.showToast(getActivity(), "Hoş geldin " + user.getUserInfo().getName() + "!!");
             }
 
-            if(user.getUserInfo().getProfilePhotoUrl() != null){
+            //profil fotosu varsa o, yoksa username baş harfleri bastırılır..
+            if (user.getUserInfo().getProfilePhotoUrl() != null && !user.getUserInfo().getProfilePhotoUrl().isEmpty()) {
+                txtProfile.setVisibility(View.GONE);
                 Glide.with(getActivity())
                         .load(user.getUserInfo().getProfilePhotoUrl())
                         .apply(RequestOptions.circleCropTransform())
                         .into(imgProfile);
+            } else {
+                CommonUtils.LOG_NEREDEYIZ("profil fotosu duzenleniyor");
+                setInitialLettersAsProfilePic(user);
             }
 
-            if(user.getUserInfo().getUsername() != null){
+            if (user.getUserInfo().getUsername() != null) {
                 txtUserName.setText(user.getUserInfo().getUsername());
             }
 
         }
 
-        if(user.getRelationCountInfo() != null ){
+        if (user.getRelationCountInfo() != null) {
             Log.i("->UserRelationCountInfo", user.getRelationCountInfo().toString());
             txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
             txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + "following");
         }
 
 
+    }
+
+    private void setInitialLettersAsProfilePic(UserProfile user) {
+
+        String picText;
+        String lastName = "";
+        String firstName = "";
+
+        if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().isEmpty()) {
+            String name = user.getUserInfo().getName();
+
+            lastName = name.substring(name.lastIndexOf(" ") + 1);
+            firstName = name.substring(0, name.lastIndexOf(' '));
+            picText = firstName.substring(0, 1) + lastName.substring(0, 1);
+
+        } else {
+
+            if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().isEmpty()) {
+                String username = user.getUserInfo().getUsername();
+                picText = username.substring(0, 1);
+            } else {
+                picText = "You";
+            }
+
+        }
+
+        txtProfile.setText(picText);
+        txtProfile.setVisibility(View.VISIBLE);
+
+    }
+
+    public BitmapDrawable writeOnDrawable(int drawableId, String text){
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
+
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+
+        paint.setColor(Color.WHITE);
+        paint.setTextSize(50);
+
+        Canvas canvas = new Canvas(bm);
+        canvas.drawText(text, bm.getWidth()/2, bm.getHeight()/2, paint);
+
+        return new BitmapDrawable(bm);
     }
 
 

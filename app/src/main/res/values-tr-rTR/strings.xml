@@ -141,5 +141,7 @@
     <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
     <string name="SHARE_IS_SUCCESSFUL">Paylaşım Başarılı</string>
 
+    <string name="emptyFeed">Arkadaşlarınızın paylaşımlarını görebilmek için onları takip etmeye başlayın :)</string>
+
 
 </resources>

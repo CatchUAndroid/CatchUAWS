@@ -114,11 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
             user.setUserid(firebaseAuth.getCurrentUser().getUid());
             user.setEmail(firebaseAuth.getCurrentUser().getEmail());
-            user.setUsername("not_important_here");
+            user.setUsername("default");
 
-
-            Log.i("eeeemail", firebaseAuth.getCurrentUser().getEmail());
-            Log.i("info", "burdayımm");
         }
 
         displayUserInfo(user);
@@ -154,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayUserInfo(User user) {
 
-        Log.i("*******", "Current User *******");
+        Log.i("*******", "currentUser *******");
         Log.i("-> userId", user.getUserid());
         Log.i("-> Email", user.getEmail());
         if (user.getName() != null)
