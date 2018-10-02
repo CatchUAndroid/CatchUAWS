@@ -86,18 +86,15 @@ public class SharePostProcess {
     }
 
     private void uploadMediasToS3() {
-
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startUploadMediaToS3(token);
             }
         });
-
     }
 
     private void startUploadMediaToS3(String token) {
-
         SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -141,8 +138,7 @@ public class SharePostProcess {
 
     }
 
-    public void uploadImages(final String downloadUrl, final String thumbnailUrl,
-                             String uploadUrl, final String extensionType, Bitmap bitmap) {
+    public void uploadImages(final String downloadUrl, final String thumbnailUrl, String uploadUrl, final String extensionType, Bitmap bitmap) {
         UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -198,6 +194,11 @@ public class SharePostProcess {
                 media.setThumbnail(thumbnailUrl);
                 media.setUrl(downloadUrl);
                 ShareItems.getInstance().getPost().getAttachments().add(media);
+
+                /*if(mediaType.equals(VIDEO_TYPE)){
+                    uploadThumbnailImage();
+                }*/
+
                 uploadIndex++;
 
                 if (uploadIndex == totalMediaCount)
@@ -215,19 +216,38 @@ public class SharePostProcess {
         }
     }
 
-    private void saveShareItemsToNeoJ() {
+    /*public void uploadThumbnailImage(final String downloadUrl, final String thumbnailUrl, String uploadUrl) {
+        UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                HttpURLConnection urlConnection = (HttpURLConnection) object;
+                handleUrlConnectionResult(urlConnection, extensionType, IMAGE_TYPE, thumbnailUrl, downloadUrl);
+            }
 
+            @Override
+            public void onFailure(Exception e) {
+                dialogDismiss();
+                CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                serviceCompleteCallback.onFailed(e);
+            }
+
+            @Override
+            public void onTaskContinue() {
+            }
+        }, bitmap, uploadUrl);
+        uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }*/
+
+    private void saveShareItemsToNeoJ() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startsaveShareItemsToNeoJ(token);
             }
         });
-
     }
 
     private void startsaveShareItemsToNeoJ(String token) {
-
         postRequest = new PostRequest();
         ShareItems.getInstance().getPost().setPrivacyType(getPostPrivacyType());
         ShareItems.getInstance().getPost().setAllowList(getParticipantList());

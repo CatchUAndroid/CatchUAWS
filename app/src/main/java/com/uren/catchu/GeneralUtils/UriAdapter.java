@@ -5,6 +5,8 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -257,6 +259,19 @@ public class UriAdapter extends AppCompatActivity {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public static boolean isImagePortrait(Uri uri){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+        int imageHeight = options.outHeight;
+        int imageWidth = options.outWidth;
+
+        if(imageHeight > imageWidth)
+            return true;
+        else
+            return false;
     }
 
 }

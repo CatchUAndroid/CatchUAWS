@@ -32,6 +32,7 @@ public class PhotoSelectUtil {
     static Context context;
     static Intent data;
     static String type;
+    static boolean portraitMode;
 
     public PhotoSelectUtil(Context context, Intent data, String type) {
         this.context = context;
@@ -45,6 +46,7 @@ public class PhotoSelectUtil {
         this.type = type;
         this.mediaUri = uri;
         routeSelection();
+        setPortraitMode();
     }
 
     private void routeSelection() {
@@ -79,16 +81,20 @@ public class PhotoSelectUtil {
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
-    public static void onSelectFromGalleryResult() {
-        mediaUri = data.getData();
-        if (data != null) {
-            try {
-                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-                imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-                bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+    public static void onSelectFromGalleryResult(){
+        try {
+            mediaUri = data.getData();
+            if (data != null) {
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+                    imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+                    bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
         }
     }
 
@@ -97,6 +103,19 @@ public class PhotoSelectUtil {
         mediaUri = data.getData();
         imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+    }
+
+    public static void setPortraitMode(){
+        if(bitmap == null)
+            return;
+
+        int width = bitmap.getWidth();
+        int heigth = bitmap.getHeight();
+
+        if(heigth > width)
+            portraitMode = true;
+        else
+            portraitMode = false;
     }
 
     public Bitmap getBitmap() {
@@ -121,5 +140,13 @@ public class PhotoSelectUtil {
 
     public void setImageRealPath(String imageRealPath) {
         PhotoSelectUtil.imageRealPath = imageRealPath;
+    }
+
+    public boolean isPortraitMode() {
+        return portraitMode;
+    }
+
+    public void setPortraitMode(boolean portraitMode) {
+        PhotoSelectUtil.portraitMode = portraitMode;
     }
 }

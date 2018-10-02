@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainShareMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -8,11 +9,11 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="30dp"
         android:background="@color/black"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/cancelTv"
@@ -20,11 +21,11 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
+            android:gravity="center"
             android:text="@string/cancel"
             android:textColor="@color/white"
             android:textSize="15dp"
-            android:textStyle="bold"
-            android:gravity="center"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/nextTv"
@@ -46,27 +47,65 @@
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="13">
+        android:layout_height="match_parent">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/htab_appbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@color/black"
             android:fitsSystemWindows="true"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-            <android.support.design.widget.TabLayout
-                android:id="@+id/htab_tabs"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:background="@color/tintColor"
-                app:tabGravity="fill"
-                app:tabIndicatorHeight="1dp"
-                app:tabIndicatorColor="@android:color/black"
-                app:tabTextColor="@color/white" />
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/img_border"
+                        android:src="@drawable/black_cancel_icon"
+                        android:id="@+id/cancelImgv"/>
+
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/htab_tabs"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="4"
+                        android:background="@drawable/img_border"
+                        app:tabGravity="fill"
+                        app:tabIndicatorColor="@android:color/black"
+                        app:tabIndicatorHeight="0dp"
+                        app:tabTextColor="@color/white" />
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/img_border"
+                        android:src="@drawable/black_tick_icon"
+                        android:id="@+id/nextImgv"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="1.5dp"
+                    android:background="@color/White"></LinearLayout>
+
+            </LinearLayout>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -77,17 +116,6 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     </android.support.design.widget.CoordinatorLayout>
-
-    <!--android.support.design.widget.FloatingActionButton
-        android:id="@+id/nextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
-        android:src="@drawable/forward_arrow" /-->
-
 
 </LinearLayout>
 

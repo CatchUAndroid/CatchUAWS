@@ -74,13 +74,11 @@ public class GroupFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
         groupRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
         getData();
     }
 
     public void getData(){
-
         UserGroups userGroups = UserGroups.getInstance(AccountHolderInfo.getUserID());
         UserGroupsListAdapter userGroupsListAdapter = new UserGroupsListAdapter(context, userGroups.getGroupRequestResult());
         groupRecyclerView.setAdapter(userGroupsListAdapter);

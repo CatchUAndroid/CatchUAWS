@@ -21,16 +21,15 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    private static OnEventListener<AccountHolderInfo> mCallBack;
+    //private static OnEventListener<AccountHolderInfo> mCallBack;
     private static Context context;
-    private static String token;
+    //private static String token;
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
     private static String FBuserId;
 
     public static AccountHolderInfo getInstance() {
-
         if (accountHolderInfoInstance == null) {
             accountHolderInfoInstance = new AccountHolderInfo();
         }
@@ -53,23 +52,19 @@ public class AccountHolderInfo {
     }
 
     public static String getUserID() {
-
         return getUserIdFromFirebase();
     }
 
     private void getProfileDetail(final String userid) {
-
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startGetProfileDetail(userid, token);
             }
         });
-
     }
 
     private void startGetProfileDetail(final String userid, String token) {
-
         UserDetail loadUserDetail = new UserDetail(context, new OnEventListener<UserProfile>() {
 
             @Override
@@ -80,9 +75,7 @@ public class AccountHolderInfo {
                 }else{
                     userProfile = up;
                     CommonUtils.LOG_OK("UserDetailProcess");
-
                 }
-
             }
 
             @Override
@@ -97,15 +90,12 @@ public class AccountHolderInfo {
         }, userid, token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public static String getUserIdFromFirebase() {
-
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         FBuserId = currentUser.getUid();
         return FBuserId;
-
     }
 
     public static FirebaseAuth getFirebaseAuth() {
@@ -113,7 +103,6 @@ public class AccountHolderInfo {
     }
 
     public static void getToken(final TokenCallback tokenCallback) {
-
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
         tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {

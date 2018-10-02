@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/photoSelectedLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@color/transparentBlack">
+
+    <Button
+        android:id="@+id/finishButton"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/img_border"
+        android:text="@string/finish"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="normal|bold|italic"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginBottom="15dp"
+            android:background="@color/transparent"
+            android:textColor="@color/White"
+            android:textStyle="bold"/>
+
+        <include layout="@layout/color_palette_layout"></include>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

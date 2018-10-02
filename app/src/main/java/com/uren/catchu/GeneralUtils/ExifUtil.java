@@ -4,12 +4,15 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.os.Build;
+import android.util.Log;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static com.facebook.GraphRequest.TAG;
 
 public class ExifUtil {
 
@@ -108,7 +111,7 @@ public class ExifUtil {
         return bitmap;
     }
 
-    private static int getExifOrientation(String src) throws IOException {
+    public static int getExifOrientation(String src) throws IOException {
         int orientation = 1;
 
         try {

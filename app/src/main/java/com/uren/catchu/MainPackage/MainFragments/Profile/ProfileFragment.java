@@ -326,8 +326,6 @@ public class ProfileFragment extends BaseFragment
         }, AccountHolderInfo.getUserID(), token);
 
         loadUserDetail.execute();
-
-
     }
 
     @Override

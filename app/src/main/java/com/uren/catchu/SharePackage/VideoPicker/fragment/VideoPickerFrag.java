@@ -42,6 +42,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CameraUtil;
 import com.uren.catchu.SharePackage.VideoPicker.Adapters.VideoFileAdapter;
+import com.uren.catchu.SharePackage.VideoPicker.Utils.VideoFileListForDelete;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.io.File;
@@ -150,9 +151,11 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                 camParamsLayout.setVisibility(View.VISIBLE);
 
                 if (videoFile != null) {
-                    videoFile.delete();
+                    VideoFileListForDelete.getInstance().addFileToList(videoFile);
+                    /*videoFile.delete();
                     videoFile = null;
                     videoFilePath = null;
+                    videoUri = null;*/
                     ShareItems.getInstance().clearVideoShareItemBox();
                 }
 
@@ -160,7 +163,6 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                     videoViewRelLayout.setVisibility(View.GONE);
                     texttureViewLayout.setVisibility(View.VISIBLE);
                 }
-
 
                 previewCamera();
             }
@@ -464,7 +466,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-        Log.i("Info", "onSurfaceTextureUpdated");
+        //Log.i("Info", "onSurfaceTextureUpdated");
     }
 
     public void setFlashModeOff() {
@@ -501,6 +503,11 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
             if (mediaPlayer != null) {
                 mediaPlayer = null;
+            }
+
+            if(videoView != null){
+                videoView.suspend();
+                videoView = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -558,7 +565,15 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
                     mediaPlayer = mp;
-                    cancelImageView.setVisibility(View.VISIBLE);
+
+
+                    mediaPlayer.start();
+                    mediaPlayerIsPlaying = true;
+
+
+                    if(camParamsLayout.getVisibility() == View.GONE)
+                        cancelImageView.setVisibility(View.VISIBLE);
+
                     playVideoImgv.setVisibility(View.GONE);
                     mediaPlayerTotalLen = mediaPlayer.getCurrentPosition();
 

@@ -5,7 +5,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,8 +16,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -25,6 +31,7 @@ import java.util.ArrayList;
 import android.preference.PreferenceManager;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.PhotoSelectCallback;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
@@ -40,35 +47,27 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     private ArrayList<File> fileList;
     View view;
+    PhotoSelectCallback photoSelectCallback;
 
     LayoutInflater layoutInflater;
 
     public static Context context;
 
     int selectedPosition = 0;
+    private static final int paddingSize = 80;
 
     PermissionModule permissionModule;
     GalleryPickerFrag galleryPickerFrag;
     PhotoSelectUtil photoSelectUtil;
 
-    public GalleryGridListAdapter(Context context, ArrayList<File> fileList, GalleryPickerFrag galleryPickerFrag) {
+    public GalleryGridListAdapter(Context context, ArrayList<File> fileList, GalleryPickerFrag galleryPickerFrag,
+                                  PhotoSelectCallback photoSelectCallback) {
         layoutInflater = LayoutInflater.from(context);
         this.fileList = fileList;
         this.context = context;
+        this.photoSelectCallback = photoSelectCallback;
         this.galleryPickerFrag = galleryPickerFrag;
         permissionModule = new PermissionModule(context);
-        addListeners();
-    }
-
-    private void addListeners() {
-        galleryPickerFrag.cancelImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                galleryPickerFrag.photoRelLayout.setVisibility(View.GONE);
-                galleryPickerFrag.specialRecyclerView.setVisibility(View.VISIBLE);
-                ShareItems.getInstance().clearImageShareItemBox();
-            }
-        });
     }
 
     @Override
@@ -76,10 +75,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         view = layoutInflater.inflate(R.layout.media_item_view, parent, false);
         GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
         return holder;
-
-       /* int width = parent.getMeasuredHeight() / 4;
-        view.setMinimumHeight(width);
-        return new GalleryGridListAdapter.MyViewHolder(view);*/
     }
 
     @Override
@@ -88,11 +83,11 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectUtil = new PhotoSelectUtil(context, data, GALLERY_TEXT);
                 fillImageShareItemBox();
-                setSelectedImageView();
+                photoSelectCallback.onSelect(photoSelectUtil.getMediaUri(), photoSelectUtil.isPortraitMode());
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectUtil = new PhotoSelectUtil(context, data, CAMERA_TEXT);
                 fillImageShareItemBox();
-                setSelectedImageView();
+                photoSelectCallback.onSelect(photoSelectUtil.getMediaUri(), photoSelectUtil.isPortraitMode());
             } else
                 DialogBoxUtil.showErrorDialog(context,  "GalleryGridListAdapter:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
                     @Override
@@ -111,13 +106,15 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     class MyViewHolder extends RecyclerView.ViewHolder {
         File selectedFile;
         int position = 0;
-        ImageView specialProfileImgView;
+        ImageView mMediaThumb;
+        ConstraintLayout constraintLayout;
 
         public MyViewHolder(final View itemView) {
             super(itemView);
-            specialProfileImgView = view.findViewById(R.id.mMediaThumb);
+            mMediaThumb = view.findViewById(R.id.mMediaThumb);
+            constraintLayout = view.findViewById(R.id.constraintLayout);
 
-            specialProfileImgView.setOnClickListener(new View.OnClickListener() {
+            mMediaThumb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     selectedPosition = getAdapterPosition();
@@ -133,12 +130,8 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         }
 
         public void showSelectedPicture() {
-            Log.i("Info", "Position:" + position + " - filelen:" + selectedFile.length());
-            galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
-            galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
-            galleryPickerFrag.initImageView();
-            Glide.with(context).load(Uri.fromFile(selectedFile)).into(galleryPickerFrag.imageView);
             photoSelectUtil = new PhotoSelectUtil(context, Uri.fromFile(selectedFile), FROM_FILE_TEXT);
+            photoSelectCallback.onSelect(Uri.fromFile(selectedFile), photoSelectUtil.isPortraitMode());
             fillImageShareItemBox();
         }
 
@@ -147,12 +140,16 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             this.selectedFile = selectedFile;
 
             if (position == CODE_GALLERY_POSITION) {
-                specialProfileImgView.setImageResource(R.drawable.gallery);
+                mMediaThumb.setImageResource(R.drawable.gallery_picker_icon);
+                constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.white, null));
+                mMediaThumb.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
             } else if (position == CODE_CAMERA_POSITION) {
-                specialProfileImgView.setImageResource(R.drawable.camera);
+                mMediaThumb.setImageResource(R.drawable.camera_picker_icon);
+                constraintLayout.setBackgroundColor(context.getResources().getColor(R.color.white, null));
+                mMediaThumb.setPadding(paddingSize, paddingSize, paddingSize, paddingSize);
             } else {
-                Log.i("Info", "selectedFile:" + Uri.fromFile(selectedFile).toString() + "-position:" + position);
-                Glide.with(context).load(selectedFile).into(specialProfileImgView);
+                mMediaThumb.setPadding(0, 0, 0, 0);
+                Glide.with(context).load(selectedFile).into(mMediaThumb);
             }
         }
     }
@@ -195,13 +192,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         else
             galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.CAMERA},
                     permissionModule.getCameraPermissionCode());
-    }
-
-    public void setSelectedImageView() {
-        galleryPickerFrag.initImageView();
-        Glide.with(context).load(photoSelectUtil.getMediaUri()).into(galleryPickerFrag.imageView);
-        galleryPickerFrag.specialRecyclerView.setVisibility(View.GONE);
-        galleryPickerFrag.photoRelLayout.setVisibility(View.VISIBLE);
     }
 
     public void startGalleryProcess() {

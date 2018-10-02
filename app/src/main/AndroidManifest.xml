@@ -53,9 +53,11 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+        <!--
+            meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" /
+        -->
 
         <activity android:name=".GroupPackage.AddGroupActivity" />
         <activity android:name=".GroupPackage.SelectFriendToGroupActivity" />
@@ -65,18 +67,6 @@
             android:name=".GroupPackage.EditGroupNameActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".SharePackage.MainShareActivity" />
-        <!--
-             The API key for Google Maps-based APIs is defined as a string resource.
-             (See the file "res/values/google_maps_api.xml").
-             Note that the API key is linked to the encryption key used to sign the APK.
-             You need a different API key for each encryption key, including the release key that is used to
-             sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
-
         <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
         <activity android:name=".SharePackage.ShareDetailActivity" />
         <activity android:name=".SharePackage.SelectGroupActivity" />
@@ -92,9 +82,21 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".LoginPackage.LoginActivity"></activity>
+        <activity android:name=".LoginPackage.LoginActivity" />
         <activity android:name=".LoginPackage.RegisterActivity" />
         <activity android:name=".LoginPackage.ForgetPasswordActivity" />
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
     </application>
 
 </manifest>

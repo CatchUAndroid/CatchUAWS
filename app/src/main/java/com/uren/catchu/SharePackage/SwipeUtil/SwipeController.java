@@ -1,4 +1,4 @@
-package com.uren.catchu.SharePackage;
+package com.uren.catchu.SharePackage.SwipeUtil;
 
 import android.content.Context;
 import android.graphics.Canvas;

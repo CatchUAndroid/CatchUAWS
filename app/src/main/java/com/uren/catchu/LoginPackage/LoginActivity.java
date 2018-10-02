@@ -368,11 +368,6 @@ public class LoginActivity extends AppCompatActivity
         userEmail = emailET.getText().toString();
         userPassword = passwordET.getText().toString();
 
-        //Test scenario
-        //todo : NT - kaldırılacak
-        userEmail = "nurullaht@gmail.com";
-        userPassword = "N.t12345";
-
         //validation controls
         if (!checkValidation(userEmail, userPassword)) {
             return;

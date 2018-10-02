@@ -87,7 +87,7 @@ public class LocationTrackerAdapter implements LocationListener {
                     locationManager.requestLocationUpdates(
                             LocationManager.NETWORK_PROVIDER,
                             MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES, (android.location.LocationListener) this);
+                            MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
                 }
 
 
@@ -109,15 +109,10 @@ public class LocationTrackerAdapter implements LocationListener {
                         locationManager.requestLocationUpdates(
                                 LocationManager.NETWORK_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES, (android.location.LocationListener) mContext);
+                                MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
                     }
 
                     if (locationManager != null) {
-
-                        // TODO: 3.09.2018 - getBestProvider kullanilabilir mi bakalim...
-                        //Criteria criteria = new Criteria();
-                        //location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-
                         location = locationManager
                                 .getLastKnownLocation(LocationManager.GPS_PROVIDER);
 
@@ -135,23 +130,4 @@ public class LocationTrackerAdapter implements LocationListener {
 
         return location;
     }
-
-    /*public void showSettingsAlert() {
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
-
-        alertDialog.setTitle(mContext.getResources().getString(R.string.gpsSettings));
-
-        alertDialog.setMessage(mContext.getResources().getString(R.string.gpsSettingMessage));
-        alertDialog.setCancelable(false);
-
-        alertDialog.setPositiveButton(mContext.getResources().getString(R.string.settings), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                mContext.startActivity(intent);
-            }
-        });
-
-
-        alertDialog.show();
-    }*/
 }

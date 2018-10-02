@@ -19,7 +19,12 @@
         <item name="tabPaddingEnd">0dp</item>
         <item name="tabGravity">fill</item>
         <item name="tabMode">fixed</item>
-
     </style>
+
+    <!--style name="sss">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style-->
 
 </resources>

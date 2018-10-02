@@ -1,4 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="shareItemPadSize">30dp</dimen>
+    <dimen name="edittextsize">15sp</dimen>
 </resources>

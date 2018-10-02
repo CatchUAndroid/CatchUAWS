@@ -1,6 +1,7 @@
 package com.uren.catchu.GeneralUtils;
 
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,9 +16,13 @@ import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +61,12 @@ public class CommonUtils {
 
     }
 
-
+    public static void setEnableOrDisableAllItemsOfLinearLayout(LinearLayout layout, boolean enableType){
+        for (int i = 0; i < layout.getChildCount(); i++) {
+            View child = layout.getChildAt(i);
+            child.setEnabled(enableType);
+        }
+    }
 
     public static void setButtonBackgroundColor(Context context, Button button, int color) {
 
