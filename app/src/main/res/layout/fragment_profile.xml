@@ -62,12 +62,31 @@
                         android:gravity="center"
                         android:orientation="vertical">
 
-                        <ImageView
-                            android:id="@+id/imgProfile"
+
+                        <RelativeLayout
                             android:layout_width="100dp"
-                            android:layout_height="100dp"
-                            android:layout_gravity="center"
-                            android:background="@drawable/img_border" />
+                            android:layout_height="100dp">
+
+                            <ImageView
+                                android:id="@+id/imgProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:background="@drawable/img_border" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:textSize="30sp"
+                                android:gravity="center"
+                                android:id="@+id/txtProfile"
+                                android:visibility="gone"
+                                android:textAllCaps="true" />
+
+
+                        </RelativeLayout>
+
+
 
                         <TextView
                             android:id="@+id/txtUserName"

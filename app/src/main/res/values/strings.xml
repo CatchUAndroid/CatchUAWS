@@ -167,6 +167,7 @@
     <string name="PASSWORD_LINK_SEND_SUCCESS">Renew password link has sent to your email address.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
 
+    <string name="emptyFeed">Start following people, posts will be shown here :)</string>
 
 
 </resources>

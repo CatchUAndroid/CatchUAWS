@@ -591,6 +591,7 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void success(Result<String> result) {
                 loginUser.setEmail(result.data);
+                Log.i("twitterEmail :", result.data);
             }
 
             @Override

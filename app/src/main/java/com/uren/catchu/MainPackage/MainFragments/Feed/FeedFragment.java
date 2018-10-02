@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.R;
@@ -50,6 +52,9 @@ public class FeedFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+    @BindView(R.id.txtNoFeed)
+    TextView txtNoFeed;
+
     //todo : NT degerler current locationdan alınacak..
     String longitude;
     String latitude;
@@ -66,6 +71,8 @@ public class FeedFragment extends BaseFragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_feed, container, false);
             ButterKnife.bind(this, mView);
+
+            CommonUtils.LOG_NEREDEYIZ("FeedFragment");
 
             init();
             getPosts();
@@ -103,8 +110,10 @@ public class FeedFragment extends BaseFragment {
 
                 if(postListResponse == null){
                     Log.i("**PostListResponseProce", "SERVER:OK BUT DATA:NULL");
+                    setTextNoFeedVisible(true);
                 }else{
                     Log.i("**PostListResponseProce", "OK");
+                    setTextNoFeedVisible(false);
                     setUpRecyclerView(postListResponse);
                 }
                 progressBar.setVisibility(View.GONE);
@@ -124,6 +133,14 @@ public class FeedFragment extends BaseFragment {
 
         postListResponseProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
+    }
+
+    private void setTextNoFeedVisible(boolean setVisible) {
+        if(setVisible){
+            txtNoFeed.setVisibility(View.VISIBLE);
+        }else{
+            txtNoFeed.setVisibility(View.GONE);
+        }
     }
 
     private void setUpRecyclerView(PostListResponse postListResponse) {

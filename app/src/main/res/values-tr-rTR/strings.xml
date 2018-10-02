@@ -136,5 +136,7 @@
     <string name="PASSWORD_LINK_SEND_SUCCESS">Şifre sıfırlama linki e-mail adresinize gönderildi.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
 
+    <string name="emptyFeed">Arkadaşlarınızın paylaşımlarını görebilmek için onları takip etmeye başlayın :)</string>
+
 
 </resources>

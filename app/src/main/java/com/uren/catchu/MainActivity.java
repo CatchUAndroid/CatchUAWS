@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayUserInfo(User user) {
 
-        Log.i("*******", "Current User *******");
+        Log.i("*******", "currentUser *******");
         Log.i("-> userId", user.getUserid());
         Log.i("-> Email", user.getEmail());
         if (user.getName() != null)

@@ -294,7 +294,12 @@ public class UserEditFragment extends BaseFragment
         final UserProfile userProfile = AccountHolderInfo.getInstance().getUser();
 
         userProfileProperties.setUserid(userProfile.getUserInfo().getUserid());
-        userProfileProperties.setProfilePhotoUrl(userProfile.getUserInfo().getProfilePhotoUrl());
+        if(profilPicChanged){
+            userProfileProperties.setProfilePhotoUrl(cropImageUri.toString()) ;
+        }else{
+            userProfileProperties.setProfilePhotoUrl(userProfile.getUserInfo().getProfilePhotoUrl());
+        }
+
 
         if (edtName.getText().toString().isEmpty()) {
             userProfileProperties.setName("");
@@ -348,7 +353,7 @@ public class UserEditFragment extends BaseFragment
                 DialogBoxUtil.showSuccessDialogBox(getActivity(), getActivity().getResources().getString(R.string.profileUpdateSuccessful), null, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
-
+                        editProfileCancelClicked();
                     }
                 });
             }
@@ -527,6 +532,10 @@ public class UserEditFragment extends BaseFragment
                 .load(bitmap)
                 .apply(RequestOptions.circleCropTransform())
                 .into(imgProfile);
+
+        profilPicChanged = true;
+
+
 
     }
 
