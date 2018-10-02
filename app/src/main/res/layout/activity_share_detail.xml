@@ -185,6 +185,30 @@
             </LinearLayout>
         </LinearLayout>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="0.13"
+            android:background="@drawable/layout_border_shape">
+
+            <EditText
+                android:id="@+id/mainEditText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:focusable="false"
+                android:gravity="top"
+                android:hint="@string/typeToAddText"
+                android:scrollbars="vertical"
+                android:textColor="@color/White"
+                android:textColorHint="@color/transparent_white" />
+
+        </ScrollView>
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
             android:layout_width="match_parent"
@@ -201,34 +225,6 @@
             android:layout_below="@+id/viewPager"
             android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal" />
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="0.5"
-            android:background="@drawable/layout_border_shape">
-
-            <EditText
-                android:id="@+id/mainEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top"
-                android:hint="@string/typeToAddText"
-                android:inputType="textMultiLine"
-                android:lines="8"
-                android:maxLines="10"
-                android:minLines="6"
-                android:scrollbars="vertical"
-                android:textColor="@color/White"
-                android:textColorHint="@color/transparent_white"
-                android:focusable="false"/>
-
-
-        </ScrollView>
 
         <!--EditText
             android:id="@+id/editText"
