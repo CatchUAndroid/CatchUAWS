@@ -47,55 +47,38 @@
         <ScrollView
             android:id="@+id/noteScrollView"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="350dp"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="2dp"
-            android:layout_weight="10"
             android:background="@drawable/layout_border_shape">
 
             <EditText
                 android:id="@+id/noteTextEditText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/transparent"
+                android:cursorVisible="false"
                 android:gravity="top"
                 android:hint="@string/typeToAddText"
                 android:inputType="textMultiLine"
                 android:lines="20"
                 android:maxLines="20"
-                android:cursorVisible="false"
                 android:minLines="6"
                 android:scrollbars="vertical"
-                android:textCursorDrawable="@null"
-                android:textSize="16sp"
                 android:textColor="@color/White"
                 android:textColorHint="@color/transparent_white"
-                android:background="@color/transparent" />
+                android:textCursorDrawable="@null"
+                android:textSize="16sp" />
 
 
         </ScrollView>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:orientation="horizontal">
@@ -104,8 +87,8 @@
                 android:id="@+id/approveImgv"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:src="@drawable/approve_icon_96"
-                android:background="@drawable/img_border_white"/>
+                android:background="@drawable/img_border_white"
+                android:src="@drawable/approve_icon_96" />
 
         </LinearLayout>
 

@@ -89,5 +89,8 @@ public class ShareItems{
         videoShareItemBoxes.clear();
     }
 
+    public int getTotalMediaCount(){
+        return videoShareItemBoxes.size() + imageShareItemBoxes.size();
+    }
 
 }

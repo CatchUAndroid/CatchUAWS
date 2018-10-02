@@ -185,15 +185,31 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ScrollView
+
+        <EditText
+            android:id="@+id/mainEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparent"
+            android:focusable="false"
+            android:gravity="top"
+            android:hint="@string/typeToAddText"
+            android:layout_marginBottom="2dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:scrollbars="vertical"
+            android:textColor="@color/White"
+            android:textColorHint="@color/transparent_white" />
+
+        <!--ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="2dp"
-            android:layout_weight="0.13"
-            android:background="@drawable/layout_border_shape">
+            android:layout_weight="0.15">
 
             <EditText
                 android:id="@+id/mainEditText"
@@ -207,7 +223,7 @@
                 android:textColor="@color/White"
                 android:textColorHint="@color/transparent_white" />
 
-        </ScrollView>
+        </ScrollView-->
 
         <android.support.v4.view.ViewPager
             android:id="@+id/viewPager"
@@ -215,7 +231,7 @@
             android:layout_height="0dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_weight="1"></android.support.v4.view.ViewPager>
 
         <LinearLayout

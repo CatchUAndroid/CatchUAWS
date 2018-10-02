@@ -24,6 +24,8 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.ImageFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.VideoFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
+import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
 import com.uren.catchu.VideoPlay.VideoPlay;
 
@@ -40,105 +42,78 @@ import static com.uren.catchu.Constants.StringConstants.VIEWPAGER_VIDEO;
 public class ShareItemsDisplayAdapter extends PagerAdapter {
     private Activity mActivity;
     private Context mContext;
-    private List<Media> attachments;
-    private List<MyVideoModel> videoList = new ArrayList<>();
-    private List<String> imageList = new ArrayList<>();
     private int imageCounter;
     private int videoCounter;
     private VideoPlay videoPlay;
 
-
-    public ShareItemsDisplayAdapter(Activity activity, Context context, List<Media> attachments) {
+    public ShareItemsDisplayAdapter(Activity activity, Context context) {
         this.mActivity = activity;
         this.mContext = context;
-        this.attachments = attachments;
         this.imageCounter = 0;
         this.videoCounter = 0;
-        seperateAttachmentsByTypes();
-    }
-
-    private void seperateAttachmentsByTypes() {
-
-        for (int i = 0; i < attachments.size(); i++) {
-
-            switch (attachments.get(i).getType()) {
-                case VIDEO_TYPE:
-                    MyVideoModel myVideoModel = new MyVideoModel(attachments.get(i).getUrl(), attachments.get(i).getThumbnail(), "video");
-                    videoList.add(myVideoModel);
-                    break;
-                case IMAGE_TYPE:
-                    imageList.add(attachments.get(i).getUrl());
-                    break;
-                default:
-                    DialogBoxUtil.showErrorDialog(mContext, "ShareItemsDisplayAdapter:Unknown media item!", new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
-                    break;
-            }
-        }
     }
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
 
-        View itemView;
-        if (videoCounter < videoList.size()) {
+        View itemView = null;
+
+        if (videoCounter < ShareItems.getInstance().getVideoShareItemBoxes().size()) {
             itemView = LayoutInflater.from(mContext).inflate(R.layout.viewpager_video, collection, false);
 
-            loadVideo(itemView);
-            loadImage(itemView, VIEWPAGER_VIDEO);
+            VideoShareItemBox videoShareItemBox = ShareItems.getInstance().getVideoShareItemBoxes().get(videoCounter);
+            loadVideo(itemView, videoShareItemBox);
+            loadImage(itemView, VIEWPAGER_VIDEO, videoShareItemBox);
             videoCounter++;
-        } else if (imageCounter < imageList.size()) {
+        } else if (imageCounter < ShareItems.getInstance().getImageShareItemBoxes().size()) {
             itemView = LayoutInflater.from(mContext).inflate(R.layout.view_red, collection, false);
 
-            loadImage(itemView, VIEWPAGER_IMAGE);
+            ImageShareItemBox imageShareItemBox = ShareItems.getInstance().getImageShareItemBoxes().get(imageCounter);
+            loadImage(itemView, VIEWPAGER_IMAGE, imageShareItemBox);
             imageCounter++;
-        } else {
-            itemView = LayoutInflater.from(mContext).inflate(R.layout.view_red, collection, false);
         }
 
         collection.addView(itemView);
         return itemView;
-
     }
 
-    private void loadVideo(View itemView) {
+    private void loadVideo(View itemView, VideoShareItemBox videoShareItemBox) {
         String videoUrl = "";
-        if (videoList.get(videoCounter).getVideo_url() != null && !videoList.get(videoCounter).getVideo_url().isEmpty()) {
-            videoUrl = videoList.get(videoCounter).getVideo_url();
+        if (videoShareItemBox.getVideoSelectUtil().getVideoRealPath() != null && !videoShareItemBox.getVideoSelectUtil().getVideoRealPath().isEmpty()) {
+            videoUrl = videoShareItemBox.getVideoSelectUtil().getVideoRealPath();
         }
-
         videoPlay = new VideoPlay(itemView, videoUrl, mActivity);
     }
 
-    private void loadImage(View itemView, String TAG) {
-
-        String loadUrl = "";
+    private void loadImage(View itemView, String TAG, Object object) {
         if (TAG.equals(VIEWPAGER_VIDEO)) {
 
-            if (videoList.get(videoCounter).getImage_url() != null && !videoList.get(videoCounter).getImage_url().isEmpty()) {
-                loadUrl = videoList.get(videoCounter).getImage_url();
-            }
+            VideoShareItemBox videoShareItemBox = (VideoShareItemBox) object;
+            Bitmap videoBitmap = videoShareItemBox.getVideoSelectUtil().getVideoBitmap();
 
-            Glide.with(mContext)
-                    .load(loadUrl)
-                    .apply(RequestOptions.centerInsideTransform())
-                    .into(videoPlay.getImageView());
+            if (videoBitmap != null) {
+                Glide.with(mContext)
+                        .load(videoBitmap)
+                        .apply(RequestOptions.centerInsideTransform())
+                        .into(videoPlay.getImageView());
+            }
 
         } else if (TAG.equals(VIEWPAGER_IMAGE)) {
 
             ImageView imgFeedItem = itemView.findViewById(R.id.imgFeedItem);
+            ImageShareItemBox imageShareItemBox = (ImageShareItemBox) object;
+            Bitmap imageBitmap;
 
-            if (imageList.get(imageCounter) != null && !imageList.get(imageCounter).isEmpty()) {
-                loadUrl = imageList.get(imageCounter);
-            }
+            if(imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
+                imageBitmap = imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap();
+            else
+                imageBitmap = imageShareItemBox.getPhotoSelectUtil().getBitmap();
 
-            Glide.with(mContext)
-                    .load(loadUrl)
-                    .apply(RequestOptions.fitCenterTransform())
-                    .into(imgFeedItem);
+            if (imageBitmap != null)
+                Glide.with(mContext)
+                        .load(imageBitmap)
+                        .apply(RequestOptions.fitCenterTransform())
+                        .into(imgFeedItem);
         }
     }
 
@@ -149,7 +124,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return attachments.size();
+        return ShareItems.getInstance().getTotalMediaCount();
     }
 
     @Override

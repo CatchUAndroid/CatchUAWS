@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -38,7 +39,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.BaseBackPressedListener;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Interfaces.OnBackPressedListener;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -77,6 +80,7 @@ public class GalleryPickerFrag extends Fragment{
     View mView;
     ArrayList<File> mFiles;
     GridLayoutManager gridLayoutManager;
+    PhotoSelectUtil photoUtil;
 
     private static final String EXTENSION_JPG = ".jpg";
     private static final String EXTENSION_JPEG = ".jpeg";
@@ -280,9 +284,10 @@ public class GalleryPickerFrag extends Fragment{
         fetchMedia();
         gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this, new PhotoSelectCallback() {
             @Override
-            public void onSelect(Uri uri, boolean portraitMode) {
-                resetPhotoImageView(portraitMode);
-                Glide.with(getActivity()).load(uri).into(selectImageView);
+            public void onSelect(PhotoSelectUtil photoSelectUtil) {
+                photoUtil = photoSelectUtil;
+                resetPhotoImageView(photoUtil.isPortraitMode());
+                Glide.with(getActivity()).load(photoUtil.getMediaUri()).into(selectImageView);
                 photoMainLayout.setVisibility(View.VISIBLE);
                 specialRecyclerView.setVisibility(View.GONE);
                 seekbar.setVisibility(View.GONE);
@@ -384,5 +389,13 @@ public class GalleryPickerFrag extends Fragment{
         cancelImageView.setVisibility(View.VISIBLE);
         addTextImgv.setVisibility(View.VISIBLE);
         textView.setVisibility(View.VISIBLE);
+    }
+
+    public void checkTextIsAddedOrNot(){
+        if(textView != null && !textView.getText().toString().isEmpty()){
+            Bitmap bitmap = BitmapConversion.getScreenShot(photoRelLayout);
+            photoUtil.setScreeanShotBitmap(bitmap);
+        }
+
     }
 }
