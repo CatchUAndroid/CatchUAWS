@@ -511,12 +511,14 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
 
         updateTextEditText.setText(mainEditText.getText());
         shareMainLayout.addView(noteTextLayout);
-        CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,false);
+        //CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,false);
+        shareMainLinearLayout.setVisibility(View.GONE);
 
         approveTextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+                //CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+                shareMainLinearLayout.setVisibility(View.VISIBLE);
                 ShareItems.getInstance().getPost().setMessage(updateTextEditText.getText().toString());
                 shareMainLayout.removeView(noteTextLayout);
                 mainEditText.setText(updateTextEditText.getText());
@@ -527,7 +529,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 shareMainLayout.removeView(noteTextLayout);
-                CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+                shareMainLinearLayout.setVisibility(View.VISIBLE);
+                //CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
             }
         });
     }
