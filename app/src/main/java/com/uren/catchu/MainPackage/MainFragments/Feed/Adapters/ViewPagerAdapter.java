@@ -3,6 +3,8 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -35,6 +37,7 @@ import com.uren.catchu.VideoPlay.VideoImage;
 import com.uren.catchu.VideoPlay.VideoPlay;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import catchu.model.Media;
@@ -73,9 +76,15 @@ public class ViewPagerAdapter extends PagerAdapter {
         for (int i = 0; i < attachments.size(); i++) {
 
             switch (attachments.get(i).getType()) {
-
                 case VIDEO_TYPE:
-                    MyVideoModel myVideoModel = new MyVideoModel(attachments.get(i).getUrl(), tempImagePath, "video");
+                    String thumbnailPath;
+                    if(attachments.get(i).getThumbnail() != null && !attachments.get(i).getThumbnail().isEmpty()){
+                        thumbnailPath = attachments.get(i).getThumbnail();
+                    }else{
+                        thumbnailPath = tempImagePath;
+                    }
+
+                    MyVideoModel myVideoModel = new MyVideoModel(attachments.get(i).getUrl(), thumbnailPath, "video");
                     videoList.add(myVideoModel);
                     break;
                 case IMAGE_TYPE:
@@ -88,6 +97,8 @@ public class ViewPagerAdapter extends PagerAdapter {
             }
         }
     }
+
+
 
 
     @Override
@@ -146,6 +157,8 @@ public class ViewPagerAdapter extends PagerAdapter {
                 loadUrl = videoList.get(videoCounter).getImage_url();
             }
 
+            //Bitmap bm =  getVideoImageUrl(videoList.get(videoCounter).getVideo_url().toString());
+
             Glide.with(mContext)
                     .load(loadUrl)
                     .apply(RequestOptions.centerInsideTransform())
@@ -170,6 +183,17 @@ public class ViewPagerAdapter extends PagerAdapter {
         }else{
             //do nothing
         }
+
+    }
+
+    private Bitmap getVideoImageUrl(String url) {
+
+
+        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+
+        mediaMetadataRetriever .setDataSource(url, new HashMap<String, String>());
+        Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(10); //unit in microsecond
+        return bmFrame;
 
     }
 

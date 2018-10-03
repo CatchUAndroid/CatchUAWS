@@ -20,16 +20,20 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
     public String latitude;
     public String radius;
     public BaseRequest baseRequest;
+    public String perpage;
+    public String page;
     private String token;
 
     public PostListResponseProcess(Context context, OnEventListener callback,
-                                    BaseRequest baseRequest, String longitude, String latitude, String radius, String token) {
+                                    BaseRequest baseRequest, String longitude, String latitude, String radius, String perpage, String page, String token) {
         mCallBack = callback;
         mContext = context;
         this.longitude = longitude;
         this.latitude = latitude;
         this.radius = radius;
         this.baseRequest = baseRequest;
+        this.perpage = perpage;
+        this.page = page;
         this.token= token;
     }
 
@@ -41,7 +45,7 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
 
         try {
             //todo NT - servislere verilen parametreler düzenlenecek...
-            PostListResponse postListResponse = instance.client.postsGeolocationPost(token, baseRequest, longitude,latitude,radius, "", "");
+            PostListResponse postListResponse = instance.client.postsGeolocationPost(token, baseRequest, longitude, perpage, latitude, radius, page);
 
             if(postListResponse.getError().getCode().intValue() == RESPONSE_OK){
                 return postListResponse;
