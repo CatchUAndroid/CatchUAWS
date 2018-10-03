@@ -1,7 +1,7 @@
 package com.uren.catchu.SharePackage.GalleryPicker.Interfaces;
 
-import android.net.Uri;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 
 public interface PhotoSelectCallback {
-    void onSelect(Uri uri, boolean portraitMode);
+    void onSelect(PhotoSelectUtil photoSelectUtil);
 }

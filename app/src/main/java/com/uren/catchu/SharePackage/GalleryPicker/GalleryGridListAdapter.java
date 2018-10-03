@@ -83,11 +83,11 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectUtil = new PhotoSelectUtil(context, data, GALLERY_TEXT);
                 fillImageShareItemBox();
-                photoSelectCallback.onSelect(photoSelectUtil.getMediaUri(), photoSelectUtil.isPortraitMode());
+                photoSelectCallback.onSelect(photoSelectUtil);
             } else if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectUtil = new PhotoSelectUtil(context, data, CAMERA_TEXT);
                 fillImageShareItemBox();
-                photoSelectCallback.onSelect(photoSelectUtil.getMediaUri(), photoSelectUtil.isPortraitMode());
+                photoSelectCallback.onSelect(photoSelectUtil);
             } else
                 DialogBoxUtil.showErrorDialog(context,  "GalleryGridListAdapter:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
                     @Override
@@ -131,7 +131,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
         public void showSelectedPicture() {
             photoSelectUtil = new PhotoSelectUtil(context, Uri.fromFile(selectedFile), FROM_FILE_TEXT);
-            photoSelectCallback.onSelect(Uri.fromFile(selectedFile), photoSelectUtil.isPortraitMode());
+            photoSelectCallback.onSelect(photoSelectUtil);
             fillImageShareItemBox();
         }
 

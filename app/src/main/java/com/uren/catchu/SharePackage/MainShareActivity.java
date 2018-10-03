@@ -23,6 +23,7 @@ import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
 import com.uren.catchu.SharePackage.GalleryPicker.TextEditFragment;
+import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.Utils.VideoFileListForDelete;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
@@ -74,7 +75,7 @@ public class MainShareActivity extends FragmentActivity {
         nextImgv = findViewById(R.id.nextImgv);
         permissionModule = new PermissionModule(MainShareActivity.this);
         ShareItems.setInstance(null);
-        ShareItems.getInstance();
+        VideoFileListForDelete.setInstance(null);
     }
 
     private void setShareItemUser() {
@@ -144,6 +145,7 @@ public class MainShareActivity extends FragmentActivity {
                 if (checkShareItems.shareIsPossible()) {
                     setShareItemUser();
                     VideoFileListForDelete.getInstance().deleteAllFile();
+                    galleryPickerFrag.checkTextIsAddedOrNot();
                     startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
                 } else
                     DialogBoxUtil.showInfoDialogBox(MainShareActivity.this, checkShareItems.getErrMessage(), null, new InfoDialogBoxCallback() {

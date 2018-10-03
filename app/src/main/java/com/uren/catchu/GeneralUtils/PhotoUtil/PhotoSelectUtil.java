@@ -27,6 +27,7 @@ import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 public class PhotoSelectUtil {
 
     static Bitmap bitmap = null;
+    static Bitmap screeanShotBitmap = null;
     static Uri mediaUri = null;
     static String imageRealPath = null;
     static Context context;
@@ -148,5 +149,13 @@ public class PhotoSelectUtil {
 
     public void setPortraitMode(boolean portraitMode) {
         PhotoSelectUtil.portraitMode = portraitMode;
+    }
+
+    public Bitmap getScreeanShotBitmap() {
+        return screeanShotBitmap;
+    }
+
+    public void setScreeanShotBitmap(Bitmap screeanShotBitmap) {
+        PhotoSelectUtil.screeanShotBitmap = screeanShotBitmap;
     }
 }

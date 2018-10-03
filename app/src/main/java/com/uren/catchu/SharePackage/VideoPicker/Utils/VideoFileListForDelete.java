@@ -1,6 +1,7 @@
 package com.uren.catchu.SharePackage.VideoPicker.Utils;
 
 import com.uren.catchu.Singleton.SelectedGroupList;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,6 +22,10 @@ public class VideoFileListForDelete {
             instance = new VideoFileListForDelete();
         }
         return instance;
+    }
+
+    public static void setInstance(VideoFileListForDelete videoFileListForDelete){
+        instance = videoFileListForDelete;
     }
 
     public void addFileToList(File file){

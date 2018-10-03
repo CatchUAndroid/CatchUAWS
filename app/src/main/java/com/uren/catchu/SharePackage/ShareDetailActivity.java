@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -109,7 +110,6 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
 
     private ViewPager viewPager;
     LinearLayout SliderDots;
-    List<Media> shareMediaList = new ArrayList<Media>();
     private Button shareButton;
 
     public static final int CODE_PUBLIC_SHARED = 0;
@@ -129,6 +129,9 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     public static final int REQUEST_CODE_ENABLE_LOCATION = 3003;
 
     CheckShareItems checkShareItems;
+    String fullText;
+
+    private static final int restrictedTextSize = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,45 +148,14 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         addListeners();
         setDefaultSelectedItem();
         setViewPager();
+        hideKeyBoard();
     }
 
     private void setViewPager() {
-        Post post = new Post();
-        fillImagePost();
-        fillVideoPost();
-        post.setAttachments(shareMediaList);
-        viewPager.setAdapter(new ShareItemsDisplayAdapter(this, ShareDetailActivity.this, post.getAttachments()));
-        viewPager.setOffscreenPageLimit(post.getAttachments().size());
-        ViewPagerUtils.setSliderDotsPanelWithTextView(post.getAttachments().size(), R.color.Orange,
+        viewPager.setAdapter(new ShareItemsDisplayAdapter(this, ShareDetailActivity.this));
+        viewPager.setOffscreenPageLimit(ShareItems.getInstance().getTotalMediaCount());
+        ViewPagerUtils.setSliderDotsPanelWithTextView(ShareItems.getInstance().getTotalMediaCount(), R.color.Orange,
                 R.color.White, ShareDetailActivity.this, viewPager, SliderDots);
-    }
-
-    private void fillImagePost() {
-        for(ImageShareItemBox imageShareItemBox : ShareItems.getInstance().getImageShareItemBoxes()){
-            Media media = new Media();
-            media.setType(IMAGE_TYPE);
-            media.setUrl(imageShareItemBox.getPhotoSelectUtil().getImageRealPath());
-            media.setThumbnail("");
-            media.setExtension("");
-            media.setHeight(0);
-            media.setWidth(0);
-            media.setMediaid("");
-            shareMediaList.add(media);
-        }
-    }
-
-    private void fillVideoPost(){
-        for (VideoShareItemBox videoShareItemBox : ShareItems.getInstance().getVideoShareItemBoxes()){
-            Media media = new Media();
-            media.setType(VIDEO_TYPE);
-            media.setUrl(videoShareItemBox.getVideoSelectUtil().getVideoRealPath());
-            media.setThumbnail("http://res.cloudinary.com/krupen/video/upload/w_300,h_150,c_crop,q_70,so_0/v1491561340/hello_cuwgcb.jpg");
-            media.setExtension("");
-            media.setHeight(0);
-            media.setWidth(0);
-            media.setMediaid("");
-            shareMediaList.add(media);
-        }
     }
 
     private void setDefaultSelectedItem() {
@@ -509,17 +481,18 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             updateTextEditText = noteTextLayout.findViewById(R.id.noteTextEditText);
         }
 
-        updateTextEditText.setText(mainEditText.getText());
+        updateTextEditText.setText(fullText);
         shareMainLayout.addView(noteTextLayout);
-        CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,false);
+        shareMainLinearLayout.setVisibility(View.GONE);
 
         approveTextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+                shareMainLinearLayout.setVisibility(View.VISIBLE);
                 ShareItems.getInstance().getPost().setMessage(updateTextEditText.getText().toString());
                 shareMainLayout.removeView(noteTextLayout);
-                mainEditText.setText(updateTextEditText.getText());
+                fullText = updateTextEditText.getText().toString();
+                mainEditText.setText(getTrimmedFullText(fullText));
             }
         });
 
@@ -527,9 +500,26 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             @Override
             public void onClick(View v) {
                 shareMainLayout.removeView(noteTextLayout);
-                CommonUtils.setEnableOrDisableAllItemsOfLinearLayout(shareMainLinearLayout,true);
+                shareMainLinearLayout.setVisibility(View.VISIBLE);
             }
         });
+    }
+
+    private String getTrimmedFullText(String text) {
+        if(text == null)
+            return "";
+        else if(!text.isEmpty()){
+            if(text.length() > restrictedTextSize)
+                return text.substring(0, restrictedTextSize) + "...";
+        }
+        return text;
+    }
+
+    public void hideKeyBoard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     public void showSettingsAlert() {
