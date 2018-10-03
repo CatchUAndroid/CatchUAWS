@@ -10,7 +10,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/camera"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         />
 
 </RelativeLayout>

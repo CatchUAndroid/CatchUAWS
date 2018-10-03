@@ -242,7 +242,7 @@ public class ProfileFragment extends BaseFragment
         String lastName = "";
         String firstName = "";
 
-        if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().isEmpty()) {
+        if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().isEmpty() && user.getUserInfo().getName().contains(" ")) {
             String name = user.getUserInfo().getName();
 
             lastName = name.substring(name.lastIndexOf(" ") + 1);

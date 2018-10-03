@@ -104,6 +104,9 @@ public class FeedFragment extends BaseFragment {
         BaseRequest baseRequest = getBaseRequest();
         setLocationInfo();
 
+        String perpage = "20";
+        String page = "1";
+
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(PostListResponse postListResponse) {
@@ -114,8 +117,10 @@ public class FeedFragment extends BaseFragment {
                 }else{
                     Log.i("**PostListResponseProce", "OK");
                     setTextNoFeedVisible(false);
-                    setUpRecyclerView(postListResponse);
+                    //setUpRecyclerView(postListResponse);
                 }
+                //todo NT - bu silinip bi yukardaki açılacak..
+                setUpRecyclerView(postListResponse);
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -129,7 +134,7 @@ public class FeedFragment extends BaseFragment {
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, baseRequest, longitude, latitude, radius, token);
+        }, baseRequest, longitude, latitude, radius, perpage, page, token);
 
         postListResponseProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -147,7 +152,8 @@ public class FeedFragment extends BaseFragment {
 
         //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
 
-        ArrayList<Post> postList = setJunkData();
+        List<Post> postList = postListResponse.getItems();
+                //setJunkData();
 
         feedAdapter = new FeedAdapter(getActivity(), getContext(), postList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -157,7 +163,7 @@ public class FeedFragment extends BaseFragment {
 
     }
 
-    private void setRecyclerViewProperties(ArrayList<Post> postList) {
+    private void setRecyclerViewProperties(List<Post> postList) {
         //todo before setAdapter
         recyclerView.setActivity(getActivity());
 
@@ -234,8 +240,8 @@ public class FeedFragment extends BaseFragment {
 
     private void setLocationInfo() {
 
-        longitude = "29.0328831";
-        latitude = "41.1077839";
+        longitude = "28.9316471";
+        latitude = "41.01354659";
         radius = "0.1";
 
     }
