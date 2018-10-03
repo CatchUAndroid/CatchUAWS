@@ -66,10 +66,13 @@
         <activity
             android:name=".GroupPackage.EditGroupNameActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".SharePackage.MainShareActivity" />
+        <activity
+            android:name=".SharePackage.MainShareActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
-        <activity android:name=".SharePackage.ShareDetailActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".SharePackage.ShareDetailActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SharePackage.SelectGroupActivity" />
         <activity android:name=".SharePackage.VideoPicker.WillDelete.Camera2Activity" />
 
@@ -98,6 +101,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+        <activity android:name=".UgurDeneme.PhotoDenemeActivity"></activity>
     </application>
 
 </manifest>

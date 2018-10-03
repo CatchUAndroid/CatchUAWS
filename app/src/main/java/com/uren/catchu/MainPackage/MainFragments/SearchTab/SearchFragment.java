@@ -118,8 +118,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     private void initializeItems() {
-
-        userid = AccountHolderInfo.getUserID();
+        userid = AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid();
         overwriteToolbar();
 
         viewPager = view.findViewById(R.id.viewpager);
@@ -151,23 +150,15 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
                 switch (tab.getPosition()) {
 
                     case personFragmentTab:
-
                         selectedProperty = propPersons;
                         rl.setVisibility(View.VISIBLE);
                         r2.setVisibility(View.GONE);
-                        //searchItem.setVisible(true);
-                        //((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(true);
                         break;
-
                     case groupFragmentTab:
                         rl.setVisibility(View.GONE);
                         r2.setVisibility(View.VISIBLE);
                         selectedProperty = propGroups;
-
-                        //searchItem.setVisible(false);
-                        //((NextActivity) getActivity()).getSupportActionBar().setDisplayShowTitleEnabled(false);
                         break;
-
                     default:
                         Log.i("Info", "Tablayout unknown");
                         break;

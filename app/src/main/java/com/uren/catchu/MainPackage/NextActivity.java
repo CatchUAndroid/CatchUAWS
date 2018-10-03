@@ -31,6 +31,7 @@ import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.ShareFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserFriends;
 import com.uren.catchu.Singleton.UserGroups;
@@ -65,7 +66,7 @@ public class NextActivity extends AppCompatActivity implements
     private int[] mTabIconsSelected = {
             R.drawable.tab_home,
             R.drawable.tab_search,
-            R.drawable.tab_pin,
+            R.drawable.tab_share,
             R.drawable.tab_news,
             R.drawable.tab_profile};
 
@@ -187,7 +188,6 @@ public class NextActivity extends AppCompatActivity implements
 
     public void onStart() {
         super.onStart();
-
         onPausedInd = false;
         Log.i("onPausedInd", "  >>onStart onPausedInd:" + onPausedInd);
     }
@@ -226,7 +226,6 @@ public class NextActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-
         if (!mNavController.isRootFragment()) {
             setTransactionOption();
             mNavController.popFragment(transactionOptions);

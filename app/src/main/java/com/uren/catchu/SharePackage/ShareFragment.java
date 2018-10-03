@@ -2,29 +2,31 @@ package com.uren.catchu.SharePackage;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
-import com.uren.catchu.SharePackage.GalleryPicker.TextEditFragment;
-import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.Utils.VideoFileListForDelete;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
@@ -32,11 +34,13 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
 import com.uren.catchu.UgurDeneme.PhotoDenemeActivity;
 
-import java.util.List;
-
+import butterknife.ButterKnife;
 import catchu.model.User;
 
-public class MainShareActivity extends FragmentActivity {
+public class ShareFragment extends BaseFragment {
+
+    Context context;
+    View view;
 
     TabLayout tabLayout;
     ViewPager viewPager;
@@ -53,7 +57,6 @@ public class MainShareActivity extends FragmentActivity {
 
     private int tabSelectedPosition = 0;
     boolean tabsCreated = false;
-    public static Activity thisActivity;
 
     private int[] tabIcons = {
             R.drawable.tab_gallery,
@@ -61,43 +64,33 @@ public class MainShareActivity extends FragmentActivity {
     };
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_share);
-        thisActivity = this;
-        initVariables();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        if(view == null) {
+            view = inflater.inflate(R.layout.fragment_main_share, container, false);
+            ButterKnife.bind(this, view);
+            context = getActivity();
+            initVariables();
+            addListeners();
+            checkWriteStoragePermission();
+        }
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        /*initVariables();
         addListeners();
-        checkWriteStoragePermission();
-    }
-
-    private void initVariables() {
-        tabLayout = findViewById(R.id.htab_tabs);
-        viewPager = findViewById(R.id.htab_viewpager);
-        cancelImgv = findViewById(R.id.cancelImgv);
-        nextImgv = findViewById(R.id.nextImgv);
-        permissionModule = new PermissionModule(MainShareActivity.this);
-        ShareItems.setInstance(null);
-        VideoFileListForDelete.setInstance(null);
-    }
-
-    private void setShareItemUser() {
-        User user = new User();
-        user.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
-        user.setUserid(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
-        user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
-        ShareItems.getInstance().getPost().setUser(user);
-    }
-
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(0).getIcon().setColorFilter(getResources().getColor(R.color.Orange, null), PorterDuff.Mode.SRC_IN);
-        tabLayout.getTabAt(1).getIcon().setColorFilter(getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+        checkWriteStoragePermission();*/
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -107,12 +100,35 @@ public class MainShareActivity extends FragmentActivity {
         }
     }
 
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(0).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.Orange, null), PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(1).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+    }
+
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
+    }
+
+    private void initVariables() {
+        tabLayout = view.findViewById(R.id.htab_tabs);
+        viewPager = view.findViewById(R.id.htab_viewpager);
+        cancelImgv = view.findViewById(R.id.cancelImgv);
+        nextImgv = view.findViewById(R.id.nextImgv);
+        permissionModule = new PermissionModule(getActivity());
+        ShareItems.setInstance(null);
+        VideoFileListForDelete.setInstance(null);
+    }
+
     private void addListeners() {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 if (tabsCreated)
-                    tab.getIcon().setColorFilter(getResources().getColor(R.color.Orange, null), PorterDuff.Mode.SRC_IN);
+                    tab.getIcon().setColorFilter(getActivity().getResources().getColor(R.color.Orange, null), PorterDuff.Mode.SRC_IN);
 
                 tabSelectedPosition = tab.getPosition();
 
@@ -131,7 +147,7 @@ public class MainShareActivity extends FragmentActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 if (tabsCreated)
-                    tab.getIcon().setColorFilter(getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+                    tab.getIcon().setColorFilter(getActivity().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
             }
 
             @Override
@@ -143,14 +159,14 @@ public class MainShareActivity extends FragmentActivity {
         nextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckShareItems checkShareItems = new CheckShareItems(MainShareActivity.this);
+                CheckShareItems checkShareItems = new CheckShareItems(getActivity());
                 if (checkShareItems.shareIsPossible()) {
                     setShareItemUser();
                     VideoFileListForDelete.getInstance().deleteAllFile();
                     galleryPickerFrag.checkTextIsAddedOrNot();
-                    startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
+                    startActivity(new Intent(getActivity(), ShareDetailActivity.class));
                 } else
-                    DialogBoxUtil.showInfoDialogBox(MainShareActivity.this, checkShareItems.getErrMessage(), null, new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showInfoDialogBox(getActivity(), checkShareItems.getErrMessage(), null, new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
 
@@ -162,15 +178,22 @@ public class MainShareActivity extends FragmentActivity {
         cancelImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                NextActivity.switchAndUpdateTabSelection(NextActivity.prevPosition);
+                getActivity().onBackPressed();
             }
         });
     }
 
+    private void setShareItemUser() {
+        User user = new User();
+        user.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+        user.setUserid(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+        user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
+        ShareItems.getInstance().getPost().setUser(user);
+    }
+
     public void checkWriteStoragePermission() {
         if (!permissionModule.checkWriteExternalStoragePermission())
-            ActivityCompat.requestPermissions(MainShareActivity.this,
+            ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     permissionModule.getWriteExternalStoragePermissionCode());
         else
@@ -178,7 +201,7 @@ public class MainShareActivity extends FragmentActivity {
     }
 
     private void setUpPager() {
-        SpecialSelectTabAdapter adapter = new SpecialSelectTabAdapter(this.getSupportFragmentManager());
+        SpecialSelectTabAdapter adapter = new SpecialSelectTabAdapter(getActivity().getSupportFragmentManager());
 
         galleryPickerFrag = new GalleryPickerFrag();
         videoPickerFrag = new VideoPickerFrag();
@@ -193,8 +216,7 @@ public class MainShareActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (tabSelectedPosition == TAB_PHOTO) {
             if (galleryPickerFrag.gridListAdapter != null) {
@@ -203,24 +225,4 @@ public class MainShareActivity extends FragmentActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        manageVisibleFragments();
-        NextActivity.switchAndUpdateTabSelection(NextActivity.prevPosition);
-        super.onBackPressed();
-    }
-
-    public void manageVisibleFragments(){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        if(fragments != null){
-            if(fragments.size() > 0) {
-                for (Fragment fragment : fragments) {
-                    if (fragment instanceof TextEditFragment) {
-                        galleryPickerFrag.textFragBackPressed();
-                    }
-                }
-            }
-        }
-    }
 }

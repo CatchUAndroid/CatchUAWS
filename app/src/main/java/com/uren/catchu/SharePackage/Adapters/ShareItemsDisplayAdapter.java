@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
@@ -55,7 +57,6 @@ public class ShareItemsDisplayAdapter extends PagerAdapter {
 
     @Override
     public Object instantiateItem(ViewGroup collection, int position) {
-
         View itemView = null;
 
         if (videoCounter < ShareItems.getInstance().getVideoShareItemBoxes().size()) {
@@ -87,17 +88,17 @@ public class ShareItemsDisplayAdapter extends PagerAdapter {
 
     private void loadImage(View itemView, String TAG, Object object) {
         if (TAG.equals(VIEWPAGER_VIDEO)) {
-
             VideoShareItemBox videoShareItemBox = (VideoShareItemBox) object;
             Bitmap videoBitmap = videoShareItemBox.getVideoSelectUtil().getVideoBitmap();
 
-            if (videoBitmap != null) {
+            final ImageView imageView = videoPlay.getImageView();
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            if (videoBitmap != null)
                 Glide.with(mContext)
                         .load(videoBitmap)
                         .apply(RequestOptions.centerInsideTransform())
-                        .into(videoPlay.getImageView());
-            }
-
+                        .into(imageView);
         } else if (TAG.equals(VIEWPAGER_IMAGE)) {
 
             ImageView imgFeedItem = itemView.findViewById(R.id.imgFeedItem);

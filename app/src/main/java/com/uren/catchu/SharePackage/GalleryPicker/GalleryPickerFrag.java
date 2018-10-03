@@ -218,7 +218,7 @@ public class GalleryPickerFrag extends Fragment{
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
         textView.setTextColor(getActivity().getResources().getColor(R.color.White, null));
-        textView.setText(" ");
+        textView.setText("");
         textView.setVisibility(View.GONE);
         textView.setLayoutParams(layoutParams);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f);
@@ -392,7 +392,7 @@ public class GalleryPickerFrag extends Fragment{
     }
 
     public void checkTextIsAddedOrNot(){
-        if(textView != null && !textView.getText().toString().isEmpty()){
+        if(textView != null && !textView.getText().toString().trim().isEmpty()){
             Bitmap bitmap = BitmapConversion.getScreenShot(photoRelLayout);
             photoUtil.setScreeanShotBitmap(bitmap);
         }
