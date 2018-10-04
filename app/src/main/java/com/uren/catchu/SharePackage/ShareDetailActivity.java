@@ -508,7 +508,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private String getTrimmedFullText(String text) {
         if(text == null)
             return "";
-        else if(!text.isEmpty()){
+        else if(!text.trim().isEmpty()){
             if(text.length() > restrictedTextSize)
                 return text.substring(0, restrictedTextSize) + "...";
         }

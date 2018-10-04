@@ -1,5 +1,4 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,23 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!--LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp">
-
-                <TextView
-                    android:id="@+id/noItemFoundTv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                    android:visibility="gone" />
-            </LinearLayout-->
-
             <android.support.v4.view.ViewPager
                 android:id="@+id/viewpager"
                 android:layout_width="match_parent"
@@ -50,7 +32,6 @@
         </RelativeLayout>
 
     </LinearLayout>
-
 
 
 </LinearLayout>

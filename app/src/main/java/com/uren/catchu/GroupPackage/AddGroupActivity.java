@@ -2,40 +2,28 @@ package com.uren.catchu.GroupPackage;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -43,6 +31,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.SaveGroupProcess;
@@ -51,6 +40,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 
+import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
@@ -65,13 +55,15 @@ public class AddGroupActivity extends AppCompatActivity {
     RelativeLayout addGroupDtlRelLayout;
     PermissionModule permissionModule;
     TextView participantSize;
+    TextView textSizeCntTv;
     PhotoSelectUtil photoSelectUtil;
+    int groupNameSize = 0;
+    GradientDrawable imageShape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group);
-
         initToolbar();
         initUI();
         addListeners();
@@ -90,14 +82,24 @@ public class AddGroupActivity extends AppCompatActivity {
     }
 
     public void initUI() {
-        participantSize = (TextView) findViewById(R.id.participantSize);
-        groupPictureImgv = (ImageView) findViewById(R.id.groupPictureImgv);
-        saveGroupInfoFab = (FloatingActionButton) findViewById(R.id.saveGroupInfoFab);
-        groupNameEditText = (EditText) findViewById(R.id.groupNameEditText);
-        addGroupDtlRelLayout = (RelativeLayout) findViewById(R.id.addGroupDtlRelLayout);
+        participantSize = findViewById(R.id.participantSize);
+        groupPictureImgv = findViewById(R.id.groupPictureImgv);
+        saveGroupInfoFab = findViewById(R.id.saveGroupInfoFab);
+        groupNameEditText = findViewById(R.id.groupNameEditText);
+        addGroupDtlRelLayout = findViewById(R.id.addGroupDtlRelLayout);
+        textSizeCntTv = findViewById(R.id.textSizeCntTv);
         recyclerView = findViewById(R.id.recyclerView);
         participantSize.setText(Integer.toString(SelectedFriendList.getInstance().getSize()));
         permissionModule = new PermissionModule(AddGroupActivity.this);
+        setGroupTextSize();
+        imageShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        groupPictureImgv.setBackground(imageShape);
+    }
+
+    private void setGroupTextSize() {
+        groupNameSize = GROUP_NAME_MAX_LENGTH;
+        textSizeCntTv.setText(Integer.toString(GROUP_NAME_MAX_LENGTH));
     }
 
     public void addListeners() {
@@ -124,6 +126,26 @@ public class AddGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 hideKeyBoard();
+            }
+        });
+
+        groupNameEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
+
+                if (groupNameSize >= 0)
+                    textSizeCntTv.setText(Integer.toString(groupNameSize));
+                else
+                    textSizeCntTv.setText(Integer.toString(0));
             }
         });
     }
@@ -211,9 +233,10 @@ public class AddGroupActivity extends AppCompatActivity {
                 photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, GALLERY_TEXT);
                 Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
             } else
-                DialogBoxUtil.showErrorDialog(AddGroupActivity.this,  "AddGroupActivity:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(AddGroupActivity.this, "AddGroupActivity:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
                     @Override
-                    public void okClick() { }
+                    public void okClick() {
+                    }
                 });
         }
     }
@@ -237,7 +260,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
 
     public void saveGroup() {
-        SaveGroupProcess saveGroupProcess = new SaveGroupProcess(AddGroupActivity.this, photoSelectUtil, groupNameEditText.getText().toString(), new SaveGroupCallback() {
+        new SaveGroupProcess(AddGroupActivity.this, photoSelectUtil, groupNameEditText.getText().toString(), new SaveGroupCallback() {
             @Override
             public void onSuccess() {
                 returnPreviousActivity();

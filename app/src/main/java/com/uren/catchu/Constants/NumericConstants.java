@@ -5,7 +5,7 @@ public class NumericConstants {
     //Bitmap circular constants
     public static final int friendImageShown = 500;
 
-    public static final int groupNameMaxLen = 25;
+    public static final int GROUP_NAME_MAX_LENGTH = 25;
 
     public static final int CODE_ADD_VALUE = 0;
     public static final int CODE_REMOVE_VALUE = 1;

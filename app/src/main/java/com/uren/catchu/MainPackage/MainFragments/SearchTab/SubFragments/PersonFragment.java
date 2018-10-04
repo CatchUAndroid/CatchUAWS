@@ -50,7 +50,6 @@ public class PersonFragment extends Fragment {
     LinearLayoutManager linearLayoutManager;
     GridLayoutManager gridLayoutManager;
 
-    //@SuppressLint("ValidFragment")
     public PersonFragment(String userid, String viewType, String searchText, Context context) {
         this.userid = userid;
         this.viewType = viewType;
@@ -95,7 +94,6 @@ public class PersonFragment extends Fragment {
 
             @Override
             public void onSuccess(SearchResult object) {
-                Log.i("Info", "SearchResult on success");
                 progressBar.setVisibility(View.GONE);
                 searchResult = object;
                 getData();
@@ -133,15 +131,12 @@ public class PersonFragment extends Fragment {
                 break;
 
             case gridShown:
-                //FriendGridListAdapter friendGridListAdapter = new FriendGridListAdapter(context, instance.getFriendList());
-                //personRecyclerView.setAdapter(friendGridListAdapter);
-
                 gridLayoutManager =new GridLayoutManager(context, 4);
                 personRecyclerView.setLayoutManager(gridLayoutManager);
                 break;
 
             default:
-                Toast.makeText(context, "Person Fragment getData teknik hata!!", Toast.LENGTH_SHORT).show();
+                break;
         }
     }
 

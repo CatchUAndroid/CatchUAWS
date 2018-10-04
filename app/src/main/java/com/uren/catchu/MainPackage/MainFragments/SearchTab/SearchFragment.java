@@ -177,22 +177,18 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         });
     }
 
-    
     private void overwriteToolbar() {
 
-        mToolBar = (Toolbar) view.findViewById(R.id.toolbar);
+        mToolBar = view.findViewById(R.id.toolbar);
+        editTextSearch =  view.findViewById(R.id.editTextSearch);
+        imgCancelSearch =  view.findViewById(R.id.imgCancelSearch);
+        rl =  view.findViewById(R.id.rl);
+        r2 =  view.findViewById(R.id.r2);
+        txtAddGroup = view.findViewById(R.id.txtAddGroup);
 
-        editTextSearch = (EditText) view.findViewById(R.id.editTextSearch);
-        imgCancelSearch = (ImageView) view.findViewById(R.id.imgCancelSearch);
-        rl = (RelativeLayout) view.findViewById(R.id.rl);
-        r2 = (RelativeLayout) view.findViewById(R.id.r2);
-        txtAddGroup = (TextView) view.findViewById(R.id.txtAddGroup);
-
-        //Cancel click
         imgCancelSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 refreshSearch = true;
                 editTextSearch.getText().clear();
                 imgCancelSearch.setVisibility(View.GONE);
@@ -200,7 +196,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
             }
         });
 
-        //Add new grup click
         txtAddGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,7 +203,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
             }
         });
 
-        //Search text change listener
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -241,7 +235,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     public void addNewGroup() {
-        if (UserFriends.getInstance(AccountHolderInfo.getUserID()).getSize() == 0)
+        if (UserFriends.getInstance().getSize() == 0)
             CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
         else {
             Intent intent = new Intent(context, SelectFriendToGroupActivity.class);

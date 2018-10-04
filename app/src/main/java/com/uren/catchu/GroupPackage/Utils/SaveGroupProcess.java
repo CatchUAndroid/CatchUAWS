@@ -53,7 +53,7 @@ public class SaveGroupProcess {
         mProgressDialog.setMessage(context.getResources().getString(R.string.groupIsCreating));
         dialogShow();
 
-        if (photoSelectUtil.getMediaUri() != null)
+        if(photoSelectUtil != null && photoSelectUtil.getMediaUri() != null)
             saveGroupImageToS3();
         else
             processSaveGroup(" ");
@@ -75,7 +75,6 @@ public class SaveGroupProcess {
                 startSaveGroupImageToS3(token);
             }
         });
-
     }
 
     private void startSaveGroupImageToS3(String token) {
@@ -134,7 +133,6 @@ public class SaveGroupProcess {
         }, 1, 0, token);
 
         signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public void processSaveGroup(String downloadUrl) {
@@ -146,7 +144,7 @@ public class SaveGroupProcess {
 
     private void fillGroupParticipants() {
 
-        participantArrayItems = new ArrayList<GroupRequestGroupParticipantArrayItem>();
+        participantArrayItems = new ArrayList<>();
 
         for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
             GroupRequestGroupParticipantArrayItem group = new GroupRequestGroupParticipantArrayItem();
@@ -173,8 +171,6 @@ public class SaveGroupProcess {
                 startSaveGroupToNeoJ(token);
             }
         });
-
-
     }
 
     private void startSaveGroupToNeoJ(String token) {
@@ -200,7 +196,6 @@ public class SaveGroupProcess {
         }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public void addGroupToUsersGroup(GroupRequestResult groupRequestResult) {

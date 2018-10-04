@@ -84,7 +84,8 @@
                         android:id="@+id/friendShareImgv"
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
-                        android:src="@drawable/friends_512" />
+                        android:padding="8dp"
+                        android:src="@drawable/friends" />
 
                     <TextView
                         android:id="@+id/friendShareTv"

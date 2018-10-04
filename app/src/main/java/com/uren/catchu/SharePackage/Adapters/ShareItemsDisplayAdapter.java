@@ -80,7 +80,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter {
 
     private void loadVideo(View itemView, VideoShareItemBox videoShareItemBox) {
         String videoUrl = "";
-        if (videoShareItemBox.getVideoSelectUtil().getVideoRealPath() != null && !videoShareItemBox.getVideoSelectUtil().getVideoRealPath().isEmpty()) {
+        if (videoShareItemBox.getVideoSelectUtil().getVideoRealPath() != null && !videoShareItemBox.getVideoSelectUtil().getVideoRealPath().trim().isEmpty()) {
             videoUrl = videoShareItemBox.getVideoSelectUtil().getVideoRealPath();
         }
         videoPlay = new VideoPlay(itemView, videoUrl, mActivity);

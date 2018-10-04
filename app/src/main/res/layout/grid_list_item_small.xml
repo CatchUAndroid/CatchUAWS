@@ -22,31 +22,42 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
 
-            <ImageView
-                android:id="@+id/specialPictureImgView"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:background="@drawable/img_border_blue"
-                android:src="@drawable/man" />
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/frameLayout">
 
+                <ImageView
+                    android:id="@+id/specialPictureImgView"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/White"
+                    android:textStyle="bold"
+                    android:layout_gravity="center"
+                    android:id="@+id/shortenTextView"
+                    android:visibility="gone"/>
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/deletePersonImgv"
-                android:layout_width="13dp"
-                android:layout_height="14dp"
-                android:layout_alignEnd="@+id/specialPictureImgView"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_alignEnd="@+id/frameLayout"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/img_border_white"
+                android:padding="1dp"
                 android:src="@drawable/cancel_gray" />
-
         </RelativeLayout>
 
         <TextView
             android:id="@+id/specialNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="user name surname"
             android:layout_gravity="center"
             android:textSize="7sp"
             android:textStyle="bold|italic" />

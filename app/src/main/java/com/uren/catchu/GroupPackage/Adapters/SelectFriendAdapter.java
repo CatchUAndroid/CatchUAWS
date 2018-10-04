@@ -2,6 +2,7 @@ package com.uren.catchu.GroupPackage.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.R;
@@ -28,14 +31,10 @@ import java.util.List;
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.displayRounded;
-import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
-
 public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapter.MyViewHolder> implements Filterable {
 
     View view;
     LayoutInflater layoutInflater;
-    ImageLoader imageLoader;
     Context context;
     Activity activity;
     FriendList friendList;
@@ -45,6 +44,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     LinearLayoutManager linearLayoutManager;
     boolean horAdapterUpdateChk;
     SelectedItemAdapter selectedItemAdapter = null;
+    GradientDrawable imageShape;
 
     public SelectFriendAdapter(Context context, FriendList friendList) {
         layoutInflater = LayoutInflater.from(context);
@@ -52,9 +52,10 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         this.friendList = friendList;
         this.orginalFriendList = friendList;
         activity = (Activity) context;
-        imageLoader = new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
         selectedFriendList = SelectedFriendList.getInstance();
         horAdapterUpdateChk = false;
+        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                context.getResources().getColor(R.color.Orange, null), GradientDrawable.OVAL, 50, 0);
     }
 
     @NonNull
@@ -62,7 +63,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     public SelectFriendAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         view = layoutInflater.inflate(R.layout.friend_vert_list_item, viewGroup, false);
         final SelectFriendAdapter.MyViewHolder holder = new SelectFriendAdapter.MyViewHolder(view);
-        horRecyclerView = (RecyclerView) activity.findViewById(R.id.horRecyclerView);
+        horRecyclerView = activity.findViewById(R.id.horRecyclerView);
         linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         horRecyclerView.setLayoutManager(linearLayoutManager);
@@ -78,6 +79,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     class MyViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         TextView usernameTextView;
+        TextView shortUserNameTv;
         ImageView profilePicImgView;
         RadioButton selectRadioBtn;
         LinearLayout specialListLinearLayout;
@@ -87,11 +89,13 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         public MyViewHolder(final View itemView) {
             super(itemView);
 
-            profilePicImgView = (ImageView) view.findViewById(R.id.profilePicImgView);
-            nameTextView = (TextView) view.findViewById(R.id.nameTextView);
-            usernameTextView = (TextView) view.findViewById(R.id.usernameTextView);
-            selectRadioBtn = (RadioButton) view.findViewById(R.id.selectRadioBtn);
-            specialListLinearLayout = (LinearLayout) view.findViewById(R.id.specialListLinearLayout);
+            profilePicImgView = view.findViewById(R.id.profilePicImgView);
+            nameTextView = view.findViewById(R.id.nameTextView);
+            usernameTextView = view.findViewById(R.id.usernameTextView);
+            selectRadioBtn = view.findViewById(R.id.selectRadioBtn);
+            specialListLinearLayout = view.findViewById(R.id.specialListLinearLayout);
+            shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
+            profilePicImgView.setBackground(imageShape);
 
             specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -133,8 +137,60 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             this.usernameTextView.setText(selectedFriend.getUsername());
             this.position = position;
             this.selectedFriend = selectedFriend;
-            imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), profilePicImgView, displayRounded);
+            setUserName();
+            setName();
+            setProfilePicture();
             updateRadioButtonValue();
+        }
+
+        public void setUserName() {
+            if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty())
+                this.usernameTextView.setText(selectedFriend.getUsername());
+        }
+
+        public void setName() {
+            if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
+                if (selectedFriend.getName().length() > 30)
+                    this.nameTextView.setText(selectedFriend.getName().trim().substring(0, 30) + "...");
+                else
+                    this.nameTextView.setText(selectedFriend.getName());
+            }
+        }
+
+        public void setProfilePicture() {
+            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
+                shortUserNameTv.setVisibility(View.GONE);
+                Glide.with(context)
+                        .load(selectedFriend.getProfilePhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(profilePicImgView);
+            } else {
+                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
+                    shortUserNameTv.setVisibility(View.VISIBLE);
+                    shortUserNameTv.setText(getShortenUserName());
+                    profilePicImgView.setImageDrawable(null);
+                } else if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty()) {
+                    shortUserNameTv.setVisibility(View.VISIBLE);
+                    shortUserNameTv.setText(selectedFriend.getUsername().substring(0, 1).toUpperCase());
+                    profilePicImgView.setImageDrawable(null);
+                } else {
+                    shortUserNameTv.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(profilePicImgView);
+                }
+            }
+        }
+
+        public String getShortenUserName() {
+            String returnValue = "";
+            String[] seperatedName = selectedFriend.getName().trim().split(" ");
+            for (String word : seperatedName) {
+                if (returnValue.length() < 5)
+                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+            }
+            return returnValue;
         }
 
         public void updateRadioButtonValue() {
@@ -161,9 +217,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 horRecyclerView.setAdapter(selectedItemAdapter);
                 horAdapterUpdateChk = true;
             } else {
-                // TODO: 31.08.2018 - Burada notifyDataSetChanged yemedi, nedenini bir ara inceleyelim???
                 horRecyclerView.setAdapter(selectedItemAdapter);
-                //selectedItemAdapter.notifyDataSetChanged();
 
                 if (selectedFriendList.getSize() == 0) {
                     horRecyclerView.setVisibility(View.GONE);
@@ -184,7 +238,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String searchString = charSequence.toString();
-                if (searchString.isEmpty())
+                if (searchString.trim().isEmpty())
                     friendList = orginalFriendList;
                 else {
                     FriendList tempFriendList = new FriendList();
@@ -197,7 +251,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                     friendList = tempFriendList;
                 }
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = (FriendList) friendList;
+                filterResults.values = friendList;
                 return filterResults;
             }
 

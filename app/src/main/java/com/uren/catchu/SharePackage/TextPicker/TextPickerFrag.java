@@ -129,7 +129,7 @@ public class TextPickerFrag extends Fragment {
                 ShareItems.getInstance().getPost().setMessage(s.toString());
                 Bitmap editTextBitmap;
 
-                if (!s.toString().isEmpty()) {
+                if (!s.toString().trim().isEmpty()) {
                     editTextBitmap = BitmapConversion.getScreenShot(textEditText);
                 } else
                     editTextBitmap = null;

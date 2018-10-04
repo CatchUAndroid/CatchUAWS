@@ -75,22 +75,17 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     String groupId;
     FriendList friendList;
 
-    ProgressDialog mProgressDialog;
-
     public static RecyclerView recyclerView;
 
     public static final int CODE_SELECT_ALL = 0;
     public static final int CODE_UNSELECT_ALL = 1;
 
-    // TODO: 3.09.2018 - Resmi olmayan kullanicilar icin isim soyad bas harf ile resme ekleme yapalim. Uloader gibi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_friend_to_group);
-
         thisActivity = this;
-
         getIntentValues(savedInstanceState);
         initUI();
         getFriendSelectionPage();
@@ -99,11 +94,11 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
     private void initUI() {
 
-        nextFab = (FloatingActionButton) findViewById(R.id.nextFab);
+        nextFab = findViewById(R.id.nextFab);
         recyclerView = findViewById(R.id.recyclerView);
         friendCountTv = findViewById(R.id.friendCountTv);
-        imgCancelSearch = (ImageView) findViewById(R.id.imgCancelSearch);
-        editTextSearch = (EditText) findViewById(R.id.editTextSearch);
+        imgCancelSearch =  findViewById(R.id.imgCancelSearch);
+        editTextSearch = findViewById(R.id.editTextSearch);
         selectAllCb = findViewById(R.id.selectAllCb);
         SelectedFriendList.setInstance(null);
     }
@@ -149,7 +144,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.toString().isEmpty())
+                if (!s.toString().trim().isEmpty())
                     imgCancelSearch.setVisibility(View.VISIBLE);
                 else
                     imgCancelSearch.setVisibility(View.GONE);

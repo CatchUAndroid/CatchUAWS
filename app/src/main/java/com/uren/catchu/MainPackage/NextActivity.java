@@ -33,12 +33,7 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.UserFriends;
-import com.uren.catchu.Singleton.UserGroups;
 
-import java.util.Date;
-
-import butterknife.BindArray;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -114,28 +109,12 @@ public class NextActivity extends AppCompatActivity implements
             }
         });
 
-        fillSingletonClasses();
+        fillAccountHolder();
     }
 
-    public void fillSingletonClasses() {
-        getUserInfo();
-        getFriendList();
-        getGroupList();
-    }
-
-    private void getUserInfo() {
+    public void fillAccountHolder() {
         AccountHolderInfo.setInstance(null, getApplicationContext());
         AccountHolderInfo.getInstance();
-    }
-
-    private void getFriendList() {
-        UserFriends.setInstance(null);
-        UserFriends.getInstance(AccountHolderInfo.getUserID());
-    }
-
-    private void getGroupList() {
-        UserGroups.setInstance(null);
-        UserGroups.getInstance(AccountHolderInfo.getUserID());
     }
 
     private void initValues() {

@@ -150,7 +150,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     private void getGroupInformation() {
 
-        groupRequestResultResultArrayItem = UserGroups.getGroupWithId(this.groupId);
+        groupRequestResultResultArrayItem = UserGroups.getInstance().getGroupWithId(this.groupId);
 
         if (groupRequestResultResultArrayItem == null)
             CommonUtils.showToast(DisplayGroupDetailActivity.this,

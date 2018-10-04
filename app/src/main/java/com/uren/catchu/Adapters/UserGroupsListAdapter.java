@@ -5,13 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
@@ -20,48 +19,44 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.SelectGroupActivity;
-import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedGroupList;
 
-import java.security.acl.Group;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
-import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
-import static com.uren.catchu.Constants.StringConstants.displayRounded;
-import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
-public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> implements Filterable{
+public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> implements Filterable {
 
-    public ImageLoader imageLoader;
     View view;
     LayoutInflater layoutInflater;
     Context context;
-
-    private GroupRequestResult groupRequestResult;
+    GroupRequestResult groupRequestResult;
     GroupRequestResult orgGroupRequestResult;
     Activity activity;
     String pendingActivityName;
     GroupRequestResultResultArrayItem seledtedGroup;
     int beforeSelectedPosition = -1;
+    GradientDrawable groupPhotoShape;
+    GradientDrawable adminButtonShape;
 
     private static final int SHOW_GROUP_DETAIL = 0;
     private static final int EXIT_FROM_GROUP = 1;
@@ -73,8 +68,8 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         this.context = context;
         activity = (Activity) context;
         pendingActivityName = context.getClass().getSimpleName();
-        Log.i("Info", "pendingActivityName:" + pendingActivityName);
-        imageLoader = new ImageLoader(context.getApplicationContext(), groupsCacheDirectory);
+        adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
     }
 
     @Override
@@ -88,6 +83,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView groupnameTextView;
+        TextView shortGroupNameTv;
         ImageView groupPicImgView;
         Button adminDisplayButton;
         LinearLayout groupSelectMainLinLay;
@@ -98,30 +94,21 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         public MyViewHolder(final View itemView) {
             super(itemView);
 
-            groupPicImgView = (ImageView) view.findViewById(R.id.groupPicImgView);
-            groupnameTextView = (TextView) view.findViewById(R.id.groupnameTextView);
-            adminDisplayButton = (Button) view.findViewById(R.id.adminDisplayButton);
-            groupSelectMainLinLay = (LinearLayout) view.findViewById(R.id.groupSelectMainLinLay);
+            groupPicImgView = view.findViewById(R.id.groupPicImgView);
+            groupnameTextView = view.findViewById(R.id.groupnameTextView);
+            adminDisplayButton = view.findViewById(R.id.adminDisplayButton);
+            groupSelectMainLinLay = view.findViewById(R.id.groupSelectMainLinLay);
             selectGroupRb = view.findViewById(R.id.selectGroupRb);
+            shortGroupNameTv = view.findViewById(R.id.shortGroupNameTv);
+            adminDisplayButton.setBackground(adminButtonShape);
 
-            if(pendingActivityName.equals(SelectGroupActivity.class.getSimpleName()))
+            if (pendingActivityName.equals(SelectGroupActivity.class.getSimpleName()))
                 selectGroupRb.setVisibility(View.VISIBLE);
-
-            /*groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    hideKeyBoard(itemView);
-                    ViewGroup viewGroup = (ViewGroup) v;
-
-                    showGroupDetail();
-                }
-            });*/
 
             groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(pendingActivityName.equals(SelectGroupActivity.class.getSimpleName())) {
+                    if (pendingActivityName.equals(SelectGroupActivity.class.getSimpleName())) {
                         selectGroupRb.setChecked(true);
                         manageSelectedItem();
                     }
@@ -144,7 +131,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             });
         }
 
-        public void manageSelectedItem(){
+        public void manageSelectedItem() {
             seledtedGroup = groupRequestResultResultArrayItem;
 
             notifyItemChanged(position);
@@ -199,7 +186,6 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                     startExitFromGroupProcess(token);
                 }
             });
-
         }
 
         private void startExitFromGroupProcess(String token) {
@@ -209,14 +195,12 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             groupRequest.setUserid(AccountHolderInfo.getUserID());
             groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
 
-
             GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
                     groupRequestResult.getResultArray().remove(groupRequestResultResultArrayItem);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, getItemCount());
-                    imageLoader.removeImageViewFromMap(groupRequestResultResultArrayItem.getGroupPhotoUrl());
                 }
 
                 @Override
@@ -231,28 +215,66 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             }, groupRequest, token);
 
             groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {
-
             this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
             this.position = position;
-            this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName());
-            imageLoader.DisplayImage(groupRequestResultResultArrayItem.getGroupPhotoUrl(),
-                    groupPicImgView, displayRounded);
-
-            Log.i("Info", "  >>groupRequestResultResultArrayItem.getGroupAdmin():" + groupRequestResultResultArrayItem.getGroupAdmin());
-            Log.i("Info", "  >>AccountHolderInfo.getUserID()                    :" + AccountHolderInfo.getUserID());
-            Log.i("Info", "  >>groupRequestResultResultArrayItem.getGroupid()   :" + groupRequestResultResultArrayItem.getGroupid());
-            Log.i("Info", "  >>==============================");
-
+            setGroupName();
+            setGroupPhoto();
             setAdminButtonValues();
             setRadioButtonValues();
         }
 
-        public void setRadioButtonValues(){
-            if(seledtedGroup != null && groupRequestResultResultArrayItem != null) {
+        public void setGroupName() {
+            if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
+                if (groupRequestResultResultArrayItem.getName().trim().length() > GROUP_NAME_MAX_LENGTH)
+                    this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName().trim().substring(0, GROUP_NAME_MAX_LENGTH) + "...");
+                else
+                    this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName());
+            }
+        }
+
+        public void setGroupPhoto() {
+            if (groupRequestResultResultArrayItem.getGroupPhotoUrl() != null && !groupRequestResultResultArrayItem.getGroupPhotoUrl().trim().isEmpty()) {
+                shortGroupNameTv.setVisibility(View.GONE);
+                groupPicImgView.setBackground(null);
+                Glide.with(context)
+                        .load(groupRequestResultResultArrayItem.getGroupPhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(groupPicImgView);
+            } else {
+                if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
+                    shortGroupNameTv.setVisibility(View.VISIBLE);
+                    shortGroupNameTv.setText(getShortGroupName());
+                    groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                            0, GradientDrawable.OVAL, 50, 0);
+                    groupPicImgView.setBackground(groupPhotoShape);
+                } else {
+                    shortGroupNameTv.setVisibility(View.GONE);
+                    groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.SteelBlue, null),
+                            0, GradientDrawable.OVAL, 50, 0);
+                    groupPicImgView.setBackground(groupPhotoShape);
+                    Glide.with(context)
+                            .load(context.getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(groupPicImgView);
+                }
+            }
+        }
+
+        public String getShortGroupName() {
+            String returnValue = "";
+            String[] seperatedName = groupRequestResultResultArrayItem.getName().trim().split(" ");
+            for (String word : seperatedName) {
+                if (returnValue.length() < 5)
+                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+            }
+            return returnValue;
+        }
+
+        public void setRadioButtonValues() {
+            if (seledtedGroup != null && groupRequestResultResultArrayItem != null) {
                 if (seledtedGroup.getGroupid().equals(groupRequestResultResultArrayItem.getGroupid()))
                     selectGroupRb.setChecked(true);
                 else
@@ -260,7 +282,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             }
         }
 
-        public void setAdminButtonValues(){
+        public void setAdminButtonValues() {
             if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID())) {
                 adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
                 adminDisplayButton.setVisibility(View.VISIBLE);
@@ -275,12 +297,6 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = groupRequestResult.getResultArray().get(position);
         holder.setData(groupRequestResultResultArrayItem, position);
     }
-
-    /*public void hideKeyBoard(View view) {
-
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }*/
 
     public long getItemId(int position) {
         return position;
@@ -303,7 +319,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
                 String searchString = charSequence.toString();
 
-                if (searchString.isEmpty())
+                if (searchString.trim().isEmpty())
                     groupRequestResult = orgGroupRequestResult;
                 else {
                     GroupRequestResult tempGroupRequestResult = new GroupRequestResult();
@@ -319,7 +335,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 }
 
                 FilterResults filterResults = new FilterResults();
-                filterResults.values = (GroupRequestResult) groupRequestResult;
+                filterResults.values = groupRequestResult;
                 return filterResults;
             }
 

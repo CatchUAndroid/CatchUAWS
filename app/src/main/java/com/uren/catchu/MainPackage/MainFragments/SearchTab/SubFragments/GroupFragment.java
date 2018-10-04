@@ -8,7 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,16 +15,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.uren.catchu.Adapters.UserGroupsListAdapter;
-import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserGroups;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.GroupRequest;
-import catchu.model.GroupRequestResult;
 
 @SuppressLint("ValidFragment")
 public class GroupFragment extends Fragment {
@@ -37,11 +31,8 @@ public class GroupFragment extends Fragment {
     ViewGroup mContainer;
     LayoutInflater mLayoutInflater;
 
-    GroupRequestResult groupRequestResult;
-
     LinearLayoutManager linearLayoutManager;
     RelativeLayout specialSelectRelLayout;
-    GroupRequest groupRequest;
 
     private Context context;
 
@@ -66,23 +57,21 @@ public class GroupFragment extends Fragment {
         this.mContainer = container;
         this.mLayoutInflater = inflater;
         mView = inflater.inflate(R.layout.fragment_special_select, container, false);
-
         ButterKnife.bind(this, mView);
-        specialSelectRelLayout = (RelativeLayout) mView.findViewById(R.id.specialSelectRelLayout);
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        groupRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
+        groupRecyclerView = mView.findViewById(R.id.specialRecyclerView);
+        specialSelectRelLayout = mView.findViewById(R.id.specialSelectRelLayout);
         getData();
     }
 
-    public void getData(){
-        UserGroups userGroups = UserGroups.getInstance(AccountHolderInfo.getUserID());
-        UserGroupsListAdapter userGroupsListAdapter = new UserGroupsListAdapter(context, userGroups.getGroupRequestResult());
+    public void getData() {
+        UserGroupsListAdapter userGroupsListAdapter = new UserGroupsListAdapter(context, UserGroups.getInstance().getGroupRequestResult());
         groupRecyclerView.setAdapter(userGroupsListAdapter);
-        linearLayoutManager  = new LinearLayoutManager(getActivity());
+        linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         groupRecyclerView.setLayoutManager(linearLayoutManager);
     }

@@ -4,6 +4,7 @@ package com.uren.catchu.GroupPackage.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -24,24 +28,22 @@ import catchu.model.UserProfileProperties;
 import static com.uren.catchu.Constants.StringConstants.displayRounded;
 import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
 
-public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAdapter.MyViewHolder>{
-
-    private FriendList friendList;
-    public ImageLoader imageLoader;
+public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAdapter.MyViewHolder> {
+    FriendList friendList;
     View view;
-
     LayoutInflater layoutInflater;
-
     Context context;
     TextView participantCntTv;
     Activity activity;
+    GradientDrawable imageShape;
 
     public FriendGridListAdapter(Context context, FriendList friendList) {
         layoutInflater = LayoutInflater.from(context);
         this.friendList = friendList;
         this.context = context;
         activity = (Activity) context;
-        imageLoader=new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
+        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
     }
 
     public Object getItem(int position) {
@@ -54,7 +56,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         view = layoutInflater.inflate(R.layout.special_grid_list_item, parent, false);
         FriendGridListAdapter.MyViewHolder holder = new FriendGridListAdapter.MyViewHolder(view);
 
-        participantCntTv = (TextView) activity.findViewById(R.id.participantSize);
+        participantCntTv = activity.findViewById(R.id.participantSize);
 
         return holder;
     }
@@ -62,6 +64,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView userNameSurname;
+        TextView shortUserNameTv;
         UserProfileProperties selectedFriend;
         ImageView deletePersonImgv;
         ImageView specialProfileImgView;
@@ -70,9 +73,11 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            specialProfileImgView = (ImageView) view.findViewById(R.id.specialPictureImgView);
-            userNameSurname = (TextView) view.findViewById(R.id.specialNameTextView);
-            deletePersonImgv = (ImageView) view.findViewById(R.id.deletePersonImgv);
+            specialProfileImgView = view.findViewById(R.id.specialPictureImgView);
+            userNameSurname = view.findViewById(R.id.specialNameTextView);
+            deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
+            shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
+            specialProfileImgView.setBackground(imageShape);
 
             deletePersonImgv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -80,7 +85,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
 
                     removeItem(position);
 
-                    if(getItemCount() == 0)
+                    if (getItemCount() == 0)
                         activity.finish();
                     else
                         participantCntTv.setText(Integer.toString(getItemCount()));
@@ -88,7 +93,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
             });
         }
 
-        private void removeItem(int position){
+        private void removeItem(int position) {
             friendList.getResultArray().remove(selectedFriend);
             SelectedFriendList.updateFriendList(friendList.getResultArray());
             notifyItemRemoved(position);
@@ -97,17 +102,51 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {
-
-            String username = selectedFriend.getName();
-
-            if(username.trim().length() > 16){
-                username = username.trim().substring(0, 13) + "...";
-            }
-
-            this.userNameSurname.setText(username);
             this.position = position;
             this.selectedFriend = selectedFriend;
-            imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), specialProfileImgView, displayRounded);
+            setUserName();
+            setProfilePicture();
+        }
+
+        private void setUserName() {
+            String username = selectedFriend.getName();
+
+            if (username.trim().length() > 16) {
+                username = username.trim().substring(0, 13) + "...";
+            }
+            this.userNameSurname.setText(username);
+        }
+
+        public void setProfilePicture() {
+            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
+                shortUserNameTv.setVisibility(View.GONE);
+                Glide.with(context)
+                        .load(selectedFriend.getProfilePhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(specialProfileImgView);
+            } else {
+                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
+                    shortUserNameTv.setVisibility(View.VISIBLE);
+                    shortUserNameTv.setText(getShortenUserName());
+                    specialProfileImgView.setImageDrawable(null);
+                } else {
+                    shortUserNameTv.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(specialProfileImgView);
+                }
+            }
+        }
+
+        public String getShortenUserName() {
+            String returnValue = "";
+            String[] seperatedName = selectedFriend.getName().trim().split(" ");
+            for (String word : seperatedName) {
+                if (returnValue.length() < 5)
+                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+            }
+            return returnValue;
         }
     }
 
@@ -123,6 +162,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
 
     @Override
     public int getItemCount() {
-        return  friendList.getResultArray().size();
+        return friendList.getResultArray().size();
     }
 }

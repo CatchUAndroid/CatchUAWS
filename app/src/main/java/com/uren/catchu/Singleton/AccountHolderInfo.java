@@ -69,12 +69,12 @@ public class AccountHolderInfo {
 
             @Override
             public void onSuccess(UserProfile up) {
-
-                if(up.getUserInfo() == null){
-                    CommonUtils.LOG_OK_BUT_NULL("UserDetailProcess");
-                }else{
-                    userProfile = up;
-                    CommonUtils.LOG_OK("UserDetailProcess");
+                if(up != null){
+                    if(up.getUserInfo() != null){
+                        userProfile = up;
+                        getFriendList();
+                        getGroupList();
+                    }
                 }
             }
 
@@ -90,6 +90,16 @@ public class AccountHolderInfo {
         }, userid, token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void getFriendList() {
+        UserFriends.setInstance(null);
+        UserFriends.getInstance();
+    }
+
+    private void getGroupList() {
+        UserGroups.setInstance(null);
+        UserGroups.getInstance();
     }
 
     public static String getUserIdFromFirebase() {
@@ -117,6 +127,7 @@ public class AccountHolderInfo {
         });
 
     }
+
 
 
 }

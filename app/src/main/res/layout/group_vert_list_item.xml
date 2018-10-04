@@ -18,14 +18,27 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/groupPicImgView"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/img_border_blue"
-            android:src="@drawable/man" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp">
+
+            <ImageView
+                android:id="@+id/groupPicImgView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:id="@+id/shortGroupNameTv"
+                android:visibility="gone"/>
+        </FrameLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -52,13 +65,12 @@
                 <Button
                     android:id="@+id/adminDisplayButton"
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
+                    android:layout_height="35dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/ripple_button_admin"
                     android:textAllCaps="false"
                     android:textColor="@color/green"
                     android:textSize="10sp"
-                    android:textStyle="normal|bold|italic" />
+                    android:textStyle="normal" />
             </LinearLayout>
 
             <RadioButton

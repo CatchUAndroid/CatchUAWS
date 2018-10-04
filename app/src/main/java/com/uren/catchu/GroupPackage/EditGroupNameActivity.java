@@ -33,7 +33,7 @@ import butterknife.BindView;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResultResultArrayItem;
 
-import static com.uren.catchu.Constants.NumericConstants.groupNameMaxLen;
+import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_NAME;
@@ -50,7 +50,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
 
     String groupId;
     String groupName;
-    String befGroupName;
 
     int groupNameSize = 0;
 
@@ -75,7 +74,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
 
     private void setGroupVariables() {
         groupNameEditText.setText(groupName);
-        groupNameSize = groupNameMaxLen - groupName.length();
+        groupNameSize = GROUP_NAME_MAX_LENGTH - groupName.length();
         textSizeCntTv.setText(Integer.toString(groupNameSize));
     }
 
@@ -103,8 +102,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
         groupNameEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.i("Info", "beforeTextChanged s: " + s.toString());
-                befGroupName = s.toString();
             }
 
             @Override
@@ -115,7 +112,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 Log.i("Info", "afterTextChanged s:" + s.toString());
-                groupNameSize = groupNameMaxLen - s.toString().length();
+                groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
 
                 if(groupNameSize >= 0)
                     textSizeCntTv.setText(Integer.toString(groupNameSize));

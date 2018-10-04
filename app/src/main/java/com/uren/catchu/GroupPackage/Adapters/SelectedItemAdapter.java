@@ -3,49 +3,45 @@ package com.uren.catchu.GroupPackage.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.media.Image;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
-import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
-
-import static com.uren.catchu.Constants.NumericConstants.CODE_REMOVE_VALUE;
-import static com.uren.catchu.Constants.StringConstants.displayRounded;
-import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
 
 public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapter.MyViewHolder> {
 
     View view;
     LayoutInflater layoutInflater;
-    public ImageLoader imageLoader;
-
     Context context;
     Activity activity;
     SelectedFriendList selectedFriendList;
     ClickCallback clickCallback;
+    GradientDrawable imageShape;
+    GradientDrawable deleteImgvShape;
 
     public SelectedItemAdapter(Context context, ClickCallback clickCallback) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.clickCallback = clickCallback;
         activity = (Activity) context;
-        imageLoader = new ImageLoader(context.getApplicationContext(), friendsCacheDirectory);
         selectedFriendList = SelectedFriendList.getInstance();
+        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        deleteImgvShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                context.getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 0);
     }
 
     @NonNull
@@ -68,6 +64,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         ImageView specialPictureImgView;
         ImageView deletePersonImgv;
         TextView specialNameTextView;
+        TextView shortenTextView;
         UserProfileProperties selectedFriend;
 
         int position = 0;
@@ -75,9 +72,12 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         public MyViewHolder(final View itemView) {
             super(itemView);
 
-            specialPictureImgView = (ImageView) view.findViewById(R.id.specialPictureImgView);
-            deletePersonImgv = (ImageView) view.findViewById(R.id.deletePersonImgv);
-            specialNameTextView = (TextView) view.findViewById(R.id.specialNameTextView);
+            specialPictureImgView = view.findViewById(R.id.specialPictureImgView);
+            deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
+            specialNameTextView = view.findViewById(R.id.specialNameTextView);
+            shortenTextView = view.findViewById(R.id.shortenTextView);
+            specialPictureImgView.setBackground(imageShape);
+            deletePersonImgv.setBackground(deleteImgvShape);
 
             specialPictureImgView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,17 +96,58 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
             });
         }
 
-        private void removeItem(int position){
+        private void removeItem(int position) {
             selectedFriendList.removeFriend(selectedFriend);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, getItemCount());
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {
-            this.specialNameTextView.setText(selectedFriend.getName());
             this.position = position;
             this.selectedFriend = selectedFriend;
-            imageLoader.DisplayImage(selectedFriend.getProfilePhotoUrl(), specialPictureImgView, displayRounded);
+            setName();
+            setProfilePicture();
+        }
+
+        public void setName() {
+            if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
+                if (selectedFriend.getName().trim().length() > 30)
+                    this.specialNameTextView.setText(selectedFriend.getName().trim().substring(0, 30) + "...");
+                else
+                    this.specialNameTextView.setText(selectedFriend.getName());
+            }
+        }
+
+        public void setProfilePicture() {
+            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
+                shortenTextView.setVisibility(View.GONE);
+                Glide.with(context)
+                        .load(selectedFriend.getProfilePhotoUrl())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(specialPictureImgView);
+            } else {
+                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
+                    shortenTextView.setVisibility(View.VISIBLE);
+                    shortenTextView.setText(getShortenUserName());
+                    specialPictureImgView.setImageDrawable(null);
+                } else {
+                    shortenTextView.setVisibility(View.GONE);
+                    Glide.with(context)
+                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
+                            .apply(RequestOptions.circleCropTransform())
+                            .into(specialPictureImgView);
+                }
+            }
+        }
+
+        public String getShortenUserName() {
+            String returnValue = "";
+            String[] seperatedName = selectedFriend.getName().trim().split(" ");
+            for (String word : seperatedName) {
+                if (returnValue.length() < 5)
+                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+            }
+            return returnValue;
         }
     }
 
