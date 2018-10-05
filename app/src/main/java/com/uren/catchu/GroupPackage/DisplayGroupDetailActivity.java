@@ -349,7 +349,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     }
 
     private void startChooseImageProc() {
-
         DialogBoxUtil.photoChosenDialogBox(DisplayGroupDetailActivity.this, getResources().
                 getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
             @Override

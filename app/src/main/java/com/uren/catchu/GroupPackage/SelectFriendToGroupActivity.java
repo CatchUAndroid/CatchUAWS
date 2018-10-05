@@ -2,6 +2,7 @@ package com.uren.catchu.GroupPackage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,6 +24,7 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -74,6 +77,13 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         initUI();
         getFriendSelectionPage();
         addListeners();
+        setShapes();
+    }
+
+    private void setShapes() {
+        GradientDrawable shape = ShapeUtil.getShape(getResources().getColor(R.color.LightSeaGreen, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        nextFab.setBackground(shape);
     }
 
     private void initUI() {
@@ -104,6 +114,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nextFab.startAnimation(AnimationUtils.loadAnimation(SelectFriendToGroupActivity.this, R.anim.image_click));
                 checkSelectedPerson();
             }
         });
