@@ -20,9 +20,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.PostItemDetailActivity;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.VideoPlay.CustomRecyclerView;
@@ -260,18 +259,16 @@ public class FeedFragment extends BaseFragment {
     }
 
 
+
     private void showItemInFullView(Media media) {
 
-        MediaSerializable mediaSerializable = new MediaSerializable(media);
+        Log.i("info ", "I am FeedFragment + mediaType " + media.getType());
+        PostItem.getInstance().setMedia(media);
 
         Intent intent = new Intent(getContext(), PostItemDetailActivity.class);
-        intent.putExtra("mediaSerializable", mediaSerializable);
         startActivity(intent);
 
     }
-
-
-
 
 
 }

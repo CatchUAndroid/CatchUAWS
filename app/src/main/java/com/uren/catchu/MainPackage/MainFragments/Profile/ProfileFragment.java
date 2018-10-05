@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -45,8 +44,8 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.Media;
 import catchu.model.UserProfile;
-import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
 import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
@@ -385,6 +384,5 @@ public class ProfileFragment extends BaseFragment
         }
 
     }
-
 
 }

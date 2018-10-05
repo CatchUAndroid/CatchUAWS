@@ -11,9 +11,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
@@ -25,16 +22,12 @@ import static com.uren.catchu.MainPackage.MainFragments.BaseFragment.ARGS_INSTAN
 public class ImageFragment extends Fragment {
 
     View mView;
-    Media media;
 
     @BindView(R.id.imgFeedItem)
     ImageView imgFeedItem;
 
-
     public ImageFragment () {
-
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,33 +37,18 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        CommonUtils.LOG_NEREDEYIZ("ImageFragment");
+
         mView = inflater.inflate(R.layout.viewpager_image, container, false);
         ButterKnife.bind(this, mView);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            MediaSerializable mediaSerializable = (MediaSerializable) args.getSerializable(ARGS_INSTANCE);
-            media = mediaSerializable.getMedia();
 
-        }
-
-        setUI();
 
         return mView;
     }
 
-    private void setUI() {
 
-        if(media.getUrl()!= null && !media.getUrl().isEmpty()){
-            Glide.with(getContext())
-                    .load(media.getUrl())
-                    .apply(RequestOptions.centerInsideTransform())
-                    .into(imgFeedItem);
-        }
-
-
-
-    }
 
 
 }
