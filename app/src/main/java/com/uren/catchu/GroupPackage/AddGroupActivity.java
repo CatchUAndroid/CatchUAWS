@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -59,6 +60,7 @@ public class AddGroupActivity extends AppCompatActivity {
     PhotoSelectUtil photoSelectUtil;
     int groupNameSize = 0;
     GradientDrawable imageShape;
+    boolean groupPhotoExist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,7 +180,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
     private void startChooseImageProc() {
         DialogBoxUtil.photoChosenDialogBox(AddGroupActivity.this, getResources().
-                getString(R.string.chooseProfilePhoto), false, new PhotoChosenCallback() {
+                getString(R.string.chooseProfilePhoto), groupPhotoExist, new PhotoChosenCallback() {
             @Override
             public void onGallerySelected() {
                 startGalleryProcess();
@@ -191,7 +193,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
             @Override
             public void onPhotoRemoved() {
-
+                setGroupPhoto(null);
             }
         });
     }
@@ -233,10 +235,10 @@ public class AddGroupActivity extends AppCompatActivity {
 
             if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, CAMERA_TEXT);
-                Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
+                setGroupPhoto(photoSelectUtil.getMediaUri());
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, GALLERY_TEXT);
-                Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
+                setGroupPhoto(photoSelectUtil.getMediaUri());
             } else
                 DialogBoxUtil.showErrorDialog(AddGroupActivity.this, "AddGroupActivity:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
                     @Override
@@ -246,11 +248,28 @@ public class AddGroupActivity extends AppCompatActivity {
         }
     }
 
+    public void setGroupPhoto(Uri groupPhotoUri) {
+        if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
+            groupPhotoExist = true;
+            groupPictureImgv.setPadding(0, 0, 0, 0);
+            Glide.with(AddGroupActivity.this)
+                    .load(groupPhotoUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(groupPictureImgv);
+        } else {
+            groupPhotoExist = false;
+            photoSelectUtil = null;
+            int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
+            groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+            Glide.with(this)
+                    .load(getResources().getIdentifier("photo_camera", "drawable", this.getPackageName()))
+                    .into(groupPictureImgv);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
 
         if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

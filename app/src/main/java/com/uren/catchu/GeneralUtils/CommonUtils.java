@@ -48,6 +48,12 @@ public class CommonUtils {
                 Settings.Secure.ANDROID_ID);
     }
 
+    public static int getPaddingInPixels(Context context, float dpSize){
+        final float scale = context.getResources().getDisplayMetrics().density;
+        int paddingInPx = (int) (dpSize * scale + 0.5f);
+        return paddingInPx;
+    }
+
 
     public static final String getVersionName(Context context) {
 
