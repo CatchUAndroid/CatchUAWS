@@ -5,35 +5,18 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-import com.squareup.picasso.Picasso;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.ImageFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.VideoFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.VideoPlay.VideoImage;
 import com.uren.catchu.VideoPlay.VideoPlay;
 
 import java.util.ArrayList;
@@ -52,46 +35,69 @@ public class ViewPagerAdapter extends PagerAdapter {
     private Activity mActivity;
     private Context mContext;
     private List<Media> attachments;
+    private List<Media> orderedAttachments;
     private List<MyVideoModel> videoList = new ArrayList<>();
     private List<String> imageList = new ArrayList<>();
     private int imageCounter;
     private int videoCounter;
     private VideoPlay videoPlay;
+    private ViewPagerClickCallBack viewPagerClickCallBack;
+    HashMap<Integer, Integer> hmap = new HashMap<Integer, Integer>();
 
 
-    public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments) {
+    public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments, ViewPagerClickCallBack viewPagerClickCallBack) {
         this.mActivity = activity;
         this.mContext = context;
         this.attachments = attachments;
         this.imageCounter = 0;
         this.videoCounter = 0;
+        this.viewPagerClickCallBack = viewPagerClickCallBack;
 
+        orderMedia();
         seperateAttachmentsByTypes();
+    }
+
+    private void orderMedia() {
+
+        orderedAttachments = new ArrayList<>();
+
+        for (int i = 0; i < attachments.size(); i++){
+            if(attachments.get(i).getType().equals(VIDEO_TYPE)){
+                orderedAttachments.add(attachments.get(i));
+            }
+        }
+
+        for (int i = 0; i < attachments.size(); i++){
+            if(attachments.get(i).getType().equals(IMAGE_TYPE)){
+                orderedAttachments.add(attachments.get(i));
+            }
+        }
+
     }
 
     private void seperateAttachmentsByTypes() {
 
         String tempImagePath = "http://res.cloudinary.com/krupen/video/upload/w_300,h_150,c_crop,q_70,so_0/v1491561340/hello_cuwgcb.jpg";
 
-        for (int i = 0; i < attachments.size(); i++) {
+        for (int i = 0; i < orderedAttachments.size(); i++) {
 
-            switch (attachments.get(i).getType()) {
+            switch (orderedAttachments.get(i).getType()) {
                 case VIDEO_TYPE:
                     String thumbnailPath;
-                    if(attachments.get(i).getThumbnail() != null && !attachments.get(i).getThumbnail().isEmpty()){
-                        thumbnailPath = attachments.get(i).getThumbnail();
-                    }else{
+                    if (orderedAttachments.get(i).getThumbnail() != null && !orderedAttachments.get(i).getThumbnail().isEmpty()) {
+                        thumbnailPath = orderedAttachments.get(i).getThumbnail();
+                    } else {
                         thumbnailPath = tempImagePath;
                     }
 
-                    MyVideoModel myVideoModel = new MyVideoModel(attachments.get(i).getUrl(), thumbnailPath, "video");
+                    MyVideoModel myVideoModel = new MyVideoModel(orderedAttachments.get(i).getUrl(), thumbnailPath, "video");
                     videoList.add(myVideoModel);
                     break;
                 case IMAGE_TYPE:
-                    imageList.add(attachments.get(i).getUrl());
+                    imageList.add(orderedAttachments.get(i).getUrl());
                     break;
                 default:
-                    Log.i("Warning ", "Unknown media type detected. Media type :" + attachments.get(i).getType());
+                    Log.i("Warning ", "Unknown media type detected. Media type :" + orderedAttachments.get(i).getType());
                     break;
 
             }
@@ -99,41 +105,53 @@ public class ViewPagerAdapter extends PagerAdapter {
     }
 
 
-
-
     @Override
-    public Object instantiateItem(ViewGroup collection, int position) {
+    public Object instantiateItem(ViewGroup collection, final int position) {
 
         View itemView;
+        final String clickedItemType;
 
         if (videoCounter < videoList.size()) {
-
+            clickedItemType = VIDEO_TYPE;
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.viewpager_video, collection, false);
 
             loadVideo(itemView);
             loadImage(itemView, VIEWPAGER_VIDEO);
             videoCounter++;
+            hmap.put(position, videoCounter);
 
         } else if (imageCounter < imageList.size()) {
+            clickedItemType = IMAGE_TYPE;
             //sonra imagelar bitene kadar eklenir
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_red, collection, false);
+                    .inflate(R.layout.viewpager_image, collection, false);
 
             loadImage(itemView, VIEWPAGER_IMAGE);
             imageCounter++;
+            hmap.put(position, imageCounter);
 
         } else {
             //do nothing
             itemView = LayoutInflater.from(mContext)
-                    .inflate(R.layout.view_red, collection, false);
+                    .inflate(R.layout.viewpager_image, collection, false);
         }
+
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //this will log the page number that was click
+                viewPagerClickCallBack.onViewPagerItemClicked(orderedAttachments.get(position));
+
+
+            }
+        });
+
 
         collection.addView(itemView);
         return itemView;
 
     }
-
 
 
     private void loadVideo(View itemView) {
@@ -149,8 +167,8 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     private void loadImage(View itemView, String TAG) {
 
-        String loadUrl="";
-        if(TAG.equals(VIEWPAGER_VIDEO)){
+        String loadUrl = "";
+        if (TAG.equals(VIEWPAGER_VIDEO)) {
 
             //load image into imageview
             if (videoList.get(videoCounter).getImage_url() != null && !videoList.get(videoCounter).getImage_url().isEmpty()) {
@@ -165,12 +183,11 @@ public class ViewPagerAdapter extends PagerAdapter {
                     .into(videoPlay.getImageView());
 
 
-
-        }else if(TAG.equals(VIEWPAGER_IMAGE)){
+        } else if (TAG.equals(VIEWPAGER_IMAGE)) {
 
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
 
-            if(imageList.get(imageCounter) != null && !imageList.get(imageCounter).isEmpty()){
+            if (imageList.get(imageCounter) != null && !imageList.get(imageCounter).isEmpty()) {
                 loadUrl = imageList.get(imageCounter);
             }
 
@@ -180,7 +197,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     .into(imgFeedItem);
 
 
-        }else{
+        } else {
             //do nothing
         }
 
@@ -191,7 +208,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
 
-        mediaMetadataRetriever .setDataSource(url, new HashMap<String, String>());
+        mediaMetadataRetriever.setDataSource(url, new HashMap<String, String>());
         Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(10); //unit in microsecond
         return bmFrame;
 
@@ -208,7 +225,7 @@ public class ViewPagerAdapter extends PagerAdapter {
     @Override
     public int getCount() {
         //return ModelObject.values().length;
-        return attachments.size();
+        return orderedAttachments.size();
     }
 
     @Override

@@ -3,13 +3,7 @@ package com.uren.catchu.SharePackage.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,25 +11,12 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.ImageFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.VideoFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
 import com.uren.catchu.VideoPlay.VideoPlay;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import catchu.model.Media;
-
-import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIEWPAGER_IMAGE;
 import static com.uren.catchu.Constants.StringConstants.VIEWPAGER_VIDEO;
 
@@ -66,7 +47,7 @@ public class ShareItemsDisplayAdapter extends PagerAdapter {
             loadImage(itemView, VIEWPAGER_VIDEO, videoShareItemBox);
             videoCounter++;
         } else if (imageCounter < ShareItems.getInstance().getImageShareItemBoxes().size()) {
-            itemView = LayoutInflater.from(mContext).inflate(R.layout.view_red, collection, false);
+            itemView = LayoutInflater.from(mContext).inflate(R.layout.viewpager_image, collection, false);
 
             ImageShareItemBox imageShareItemBox = ShareItems.getInstance().getImageShareItemBoxes().get(imageCounter);
             loadImage(itemView, VIEWPAGER_IMAGE, imageShareItemBox);

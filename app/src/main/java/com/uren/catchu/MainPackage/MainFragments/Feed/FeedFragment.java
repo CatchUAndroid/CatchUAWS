@@ -1,9 +1,9 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +19,10 @@ import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MediaSerializable;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.PostItemDetailActivity;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.VideoPlay.CustomRecyclerView;
@@ -104,17 +108,17 @@ public class FeedFragment extends BaseFragment {
         BaseRequest baseRequest = getBaseRequest();
         setLocationInfo();
 
-        String perpage = "20";
+        String perpage = "5";
         String page = "1";
 
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(PostListResponse postListResponse) {
 
-                if(postListResponse == null){
+                if (postListResponse == null) {
                     Log.i("**PostListResponseProce", "SERVER:OK BUT DATA:NULL");
                     setTextNoFeedVisible(true);
-                }else{
+                } else {
                     Log.i("**PostListResponseProce", "OK");
                     setTextNoFeedVisible(false);
                     //setUpRecyclerView(postListResponse);
@@ -141,9 +145,9 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void setTextNoFeedVisible(boolean setVisible) {
-        if(setVisible){
+        if (setVisible) {
             txtNoFeed.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             txtNoFeed.setVisibility(View.GONE);
         }
     }
@@ -153,9 +157,17 @@ public class FeedFragment extends BaseFragment {
         //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
 
         List<Post> postList = postListResponse.getItems();
-                //setJunkData();
+        //setJunkData();
 
-        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList);
+
+        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, new ViewPagerClickCallBack() {
+            @Override
+            public void onViewPagerItemClicked(Media media) {
+                showItemInFullView(media);
+            }
+
+        });
+
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
 
@@ -168,7 +180,7 @@ public class FeedFragment extends BaseFragment {
         recyclerView.setActivity(getActivity());
 
         //optional - to play only first visible video
-        recyclerView.setPlayOnlyFirstVideo(true); // false by default
+        recyclerView.setPlayOnlyFirstVideo(false); // false by default
 
         //optional - by default we check if url ends with ".mp4". If your urls do not end with mp4, you can set this param to false and implement your own check to see if video points to url
         recyclerView.setCheckForMp4(false); //true by default
@@ -176,16 +188,17 @@ public class FeedFragment extends BaseFragment {
         //optional - download videos to local storage (requires "android.permission.WRITE_EXTERNAL_STORAGE" in manifest or ask in runtime)
         recyclerView.setDownloadPath(Environment.getExternalStorageDirectory() + "/MyVideo"); // (Environment.getExternalStorageDirectory() + "/NT_Video") by default
 
-        recyclerView.setDownloadVideos(true); // false by default
+        recyclerView.setDownloadVideos(false); // false by default
 
         recyclerView.setVisiblePercent(50); // percentage of View that needs to be visible to start playing
 
         //extra - start downloading all videos in background before loading RecyclerView
         List<String> urls = new ArrayList<>();
         for (int i = 0; i < postList.size(); i++) {
-            for(int j = 0; j< postList.get(i).getAttachments().size(); j++){
+            for (int j = 0; j < postList.get(i).getAttachments().size(); j++) {
                 Media media = postList.get(i).getAttachments().get(j);
                 urls.add(media.getUrl());
+                Log.i("url", media.getUrl());
             }
         }
 
@@ -240,10 +253,25 @@ public class FeedFragment extends BaseFragment {
 
     private void setLocationInfo() {
 
-        longitude = "28.9316471";
-        latitude = "41.01354659";
+        longitude = "29.03129382";
+        latitude = "41.10745331";
         radius = "0.1";
 
     }
+
+
+    private void showItemInFullView(Media media) {
+
+        MediaSerializable mediaSerializable = new MediaSerializable(media);
+
+        Intent intent = new Intent(getContext(), PostItemDetailActivity.class);
+        intent.putExtra("mediaSerializable", mediaSerializable);
+        startActivity(intent);
+
+    }
+
+
+
+
 
 }
