@@ -1,10 +1,8 @@
 package com.uren.catchu.GroupPackage;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,14 +13,9 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -30,20 +23,13 @@ import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserGroups;
 
-import java.util.List;
-
-import butterknife.BindView;
-import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
-import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_NAME;
-import static com.uren.catchu.Constants.StringConstants.UPDATE_GROUP_INFO;
 
 public class EditGroupNameActivity extends AppCompatActivity {
 
@@ -53,13 +39,9 @@ public class EditGroupNameActivity extends AppCompatActivity {
     Button cancelButton;
     Button approveButton;
     RelativeLayout relLayout;
-
     String groupId;
     String groupName;
-
     int groupNameSize = 0;
-
-    ProgressBar progressBar;
     GradientDrawable buttonShape;
 
     @Override
@@ -90,7 +72,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
         cancelButton = findViewById(R.id.cancelButton);
         approveButton = findViewById(R.id.approveButton);
         relLayout = findViewById(R.id.relLayout);
-        progressBar = findViewById(R.id.progressBar);
         toolbar.setTitle(getResources().getString(R.string.giveNewName));
         toolbar.setTitleTextColor(getResources().getColor(R.color.White, null));
         setButtonShapes();
@@ -166,7 +147,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
         new UpdateGroupProcess(EditGroupNameActivity.this, null, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
             public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
-                progressBar.setVisibility(View.GONE);
                 UserGroups.changeGroupItem(groupId, groupItem);
                 DisplayGroupDetailActivity.subtitleCollapsingToolbarLayout.setTitle(groupNameEditText.getText().toString());
                 SearchFragment.reloadAdapter();
