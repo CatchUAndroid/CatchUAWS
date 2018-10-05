@@ -42,22 +42,42 @@ public class DialogBoxUtil {
         alert.show();
     }
 
+    public static void showErrorDialog(Context context, String errMessage, final InfoDialogBoxCallback infoDialogBoxCallback){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(context.getResources().getString(R.string.errorUpper));
+        builder.setIcon(context.getResources().getDrawable(R.drawable.toast_error_icon, null));
+        builder.setMessage(errMessage);
+
+        builder.setNeutralButton(context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                infoDialogBoxCallback.okClick();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
     public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
-        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setIcon(context.getResources().getDrawable(R.drawable.info_icon_512, null));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(context.getResources().getDrawable(R.drawable.info_icon_512, null));
+        builder.setMessage(message);
 
-        if (title != null)
-            alertDialog.setTitle(title);
+        if(title != null && !title.trim().isEmpty())
+            builder.setTitle(title);
 
-        alertDialog.setMessage(message);
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, context.getResources().getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        infoDialogBoxCallback.okClick();
-                    }
-                });
-        alertDialog.show();
+        builder.setNeutralButton(context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                infoDialogBoxCallback.okClick();
+            }
+        });
+
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     public static void showSuccessDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
@@ -80,7 +100,7 @@ public class DialogBoxUtil {
 
     public static void showYesNoDialog(Context context, String title, String message, final YesNoDialogBoxCallback yesNoDialogBoxCallback) {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(R.drawable.warning_icon40);
         builder.setMessage(message);
 
@@ -100,24 +120,6 @@ public class DialogBoxUtil {
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
                 yesNoDialogBoxCallback.noClick();
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
-    }
-
-    public static void showErrorDialog(Context context, String errMessage, final InfoDialogBoxCallback infoDialogBoxCallback){
-        AlertDialog.Builder builder = new AlertDialog.Builder(context, android.R.style.Theme_Material_Dialog_Alert);
-        builder.setTitle(context.getResources().getString(R.string.errorUpper));
-        builder.setIcon(R.drawable.toast_error_icon);
-        builder.setMessage(errMessage);
-
-        builder.setNeutralButton(context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                infoDialogBoxCallback.okClick();
             }
         });
 

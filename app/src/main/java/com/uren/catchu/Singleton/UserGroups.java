@@ -66,6 +66,18 @@ public class UserGroups {
         }
     }
 
+    public static void changeGroupItem(String groupid, GroupRequestResultResultArrayItem item){
+        int index = 0;
+        for (GroupRequestResultResultArrayItem groupRequestResultResultArrayItem : groupRequestResult.getResultArray()) {
+            if (groupid.equals(groupRequestResultResultArrayItem.getGroupid())) {
+                groupRequestResult.getResultArray().remove(index);
+                groupRequestResult.getResultArray().add(index, item);
+                break;
+            }
+            index = index + 1;
+        }
+    }
+
     public static void changeGroupPicture(String groupid, String groupPicUrl) {
 
         int index = 0;

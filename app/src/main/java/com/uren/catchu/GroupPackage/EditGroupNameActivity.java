@@ -23,7 +23,11 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
+import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -99,7 +103,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
         approveButton.setBackground(buttonShape);
     }
 
-    public void addListeners(){
+    public void addListeners() {
 
         relLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,7 +127,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
                 Log.i("Info", "afterTextChanged s:" + s.toString());
                 groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
 
-                if(groupNameSize >= 0)
+                if (groupNameSize >= 0)
                     textSizeCntTv.setText(Integer.toString(groupNameSize));
                 else
                     textSizeCntTv.setText(Integer.toString(0));
@@ -140,57 +144,40 @@ public class EditGroupNameActivity extends AppCompatActivity {
         approveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeGroupName();
+                if (groupNameEditText.getText() != null && !groupNameEditText.getText().toString().trim().isEmpty())
+                    updateGroup();
+                else {
+                    hideKeyBoard();
+                    DialogBoxUtil.showInfoDialogBox(EditGroupNameActivity.this, getResources().getString(R.string.pleaseWriteGroupName),null, new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+                }
             }
         });
     }
 
-    public void changeGroupName(){
+    public void updateGroup() {
+        GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
+        groupRequestResultResultArrayItem.setName(groupNameEditText.getText().toString());
 
-        AccountHolderInfo.getToken(new TokenCallback() {
+        new UpdateGroupProcess(EditGroupNameActivity.this, null, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
-            public void onTokenTaken(String token) {
-                startChangeGroupName(token);
-            }
-        });
-    }
-
-    private void startChangeGroupName(String token) {
-
-        final GroupRequest groupRequest = new GroupRequest();
-
-        GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
-        groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
-
-        groupRequest.setRequestType(UPDATE_GROUP_INFO);
-        groupRequest.setGroupid(groupId);
-        groupRequest.setGroupName(groupNameEditText.getText().toString());
-        groupRequest.setUserid(AccountHolderInfo.getUserID());
-        groupRequest.setGroupPhotoUrl(groupRequestResultResultArrayItem.getGroupPhotoUrl());
-
-        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
+            public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
                 progressBar.setVisibility(View.GONE);
-                UserGroups.changeGroupName(groupId, groupNameEditText.getText().toString());
+                UserGroups.changeGroupItem(groupId, groupItem);
                 DisplayGroupDetailActivity.subtitleCollapsingToolbarLayout.setTitle(groupNameEditText.getText().toString());
                 SearchFragment.reloadAdapter();
                 finish();
             }
 
             @Override
-            public void onFailure(Exception e) {
-                progressBar.setVisibility(View.GONE);
-                CommonUtils.showToast( EditGroupNameActivity.this, getResources().getString(R.string.error) + e.getMessage());
-            }
+            public void onFailed(Exception e) {
 
-            @Override
-            public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
             }
-        }, groupRequest, token);
-
-        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        });
     }
 
     public void hideKeyBoard() {

@@ -70,6 +70,8 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         pendingActivityName = context.getClass().getSimpleName();
         adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                 context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
+        groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
     }
 
     @Override
@@ -101,6 +103,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             selectGroupRb = view.findViewById(R.id.selectGroupRb);
             shortGroupNameTv = view.findViewById(R.id.shortGroupNameTv);
             adminDisplayButton.setBackground(adminButtonShape);
+            groupPicImgView.setBackground(groupPhotoShape);
 
             if (pendingActivityName.equals(SelectGroupActivity.class.getSimpleName()))
                 selectGroupRb.setVisibility(View.VISIBLE);
@@ -140,6 +143,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 notifyItemChanged(beforeSelectedPosition);
 
             beforeSelectedPosition = position;
+
             List<GroupRequestResultResultArrayItem> itemList = new ArrayList<>();
             itemList.add(groupRequestResultResultArrayItem);
             SelectedGroupList.getInstance().setGroupRequestResultList(itemList);
@@ -238,7 +242,6 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         public void setGroupPhoto() {
             if (groupRequestResultResultArrayItem.getGroupPhotoUrl() != null && !groupRequestResultResultArrayItem.getGroupPhotoUrl().trim().isEmpty()) {
                 shortGroupNameTv.setVisibility(View.GONE);
-                groupPicImgView.setBackground(null);
                 Glide.with(context)
                         .load(groupRequestResultResultArrayItem.getGroupPhotoUrl())
                         .apply(RequestOptions.circleCropTransform())
@@ -247,14 +250,9 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
                     shortGroupNameTv.setVisibility(View.VISIBLE);
                     shortGroupNameTv.setText(getShortGroupName());
-                    groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                            0, GradientDrawable.OVAL, 50, 0);
-                    groupPicImgView.setBackground(groupPhotoShape);
+                    groupPicImgView.setImageDrawable(null);
                 } else {
                     shortGroupNameTv.setVisibility(View.GONE);
-                    groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.SteelBlue, null),
-                            0, GradientDrawable.OVAL, 50, 0);
-                    groupPicImgView.setBackground(groupPhotoShape);
                     Glide.with(context)
                             .load(context.getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
                             .apply(RequestOptions.circleCropTransform())

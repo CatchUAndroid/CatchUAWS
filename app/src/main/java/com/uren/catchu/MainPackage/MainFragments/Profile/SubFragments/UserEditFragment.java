@@ -411,6 +411,7 @@ public class UserEditFragment extends BaseFragment
         };
 
         DialogBoxUtil.photoChosenDialogBox(getContext(), "Choose Photo", false, photoChosenCallback);
+        // TODO: 5.10.2018 - default false verdik, kaldirmak isterse diye duzenlemek lazim...
     }
 
 

@@ -17,20 +17,15 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.GalleryPickerFrag;
 import com.uren.catchu.SharePackage.GalleryPicker.TextEditFragment;
-import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
-import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.VideoPicker.Utils.VideoFileListForDelete;
 import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
-import com.uren.catchu.UgurDeneme.PhotoDenemeActivity;
 
 import java.util.List;
 
@@ -143,19 +138,10 @@ public class MainShareActivity extends FragmentActivity {
         nextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CheckShareItems checkShareItems = new CheckShareItems(MainShareActivity.this);
-                if (checkShareItems.shareIsPossible()) {
-                    setShareItemUser();
-                    VideoFileListForDelete.getInstance().deleteAllFile();
-                    galleryPickerFrag.checkTextIsAddedOrNot();
-                    startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
-                } else
-                    DialogBoxUtil.showInfoDialogBox(MainShareActivity.this, checkShareItems.getErrMessage(), null, new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-
-                        }
-                    });
+                setShareItemUser();
+                VideoFileListForDelete.getInstance().deleteAllFile();
+                galleryPickerFrag.checkTextIsAddedOrNot();
+                startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
             }
         });
 
@@ -210,11 +196,11 @@ public class MainShareActivity extends FragmentActivity {
         super.onBackPressed();
     }
 
-    public void manageVisibleFragments(){
+    public void manageVisibleFragments() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();
-        if(fragments != null){
-            if(fragments.size() > 0) {
+        if (fragments != null) {
+            if (fragments.size() > 0) {
                 for (Fragment fragment : fragments) {
                     if (fragment instanceof TextEditFragment) {
                         galleryPickerFrag.textFragBackPressed();
