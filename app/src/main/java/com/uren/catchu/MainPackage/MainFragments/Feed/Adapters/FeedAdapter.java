@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -40,11 +41,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     private Activity mActivity;
     private Context mContext;
     private List<Post> postList;
+    private ViewPagerClickCallBack viewPagerClickCallBack;
 
-    public FeedAdapter(Activity activity, Context context, List<Post> postList) {
+    public FeedAdapter(Activity activity, Context context, List<Post> postList, ViewPagerClickCallBack viewPagerClickCallBack) {
         this.mActivity=activity;
         this.mContext = context;
         this.postList = postList;
+        this.viewPagerClickCallBack = viewPagerClickCallBack;
     }
 
     @Override
@@ -100,7 +103,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         private void setViewPager(Post post) {
 
-            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
+            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), viewPagerClickCallBack));
             viewPager.setOffscreenPageLimit(post.getAttachments().size());
             ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), view, mContext);
 
