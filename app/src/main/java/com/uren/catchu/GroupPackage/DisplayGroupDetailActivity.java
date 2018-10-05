@@ -27,12 +27,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
@@ -74,13 +79,11 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     ImageView groupPictureImgV;
     ImageView editImageView;
-    ImageLoader imageLoader;
+    //ImageLoader imageLoader;
     public static TextView personCntTv;
     public static SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
+    boolean photoExistOnImgv = false;
 
-    //public static SpecialSelectTabAdapter adapter;
-
-    //ViewPager viewPager;
     String groupId;
     public static Context context;
 
@@ -96,7 +99,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     private static final int CODE_CAMERA_SELECTED = 0;
     private static final int CODE_GALLERY_SELECTED = 1;
 
-    public int photoChoosenType;
     PermissionModule permissionModule;
 
     private Bitmap groupPhotoBitmap = null;
@@ -119,14 +121,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
         context = this;
 
-        groupParticipantList = new ArrayList<UserProfileProperties>();
-
-        imageLoader = new ImageLoader(this, groupsCacheDirectory);
+        groupParticipantList = new ArrayList<>();
 
         Intent i = getIntent();
         groupId = (String) i.getSerializableExtra(PUTEXTRA_GROUP_ID);
-
-        Log.i("Info", "  >>groupId:" + groupId);
 
         setGUIVariables();
         getGroupInformation();
@@ -135,14 +133,13 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     }
 
     public void setGUIVariables() {
-        groupPictureImgV = (ImageView) findViewById(R.id.groupPictureImgv);
-        editImageView = (ImageView) findViewById(R.id.editImageView);
-        personCntTv = (TextView) findViewById(R.id.personCntTv);
-        addFriendCardView = (CardView) findViewById(R.id.addFriendCardView);
-        deleteGroupCardView = (CardView) findViewById(R.id.deleteGroupCardView);
-        //viewPager = (ViewPager) findViewById(R.id.viewpager);
+        groupPictureImgV = findViewById(R.id.groupPictureImgv);
+        editImageView = findViewById(R.id.editImageView);
+        personCntTv = findViewById(R.id.personCntTv);
+        addFriendCardView = findViewById(R.id.addFriendCardView);
+        deleteGroupCardView = findViewById(R.id.deleteGroupCardView);
         progressBar = findViewById(R.id.progressBar);
-        subtitleCollapsingToolbarLayout = (SubtitleCollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        subtitleCollapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         permissionModule = new PermissionModule(context);
         mProgressDialog = new ProgressDialog(this);
         recyclerView = findViewById(R.id.recyclerView);
@@ -170,7 +167,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                 startGetGroupParticipants(token);
             }
         });
-
     }
 
     private void startGetGroupParticipants(String token) {
@@ -229,7 +225,21 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     }
 
     public void setGroupImage(String photoUrl) {
-        imageLoader.DisplayImage(photoUrl, groupPictureImgV, displayRectangle);
+        if (photoUrl != null && !photoUrl.trim().isEmpty()) {
+            photoExistOnImgv = true;
+            groupPictureImgV.setPadding(0, 0, 0, 0 );
+            Glide.with(this)
+                    .load(photoUrl)
+                    .apply(RequestOptions.centerInsideTransform())
+                    .into(groupPictureImgV);
+        }else {
+            photoExistOnImgv = false;
+            groupPictureImgV.setPadding(200, 200, 200, 200 );
+            Glide.with(this)
+                    .load(getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
+                    .apply(RequestOptions.centerInsideTransform())
+                    .into(groupPictureImgV);
+        }
     }
 
     public void addListeners() {
@@ -238,8 +248,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), SelectFriendToGroupActivity.class);
-                //Log.i("Info", "this.getClass().getSimpleName():" + this.getClass().getSimpleName());
-                //Log.i("Info", "DisplayGroupDetailActivity.class.getSimpleName():" + DisplayGroupDetailActivity.class.getSimpleName());
                 intent.putExtra(PUTEXTRA_ACTIVITY_NAME, DisplayGroupDetailActivity.class.getSimpleName());
                 intent.putExtra(PUTEXTRA_GROUP_ID, groupId);
                 startActivity(intent);
@@ -249,7 +257,17 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showYesNoDialog(null, getResources().getString(R.string.areYouSureExitFromGroup));
+                DialogBoxUtil.showYesNoDialog(DisplayGroupDetailActivity.this, null, getResources().getString(R.string.areYouSureExitFromGroup), new YesNoDialogBoxCallback() {
+                    @Override
+                    public void yesClick() {
+                        exitFromGroup(AccountHolderInfo.getUserID());
+                    }
+
+                    @Override
+                    public void noClick() {
+
+                    }
+                });
             }
         });
 
@@ -267,15 +285,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         groupPictureImgV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 30.08.2018 -  startChooseImageProc ve sonrasini moduler nasil yapariz bakalim...
                 startChooseImageProc();
             }
         });
     }
 
-
     private void setupViewRecyclerView() {
-
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new GroupDetailListAdapter(this, groupParticipantList, groupRequestResultResultArrayItem);
         adapter.setClickListener(this);
@@ -288,40 +303,9 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     }
 
     public static void reloadAdapter() {
-
-        // TODO: 30.08.2018 - recycler view update etmenin baska yolu var mi?....
         adapter = new GroupDetailListAdapter(context, groupParticipantList, groupRequestResultResultArrayItem);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
-    }
-
-    public void showYesNoDialog(String title, String message) {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(DisplayGroupDetailActivity.this, android.R.style.Theme_Material_Dialog_Alert);
-
-        builder.setIcon(R.drawable.warning_icon40);
-        builder.setMessage(message);
-
-        if (title != null)
-            builder.setTitle(title);
-
-        builder.setPositiveButton(getResources().getString(R.string.upperYes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                exitFromGroup(AccountHolderInfo.getUserID());
-            }
-        });
-
-        builder.setNegativeButton(getResources().getString(R.string.upperNo), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     public void exitFromGroup(final String userid) {
@@ -332,7 +316,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                 startExitFromGroup(userid, token);
             }
         });
-
     }
 
     private void startExitFromGroup(String userid, String token) {
@@ -346,7 +329,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             @Override
             public void onSuccess(Object object) {
                 UserGroups.removeGroupFromList(groupRequestResultResultArrayItem);
-                imageLoader.removeImageViewFromMap(groupRequestResultResultArrayItem.getGroupPhotoUrl());
                 SearchFragment.reloadAdapter();
                 finish();
             }
@@ -364,40 +346,27 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void startChooseImageProc() {
 
-        Log.i("Info", "startChooseImageProc++++++++++++++++++++++++++++++++");
+        DialogBoxUtil.photoChosenDialogBox(DisplayGroupDetailActivity.this, getResources().
+                getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
+            @Override
+            public void onGallerySelected() {
+                startGalleryProcess();
+            }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1);
-        adapter.add("  " + getResources().getString(R.string.openCamera));
-        adapter.add("  " + getResources().getString(R.string.openGallery));
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            @Override
+            public void onCameraSelected() {
+                startCameraProcess();
+            }
 
-        builder.setTitle(getResources().getString(R.string.chooseProfilePhoto));
-
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (item == CODE_CAMERA_SELECTED) {
-
-                    photoChoosenType = CODE_CAMERA_SELECTED;
-                    startCameraProcess();
-
-                } else if (item == CODE_GALLERY_SELECTED) {
-
-                    photoChoosenType = CODE_GALLERY_SELECTED;
-                    startGalleryProcess();
-
-                } else
-                    CommonUtils.showToast(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError));
+            @Override
+            public void onPhotoRemoved() {
+                updateGroupToNeoJ("");
             }
         });
-
-        AlertDialog alert = builder.create();
-        alert.show();
     }
 
     public void startCameraProcess() {
@@ -557,12 +526,11 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                 startUpdateGroupToNeoJ(photoNewUrl, token);
             }
         });
-
-
-
     }
 
     private void startUpdateGroupToNeoJ(final String photoNewUrl, String token) {
+
+        // TODO: 5.10.2018 - grup fotosu silindiginde S3 den silme akisi yok...
 
         final GroupRequest groupRequest = new GroupRequest();
 
@@ -578,7 +546,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
             @Override
             public void onSuccess(Object object) {
                 UserGroups.changeGroupPicture(groupId, photoNewUrl);
-                imageLoader.removeImageViewFromMap(groupRequestResultResultArrayItem.getGroupPhotoUrl());
                 setGroupImage(photoNewUrl);
                 SearchFragment.reloadAdapter();
                 dialogDismiss();
@@ -597,7 +564,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     @Override

@@ -2,11 +2,13 @@ package com.uren.catchu.SharePackage.VideoPicker.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
@@ -63,14 +66,23 @@ public class VideoViewFragment extends Fragment {
         cancelImageView = mView.findViewById(R.id.cancelImageView);
         videoView = mView.findViewById(R.id.videoView);
         playVideoImgv = mView.findViewById(R.id.playVideoImgv);
+        setShapes();
     }
 
+    private void setShapes() {
+        GradientDrawable playVideoImgvShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.transparentBlack, null),
+                getActivity().getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3);
+        playVideoImgv.setBackground(playVideoImgvShape);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelImageView.setVisibility(View.GONE);
                 videoView.stopPlayback();
+                mediaPlayer = null;
                 ShareItems.getInstance().clearVideoShareItemBox();
                 getActivity().onBackPressed();
             }
@@ -79,21 +91,23 @@ public class VideoViewFragment extends Fragment {
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(mediaPlayerPlayFinished) {
-                    playVideoImgv.setVisibility(View.GONE);
-                    mediaPlayer.seekTo(mediaPlayerTotalLen);
-                    mediaPlayer.start();
-                    mediaPlayerIsPlaying = true;
-                    mediaPlayerPlayFinished = false;
-                }else {
-                    if (mediaPlayerIsPlaying) {
-                        playVideoImgv.setVisibility(View.VISIBLE);
-                        mediaPlayer.pause();
-                        mediaPlayerIsPlaying = false;
-                    } else {
+                if(mediaPlayer != null) {
+                    if (mediaPlayerPlayFinished) {
                         playVideoImgv.setVisibility(View.GONE);
+                        mediaPlayer.seekTo(mediaPlayerTotalLen);
                         mediaPlayer.start();
                         mediaPlayerIsPlaying = true;
+                        mediaPlayerPlayFinished = false;
+                    } else {
+                        if (mediaPlayerIsPlaying) {
+                            playVideoImgv.setVisibility(View.VISIBLE);
+                            mediaPlayer.pause();
+                            mediaPlayerIsPlaying = false;
+                        } else {
+                            playVideoImgv.setVisibility(View.GONE);
+                            mediaPlayer.start();
+                            mediaPlayerIsPlaying = true;
+                        }
                     }
                 }
                 return false;
@@ -122,12 +136,15 @@ public class VideoViewFragment extends Fragment {
         videoView.setVideoURI(videoUri);
         videoView.requestFocus();
 
+        Log.i("Info", "VideoViewFragment: videoUri :" + videoUri.toString());
+
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer = mp;
                 mediaPlayer.start();
                 cancelImageView.setVisibility(View.VISIBLE);
                 playVideoImgv.setVisibility(View.GONE);
+                mediaPlayerIsPlaying = true;
                 mediaPlayerTotalLen = mediaPlayer.getCurrentPosition();
 
                 mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {

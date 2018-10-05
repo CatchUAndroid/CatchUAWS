@@ -16,16 +16,28 @@
         android:id="@+id/specialListLinearLayout"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/specialPictureImgView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/img_border_blue"
-            android:src="@drawable/man"
-            android:layout_marginTop="2dp"
-            android:layout_marginBottom="2dp"/>
+            android:layout_marginTop="5dp">
+
+            <ImageView
+                android:id="@+id/specialPictureImgView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center" />
+
+            <TextView
+                android:id="@+id/shortUsernameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/White"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="180dp"
@@ -53,14 +65,13 @@
         <Button
             android:id="@+id/adminDisplayBtn"
             android:layout_width="wrap_content"
-            android:layout_height="20dp"
+            android:layout_height="37dp"
             android:layout_gravity="center"
-            android:background="@drawable/ripple_button_admin"
             android:text="@string/adminText"
             android:textSize="10sp"
             android:textAllCaps="false"
-            android:textColor="@color/green"
-            android:textStyle="normal|bold|italic" />
+            android:textColor="@color/MediumSeaGreen"
+            android:textStyle="normal|bold" />
 
     </LinearLayout>
 

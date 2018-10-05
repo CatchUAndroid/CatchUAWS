@@ -31,15 +31,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/gradient_bg"
-                    android:fitsSystemWindows="true"
+                    android:fitsSystemWindows="false"
                     android:scaleType="centerCrop"
+                    android:src="@drawable/groups_icon_500"
                     app:layout_collapseMode="parallax" />
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/gradient_bg">
-                </FrameLayout>
+                    android:background="@drawable/gradient_bg"></FrameLayout>
 
                 <ImageView
                     android:id="@+id/editImageView"

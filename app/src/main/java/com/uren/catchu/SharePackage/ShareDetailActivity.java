@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
@@ -45,6 +47,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
@@ -87,12 +90,14 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private LocationTrackerAdapter locationTrackObj;
     FrameLayout shareMainLayout;
     LinearLayout shareMainLinearLayout;
+    LinearLayout mapLayout;
 
     //Update text views
     View noteTextLayout;
     ImageView approveTextImgv;
     ImageView cancelTextImgv;
     EditText updateTextEditText;
+    ScrollView noteScrollView;
 
     private ImageView publicShareImgv;
     private ImageView friendShareImgv;
@@ -180,9 +185,17 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         shareMainLayout = findViewById(R.id.shareMainLayout);
         mainEditText = findViewById(R.id.mainEditText);
         shareMainLinearLayout = findViewById(R.id.shareMainLinearLayout);
+        mapLayout = findViewById(R.id.mapLayout);
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this);
         checkShareItems = new CheckShareItems(ShareDetailActivity.this);
+        setMapLayoutShape();
+    }
+
+    private void setMapLayoutShape() {
+        GradientDrawable mapShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
+                0, GradientDrawable.RECTANGLE, 15, 0);
+        mapLayout.setBackground(mapShape);
     }
 
     public void addListeners() {
@@ -479,6 +492,13 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             approveTextImgv = noteTextLayout.findViewById(R.id.approveImgv);
             cancelTextImgv = noteTextLayout.findViewById(R.id.cancelTextImgv);
             updateTextEditText = noteTextLayout.findViewById(R.id.noteTextEditText);
+            noteScrollView = noteTextLayout.findViewById(R.id.noteScrollView);
+            GradientDrawable approveButtonShape = ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                    0, GradientDrawable.OVAL, 50, 0);
+            approveTextImgv.setBackground(approveButtonShape);
+            GradientDrawable scrollviewShape = ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
+                    getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
+            noteScrollView.setBackground(scrollviewShape);
         }
 
         updateTextEditText.setText(fullText);

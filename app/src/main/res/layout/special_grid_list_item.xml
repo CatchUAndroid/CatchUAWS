@@ -9,11 +9,11 @@
     app:cardBackgroundColor="@color/toastBackground">
 
     <LinearLayout
-        android:layout_width="70dp"
-        android:layout_height="60dp"
-        android:background="@color/toastBackground"
         android:id="@+id/specialListLinearLayout"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:background="@color/toastBackground"
         android:orientation="vertical">
 
 
@@ -23,9 +23,9 @@
             android:layout_gravity="center">
 
             <FrameLayout
+                android:id="@+id/frameLayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/frameLayout">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/specialPictureImgView"
@@ -50,16 +50,8 @@
                 android:layout_height="20dp"
                 android:layout_alignEnd="@+id/frameLayout"
                 android:layout_alignParentTop="true"
-                android:background="@drawable/img_border_white"
+                android:padding="1dp"
                 android:src="@drawable/cancel_gray" />
-
-            <!--ImageView
-                android:id="@+id/deletePersonImgv"
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:layout_alignEnd="@+id/specialPictureImgView"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/ic_cancel_white_18dp" /-->
 
         </RelativeLayout>
 
@@ -67,8 +59,8 @@
             android:id="@+id/specialNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="user name surname"
             android:layout_gravity="center"
+            android:text="user name surname"
             android:textSize="7sp"
             android:textStyle="bold|italic" />
 

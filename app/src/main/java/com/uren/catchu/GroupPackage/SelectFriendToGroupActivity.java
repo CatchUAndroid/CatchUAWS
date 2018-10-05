@@ -1,39 +1,28 @@
 package com.uren.catchu.GroupPackage;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
-import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
@@ -47,16 +36,12 @@ import java.util.List;
 import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
-import catchu.model.GroupRequestResult;
-import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.ADD_PARTICIPANT_INTO_GROUP;
-import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LIST;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_COUNT;
-import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 public class SelectFriendToGroupActivity extends AppCompatActivity {
 
@@ -80,7 +65,6 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     public static final int CODE_SELECT_ALL = 0;
     public static final int CODE_UNSELECT_ALL = 1;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +77,6 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     }
 
     private void initUI() {
-
         nextFab = findViewById(R.id.nextFab);
         recyclerView = findViewById(R.id.recyclerView);
         friendCountTv = findViewById(R.id.friendCountTv);

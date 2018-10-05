@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.SurfaceTexture;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.Camera;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
@@ -35,6 +36,7 @@ import android.widget.VideoView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -113,7 +115,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.video_picker_deneme, container, false);
+            mView = inflater.inflate(R.layout.video_picker, container, false);
             ButterKnife.bind(this, mView);
         }
         return mView;
@@ -128,9 +130,9 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
     }
 
     private void initUI() {
-        textureView = (TextureView) mView.findViewById(R.id.texture_view);
+        textureView = mView.findViewById(R.id.texture_view);
         cancelImageView = mView.findViewById(R.id.cancelImageView);
-        mToggleButton = (ToggleButton) mView.findViewById(R.id.toggleRecordingButton);
+        mToggleButton = mView.findViewById(R.id.toggleRecordingButton);
         galleryImgv = mView.findViewById(R.id.galleryImgv);
         texttureViewLayout = mView.findViewById(R.id.texttureViewLayout);
         permissionModule = new PermissionModule(getActivity());
@@ -141,8 +143,20 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         videoViewRelLayout = mView.findViewById(R.id.videoViewRelLayout);
         playVideoImgv = mView.findViewById(R.id.playVideoImgv);
         textureView.setSurfaceTextureListener(this);
+        setShapes();
     }
 
+    private void setShapes() {
+        GradientDrawable galleryImgvShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.transparentBlack, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        galleryImgv.setBackground(galleryImgvShape);
+
+        GradientDrawable playVideoImgvShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.transparentBlack, null),
+                getActivity().getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3);
+        playVideoImgv.setBackground(playVideoImgvShape);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,7 +245,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (videoFile != null) {
+                if (videoFile != null && mediaPlayer != null) {
                     if (mediaPlayerPlayFinished) {
                         playVideoImgv.setVisibility(View.GONE);
                         mediaPlayer.seekTo(mediaPlayerTotalLen);
@@ -428,7 +442,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
     public void addVideoShareItemList() {
         ShareItems.getInstance().clearVideoShareItemBox();
-        VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), videoUri,videoFilePath, CAMERA_TEXT);
+        VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), videoUri, videoFilePath, CAMERA_TEXT);
         VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
         ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
@@ -505,9 +519,8 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                 mediaPlayer = null;
             }
 
-            if(videoView != null){
+            if (videoView != null) {
                 videoView.suspend();
-                videoView = null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -562,6 +575,8 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             videoView.setVideoURI(videoUri);
             videoView.requestFocus();
 
+            Log.i("Info", "VideoPickerFrag: videoUri :" + videoUri.toString());
+
             videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 public void onPrepared(MediaPlayer mp) {
                     mediaPlayer = mp;
@@ -571,7 +586,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                     mediaPlayerIsPlaying = true;
 
 
-                    if(camParamsLayout.getVisibility() == View.GONE)
+                    if (camParamsLayout.getVisibility() == View.GONE)
                         cancelImageView.setVisibility(View.VISIBLE);
 
                     playVideoImgv.setVisibility(View.GONE);

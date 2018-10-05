@@ -178,7 +178,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
     private void startChooseImageProc() {
         DialogBoxUtil.photoChosenDialogBox(AddGroupActivity.this, getResources().
-                getString(R.string.chooseProfilePhoto), new PhotoChosenCallback() {
+                getString(R.string.chooseProfilePhoto), false, new PhotoChosenCallback() {
             @Override
             public void onGallerySelected() {
                 startGalleryProcess();
@@ -187,6 +187,11 @@ public class AddGroupActivity extends AppCompatActivity {
             @Override
             public void onCameraSelected() {
                 startCameraProcess();
+            }
+
+            @Override
+            public void onPhotoRemoved() {
+
             }
         });
     }

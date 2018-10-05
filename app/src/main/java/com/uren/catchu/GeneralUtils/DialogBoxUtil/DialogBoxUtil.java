@@ -11,13 +11,18 @@ import com.uren.catchu.R;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
 
 public class DialogBoxUtil {
 
-    public static void photoChosenDialogBox(Context context, String title, final PhotoChosenCallback photoChosenCallback) {
+    public static void photoChosenDialogBox(Context context, String title, boolean photoExist, final PhotoChosenCallback photoChosenCallback) {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.openCamera));
+
+        if(photoExist)
+            adapter.add("  " + context.getResources().getString(R.string.REMOVE_PHOTO));
+
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         if (title != null)
             builder.setTitle(title);
@@ -28,6 +33,9 @@ public class DialogBoxUtil {
                     photoChosenCallback.onGallerySelected();
                 else if (item == CODE_CAMERA_POSITION)
                     photoChosenCallback.onCameraSelected();
+                else if (item == CODE_PHOTO_REMOVE){
+                    photoChosenCallback.onPhotoRemoved();
+                }
             }
         });
         AlertDialog alert = builder.create();

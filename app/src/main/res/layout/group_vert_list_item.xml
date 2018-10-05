@@ -68,9 +68,9 @@
                     android:layout_height="35dp"
                     android:layout_gravity="center"
                     android:textAllCaps="false"
-                    android:textColor="@color/green"
+                    android:textColor="@color/MediumSeaGreen"
                     android:textSize="10sp"
-                    android:textStyle="normal" />
+                    android:textStyle="normal|bold" />
             </LinearLayout>
 
             <RadioButton

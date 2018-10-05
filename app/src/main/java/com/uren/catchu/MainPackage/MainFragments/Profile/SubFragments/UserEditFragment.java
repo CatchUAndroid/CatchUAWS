@@ -403,9 +403,14 @@ public class UserEditFragment extends BaseFragment
             public void onCameraSelected() {
                 getGalleryPermission();
             }
+
+            @Override
+            public void onPhotoRemoved() {
+
+            }
         };
 
-        DialogBoxUtil.photoChosenDialogBox(getContext(), "Choose Photo", photoChosenCallback);
+        DialogBoxUtil.photoChosenDialogBox(getContext(), "Choose Photo", false, photoChosenCallback);
     }
 
 

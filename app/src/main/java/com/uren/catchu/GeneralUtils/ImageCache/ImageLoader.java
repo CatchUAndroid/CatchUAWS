@@ -66,11 +66,11 @@ public class ImageLoader {
     public int getImageId(){
 
         if(fileChild.equals(friendsCacheDirectory))
-            return R.drawable.man;
+            return R.drawable.user_icon;
         else if(fileChild.equals(groupsCacheDirectory))
             return R.drawable.user_groups;
         else
-            return R.drawable.man;
+            return R.drawable.user_icon;
     }
 
     public void DisplayImage(String url, ImageView imageView, String displayType) {

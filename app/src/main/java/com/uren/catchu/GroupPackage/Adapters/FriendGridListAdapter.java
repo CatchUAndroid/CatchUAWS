@@ -36,6 +36,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
     TextView participantCntTv;
     Activity activity;
     GradientDrawable imageShape;
+    GradientDrawable deleteShape;
 
     public FriendGridListAdapter(Context context, FriendList friendList) {
         layoutInflater = LayoutInflater.from(context);
@@ -43,6 +44,8 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         this.context = context;
         activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                 0, GradientDrawable.OVAL, 50, 0);
     }
 
@@ -78,6 +81,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
             deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
             specialProfileImgView.setBackground(imageShape);
+            deletePersonImgv.setBackground(deleteShape);
 
             deletePersonImgv.setOnClickListener(new View.OnClickListener() {
                 @Override

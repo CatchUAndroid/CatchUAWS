@@ -3,6 +3,7 @@ package com.uren.catchu.GroupPackage;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -54,8 +56,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
     int groupNameSize = 0;
 
     ProgressBar progressBar;
-
-    // TODO: 6.09.2018 - Grup listeleme ekraninda maz size ne oluyor kontrol edilecek. Grup admin buyonu kayiyordu.
+    GradientDrawable buttonShape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +87,16 @@ public class EditGroupNameActivity extends AppCompatActivity {
         approveButton = findViewById(R.id.approveButton);
         relLayout = findViewById(R.id.relLayout);
         progressBar = findViewById(R.id.progressBar);
-
         toolbar.setTitle(getResources().getString(R.string.giveNewName));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.White, null));
+        setButtonShapes();
+    }
+
+    private void setButtonShapes() {
+        buttonShape = ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
+        cancelButton.setBackground(buttonShape);
+        approveButton.setBackground(buttonShape);
     }
 
     public void addListeners(){
@@ -134,8 +143,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
                 changeGroupName();
             }
         });
-
-
     }
 
     public void changeGroupName(){
@@ -146,7 +153,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
                 startChangeGroupName(token);
             }
         });
-
     }
 
     private void startChangeGroupName(String token) {
@@ -185,12 +191,13 @@ public class EditGroupNameActivity extends AppCompatActivity {
         }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public void hideKeyBoard() {
-
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        if (getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
+
 }

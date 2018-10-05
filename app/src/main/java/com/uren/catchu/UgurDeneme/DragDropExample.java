@@ -30,7 +30,7 @@ public class DragDropExample extends AppCompatActivity {
 
         trash.setOnDragListener(new TrashDragListener(
                 R.drawable.approve_icon_96,
-                R.drawable.ic_cancel_white_18dp));
+                R.drawable.cancel_gray));
 
         trash.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -169,7 +169,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
         private void changeColor(int colorType) {
 
-            GradientDrawable mDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.roundedbutton);
+            GradientDrawable mDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.img_border);
             if (colorType == 1) {
                 mDrawable.setColor(Color.parseColor("#42A5F5"));
             } else if (colorType == 2) {

@@ -30,7 +30,9 @@
     <string name="selectPicture">Resim Seçin</string>
     <string name="openCamera">Kamerayı Aç</string>
     <string name="openGallery">Galeriden Seç</string>
+    <string name="REMOVE_PHOTO">Fotoğrafı kaldır</string>
     <string name="chooseProfilePhoto">Profil fotoğrafı seçin</string>
+    <string name="CHOOSE_GROUP_PHOTO">Grup fotoğrafı seçin</string>
     <string name="groupInformation">Grup Bilgileri</string>
     <string name="deleteGroup">Grubu Sil</string>
     <string name="exitFromGroup">Gruptan Çık</string>

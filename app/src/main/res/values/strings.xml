@@ -48,7 +48,9 @@
     <string name="selectPicture">Select Picture</string>
     <string name="openCamera">Open Camera</string>
     <string name="openGallery">Open Gallery</string>
+    <string name="REMOVE_PHOTO">Remove photo</string>
     <string name="chooseProfilePhoto">Choose a profile photo</string>
+    <string name="CHOOSE_GROUP_PHOTO">Choose a group photo</string>
     <string name="groupInformation">Group Information</string>
     <string name="deleteGroup">Delete Group</string>
     <string name="exitFromGroup">Exit From Group</string>
