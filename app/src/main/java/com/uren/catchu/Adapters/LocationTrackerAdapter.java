@@ -1,19 +1,27 @@
 package com.uren.catchu.Adapters;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 public class LocationTrackerAdapter implements LocationListener {
 
@@ -21,6 +29,7 @@ public class LocationTrackerAdapter implements LocationListener {
     private boolean isGPSEnabled = false;
     private boolean isNetworkEnabled = false;
     private Location location;
+    LocationCallback locationCallback;
     private double latitude;
     private double longitude;
 
@@ -36,13 +45,7 @@ public class LocationTrackerAdapter implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i("Info", "Location changed lat :" + location.getLatitude());
-        Log.i("Info", "Location changed long:" + location.getLongitude());
-
-        catchu.model.Location locationModel = new catchu.model.Location();
-        locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-        locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-        ShareItems.getInstance().getPost().setLocation(locationModel);
+        locationCallback.onLocationChanged(location);
     }
 
     @Override
@@ -60,14 +63,15 @@ public class LocationTrackerAdapter implements LocationListener {
 
     }
 
-    public LocationTrackerAdapter(Context context) {
+    public LocationTrackerAdapter(Context context, LocationCallback locationCallback) {
         mContext = context;
         permissionModule = new PermissionModule(mContext);
+        this.locationCallback = locationCallback;
     }
 
     public boolean canGetLocation() {
 
-        locationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
 
         isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
@@ -79,55 +83,64 @@ public class LocationTrackerAdapter implements LocationListener {
     }
 
     public Location getLocation() {
-        try {
-            // First get location from Network Provider
-            if (isNetworkEnabled) {
-
-                if (permissionModule.checkAccessFineLocationPermission()) {
-                    locationManager.requestLocationUpdates(
-                            LocationManager.NETWORK_PROVIDER,
-                            MIN_TIME_BW_UPDATES,
-                            MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
-                }
-
-
-                if (permissionModule.checkAccessFineLocationPermission()) {
-                    if (locationManager != null) {
-                        location = locationManager
-                                .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-                    }
-                }
-            }
-            // if GPS Enabled get lat/long using GPS Services
-            if (isGPSEnabled) {
-                if (location == null) {
-                    if (permissionModule.checkAccessFineLocationPermission()) {
-                        locationManager.requestLocationUpdates(
-                                LocationManager.NETWORK_PROVIDER,
-                                MIN_TIME_BW_UPDATES,
-                                MIN_DISTANCE_CHANGE_FOR_UPDATES,  this);
-                    }
-
-                    if (locationManager != null) {
-                        location = locationManager
-                                .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                        if (location != null) {
-                            latitude = location.getLatitude();
-                            longitude = location.getLongitude();
-                        }
-                    }
-                }
-            }
-
-        } catch (Exception e) {
-            CommonUtils.showToast(mContext, mContext.getResources().getString(R.string.error) + e.getMessage());
-        }
-
+        setLocationFromNetworkProvider();
+        setLocationFromGPSProvider();
+        setLocationFromBestProvider();
         return location;
+    }
+
+    public void setLocationFromNetworkProvider() {
+        if (isNetworkEnabled && location == null) {
+            if (permissionModule.checkAccessFineLocationPermission()) {
+                locationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER,
+                        MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                if (locationManager != null) {
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                }
+            }
+        }
+    }
+
+    public void setLocationFromGPSProvider() {
+        if (isGPSEnabled && location == null) {
+            if (permissionModule.checkAccessFineLocationPermission()) {
+                locationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER,
+                        MIN_TIME_BW_UPDATES,
+                        MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
+
+                if (locationManager != null) {
+                    location = locationManager
+                            .getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+                    if (location != null) {
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                    }
+                }
+            }
+        }
+    }
+
+    public void setLocationFromBestProvider() {
+        if (location == null) {
+            String bestProvider;
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+
+            Criteria criteria = new Criteria();
+            bestProvider = locationManager.getBestProvider(criteria, false);
+
+            if (permissionModule.checkAccessFineLocationPermission()) {
+                location = locationManager.getLastKnownLocation(bestProvider);
+            }
+        }
     }
 }

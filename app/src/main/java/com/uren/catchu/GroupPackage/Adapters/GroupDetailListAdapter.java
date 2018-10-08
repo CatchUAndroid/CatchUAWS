@@ -24,6 +24,7 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
@@ -151,7 +152,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
                                     Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
                                 } else if (item == CODE_REMOVE_FROM_GROUP) {
-                                    exitFromGroup(userProfile.getUserid(), position);
+                                    exitFromGroup(userProfile.getUserid());
                                 } else if (item == CODE_CHANGE_AS_ADMIN) {
                                     changeAdministrator(userProfile.getUserid());
                                     Toast.makeText(context, "Change as admin clicked", Toast.LENGTH_SHORT).show();
@@ -217,7 +218,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             } else {
                 if (userProfile.getName() != null && !userProfile.getName().trim().isEmpty()) {
                     shortUsernameTv.setVisibility(View.VISIBLE);
-                    shortUsernameTv.setText(getShortenUserName());
+                    shortUsernameTv.setText(UserDataUtil.getShortenUserName(userProfile.getName()));
                     specialProfileImgView.setImageDrawable(null);
                 } else {
                     shortUsernameTv.setVisibility(View.GONE);
@@ -229,17 +230,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             }
         }
 
-        public String getShortenUserName() {
-            String returnValue = "";
-            String[] seperatedName = userProfile.getName().trim().split(" ");
-            for (String word : seperatedName) {
-                if (returnValue.length() < 5)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
-            }
-            return returnValue;
-        }
-
-        public void exitFromGroup(final String userid, final int position) {
+        public void exitFromGroup(final String userid) {
 
             AccountHolderInfo.getToken(new TokenCallback() {
                 @Override

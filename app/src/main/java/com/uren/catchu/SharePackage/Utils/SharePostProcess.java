@@ -14,13 +14,16 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
+import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
+import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 import com.uren.catchu.Singleton.UserFriends;
 
@@ -32,6 +35,7 @@ import java.util.List;
 
 import catchu.model.BucketUpload;
 import catchu.model.BucketUploadResponse;
+import catchu.model.FriendList;
 import catchu.model.Media;
 import catchu.model.PostRequest;
 import catchu.model.User;
@@ -41,6 +45,7 @@ import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
@@ -224,7 +229,7 @@ public class SharePostProcess {
                         dialogDismiss();
                         InputStream is = urlConnection.getErrorStream();
                         serviceCompleteCallback.onFailed(new Exception(is.toString()));
-                    }else {
+                    } else {
                         uploadIndex++;
                         checkAllItemsUploaded();
                     }
@@ -249,7 +254,7 @@ public class SharePostProcess {
         uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void checkAllItemsUploaded(){
+    public void checkAllItemsUploaded() {
         if (uploadIndex == totalMediaCount)
             saveShareItemsToNeoJ();
     }
@@ -258,15 +263,56 @@ public class SharePostProcess {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startsaveShareItemsToNeoJ(token);
+                checkPrivacyType(token);
             }
         });
     }
 
-    private void startsaveShareItemsToNeoJ(String token) {
+    private List<User> getParticipantList() {
+        List<User> userList = new ArrayList<>();
+        if (selectedItem == ShareDetailActivity.CODE_FRIEND_SHARED) {
+            for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
+                User user = new User();
+                user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
+                user.setUserid(userProfileProperties.getUserid());
+                user.setUsername(userProfileProperties.getUsername());
+                userList.add(user);
+            }
+        }
+        return userList;
+    }
+
+    private void checkPrivacyType(final String token) {
+        if (selectedItem == ShareDetailActivity.CODE_PUBLIC_SHARED)
+            saveToNeo(token, SHARE_TYPE_EVERYONE);
+        else if (selectedItem == ShareDetailActivity.CODE_FRIEND_SHARED) {
+
+            AccountHolderFollowers.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    FriendList friendList = (FriendList) object;
+                    if (friendList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
+                        saveToNeo(token, SHARE_TYPE_ALL_FOLLOWERS);
+                    else
+                        saveToNeo(token, SHARE_TYPE_CUSTOM);
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    serviceCompleteCallback.onFailed(e);
+                }
+            });
+        } else if (selectedItem == ShareDetailActivity.CODE_JUSTME_SHARED)
+            saveToNeo(token, SHARE_TYPE_SELF);
+        else if(selectedItem == ShareDetailActivity.CODE_GROUP_SHARED)
+            saveToNeo(token, SHARE_TYPE_GROUP);
+    }
+
+    private void saveToNeo(String token, String postPrivacyType) {
         postRequest = new PostRequest();
-        ShareItems.getInstance().getPost().setPrivacyType(getPostPrivacyType());
+        ShareItems.getInstance().getPost().setPrivacyType(postPrivacyType);
         ShareItems.getInstance().getPost().setAllowList(getParticipantList());
+        ShareItems.getInstance().getPost().setGroupid(getGroupId());
         postRequest.setPost(ShareItems.getInstance().getPost());
 
         PostRequestProcess postRequestProcess = new PostRequestProcess(new OnEventListener() {
@@ -290,34 +336,12 @@ public class SharePostProcess {
             }
         }, postRequest, token);
         postRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
-    private List<User> getParticipantList() {
-        List<User> userList = new ArrayList<>();
-        if (selectedItem == ShareDetailActivity.CODE_FRIEND_SHARED) {
-            for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
-                User user = new User();
-                user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
-                user.setUserid(userProfileProperties.getUserid());
-                user.setUsername(userProfileProperties.getUsername());
-                userList.add(user);
-            }
-        }
-        return userList;
-    }
-
-    private String getPostPrivacyType() {
-        if (selectedItem == ShareDetailActivity.CODE_PUBLIC_SHARED)
-            return SHARE_TYPE_EVERYONE;
-        else if (selectedItem == ShareDetailActivity.CODE_FRIEND_SHARED) {
-            if (UserFriends.getFriendList().getResultArray().size() == SelectedFriendList.getInstance().getSize()) {
-                return SHARE_TYPE_ALL_FOLLOWERS;
-            } else {
-                return SHARE_TYPE_CUSTOM;
-            }
-        } else if (selectedItem == ShareDetailActivity.CODE_JUSTME_SHARED)
-            return SHARE_TYPE_SELF;
-        return null;
+    private String getGroupId() {
+        if (SelectedGroupList.getInstance() != null && SelectedGroupList.getInstance().getSize() > 0) {
+            return SelectedGroupList.getInstance().getGroupRequestResult().getResultArray().get(0).getGroupid();
+        } else
+            return "";
     }
 }

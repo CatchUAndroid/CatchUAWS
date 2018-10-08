@@ -126,6 +126,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="feed">Feeds</string>
+    <string name="LOWER_FOLLOWER">follower</string>
+    <string name="LOWER_FOLLOWING">following</string>
+
 
     <string name="red">Red</string>
     <string name="blue">Blue</string>

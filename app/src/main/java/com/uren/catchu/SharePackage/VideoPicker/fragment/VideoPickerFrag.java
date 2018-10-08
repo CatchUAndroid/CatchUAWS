@@ -36,6 +36,7 @@ import android.widget.VideoView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
@@ -43,7 +44,6 @@ import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.Utils.CameraUtil;
-import com.uren.catchu.SharePackage.VideoPicker.Adapters.VideoFileAdapter;
 import com.uren.catchu.SharePackage.VideoPicker.Utils.VideoFileListForDelete;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
@@ -333,7 +333,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
     private void initRecorder(Surface surface) {
         mCamera.unlock();
-        videoFile = VideoFileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO);
+        videoFile = FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO);
         videoFilePath = videoFile.getAbsolutePath();
         mMediaRecorder = new MediaRecorder();
         mMediaRecorder.setPreviewDisplay(surface);
@@ -352,7 +352,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         mMediaRecorder.setOrientationHint(cameraOrientation);
         mMediaRecorder.setOnInfoListener(this);
 
-        Log.i("Info", "VideoFileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath():" + videoFilePath);
+        Log.i("Info", "FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath():" + videoFilePath);
 
         try {
             mMediaRecorder.prepare();

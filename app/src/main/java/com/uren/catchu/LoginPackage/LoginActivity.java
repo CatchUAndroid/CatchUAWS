@@ -61,6 +61,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GroupPackage.EditGroupNameActivity;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
@@ -232,7 +233,7 @@ public class LoginActivity extends AppCompatActivity
 
         if (view == backgroundLayout) {
             saveLoginInformation();
-            hideKeyBoard();
+            CommonUtils.hideKeyBoard(LoginActivity.this);
         } else if (view == emailET) {
 
         } else if (view == passwordET) {
@@ -379,12 +380,6 @@ public class LoginActivity extends AppCompatActivity
         }
 
         loginUser(userEmail, userPassword);
-    }
-
-    public void hideKeyBoard() {
-
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
     private boolean checkValidation(String email, String password) {

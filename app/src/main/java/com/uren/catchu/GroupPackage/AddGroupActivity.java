@@ -31,6 +31,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
@@ -116,6 +117,7 @@ public class AddGroupActivity extends AppCompatActivity {
         saveGroupInfoFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CommonUtils.hideKeyBoard(AddGroupActivity.this);
                 if (groupNameEditText.getText().toString().equals("") || groupNameEditText.getText() == null) {
                     CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.pleaseWriteGroupName));
                     return;
@@ -127,7 +129,7 @@ public class AddGroupActivity extends AppCompatActivity {
         addGroupDtlRelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideKeyBoard();
+                CommonUtils.hideKeyBoard(AddGroupActivity.this);
             }
         });
 
@@ -152,11 +154,6 @@ public class AddGroupActivity extends AppCompatActivity {
         });
     }
 
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-    }
-
     private void openPersonSelectionPage() {
         adapter = new FriendGridListAdapter(this, SelectedFriendList.getInstance().getSelectedFriendList());
         recyclerView.setAdapter(adapter);
@@ -169,6 +166,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:
+                CommonUtils.hideKeyBoard(AddGroupActivity.this);
                 finish();
                 break;
             default:
@@ -214,17 +212,12 @@ public class AddGroupActivity extends AppCompatActivity {
     public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
             requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
-        else {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
-        }
+        else
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
     }
 
     private void startGalleryProcess() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
+        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                 getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
@@ -276,8 +269,7 @@ public class AddGroupActivity extends AppCompatActivity {
                 checkCameraPermission();
             }
         } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }

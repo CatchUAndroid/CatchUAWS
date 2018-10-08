@@ -21,6 +21,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -196,18 +197,14 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
 
     public void startGalleryProcess() {
         Activity origin = (Activity) context;
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        origin.startActivityForResult(Intent.createChooser(intent,
+        origin.startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                 context.getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
     public void startCameraProcess() {
         if (permissionModule.checkWriteExternalStoragePermission()) {
             Activity origin = (Activity) context;
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            origin.startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            origin.startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         } else
             galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     permissionModule.getWriteExternalStoragePermissionCode());

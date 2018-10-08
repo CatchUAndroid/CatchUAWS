@@ -1,6 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +14,9 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -29,7 +24,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
@@ -38,13 +33,13 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFra
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
+import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.UserFriends;
 
 import butterknife.ButterKnife;
+import catchu.model.FriendList;
 import catchu.model.SearchResult;
 
-import static com.uren.catchu.Constants.StringConstants.GET_AUTHENTICATED_USER_GROUP_LIST;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.propGroups;
 import static com.uren.catchu.Constants.StringConstants.propPersons;
@@ -97,6 +92,11 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
@@ -135,7 +135,7 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
         personFragment = new PersonFragment(userid, verticalShown, "A", context);
         groupFragment = new GroupFragment(context, userid);
 
-        adapter = new SpecialSelectTabAdapter(getFragmentManager());
+        adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(personFragment, getResources().getString(R.string.friends));
         adapter.addFragment(groupFragment, getResources().getString(R.string.groups));
         viewPager.setAdapter(adapter);
@@ -180,10 +180,10 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private void overwriteToolbar() {
 
         mToolBar = view.findViewById(R.id.toolbar);
-        editTextSearch =  view.findViewById(R.id.editTextSearch);
-        imgCancelSearch =  view.findViewById(R.id.imgCancelSearch);
-        rl =  view.findViewById(R.id.rl);
-        r2 =  view.findViewById(R.id.r2);
+        editTextSearch = view.findViewById(R.id.editTextSearch);
+        imgCancelSearch = view.findViewById(R.id.imgCancelSearch);
+        rl = view.findViewById(R.id.rl);
+        r2 = view.findViewById(R.id.r2);
         txtAddGroup = view.findViewById(R.id.txtAddGroup);
 
         imgCancelSearch.setOnClickListener(new View.OnClickListener() {
@@ -235,13 +235,24 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     public void addNewGroup() {
-        if (UserFriends.getInstance().getSize() == 0)
-            CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
-        else {
-            Intent intent = new Intent(context, SelectFriendToGroupActivity.class);
-            intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
-            startActivity(intent);
-        }
+        AccountHolderFollowers.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                FriendList friendList = (FriendList) object;
+                if (friendList.getResultArray().size() == 0)
+                    CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
+                else {
+                    Intent intent = new Intent(context, SelectFriendToGroupActivity.class);
+                    intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     public void searchForPersons(String searchText) {
@@ -250,7 +261,8 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     public static void reloadAdapter() {
-        adapter.notifyDataSetChanged();
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
     }
 
     @Override

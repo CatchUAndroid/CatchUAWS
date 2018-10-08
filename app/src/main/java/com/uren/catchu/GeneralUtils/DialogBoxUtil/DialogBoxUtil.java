@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.R;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
@@ -16,6 +17,7 @@ import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
 public class DialogBoxUtil {
 
     public static void photoChosenDialogBox(Context context, String title, boolean photoExist, final PhotoChosenCallback photoChosenCallback) {
+        CommonUtils.hideKeyBoard(context);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.openCamera));
@@ -43,6 +45,7 @@ public class DialogBoxUtil {
     }
 
     public static void showErrorDialog(Context context, String errMessage, final InfoDialogBoxCallback infoDialogBoxCallback){
+        CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getResources().getString(R.string.errorUpper));
         builder.setIcon(context.getResources().getDrawable(R.drawable.toast_error_icon, null));
@@ -61,6 +64,7 @@ public class DialogBoxUtil {
     }
 
     public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
+        CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(context.getResources().getDrawable(R.drawable.info_icon_512, null));
         builder.setMessage(message);
@@ -81,6 +85,7 @@ public class DialogBoxUtil {
     }
 
     public static void showSuccessDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
+        CommonUtils.hideKeyBoard(context);
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setIcon(R.drawable.success_icon_480);
 
@@ -99,7 +104,7 @@ public class DialogBoxUtil {
     }
 
     public static void showYesNoDialog(Context context, String title, String message, final YesNoDialogBoxCallback yesNoDialogBoxCallback) {
-
+        CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(R.drawable.warning_icon40);
         builder.setMessage(message);
@@ -128,6 +133,7 @@ public class DialogBoxUtil {
     }
 
     public static void showInfoDialogWithLimitedTime(Context context, String title, String message, long timeInMs, final InfoDialogBoxCallback infoDialogBoxCallback){
+        CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         if(title != null)

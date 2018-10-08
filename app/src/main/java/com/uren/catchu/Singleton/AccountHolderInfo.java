@@ -16,6 +16,10 @@ import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 
 import catchu.model.UserProfile;
+import catchu.model.UserProfileRelationCountInfo;
+
+import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
 public class AccountHolderInfo {
 
@@ -126,6 +130,33 @@ public class AccountHolderInfo {
             }
         });
 
+    }
+
+    public static void updateAccountHolderFollowCnt(String requestType) {
+        int followingCnt = Integer.parseInt(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowingCount());
+        int followerCnt = Integer.parseInt(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+        UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
+
+        switch (requestType) {
+            case FRIEND_CREATE_FOLLOW_DIRECTLY:
+                followingCnt = followingCnt + 1;
+                userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
+                userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+                break;
+
+            case FRIEND_DELETE_FOLLOW:
+                followingCnt = followingCnt - 1;
+                userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
+                userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+                break;
+
+            // TODO: 7.10.2018 - UG - Will continue
+
+            default:
+                break;
+        }
+
+        accountHolderInfoInstance.getUser().setRelationCountInfo(userProfileRelationCountInfo);
     }
 
 

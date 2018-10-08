@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
@@ -100,7 +102,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    hideKeyBoard(itemView);
+                    CommonUtils.hideKeyBoard(context);
                     if (selectRadioBtn.isChecked()) {
                         selectRadioBtn.setChecked(false);
                         selectedFriendList.removeFriend(selectedFriend);
@@ -116,7 +118,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             selectRadioBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    hideKeyBoard(itemView);
+                    CommonUtils.hideKeyBoard(context);
                     if (selectRadioBtn.isChecked()) {
                         if (!selectedFriendList.isUserInList(selectedFriend.getUserid())) {
                             selectedFriendList.addFriend(selectedFriend);
@@ -139,7 +141,8 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             this.selectedFriend = selectedFriend;
             setUserName();
             setName();
-            setProfilePicture();
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), shortUserNameTv, profilePicImgView);
             updateRadioButtonValue();
         }
 
@@ -155,42 +158,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 else
                     this.nameTextView.setText(selectedFriend.getName());
             }
-        }
-
-        public void setProfilePicture() {
-            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
-                shortUserNameTv.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(selectedFriend.getProfilePhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(profilePicImgView);
-            } else {
-                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                    shortUserNameTv.setVisibility(View.VISIBLE);
-                    shortUserNameTv.setText(getShortenUserName());
-                    profilePicImgView.setImageDrawable(null);
-                } else if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty()) {
-                    shortUserNameTv.setVisibility(View.VISIBLE);
-                    shortUserNameTv.setText(selectedFriend.getUsername().substring(0, 1).toUpperCase());
-                    profilePicImgView.setImageDrawable(null);
-                } else {
-                    shortUserNameTv.setVisibility(View.GONE);
-                    Glide.with(context)
-                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(profilePicImgView);
-                }
-            }
-        }
-
-        public String getShortenUserName() {
-            String returnValue = "";
-            String[] seperatedName = selectedFriend.getName().trim().split(" ");
-            for (String word : seperatedName) {
-                if (returnValue.length() < 5)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
-            }
-            return returnValue;
         }
 
         public void updateRadioButtonValue() {
@@ -275,11 +242,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             horRecyclerView.setVisibility(View.GONE);
             notifyDataSetChanged();
         }
-    }
-
-    public void hideKeyBoard(View view) {
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     public long getItemId(int position) {

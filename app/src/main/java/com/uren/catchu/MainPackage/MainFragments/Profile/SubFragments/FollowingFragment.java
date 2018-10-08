@@ -63,13 +63,10 @@ public class FollowingFragment extends BaseFragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mView == null){
-
             mView = inflater.inflate(R.layout.profile_subfragment_following, container, false);
             ButterKnife.bind(this, mView);
-
             init();
             getFollowingList();
-
         }
 
         return mView;
@@ -81,14 +78,20 @@ public class FollowingFragment extends BaseFragment
 
     }
 
+    @Override
+    public void onStart(){
+        if(followAdapter != null)
+            getFollowingList();
+
+        super.onStart();
+    }
+
     private void init() {
 
         imgBack.setOnClickListener(this);
         imgAddFollowing.setOnClickListener(this);
-
         followInfo = new FollowInfo();
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
     }
 
 
@@ -116,7 +119,6 @@ public class FollowingFragment extends BaseFragment
                 startGetFollowingList(token);
             }
         });
-
     }
 
     private void startGetFollowingList(String token) {
@@ -124,7 +126,7 @@ public class FollowingFragment extends BaseFragment
         followInfo.setRequestType(GET_USER_FOLLOWINGS);
         followInfo.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
 
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(getActivity(), new OnEventListener<FollowInfo>() {
+        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
             @Override
             public void onSuccess(FollowInfo resp) {
 
@@ -173,9 +175,6 @@ public class FollowingFragment extends BaseFragment
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         following_recyclerView.setLayoutManager(mLayoutManager);
         following_recyclerView.setAdapter(followAdapter);
-
-
-
     }
 
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
@@ -183,7 +182,8 @@ public class FollowingFragment extends BaseFragment
         if (mFragmentNavigation != null) {
 
             FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
-            followInfoRowItem.setFollowAdapter(followAdapter);
+            //followInfoRowItem.setFollowAdapter(followAdapter);
+            followInfoRowItem.setAdapter(followAdapter);
             followInfoRowItem.setClickedPosition(clickedPosition);
 
             mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), AnimateRightToLeft);
@@ -193,6 +193,5 @@ public class FollowingFragment extends BaseFragment
         }
 
     }
-
 
 }

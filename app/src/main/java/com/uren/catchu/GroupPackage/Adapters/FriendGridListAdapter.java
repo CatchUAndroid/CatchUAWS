@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
@@ -109,7 +110,8 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
             this.position = position;
             this.selectedFriend = selectedFriend;
             setUserName();
-            setProfilePicture();
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), shortUserNameTv, specialProfileImgView);
         }
 
         private void setUserName() {
@@ -119,38 +121,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
                 username = username.trim().substring(0, 13) + "...";
             }
             this.userNameSurname.setText(username);
-        }
-
-        public void setProfilePicture() {
-            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
-                shortUserNameTv.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(selectedFriend.getProfilePhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(specialProfileImgView);
-            } else {
-                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                    shortUserNameTv.setVisibility(View.VISIBLE);
-                    shortUserNameTv.setText(getShortenUserName());
-                    specialProfileImgView.setImageDrawable(null);
-                } else {
-                    shortUserNameTv.setVisibility(View.GONE);
-                    Glide.with(context)
-                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(specialProfileImgView);
-                }
-            }
-        }
-
-        public String getShortenUserName() {
-            String returnValue = "";
-            String[] seperatedName = selectedFriend.getName().trim().split(" ");
-            for (String word : seperatedName) {
-                if (returnValue.length() < 5)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
-            }
-            return returnValue;
         }
     }
 

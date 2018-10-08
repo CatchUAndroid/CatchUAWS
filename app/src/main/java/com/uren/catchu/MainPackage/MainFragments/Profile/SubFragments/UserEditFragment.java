@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -45,11 +46,14 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.GeneralUtils.CircleTransform;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.PhotoSelectAdapter;
+import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
@@ -60,6 +64,8 @@ import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Calendar;
 
 import butterknife.BindArray;
@@ -90,6 +96,9 @@ public class UserEditFragment extends BaseFragment
     //Change Image variables
     private boolean profilPicChanged;
     Bitmap bitmap;
+    boolean photoExist = false;
+
+    private static final String TAG = "PhotoImageFragment";
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -109,6 +118,8 @@ public class UserEditFragment extends BaseFragment
     TextView txtCancel;
     @BindView(R.id.txtSave)
     TextView txtSave;
+    @BindView(R.id.shortUserNameTv)
+    TextView shortUserNameTv;
 
     //Fields
     @BindView(R.id.edtName)
@@ -141,6 +152,8 @@ public class UserEditFragment extends BaseFragment
     @BindArray(R.array.gender)
     String[] GENDERS;
 
+    GradientDrawable imageShape;
+
     //todo : NT - request kodları permissionConstanstan çekilmeli
     // photo select variables
     private static final int CODE_GALLERY_REQUEST = 0xa0;
@@ -149,13 +162,14 @@ public class UserEditFragment extends BaseFragment
     private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
     private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
     private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
-    private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
+    //private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
     private Uri imageUri;
     private Uri cropImageUri;
     private static final int OUTPUT_X = 480;
     private static final int OUTPUT_Y = 480;
 
-    public UserEditFragment() { }
+    public UserEditFragment() {
+    }
 
     @Nullable
     @Override
@@ -167,23 +181,14 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void init() {
-
         txtSave.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
-
-        //rlCoverPicture.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
-
         edtBirthDay.setOnClickListener(this);
-
-
         setBirthDayDataSetListener();
         setGenderClickListener();
-
         profilPicChanged = false;
         userProfileProperties = new UserProfileProperties();
-
-
     }
 
     private void setBirthDayDataSetListener() {
@@ -230,15 +235,36 @@ public class UserEditFragment extends BaseFragment
         edtBirthDay.setText(userProfile.getUserInfo().getBirthday());
         edtEmail.setText(userProfile.getUserInfo().getEmail());
         edtPhone.setText(userProfile.getUserInfo().getPhone());
+        shortUserNameTv.setText(UserDataUtil.getShortenUserName(userProfile.getUserInfo().getName()));
         genderSpinner.setSelection(genderSpinnerAdapter.getPosition(userProfile.getUserInfo().getGender()));
         selectedGender = userProfile.getUserInfo().getGender();
-
+        imageShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        imgProfile.setBackground(imageShape);
+        setUserPhoto(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
         // TODO : NT: Update Cover picture
+    }
 
-        Glide.with(getActivity())
-                .load(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl())
-                .apply(RequestOptions.circleCropTransform())
-                .into(imgProfile);
+    private void setUserPhoto(String url) {
+        if (url != null && !url.trim().isEmpty()) {
+            photoExist = true;
+            shortUserNameTv.setVisibility(View.GONE);
+            Glide.with(getActivity())
+                    .load(url)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgProfile);
+        } else if (userProfile.getUserInfo().getName() != null && !userProfile.getUserInfo().getName().trim().isEmpty()) {
+            photoExist = false;
+            shortUserNameTv.setVisibility(View.VISIBLE);
+            imgProfile.setImageDrawable(null);
+        } else {
+            photoExist = false;
+            shortUserNameTv.setVisibility(View.GONE);
+            Glide.with(getActivity())
+                    .load(getActivity().getResources().getIdentifier("user_icon", "drawable", getActivity().getPackageName()))
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgProfile);
+        }
     }
 
     @Override
@@ -249,25 +275,18 @@ public class UserEditFragment extends BaseFragment
         }
 
         if (v == txtSave) {
+            CommonUtils.hideKeyBoard(getActivity());
             editProfileConfirmClicked();
         }
 
-/*
-        if (v == rlCoverPicture) {
-            coverPictureClicked();
-        }
-*/
         if (v == rlProfilePicture) {
-            profilePictureClicked();
+            chooseImageProcess();
         }
 
         if (v == edtBirthDay) {
             birthDayClicked();
         }
-
-
     }
-
 
     private void birthDayClicked() {
         Calendar cal = Calendar.getInstance();
@@ -294,9 +313,12 @@ public class UserEditFragment extends BaseFragment
         final UserProfile userProfile = AccountHolderInfo.getInstance().getUser();
 
         userProfileProperties.setUserid(userProfile.getUserInfo().getUserid());
-        if(profilPicChanged){
-            userProfileProperties.setProfilePhotoUrl(cropImageUri.toString()) ;
-        }else{
+
+        if (!photoExist)
+            userProfileProperties.setProfilePhotoUrl("");
+        else if (profilPicChanged) {
+            userProfileProperties.setProfilePhotoUrl(cropImageUri.toString());
+        } else {
             userProfileProperties.setProfilePhotoUrl(userProfile.getUserInfo().getProfilePhotoUrl());
         }
 
@@ -370,55 +392,28 @@ public class UserEditFragment extends BaseFragment
         }, profilPicChanged, userProfileProperties, bitmap);
     }
 
-    private void profilePictureClicked() {
-
-        /** #unt3
-         permissionModule = new PermissionModule(getActivity());
-         chooseImageProcess();
-         */
-
-        yeniTasarımDeneme();
-
-    }
-
-    private void yeniTasarımDeneme() {
-
-        chooseImageProcess();
-    }
-
-
-
-
-    private static final String TAG = "PhotoImageFragment";
-
-
     private void chooseImageProcess() {
         PhotoChosenCallback photoChosenCallback = new PhotoChosenCallback() {
             @Override
             public void onGallerySelected() {
-                getCameraPermission();
-            }
-
-            @Override
-            public void onCameraSelected() {
                 getGalleryPermission();
             }
 
             @Override
-            public void onPhotoRemoved() {
+            public void onCameraSelected() {
+                getCameraPermission();
+            }
 
+            @Override
+            public void onPhotoRemoved() {
+                setUserPhoto(null);
             }
         };
 
-        DialogBoxUtil.photoChosenDialogBox(getContext(), "Choose Photo", false, photoChosenCallback);
-        // TODO: 5.10.2018 - default false verdik, kaldirmak isterse diye duzenlemek lazim...
+        DialogBoxUtil.photoChosenDialogBox(getContext(), getActivity().getResources().getString(R.string.chooseProfilePhoto), photoExist, photoChosenCallback);
     }
 
-
-    /**
-     * Dinamik uygulama -sdcard -Okuma ve yazma izinleri
-     */
-    private void getCameraPermission() {
+    private void getGalleryPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSIONS_REQUEST_CODE);
@@ -430,10 +425,7 @@ public class UserEditFragment extends BaseFragment
         }
     }
 
-    /**
-     * Kamera izinlerine erişim isteme
-     */
-    private void getGalleryPermission() {
+    private void getCameraPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat
                     .checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
@@ -504,14 +496,14 @@ public class UserEditFragment extends BaseFragment
         switch (requestCode) {
             //Kamera dönüş
             case CODE_CAMERA_REQUEST:
-                cropImageUri = Uri.fromFile(fileCropUri);
+                cropImageUri = Uri.fromFile(FileAdapter.getCropMediaFile());
                 PhotoSelectUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
                 break;
             //Albüm dönüşü
             case CODE_GALLERY_REQUEST:
 
                 if (PhotoSelectUtils.hasExternalStorage()) {
-                    cropImageUri = Uri.fromFile(fileCropUri);
+                    cropImageUri = Uri.fromFile(FileAdapter.getCropMediaFile());
                     Uri newUri = Uri.parse(PhotoSelectUtils.getPath(getActivity(), data.getData()));
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         newUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", new File(newUri.getPath()));
@@ -524,145 +516,22 @@ public class UserEditFragment extends BaseFragment
             //result
             case CODE_RESULT_REQUEST:
                 bitmap = PhotoSelectUtils.getBitmapFromUri(cropImageUri, getActivity());
-                if (bitmap != null) {
-                    showImages(bitmap);
-                }
+                showImages(bitmap);
                 break;
+
             default:
         }
     }
 
     private void showImages(Bitmap bitmap) {
-
-        Glide.with(getActivity())
-                .load(bitmap)
-                .apply(RequestOptions.circleCropTransform())
-                .into(imgProfile);
-
-        profilPicChanged = true;
-
-
-
+        if (bitmap != null) {
+            photoExist = true;
+            profilPicChanged = true;
+            shortUserNameTv.setVisibility(View.GONE);
+            Glide.with(getActivity())
+                    .load(bitmap)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imgProfile);
+        }
     }
-
-
-/** denemek için kapatıldı
- *
- private void chooseImageProcess() {
-
- Log.i("Info", "startChooseImageProc++++++++++++++++++++++++++++++++");
-
- ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
- adapter.add("  " + getResources().getString(R.string.openCamera));
- adapter.add("  " + getResources().getString(R.string.openGallery));
- AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
- builder.setTitle(getResources().getString(R.string.chooseProfilePhoto));
-
- builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
- public void onClick(DialogInterface dialog, int item) {
-
- if (item == adapterCameraSelected) {
-
- photoChoosenType = adapterCameraSelected;
- startCameraProcess();
-
- } else if (item == adapterGallerySelected) {
-
- photoChoosenType = adapterGallerySelected;
- startGalleryProcess();
-
- } else
- CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError));
- }
- });
-
- AlertDialog alert = builder.create();
- alert.show();
- }
-
- public void startCameraProcess() {
-
- if (!CommonUtils.checkCameraHardware(getActivity())) {
- CommonUtils.showToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
- return;
- }
-
- if (!permissionModule.checkWriteExternalStoragePermission())
- requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.getWriteExternalStoragePermissionCode());
- else
- checkCameraPermission();
- }
-
- public void checkCameraPermission() {
- if (!permissionModule.checkCameraPermission())
- requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
- else {
- Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
- startActivityForResult(intent, permissionModule.getCameraPermissionCode());
- }
- }
-
- private void startGalleryProcess() {
-
- Intent intent = new Intent();
- intent.setType("image/*");
- intent.setAction(Intent.ACTION_GET_CONTENT);
- startActivityForResult(Intent.createChooser(intent,
- getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
- }
-
-
-
- @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
- if (resultCode == Activity.RESULT_OK) {
-
- profilPicChanged = true;
-
- if (requestCode == permissionModule.getCameraPermissionCode()) {
- photoSelectAdapter = new PhotoSelectAdapter((NextActivity) getActivity(), data, CAMERA_TEXT);
- manageProfilePicChoosen();
- } else if (requestCode == permissionModule.getImageGalleryPermission()) {
- photoSelectAdapter = new PhotoSelectAdapter((NextActivity) getActivity(), data, GALLERY_TEXT);
- manageProfilePicChoosen();
- } else
- CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError) + requestCode);
- }
- }
-
-
- private void manageProfilePicChoosen() {
-
-
- Glide.with(getActivity())
- .load(photoSelectAdapter.getPictureUri())
- .apply(RequestOptions.circleCropTransform())
- .into(imgProfile);
-
-
- }
-
-
- public void savePicToS3() {
-
-
- }
-
- @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
- //super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
- Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
-
- if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
- if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
- checkCameraPermission();
- }
- } else if (requestCode == permissionModule.getCameraPermissionCode()) {
- Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
- startActivityForResult(intent, permissionModule.getCameraPermissionCode());
- } else
- CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError) + requestCode);
- }
- */
 }

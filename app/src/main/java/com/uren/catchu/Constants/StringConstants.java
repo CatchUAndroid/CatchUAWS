@@ -54,6 +54,7 @@ public class StringConstants {
     public static final String SHARE_TYPE_ALL_FOLLOWERS = "ALL_FOLLOWERS";
     public static final String SHARE_TYPE_CUSTOM = "CUSTOM";
     public static final String SHARE_TYPE_SELF = "SELF";
+    public static final String SHARE_TYPE_GROUP = "GROUP";
 
     //Animation Tags
     public static final String AnimateLeftToRight = "AnimateLeftToRight";

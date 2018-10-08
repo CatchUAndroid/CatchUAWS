@@ -125,7 +125,7 @@ public class FollowerFragment extends BaseFragment
 
     private void startFollowInfoProcess(String token) {
 
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(getActivity(), new OnEventListener<FollowInfo>() {
+        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
             @Override
             public void onSuccess(FollowInfo resp) {
 
@@ -180,7 +180,7 @@ public class FollowerFragment extends BaseFragment
         if (mFragmentNavigation != null) {
 
             FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
-            followInfoRowItem.setFollowAdapter(followAdapter);
+            followInfoRowItem.setAdapter(followAdapter);
             followInfoRowItem.setClickedPosition(clickedPosition);
 
             mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), AnimateRightToLeft);

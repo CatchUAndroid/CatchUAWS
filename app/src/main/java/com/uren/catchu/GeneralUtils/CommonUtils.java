@@ -245,5 +245,12 @@ public class CommonUtils {
         Log.i(infoPrefix + neredeyiz, konum);
     }
 
+    public static void hideKeyBoard(Context context) {
+        Activity activity = (Activity) context;
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (activity.getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
 }

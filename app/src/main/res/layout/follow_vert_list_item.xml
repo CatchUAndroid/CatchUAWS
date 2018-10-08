@@ -18,45 +18,69 @@
 
 
             <RelativeLayout
+                android:id="@+id/rlUserInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingLeft="10dp"
-                android:paddingRight="11dp"
-                android:id="@+id/rlUserInfo"
-                >
+                android:paddingRight="11dp">
 
-                <ImageView
+
+                <FrameLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="5dp"
+                    android:id="@+id/frameLayout">
+
+                    <ImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY"/>
+
+                    <TextView
+                        android:id="@+id/shortUserNameTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textColor="@color/White"
+                        android:textStyle="bold"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+
+                <!--ImageView
                     android:id="@+id/profile_image"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:scaleType="fitXY"
-                    android:layout_marginTop="5dp"
                     android:layout_marginBottom="5dp"
-                    />
+                    android:layout_marginTop="5dp"
+                    android:scaleType="fitXY" /-->
 
                 <TextView
                     android:id="@+id/profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_toRightOf="@id/profile_image"
-                    android:textSize="15sp"
-                    android:layout_marginLeft="20dp"/>
+                    android:layout_marginLeft="20dp"
+                    android:layout_toRightOf="@id/frameLayout"
+                    android:textSize="15sp" />
 
                 <Button
                     android:id="@+id/btnFollowStatus"
                     android:layout_width="100dp"
                     android:layout_height="40dp"
-                    android:text="@string/follow"
-                    android:background = "@drawable/ripple"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:textAllCaps="false"/>
+                    android:text="@string/follow"
+                    android:textSize="10sp"
+                    android:textAllCaps="false" />
 
 
             </RelativeLayout>
-
 
 
             <LinearLayout
@@ -74,16 +98,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0.1"
-                    android:background="@android:color/black"
-                    />
+                    android:background="@android:color/black" />
 
             </LinearLayout>
 
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
-
 
 
 </LinearLayout>

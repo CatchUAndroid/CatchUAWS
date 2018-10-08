@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -38,12 +39,14 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
+import com.uren.catchu.GroupPackage.EditGroupNameActivity;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Adapters.ShareItemsDisplayAdapter;
+import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.Utils.SharePostProcess;
 import com.uren.catchu.Singleton.SelectedGroupList;
@@ -65,7 +68,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private LocationTrackerAdapter locationTrackObj;
     FrameLayout shareMainLayout;
     LinearLayout shareMainLinearLayout;
-    LinearLayout mapLayout;
+    RelativeLayout mapLayout;
 
     //Update text views
     View noteTextLayout;
@@ -128,7 +131,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         addListeners();
         setDefaultSelectedItem();
         setViewPager();
-        hideKeyBoard();
+        CommonUtils.hideKeyBoard(ShareDetailActivity.this);
     }
 
     private void setViewPager() {
@@ -162,15 +165,27 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         shareMainLinearLayout = findViewById(R.id.shareMainLinearLayout);
         mapLayout = findViewById(R.id.mapLayout);
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this);
         checkShareItems = new CheckShareItems(ShareDetailActivity.this);
         setMapLayoutShape();
+        initLocationTracker();
     }
 
     private void setMapLayoutShape() {
         GradientDrawable mapShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
                 0, GradientDrawable.RECTANGLE, 15, 0);
         mapLayout.setBackground(mapShape);
+    }
+
+    private void initLocationTracker(){
+        locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this, new LocationCallback() {
+            @Override
+            public void onLocationChanged(Location location) {
+                catchu.model.Location locationModel = new catchu.model.Location();
+                locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+                locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+                ShareItems.getInstance().getPost().setLocation(locationModel);
+            }
+        });
     }
 
     public void addListeners() {
@@ -508,13 +523,6 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 return text.substring(0, restrictedTextSize) + "...";
         }
         return text;
-    }
-
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
     public void showSettingsAlert() {

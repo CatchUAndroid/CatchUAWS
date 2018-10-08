@@ -41,6 +41,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
@@ -376,17 +377,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         if (!permissionModule.checkCameraPermission())
             requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
         else {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         }
     }
 
     private void startGalleryProcess() {
-
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
+        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                 getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
@@ -421,8 +417,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                 checkCameraPermission();
             }
         } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }

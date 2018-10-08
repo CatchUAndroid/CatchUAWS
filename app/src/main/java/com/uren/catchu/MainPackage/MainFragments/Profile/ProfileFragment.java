@@ -8,6 +8,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,6 +34,8 @@ import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
@@ -56,6 +60,7 @@ public class ProfileFragment extends BaseFragment
 
     View mView;
     UserProfile myProfile;
+    GradientDrawable imageShape;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -108,11 +113,18 @@ public class ProfileFragment extends BaseFragment
 
             setCollapsingToolbar();
             setUpPager();
+            setProfileImageShape();
         }
 
         return mView;
     }
 
+    public void setProfileImageShape(){
+        imageShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
+                getActivity().getResources().getColor(R.color.White, null),
+                GradientDrawable.OVAL, 50, 2);
+        imgProfile.setBackground(imageShape);
+    }
 
     private void setCollapsingToolbar() {
 
@@ -166,16 +178,13 @@ public class ProfileFragment extends BaseFragment
         vpNews.setAdapter(adp);
         vpNews.setOffscreenPageLimit(12);
         tabs.setupWithViewPager(vpNews);
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         updateUI();
         initListeners();
-
     }
 
     private void initListeners() {
@@ -200,87 +209,37 @@ public class ProfileFragment extends BaseFragment
 
     private void setProfileDetail(UserProfile user) {
 
-        if (user.getUserInfo() != null) {
+        if (user != null && user.getUserInfo() != null) {
 
             Log.i("->UserInfo", user.getUserInfo().toString());
 
-            if (user.getUserInfo().getName() != null) {
+            if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 toolbarTitle.setText(user.getUserInfo().getName());
                 CommonUtils.showToast(getActivity(), "Hoş geldin " + user.getUserInfo().getName() + "!!");
             }
 
-            //profil fotosu varsa o, yoksa username baş harfleri bastırılır..
-            if (user.getUserInfo().getProfilePhotoUrl() != null && !user.getUserInfo().getProfilePhotoUrl().isEmpty()) {
-                txtProfile.setVisibility(View.GONE);
-                Glide.with(getActivity())
-                        .load(user.getUserInfo().getProfilePhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(imgProfile);
-            } else {
-                CommonUtils.LOG_NEREDEYIZ("profil fotosu duzenleniyor");
-                setInitialLettersAsProfilePic(user);
-            }
+            UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), txtProfile, imgProfile);
 
-            if (user.getUserInfo().getUsername() != null) {
+            if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 txtUserName.setText(user.getUserInfo().getUsername());
             }
-
         }
 
-        if (user.getRelationCountInfo() != null) {
+        setUserFollowerAndFollowingCnt(user);
+    }
+
+    private void setUserFollowerAndFollowingCnt(UserProfile user) {
+        if (user != null && user.getRelationCountInfo() != null) {
             Log.i("->UserRelationCountInfo", user.getRelationCountInfo().toString());
-            txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + "follower");
-            txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + "following");
+
+            if (user.getRelationCountInfo().getFollowerCount() != null && !user.getRelationCountInfo().getFollowerCount().trim().isEmpty())
+                txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + getActivity().getResources().getString(R.string.LOWER_FOLLOWER));
+
+            if (user.getRelationCountInfo().getFollowingCount() != null && !user.getRelationCountInfo().getFollowingCount().trim().isEmpty())
+                txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.LOWER_FOLLOWING));
         }
-
-
     }
-
-    private void setInitialLettersAsProfilePic(UserProfile user) {
-
-        String picText;
-        String lastName = "";
-        String firstName = "";
-
-        if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().isEmpty() && user.getUserInfo().getName().contains(" ")) {
-            String name = user.getUserInfo().getName();
-
-            lastName = name.substring(name.lastIndexOf(" ") + 1);
-            firstName = name.substring(0, name.lastIndexOf(' '));
-            picText = firstName.substring(0, 1) + lastName.substring(0, 1);
-
-        } else {
-
-            if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().isEmpty()) {
-                String username = user.getUserInfo().getUsername();
-                picText = username.substring(0, 1);
-            } else {
-                picText = "You";
-            }
-
-        }
-
-        txtProfile.setText(picText);
-        txtProfile.setVisibility(View.VISIBLE);
-
-    }
-
-    public BitmapDrawable writeOnDrawable(int drawableId, String text){
-
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), drawableId).copy(Bitmap.Config.ARGB_8888, true);
-
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.FILL);
-
-        paint.setColor(Color.WHITE);
-        paint.setTextSize(50);
-
-        Canvas canvas = new Canvas(bm);
-        canvas.drawText(text, bm.getWidth()/2, bm.getHeight()/2, paint);
-
-        return new BitmapDrawable(bm);
-    }
-
 
     private void getProfileDetail(final String userID) {
 
@@ -301,9 +260,6 @@ public class ProfileFragment extends BaseFragment
 
     private void startGetProfileDetail(final String userID, String token) {
 
-        Log.i("gidilen UserId", userID);
-
-        //Asenkron Task başlatır.
         UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
 
             @Override
@@ -325,7 +281,7 @@ public class ProfileFragment extends BaseFragment
             }
         }, AccountHolderInfo.getUserID(), token);
 
-        loadUserDetail.execute();
+        loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

@@ -21,19 +21,25 @@ import com.uren.catchu.Adapters.UserDetailAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.SearchResult;
 
+import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
 import static com.uren.catchu.Constants.StringConstants.gridShown;
 import static com.uren.catchu.Constants.StringConstants.horizontalShown;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 @SuppressLint("ValidFragment")
-public class PersonFragment extends Fragment {
+public class PersonFragment extends BaseFragment {
 
     RecyclerView personRecyclerView;
 
@@ -43,6 +49,7 @@ public class PersonFragment extends Fragment {
     String searchText;
     Context context;
     SearchResult searchResult;
+    UserDetailAdapter userDetailAdapter;
 
     @BindView(R.id.progressBar)
     public ProgressBar progressBar;
@@ -118,7 +125,12 @@ public class PersonFragment extends Fragment {
         switch (viewType){
             case verticalShown:
 
-                UserDetailAdapter userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult, userid);
+                userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult, userid, new FollowAdapter.RowItemClickListener() {
+                    @Override
+                    public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
+                        startFollowingInfoProcess(rowItem, clickedPosition);
+                    }
+                });
                 personRecyclerView.setAdapter(userDetailAdapter);
                 linearLayoutManager = new LinearLayoutManager(context);
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -140,4 +152,13 @@ public class PersonFragment extends Fragment {
         }
     }
 
+    private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
+
+        if (mFragmentNavigation != null) {
+            FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
+            followInfoRowItem.setAdapter(userDetailAdapter);
+            followInfoRowItem.setClickedPosition(clickedPosition);
+            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), AnimateRightToLeft);
+        }
+    }
 }

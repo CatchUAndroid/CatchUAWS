@@ -16,6 +16,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -89,7 +90,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
         relLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideKeyBoard();
+                CommonUtils.hideKeyBoard(EditGroupNameActivity.this);
             }
         });
 
@@ -128,7 +129,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
                 if (groupNameEditText.getText() != null && !groupNameEditText.getText().toString().trim().isEmpty())
                     updateGroup();
                 else {
-                    hideKeyBoard();
+                    CommonUtils.hideKeyBoard(EditGroupNameActivity.this);
                     DialogBoxUtil.showInfoDialogBox(EditGroupNameActivity.this, getResources().getString(R.string.pleaseWriteGroupName),null, new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
@@ -158,13 +159,6 @@ public class EditGroupNameActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
 }
