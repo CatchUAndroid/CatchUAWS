@@ -26,14 +26,16 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.UserFriends;
 
 import java.util.List;
 
@@ -174,7 +176,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 @Override
                 public void onSuccess(FriendRequestList object) {
                     updateFollowUI(requestType);
-                    updateUserFriends(requestType);
+                    updateFollowingList(requestType);
                     btnFollowStatus.setEnabled(true);
                 }
 
@@ -228,13 +230,29 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
             }
         }
 
-        public void updateUserFriends(String requestType) {
-            UserProfileProperties userProfileProperties = new UserProfileProperties();
-            userProfileProperties.setName(followListItem.getName());
-            userProfileProperties.setProfilePhotoUrl(followListItem.getProfilePhotoUrl());
-            userProfileProperties.setUserid(followListItem.getUserid());
-            userProfileProperties.setUsername(followListItem.getUsername());
-            UserFriends.updateFriendListByFollowType(requestType, userProfileProperties);
+        public void updateFollowingList(final String requestType) {
+
+            AccountHolderFollowings.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
+                    followInfoResultArrayItem.setName(followListItem.getName());
+                    followInfoResultArrayItem.setProfilePhotoUrl(followListItem.getProfilePhotoUrl());
+                    followInfoResultArrayItem.setUserid(followListItem.getUserid());
+                    followInfoResultArrayItem.setUsername(followListItem.getUsername());
+                    AccountHolderFollowings.updateFriendListByFollowType(requestType, followInfoResultArrayItem);
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+                }
+            });
         }
     }
 

@@ -36,7 +36,6 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.UserFriends;
 
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
@@ -235,14 +234,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     });
                 }
             });
-            /*
-
-            UserProfileProperties userProfileProperties = new UserProfileProperties();
-            userProfileProperties.setName(selectedFriend.getName());
-            userProfileProperties.setProfilePhotoUrl(selectedFriend.getProfilePhotoUrl());
-            userProfileProperties.setUserid(selectedFriend.getUserid());
-            userProfileProperties.setUsername(selectedFriend.getUsername());
-            UserFriends.updateFriendListByFollowType(requestType, userProfileProperties);*/
         }
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {

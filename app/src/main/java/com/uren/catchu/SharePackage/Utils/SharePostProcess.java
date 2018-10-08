@@ -25,7 +25,6 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.Share.ShareItems;
-import com.uren.catchu.Singleton.UserFriends;
 
 import java.io.IOException;
 import java.io.InputStream;

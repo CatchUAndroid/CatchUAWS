@@ -26,12 +26,13 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
+import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.UserFriends;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -164,31 +165,44 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     }
 
     private void getFriendSelectionPage() {
-        friendList = getUserFriends();
+
+        AccountHolderFollowers.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                friendList = getUserFollowers((FriendList) object);
+                setAdapter();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+    }
+
+    public void setAdapter(){
         setFriendCountTextView();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendAdapter(this, friendList);
         recyclerView.setAdapter(adapter);
     }
 
-    public FriendList getUserFriends() {
-
-        FriendList friendListTemp = UserFriends.getFriendList();
+    public FriendList getUserFollowers(FriendList friendList) {
 
         if (pendingActivityName == null)
-            return friendListTemp;
+            return friendList;
         else if (pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
             if (DisplayGroupDetailActivity.groupParticipantList == null)
-                return friendListTemp;
+                return friendList;
             else if (DisplayGroupDetailActivity.groupParticipantList.size() == 0)
-                return friendListTemp;
+                return friendList;
             else {
-                return extractGroupParticipants(friendListTemp);
+                return extractGroupParticipants(friendList);
             }
         } else if (pendingActivityName.equals(NextActivity.class.getSimpleName())) {
-            return friendListTemp;
+            return friendList;
         } else
-            return friendListTemp;
+            return friendList;
     }
 
     public FriendList extractGroupParticipants(FriendList friendListTemp) {

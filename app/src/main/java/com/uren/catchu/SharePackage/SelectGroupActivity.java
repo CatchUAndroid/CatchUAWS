@@ -15,9 +15,12 @@ import android.widget.ImageView;
 
 import com.uren.catchu.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.UserGroups;
+
+import catchu.model.GroupRequestResult;
 
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COUNT;
@@ -62,8 +65,19 @@ public class SelectGroupActivity extends AppCompatActivity {
 
     private void setUpViewPager() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        userGroupsListAdapter = new UserGroupsListAdapter(SelectGroupActivity.this, UserGroups.getInstance().getGroupRequestResult());
-        recyclerView.setAdapter(userGroupsListAdapter);
+        UserGroups.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                GroupRequestResult groupRequestResult = (GroupRequestResult) object;
+                userGroupsListAdapter = new UserGroupsListAdapter(SelectGroupActivity.this, groupRequestResult);
+                recyclerView.setAdapter(userGroupsListAdapter);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     public void addListeners(){

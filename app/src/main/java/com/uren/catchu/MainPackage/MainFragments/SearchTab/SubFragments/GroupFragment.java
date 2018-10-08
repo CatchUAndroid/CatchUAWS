@@ -15,11 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.uren.catchu.Adapters.UserGroupsListAdapter;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.UserGroups;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.GroupRequestResult;
 
 @SuppressLint("ValidFragment")
 public class GroupFragment extends Fragment {
@@ -33,6 +35,7 @@ public class GroupFragment extends Fragment {
 
     LinearLayoutManager linearLayoutManager;
     RelativeLayout specialSelectRelLayout;
+    UserGroupsListAdapter userGroupsListAdapter;
 
     private Context context;
 
@@ -65,14 +68,26 @@ public class GroupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         groupRecyclerView = mView.findViewById(R.id.specialRecyclerView);
         specialSelectRelLayout = mView.findViewById(R.id.specialSelectRelLayout);
-        getData();
+        getGroups();
     }
 
-    public void getData() {
-        UserGroupsListAdapter userGroupsListAdapter = new UserGroupsListAdapter(context, UserGroups.getInstance().getGroupRequestResult());
-        groupRecyclerView.setAdapter(userGroupsListAdapter);
-        linearLayoutManager = new LinearLayoutManager(getActivity());
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        groupRecyclerView.setLayoutManager(linearLayoutManager);
+    public void getGroups() {
+
+        UserGroups.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                GroupRequestResult groupRequestResult = (GroupRequestResult) object;
+                userGroupsListAdapter = new UserGroupsListAdapter(context, groupRequestResult);
+                groupRecyclerView.setAdapter(userGroupsListAdapter);
+                linearLayoutManager = new LinearLayoutManager(getActivity());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                groupRecyclerView.setLayoutManager(linearLayoutManager);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 }

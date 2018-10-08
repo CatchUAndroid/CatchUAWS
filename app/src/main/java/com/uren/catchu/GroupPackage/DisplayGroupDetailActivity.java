@@ -47,6 +47,7 @@ import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -139,16 +140,26 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     private void getGroupInformation() {
 
-        groupRequestResultResultArrayItem = UserGroups.getInstance().getGroupWithId(this.groupId);
+        UserGroups.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
 
-        if (groupRequestResultResultArrayItem == null)
-            CommonUtils.showToast(DisplayGroupDetailActivity.this,
-                    getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
-        else {
-            setCardViewVisibility();
-            setGroupTitle();
-            setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
-        }
+                if (groupRequestResultResultArrayItem == null)
+                    CommonUtils.showToast(DisplayGroupDetailActivity.this,
+                            getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
+                else {
+                    setCardViewVisibility();
+                    setGroupTitle();
+                    setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     public void getGroupParticipants() {
@@ -425,10 +436,21 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     public void updateGroup() {
         new UpdateGroupProcess(DisplayGroupDetailActivity.this, photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
-            public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
-                UserGroups.getInstance().changeGroupItem(groupId, groupItem);
-                SearchFragment.reloadAdapter();
-                setGroupImage(groupItem.getGroupPhotoUrl());
+            public void onSuccess(final GroupRequestResultResultArrayItem groupItem) {
+
+                UserGroups.getInstance(new CompleteCallback() {
+                    @Override
+                    public void onComplete(Object object) {
+                        UserGroups.changeGroupItem(groupId, groupItem);
+                        SearchFragment.reloadAdapter();
+                        setGroupImage(groupItem.getGroupPhotoUrl());
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+
+                    }
+                });
             }
 
             @Override

@@ -76,8 +76,6 @@ public class AccountHolderInfo {
                 if(up != null){
                     if(up.getUserInfo() != null){
                         userProfile = up;
-                        getFriendList();
-                        getGroupList();
                     }
                 }
             }
@@ -94,16 +92,6 @@ public class AccountHolderInfo {
         }, userid, token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    private void getFriendList() {
-        UserFriends.setInstance(null);
-        UserFriends.getInstance();
-    }
-
-    private void getGroupList() {
-        UserGroups.setInstance(null);
-        UserGroups.getInstance();
     }
 
     public static String getUserIdFromFirebase() {

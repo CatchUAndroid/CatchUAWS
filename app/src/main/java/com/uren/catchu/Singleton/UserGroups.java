@@ -3,25 +3,40 @@ package com.uren.catchu.Singleton;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.gson.annotations.SerializedName;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.Interfaces.CompleteCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.GET_AUTHENTICATED_USER_GROUP_LIST;
 
 public class UserGroups {
     private static UserGroups userGroupsInstance = null;
     private static GroupRequestResult groupRequestResult;
+    private static CompleteCallback mCompleteCallback;
 
-    public static UserGroups getInstance() {
-        if (userGroupsInstance == null)
+    public static void getInstance(CompleteCallback completeCallback) {
+
+        mCompleteCallback = completeCallback;
+
+        if (userGroupsInstance == null) {
+            groupRequestResult = new GroupRequestResult();
+            List<UserProfileProperties> userProfilePropertiesList = new ArrayList<>();
+            List<GroupRequestResultResultArrayItem> groupRequestResultResultArrayItems = new ArrayList<>();
+            groupRequestResult.setResultArrayParticipantList(userProfilePropertiesList);
+            groupRequestResult.setResultArray(groupRequestResultResultArrayItems);
             userGroupsInstance = new UserGroups();
-
-        return userGroupsInstance;
+        }else
+            mCompleteCallback.onComplete(groupRequestResult);
     }
 
     public GroupRequestResult getGroupRequestResult() {
@@ -128,13 +143,16 @@ public class UserGroups {
             @Override
             public void onSuccess(GroupRequestResult object) {
                 Log.i("**GroupResultProcess ", "OK");
-                if (object != null)
+                if (object != null) {
                     groupRequestResult = (GroupRequestResult) object;
+                    mCompleteCallback.onComplete(groupRequestResult);
+                }
             }
 
             @Override
             public void onFailure(Exception e) {
                 Log.i("**GroupResultProcess ", "FAIL - " + e.toString());
+                mCompleteCallback.onFailed(e);
             }
 
             @Override
