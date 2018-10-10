@@ -1,11 +1,19 @@
 package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,30 +86,44 @@ public class AccountHolderFacebookFriends {
     }
 
     private void startGetFacebookFriends(String token) {
-        FollowInfo followInfoTemp = new FollowInfo();
-        followInfoTemp.setRequestType(GET_USER_FOLLOWINGS);
-        followInfoTemp.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+        GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
 
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
-            @Override
-            public void onSuccess(FollowInfo resp) {
-                if(resp != null) {
-                    followInfo = (FollowInfo) resp;
-                    mCompleteCallback.onComplete(followInfo);
-                }
-            }
+                        if (object != null) {
+                            try {
+                                JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
+                                /*FacebookFriendList.setInstance(null);
 
-            @Override
-            public void onFailure(Exception e) {
-                mCompleteCallback.onFailed(e);
-            }
+                                friendListSize = friendList.length();
 
-            @Override
-            public void onTaskContinue() {
-            }
-        }, followInfoTemp, token);
+                                mProgressDialog.setMessage("Yükleniyor...");
+                                mProgressDialog.show();
 
-        followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                                for (int i = 0; i < friendList.length(); i++) {
+                                    JSONObject jsonObject = friendList.getJSONObject(i);
+                                    String friendName = (String) jsonObject.get(name);
+                                    String friendProviderID = (String) jsonObject.get("id");
+
+                                    if (checkFriendByProviderId(friendProviderID))
+                                        setFaceFriendToInviteList(friendProviderID, friendName, Yes);
+                                    else
+                                        setFaceFriendToInviteList(friendProviderID, friendName, null);
+
+                                }*/
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "friends");
+        graphRequest.setParameters(parameters);
+        graphRequest.executeAsync();
     }
 
     public static void updateFriendListByFollowType(String requestType, final FollowInfoResultArrayItem followInfoResultArrayItem) {
@@ -129,7 +151,6 @@ public class AccountHolderFacebookFriends {
 
                 }
             });
-
         }
     }
 }

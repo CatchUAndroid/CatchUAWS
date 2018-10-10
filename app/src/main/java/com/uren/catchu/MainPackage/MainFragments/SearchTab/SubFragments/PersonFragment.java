@@ -21,12 +21,14 @@ import com.uren.catchu.Adapters.UserDetailAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
@@ -98,6 +100,19 @@ public class PersonFragment extends BaseFragment {
     }
 
     private void startGetProfileDetail(String userid, String searchText, String token) {
+
+        AccountHolderFacebookFriends.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+
         SearchResultProcess searchResultProcess = new SearchResultProcess(context, new OnEventListener<SearchResult>() {
 
             @Override
