@@ -2,6 +2,7 @@ package com.uren.catchu.GroupPackage;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,13 +24,15 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
+import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.UserFriends;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +78,13 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         initUI();
         getFriendSelectionPage();
         addListeners();
+        setShapes();
+    }
+
+    private void setShapes() {
+        GradientDrawable shape = ShapeUtil.getShape(getResources().getColor(R.color.LightSeaGreen, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        nextFab.setBackground(shape);
     }
 
     private void initUI() {
@@ -104,6 +115,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                nextFab.startAnimation(AnimationUtils.loadAnimation(SelectFriendToGroupActivity.this, R.anim.image_click));
                 checkSelectedPerson();
             }
         });
@@ -153,31 +165,44 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     }
 
     private void getFriendSelectionPage() {
-        friendList = getUserFriends();
+
+        AccountHolderFollowers.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                friendList = getUserFollowers((FriendList) object);
+                setAdapter();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+    }
+
+    public void setAdapter(){
         setFriendCountTextView();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendAdapter(this, friendList);
         recyclerView.setAdapter(adapter);
     }
 
-    public FriendList getUserFriends() {
-
-        FriendList friendListTemp = UserFriends.getFriendList();
+    public FriendList getUserFollowers(FriendList friendList) {
 
         if (pendingActivityName == null)
-            return friendListTemp;
+            return friendList;
         else if (pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
             if (DisplayGroupDetailActivity.groupParticipantList == null)
-                return friendListTemp;
+                return friendList;
             else if (DisplayGroupDetailActivity.groupParticipantList.size() == 0)
-                return friendListTemp;
+                return friendList;
             else {
-                return extractGroupParticipants(friendListTemp);
+                return extractGroupParticipants(friendList);
             }
         } else if (pendingActivityName.equals(NextActivity.class.getSimpleName())) {
-            return friendListTemp;
+            return friendList;
         } else
-            return friendListTemp;
+            return friendList;
     }
 
     public FriendList extractGroupParticipants(FriendList friendListTemp) {

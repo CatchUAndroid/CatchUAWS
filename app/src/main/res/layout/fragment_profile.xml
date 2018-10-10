@@ -1,7 +1,8 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/profileMainLayout"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -72,21 +73,18 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
-                                android:background="@drawable/img_border" />
+                                android:padding="1dp" />
 
                             <TextView
+                                android:id="@+id/txtProfile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textSize="30sp"
                                 android:gravity="center"
-                                android:id="@+id/txtProfile"
-                                android:visibility="gone"
-                                android:textAllCaps="true" />
-
+                                android:textAllCaps="true"
+                                android:textSize="30sp"
+                                android:visibility="gone" />
 
                         </RelativeLayout>
-
-
 
                         <TextView
                             android:id="@+id/txtUserName"
@@ -175,19 +173,33 @@
                     <RelativeLayout
                         android:id="@+id/notification"
                         android:layout_width="50dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="40dp"
                         android:clickable="true"
                         android:gravity="center">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                            android:id="@+id/imgSettings"
+                            android:id="@+id/menuImgv"
                             android:layout_width="25dp"
                             android:layout_height="25dp"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="end"
                             android:layout_marginLeft="10dp"
-                            android:src="@mipmap/settings" />
+                            android:src="@drawable/menu_white_18dp" />
+
+                        <TextView
+                            android:id="@+id/pendReqCntTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@drawable/circle_text_bg"
+                            android:gravity="center"
+                            android:textColor="@color/white"
+                            android:textSize="9dp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -235,6 +247,15 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
+    <android.support.design.widget.NavigationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity ="left"
+        android:id="@+id/navViewLayout"
+        app:headerLayout="@layout/profile_navview_layout"
+        app:menu="@menu/profile_navview_menu">
+    </android.support.design.widget.NavigationView>
 
-</FrameLayout>
+
+</android.support.v4.widget.DrawerLayout>
 

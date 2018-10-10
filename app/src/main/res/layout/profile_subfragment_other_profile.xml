@@ -54,32 +54,29 @@
                     android:orientation="horizontal"
                     android:weightSum="5">
 
-
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:gravity="center">
 
                         <ImageView
                             android:id="@+id/imgProfile"
                             android:layout_width="100dp"
                             android:layout_height="100dp"
                             android:layout_gravity="center"
-                            android:background="@drawable/img_border" />
+                            android:padding="1dp" />
 
                         <TextView
                             android:id="@+id/txtUserName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:textColor="@color/white"
-                            android:textSize="20sp" />
-
-
-                    </LinearLayout>
-
+                            android:layout_gravity="center"
+                            android:textColor="@color/White"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </FrameLayout>
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -115,25 +112,16 @@
                         <Button
                             android:id="@+id/btnFollowStatus"
                             android:layout_width="100dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="35dp"
                             android:layout_marginLeft="40dp"
                             android:layout_marginTop="30dp"
-                            android:background="@drawable/ripple"
                             android:text="@string/follow"
                             android:textAllCaps="false"
-                            android:textSize="20sp"/>
-
+                            android:textSize="12sp" />
 
                     </LinearLayout>
-
-
                 </LinearLayout>
 
-
-                <!--android:layout_marginBottom="48dp"
-                   app:layout_collapseMode="pin"
-                   yaparsak toolbar tepede sabit kalır.
-                /-->
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/htab_toolbar"
                     android:layout_width="match_parent"

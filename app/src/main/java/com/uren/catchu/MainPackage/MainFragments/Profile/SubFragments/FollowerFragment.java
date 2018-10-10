@@ -17,6 +17,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -28,8 +29,8 @@ import butterknife.ButterKnife;
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWERS;
 
 
@@ -95,7 +96,7 @@ public class FollowerFragment extends BaseFragment
 
         if (v == imgBack) {
 
-            ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
+            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
 
         }
@@ -125,7 +126,7 @@ public class FollowerFragment extends BaseFragment
 
     private void startFollowInfoProcess(String token) {
 
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(getActivity(), new OnEventListener<FollowInfo>() {
+        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
             @Override
             public void onSuccess(FollowInfo resp) {
 
@@ -157,15 +158,13 @@ public class FollowerFragment extends BaseFragment
 
     private void setUpRecyclerView(FollowInfo followInfo) {
 
-
-        FollowAdapter.RowItemClickListener rowItemClickListener = new FollowAdapter.RowItemClickListener() {
+        RowItemClickListener rowItemClickListener = new RowItemClickListener() {
             @Override
             public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
                 CommonUtils.showToast(getContext(), "Clicked : " + rowItem.getName());
                 startFollowerInfoProcess(rowItem, clickedPosition);
             }
         };
-
 
         followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray(), rowItemClickListener);
 
@@ -180,10 +179,10 @@ public class FollowerFragment extends BaseFragment
         if (mFragmentNavigation != null) {
 
             FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
-            followInfoRowItem.setFollowAdapter(followAdapter);
+            followInfoRowItem.setAdapter(followAdapter);
             followInfoRowItem.setClickedPosition(clickedPosition);
 
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), AnimateRightToLeft);
+            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), ANIMATE_RIGHT_TO_LEFT);
 
             //mFragmentNavigation.pushFragment(new UserEditFragment());
 

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
 import com.uren.catchu.R;
@@ -106,7 +107,8 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
             this.position = position;
             this.selectedFriend = selectedFriend;
             setName();
-            setProfilePicture();
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), shortenTextView, specialPictureImgView);
         }
 
         public void setName() {
@@ -116,38 +118,6 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
                 else
                     this.specialNameTextView.setText(selectedFriend.getName());
             }
-        }
-
-        public void setProfilePicture() {
-            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
-                shortenTextView.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(selectedFriend.getProfilePhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(specialPictureImgView);
-            } else {
-                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                    shortenTextView.setVisibility(View.VISIBLE);
-                    shortenTextView.setText(getShortenUserName());
-                    specialPictureImgView.setImageDrawable(null);
-                } else {
-                    shortenTextView.setVisibility(View.GONE);
-                    Glide.with(context)
-                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(specialPictureImgView);
-                }
-            }
-        }
-
-        public String getShortenUserName() {
-            String returnValue = "";
-            String[] seperatedName = selectedFriend.getName().trim().split(" ");
-            for (String word : seperatedName) {
-                if (returnValue.length() < 5)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
-            }
-            return returnValue;
         }
     }
 

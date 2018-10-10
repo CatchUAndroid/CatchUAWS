@@ -27,6 +27,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GroupPackage.EditGroupNameActivity;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
@@ -165,7 +167,7 @@ public class TextPickerFrag extends Fragment {
             public void onClick(View v) {
                 colorPaletteLayout.setVisibility(View.GONE);
                 closePalletteBtnLayout.setVisibility(View.GONE);
-                hideKeyBoard();
+                CommonUtils.hideKeyBoard(getActivity());
             }
         });
 
@@ -304,13 +306,6 @@ public class TextPickerFrag extends Fragment {
 
         if (dots.length > 0)
             dots[currentPage].setTextColor(cActive);
-    }
-
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getActivity().getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
 }

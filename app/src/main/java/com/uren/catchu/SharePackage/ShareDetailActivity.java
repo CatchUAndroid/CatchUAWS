@@ -1,21 +1,17 @@
 package com.uren.catchu.SharePackage;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -32,53 +28,35 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
-import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
+import com.uren.catchu.GroupPackage.EditGroupNameActivity;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.ViewPagerAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Adapters.ShareItemsDisplayAdapter;
-import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
-import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
+import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.Utils.SharePostProcess;
 import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
-import catchu.model.Media;
-import catchu.model.Post;
-
-import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
-import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
-import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
-import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_COUNT;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COUNT;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 public class ShareDetailActivity extends FragmentActivity implements OnMapReadyCallback{
 
@@ -90,7 +68,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     private LocationTrackerAdapter locationTrackObj;
     FrameLayout shareMainLayout;
     LinearLayout shareMainLinearLayout;
-    LinearLayout mapLayout;
+    RelativeLayout mapLayout;
 
     //Update text views
     View noteTextLayout;
@@ -153,7 +131,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         addListeners();
         setDefaultSelectedItem();
         setViewPager();
-        hideKeyBoard();
+        CommonUtils.hideKeyBoard(ShareDetailActivity.this);
     }
 
     private void setViewPager() {
@@ -187,15 +165,27 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         shareMainLinearLayout = findViewById(R.id.shareMainLinearLayout);
         mapLayout = findViewById(R.id.mapLayout);
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this);
         checkShareItems = new CheckShareItems(ShareDetailActivity.this);
         setMapLayoutShape();
+        initLocationTracker();
     }
 
     private void setMapLayoutShape() {
         GradientDrawable mapShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
                 0, GradientDrawable.RECTANGLE, 15, 0);
         mapLayout.setBackground(mapShape);
+    }
+
+    private void initLocationTracker(){
+        locationTrackObj = new LocationTrackerAdapter(ShareDetailActivity.this, new LocationCallback() {
+            @Override
+            public void onLocationChanged(Location location) {
+                catchu.model.Location locationModel = new catchu.model.Location();
+                locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+                locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+                ShareItems.getInstance().getPost().setLocation(locationModel);
+            }
+        });
     }
 
     public void addListeners() {
@@ -533,13 +523,6 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                 return text.substring(0, restrictedTextSize) + "...";
         }
         return text;
-    }
-
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
     public void showSettingsAlert() {

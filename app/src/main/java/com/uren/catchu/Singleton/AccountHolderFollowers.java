@@ -6,26 +6,29 @@ import android.util.Log;
 import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.Interfaces.CompleteCallback;
 
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
-public class UserFriends {
+public class AccountHolderFollowers {
 
-    private static UserFriends userFriendsInstance = null;
+    private static AccountHolderFollowers accountHolderFollowers = null;
     private static FriendList friendList;
+    private static CompleteCallback mCompleteCallback;
 
-    public static UserFriends getInstance() {
+    public static void getInstance(CompleteCallback completeCallback) {
 
-        if (userFriendsInstance == null) {
+        mCompleteCallback = completeCallback;
+
+        if (accountHolderFollowers == null) {
             friendList = new FriendList();
-            userFriendsInstance = new UserFriends();
-        }
-
-        return userFriendsInstance;
+            accountHolderFollowers = new AccountHolderFollowers();
+        }else
+            mCompleteCallback.onComplete(friendList);
     }
 
-    public UserFriends() {
+    public AccountHolderFollowers() {
         getFriends();
     }
 
@@ -37,24 +40,24 @@ public class UserFriends {
         return friendList.getResultArray().size();
     }
 
-    public static void setInstance(UserFriends instance) {
-        userFriendsInstance = instance;
+    public static void setInstance(AccountHolderFollowers instance) {
+        accountHolderFollowers = instance;
     }
 
     private void getFriends() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startGetFriends(token);
+                startGetFollowers(token);
             }
         });
     }
 
-    public static void addFriend(UserProfileProperties userProfileProperties) {
+    public static void addFollower(UserProfileProperties userProfileProperties) {
         friendList.getResultArray().add(userProfileProperties);
     }
 
-    public static void removeFriend(String userid) {
+    public static void removeFollower(String userid) {
         if (userid != null && !userid.trim().isEmpty()) {
             int index = 0;
             for (UserProfileProperties userProfileProperties : friendList.getResultArray()) {
@@ -67,19 +70,22 @@ public class UserFriends {
         }
     }
 
-    private void startGetFriends(String token) {
+    private void startGetFollowers(String token) {
 
         FriendListRequestProcess friendListRequestProcess = new FriendListRequestProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                if (object != null)
+                if (object != null) {
+                    Log.i("**FriendListRequestProc", "OK");
                     friendList = (FriendList) object;
-                Log.i("**FriendListRequestProc", "OK");
+                    mCompleteCallback.onComplete(friendList);
+                }
             }
 
             @Override
             public void onFailure(Exception e) {
                 Log.i("**FriendListRequestProc", "FAIL - " + e.toString());
+                mCompleteCallback.onFailed(e);
             }
 
             @Override

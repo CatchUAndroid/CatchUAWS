@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -30,6 +31,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
@@ -59,6 +61,7 @@ public class AddGroupActivity extends AppCompatActivity {
     PhotoSelectUtil photoSelectUtil;
     int groupNameSize = 0;
     GradientDrawable imageShape;
+    boolean groupPhotoExist = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,7 @@ public class AddGroupActivity extends AppCompatActivity {
         saveGroupInfoFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CommonUtils.hideKeyBoard(AddGroupActivity.this);
                 if (groupNameEditText.getText().toString().equals("") || groupNameEditText.getText() == null) {
                     CommonUtils.showToast(AddGroupActivity.this, getResources().getString(R.string.pleaseWriteGroupName));
                     return;
@@ -125,7 +129,7 @@ public class AddGroupActivity extends AppCompatActivity {
         addGroupDtlRelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                hideKeyBoard();
+                CommonUtils.hideKeyBoard(AddGroupActivity.this);
             }
         });
 
@@ -150,11 +154,6 @@ public class AddGroupActivity extends AppCompatActivity {
         });
     }
 
-    public void hideKeyBoard() {
-        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-    }
-
     private void openPersonSelectionPage() {
         adapter = new FriendGridListAdapter(this, SelectedFriendList.getInstance().getSelectedFriendList());
         recyclerView.setAdapter(adapter);
@@ -167,6 +166,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case android.R.id.home:
+                CommonUtils.hideKeyBoard(AddGroupActivity.this);
                 finish();
                 break;
             default:
@@ -178,7 +178,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
     private void startChooseImageProc() {
         DialogBoxUtil.photoChosenDialogBox(AddGroupActivity.this, getResources().
-                getString(R.string.chooseProfilePhoto), false, new PhotoChosenCallback() {
+                getString(R.string.chooseProfilePhoto), groupPhotoExist, new PhotoChosenCallback() {
             @Override
             public void onGallerySelected() {
                 startGalleryProcess();
@@ -191,7 +191,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
             @Override
             public void onPhotoRemoved() {
-
+                setGroupPhoto(null);
             }
         });
     }
@@ -212,17 +212,12 @@ public class AddGroupActivity extends AppCompatActivity {
     public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
             requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
-        else {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
-        }
+        else
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
     }
 
     private void startGalleryProcess() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
+        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                 getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
@@ -233,10 +228,10 @@ public class AddGroupActivity extends AppCompatActivity {
 
             if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, CAMERA_TEXT);
-                Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
+                setGroupPhoto(photoSelectUtil.getMediaUri());
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, GALLERY_TEXT);
-                Glide.with(AddGroupActivity.this).load(photoSelectUtil.getMediaUri()).apply(RequestOptions.circleCropTransform()).into(groupPictureImgv);
+                setGroupPhoto(photoSelectUtil.getMediaUri());
             } else
                 DialogBoxUtil.showErrorDialog(AddGroupActivity.this, "AddGroupActivity:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
                     @Override
@@ -246,19 +241,35 @@ public class AddGroupActivity extends AppCompatActivity {
         }
     }
 
+    public void setGroupPhoto(Uri groupPhotoUri) {
+        if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
+            groupPhotoExist = true;
+            groupPictureImgv.setPadding(0, 0, 0, 0);
+            Glide.with(AddGroupActivity.this)
+                    .load(groupPhotoUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(groupPictureImgv);
+        } else {
+            groupPhotoExist = false;
+            photoSelectUtil = null;
+            int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
+            groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+            Glide.with(this)
+                    .load(getResources().getIdentifier("photo_camera", "drawable", this.getPackageName()))
+                    .into(groupPictureImgv);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
 
         if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkCameraPermission();
             }
         } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }

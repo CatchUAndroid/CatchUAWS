@@ -16,14 +16,12 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
 
     private OnEventListener<FollowInfo> mCallBack;
-    private Context mContext;
     public Exception mException;
     public FollowInfo followInfo;
     private String token;
 
-    public FollowInfoProcess(Context context, OnEventListener callback, FollowInfo followInfo, String token) {
+    public FollowInfoProcess(OnEventListener callback, FollowInfo followInfo, String token) {
         mCallBack = callback;
-        mContext = context;
         this.followInfo = followInfo;
         this.token = token;
     }
@@ -38,9 +36,9 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
 
             FollowInfo rsp = instance.client.usersFollowPost(token, followInfo);
 
-            if(rsp.getError().getCode().intValue() == RESPONSE_OK){
+            if (rsp.getError().getCode().intValue() == RESPONSE_OK) {
                 return rsp;
-            }else{
+            } else {
                 return null;
             }
 

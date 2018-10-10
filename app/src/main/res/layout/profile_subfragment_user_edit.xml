@@ -125,15 +125,29 @@
                     android:layout_marginStart="30dp">
 
 
-                    <ImageView
-                        android:id="@+id/imgProfile"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center"
-                        android:background="@drawable/img_border" />
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
-                    <RelativeLayout
+                        <ImageView
+                            android:id="@+id/imgProfile"
+                            android:layout_width="100dp"
+                            android:layout_height="100dp"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="center" />
+
+                        <TextView
+                            android:id="@+id/shortUserNameTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/White"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            android:textSize="30dp" />
+                    </FrameLayout>
+
+                    <!--RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -145,7 +159,7 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/add_image" />
 
-                    </RelativeLayout>
+                    </RelativeLayout-->
 
                 </RelativeLayout>
 

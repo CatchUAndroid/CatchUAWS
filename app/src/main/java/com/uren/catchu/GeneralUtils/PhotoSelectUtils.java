@@ -1,6 +1,7 @@
 package com.uren.catchu.GeneralUtils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -17,69 +18,39 @@ import android.support.v4.app.Fragment;
 public class PhotoSelectUtils {
     private static final String TAG = "PhotoUtils";
 
-    /**
-     * @param fragment    fragment
-     * @param imageUri    Fotoğraf çekildikten sonra fotoğraf depolama yolu
-     * @param requestCode Sistem kamera isteği kodunu çağır
-     */
     public static void takePicture(Fragment fragment, Uri imageUri, int requestCode) {
-        //调用系统相机
         Intent intentCamera = new Intent();
         intentCamera.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        //Fotoğraf sonuçlarını kaydet photo_file的Uri中，Albümde saklanmıyor
         intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         fragment.startActivityForResult(intentCamera, requestCode);
     }
 
-    /**
-     * @param fragment    当前fragment
-     * @param requestCode Albüm için istek kodunu aç
-     */
     public static void openPic(Fragment fragment, int requestCode) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
         photoPickerIntent.setType("image/*");
         fragment.startActivityForResult(photoPickerIntent, requestCode);
     }
-    /**
-     * @param fragment    当前fragment
-     * @param orgUri      剪裁原图的Uri
-     * @param desUri      剪裁后的图片的Uri
-     * @param aspectX     X方向的比例
-     * @param aspectY     Y方向的比例
-     * @param width       剪裁图片的宽度
-     * @param height      剪裁图片高度
-     * @param requestCode 剪裁图片的请求码
-     */
+
     public static void cropImageUri(Fragment fragment, Uri orgUri, Uri desUri, int aspectX, int aspectY, int width, int height, int requestCode) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
+
         intent.setDataAndType(orgUri, "image/*");
-        //发送裁剪信号
         intent.putExtra("crop", "true");
         intent.putExtra("aspectX", aspectX);
         intent.putExtra("aspectY", aspectY);
         intent.putExtra("outputX", width);
         intent.putExtra("outputY", height);
         intent.putExtra("scale", true);
-        //将剪切的图片保存到目标Uri中
         intent.putExtra(MediaStore.EXTRA_OUTPUT, desUri);
-        //1-false用uri返回图片
-        //2-true直接用bitmap返回图片（此种只适用于小图片，返回图片过大会报错）
         intent.putExtra("return-data", false);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("noFaceDetection", true);
         fragment.startActivityForResult(intent, requestCode);
     }
 
-    /**
-     * 读取uri所在的图片
-     *
-     * @param uri      图片对应的Uri
-     * @param mContext 上下文对象
-     * @return 获取图像的Bitmap
-     */
     public static Bitmap getBitmapFromUri(Uri uri, Context mContext) {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
@@ -90,19 +61,14 @@ public class PhotoSelectUtils {
         }
     }
 
-    /**
-     * @param context 上下文对象
-     * @param uri     当前相册照片的Uri
-     * @return 解析后的Uri对应的String
-     */
     @SuppressLint("NewApi")
     public static String getPath(final Context context, final Uri uri) {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
         String pathHead = "file:///";
-        // DocumentProvider
+
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
+
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
@@ -110,18 +76,14 @@ public class PhotoSelectUtils {
                 if ("primary".equalsIgnoreCase(type)) {
                     return pathHead + Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
+            } else if (isDownloadsDocument(uri)) {
 
                 final String id = DocumentsContract.getDocumentId(uri);
 
                 final Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
                 return pathHead + getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
+            } else if (isMediaDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -180,10 +142,6 @@ public class PhotoSelectUtils {
         return null;
     }
 
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
     private static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
@@ -206,7 +164,7 @@ public class PhotoSelectUtils {
 
     /**
      * Cihazın mevcut olup olmadığını kontrol et SDCard
-     Araç yöntemi
+     * Araç yöntemi
      */
     public static boolean hasExternalStorage() {
         String state = Environment.getExternalStorageState();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,19 +23,31 @@ import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
+import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.UserFriends;
 
+import catchu.model.FollowInfo;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.FriendRequestList;
 import catchu.model.RelationProperties;
 import catchu.model.SearchResult;
 import catchu.model.SearchResultResultArrayItem;
 import catchu.model.UserProfileProperties;
+import catchu.model.UserProfileRelationCountInfo;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -51,15 +64,17 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     Context context;
     Activity activity;
     SearchResult searchResult;
+    RowItemClickListener rowItemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid) {
+    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid, RowItemClickListener rowItemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.searchText = searchText;
         this.searchResult = searchResult;
         this.userid = userid;
+        this.rowItemClickListener = rowItemClickListener;
         activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -84,6 +99,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         TextView usernameTextView;
         TextView shortenTextView;
         ImageView profilePicImgView;
+        CardView personRootCardView;
         SearchResultResultArrayItem selectedFriend;
         Button statuDisplayBtn;
         String requestedUserid;
@@ -98,6 +114,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             nameTextView = view.findViewById(R.id.nameTextView);
             statuDisplayBtn = view.findViewById(R.id.statuDisplayBtn);
             shortenTextView = view.findViewById(R.id.shortenTextView);
+            personRootCardView = view.findViewById(R.id.personRootCardView);
             profilePicImgView.setBackground(imageShape);
             statuDisplayBtn.setBackground(buttonShape);
 
@@ -109,6 +126,31 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     checkFriendRelation();
                 }
             });
+
+            personRootCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FollowInfoResultArrayItem followItem = getFollowProperties();
+                    rowItemClickListener.onClick(v, followItem, position);
+                }
+            });
+        }
+
+        public FollowInfoResultArrayItem getFollowProperties() {
+            FollowInfoResultArrayItem followItem = new FollowInfoResultArrayItem();
+            followItem.setBirthday(selectedFriend.getName());
+            followItem.setEmail(selectedFriend.getUsername());
+            followItem.setProfilePhotoUrl(selectedFriend.getProfilePhotoUrl());
+            followItem.setUserid(selectedFriend.getUserid());
+            followItem.setIsPendingRequest(selectedFriend.getPendingFriendRequest());
+            followItem.setIsPrivateAccount(selectedFriend.getIsPrivateAccount());
+
+            if (selectedFriend.getFriendRelation() != null && selectedFriend.getFriendRelation())
+                followItem.setIsFollow(true);
+            else
+                followItem.setIsFollow(false);
+
+            return followItem;
         }
 
         public void checkFriendRelation() {
@@ -149,8 +191,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     selectedFriend.setPendingFriendRequest(relationProperties.getPendingFriendRequest());
                     searchResult.getResultArray().remove(position);
                     searchResult.getResultArray().add(position, selectedFriend);
-                    updateUIValue();
-                    updateUserFriends(requestType);
+                    UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn);
+                    AccountHolderInfo.updateAccountHolderFollowCnt(requestType);
+                    updateFollowingList(requestType);
                     statuDisplayBtn.setEnabled(true);
                 }
 
@@ -169,21 +212,29 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
-        public void updateUserFriends(String requestType) {
-            if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY)) {
-                UserProfileProperties userProfileProperties = new UserProfileProperties();
-                userProfileProperties.setName(selectedFriend.getName());
-                userProfileProperties.setProfilePhotoUrl(selectedFriend.getProfilePhotoUrl());
-                userProfileProperties.setUserid(selectedFriend.getUserid());
-                userProfileProperties.setUsername(selectedFriend.getUsername());
-                UserFriends.getInstance().addFriend(userProfileProperties);
-            } else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
-                UserFriends.getInstance().removeFriend(selectedFriend.getUserid());
-            }
+        public void updateFollowingList(final String requestType) {
 
+            AccountHolderFollowings.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
+                    followInfoResultArrayItem.setName(selectedFriend.getName());
+                    followInfoResultArrayItem.setProfilePhotoUrl(selectedFriend.getProfilePhotoUrl());
+                    followInfoResultArrayItem.setUserid(selectedFriend.getUserid());
+                    followInfoResultArrayItem.setUsername(selectedFriend.getUsername());
+                    AccountHolderFollowings.updateFriendListByFollowType(requestType, followInfoResultArrayItem);
+                }
 
-            // TODO: 3.10.2018 - ugur - DEVAM EDELIM...
+                @Override
+                public void onFailed(Exception e) {
+                    DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
 
+                        }
+                    });
+                }
+            });
         }
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {
@@ -192,8 +243,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             this.requestedUserid = selectedFriend.getUserid();
             setUserName();
             setName();
-            setProfilePicture();
-            updateUIValue();
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), shortenTextView, profilePicImgView);
+            UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn);
         }
 
         public void setUserName() {
@@ -209,65 +261,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     this.nameTextView.setText(selectedFriend.getName());
             }
         }
-
-        public void setProfilePicture() {
-            if (selectedFriend.getProfilePhotoUrl() != null && !selectedFriend.getProfilePhotoUrl().trim().isEmpty()) {
-                shortenTextView.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(selectedFriend.getProfilePhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(profilePicImgView);
-            } else {
-                if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                    shortenTextView.setVisibility(View.VISIBLE);
-                    shortenTextView.setText(getShortenUserName());
-                    profilePicImgView.setImageDrawable(null);
-                } else if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty()) {
-                    shortenTextView.setVisibility(View.VISIBLE);
-                    shortenTextView.setText(selectedFriend.getUsername().substring(0, 1).toUpperCase());
-                    profilePicImgView.setImageDrawable(null);
-                } else {
-                    shortenTextView.setVisibility(View.GONE);
-                    Glide.with(context)
-                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(profilePicImgView);
-                }
-            }
-        }
-
-        public String getShortenUserName() {
-            String returnValue = "";
-            String[] seperatedName = selectedFriend.getName().trim().split(" ");
-            for (String word : seperatedName) {
-                if (returnValue.length() < 5)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
-            }
-
-            return returnValue;
-        }
-
-        public void updateUIValue() {
-            if (selectedFriend.getFriendRelation()) {
-                statuDisplayBtn.setText(context.getResources().getString(R.string.following));
-                statuDisplayBtn.setTextColor(context.getResources().getColor(R.color.Black, null));
-                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                        context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
-            } else {
-                if (selectedFriend.getPendingFriendRequest()) {
-                    statuDisplayBtn.setText(context.getResources().getString(R.string.request_sended));
-                    statuDisplayBtn.setTextColor(context.getResources().getColor(R.color.White, null));
-                    buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.black_25_transparent, null),
-                            0, GradientDrawable.RECTANGLE, 15, 0);
-                } else {
-                    statuDisplayBtn.setText(context.getResources().getString(R.string.follow));
-                    statuDisplayBtn.setTextColor(context.getResources().getColor(R.color.White, null));
-                    buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                            0, GradientDrawable.RECTANGLE, 15, 0);
-                }
-            }
-            statuDisplayBtn.setBackground(buttonShape);
-        }
     }
 
     public long getItemId(int position) {
@@ -277,5 +270,9 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     @Override
     public int getItemCount() {
         return searchResult.getResultArray().size();
+    }
+
+    public void updateAdapterWithPosition(int position) {
+        notifyItemChanged(position);
     }
 }

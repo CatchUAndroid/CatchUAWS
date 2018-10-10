@@ -18,7 +18,7 @@
     <string name="selectLeastOneGroup">En az 1 grup seçmelisiniz!</string>
     <string name="addFriendFirst">Grup oluşturmak için önce arkadaş eklemelisiniz!</string>
     <string name="addGroupName">Grup adı ekle</string>
-    <string name="pleaseWriteGroupName">Lütfen grup adını yazınız!</string>
+    <string name="pleaseWriteGroupName">Grup adı boş olamaz!</string>
     <string name="deviceHasNoCamera">Cihazın kamerası yok!</string>
     <string name="groupIsCreating">Grup Oluşturuluyor...</string>
     <string name="writeGroupName">Grup adını yazın...</string>
@@ -48,7 +48,7 @@
     <string name="changeAsAdmin">Admin olarak değiştir</string>
     <string name="friendsAdding">Katılımcılar ekleniyor...</string>
     <string name="giveCameraPermission">Kamerayı kullanmak için izin gerekmektedir</string>
-    <string name="pleaseAddShareItem">Paylaşım yapabilmek için video yada resim eklemelisiniz!</string>
+    <string name="pleaseAddShareItem">Paylaşım yapabilmek için video, resim yada not eklemelisiniz!</string>
     <string name="selectGroup">Grup Seç</string>
     <string name="selectAll">Hepsini Seç</string>
     <string name="share">PAYLAŞ</string>
@@ -64,6 +64,9 @@
     <string name="dragForDelete">Silmek için Sürükle</string>
     <string name="finish">Bitir</string>
     <string name="typeToAddText">Metin Ekle...</string>
+    <string name="UPDATING">Güncelleniyor...</string>
+    <string name="EXPLORE_PEOPLE">Kişileri Keşfet</string>
+    <string name="VIEW_PENDING_REQUEST">Gelen Istekleri Görüntüle</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -106,10 +109,13 @@
     <string name="follow">Takip et</string>
     <string name="following">Takip ediliyor</string>
     <string name="request_sended">İstek gönderildi</string>
+    <string name="ACCEPT_REQUEST">Kabul Et</string>
     <string name="cancel_following">Takip etmeyi bırak?</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="feed">Paylaşımlar</string>
+    <string name="PENDING_REQUESTS">Bekleyen Istekler</string>
+    <string name="THERE_IS_NO_PENDING_REQUEST">Bekleyen isteğiniz bulunmamaktadır</string>
 
 
     <!-- LoginActivity Constants-->

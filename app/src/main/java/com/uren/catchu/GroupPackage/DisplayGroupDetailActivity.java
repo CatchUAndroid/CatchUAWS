@@ -36,13 +36,18 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
+import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
+import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -79,7 +84,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     ImageView groupPictureImgV;
     ImageView editImageView;
-    //ImageLoader imageLoader;
     public static TextView personCntTv;
     public static SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
     boolean photoExistOnImgv = false;
@@ -96,18 +100,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     GroupRequestResult groupRequestResult;
     public static GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
 
-    private static final int CODE_CAMERA_SELECTED = 0;
-    private static final int CODE_GALLERY_SELECTED = 1;
-
     PermissionModule permissionModule;
-
-    private Bitmap groupPhotoBitmap = null;
-    private Bitmap getGroupPhotoBitmapOrjinal = null;
-
-    private Uri groupPictureUri = null;
-    private String imageRealPath;
-    private InputStream profileImageStream;
-
     ProgressDialog mProgressDialog;
 
     ProgressBar progressBar;
@@ -147,16 +140,26 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
     private void getGroupInformation() {
 
-        groupRequestResultResultArrayItem = UserGroups.getInstance().getGroupWithId(this.groupId);
+        UserGroups.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
 
-        if (groupRequestResultResultArrayItem == null)
-            CommonUtils.showToast(DisplayGroupDetailActivity.this,
-                    getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
-        else {
-            setCardViewVisibility();
-            setGroupTitle();
-            setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
-        }
+                if (groupRequestResultResultArrayItem == null)
+                    CommonUtils.showToast(DisplayGroupDetailActivity.this,
+                            getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
+                else {
+                    setCardViewVisibility();
+                    setGroupTitle();
+                    setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     public void getGroupParticipants() {
@@ -198,7 +201,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         }, groupRequest, token);
 
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     public void setParticipantCount() {
@@ -227,14 +229,14 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     public void setGroupImage(String photoUrl) {
         if (photoUrl != null && !photoUrl.trim().isEmpty()) {
             photoExistOnImgv = true;
-            groupPictureImgV.setPadding(0, 0, 0, 0 );
+            groupPictureImgV.setPadding(0, 0, 0, 0);
             Glide.with(this)
                     .load(photoUrl)
                     .apply(RequestOptions.centerInsideTransform())
                     .into(groupPictureImgV);
-        }else {
+        } else {
             photoExistOnImgv = false;
-            groupPictureImgV.setPadding(200, 200, 200, 200 );
+            groupPictureImgV.setPadding(200, 200, 200, 200);
             Glide.with(this)
                     .load(getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
                     .apply(RequestOptions.centerInsideTransform())
@@ -338,7 +340,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
             }
 
-
             @Override
             public void onTaskContinue() {
 
@@ -349,7 +350,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     }
 
     private void startChooseImageProc() {
-
         DialogBoxUtil.photoChosenDialogBox(DisplayGroupDetailActivity.this, getResources().
                 getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
             @Override
@@ -364,7 +364,9 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
             @Override
             public void onPhotoRemoved() {
-                updateGroupToNeoJ("");
+                groupRequestResultResultArrayItem.setGroupPhotoUrl("");
+                photoSelectUtil = null;
+                updateGroup();
             }
         });
     }
@@ -386,17 +388,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         if (!permissionModule.checkCameraPermission())
             requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
         else {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         }
     }
 
     private void startGalleryProcess() {
-
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
+        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                 getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
     }
 
@@ -404,14 +401,15 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
-
             if (requestCode == permissionModule.getCameraPermissionCode()) {
                 photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, CAMERA_TEXT);
-                groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
+                //groupPictureImgV.setPadding(200, 200, 200, 200);
+                //groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
                 updateGroup();
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
                 photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, GALLERY_TEXT);
-                groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
+                //groupPictureImgV.setPadding(200, 200, 200, 200);
+                //groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
                 updateGroup();
             } else
                 CommonUtils.showToastLong(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError) + requestCode);
@@ -430,140 +428,43 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
                 checkCameraPermission();
             }
         } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
         } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 
     public void updateGroup() {
-
-        mProgressDialog.setMessage(getResources().getString(R.string.groupPhotoChanging));
-        dialogShow();
-
-        AccountHolderInfo.getToken(new TokenCallback() {
+        new UpdateGroupProcess(DisplayGroupDetailActivity.this, photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
-            public void onTokenTaken(String token) {
-                startUpdateGroup(token);
-            }
-        });
+            public void onSuccess(final GroupRequestResultResultArrayItem groupItem) {
 
-
-    }
-
-    private void startUpdateGroup(String token) {
-
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
-
-                Log.i("Info", "  >>commonS3BucketResult.getFileExtention():" + commonS3BucketResult.getImages().get(0).getExtension());
-                Log.i("Info", "  >>commonS3BucketResult.getSignedUrl()    :" + commonS3BucketResult.getImages().get(0).getUploadUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getDownloadUrl()  :" + commonS3BucketResult.getImages().get(0).getDownloadUrl());
-                Log.i("Info", "  >>commonS3BucketResult.getError()        :" + commonS3BucketResult.getError().getMessage());
-
-                UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+                UserGroups.getInstance(new CompleteCallback() {
                     @Override
-                    public void onSuccess(Object object) {
-                        HttpURLConnection urlConnection = (HttpURLConnection) object;
+                    public void onComplete(Object object) {
+                        UserGroups.changeGroupItem(groupId, groupItem);
+                        SearchFragment.reloadAdapter();
+                        setGroupImage(groupItem.getGroupPhotoUrl());
+                    }
 
-                        try {
-                            // TODO: 30.08.2018 - Grup fotosu guncellendi, S3 den silme akisi nasil olacak...
-                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK)
-                                updateGroupToNeoJ(commonS3BucketResult.getImages().get(0).getDownloadUrl());
-                            else {
-                                InputStream is = urlConnection.getErrorStream();
-                                CommonUtils.showToastLong(context, getResources().getString(R.string.error) + is.toString());
+                    @Override
+                    public void onFailed(Exception e) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this,
+                        getResources().getString(R.string.error),
+                        new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+
                             }
-                        } catch (IOException e) {
-                            CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-                        CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-                    }
-
-                    @Override
-                    public void onTaskContinue() {
-
-                    }
-                }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
-
-                uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                CommonUtils.showToastLong(context, getResources().getString(R.string.error) + e.getMessage());
-            }
-
-            @Override
-            public void onTaskContinue() {
-
-            }
-        }, 1, 0, token);
-
-        signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-    }
-
-    public void dialogShow() {
-        if (!mProgressDialog.isShowing()) mProgressDialog.show();
-    }
-
-    public void dialogDismiss() {
-        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
-    }
-
-    public void updateGroupToNeoJ(final String photoNewUrl) {
-
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startUpdateGroupToNeoJ(photoNewUrl, token);
+                        });
             }
         });
-    }
-
-    private void startUpdateGroupToNeoJ(final String photoNewUrl, String token) {
-
-        // TODO: 5.10.2018 - grup fotosu silindiginde S3 den silme akisi yok...
-
-        final GroupRequest groupRequest = new GroupRequest();
-
-        final GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
-
-        groupRequest.setRequestType(UPDATE_GROUP_INFO);
-        groupRequest.setGroupid(groupId);
-        groupRequest.setGroupName(groupRequestResultResultArrayItem.getName());
-        groupRequest.setUserid(AccountHolderInfo.getUserID());
-        groupRequest.setGroupPhotoUrl(photoNewUrl);
-
-        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                UserGroups.changeGroupPicture(groupId, photoNewUrl);
-                setGroupImage(photoNewUrl);
-                SearchFragment.reloadAdapter();
-                dialogDismiss();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                dialogDismiss();
-                CommonUtils.showToast(DisplayGroupDetailActivity.this, getResources().getString(R.string.error) + e.getMessage());
-            }
-
-            @Override
-            public void onTaskContinue() {
-
-            }
-        }, groupRequest, token);
-
-        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     @Override

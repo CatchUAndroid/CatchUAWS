@@ -54,10 +54,11 @@ public class StringConstants {
     public static final String SHARE_TYPE_ALL_FOLLOWERS = "ALL_FOLLOWERS";
     public static final String SHARE_TYPE_CUSTOM = "CUSTOM";
     public static final String SHARE_TYPE_SELF = "SELF";
+    public static final String SHARE_TYPE_GROUP = "GROUP";
 
     //Animation Tags
-    public static final String AnimateLeftToRight = "AnimateLeftToRight";
-    public static final String AnimateRightToLeft = "AnimateRightToLeft";
+    public static final String ANIMATE_LEFT_TO_RIGHT = "ANIMATE_LEFT_TO_RIGHT";
+    public static final String ANIMATE_RIGHT_TO_LEFT = "ANIMATE_RIGHT_TO_LEFT";
 
     //Image Extension Types
     public static final String JPG_TYPE = "jpg";

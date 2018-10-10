@@ -46,7 +46,7 @@
                     android:id="@+id/groupPictureImgv"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:padding="20dp"
+                    android:padding="@dimen/ADD_GROUP_IMGV_SIZE"
                     android:src="@drawable/photo_camera" />
 
                 <LinearLayout
@@ -100,15 +100,6 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/constantItem"/>
         </LinearLayout>
-
-        <!--include layout="@layout/layout_progress_bar" /-->
-
-        <!--android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            android:background="@color/toastBackground"/-->
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -48,6 +48,12 @@ public class CommonUtils {
                 Settings.Secure.ANDROID_ID);
     }
 
+    public static int getPaddingInPixels(Context context, float dpSize){
+        final float scale = context.getResources().getDisplayMetrics().density;
+        int paddingInPx = (int) (dpSize * scale + 0.5f);
+        return paddingInPx;
+    }
+
 
     public static final String getVersionName(Context context) {
 
@@ -239,5 +245,12 @@ public class CommonUtils {
         Log.i(infoPrefix + neredeyiz, konum);
     }
 
+    public static void hideKeyBoard(Context context) {
+        Activity activity = (Activity) context;
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (activity.getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
 
 }

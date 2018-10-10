@@ -37,8 +37,8 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
@@ -237,13 +237,13 @@ public class NextActivity extends AppCompatActivity implements
         }
 
         switch (ANIMATION_TAG) {
-            case AnimateRightToLeft:
+            case ANIMATE_RIGHT_TO_LEFT:
                 transactionOptions.enterAnimation = R.anim.slide_from_right;
                 transactionOptions.exitAnimation = R.anim.slide_to_left;
                 transactionOptions.popEnterAnimation = R.anim.slide_from_left;
                 transactionOptions.popExitAnimation = R.anim.slide_to_right;
                 break;
-            case AnimateLeftToRight:
+            case ANIMATE_LEFT_TO_RIGHT:
                 transactionOptions.enterAnimation = R.anim.slide_from_left;
                 transactionOptions.exitAnimation = R.anim.slide_to_right;
                 transactionOptions.popEnterAnimation = R.anim.slide_from_right;

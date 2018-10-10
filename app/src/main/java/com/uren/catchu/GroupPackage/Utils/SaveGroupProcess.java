@@ -95,6 +95,7 @@ public class SaveGroupProcess {
                             } else {
                                 InputStream is = urlConnection.getErrorStream();
                                 CommonUtils.showToast(context, is.toString());
+                                saveGroupCallback.onFailed(new Exception(is.toString()));
                             }
                         } catch (IOException e) {
                             dialogDismiss();
