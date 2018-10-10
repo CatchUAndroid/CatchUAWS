@@ -84,10 +84,12 @@
                             android:paddingRight="10dp">
 
                             <ImageView
+                                android:id="@+id/imgLike"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@mipmap/icon_more"
-                                android:tint="@color/oceanBlue" />
+                                android:layout_marginRight="10dp"
+                                android:src="@mipmap/icon_like" />
+
 
                         </LinearLayout>
 
@@ -96,59 +98,106 @@
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/profile_name"
+                    android:id="@+id/txtDetail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="20dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. " />
+                    android:text="" />
 
                 <!-- ViewPager /-->
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp">
+                    android:layout_height="300dp">
 
                 </android.support.v4.view.ViewPager>
 
                 <!-- SliderDots /-->
                 <LinearLayout
                     android:id="@+id/SliderDots"
-                    android:layout_below="@+id/viewPager"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical|center_horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/viewPager"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
                     android:gravity="left"
-                    android:orientation="horizontal"
-                    android:padding="10dp"
-                    android:weightSum="3">
+                    android:orientation="horizontal">
 
-                    <ImageView
+                    <!-- Like layout  /-->
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_weight="0.5"
-                        android:src="@mipmap/icon_like"
-                        android:tint="@color/oceanBlue" />
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:id="@+id/layoutLike">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_weight="0.5"
-                        android:src="@mipmap/icon_comment"
-                        android:tint="@color/oceanBlue" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginRight="2dp"
+                            android:src="@mipmap/icon_like"
+                            android:tint="@color/oceanBlue" />
 
-                    <ImageView
+                        <TextView
+                            android:id="@+id/txtLikeCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- Comment layout  /-->
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:layout_weight="0.5"
-                        android:src="@mipmap/icon_share"
-                        android:tint="@color/oceanBlue" />
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:id="@+id/layoutComment">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginRight="2dp"
+                            android:src="@mipmap/icon_comment"
+                            android:tint="@color/oceanBlue" />
+
+                        <TextView
+                            android:id="@+id/txtCommentCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- Share layout  /-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:layout_marginRight="5dp"
+                            android:src="@mipmap/icon_share"
+                            android:tint="@color/oceanBlue" />
+
+                    </LinearLayout>
 
 
                 </LinearLayout>

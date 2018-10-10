@@ -300,8 +300,6 @@ public class ProfileFragment extends BaseFragment
 
     private void startGetProfileDetail(final String userID, String token) {
 
-        Log.i("gidilen UserId", userID);
-
         //Asenkron Task başlatır.
         UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
 

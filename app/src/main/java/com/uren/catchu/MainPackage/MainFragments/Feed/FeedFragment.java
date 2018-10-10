@@ -15,13 +15,16 @@ import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.PostItemDetailActivity;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.VideoPlay.CustomRecyclerView;
@@ -32,6 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.BaseRequest;
+import catchu.model.BaseResponse;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
@@ -107,6 +111,7 @@ public class FeedFragment extends BaseFragment {
         BaseRequest baseRequest = getBaseRequest();
         setLocationInfo();
 
+        //todo NT - pagination yapılacak
         String perpage = "5";
         String page = "1";
 
@@ -115,21 +120,20 @@ public class FeedFragment extends BaseFragment {
             public void onSuccess(PostListResponse postListResponse) {
 
                 if (postListResponse == null) {
-                    Log.i("**PostListResponseProce", "SERVER:OK BUT DATA:NULL");
+                    CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
                     setTextNoFeedVisible(true);
                 } else {
-                    Log.i("**PostListResponseProce", "OK");
+                    CommonUtils.LOG_OK("PostListResponseProcess");
                     setTextNoFeedVisible(false);
-                    //setUpRecyclerView(postListResponse);
+                    setUpRecyclerView(postListResponse);
                 }
-                //todo NT - bu silinip bi yukardaki açılacak..
-                setUpRecyclerView(postListResponse);
+
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Exception e) {
-                Log.i("**PostListResponseProce", "FAIL - " + e.toString());
+                CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -155,8 +159,10 @@ public class FeedFragment extends BaseFragment {
 
         //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
 
-        List<Post> postList = postListResponse.getItems();
-        //setJunkData();
+        List<Post> postList;
+        postList= postListResponse.getItems();
+        logPostId(postList); //todo NT - silinecek
+        //postList=setJunkData();
 
 
         feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, new ViewPagerClickCallBack() {
@@ -165,6 +171,11 @@ public class FeedFragment extends BaseFragment {
                 showItemInFullView(media);
             }
 
+        }, new PostLikeClickCallback() {
+            @Override
+            public void onPostLikeClicked(Post post, boolean isPostLiked) {
+                postLikeClickedProcess(post, isPostLiked);
+            }
         });
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
@@ -173,6 +184,14 @@ public class FeedFragment extends BaseFragment {
         setRecyclerViewProperties(postList);
 
     }
+
+    //todo NT - silinecek
+    private void logPostId(List<Post> postList) {
+        for (int i = 0; i< postList.size(); i++){
+            Log.i("post-" + i + " :", postList.get(i).getPostid() );
+        }
+    }
+
 
     private void setRecyclerViewProperties(List<Post> postList) {
         //todo before setAdapter
@@ -254,21 +273,68 @@ public class FeedFragment extends BaseFragment {
 
         longitude = "29.03129382";
         latitude = "41.10745331";
-        radius = "0.1";
+        radius = "1";
 
     }
-
 
 
     private void showItemInFullView(Media media) {
 
-        Log.i("info ", "I am FeedFragment + mediaType " + media.getType());
         PostItem.getInstance().setMedia(media);
 
-        Intent intent = new Intent(getContext(), PostItemDetailActivity.class);
-        startActivity(intent);
+        if (media.getType().equals(IMAGE_TYPE)) {
+            Intent intent = new Intent(getActivity(), ImageActivity.class);
+            startActivity(intent);
+        } else if (media.getType().equals(VIDEO_TYPE)) {
+            Intent intent = new Intent(getActivity(), VideoActivity.class);
+            startActivity(intent);
+        } else {
+            Log.e("info", "unknown media type detected");
+        }
 
     }
 
+    private void postLikeClickedProcess(final Post post, final boolean isPostLiked) {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startPostLikeClickedProcess(post, isPostLiked, token);
+            }
+        });
+
+    }
+
+    private void startPostLikeClickedProcess(Post post, boolean isPostLiked, String token) {
+
+        BaseRequest baseRequest = getBaseRequest();
+        String postId = post.getPostid();
+        String commentId = null;
+
+        PostLikeProcess postLikeProcess = new PostLikeProcess(getContext(), new OnEventListener<BaseResponse>() {
+            @Override
+            public void onSuccess(BaseResponse resp) {
+
+                if (resp == null) {
+                    CommonUtils.LOG_OK_BUT_NULL("PostLikeProcess");
+                } else {
+                    CommonUtils.LOG_OK("PostLikeProcess");
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                CommonUtils.LOG_FAIL("PostLikeProcess", e.toString());
+            }
+
+            @Override
+            public void onTaskContinue() {
+            }
+        }, postId, commentId, baseRequest, isPostLiked, token);
+
+        postLikeProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
+    }
 
 }

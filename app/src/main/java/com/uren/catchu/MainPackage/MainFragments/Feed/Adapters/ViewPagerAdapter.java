@@ -42,7 +42,6 @@ public class ViewPagerAdapter extends PagerAdapter {
     private int videoCounter;
     private VideoPlay videoPlay;
     private ViewPagerClickCallBack viewPagerClickCallBack;
-    HashMap<Integer, Integer> hmap = new HashMap<Integer, Integer>();
 
 
     public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments, ViewPagerClickCallBack viewPagerClickCallBack) {
@@ -119,7 +118,6 @@ public class ViewPagerAdapter extends PagerAdapter {
             loadVideo(itemView);
             loadImage(itemView, VIEWPAGER_VIDEO);
             videoCounter++;
-            hmap.put(position, videoCounter);
 
         } else if (imageCounter < imageList.size()) {
             clickedItemType = IMAGE_TYPE;
@@ -129,7 +127,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
             loadImage(itemView, VIEWPAGER_IMAGE);
             imageCounter++;
-            hmap.put(position, imageCounter);
 
         } else {
             //do nothing
@@ -203,18 +200,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     }
 
-    private Bitmap getVideoImageUrl(String url) {
-
-
-        MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-
-        mediaMetadataRetriever.setDataSource(url, new HashMap<String, String>());
-        Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(10); //unit in microsecond
-        return bmFrame;
-
-    }
-
-
     @Override
     public void destroyItem(ViewGroup collection, int position, Object view) {
         collection.removeView((View) view);
@@ -224,7 +209,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        //return ModelObject.values().length;
         return orderedAttachments.size();
     }
 

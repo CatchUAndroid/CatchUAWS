@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/profilePageMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/profilePageMainLayout"
     android:orientation="vertical">
 
     <!--android.support.v7.widget.Toolbar
@@ -25,7 +25,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="0dp" />
     <!--android:background="@drawable/bottom_shadow"-->
 
     <FrameLayout
@@ -34,11 +34,12 @@
         android:layout_height="0dp"
         android:layout_weight="11"
         android:orientation="vertical">
+
     </FrameLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        android:layout_height="1dp" />
     <!--android:background="@drawable/bottom_shadow"-->
 
 

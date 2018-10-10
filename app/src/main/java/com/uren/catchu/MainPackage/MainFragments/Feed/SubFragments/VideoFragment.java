@@ -34,9 +34,13 @@ public class VideoFragment extends Fragment {
 
         mView = inflater.inflate(R.layout.viewpager_video, container, false);
         ButterKnife.bind(this, mView);
-
+        
+        setVideo();
 
         return mView;
 
+    }
+
+    private void setVideo() {
     }
 }
