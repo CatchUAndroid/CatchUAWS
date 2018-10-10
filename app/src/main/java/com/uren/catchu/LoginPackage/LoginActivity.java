@@ -371,8 +371,8 @@ public class LoginActivity extends AppCompatActivity
 
         //Test scenario
         //todo : NT - kaldırılacak
-        /*userEmail = "ugogebakan@gmail.com";
-        userPassword = "123456";*/
+        userEmail = "ugogebakan@gmail.com";
+        userPassword = "123456";
 
         //validation controls
         if (!checkValidation(userEmail, userPassword)) {
