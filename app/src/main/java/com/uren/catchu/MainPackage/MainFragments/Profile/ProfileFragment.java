@@ -54,6 +54,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingReq
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.AccountHolderPendings;
 
@@ -324,6 +325,7 @@ public class ProfileFragment extends BaseFragment
     }
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
+
         if (user != null && user.getRelationCountInfo() != null) {
             Log.i("->UserRelationCountInfo", user.getRelationCountInfo().toString());
 

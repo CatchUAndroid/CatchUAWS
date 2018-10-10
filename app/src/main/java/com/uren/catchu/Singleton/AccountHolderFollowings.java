@@ -7,6 +7,9 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 

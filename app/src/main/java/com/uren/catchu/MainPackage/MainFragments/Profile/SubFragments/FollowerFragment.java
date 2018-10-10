@@ -121,7 +121,6 @@ public class FollowerFragment extends BaseFragment
 
         });
 
-
     }
 
     private void startFollowInfoProcess(String token) {
