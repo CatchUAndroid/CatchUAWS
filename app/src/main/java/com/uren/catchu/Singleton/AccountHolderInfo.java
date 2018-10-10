@@ -18,6 +18,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileRelationCountInfo;
 
+import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
@@ -138,7 +139,11 @@ public class AccountHolderInfo {
                 userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
                 break;
 
-            // TODO: 7.10.2018 - UG - Will continue
+            case FRIEND_ACCEPT_REQUEST:
+                followerCnt = followerCnt + 1;
+                userProfileRelationCountInfo.setFollowerCount(Integer.toString(followerCnt));
+                userProfileRelationCountInfo.setFollowingCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowingCount());
+                break;
 
             default:
                 break;

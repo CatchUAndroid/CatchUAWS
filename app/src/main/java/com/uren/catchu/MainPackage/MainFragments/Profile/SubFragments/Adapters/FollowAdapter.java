@@ -31,6 +31,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
@@ -44,7 +45,7 @@ import catchu.model.FriendRequestList;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -271,11 +272,6 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
     public void updateAdapterWithPosition(int position) {
 
         notifyItemChanged(position);
-    }
-
-    public interface RowItemClickListener {
-
-        void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition);
     }
 }
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/navViewNameTv"
+            android:text="UGUR GOGEBAKAN"
+            android:textColor="@color/White"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif-medium"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/navViewUsernameTv"
+            android:text="ugurgog"
+            android:textColor="@color/White"
+            android:textSize="15sp"
+            android:fontFamily="sans-serif"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

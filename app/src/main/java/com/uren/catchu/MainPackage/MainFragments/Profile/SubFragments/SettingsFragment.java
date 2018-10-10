@@ -28,8 +28,8 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 
 public class SettingsFragment extends Fragment
@@ -111,7 +111,7 @@ public class SettingsFragment extends Fragment
 
     private void settingsCancelClicked() {
 
-        ((NextActivity) getActivity()).ANIMATION_TAG = AnimateRightToLeft;
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         getActivity().onBackPressed();
 
 

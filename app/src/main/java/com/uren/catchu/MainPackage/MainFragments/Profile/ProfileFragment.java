@@ -14,17 +14,24 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -36,24 +43,28 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.AccountHolderPendings;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.FriendRequestList;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
@@ -61,6 +72,10 @@ public class ProfileFragment extends BaseFragment
     View mView;
     UserProfile myProfile;
     GradientDrawable imageShape;
+    boolean mDrawerState;
+
+    TextView navViewNameTv;
+    TextView navViewUsernameTv;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -84,11 +99,19 @@ public class ProfileFragment extends BaseFragment
     TextView txtFollowingCnt;
     @BindView(R.id.txtProfile)
     TextView txtProfile;
+    @BindView(R.id.pendReqCntTv)
+    TextView pendReqCntTv;
+    @BindView(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.navViewLayout)
+    NavigationView navViewLayout;
 
     @BindView(R.id.imgUserEdit)
     ClickableImageView imgUserEdit;
-    @BindView(R.id.imgSettings)
-    ClickableImageView imgSettings;
+    @BindView(R.id.menuImgv)
+    ClickableImageView menuImgv;
+
+    TextView navPendReqCntTv;
 
     public static ProfileFragment newInstance(FollowInfoRowItem rowItem) {
         Bundle args = new Bundle();
@@ -112,18 +135,26 @@ public class ProfileFragment extends BaseFragment
             ButterKnife.bind(this, mView);
 
             setCollapsingToolbar();
+            addListeners();
             setUpPager();
+            setNavViewItems();
             setProfileImageShape();
         }
 
         return mView;
     }
 
-    public void setProfileImageShape(){
+    public void setProfileImageShape() {
         imageShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
                 getActivity().getResources().getColor(R.color.White, null),
                 GradientDrawable.OVAL, 50, 2);
         imgProfile.setBackground(imageShape);
+    }
+
+    private void setNavViewItems(){
+        View v = navViewLayout.getHeaderView(0);
+        navViewNameTv = v.findViewById(R.id.navViewNameTv);
+        navViewUsernameTv = v.findViewById(R.id.navViewUsernameTv);
     }
 
     private void setCollapsingToolbar() {
@@ -155,9 +186,70 @@ public class ProfileFragment extends BaseFragment
                     ContextCompat.getColor(getActivity(), R.color.primary_700)
             );
         }
-
     }
 
+    public void addListeners() {
+        drawerLayout.addDrawerListener(new ActionBarDrawerToggle(getActivity(),
+                drawerLayout,
+                null,
+                0,
+                0) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                mDrawerState = false;
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                mDrawerState = true;
+            }
+        });
+
+        menuImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(pendReqCntTv != null)
+                    pendReqCntTv.setVisibility(View.GONE);
+
+                if (mDrawerState) {
+                    drawerLayout.closeDrawer(Gravity.START);
+                } else {
+                    drawerLayout.openDrawer(Gravity.START);
+                }
+            }
+        });
+
+        navViewLayout.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+                switch (item.getItemId()) {
+                    case R.id.searchItem:
+                        break;
+
+                    case R.id.viewItem:
+                        if(navPendReqCntTv != null)
+                            navPendReqCntTv.setVisibility(View.GONE);
+
+                        drawerLayout.closeDrawer(Gravity.START);
+                        startPendingRequestFragment();
+                        break;
+
+                    case R.id.settingsItem:
+                        drawerLayout.closeDrawer(Gravity.START);
+                        startSettingsFragment();
+                        break;
+
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+        });
+    }
 
     private void setUpPager() {
 
@@ -190,10 +282,8 @@ public class ProfileFragment extends BaseFragment
     private void initListeners() {
 
         imgUserEdit.setOnClickListener(this);
-        imgSettings.setOnClickListener(this);
         txtFollowerCnt.setOnClickListener(this);
         txtFollowingCnt.setOnClickListener(this);
-
     }
 
     private void updateUI() {
@@ -215,7 +305,7 @@ public class ProfileFragment extends BaseFragment
 
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 toolbarTitle.setText(user.getUserInfo().getName());
-                CommonUtils.showToast(getActivity(), "Hoş geldin " + user.getUserInfo().getName() + "!!");
+                navViewNameTv.setText(user.getUserInfo().getName());
             }
 
             UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
@@ -223,9 +313,13 @@ public class ProfileFragment extends BaseFragment
 
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 txtUserName.setText(user.getUserInfo().getUsername());
+                navViewUsernameTv.setText(user.getUserInfo().getUsername());
+            }
+
+            if(user.getUserInfo().getIsPrivateAccount()){
+                getPendingFriendList();
             }
         }
-
         setUserFollowerAndFollowingCnt(user);
     }
 
@@ -239,6 +333,44 @@ public class ProfileFragment extends BaseFragment
             if (user.getRelationCountInfo().getFollowingCount() != null && !user.getRelationCountInfo().getFollowingCount().trim().isEmpty())
                 txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.LOWER_FOLLOWING));
         }
+    }
+
+    private void getPendingFriendList(){
+        AccountHolderPendings.getInstance(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                FriendRequestList friendRequestList = (FriendRequestList) object;
+
+                if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
+                    pendReqCntTv.setVisibility(View.VISIBLE);
+                    pendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
+                }else
+                    pendReqCntTv.setVisibility(View.GONE);
+
+
+                Menu menu = navViewLayout.getMenu();
+                for(int index = 0; index < menu.size(); index++){
+                    MenuItem menuItem = menu.getItem(index);
+                    if(menuItem.getItemId() == R.id.viewItem){
+                        RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
+                        navPendReqCntTv = rootView.findViewById(R.id.pendReqCntTv);
+
+                        if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
+                            navPendReqCntTv.setVisibility(View.VISIBLE);
+                            navPendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
+                        }else
+                            navPendReqCntTv.setVisibility(View.GONE);
+                    }
+                }
+
+
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     private void getProfileDetail(final String userID) {
@@ -291,10 +423,6 @@ public class ProfileFragment extends BaseFragment
             userEditClicked();
         }
 
-        if (v == imgSettings) {
-            settingsClicked();
-        }
-
         if (v == txtFollowerCnt) {
             followerClicked();
         }
@@ -305,21 +433,11 @@ public class ProfileFragment extends BaseFragment
 
     }
 
-
-    private void settingsClicked() {
-
-        if (mFragmentNavigation != null) {
-            //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new SettingsFragment(), AnimateLeftToRight);
-        }
-
-    }
-
     private void userEditClicked() {
 
         if (mFragmentNavigation != null) {
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new UserEditFragment(), AnimateRightToLeft);
+            mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
 
     }
@@ -328,7 +446,7 @@ public class ProfileFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new FollowerFragment(), AnimateRightToLeft);
+            mFragmentNavigation.pushFragment(new FollowerFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
 
     }
@@ -337,10 +455,20 @@ public class ProfileFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new FollowingFragment(), AnimateRightToLeft);
+            mFragmentNavigation.pushFragment(new FollowingFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
 
     }
 
+    private void startSettingsFragment() {
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new SettingsFragment(), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
 
+    private void startPendingRequestFragment() {
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new PendingRequestsFragment(), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
 }

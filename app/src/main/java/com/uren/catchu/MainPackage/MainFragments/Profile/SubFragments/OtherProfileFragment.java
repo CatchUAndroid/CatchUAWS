@@ -59,8 +59,8 @@ import catchu.model.FriendRequestList;
 import catchu.model.UserProfile;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -274,7 +274,7 @@ public class OtherProfileFragment extends BaseFragment
 
         if (v == imgBackBtn) {
 
-            ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
+            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
 
             if (followInfoRowItem.getAdapter() instanceof FollowAdapter) {
                 ((FollowAdapter) followInfoRowItem.getAdapter()).updateAdapterWithPosition(followInfoRowItem.getClickedPosition());

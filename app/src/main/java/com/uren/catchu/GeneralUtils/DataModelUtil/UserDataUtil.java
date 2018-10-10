@@ -73,4 +73,15 @@ public class UserDataUtil {
         }
         displayButton.setBackground(buttonShape);
     }
+
+    public static void updatePendingButton(Context context, Button displayButton) {
+        CommonUtils.hideKeyBoard(context);
+        GradientDrawable buttonShape;
+        displayButton.setText(context.getResources().getString(R.string.ACCEPT_REQUEST));
+        displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
+        buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.RECTANGLE, 15, 0);
+        displayButton.setBackground(buttonShape);
+    }
+
 }

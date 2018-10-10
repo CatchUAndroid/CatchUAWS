@@ -53,11 +53,11 @@ public class AccountHolderFollowers {
         });
     }
 
-    public static void addFriend(UserProfileProperties userProfileProperties) {
+    public static void addFollower(UserProfileProperties userProfileProperties) {
         friendList.getResultArray().add(userProfileProperties);
     }
 
-    public static void removeFriend(String userid) {
+    public static void removeFollower(String userid) {
         if (userid != null && !userid.trim().isEmpty()) {
             int index = 0;
             for (UserProfileProperties userProfileProperties : friendList.getResultArray()) {

@@ -7,6 +7,9 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 
@@ -14,9 +17,10 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIR
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
-public class AccountHolderFollowings {
+public class AccountHolderFacebookFriends {
 
-    private static AccountHolderFollowings accountHolderFollowings = null;
+
+    private static AccountHolderFacebookFriends accountHolderFacebookFriends = null;
     private static FollowInfo followInfo;
     private static CompleteCallback mCompleteCallback;
 
@@ -24,20 +28,20 @@ public class AccountHolderFollowings {
 
         mCompleteCallback = completeCallback;
 
-        if (accountHolderFollowings == null) {
+        if (accountHolderFacebookFriends == null) {
             followInfo = new FollowInfo();
             List<FollowInfoResultArrayItem> followInfoResultArrayItems = new ArrayList<>();
             followInfo.setResultArray(followInfoResultArrayItems);
-            accountHolderFollowings = new AccountHolderFollowings();
+            accountHolderFacebookFriends = new AccountHolderFacebookFriends();
         }else
             mCompleteCallback.onComplete(followInfo);
     }
 
-    public AccountHolderFollowings() {
+    public AccountHolderFacebookFriends() {
         getFriends();
     }
 
-    public static FollowInfo getFollowingList() {
+    public static FollowInfo getFacebookFriendsList() {
         return followInfo;
     }
 
@@ -45,37 +49,20 @@ public class AccountHolderFollowings {
         return followInfo.getResultArray().size();
     }
 
-    public static void setInstance(AccountHolderFollowings instance) {
-        accountHolderFollowings = instance;
+    public static void setInstance(AccountHolderFacebookFriends instance) {
+        accountHolderFacebookFriends = instance;
     }
 
     private void getFriends() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startGetFollowings(token);
+                startGetFacebookFriends(token);
             }
         });
     }
 
-    public static void addFollowing(FollowInfoResultArrayItem followInfoResultArrayItem) {
-        followInfo.getResultArray().add(followInfoResultArrayItem);
-    }
-
-    public static void removeFollowing(String userid) {
-        if (userid != null && !userid.trim().isEmpty()) {
-            int index = 0;
-            for (FollowInfoResultArrayItem followInfoResultArrayItem : followInfo.getResultArray()) {
-                if (followInfoResultArrayItem.getUserid().equals(userid)) {
-                    followInfo.getResultArray().remove(index);
-                    break;
-                }
-                index = index + 1;
-            }
-        }
-    }
-
-    public static boolean isFollowing(String userid){
+    public static boolean isFacebookFriend(String userid){
         boolean isFoolowing = false;
         if (userid != null && !userid.trim().isEmpty()) {
             int index = 0;
@@ -90,7 +77,7 @@ public class AccountHolderFollowings {
         return isFoolowing;
     }
 
-    private void startGetFollowings(String token) {
+    private void startGetFacebookFriends(String token) {
         FollowInfo followInfoTemp = new FollowInfo();
         followInfoTemp.setRequestType(GET_USER_FOLLOWINGS);
         followInfoTemp.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
@@ -117,11 +104,31 @@ public class AccountHolderFollowings {
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public static void updateFriendListByFollowType(String requestType, FollowInfoResultArrayItem followInfoResultArrayItem) {
+    public static void updateFriendListByFollowType(String requestType, final FollowInfoResultArrayItem followInfoResultArrayItem) {
         if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY))
-            accountHolderFollowings.addFollowing(followInfoResultArrayItem);
+            AccountHolderFollowings.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    AccountHolderFollowings.addFollowing(followInfoResultArrayItem);
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            });
         else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
-            accountHolderFollowings.removeFollowing(followInfoResultArrayItem.getUserid());
+            AccountHolderFollowings.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    AccountHolderFollowings.removeFollowing(followInfoResultArrayItem.getUserid());
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            });
 
         }
     }

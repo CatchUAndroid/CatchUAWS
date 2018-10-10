@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/searchItem"
+        android:checkable="true"
+        android:icon="@drawable/tab_search"
+        android:title="@string/EXPLORE_PEOPLE" />
+
+    <item
+        android:id="@+id/viewItem"
+        android:checkable="true"
+        android:icon="@drawable/view"
+        android:title="@string/VIEW_PENDING_REQUEST"
+        app:actionLayout="@layout/navmenu_action_layout"/>
+
+    <item
+        android:id="@+id/settingsItem"
+        android:checkable="true"
+        android:icon="@mipmap/settings"
+        android:title="@string/settings" />
+
+</menu>

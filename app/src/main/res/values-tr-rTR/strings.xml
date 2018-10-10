@@ -65,6 +65,8 @@
     <string name="finish">Bitir</string>
     <string name="typeToAddText">Metin Ekle...</string>
     <string name="UPDATING">Güncelleniyor...</string>
+    <string name="EXPLORE_PEOPLE">Kişileri Keşfet</string>
+    <string name="VIEW_PENDING_REQUEST">Gelen Istekleri Görüntüle</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -107,10 +109,13 @@
     <string name="follow">Takip et</string>
     <string name="following">Takip ediliyor</string>
     <string name="request_sended">İstek gönderildi</string>
+    <string name="ACCEPT_REQUEST">Kabul Et</string>
     <string name="cancel_following">Takip etmeyi bırak?</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="feed">Paylaşımlar</string>
+    <string name="PENDING_REQUESTS">Bekleyen Istekler</string>
+    <string name="THERE_IS_NO_PENDING_REQUEST">Bekleyen isteğiniz bulunmamaktadır</string>
 
 
     <!-- LoginActivity Constants-->

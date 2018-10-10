@@ -29,6 +29,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
@@ -46,7 +47,7 @@ import catchu.model.SearchResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 import catchu.model.UserProfileRelationCountInfo;
 
-import static com.uren.catchu.Constants.StringConstants.AnimateRightToLeft;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -63,11 +64,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     Context context;
     Activity activity;
     SearchResult searchResult;
-    FollowAdapter.RowItemClickListener rowItemClickListener;
+    RowItemClickListener rowItemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid, FollowAdapter.RowItemClickListener rowItemClickListener) {
+    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid, RowItemClickListener rowItemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.searchText = searchText;

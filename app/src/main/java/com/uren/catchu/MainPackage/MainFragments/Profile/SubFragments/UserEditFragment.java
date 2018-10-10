@@ -77,7 +77,7 @@ import catchu.model.UserProfileProperties;
 import static android.app.Activity.RESULT_OK;
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_FAIL;
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_OK;
-import static com.uren.catchu.Constants.StringConstants.AnimateLeftToRight;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
@@ -304,7 +304,7 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void editProfileCancelClicked() {
-        ((NextActivity) getActivity()).ANIMATION_TAG = AnimateLeftToRight;
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         getActivity().onBackPressed();
     }
 
