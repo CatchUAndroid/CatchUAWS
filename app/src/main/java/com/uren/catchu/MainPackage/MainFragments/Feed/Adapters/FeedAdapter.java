@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
@@ -55,6 +56,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgProfilePic;
+        TextView txtProfilePic;
         TextView txtName;
         TextView txtUserName;
         TextView txtDetail;
@@ -64,12 +66,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         private int position;
         boolean isPostLiked = false;
         Post post;
-        int likeColor;
         TextView txtLikeCount;
         TextView txtCommentCount;
         LinearLayout layoutLike;
         LinearLayout layoutComment;
-
 
         View mView;
 
@@ -79,6 +79,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             mView = view;
             cardView = (CardView) view.findViewById(R.id.card_view);
             imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
+            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtUserName = (TextView) view.findViewById(R.id.txtUserName);
             txtDetail = (TextView) view.findViewById(R.id.txtDetail);
@@ -104,16 +105,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                     imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
 
                     if (isPostLiked) {
-                        likeColor = R.color.black;
-                        imgLike.setColorFilter(ContextCompat.getColor(mContext, likeColor), android.graphics.PorterDuff.Mode.SRC_IN);
-                        imgLike.setImageResource(R.mipmap.icon_like);
                         isPostLiked = false;
+                        setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
                         postLikeClickCallback.onPostLikeClicked(post, false);
                     } else {
-                        likeColor = R.color.oceanBlue;
-                        imgLike.setColorFilter(ContextCompat.getColor(mContext, likeColor), android.graphics.PorterDuff.Mode.SRC_IN);
-                        imgLike.setImageResource(R.mipmap.icon_like_filled);
                         isPostLiked = true;
+                        setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
                         postLikeClickCallback.onPostLikeClicked(post, true);
                     }
 
@@ -124,7 +121,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    layoutLikeClicked();
                 }
             });
 
@@ -132,9 +129,32 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    layoutCommentClicked();
                 }
             });
+
+        }
+
+        private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
+            imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
+            imgLike.setImageResource(icon);
+
+            if (isClientOperation) {
+                if (isPostLiked) {
+                    post.setLikeCount(post.getLikeCount() + 1);
+                } else {
+                    post.setLikeCount(post.getLikeCount() - 1);
+                }
+            }
+            txtLikeCount.setText(String.valueOf(post.getLikeCount()));
+
+        }
+
+        private void layoutLikeClicked() {
+
+        }
+
+        private void layoutCommentClicked() {
 
         }
 
@@ -147,10 +167,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             //todo NT - profil fotosu düzenlenecek
             //profile picture
-            Glide.with(mContext)
-                    .load("https://i.hizliresim.com/Q2O8gV.jpg")
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imgProfilePic);
+            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
+                    post.getUser().getName(), txtProfilePic, imgProfilePic);
+
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
                 this.txtName.setText(post.getUser().getName());
@@ -175,14 +194,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             }
             //Like
             if (post.getIsLiked()) {
-                likeColor = R.color.oceanBlue;
-                imgLike.setColorFilter(ContextCompat.getColor(mContext, likeColor), android.graphics.PorterDuff.Mode.SRC_IN);
-                imgLike.setImageResource(R.mipmap.icon_like_filled);
+                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
+            } else {
+                setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
-            //Like Count
-            txtLikeCount.setText(String.valueOf(post.getLikeCount()));
-            //Comment Count
-            txtCommentCount.setText(String.valueOf(post.getCommentCount()));
+
 
         }
 
