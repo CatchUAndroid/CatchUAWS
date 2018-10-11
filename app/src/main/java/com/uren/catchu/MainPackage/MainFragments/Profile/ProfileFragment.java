@@ -139,17 +139,9 @@ public class ProfileFragment extends BaseFragment
             addListeners();
             setUpPager();
             setNavViewItems();
-            setProfileImageShape();
         }
 
         return mView;
-    }
-
-    public void setProfileImageShape() {
-        imageShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
-                getActivity().getResources().getColor(R.color.White, null),
-                GradientDrawable.OVAL, 50, 2);
-        imgProfile.setBackground(imageShape);
     }
 
     private void setNavViewItems(){

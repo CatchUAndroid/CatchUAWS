@@ -114,6 +114,10 @@ public class LoginActivity extends AppCompatActivity
     //Firebase
     private FirebaseAuth mAuth;
 
+    //Provider Types
+    final String FacebookProviderType = "facebook";
+    final String TwitterProviderType = "twitter";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -371,8 +375,8 @@ public class LoginActivity extends AppCompatActivity
 
         //Test scenario
         //todo : NT - kaldırılacak
-        /*userEmail = "ugogebakan@gmail.com";
-        userPassword = "123456";*/
+        //userEmail = "ugogebakan@gmail.com";
+        //userPassword = "123456";
 
         //validation controls
         if (!checkValidation(userEmail, userPassword)) {
@@ -493,6 +497,8 @@ public class LoginActivity extends AppCompatActivity
                             String facebookUserId = object.getString("id");
                             String url = "https://graph.facebook.com/" + facebookUserId + "/picture?type=large";
                             loginUser.setProfilePhotoUrl(url);
+                            loginUser.setProviderId(facebookUserId);
+                            loginUser.setProviderType(FacebookProviderType);
 
                             handleFacebookAccessToken(loginResult.getAccessToken());
 
@@ -525,7 +531,6 @@ public class LoginActivity extends AppCompatActivity
 
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in loginUser's information
-
                                 Log.i("Info", "  >>signInWithCredential:success");
                                 startMainPage();
 
@@ -604,6 +609,10 @@ public class LoginActivity extends AppCompatActivity
         loginUser.setProfilePhotoUrl(profilePicture);
         //username
         loginUser.setUsername(session.getUserName());
+        //providerId
+        loginUser.setProviderId(String.valueOf(session.getUserId()));
+        //providerType
+        loginUser.setProviderType(TwitterProviderType);
 
     }
 

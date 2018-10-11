@@ -9,6 +9,8 @@ public class LoginUser implements Serializable {
     private String username;
     private String name;
     private String profilePhotoUrl;
+    private String providerId;
+    private String providerType;
 
 
     public LoginUser() {
@@ -17,6 +19,8 @@ public class LoginUser implements Serializable {
         this.username = "";
         this.name= "";
         this.profilePhotoUrl = "";
+        this.providerId = "";
+        this.providerType = "";
     }
 
     public String getUserId() {
@@ -57,6 +61,22 @@ public class LoginUser implements Serializable {
 
     public void setProfilePhotoUrl(String profilePhotoUrl) {
         this.profilePhotoUrl = profilePhotoUrl;
+    }
+
+    public String getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(String providerType) {
+        this.providerType = providerType;
+    }
+
+    public String getProviderId() {
+        return providerId;
+    }
+
+    public void setProviderId(String providerId) {
+        this.providerId = providerId;
     }
 
 

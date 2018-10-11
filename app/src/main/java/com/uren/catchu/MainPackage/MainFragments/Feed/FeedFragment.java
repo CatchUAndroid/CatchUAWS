@@ -121,10 +121,14 @@ public class FeedFragment extends BaseFragment {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
-                    setTextNoFeedVisible(true);
+
                 } else {
                     CommonUtils.LOG_OK("PostListResponseProcess");
-                    setTextNoFeedVisible(false);
+                    if(postListResponse.getItems().size() == 0){
+                        setTextNoFeedVisible(true);
+                    }else{
+                        setTextNoFeedVisible(false);
+                    }
                     setUpRecyclerView(postListResponse);
                 }
 

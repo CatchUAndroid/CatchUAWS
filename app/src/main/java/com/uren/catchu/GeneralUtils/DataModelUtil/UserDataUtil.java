@@ -48,6 +48,13 @@ public class UserDataUtil {
                         .into(profilePicImgView);
             }
         }
+
+        GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                context.getResources().getColor(R.color.Red, null),
+                GradientDrawable.OVAL, 50, 2);
+        profilePicImgView.setBackground(imageShape);
+
+
     }
 
     public static void updateFollowButton(Context context, Boolean friendRelation, Boolean pendingFriendRequest, Button displayButton) {
