@@ -172,7 +172,6 @@ public class FeedFragment extends BaseFragment {
         //postList=setJunkData();
         //logPostId(postList); //todo NT - silinecek
 
-
         feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, mFragmentNavigation);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
@@ -242,8 +241,16 @@ public class FeedFragment extends BaseFragment {
         mediaList.add(media1);
         mediaList.add(media2);
 
+        User user = new User();
+        user.setName("JunkUser");
+        user.setUsername("junkUser");
+
         Post post = new Post();
         post.setAttachments(mediaList);
+        post.setUser(user);
+        post.setLikeCount(20);
+        post.setCommentCount(20);
+        post.setIsLiked(true);
 
         ArrayList<Post> postList = new ArrayList<Post>();
 

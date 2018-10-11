@@ -171,12 +171,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             this.post = post;
             this.isPostLiked = post.getIsLiked();
 
-
             //todo NT - profil fotosu düzenlenecek
             //profile picture
-            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
-                    post.getUser().getName(), txtProfilePic, imgProfilePic);
-
+            if(post.getUser().getProfilePhotoUrl()!=null && !post.getUser().getProfilePhotoUrl().isEmpty()){
+                UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
+                        post.getUser().getName(), txtProfilePic, imgProfilePic);
+            }
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
                 this.txtName.setText(post.getUser().getName());
@@ -217,9 +217,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         }
 
-
     }
-
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
