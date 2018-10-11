@@ -30,8 +30,10 @@ import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.UserListResponse;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
 
 
 public class PersonListFragment extends BaseFragment
@@ -79,8 +81,6 @@ public class PersonListFragment extends BaseFragment
 
         imgBack.setOnClickListener(this);
 
-        followInfo = new FollowInfo();
-
     }
 
 
@@ -89,7 +89,7 @@ public class PersonListFragment extends BaseFragment
 
         if (v == imgBack) {
 
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_DOWN_TO_UP;
             getActivity().onBackPressed();
 
         }
