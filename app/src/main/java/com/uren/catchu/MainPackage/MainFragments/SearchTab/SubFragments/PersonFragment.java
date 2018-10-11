@@ -82,11 +82,11 @@ public class PersonFragment extends BaseFragment {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
     }
 
-    public void getSearchResult(final String userid, final String searchText){
+    public void getSearchResult(final String userid, final String searchText) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -120,9 +120,9 @@ public class PersonFragment extends BaseFragment {
         searchResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void getData(){
+    public void getData() {
 
-        switch (viewType){
+        switch (viewType) {
             case verticalShown:
 
                 userDetailAdapter = new UserDetailAdapter(context, searchText, searchResult, userid, new ListItemClickListener() {
@@ -143,7 +143,7 @@ public class PersonFragment extends BaseFragment {
                 break;
 
             case gridShown:
-                gridLayoutManager =new GridLayoutManager(context, 4);
+                gridLayoutManager = new GridLayoutManager(context, 4);
                 personRecyclerView.setLayoutManager(gridLayoutManager);
                 break;
 
@@ -154,14 +154,14 @@ public class PersonFragment extends BaseFragment {
 
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
 
-        if(!rowItem.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
+        if (!rowItem.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
             if (mFragmentNavigation != null) {
                 FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
                 followInfoListItem.setAdapter(userDetailAdapter);
                 followInfoListItem.setClickedPosition(clickedPosition);
                 mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
-        }else {
+        } else {
             NextActivity.switchAndUpdateTabSelection(FragNavController.TAB5);
         }
     }

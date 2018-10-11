@@ -14,9 +14,12 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFollowings;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.UserProfileRelationCountInfo;
 
+import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
@@ -64,8 +67,12 @@ public class UserDataUtil {
 
     }
 
-    public static void updateFollowButton(Context context, Boolean friendRelation, Boolean pendingFriendRequest, Button displayButton) {
-        CommonUtils.hideKeyBoard(context);
+    public static void updateFollowButton(Context context, Boolean friendRelation, Boolean pendingFriendRequest, Button displayButton,
+                                          Boolean isHideKeybard) {
+
+        if(isHideKeybard != null && isHideKeybard)
+            CommonUtils.hideKeyBoard(context);
+
         GradientDrawable buttonShape;
         if (friendRelation != null && friendRelation) {
             displayButton.setText(context.getResources().getString(R.string.following));
@@ -97,4 +104,5 @@ public class UserDataUtil {
                 0, GradientDrawable.RECTANGLE, 15, 0);
         displayButton.setBackground(buttonShape);
     }
+
 }

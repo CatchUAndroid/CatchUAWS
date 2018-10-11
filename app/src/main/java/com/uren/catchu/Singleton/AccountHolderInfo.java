@@ -28,9 +28,7 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    //private static OnEventListener<AccountHolderInfo> mCallBack;
     private static Context context;
-    //private static String token;
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
@@ -50,7 +48,6 @@ public class AccountHolderInfo {
 
     public AccountHolderInfo() {
         firebaseAuth = FirebaseAuth.getInstance();
-        userProfile = new UserProfile();
         getProfileDetail(getUserIdFromFirebase());
     }
 
@@ -60,7 +57,7 @@ public class AccountHolderInfo {
     }
 
     public UserProfile getUser() {
-        return this.userProfile;
+        return userProfile;
     }
 
     public static String getUserID() {
@@ -125,38 +122,39 @@ public class AccountHolderInfo {
                 }
             }
         });
-
     }
 
     public static void updateAccountHolderFollowCnt(String requestType) {
-        int followingCnt = Integer.parseInt(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowingCount());
-        int followerCnt = Integer.parseInt(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+        // TODO: 11.10.2018 - search de gonderilen istek geri alinmak istendiginde patliyor..
+        //
+        int followingCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
+        int followerCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
         UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
 
         switch (requestType) {
             case FRIEND_CREATE_FOLLOW_DIRECTLY:
                 followingCnt = followingCnt + 1;
                 userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
                 break;
 
             case FRIEND_DELETE_FOLLOW:
                 followingCnt = followingCnt - 1;
                 userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
                 break;
 
             case FRIEND_ACCEPT_REQUEST:
                 followerCnt = followerCnt + 1;
                 userProfileRelationCountInfo.setFollowerCount(Integer.toString(followerCnt));
-                userProfileRelationCountInfo.setFollowingCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowingCount());
+                userProfileRelationCountInfo.setFollowingCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
                 break;
 
             default:
                 break;
         }
 
-        accountHolderInfoInstance.getUser().setRelationCountInfo(userProfileRelationCountInfo);
+        AccountHolderInfo.getInstance().getUser().setRelationCountInfo(userProfileRelationCountInfo);
     }
 
 
