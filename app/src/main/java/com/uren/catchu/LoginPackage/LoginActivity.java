@@ -82,6 +82,9 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
+import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
+import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_TWITTER;
+
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener {
 
@@ -113,10 +116,6 @@ public class LoginActivity extends AppCompatActivity
 
     //Firebase
     private FirebaseAuth mAuth;
-
-    //Provider Types
-    final String FacebookProviderType = "facebook";
-    final String TwitterProviderType = "twitter";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -498,7 +497,7 @@ public class LoginActivity extends AppCompatActivity
                             String url = "https://graph.facebook.com/" + facebookUserId + "/picture?type=large";
                             loginUser.setProfilePhotoUrl(url);
                             loginUser.setProviderId(facebookUserId);
-                            loginUser.setProviderType(FacebookProviderType);
+                            loginUser.setProviderType(PROVIDER_TYPE_FACEBOOK);
 
                             handleFacebookAccessToken(loginResult.getAccessToken());
 
@@ -612,7 +611,7 @@ public class LoginActivity extends AppCompatActivity
         //providerId
         loginUser.setProviderId(String.valueOf(session.getUserId()));
         //providerType
-        loginUser.setProviderType(TwitterProviderType);
+        loginUser.setProviderType(PROVIDER_TYPE_TWITTER);
 
     }
 

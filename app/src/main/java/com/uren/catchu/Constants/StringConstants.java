@@ -83,4 +83,8 @@ public class StringConstants {
     public static final String VIEWPAGER_VIDEO = "VIEWPAGER_VIDEO";
     public static final String VIEWPAGER_IMAGE = "VIEWPAGER_IMAGE";
 
+    //Provider Types
+    public static final String PROVIDER_TYPE_FACEBOOK = "facebook";
+    public static final String PROVIDER_TYPE_TWITTER = "twitter";
+
 }

@@ -105,34 +105,4 @@ public class UserDataUtil {
         displayButton.setBackground(buttonShape);
     }
 
-   /* public static void updateAccountHolderFollowCnt(String requestType) {
-        int followingCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
-        int followerCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
-        UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
-
-        switch (requestType) {
-            case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                followingCnt = followingCnt + 1;
-                userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
-                break;
-
-            case FRIEND_DELETE_FOLLOW:
-                followingCnt = followingCnt - 1;
-                userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
-                break;
-
-            case FRIEND_ACCEPT_REQUEST:
-                followerCnt = followerCnt + 1;
-                userProfileRelationCountInfo.setFollowerCount(Integer.toString(followerCnt));
-                userProfileRelationCountInfo.setFollowingCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
-                break;
-
-            default:
-                break;
-        }
-
-        AccountHolderInfo.getInstance().getUser().setRelationCountInfo(userProfileRelationCountInfo);
-    }*/
 }

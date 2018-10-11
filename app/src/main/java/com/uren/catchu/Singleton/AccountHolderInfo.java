@@ -122,11 +122,11 @@ public class AccountHolderInfo {
                 }
             }
         });
-
     }
 
     public static void updateAccountHolderFollowCnt(String requestType) {
-        // TODO: 11.10.2018 - search de gonderilen istek geri alinmak istendiginde patliyor.. 
+        // TODO: 11.10.2018 - search de gonderilen istek geri alinmak istendiginde patliyor..
+        //
         int followingCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
         int followerCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
         UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
@@ -135,19 +135,19 @@ public class AccountHolderInfo {
             case FRIEND_CREATE_FOLLOW_DIRECTLY:
                 followingCnt = followingCnt + 1;
                 userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
                 break;
 
             case FRIEND_DELETE_FOLLOW:
                 followingCnt = followingCnt - 1;
                 userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowerCount());
+                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
                 break;
 
             case FRIEND_ACCEPT_REQUEST:
                 followerCnt = followerCnt + 1;
                 userProfileRelationCountInfo.setFollowerCount(Integer.toString(followerCnt));
-                userProfileRelationCountInfo.setFollowingCount(accountHolderInfoInstance.getUser().getRelationCountInfo().getFollowingCount());
+                userProfileRelationCountInfo.setFollowingCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
                 break;
 
             default:

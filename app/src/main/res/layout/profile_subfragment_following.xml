@@ -71,13 +71,7 @@
                 android:layout_marginTop="10dp">
             </android.support.v7.widget.RecyclerView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:id="@+id/warningMsgTv"
-                android:visibility="gone"
-                android:gravity="center"/>
+            <include layout="@layout/warning_message_tv"></include>
 
         </RelativeLayout>
 
