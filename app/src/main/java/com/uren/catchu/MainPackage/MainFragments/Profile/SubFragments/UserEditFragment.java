@@ -229,15 +229,41 @@ public class UserEditFragment extends BaseFragment
 
     private void updateUI() {
         userProfile = AccountHolderInfo.getInstance().getUser();
-        edtName.setText(userProfile.getUserInfo().getName());
-        edtUserName.setText(userProfile.getUserInfo().getUsername());
-        edtWebsite.setText(userProfile.getUserInfo().getWebsite());
-        edtBirthDay.setText(userProfile.getUserInfo().getBirthday());
-        edtEmail.setText(userProfile.getUserInfo().getEmail());
-        edtPhone.setText(userProfile.getUserInfo().getPhone());
-        shortUserNameTv.setText(UserDataUtil.getShortenUserName(userProfile.getUserInfo().getName()));
-        genderSpinner.setSelection(genderSpinnerAdapter.getPosition(userProfile.getUserInfo().getGender()));
-        selectedGender = userProfile.getUserInfo().getGender();
+
+        if (userProfile.getUserInfo() != null) {
+
+            UserProfileProperties userInfo = userProfile.getUserInfo();
+
+            if (userInfo.getName() != null && !userInfo.getName().isEmpty()) {
+                edtName.setText(userInfo.getName());
+                shortUserNameTv.setText(UserDataUtil.getShortenUserName(userProfile.getUserInfo().getName()));
+            }
+            if (userInfo.getUsername() != null && !userInfo.getUsername().isEmpty()) {
+                edtUserName.setText(userInfo.getUsername());
+            }
+            if (userInfo.getWebsite() != null && !userInfo.getWebsite().isEmpty()) {
+                edtWebsite.setText(userInfo.getWebsite());
+            }
+            if (userInfo.getBirthday() != null && !userInfo.getBirthday().isEmpty()) {
+                edtBirthDay.setText(userInfo.getUsername());
+            }
+
+            if (userInfo.getEmail() != null && !userInfo.getEmail().isEmpty()) {
+                edtEmail.setText(userInfo.getEmail());
+            }
+            if (userInfo.getPhone() != null && !userInfo.getPhone().isEmpty()) {
+                edtPhone.setText(userInfo.getPhone());
+            }
+            if (userInfo.getBirthday() != null && !userInfo.getBirthday().isEmpty()) {
+                edtBirthDay.setText(userInfo.getUsername());
+            }
+            if (userInfo.getGender() != null && !userInfo.getGender().isEmpty()) {
+                genderSpinner.setSelection(genderSpinnerAdapter.getPosition(userProfile.getUserInfo().getGender()));
+                selectedGender = userProfile.getUserInfo().getGender();
+            }
+
+        }
+
         imageShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
         imgProfile.setBackground(imageShape);
