@@ -3,11 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -34,18 +29,14 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
@@ -54,7 +45,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingReq
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.AccountHolderPendings;
 
@@ -62,9 +52,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
 import catchu.model.UserProfile;
-import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ProfileFragment extends BaseFragment
@@ -114,7 +102,7 @@ public class ProfileFragment extends BaseFragment
 
     TextView navPendReqCntTv;
 
-    public static ProfileFragment newInstance(FollowInfoRowItem rowItem) {
+    public static ProfileFragment newInstance(FollowInfoListItem rowItem) {
         Bundle args = new Bundle();
         args.putSerializable(ARGS_INSTANCE, rowItem);
         ProfileFragment fragment = new ProfileFragment();

@@ -1,11 +1,8 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,12 +22,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.config.AWSConfiguration;
-import com.amazonaws.regions.Regions;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.Adapters.UserDetailAdapter;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -41,16 +32,13 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-
-import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,7 +48,6 @@ import catchu.model.UserProfile;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -71,7 +58,7 @@ public class OtherProfileFragment extends BaseFragment
 
     View mView;
     UserProfile otherProfile;
-    FollowInfoRowItem followInfoRowItem;
+    FollowInfoListItem followInfoListItem;
     FollowInfoResultArrayItem selectedProfile;
     private int followingCount, followerCount;
 
@@ -102,7 +89,7 @@ public class OtherProfileFragment extends BaseFragment
     @BindView(R.id.btnFollowStatus)
     Button btnFollowStatus;
 
-    public static OtherProfileFragment newInstance(FollowInfoRowItem rowItem) {
+    public static OtherProfileFragment newInstance(FollowInfoListItem rowItem) {
         Bundle args = new Bundle();
         args.putSerializable(ARGS_INSTANCE, rowItem);
         OtherProfileFragment fragment = new OtherProfileFragment();
@@ -125,9 +112,9 @@ public class OtherProfileFragment extends BaseFragment
 
             Bundle args = getArguments();
             if (args != null) {
-                followInfoRowItem = (FollowInfoRowItem) args.getSerializable(ARGS_INSTANCE);
-                selectedProfile = followInfoRowItem.getResultArrayItem();
-                CommonUtils.showToast(getActivity(), followInfoRowItem.getResultArrayItem().getName());
+                followInfoListItem = (FollowInfoListItem) args.getSerializable(ARGS_INSTANCE);
+                selectedProfile = followInfoListItem.getResultArrayItem();
+                CommonUtils.showToast(getActivity(), followInfoListItem.getResultArrayItem().getName());
 
             }
 
@@ -267,10 +254,10 @@ public class OtherProfileFragment extends BaseFragment
 
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
 
-            if (followInfoRowItem.getAdapter() instanceof FollowAdapter) {
-                ((FollowAdapter) followInfoRowItem.getAdapter()).updateAdapterWithPosition(followInfoRowItem.getClickedPosition());
-            } else if (followInfoRowItem.getAdapter() instanceof UserDetailAdapter) {
-                ((UserDetailAdapter) followInfoRowItem.getAdapter()).updateAdapterWithPosition(followInfoRowItem.getClickedPosition());
+            if (followInfoListItem.getAdapter() instanceof FollowAdapter) {
+                ((FollowAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
+            } else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
+                ((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
             }
 
             getActivity().onBackPressed();

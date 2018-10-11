@@ -8,13 +8,13 @@ import java.io.Serializable;
 
 import catchu.model.FollowInfoResultArrayItem;
 
-public class FollowInfoRowItem implements Serializable {
+public class FollowInfoListItem implements Serializable {
 
     FollowInfoResultArrayItem resultArrayItem;
     int clickedPosition;
     RecyclerView.Adapter adapter;
 
-    public FollowInfoRowItem(FollowInfoResultArrayItem resultArrayItem) {
+    public FollowInfoListItem(FollowInfoResultArrayItem resultArrayItem) {
         this.resultArrayItem = resultArrayItem;
     }
 

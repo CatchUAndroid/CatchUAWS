@@ -3,8 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,13 +12,12 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.R;
 import com.uren.catchu.VideoPlay.VideoPlay;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import catchu.model.Media;
@@ -41,16 +38,16 @@ public class ViewPagerAdapter extends PagerAdapter {
     private int imageCounter;
     private int videoCounter;
     private VideoPlay videoPlay;
-    private ViewPagerClickCallBack viewPagerClickCallBack;
+    private ViewPagerClickCallback viewPagerClickCallback;
 
 
-    public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments, ViewPagerClickCallBack viewPagerClickCallBack) {
+    public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments, ViewPagerClickCallback viewPagerClickCallback) {
         this.mActivity = activity;
         this.mContext = context;
         this.attachments = attachments;
         this.imageCounter = 0;
         this.videoCounter = 0;
-        this.viewPagerClickCallBack = viewPagerClickCallBack;
+        this.viewPagerClickCallback = viewPagerClickCallback;
 
         orderMedia();
         seperateAttachmentsByTypes();
@@ -138,7 +135,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         itemView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //this will log the page number that was click
-                viewPagerClickCallBack.onViewPagerItemClicked(orderedAttachments.get(position));
+                viewPagerClickCallback.onViewPagerItemClicked(orderedAttachments.get(position));
 
 
             }

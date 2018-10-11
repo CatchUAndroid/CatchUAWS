@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
@@ -38,7 +38,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
-public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHolder> {
+public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.MyViewHolder> {
 
     private Context context;
     private List<FollowInfoResultArrayItem> followList;
@@ -46,7 +46,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public FollowAdapter(Context context, List<FollowInfoResultArrayItem> followList, ListItemClickListener listItemClickListener) {
+    public PersonListAdapter(Context context, List<FollowInfoResultArrayItem> followList, ListItemClickListener listItemClickListener) {
         this.context = context;
         this.followList = followList;
         this.listItemClickListener = listItemClickListener;

@@ -20,8 +20,10 @@ import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentListClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.LikeListClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallBack;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
@@ -169,7 +171,7 @@ public class FeedFragment extends BaseFragment {
         //postList=setJunkData();
 
 
-        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, new ViewPagerClickCallBack() {
+        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, new ViewPagerClickCallback() {
             @Override
             public void onViewPagerItemClicked(Media media) {
                 showItemInFullView(media);
@@ -180,7 +182,17 @@ public class FeedFragment extends BaseFragment {
             public void onPostLikeClicked(Post post, boolean isPostLiked) {
                 postLikeClickedProcess(post, isPostLiked);
             }
-        });
+        }, new LikeListClickCallback() {
+            @Override
+            public void onLikeListClicked(String list) {
+
+            }
+        }, new CommentListClickCallback() {
+            @Override
+            public void onCommentListClicked(String list) {
+
+            }
+        }, mFragmentNavigation);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);

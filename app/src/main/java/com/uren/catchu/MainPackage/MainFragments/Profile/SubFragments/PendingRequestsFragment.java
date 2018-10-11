@@ -17,8 +17,8 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.PendingRequestAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -96,7 +96,7 @@ public class PendingRequestsFragment extends BaseFragment {
             public void onComplete(Object object) {
                 FriendRequestList friendRequestList = (FriendRequestList) object;
                 setWarningMessageVisibility(friendRequestList);
-                pendingRequestAdapter = new PendingRequestAdapter(getActivity(), friendRequestList, new RowItemClickListener() {
+                pendingRequestAdapter = new PendingRequestAdapter(getActivity(), friendRequestList, new ListItemClickListener() {
                     @Override
                     public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
                         startFollowingInfoProcess(rowItem, clickedPosition);
@@ -137,10 +137,10 @@ public class PendingRequestsFragment extends BaseFragment {
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
 
         if (mFragmentNavigation != null) {
-            FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
-            followInfoRowItem.setAdapter(pendingRequestAdapter);
-            followInfoRowItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), ANIMATE_RIGHT_TO_LEFT);
+            FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
+            followInfoListItem.setAdapter(pendingRequestAdapter);
+            followInfoListItem.setClickedPosition(clickedPosition);
+            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 }

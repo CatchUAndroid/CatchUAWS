@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -26,34 +22,23 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.FriendRequestList;
 import catchu.model.RelationProperties;
 import catchu.model.SearchResult;
 import catchu.model.SearchResultResultArrayItem;
-import catchu.model.UserProfileProperties;
-import catchu.model.UserProfileRelationCountInfo;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.displayRounded;
-import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
 
 public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.MyViewHolder> {
 
@@ -64,17 +49,17 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     Context context;
     Activity activity;
     SearchResult searchResult;
-    RowItemClickListener rowItemClickListener;
+    ListItemClickListener listItemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid, RowItemClickListener rowItemClickListener) {
+    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid, ListItemClickListener listItemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.searchText = searchText;
         this.searchResult = searchResult;
         this.userid = userid;
-        this.rowItemClickListener = rowItemClickListener;
+        this.listItemClickListener = listItemClickListener;
         activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -131,7 +116,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 @Override
                 public void onClick(View v) {
                     FollowInfoResultArrayItem followItem = getFollowProperties();
-                    rowItemClickListener.onClick(v, followItem, position);
+                    listItemClickListener.onClick(v, followItem, position);
                 }
             });
         }

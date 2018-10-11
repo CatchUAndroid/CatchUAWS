@@ -4,7 +4,7 @@ import android.view.View;
 
 import catchu.model.FollowInfoResultArrayItem;
 
-public interface RowItemClickListener {
+public interface ListItemClickListener {
 
     void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition);
 }

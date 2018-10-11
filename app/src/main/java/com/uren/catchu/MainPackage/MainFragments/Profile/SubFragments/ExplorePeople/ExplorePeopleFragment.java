@@ -35,8 +35,8 @@ public class ExplorePeopleFragment extends BaseFragment{
     SpecialSelectTabAdapter adapter;
     Toolbar mToolBar;
 
-    FacebookFriendsFragment facebookFriendsFragment;
-    ContactFriendsFragment contactFriendsFragment;
+    //FacebookFriendsFragment facebookFriendsFragment;
+    //ContactFriendsFragment contactFriendsFragment;
 
     private EditText editTextSearch;
     private ImageView imgCancelSearch;
@@ -101,12 +101,12 @@ public class ExplorePeopleFragment extends BaseFragment{
     }
 
     private void setupViewPager(final ViewPager viewPager) {
-        facebookFriendsFragment = new FacebookFriendsFragment();
-        contactFriendsFragment = new ContactFriendsFragment();
+        //facebookFriendsFragment = new FacebookFriendsFragment();
+        //contactFriendsFragment = new ContactFriendsFragment();
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
-        adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
-        adapter.addFragment(contactFriendsFragment, getResources().getString(R.string.CONTACTS));
+        //adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
+        //adapter.addFragment(contactFriendsFragment, getResources().getString(R.string.CONTACTS));
         viewPager.setAdapter(adapter);
     }
 

@@ -23,7 +23,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderFollowings;
@@ -40,15 +40,15 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
 
     private Context context;
     GradientDrawable imageShape;
-    private RowItemClickListener rowItemClickListener;
+    private ListItemClickListener listItemClickListener;
     ReturnCallback returnCallback;
     FriendRequestList friendRequestList;
 
-    public PendingRequestAdapter(Context context, FriendRequestList friendRequestList, RowItemClickListener rowItemClickListener,
+    public PendingRequestAdapter(Context context, FriendRequestList friendRequestList, ListItemClickListener listItemClickListener,
                                  ReturnCallback returnCallback) {
         this.context = context;
         this.friendRequestList = friendRequestList;
-        this.rowItemClickListener = rowItemClickListener;
+        this.listItemClickListener = listItemClickListener;
         this.returnCallback = returnCallback;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -109,7 +109,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                             else
                                 followItem.setIsFollow(false);
 
-                            rowItemClickListener.onClick(v, followItem, position);
+                            listItemClickListener.onClick(v, followItem, position);
                         }
 
                         @Override

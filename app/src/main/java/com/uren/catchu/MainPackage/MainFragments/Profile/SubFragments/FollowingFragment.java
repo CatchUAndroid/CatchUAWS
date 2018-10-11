@@ -18,10 +18,9 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -31,7 +30,6 @@ import butterknife.ButterKnife;
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
@@ -161,7 +159,7 @@ public class FollowingFragment extends BaseFragment
             item.setIsFollow(true);
         }
 
-        RowItemClickListener rowItemClickListener = new RowItemClickListener() {
+        ListItemClickListener listItemClickListener = new ListItemClickListener() {
             @Override
             public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
                 CommonUtils.showToast(getContext(), "Clicked : " + rowItem.getName());
@@ -171,7 +169,7 @@ public class FollowingFragment extends BaseFragment
         };
 
 
-        followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray(), rowItemClickListener);
+        followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray(), listItemClickListener);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         following_recyclerView.setLayoutManager(mLayoutManager);
@@ -181,10 +179,10 @@ public class FollowingFragment extends BaseFragment
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
 
         if (mFragmentNavigation != null) {
-            FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
-            followInfoRowItem.setAdapter(followAdapter);
-            followInfoRowItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), ANIMATE_RIGHT_TO_LEFT);
+            FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
+            followInfoListItem.setAdapter(followAdapter);
+            followInfoListItem.setClickedPosition(clickedPosition);
+            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
