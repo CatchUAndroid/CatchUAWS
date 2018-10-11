@@ -120,12 +120,31 @@ public class AccountHolderFollowings {
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public static void updateFriendListByFollowType(String requestType, FollowInfoResultArrayItem followInfoResultArrayItem) {
+    public static void updateFriendListByFollowType(String requestType, final FollowInfoResultArrayItem followInfoResultArrayItem) {
         if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY))
-            accountHolderFollowings.addFollowing(followInfoResultArrayItem);
-        else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
-            accountHolderFollowings.removeFollowing(followInfoResultArrayItem.getUserid());
+            AccountHolderFollowings.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    AccountHolderFollowings.addFollowing(followInfoResultArrayItem);
+                }
 
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            });
+        else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
+            AccountHolderFollowings.getInstance(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    AccountHolderFollowings.removeFollowing(followInfoResultArrayItem.getUserid());
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            });
         }
     }
 }

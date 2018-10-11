@@ -330,10 +330,10 @@ public class ProfileFragment extends BaseFragment
             Log.i("->UserRelationCountInfo", user.getRelationCountInfo().toString());
 
             if (user.getRelationCountInfo().getFollowerCount() != null && !user.getRelationCountInfo().getFollowerCount().trim().isEmpty())
-                txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + getActivity().getResources().getString(R.string.LOWER_FOLLOWER));
+                txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + getActivity().getResources().getString(R.string.followers));
 
             if (user.getRelationCountInfo().getFollowingCount() != null && !user.getRelationCountInfo().getFollowingCount().trim().isEmpty())
-                txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.LOWER_FOLLOWING));
+                txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.followings));
         }
     }
 

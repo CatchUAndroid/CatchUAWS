@@ -27,6 +27,8 @@
     <string name="upperAddFriend">ADD FRIEND</string>
     <string name="friends">FRIENDS</string>
     <string name="groups">GROUPS</string>
+    <string name="FACEBOOK">FACEBOOK</string>
+    <string name="CONTACTS">CONTACTS</string>
     <string name="error">Error:</string>
     <string name="errorUpper">ERROR</string>
     <string name="info">Info:</string>
@@ -85,6 +87,7 @@
     <string name="UPDATING">Updating...</string>
     <string name="EXPLORE_PEOPLE">Explore People</string>
     <string name="VIEW_PENDING_REQUEST">View Pending Requests</string>
+    <string name="THERE_IS_NO_GROUP_CREATE_OR_INCLUDE">There is no group you created or included</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -129,8 +132,6 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="feed">Feeds</string>
-    <string name="LOWER_FOLLOWER">follower</string>
-    <string name="LOWER_FOLLOWING">following</string>
     <string name="PENDING_REQUESTS">Pending Requests</string>
     <string name="THERE_IS_NO_PENDING_REQUEST">There is no pending request</string>
 

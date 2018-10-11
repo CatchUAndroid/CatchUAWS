@@ -245,7 +245,13 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             setName();
             UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                     selectedFriend.getName(), shortenTextView, profilePicImgView);
-            UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn);
+
+            if(selectedFriend.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
+                statuDisplayBtn.setVisibility(View.GONE);
+            else {
+                UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn);
+                statuDisplayBtn.setVisibility(View.VISIBLE);
+            }
         }
 
         public void setUserName() {

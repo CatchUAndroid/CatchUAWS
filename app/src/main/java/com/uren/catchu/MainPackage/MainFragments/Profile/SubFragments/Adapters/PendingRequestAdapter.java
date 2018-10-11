@@ -14,17 +14,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFollowers;
@@ -32,33 +30,26 @@ import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.AccountHolderPendings;
 
-import java.util.List;
-
-import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.FriendList;
 import catchu.model.FriendRequestList;
-import catchu.model.RelationProperties;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAdapter.MyViewHolder> {
 
     private Context context;
     GradientDrawable imageShape;
     private RowItemClickListener rowItemClickListener;
+    ReturnCallback returnCallback;
     FriendRequestList friendRequestList;
 
-    public PendingRequestAdapter(Context context, FriendRequestList friendRequestList, RowItemClickListener rowItemClickListener) {
+    public PendingRequestAdapter(Context context, FriendRequestList friendRequestList, RowItemClickListener rowItemClickListener,
+                                 ReturnCallback returnCallback) {
         this.context = context;
         this.friendRequestList = friendRequestList;
         this.rowItemClickListener = rowItemClickListener;
+        this.returnCallback = returnCallback;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
     }
@@ -158,6 +149,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                             addFollower();
                             notifyItemRemoved(position);
                             notifyItemRangeChanged(position, getItemCount());
+                            returnCallback.onReturn(AccountHolderPendings.getPendingList());
                         }
 
                         @Override

@@ -2,6 +2,7 @@ package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -94,6 +95,14 @@ public class AccountHolderFacebookFriends {
                         if (object != null) {
                             try {
                                 JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
+
+                                Log.i("Info", "");
+
+
+
+
+
+
                                 /*FacebookFriendList.setInstance(null);
 
                                 friendListSize = friendList.length();
@@ -126,31 +135,4 @@ public class AccountHolderFacebookFriends {
         graphRequest.executeAsync();
     }
 
-    public static void updateFriendListByFollowType(String requestType, final FollowInfoResultArrayItem followInfoResultArrayItem) {
-        if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY))
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    AccountHolderFollowings.addFollowing(followInfoResultArrayItem);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
-                }
-            });
-        else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    AccountHolderFollowings.removeFollowing(followInfoResultArrayItem.getUserid());
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
-                }
-            });
-        }
-    }
 }

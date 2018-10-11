@@ -15,7 +15,9 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 
+import catchu.model.RelationProperties;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 import catchu.model.UserProfileRelationCountInfo;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
@@ -36,6 +38,11 @@ public class AccountHolderInfo {
 
     public static AccountHolderInfo getInstance() {
         if (accountHolderInfoInstance == null) {
+            userProfile = new UserProfile();
+            UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
+            UserProfileProperties userProfileProperties = new UserProfileProperties();
+            userProfile.setRelationCountInfo(userProfileRelationCountInfo);
+            userProfile.setUserInfo(userProfileProperties);
             accountHolderInfoInstance = new AccountHolderInfo();
         }
         return accountHolderInfoInstance;
