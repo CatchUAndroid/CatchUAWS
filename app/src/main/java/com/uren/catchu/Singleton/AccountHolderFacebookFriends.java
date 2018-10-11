@@ -10,6 +10,7 @@ import com.facebook.GraphResponse;
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.ProviderListRequestProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
 
 import org.json.JSONArray;
@@ -21,12 +22,16 @@ import java.util.List;
 
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.Provider;
+import catchu.model.ProviderList;
 import catchu.model.User;
 import catchu.model.UserListResponse;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
+import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 
 public class AccountHolderFacebookFriends {
 
@@ -42,7 +47,7 @@ public class AccountHolderFacebookFriends {
             userListResponse = new UserListResponse();
             userListResponse.setItems(new ArrayList<User>());
             accountHolderFacebookFriends = new AccountHolderFacebookFriends();
-        }else
+        } else
             mCompleteCallback.onComplete(userListResponse);
     }
 
@@ -63,30 +68,6 @@ public class AccountHolderFacebookFriends {
     }
 
     private void getFacebookFriends() {
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startGetFacebookFriends(token);
-            }
-        });
-    }
-
-    /*public static boolean isFacebookFriend(String userid){
-        boolean isFoolowing = false;
-        if (userid != null && !userid.trim().isEmpty()) {
-            int index = 0;
-            for (User user: userListResponse.getItems()) {
-                if (user.getUserid().equals(userid)) {
-                    isFoolowing = true;
-                    break;
-                }
-                index = index + 1;
-            }
-        }
-        return isFoolowing;
-    }*/
-
-    private void startGetFacebookFriends(String token) {
         GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -98,39 +79,26 @@ public class AccountHolderFacebookFriends {
 
                                 Log.i("Info", "");
 
+                                ProviderList providerList = new ProviderList();
+                                List<Provider> list = new ArrayList<>();
+
                                 for (int i = 0; i < friendList.length(); i++) {
                                     JSONObject jsonObject = friendList.getJSONObject(i);
                                     String providerId = (String) jsonObject.get("id");
 
+                                    Provider provider = new Provider();
+                                    provider.setProviderid(providerId);
+                                    provider.setProviderType(PROVIDER_TYPE_FACEBOOK);
 
+                                    list.add(provider);
                                 }
 
-
-
-
-
-
-                                /*FacebookFriendList.setInstance(null);
-
-                                friendListSize = friendList.length();
-
-                                mProgressDialog.setMessage("Yükleniyor...");
-                                mProgressDialog.show();
-
-                                for (int i = 0; i < friendList.length(); i++) {
-                                    JSONObject jsonObject = friendList.getJSONObject(i);
-                                    String friendName = (String) jsonObject.get(name);
-                                    String friendProviderID = (String) jsonObject.get("id");
-
-                                    if (checkFriendByProviderId(friendProviderID))
-                                        setFaceFriendToInviteList(friendProviderID, friendName, Yes);
-                                    else
-                                        setFaceFriendToInviteList(friendProviderID, friendName, null);
-
-                                }*/
+                                providerList.setItems(list);
+                                providerListProcess(providerList);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                mCompleteCallback.onFailed(e);
                             }
                         }
                     }
@@ -140,6 +108,36 @@ public class AccountHolderFacebookFriends {
         parameters.putString("fields", "friends");
         graphRequest.setParameters(parameters);
         graphRequest.executeAsync();
+    }
+
+    public void providerListProcess(final ProviderList providerList) {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                ProviderListRequestProcess providerListRequestProcess = new ProviderListRequestProcess(new OnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+                        if (object != null) {
+                            userListResponse = (UserListResponse) object;
+                            mCompleteCallback.onComplete(userListResponse);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        mCompleteCallback.onFailed(e);
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+
+                    }
+                }, providerList, token, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+
+                providerListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
     }
 
 }

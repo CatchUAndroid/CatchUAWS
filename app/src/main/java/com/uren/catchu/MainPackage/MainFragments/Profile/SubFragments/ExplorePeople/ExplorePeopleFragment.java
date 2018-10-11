@@ -35,6 +35,9 @@ public class ExplorePeopleFragment extends BaseFragment{
     SpecialSelectTabAdapter adapter;
     Toolbar mToolBar;
 
+    FacebookFriendsFragment facebookFriendsFragment;
+    ContactFriendsFragment contactFriendsFragment;
+
     //FacebookFriendsFragment facebookFriendsFragment;
     //ContactFriendsFragment contactFriendsFragment;
 
@@ -101,12 +104,12 @@ public class ExplorePeopleFragment extends BaseFragment{
     }
 
     private void setupViewPager(final ViewPager viewPager) {
-        //facebookFriendsFragment = new FacebookFriendsFragment();
-        //contactFriendsFragment = new ContactFriendsFragment();
+        facebookFriendsFragment = new FacebookFriendsFragment();
+        contactFriendsFragment = new ContactFriendsFragment();
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
-        //adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
-        //adapter.addFragment(contactFriendsFragment, getResources().getString(R.string.CONTACTS));
+        adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
+        adapter.addFragment(contactFriendsFragment, getResources().getString(R.string.CONTACTS));
         viewPager.setAdapter(adapter);
     }
 
@@ -119,14 +122,14 @@ public class ExplorePeopleFragment extends BaseFragment{
                 switch (tab.getPosition()) {
 
                     case TAB_FACEBOOK:
-                        rl.setVisibility(View.VISIBLE);
-                        r2.setVisibility(View.GONE);
+                        /*rl.setVisibility(View.VISIBLE);
+                        r2.setVisibility(View.GONE);*/
                         selectedProperty = TAB_FACEBOOK;
                         break;
 
                     case TAB_CONTACTS:
-                        rl.setVisibility(View.VISIBLE);
-                        r2.setVisibility(View.GONE);
+                       /* rl.setVisibility(View.VISIBLE);
+                        r2.setVisibility(View.GONE);*/
                         selectedProperty = TAB_CONTACTS;
                         break;
 
@@ -171,40 +174,21 @@ public class ExplorePeopleFragment extends BaseFragment{
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                tempSearchText = editTextSearch.getText().toString();
-
-                if (tempSearchText.matches("")) {
-                    if (!refreshSearch) return;
-                    //searchForPersons("A");
-                    searchText = tempSearchText;
-                    return;
-                }
-
-                if (!tempSearchText.matches(searchText)) {
-                    //searchForPersons(tempSearchText);
-                    imgCancelSearch.setVisibility(View.VISIBLE);
-                    searchText = tempSearchText;
-                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+                if (!s.toString().trim().isEmpty())
+                    imgCancelSearch.setVisibility(View.VISIBLE);
+                else
+                    imgCancelSearch.setVisibility(View.GONE);
 
+                if(selectedProperty == TAB_FACEBOOK){
+                    ((FacebookFriendsFragment)adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
+                }else if(selectedProperty == TAB_CONTACTS){
+                    //((ContactFriendsFragment)adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
+                }
             }
         });
     }
-
-
-    /*public void searchForPersons(String searchText) {
-        adapter.updateFragment(personFragmentTab, personFragment);
-        personFragment.getSearchResult(userid, searchText);
-    }
-
-    public static void reloadAdapter() {
-        if (adapter != null)
-            adapter.notifyDataSetChanged();
-    }*/
-
-
 }
