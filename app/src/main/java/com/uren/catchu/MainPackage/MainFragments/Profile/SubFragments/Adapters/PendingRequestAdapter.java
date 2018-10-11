@@ -144,7 +144,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                     AccountHolderPendings.getInstance(new CompleteCallback() {
                         @Override
                         public void onComplete(Object object) {
-                            AccountHolderInfo.updateAccountHolderFollowCnt(FRIEND_ACCEPT_REQUEST);
+                            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(FRIEND_ACCEPT_REQUEST);
                             AccountHolderPendings.removePending(userProfileProperties.getUserid());
                             addFollower();
                             notifyItemRemoved(position);

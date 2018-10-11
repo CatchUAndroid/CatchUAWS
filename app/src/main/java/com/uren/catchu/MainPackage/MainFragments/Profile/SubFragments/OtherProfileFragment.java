@@ -210,7 +210,7 @@ public class OtherProfileFragment extends BaseFragment
 
         txtFollowerCnt.setClickable(false);
         txtFollowingCnt.setClickable(false);
-        UserDataUtil.updateFollowButton(getActivity(), selectedProfile.getIsFollow(), selectedProfile.getIsPendingRequest(), btnFollowStatus);
+        UserDataUtil.updateFollowButton(getActivity(), selectedProfile.getIsFollow(), selectedProfile.getIsPendingRequest(), btnFollowStatus, true);
         getProfileDetail(selectedProfile.getUserid());
     }
 
@@ -377,7 +377,7 @@ public class OtherProfileFragment extends BaseFragment
                 break;
         }
 
-        UserDataUtil.updateFollowButton(getActivity(), selectedProfile.getIsFollow(), selectedProfile.getIsPendingRequest(), btnFollowStatus);
+        UserDataUtil.updateFollowButton(getActivity(), selectedProfile.getIsFollow(), selectedProfile.getIsPendingRequest(), btnFollowStatus, true);
     }
 
     private void openDialogBox() {

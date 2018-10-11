@@ -141,7 +141,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
             this.position = position;
             UserDataUtil.setProfilePicture(context, followListItem.getProfilePhotoUrl(),
                     followListItem.getName(), shortUserNameTv, profileImage);
-            UserDataUtil.updateFollowButton(context, followListItem.getIsFollow(), followListItem.getIsPendingRequest(), btnFollowStatus);
+            UserDataUtil.updateFollowButton(context, followListItem.getIsFollow(), followListItem.getIsPendingRequest(), btnFollowStatus, true);
         }
 
         private void openDialogBox() {
@@ -200,7 +200,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
         }
 
         private void updateFollowUI(String updateType) {
-            AccountHolderInfo.updateAccountHolderFollowCnt(updateType);
+            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(updateType);
             updateFollowTypeAfterOperation(updateType);
             notifyItemChanged(position, followListItem.getIsPendingRequest());
             notifyItemChanged(position, followListItem.getIsFollow());

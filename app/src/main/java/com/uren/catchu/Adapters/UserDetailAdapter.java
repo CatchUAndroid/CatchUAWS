@@ -191,8 +191,8 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                     selectedFriend.setPendingFriendRequest(relationProperties.getPendingFriendRequest());
                     searchResult.getResultArray().remove(position);
                     searchResult.getResultArray().add(position, selectedFriend);
-                    UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn);
-                    AccountHolderInfo.updateAccountHolderFollowCnt(requestType);
+                    UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn, true);
+                    AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
                     updateFollowingList(requestType);
                     statuDisplayBtn.setEnabled(true);
                 }
@@ -249,7 +249,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             if(selectedFriend.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
                 statuDisplayBtn.setVisibility(View.GONE);
             else {
-                UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn);
+                UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn, false);
                 statuDisplayBtn.setVisibility(View.VISIBLE);
             }
         }
