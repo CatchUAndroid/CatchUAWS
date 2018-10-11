@@ -21,6 +21,8 @@ import java.util.List;
 
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.User;
+import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
@@ -28,9 +30,8 @@ import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 public class AccountHolderFacebookFriends {
 
-
     private static AccountHolderFacebookFriends accountHolderFacebookFriends = null;
-    private static FollowInfo followInfo;
+    private static UserListResponse userListResponse;
     private static CompleteCallback mCompleteCallback;
 
     public static void getInstance(CompleteCallback completeCallback) {
@@ -38,31 +39,30 @@ public class AccountHolderFacebookFriends {
         mCompleteCallback = completeCallback;
 
         if (accountHolderFacebookFriends == null) {
-            followInfo = new FollowInfo();
-            List<FollowInfoResultArrayItem> followInfoResultArrayItems = new ArrayList<>();
-            followInfo.setResultArray(followInfoResultArrayItems);
+            userListResponse = new UserListResponse();
+            userListResponse.setItems(new ArrayList<User>());
             accountHolderFacebookFriends = new AccountHolderFacebookFriends();
         }else
-            mCompleteCallback.onComplete(followInfo);
+            mCompleteCallback.onComplete(userListResponse);
     }
 
     public AccountHolderFacebookFriends() {
-        getFriends();
+        getFacebookFriends();
     }
 
-    public static FollowInfo getFacebookFriendsList() {
-        return followInfo;
+    public static UserListResponse getFacebookFriendsList() {
+        return userListResponse;
     }
 
     public int getSize() {
-        return followInfo.getResultArray().size();
+        return userListResponse.getItems().size();
     }
 
     public static void setInstance(AccountHolderFacebookFriends instance) {
         accountHolderFacebookFriends = instance;
     }
 
-    private void getFriends() {
+    private void getFacebookFriends() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -71,12 +71,12 @@ public class AccountHolderFacebookFriends {
         });
     }
 
-    public static boolean isFacebookFriend(String userid){
+    /*public static boolean isFacebookFriend(String userid){
         boolean isFoolowing = false;
         if (userid != null && !userid.trim().isEmpty()) {
             int index = 0;
-            for (FollowInfoResultArrayItem followInfoResultArrayItem : followInfo.getResultArray()) {
-                if (followInfoResultArrayItem.getUserid().equals(userid)) {
+            for (User user: userListResponse.getItems()) {
+                if (user.getUserid().equals(userid)) {
                     isFoolowing = true;
                     break;
                 }
@@ -84,7 +84,7 @@ public class AccountHolderFacebookFriends {
             }
         }
         return isFoolowing;
-    }
+    }*/
 
     private void startGetFacebookFriends(String token) {
         GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
@@ -97,6 +97,13 @@ public class AccountHolderFacebookFriends {
                                 JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
 
                                 Log.i("Info", "");
+
+                                for (int i = 0; i < friendList.length(); i++) {
+                                    JSONObject jsonObject = friendList.getJSONObject(i);
+                                    String providerId = (String) jsonObject.get("id");
+
+
+                                }
 
 
 
