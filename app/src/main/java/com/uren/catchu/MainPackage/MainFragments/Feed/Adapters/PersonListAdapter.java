@@ -128,7 +128,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
             this.position = position;
             UserDataUtil.setProfilePicture(context, followListItem.getProfilePhotoUrl(),
                     followListItem.getName(), shortUserNameTv, profileImage);
-            UserDataUtil.updateFollowButton(context, followListItem.getIsFollow(), followListItem.getIsPendingRequest(), btnFollowStatus);
+            UserDataUtil.updateFollowButton(context, followListItem.getIsFollow(), followListItem.getIsPendingRequest(), btnFollowStatus, true);
         }
 
         private void openDialogBox() {
