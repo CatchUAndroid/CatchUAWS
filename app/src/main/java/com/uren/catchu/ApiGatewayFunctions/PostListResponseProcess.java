@@ -69,7 +69,6 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
         if (mCallBack != null) {
             mCallBack.onTaskContinue();
         }
-
     }
 
     @Override
