@@ -48,22 +48,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     private Activity mActivity;
     private Context mContext;
     private List<Post> postList;
-    private ViewPagerClickCallback viewPagerClickCallback;
-    private PostLikeClickCallback postLikeClickCallback;
-    private LikeListClickCallback likeListClickCallback;
-    private CommentListClickCallback commentListClickCallback;
     BaseFragment.FragmentNavigation fragmentNavigation;
 
-    public FeedAdapter(Activity activity, Context context, List<Post> postList, ViewPagerClickCallback viewPagerClickCallback, PostLikeClickCallback postLikeClickCallback, LikeListClickCallback likeListClickCallback,
-                       CommentListClickCallback commentListClickCallback,
+    public FeedAdapter(Activity activity, Context context, List<Post> postList,
                        BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
         this.mContext = context;
         this.postList = postList;
-        this.viewPagerClickCallback = viewPagerClickCallback;
-        this.postLikeClickCallback = postLikeClickCallback;
-        this.likeListClickCallback = likeListClickCallback;
-        this.commentListClickCallback = commentListClickCallback;
         this.fragmentNavigation = fragmentNavigation;
     }
 
@@ -74,7 +65,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         return new MyViewHolder(itemView);
     }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
@@ -130,18 +120,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                     if (isPostLiked) {
                         isPostLiked = false;
                         setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                        postLikeClickCallback.onPostLikeClicked(post, false);
-                        //postLikeClickedProcess(post, isPostLiked);
-
-                        //PostHelper.postLikeClickedProcess(mContext, post, isPostLiked);
-                        //PostHelper.LikeClicked(mContext, post, isPostLiked);
-                        //PostHelper.LikeClicked.setInstance();
+                        PostHelper.LikeClicked.startProcess(mContext, post, isPostLiked);
                     } else {
                         isPostLiked = true;
                         setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
-                        postLikeClickCallback.onPostLikeClicked(post, true);
-                        //postLikeClickedProcess(post, isPostLiked);
-                        //PostHelper.postLikeClickedProcess(mContext, post, isPostLiked);
+                        PostHelper.LikeClicked.startProcess(mContext, post, isPostLiked);
                     }
 
                 }
@@ -151,7 +134,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    likeListClickCallback.onLikeListClicked("like");
+                    PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation);
                 }
             });
 
@@ -159,7 +142,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    commentListClickCallback.onCommentListClicked("comment");
+                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation);
                 }
             });
 
@@ -228,7 +211,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
         private void setViewPager(Post post) {
 
-            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), viewPagerClickCallback));
+            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
             viewPager.setOffscreenPageLimit(post.getAttachments().size());
             ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
 

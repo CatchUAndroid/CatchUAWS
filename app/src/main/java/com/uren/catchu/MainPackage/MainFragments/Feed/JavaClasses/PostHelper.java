@@ -1,51 +1,65 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
+import android.view.View;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
+import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
+import catchu.model.Media;
 import catchu.model.Post;
+import catchu.model.PostListResponse;
 import catchu.model.User;
+
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 public class PostHelper {
 
     public static class LikeClicked {
 
-        Context context;
-        Post post;
-        boolean isPostLiked;
+        static Post post;
+        static boolean isPostLiked;
 
-        public void setInstance(Context context, Post post, boolean isPostLiked){
-            this.context = context;
-            this.post = post;
-            this.isPostLiked = isPostLiked;
+        public static final void startProcess(Context context1, Post post1, boolean isPostLiked1){
+            post = post1;
+            isPostLiked = isPostLiked1;
 
-            LikeClicked likeClicked = new LikeClicked();
+            LikeClicked likeClicked = new LikeClicked(context1);
         }
 
-        public LikeClicked() {
-            postLikeClickedProcess();
+        private LikeClicked(Context context) {
+            postLikeClickedProcess(context);
         }
 
-        public void postLikeClickedProcess() {
+        private void postLikeClickedProcess(final Context context) {
 
             AccountHolderInfo.getToken(new TokenCallback() {
                 @Override
                 public void onTokenTaken(String token) {
-                    startPostLikeClickedProcess(context, post, isPostLiked, token);
+                    startPostLikeClickedProcess(context, token);
                 }
             });
 
         }
 
-        private void startPostLikeClickedProcess(Context context, Post post, boolean isPostLiked, String token) {
+        private void startPostLikeClickedProcess(Context context, String token) {
 
             BaseRequest baseRequest = getBaseRequest();
             String postId = post.getPostid();
@@ -74,7 +88,6 @@ public class PostHelper {
 
             postLikeProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-
         }
 
         private BaseRequest getBaseRequest() {
@@ -86,6 +99,94 @@ public class PostHelper {
 
             return baseRequest;
         }
+    }
+
+    public static class LikeListClicked {
+
+        static BaseFragment.FragmentNavigation fragmentNavigation;
+
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav){
+
+            fragmentNavigation = fragmNav;
+
+            LikeListClicked likeListClicked = new LikeListClicked(context);
+        }
+
+        private LikeListClicked(Context context) {
+            postLikeListClickedProcess(context);
+        }
+
+        private void postLikeListClickedProcess(Context context) {
+
+            if (fragmentNavigation != null) {
+                fragmentNavigation.pushFragment(new PersonListFragment(), ANIMATE_DOWN_TO_UP);
+            }
+
+
+        }
+
+
+    }
+
+    public static class CommentListClicked {
+
+        static BaseFragment.FragmentNavigation fragmentNavigation;
+
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav){
+
+            fragmentNavigation = fragmNav;
+
+            CommentListClicked commentListClicked = new CommentListClicked(context);
+        }
+
+        private CommentListClicked(Context context) {
+            postCommentListClickedProcess(context);
+        }
+
+        private void postCommentListClickedProcess(Context context) {
+
+            if (fragmentNavigation != null) {
+                fragmentNavigation.pushFragment(new PersonListFragment(), ANIMATE_DOWN_TO_UP);
+            }
+
+        }
+
+
+    }
+
+    public static class ViewPagerItemClicked {
+
+        static Media media;
+
+        public static final void startProcess(Activity activity, Context context, Media m){
+
+            media = m;
+            ViewPagerItemClicked viewPagerItemClicked = new ViewPagerItemClicked(activity, context);
+        }
+
+        private ViewPagerItemClicked(Activity activity, Context context) {
+
+            showItemInFullView(activity,  media);
+
+        }
+
+        private void showItemInFullView(Activity activity, Media media) {
+
+            PostItem.getInstance().setMedia(media);
+
+            if (media.getType().equals(IMAGE_TYPE)) {
+                Intent intent = new Intent(activity, ImageActivity.class);
+                activity.startActivity(intent);
+            } else if (media.getType().equals(VIDEO_TYPE)) {
+                Intent intent = new Intent(activity, VideoActivity.class);
+                activity.startActivity(intent);
+            } else {
+                Log.e("info", "unknown media type detected");
+            }
+
+        }
+
+
     }
 
 

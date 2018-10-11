@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
 import com.uren.catchu.VideoPlay.VideoPlay;
 
@@ -38,16 +39,13 @@ public class ViewPagerAdapter extends PagerAdapter {
     private int imageCounter;
     private int videoCounter;
     private VideoPlay videoPlay;
-    private ViewPagerClickCallback viewPagerClickCallback;
 
-
-    public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments, ViewPagerClickCallback viewPagerClickCallback) {
+    public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments) {
         this.mActivity = activity;
         this.mContext = context;
         this.attachments = attachments;
         this.imageCounter = 0;
         this.videoCounter = 0;
-        this.viewPagerClickCallback = viewPagerClickCallback;
 
         orderMedia();
         seperateAttachmentsByTypes();
@@ -135,12 +133,10 @@ public class ViewPagerAdapter extends PagerAdapter {
         itemView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //this will log the page number that was click
-                viewPagerClickCallback.onViewPagerItemClicked(orderedAttachments.get(position));
-
-
+                PostHelper.ViewPagerItemClicked.startProcess(mActivity, mContext, orderedAttachments.get(position));
+                //viewPagerClickCallback.onViewPagerItemClicked(orderedAttachments.get(position));
             }
         });
-
 
         collection.addView(itemView);
         return itemView;

@@ -37,8 +37,10 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
 
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
@@ -248,6 +250,18 @@ public class NextActivity extends AppCompatActivity implements
                 transactionOptions.exitAnimation = R.anim.slide_to_right;
                 transactionOptions.popEnterAnimation = R.anim.slide_from_right;
                 transactionOptions.popExitAnimation = R.anim.slide_to_left;
+                break;
+            case ANIMATE_DOWN_TO_UP:
+                transactionOptions.enterAnimation = R.anim.slide_from_down;
+                transactionOptions.exitAnimation = R.anim.slide_to_up;
+                transactionOptions.popEnterAnimation = R.anim.slide_from_up;
+                transactionOptions.popExitAnimation = R.anim.slide_to_down;
+                break;
+            case ANIMATE_UP_TO_DOWN:
+                transactionOptions.enterAnimation = R.anim.slide_from_up;
+                transactionOptions.exitAnimation = R.anim.slide_to_down;
+                transactionOptions.popEnterAnimation = R.anim.slide_from_down;
+                transactionOptions.popExitAnimation = R.anim.slide_to_up;
                 break;
             default:
                 transactionOptions = null;

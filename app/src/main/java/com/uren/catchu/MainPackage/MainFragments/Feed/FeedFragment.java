@@ -24,6 +24,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentListClic
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.LikeListClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
@@ -114,7 +115,7 @@ public class FeedFragment extends BaseFragment {
         setLocationInfo();
 
         //todo NT - pagination yapılacak
-        String perpage = "5";
+        String perpage = "10";
         String page = "1";
 
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
@@ -167,33 +168,12 @@ public class FeedFragment extends BaseFragment {
 
         List<Post> postList;
         postList= postListResponse.getItems();
-        logPostId(postList); //todo NT - silinecek
+
         //postList=setJunkData();
+        //logPostId(postList); //todo NT - silinecek
 
 
-        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, new ViewPagerClickCallback() {
-            @Override
-            public void onViewPagerItemClicked(Media media) {
-                showItemInFullView(media);
-            }
-
-        }, new PostLikeClickCallback() {
-            @Override
-            public void onPostLikeClicked(Post post, boolean isPostLiked) {
-                postLikeClickedProcess(post, isPostLiked);
-            }
-        }, new LikeListClickCallback() {
-            @Override
-            public void onLikeListClicked(String list) {
-
-            }
-        }, new CommentListClickCallback() {
-            @Override
-            public void onCommentListClicked(String list) {
-
-            }
-        }, mFragmentNavigation);
-
+        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, mFragmentNavigation);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
 
@@ -267,7 +247,7 @@ public class FeedFragment extends BaseFragment {
 
         ArrayList<Post> postList = new ArrayList<Post>();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1; i++) {
             postList.add(post);
         }
 
@@ -293,64 +273,5 @@ public class FeedFragment extends BaseFragment {
 
     }
 
-
-    private void showItemInFullView(Media media) {
-
-        PostItem.getInstance().setMedia(media);
-
-        if (media.getType().equals(IMAGE_TYPE)) {
-            Intent intent = new Intent(getActivity(), ImageActivity.class);
-            startActivity(intent);
-        } else if (media.getType().equals(VIDEO_TYPE)) {
-            Intent intent = new Intent(getActivity(), VideoActivity.class);
-            startActivity(intent);
-        } else {
-            Log.e("info", "unknown media type detected");
-        }
-
-    }
-
-    private void postLikeClickedProcess(final Post post, final boolean isPostLiked) {
-
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startPostLikeClickedProcess(post, isPostLiked, token);
-            }
-        });
-
-    }
-
-    private void startPostLikeClickedProcess(Post post, boolean isPostLiked, String token) {
-
-        BaseRequest baseRequest = getBaseRequest();
-        String postId = post.getPostid();
-        String commentId = null;
-
-        PostLikeProcess postLikeProcess = new PostLikeProcess(getContext(), new OnEventListener<BaseResponse>() {
-            @Override
-            public void onSuccess(BaseResponse resp) {
-
-                if (resp == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("PostLikeProcess");
-                } else {
-                    CommonUtils.LOG_OK("PostLikeProcess");
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("PostLikeProcess", e.toString());
-            }
-
-            @Override
-            public void onTaskContinue() {
-            }
-        }, postId, commentId, baseRequest, isPostLiked, token);
-
-        postLikeProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
-    }
 
 }
