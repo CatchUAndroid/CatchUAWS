@@ -48,7 +48,7 @@ public class PostLikeProcess extends AsyncTask<Void, Void, BaseResponse> {
             } else {
                 //call post dislike service
                 Log.i("info", "goes server for DISLIKE");
-                baseResponse = instance.client.postsPostidCommentsCommentidLikeDelete(postId, commentId, baseRequest, token);
+                baseResponse = instance.client.postsPostidCommentsCommentidLikeDelete(postId, token, commentId, baseRequest);
             }
 
             if (baseResponse.getError().getCode() == RESPONSE_OK) {

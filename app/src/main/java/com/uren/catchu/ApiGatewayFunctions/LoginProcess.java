@@ -20,12 +20,14 @@ public class LoginProcess extends AsyncTask<Void, Void, BaseResponse> {
     public Exception mException;
     public BaseRequest baseRequest;
     private String token;
+    private String userId;
 
-    public LoginProcess(Context context, OnEventListener callback, BaseRequest baseRequest, String token) {
+    public LoginProcess(Context context, OnEventListener callback, String userId, BaseRequest baseRequest, String token) {
         mCallBack = callback;
         mContext = context;
         this.baseRequest = baseRequest;
         this.token = token;
+        this.userId = userId;
     }
 
 
@@ -36,7 +38,7 @@ public class LoginProcess extends AsyncTask<Void, Void, BaseResponse> {
 
         try {
 
-            BaseResponse rsp = instance.client.loginPost(token, baseRequest);
+            BaseResponse rsp = instance.client.loginPost(userId, token, baseRequest);
 
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
                 return rsp;

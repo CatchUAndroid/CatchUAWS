@@ -23,6 +23,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
+import catchu.model.Provider;
 import catchu.model.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         User user = new User();
         Bundle extras = getIntent().getExtras();
+        Provider provider = new Provider();
 
         if (extras != null) {
 
@@ -98,13 +100,18 @@ public class MainActivity extends AppCompatActivity {
             user.setUsername(loginUser.getUsername());
             user.setEmail(loginUser.getEmail());
 
+
             if (loginUser.getName() != null && !loginUser.getName().isEmpty()) {
                 user.setName(loginUser.getName());
             }
-
             if (loginUser.getProfilePhotoUrl() != null && !loginUser.getProfilePhotoUrl().isEmpty()) {
                 user.setProfilePhotoUrl(loginUser.getProfilePhotoUrl());
             }
+
+            //Provider
+            provider.setProviderid(loginUser.getProviderId());
+            provider.setProviderType(loginUser.getProviderType());
+            user.setProvider(provider);
 
         } else {
 
@@ -115,6 +122,9 @@ public class MainActivity extends AppCompatActivity {
             user.setUserid(firebaseAuth.getCurrentUser().getUid());
             user.setEmail(firebaseAuth.getCurrentUser().getEmail());
             user.setUsername("default");
+            provider.setProviderid("");
+            provider.setProviderType("");
+            user.setProvider(provider);
 
         }
 
@@ -144,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTaskContinue() {
 
             }
-        }, baseRequest, token);
+        }, user.getUserid(), baseRequest, token);
 
         loginProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
