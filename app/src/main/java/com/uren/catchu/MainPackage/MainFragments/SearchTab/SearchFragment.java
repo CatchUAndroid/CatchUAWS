@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,7 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
@@ -39,6 +45,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.ButterKnife;
 import catchu.model.FriendList;
 import catchu.model.SearchResult;
+import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.propGroups;
@@ -46,33 +53,26 @@ import static com.uren.catchu.Constants.StringConstants.propPersons;
 import static com.uren.catchu.Constants.StringConstants.verticalShown;
 
 
-public class SearchFragment extends BaseFragment implements IOnBackPressed {
+public class SearchFragment extends BaseFragment {
 
     private Context context;
 
     View view;
     private ViewPager viewPager;
     private TabLayout tabLayout;
-
-    public static String selectedProperty;
-
-    SearchView searchView;
-
-    SearchResult searchResult;
+    public String selectedProperty;
     static SpecialSelectTabAdapter adapter;
 
-    private static final int personFragmentTab = 0;
-    private static final int groupFragmentTab = 1;
+    private final int personFragmentTab = 0;
+    private final int groupFragmentTab = 1;
 
     String userid;
-    MenuItem searchItem;
     Toolbar mToolBar;
 
     //nurullah - person ve group fragmentları tek bir tane yaratılacak şekilde düzenlendi
     private PersonFragment personFragment;
     private GroupFragment groupFragment;
 
-    //Search bar degiskenleri
     private EditText editTextSearch;
     private ImageView imgCancelSearch;
     private String searchText = "";
@@ -83,8 +83,6 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     private Boolean refreshSearch = true;
 
     PermissionModule permissionModule;
-
-    // TODO(BUG) - Tab degistirip tekrar search e geldigimizde Person fragment ve Group Fragment funclar calismiyor
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -118,17 +116,58 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     }
 
     private void initializeItems() {
-        userid = AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid();
+        viewPager = view.findViewById(R.id.viewpager);
+        tabLayout = view.findViewById(R.id.tabs);
         overwriteToolbar();
 
-        viewPager = view.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid() != null) {
+            userid = AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid();
+            setupViewPager(viewPager);
+            tabLayout.setupWithViewPager(viewPager);
+        } else
+            getProfileDetail();
 
         selectedProperty = propPersons;
         addListeners();
+    }
+
+    private void getProfileDetail() {
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetProfileDetail(token);
+            }
+        });
+    }
+
+    private void startGetProfileDetail(String token) {
+
+        UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
+            @Override
+            public void onSuccess(UserProfile up) {
+                UserProfile userProfile = new UserProfile();
+                userid = userProfile.getUserInfo().getUserid();
+                setupViewPager(viewPager);
+                tabLayout.setupWithViewPager(viewPager);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
+            }
+
+            @Override
+            public void onTaskContinue() {
+
+            }
+        }, AccountHolderInfo.getUserID(), token);
+
+        loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private void setupViewPager(final ViewPager viewPager) {
@@ -250,7 +289,11 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
 
             @Override
             public void onFailed(Exception e) {
-
+                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
         });
     }
@@ -268,10 +311,5 @@ public class SearchFragment extends BaseFragment implements IOnBackPressed {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 }

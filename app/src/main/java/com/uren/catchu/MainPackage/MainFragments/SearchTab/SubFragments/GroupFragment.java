@@ -13,14 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.uren.catchu.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.UserGroups;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
 
 @SuppressLint("ValidFragment")
@@ -32,6 +35,7 @@ public class GroupFragment extends Fragment {
     String userid;
     ViewGroup mContainer;
     LayoutInflater mLayoutInflater;
+    TextView warningMsgTv;
 
     LinearLayoutManager linearLayoutManager;
     RelativeLayout specialSelectRelLayout;
@@ -68,6 +72,8 @@ public class GroupFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         groupRecyclerView = mView.findViewById(R.id.specialRecyclerView);
         specialSelectRelLayout = mView.findViewById(R.id.specialSelectRelLayout);
+        warningMsgTv = mView.findViewById(R.id.warningMsgTv);
+        warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         getGroups();
     }
 
@@ -77,7 +83,14 @@ public class GroupFragment extends Fragment {
             @Override
             public void onComplete(Object object) {
                 GroupRequestResult groupRequestResult = (GroupRequestResult) object;
-                userGroupsListAdapter = new UserGroupsListAdapter(context, groupRequestResult);
+                setWarningMessageVisibility(groupRequestResult);
+                userGroupsListAdapter = new UserGroupsListAdapter(context, groupRequestResult, new ReturnCallback() {
+                    @Override
+                    public void onReturn(Object object) {
+                        GroupRequestResult groupRequestResult1 = (GroupRequestResult) object;
+                        setWarningMessageVisibility(groupRequestResult1);
+                    }
+                });
                 groupRecyclerView.setAdapter(userGroupsListAdapter);
                 linearLayoutManager = new LinearLayoutManager(getActivity());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -89,5 +102,13 @@ public class GroupFragment extends Fragment {
 
             }
         });
+    }
+
+    public void setWarningMessageVisibility(GroupRequestResult groupRequestResult) {
+        if (groupRequestResult != null && groupRequestResult.getResultArray() != null &&
+                groupRequestResult.getResultArray().size() == 0) {
+            warningMsgTv.setVisibility(View.VISIBLE);
+        } else
+            warningMsgTv.setVisibility(View.GONE);
     }
 }

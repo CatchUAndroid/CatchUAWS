@@ -21,11 +21,14 @@ import com.uren.catchu.Adapters.UserDetailAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
+import com.uren.catchu.FragmentControllers.FragNavController;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RowItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoRowItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -98,6 +101,7 @@ public class PersonFragment extends BaseFragment {
     }
 
     private void startGetProfileDetail(String userid, String searchText, String token) {
+
         SearchResultProcess searchResultProcess = new SearchResultProcess(context, new OnEventListener<SearchResult>() {
 
             @Override
@@ -155,11 +159,15 @@ public class PersonFragment extends BaseFragment {
 
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
 
-        if (mFragmentNavigation != null) {
-            FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
-            followInfoRowItem.setAdapter(userDetailAdapter);
-            followInfoRowItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), ANIMATE_RIGHT_TO_LEFT);
+        if(!rowItem.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
+            if (mFragmentNavigation != null) {
+                FollowInfoRowItem followInfoRowItem = new FollowInfoRowItem(rowItem);
+                followInfoRowItem.setAdapter(userDetailAdapter);
+                followInfoRowItem.setClickedPosition(clickedPosition);
+                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoRowItem), ANIMATE_RIGHT_TO_LEFT);
+            }
+        }else {
+            NextActivity.switchAndUpdateTabSelection(FragNavController.TAB5);
         }
     }
 }

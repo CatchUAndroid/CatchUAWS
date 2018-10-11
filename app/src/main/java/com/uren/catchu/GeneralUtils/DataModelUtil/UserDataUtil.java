@@ -11,7 +11,14 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderFollowings;
+
+import catchu.model.FollowInfoResultArrayItem;
+
+import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
 public class UserDataUtil {
 
@@ -90,5 +97,4 @@ public class UserDataUtil {
                 0, GradientDrawable.RECTANGLE, 15, 0);
         displayButton.setBackground(buttonShape);
     }
-
 }

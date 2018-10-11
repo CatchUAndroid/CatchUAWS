@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.uren.catchu.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.UserGroups;
@@ -69,7 +70,12 @@ public class SelectGroupActivity extends AppCompatActivity {
             @Override
             public void onComplete(Object object) {
                 GroupRequestResult groupRequestResult = (GroupRequestResult) object;
-                userGroupsListAdapter = new UserGroupsListAdapter(SelectGroupActivity.this, groupRequestResult);
+                userGroupsListAdapter = new UserGroupsListAdapter(SelectGroupActivity.this, groupRequestResult, new ReturnCallback() {
+                    @Override
+                    public void onReturn(Object object) {
+
+                    }
+                });
                 recyclerView.setAdapter(userGroupsListAdapter);
             }
 

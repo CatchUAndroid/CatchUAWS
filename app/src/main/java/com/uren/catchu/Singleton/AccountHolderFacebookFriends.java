@@ -1,11 +1,20 @@
 package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
+import android.os.Bundle;
+import android.util.Log;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,58 +87,52 @@ public class AccountHolderFacebookFriends {
     }
 
     private void startGetFacebookFriends(String token) {
-        FollowInfo followInfoTemp = new FollowInfo();
-        followInfoTemp.setRequestType(GET_USER_FOLLOWINGS);
-        followInfoTemp.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+        GraphRequest graphRequest = GraphRequest.newMeRequest(AccessToken.getCurrentAccessToken(),
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
 
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
-            @Override
-            public void onSuccess(FollowInfo resp) {
-                if(resp != null) {
-                    followInfo = (FollowInfo) resp;
-                    mCompleteCallback.onComplete(followInfo);
-                }
-            }
+                        if (object != null) {
+                            try {
+                                JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
 
-            @Override
-            public void onFailure(Exception e) {
-                mCompleteCallback.onFailed(e);
-            }
+                                Log.i("Info", "");
 
-            @Override
-            public void onTaskContinue() {
-            }
-        }, followInfoTemp, token);
 
-        followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+
+
+
+                                /*FacebookFriendList.setInstance(null);
+
+                                friendListSize = friendList.length();
+
+                                mProgressDialog.setMessage("Yükleniyor...");
+                                mProgressDialog.show();
+
+                                for (int i = 0; i < friendList.length(); i++) {
+                                    JSONObject jsonObject = friendList.getJSONObject(i);
+                                    String friendName = (String) jsonObject.get(name);
+                                    String friendProviderID = (String) jsonObject.get("id");
+
+                                    if (checkFriendByProviderId(friendProviderID))
+                                        setFaceFriendToInviteList(friendProviderID, friendName, Yes);
+                                    else
+                                        setFaceFriendToInviteList(friendProviderID, friendName, null);
+
+                                }*/
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "friends");
+        graphRequest.setParameters(parameters);
+        graphRequest.executeAsync();
     }
 
-    public static void updateFriendListByFollowType(String requestType, final FollowInfoResultArrayItem followInfoResultArrayItem) {
-        if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY))
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    AccountHolderFollowings.addFollowing(followInfoResultArrayItem);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
-                }
-            });
-        else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    AccountHolderFollowings.removeFollowing(followInfoResultArrayItem.getUserid());
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
-                }
-            });
-
-        }
-    }
 }
