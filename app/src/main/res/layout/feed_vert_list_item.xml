@@ -29,44 +29,49 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <!-- Top of Post Text /-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:orientation="horizontal">
 
+                    <!-- Profile layout /-->
                     <LinearLayout
-                        android:layout_width="70dp"
-                        android:layout_height="match_parent"
-                        android:padding="10dp">
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/profileMainLayout">
 
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                        <!-- Profile Picture /-->
+                        <LinearLayout
+                            android:layout_width="70dp"
+                            android:layout_height="match_parent"
+                            android:padding="10dp">
 
-                            <ImageView
-                                android:id="@+id/imgProfilePic"
+                            <RelativeLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_gravity="center" />
+                                android:layout_height="match_parent">
 
-                            <TextView
-                                android:id="@+id/txtProfilePic"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:gravity="center"
-                                android:textAllCaps="true"
-                                android:textSize="20sp"
-                                android:visibility="gone" />
+                                <ImageView
+                                    android:id="@+id/imgProfilePic"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center" />
 
-                        </RelativeLayout>
+                                <TextView
+                                    android:id="@+id/txtProfilePic"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:textAllCaps="true"
+                                    android:textSize="20sp"
+                                    android:visibility="gone" />
 
-                    </LinearLayout>
+                            </RelativeLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        </LinearLayout>
 
+                        <!-- Profile Detail Name-Username /-->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -91,22 +96,25 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                    </LinearLayout>
+
+
+
+                    <!-- Like Icon /-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|right"
+                        android:gravity="right"
+                        android:paddingRight="10dp">
+
+                        <ImageView
+                            android:id="@+id/imgLike"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center|right"
-                            android:gravity="right"
-                            android:paddingRight="10dp">
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/icon_like" />
 
-                            <ImageView
-                                android:id="@+id/imgLike"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="10dp"
-                                android:src="@mipmap/icon_like" />
-
-
-                        </LinearLayout>
 
                     </LinearLayout>
 

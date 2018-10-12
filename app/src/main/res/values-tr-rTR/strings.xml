@@ -153,6 +153,8 @@
     <string name="SHARE_IS_SUCCESSFUL">Paylaşım Başarılı</string>
 
     <string name="emptyFeed">Arkadaşlarınızın paylaşımlarını görebilmek için onları takip etmeye başlayın :)</string>
+    <string name="likes">Beğeni</string>
+    <string name="comments">Yorum</string>
 
 
 </resources>

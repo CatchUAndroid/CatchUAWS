@@ -44,6 +44,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.AccountHolderPendings;
@@ -53,6 +54,7 @@ import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
 import catchu.model.UserProfile;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ProfileFragment extends BaseFragment
@@ -99,12 +101,18 @@ public class ProfileFragment extends BaseFragment
     ClickableImageView imgUserEdit;
     @BindView(R.id.menuImgv)
     ClickableImageView menuImgv;
+    @BindView(R.id.imgBackBtn)
+    ClickableImageView imgBackBtn;
+    @BindView(R.id.menuLayout)
+    RelativeLayout menuLayout;
+    @BindView(R.id.backLayout)
+    RelativeLayout backLayout;
 
     TextView navPendReqCntTv;
 
-    public static ProfileFragment newInstance(FollowInfoListItem rowItem) {
+    public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
-        args.putSerializable(ARGS_INSTANCE, rowItem);
+        args.putBoolean(ARGS_INSTANCE, comingFromTab);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -123,6 +131,7 @@ public class ProfileFragment extends BaseFragment
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
 
+            checkBundle();
             setCollapsingToolbar();
             addListeners();
             setUpPager();
@@ -130,6 +139,20 @@ public class ProfileFragment extends BaseFragment
         }
 
         return mView;
+    }
+
+    private void checkBundle() {
+        Bundle args = getArguments();
+        if (args != null) {
+            Boolean comingFromTab = (Boolean) args.getBoolean(ARGS_INSTANCE);
+            if(!comingFromTab){
+                //if not coming from Tab, edits disabled..
+                imgUserEdit.setVisibility(View.GONE);
+                menuLayout.setVisibility(View.GONE);
+                backLayout.setVisibility(View.VISIBLE);
+                imgBackBtn.setOnClickListener(this);
+            }
+        }
     }
 
     private void setNavViewItems(){
@@ -297,7 +320,7 @@ public class ProfileFragment extends BaseFragment
                 navViewUsernameTv.setText(user.getUserInfo().getUsername());
             }
 
-            if(user.getUserInfo().getIsPrivateAccount()){
+            if(user.getUserInfo().getIsPrivateAccount() != null){
                 getPendingFriendList();
             }
         }
@@ -411,6 +434,11 @@ public class ProfileFragment extends BaseFragment
 
         if (v == txtFollowingCnt) {
             followingClicked();
+        }
+
+        if(v == imgBackBtn){
+            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            getActivity().onBackPressed();
         }
 
     }

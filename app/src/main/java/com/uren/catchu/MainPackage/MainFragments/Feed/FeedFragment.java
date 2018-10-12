@@ -182,8 +182,12 @@ public class FeedFragment extends BaseFragment {
 
     //todo NT - silinecek
     private void logPostId(List<Post> postList) {
+        int postNumber;
         for (int i = 0; i< postList.size(); i++){
-            Log.i("post-" + i + " :", postList.get(i).getPostid() );
+            postNumber = i+1;
+            if(postList.get(i).getPostid()!= null && !postList.get(i).getPostid().isEmpty()){
+                Log.i("post-" + postNumber + " :", postList.get(i).getPostid() );
+            }
         }
     }
 
@@ -207,11 +211,14 @@ public class FeedFragment extends BaseFragment {
 
         //extra - start downloading all videos in background before loading RecyclerView
         List<String> urls = new ArrayList<>();
+        int postNum;
         for (int i = 0; i < postList.size(); i++) {
+            postNum=i+1;
+            Log.i("=== Post-" + postNum + " :", postList.get(i).getPostid() + " === ATTACHMENT URLS" );
             for (int j = 0; j < postList.get(i).getAttachments().size(); j++) {
                 Media media = postList.get(i).getAttachments().get(j);
                 urls.add(media.getUrl());
-                Log.i("url", media.getUrl());
+                Log.i("url",  media.getUrl());
             }
         }
 

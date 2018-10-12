@@ -83,6 +83,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         TextView txtCommentCount;
         LinearLayout layoutLike;
         LinearLayout layoutComment;
+        LinearLayout profileMainLayout;
 
         View mView;
 
@@ -102,7 +103,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             txtCommentCount = (TextView) view.findViewById(R.id.txtCommentCount);
             layoutLike = (LinearLayout) view.findViewById(R.id.layoutLike);
             layoutComment = (LinearLayout) view.findViewById(R.id.layoutComment);
-
+            profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
 
             setListeners();
 
@@ -134,7 +135,9 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation);
+                    String toolbarTitle = mContext.getResources().getString(R.string.likes) ;
+                    CommonUtils.showToast(mContext, toolbarTitle);
+                    PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle);
                 }
             });
 
@@ -142,12 +145,21 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation);
+                    String toolbarTitle = mContext.getResources().getString(R.string.comments) ;
+                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle);
+                }
+            });
+
+            //Profile layout
+            profileMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String selectedProfileId = post.getUser().getUserid();
+                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, selectedProfileId);
                 }
             });
 
         }
-
 
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
@@ -173,10 +185,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
             //todo NT - profil fotosu düzenlenecek
             //profile picture
-            if(post.getUser().getProfilePhotoUrl()!=null && !post.getUser().getProfilePhotoUrl().isEmpty()){
-                UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
-                        post.getUser().getName(), txtProfilePic, imgProfilePic);
-            }
+            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
+                    post.getUser().getName(), txtProfilePic, imgProfilePic);
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
                 this.txtName.setText(post.getUser().getName());

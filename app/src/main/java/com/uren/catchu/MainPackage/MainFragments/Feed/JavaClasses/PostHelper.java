@@ -16,10 +16,14 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
@@ -104,10 +108,13 @@ public class PostHelper {
     public static class LikeListClicked {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
+        static String toolbarTitle;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav){
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle){
 
             fragmentNavigation = fragmNav;
+            LikeListClicked.toolbarTitle = toolbarTitle;
+
 
             LikeListClicked likeListClicked = new LikeListClicked(context);
         }
@@ -117,12 +124,9 @@ public class PostHelper {
         }
 
         private void postLikeListClickedProcess(Context context) {
-
             if (fragmentNavigation != null) {
-                fragmentNavigation.pushFragment(new PersonListFragment(), ANIMATE_DOWN_TO_UP);
+                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle), ANIMATE_DOWN_TO_UP);
             }
-
-
         }
 
 
@@ -131,10 +135,12 @@ public class PostHelper {
     public static class CommentListClicked {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
+        static String toolbarTitle;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav){
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle){
 
             fragmentNavigation = fragmNav;
+            CommentListClicked.toolbarTitle= toolbarTitle;
 
             CommentListClicked commentListClicked = new CommentListClicked(context);
         }
@@ -144,13 +150,10 @@ public class PostHelper {
         }
 
         private void postCommentListClickedProcess(Context context) {
-
             if (fragmentNavigation != null) {
-                fragmentNavigation.pushFragment(new PersonListFragment(), ANIMATE_DOWN_TO_UP);
+                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle), ANIMATE_DOWN_TO_UP);
             }
-
         }
-
 
     }
 
@@ -187,6 +190,45 @@ public class PostHelper {
         }
 
 
+    }
+
+    public static class ProfileClicked {
+
+        static BaseFragment.FragmentNavigation fragmentNavigation;
+        static String selectedProfileId;
+
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String selectedProfileId){
+
+            fragmentNavigation = fragmNav;
+            ProfileClicked.selectedProfileId= selectedProfileId;
+
+            ProfileClicked commentListClicked = new ProfileClicked(context);
+        }
+
+        private ProfileClicked(Context context) {
+            postProfileClickedProcess(context);
+        }
+
+        private void postProfileClickedProcess(Context context) {
+            if (fragmentNavigation != null) {
+                FollowInfoListItem followInfoListItem = getProfileItem();
+                if(followInfoListItem.getResultArrayItem().getUserid().equals(AccountHolderInfo.getUserID())){
+                    //clicked own profile
+                    fragmentNavigation.pushFragment(ProfileFragment.newInstance(false), ANIMATE_RIGHT_TO_LEFT);
+                }else{
+                    //clicked others profile
+                    fragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                }
+            }
+        }
+
+        public FollowInfoListItem getProfileItem() {
+            FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
+            followInfoResultArrayItem.setIsFollow(true);
+            followInfoResultArrayItem.setUserid(selectedProfileId);
+            FollowInfoListItem profileItem = new FollowInfoListItem(followInfoResultArrayItem);
+            return profileItem;
+        }
     }
 
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainPackage.MainFragments.Profile.SubFragments.SettingsFragment">
+    tools:context=".MainPackage.MainFragments.Feed.SubFragments.PersonListFragment">
 
     <include layout="@layout/layout_progress_bar" />
 
@@ -45,17 +45,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_weight="3.3"
                     android:gravity="center|left"
-                    android:text="@string/followers"
                     android:textColor="@android:color/white"
                     android:textSize="25sp" />
-
-                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                    android:id="@+id/imgAddFollower"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:src="@drawable/add_person"/>
 
             </LinearLayout>
 

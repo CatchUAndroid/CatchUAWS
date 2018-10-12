@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -43,6 +44,9 @@ public class PersonListFragment extends BaseFragment
     FollowInfo followInfo;
     PersonListAdapter personListAdapter;
 
+    @BindView(R.id.toolbarTitle)
+    TextView toolbarTitle;
+
     @BindView(R.id.personList_recyclerView)
     RecyclerView personList_recyclerView;
 
@@ -52,7 +56,12 @@ public class PersonListFragment extends BaseFragment
     @BindView(R.id.imgBack)
     ClickableImageView imgBack;
 
-    public PersonListFragment() {
+    public static PersonListFragment newInstance(String toolbarTitle) {
+        Bundle args = new Bundle();
+        args.putString(ARGS_INSTANCE, toolbarTitle);
+        PersonListFragment fragment = new PersonListFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Nullable
@@ -63,6 +72,9 @@ public class PersonListFragment extends BaseFragment
             mView = inflater.inflate(R.layout.person_list_fragment, container, false);
             ButterKnife.bind(this, mView);
 
+
+
+            setToolbarTitle();
             init();
             getPersonList();
         }
@@ -77,7 +89,18 @@ public class PersonListFragment extends BaseFragment
 
     }
 
+    private void setToolbarTitle() {
+        Bundle args = getArguments();
+        if (args != null) {
+            toolbarTitle.setText((String) args.getString(ARGS_INSTANCE));
+        }else{
+            toolbarTitle.setText("List");
+        }
+    }
+
     private void init() {
+
+
 
         imgBack.setOnClickListener(this);
 

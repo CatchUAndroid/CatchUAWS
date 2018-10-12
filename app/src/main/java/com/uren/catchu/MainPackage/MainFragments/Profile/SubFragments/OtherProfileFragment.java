@@ -89,6 +89,9 @@ public class OtherProfileFragment extends BaseFragment
     @BindView(R.id.btnFollowStatus)
     Button btnFollowStatus;
 
+    /**
+     * @param rowItem içerisinde userId, isFollow degerleri zorunlu olarak beslenmelidir.
+     */
     public static OtherProfileFragment newInstance(FollowInfoListItem rowItem) {
         Bundle args = new Bundle();
         args.putSerializable(ARGS_INSTANCE, rowItem);
@@ -114,8 +117,6 @@ public class OtherProfileFragment extends BaseFragment
             if (args != null) {
                 followInfoListItem = (FollowInfoListItem) args.getSerializable(ARGS_INSTANCE);
                 selectedProfile = followInfoListItem.getResultArrayItem();
-                CommonUtils.showToast(getActivity(), followInfoListItem.getResultArrayItem().getName());
-
             }
 
             setCollapsingToolbar();

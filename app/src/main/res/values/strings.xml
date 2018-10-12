@@ -185,6 +185,8 @@
     <string name="SHARE_IS_SUCCESSFUL">Share is Successful</string>
 
     <string name="emptyFeed">Start following people, posts will be shown here :)</string>
+    <string name="likes">Likes</string>
+    <string name="comments">Comments</string>
 
 
 </resources>

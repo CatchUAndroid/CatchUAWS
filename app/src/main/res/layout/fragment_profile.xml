@@ -178,28 +178,54 @@
                         android:clickable="true"
                         android:gravity="center">
 
-                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                            android:id="@+id/menuImgv"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="end"
-                            android:layout_marginLeft="10dp"
-                            android:src="@drawable/menu_white_18dp" />
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/menuLayout">
 
-                        <TextView
-                            android:id="@+id/pendReqCntTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentTop="true"
-                            android:background="@drawable/circle_text_bg"
-                            android:gravity="center"
-                            android:textColor="@color/white"
-                            android:textSize="9dp"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
+                            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                                android:id="@+id/menuImgv"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="end"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/menu_white_18dp" />
+
+                            <TextView
+                                android:id="@+id/pendReqCntTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentTop="true"
+                                android:background="@drawable/circle_text_bg"
+                                android:gravity="center"
+                                android:textColor="@color/white"
+                                android:textSize="9dp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/backLayout"
+                            android:visibility="gone">
+
+                            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                                android:id="@+id/imgBackBtn"
+                                android:layout_width="25dp"
+                                android:layout_height="25dp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:layout_gravity="end"
+                                android:layout_marginLeft="10dp"
+                                android:src="@drawable/back_arrow2" />
+
+                        </RelativeLayout>
+
 
                     </RelativeLayout>
 
