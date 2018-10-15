@@ -74,9 +74,9 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         public MyViewHolder(View view) {
             super(view);
 
-            profileName =  view.findViewById(R.id.profile_name);
+            profileName = view.findViewById(R.id.profile_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-            profileImage =  view.findViewById(R.id.profile_image);
+            profileImage = view.findViewById(R.id.profile_image);
             btnFollowStatus = view.findViewById(R.id.btnFollowStatus);
             cardView = view.findViewById(R.id.card_view);
             profileImage.setBackground(imageShape);
@@ -104,7 +104,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                             followItem.setUserid(userProfileProperties.getUserid());
                             followItem.setIsPrivateAccount(userProfileProperties.getIsPrivateAccount());
 
-                            if(AccountHolderFollowings.isFollowing(userProfileProperties.getUserid()))
+                            if (AccountHolderFollowings.isFollowing(userProfileProperties.getUserid()))
                                 followItem.setIsFollow(true);
                             else
                                 followItem.setIsFollow(false);
@@ -178,12 +178,12 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                 public void onTaskContinue() {
 
                 }
-            }, FRIEND_ACCEPT_REQUEST, userProfileProperties.getUserid(),AccountHolderInfo.getUserID(), token);
+            }, FRIEND_ACCEPT_REQUEST, userProfileProperties.getUserid(), AccountHolderInfo.getUserID(), token);
 
             friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
 
-        public void addFollower(){
+        public void addFollower() {
             AccountHolderFollowers.getInstance(new CompleteCallback() {
                 @Override
                 public void onComplete(Object object) {
@@ -216,7 +216,10 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
 
     @Override
     public int getItemCount() {
-        return friendRequestList.getResultArray().size();
+        if (friendRequestList != null && friendRequestList.getResultArray() != null)
+            return friendRequestList.getResultArray().size();
+        else
+            return 0;
     }
 
     public void updateAdapterWithPosition(int position) {

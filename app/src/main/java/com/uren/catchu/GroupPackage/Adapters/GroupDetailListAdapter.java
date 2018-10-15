@@ -53,7 +53,6 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
     Context context;
     Activity activity;
-    private ItemClickListener mClickListener;
 
     public static final int CODE_DISPLAY_PROFILE = 0;
     public static final int CODE_REMOVE_FROM_GROUP = 1;
@@ -99,7 +98,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
         return holder;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView nameSurname;
         TextView username;
@@ -109,16 +108,9 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
         ImageView specialProfileImgView;
         int position = 0;
 
-        @Override
-        public void onClick(View v) {
-            if (mClickListener != null)
-                mClickListener.onItemClick(view, getAdapterPosition());
-        }
-
         public MyViewHolder(View itemView) {
             super(itemView);
 
-            itemView.setOnClickListener(this);
             specialProfileImgView = view.findViewById(R.id.specialPictureImgView);
             nameSurname = view.findViewById(R.id.specialNameTextView);
             shortUsernameTv = view.findViewById(R.id.shortUsernameTv);
@@ -339,15 +331,4 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
         return groupParticipantList.size();
     }
 
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
-    public String getItem(int id) {
-        return groupParticipantList.get(id).getName();
-    }
 }

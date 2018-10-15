@@ -91,7 +91,7 @@ public class AccountHolderPendings {
             public void onTaskContinue() {
 
             }
-        }, FRIEND_GET_REQUESTING_FOLLOW_LIST, AccountHolderInfo.getUserID(), "", token);
+        }, FRIEND_GET_REQUESTING_FOLLOW_LIST, AccountHolderInfo.getUserID(), " ", token);
 
         friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

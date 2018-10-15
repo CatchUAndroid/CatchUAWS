@@ -1,4 +1,4 @@
-package com.uren.catchu.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;

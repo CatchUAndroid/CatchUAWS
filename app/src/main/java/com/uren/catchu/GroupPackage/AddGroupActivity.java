@@ -2,6 +2,7 @@ package com.uren.catchu.GroupPackage;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
@@ -9,11 +10,13 @@ import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -37,8 +40,10 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.SaveGroupProcess;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderContactList;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 
@@ -98,6 +103,35 @@ public class AddGroupActivity extends AppCompatActivity {
         imageShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
                 0, GradientDrawable.OVAL, 50, 0);
         groupPictureImgv.setBackground(imageShape);
+
+
+        // TODO: 12.10.2018 - ugur silinecek
+        /*if(permissionModule.checkReadPhoneStatePermission()){
+            TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumber = tMgr.getLine1Number();
+            Log.i("Info", "mPhoneNumber:" + mPhoneNumber);
+        }else
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, permissionModule.getReadPhoneStateCode());*/
+
+        /*if(permissionModule.checkReadContactsPermission()){
+            TelephonyManager tMgrr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+            String mPhoneNumberrr = tMgrr.getLine1Number();
+            Log.i("Info", "mPhoneNumber:" + mPhoneNumberrr);
+        }else
+            ActivityCompat.requestPermissions(AddGroupActivity.this,
+                    new String[]{Manifest.permission.READ_CONTACTS},permissionModule.getReadContactsCode());*/
+
+        AccountHolderContactList.getInstance(AddGroupActivity.this, null, new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 
     private void setGroupTextSize() {
@@ -204,16 +238,16 @@ public class AddGroupActivity extends AppCompatActivity {
         }
 
         if (!permissionModule.checkWriteExternalStoragePermission())
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.getWriteExternalStoragePermissionCode());
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         else
             checkCameraPermission();
     }
 
     public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
         else
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
     }
 
     private void startGalleryProcess() {
@@ -226,7 +260,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == permissionModule.getCameraPermissionCode()) {
+            if (requestCode == permissionModule.PERMISSION_CAMERA) {
                 photoSelectUtil = new PhotoSelectUtil(AddGroupActivity.this, data, CAMERA_TEXT);
                 setGroupPhoto(photoSelectUtil.getMediaUri());
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
@@ -264,13 +298,46 @@ public class AddGroupActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkCameraPermission();
             }
-        } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
-        } else
+        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+        } else if(requestCode == permissionModule.PERMISSION_READ_PHONE_STATE){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+                String mPhoneNumber = tMgr.getLine1Number();
+
+
+                // TODO: 12.10.2018 - ugur silinecek
+                if(permissionModule.checkReadContactsPermission()){
+                    TelephonyManager tMgrr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
+                    String mPhoneNumberrr = tMgrr.getLine1Number();
+                    Log.i("Info", "mPhoneNumber:" + mPhoneNumberrr);
+                }else
+                    ActivityCompat.requestPermissions(AddGroupActivity.this,
+                            new String[]{Manifest.permission.READ_CONTACTS},permissionModule.PERMISSION_READ_CONTACTS);
+
+
+                Log.i("Info", "mPhoneNumber:" + mPhoneNumber);
+            }
+        }else if(requestCode == permissionModule.PERMISSION_READ_CONTACTS){
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                AccountHolderContactList.setInstance(null);
+                AccountHolderContactList.getInstance(AddGroupActivity.this, null, new CompleteCallback() {
+                    @Override
+                    public void onComplete(Object object) {
+
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+
+                    }
+                });
+            }
+        }else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 
@@ -284,7 +351,11 @@ public class AddGroupActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                CommonUtils.showToastLong(AddGroupActivity.this, getResources().getString(R.string.error) + e.getMessage());
+                DialogBoxUtil.showErrorDialog(AddGroupActivity.this, AddGroupActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
         });
     }

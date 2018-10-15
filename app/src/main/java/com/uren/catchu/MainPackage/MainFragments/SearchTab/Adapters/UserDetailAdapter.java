@@ -1,4 +1,4 @@
-package com.uren.catchu.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -44,7 +44,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
     View view;
     LayoutInflater layoutInflater;
-    String userid;
+    //String userid;
     String searchText;
     Context context;
     Activity activity;
@@ -53,12 +53,11 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, String userid, ListItemClickListener listItemClickListener) {
+    public UserDetailAdapter(Context context, String searchText, SearchResult searchResult, ListItemClickListener listItemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
         this.searchText = searchText;
         this.searchResult = searchResult;
-        this.userid = userid;
         this.listItemClickListener = listItemClickListener;
         activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
@@ -192,7 +191,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
                 public void onTaskContinue() {
 
                 }
-            }, requestType, userid, requestedUserid, token);
+            }, requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid, token);
 
             friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }

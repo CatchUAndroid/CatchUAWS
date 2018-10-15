@@ -88,6 +88,7 @@
     <string name="EXPLORE_PEOPLE">Explore People</string>
     <string name="VIEW_PENDING_REQUEST">View Pending Requests</string>
     <string name="THERE_IS_NO_GROUP_CREATE_OR_INCLUDE">There is no group you created or included</string>
+    <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">There is no Facebook friend who using CatchU</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

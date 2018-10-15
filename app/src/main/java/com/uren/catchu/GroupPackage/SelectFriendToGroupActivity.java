@@ -24,6 +24,8 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -91,7 +93,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         nextFab = findViewById(R.id.nextFab);
         recyclerView = findViewById(R.id.recyclerView);
         friendCountTv = findViewById(R.id.friendCountTv);
-        imgCancelSearch =  findViewById(R.id.imgCancelSearch);
+        imgCancelSearch = findViewById(R.id.imgCancelSearch);
         editTextSearch = findViewById(R.id.editTextSearch);
         selectAllCb = findViewById(R.id.selectAllCb);
         SelectedFriendList.setInstance(null);
@@ -139,12 +141,16 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.toString().trim().isEmpty())
-                    imgCancelSearch.setVisibility(View.VISIBLE);
-                else
-                    imgCancelSearch.setVisibility(View.GONE);
+                if (s != null && s.toString() != null) {
+                    if (!s.toString().trim().isEmpty())
+                        imgCancelSearch.setVisibility(View.VISIBLE);
+                    else
+                        imgCancelSearch.setVisibility(View.GONE);
 
-                adapter.updateAdapter(s.toString());
+                    if (adapter != null)
+                        adapter.updateAdapter(s.toString());
+                } else
+                    imgCancelSearch.setVisibility(View.GONE);
             }
         });
 
@@ -175,12 +181,16 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-
+                DialogBoxUtil.showErrorDialog(SelectFriendToGroupActivity.this, SelectFriendToGroupActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
         });
     }
 
-    public void setAdapter(){
+    public void setAdapter() {
         setFriendCountTextView();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new SelectFriendAdapter(this, friendList);

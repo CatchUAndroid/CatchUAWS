@@ -88,7 +88,7 @@ public class ShareFragment extends BaseFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setUpPager();
             } else
@@ -191,7 +191,7 @@ public class ShareFragment extends BaseFragment {
         if (!permissionModule.checkWriteExternalStoragePermission())
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.getWriteExternalStoragePermissionCode());
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         else
             setUpPager();
     }

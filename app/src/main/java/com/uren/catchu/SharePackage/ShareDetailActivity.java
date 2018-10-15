@@ -34,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
+import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -69,6 +70,8 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     FrameLayout shareMainLayout;
     LinearLayout shareMainLinearLayout;
     RelativeLayout mapLayout;
+
+    LinearLayout publicShareLayout;
 
     //Update text views
     View noteTextLayout;
@@ -164,6 +167,9 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         mainEditText = findViewById(R.id.mainEditText);
         shareMainLinearLayout = findViewById(R.id.shareMainLinearLayout);
         mapLayout = findViewById(R.id.mapLayout);
+
+        publicShareLayout = findViewById(R.id.publicShareLayout);
+
         locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
         checkShareItems = new CheckShareItems(ShareDetailActivity.this);
         setMapLayoutShape();
@@ -192,6 +198,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
         publicShareImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //AnimationUtil.setShareItemAnimation(publicShareLayout);
                 publicShareImgv.startAnimation(AnimationUtils.loadAnimation(ShareDetailActivity.this, R.anim.image_click));
                 selectedItem = CODE_PUBLIC_SHARED;
                 manageSelectedItem();
@@ -268,7 +275,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             public void okClick() {
                 ActivityCompat.requestPermissions(ShareDetailActivity.this,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        permissionModule.getAccessFineLocationCode());
+                        permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
             }
         });
     }
@@ -371,7 +378,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == permissionModule.getAccessFineLocationCode()) {
+        if (requestCode == permissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initializeMap(mMap);
             }
@@ -452,7 +459,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             else
                 ActivityCompat.requestPermissions(ShareDetailActivity.this,
                         new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        permissionModule.getAccessFineLocationCode());
+                        permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
         } else
             initializeMap(mMap);
     }

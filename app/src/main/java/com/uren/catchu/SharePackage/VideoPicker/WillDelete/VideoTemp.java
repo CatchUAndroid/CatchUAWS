@@ -151,7 +151,7 @@ public class VideoTemp extends Fragment implements SurfaceHolder.Callback {
         } else
             ActivityCompat.requestPermissions(getActivity(),
                     new String[]{Manifest.permission.CAMERA},
-                    permissionModule.getCameraPermissionCode());
+                    permissionModule.PERMISSION_CAMERA);
     }
 
     private void checkCameraRotation() {
@@ -179,7 +179,7 @@ public class VideoTemp extends Fragment implements SurfaceHolder.Callback {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == permissionModule.getCameraPermissionCode()) {
+        if (requestCode == permissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             }

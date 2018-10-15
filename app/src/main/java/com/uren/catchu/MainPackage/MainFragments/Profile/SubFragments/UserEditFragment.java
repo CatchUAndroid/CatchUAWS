@@ -189,6 +189,7 @@ public class UserEditFragment extends BaseFragment
         setGenderClickListener();
         profilPicChanged = false;
         userProfileProperties = new UserProfileProperties();
+
     }
 
     private void setBirthDayDataSetListener() {

@@ -1,24 +1,17 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
-import android.widget.Filterable;
+import android.widget.TextView;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.uren.catchu.Adapters.UserDetailAdapter;
-import com.uren.catchu.ApiGatewayFunctions.ProviderListRequestProcess;
 import com.uren.catchu.FragmentControllers.FragNavController;
+import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -32,28 +25,21 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.ButterKnife;
 import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.GroupRequestResult;
-import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
-public class FacebookFriendsFragment extends BaseFragment{
+public class FacebookFriendsFragment extends BaseFragment {
 
     View mView;
+    TextView warningMsgTv;
     FacebookFriendsAdapter facebookFriendsAdapter;
     RecyclerView personRecyclerView;
 
-    public FacebookFriendsFragment() { }
+    public FacebookFriendsFragment() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,9 +62,9 @@ public class FacebookFriendsFragment extends BaseFragment{
         getFacebookFriends();
     }
 
-    public void initVariables(){
-        personRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
-
+    public void initVariables() {
+        personRecyclerView = mView.findViewById(R.id.specialRecyclerView);
+        warningMsgTv = mView.findViewById(R.id.warningMsgTv);
     }
 
     private void addListeners() {
@@ -90,16 +76,23 @@ public class FacebookFriendsFragment extends BaseFragment{
             @Override
             public void onComplete(Object object) {
                 UserListResponse userListResponse = (UserListResponse) object;
-                facebookFriendsAdapter = new FacebookFriendsAdapter(getActivity(), userListResponse, new ListItemClickListener() {
-                    @Override
-                    public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
-                        displayUserProfile(rowItem, clickedPosition);
-                    }
-                });
-                personRecyclerView.setAdapter(facebookFriendsAdapter);
-                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                personRecyclerView.setLayoutManager(linearLayoutManager);
+
+                MessageDataUtil.setWarningMessageVisibility(userListResponse, warningMsgTv,
+                        getActivity().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
+
+                if (userListResponse != null && userListResponse.getItems() != null &&
+                        userListResponse.getItems().size() > 0) {
+                    facebookFriendsAdapter = new FacebookFriendsAdapter(getActivity(), userListResponse, new ListItemClickListener() {
+                        @Override
+                        public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
+                            displayUserProfile(rowItem, clickedPosition);
+                        }
+                    });
+                    personRecyclerView.setAdapter(facebookFriendsAdapter);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    personRecyclerView.setLayoutManager(linearLayoutManager);
+                }
             }
 
             @Override
@@ -128,6 +121,7 @@ public class FacebookFriendsFragment extends BaseFragment{
     }
 
     public void updateAdapter(String searchText) {
-        facebookFriendsAdapter.updateAdapter(searchText);
+        if (searchText != null)
+            facebookFriendsAdapter.updateAdapter(searchText);
     }
 }
