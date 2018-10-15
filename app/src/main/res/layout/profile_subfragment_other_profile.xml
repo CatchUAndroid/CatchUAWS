@@ -115,7 +115,7 @@
                             android:layout_height="35dp"
                             android:layout_marginLeft="40dp"
                             android:layout_marginTop="30dp"
-                            android:text="@string/follow"
+                            android:text="@string/loading"
                             android:textAllCaps="false"
                             android:textSize="12sp" />
 

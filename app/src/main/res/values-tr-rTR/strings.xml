@@ -155,6 +155,7 @@
     <string name="emptyFeed">Arkadaşlarınızın paylaşımlarını görebilmek için onları takip etmeye başlayın :)</string>
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
+    <string name="loading">Yükleniyor</string>
 
 
 </resources>

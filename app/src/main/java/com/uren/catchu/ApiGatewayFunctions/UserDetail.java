@@ -14,12 +14,14 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
     private Context mContext;
     public Exception mException;
     public String userid;
+    public String requestedUserId;
     private String token;
 
-    public UserDetail(Context context, OnEventListener callback, String userid, String token) {
+    public UserDetail(Context context, OnEventListener callback, String userid, String requestedUserId, String token) {
         mCallBack = callback;
         mContext = context;
         this.userid = userid;
+        this.requestedUserId = requestedUserId;
         this.token = token;
     }
 
@@ -30,7 +32,7 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            UserProfile userProfile = instance.client.usersGet(token, userid);
+            UserProfile userProfile = instance.client.usersGet(userid, requestedUserId, token);
 
             if(userProfile.getError().getCode().intValue() == RESPONSE_OK){
                 return userProfile;

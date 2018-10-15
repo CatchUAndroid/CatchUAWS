@@ -31,6 +31,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickC
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -38,6 +39,7 @@ import java.util.List;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
 import catchu.model.User;
 
@@ -137,7 +139,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 public void onClick(View v) {
                     String toolbarTitle = mContext.getResources().getString(R.string.likes) ;
                     CommonUtils.showToast(mContext, toolbarTitle);
-                    PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle);
+                    PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
                 }
             });
 
@@ -146,7 +148,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                 @Override
                 public void onClick(View v) {
                     String toolbarTitle = mContext.getResources().getString(R.string.comments) ;
-                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle);
+                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
                 }
             });
 
@@ -154,8 +156,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             profileMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String selectedProfileId = post.getUser().getUserid();
-                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, selectedProfileId);
+                    FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
+                    rowItem.setUserid(post.getUser().getUserid());
+                    rowItem.setProfilePhotoUrl(post.getUser().getProfilePhotoUrl());
+                    rowItem.setName(post.getUser().getName());
+                    FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
+                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, followInfoListItem);
                 }
             });
 

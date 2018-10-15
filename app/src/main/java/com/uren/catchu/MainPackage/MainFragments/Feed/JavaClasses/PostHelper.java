@@ -41,7 +41,7 @@ public class PostHelper {
         static Post post;
         static boolean isPostLiked;
 
-        public static final void startProcess(Context context1, Post post1, boolean isPostLiked1){
+        public static final void startProcess(Context context1, Post post1, boolean isPostLiked1) {
             post = post1;
             isPostLiked = isPostLiked1;
 
@@ -109,12 +109,14 @@ public class PostHelper {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
         static String toolbarTitle;
+        static String postId;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle){
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
+                                              String postId) {
 
             fragmentNavigation = fragmNav;
             LikeListClicked.toolbarTitle = toolbarTitle;
-
+            LikeListClicked.postId = postId;
 
             LikeListClicked likeListClicked = new LikeListClicked(context);
         }
@@ -125,7 +127,7 @@ public class PostHelper {
 
         private void postLikeListClickedProcess(Context context) {
             if (fragmentNavigation != null) {
-                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle), ANIMATE_DOWN_TO_UP);
+                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle, postId), ANIMATE_DOWN_TO_UP);
             }
         }
 
@@ -136,11 +138,14 @@ public class PostHelper {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
         static String toolbarTitle;
+        static String postId;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle){
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
+                                              String postId) {
 
             fragmentNavigation = fragmNav;
-            CommentListClicked.toolbarTitle= toolbarTitle;
+            CommentListClicked.toolbarTitle = toolbarTitle;
+            CommentListClicked.postId = postId;
 
             CommentListClicked commentListClicked = new CommentListClicked(context);
         }
@@ -151,7 +156,7 @@ public class PostHelper {
 
         private void postCommentListClickedProcess(Context context) {
             if (fragmentNavigation != null) {
-                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle), ANIMATE_DOWN_TO_UP);
+                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle, postId), ANIMATE_DOWN_TO_UP);
             }
         }
 
@@ -161,7 +166,7 @@ public class PostHelper {
 
         static Media media;
 
-        public static final void startProcess(Activity activity, Context context, Media m){
+        public static final void startProcess(Activity activity, Context context, Media m) {
 
             media = m;
             ViewPagerItemClicked viewPagerItemClicked = new ViewPagerItemClicked(activity, context);
@@ -169,7 +174,7 @@ public class PostHelper {
 
         private ViewPagerItemClicked(Activity activity, Context context) {
 
-            showItemInFullView(activity,  media);
+            showItemInFullView(activity, media);
 
         }
 
@@ -195,12 +200,12 @@ public class PostHelper {
     public static class ProfileClicked {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
-        static String selectedProfileId;
+        static FollowInfoListItem followInfoListItem;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String selectedProfileId){
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, FollowInfoListItem followInfoListItem) {
 
             fragmentNavigation = fragmNav;
-            ProfileClicked.selectedProfileId= selectedProfileId;
+            ProfileClicked.followInfoListItem = followInfoListItem;
 
             ProfileClicked commentListClicked = new ProfileClicked(context);
         }
@@ -211,24 +216,16 @@ public class PostHelper {
 
         private void postProfileClickedProcess(Context context) {
             if (fragmentNavigation != null) {
-                FollowInfoListItem followInfoListItem = getProfileItem();
-                if(followInfoListItem.getResultArrayItem().getUserid().equals(AccountHolderInfo.getUserID())){
+                if (followInfoListItem.getResultArrayItem().getUserid().equals(AccountHolderInfo.getUserID())) {
                     //clicked own profile
                     fragmentNavigation.pushFragment(ProfileFragment.newInstance(false), ANIMATE_RIGHT_TO_LEFT);
-                }else{
+                } else {
                     //clicked others profile
                     fragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
                 }
             }
         }
 
-        public FollowInfoListItem getProfileItem() {
-            FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-            followInfoResultArrayItem.setIsFollow(true);
-            followInfoResultArrayItem.setUserid(selectedProfileId);
-            FollowInfoListItem profileItem = new FollowInfoListItem(followInfoResultArrayItem);
-            return profileItem;
-        }
     }
 
 

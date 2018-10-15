@@ -18,6 +18,8 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
@@ -25,10 +27,13 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.User;
 import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
@@ -41,11 +46,14 @@ public class PersonListFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    FollowInfo followInfo;
     PersonListAdapter personListAdapter;
+    String toolbarTitle;
+    String postId;
+    String page;
+    String perPage;
 
     @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+    TextView txtToolbarTitle;
 
     @BindView(R.id.personList_recyclerView)
     RecyclerView personList_recyclerView;
@@ -56,9 +64,10 @@ public class PersonListFragment extends BaseFragment
     @BindView(R.id.imgBack)
     ClickableImageView imgBack;
 
-    public static PersonListFragment newInstance(String toolbarTitle) {
+    public static PersonListFragment newInstance(String toolbarTitle, String postId) {
         Bundle args = new Bundle();
-        args.putString(ARGS_INSTANCE, toolbarTitle);
+        args.putString("toolbarTitle", toolbarTitle);
+        args.putString("postId", postId);
         PersonListFragment fragment = new PersonListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -68,13 +77,11 @@ public class PersonListFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(mView == null){
+        if (mView == null) {
             mView = inflater.inflate(R.layout.person_list_fragment, container, false);
             ButterKnife.bind(this, mView);
 
-
-
-            setToolbarTitle();
+            getItemsFromBundle();
             init();
             getPersonList();
         }
@@ -89,18 +96,19 @@ public class PersonListFragment extends BaseFragment
 
     }
 
-    private void setToolbarTitle() {
+    private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            toolbarTitle.setText((String) args.getString(ARGS_INSTANCE));
-        }else{
-            toolbarTitle.setText("List");
+            toolbarTitle = (String) args.getString("toolbarTitle");
+            postId = (String) args.getString("postId");
         }
     }
 
     private void init() {
 
-
+        if (toolbarTitle != null && !toolbarTitle.isEmpty()) {
+            txtToolbarTitle.setText(toolbarTitle);
+        }
 
         imgBack.setOnClickListener(this);
 
@@ -136,12 +144,12 @@ public class PersonListFragment extends BaseFragment
     private void startGetPersonList(String token) {
 
         String userId = AccountHolderInfo.getUserID();
-        String postId;
-        String perPage="10";
-        String page="1";
-        String commentId=null;
+        String postID = postId;
+        String perPage = "10";
+        String page = "1";
+        String commentId = null;
 
-/*
+
         PostLikeListProcess postLikeListProcess = new PostLikeListProcess(getContext(), new OnEventListener<UserListResponse>() {
             @Override
             public void onSuccess(UserListResponse userListResponse) {
@@ -152,34 +160,39 @@ public class PersonListFragment extends BaseFragment
                     CommonUtils.LOG_OK("PostLikeListProcess");
                     setUpRecyclerView(userListResponse);
                 }
+
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("PostLikeListProcess", e.toString());
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onTaskContinue() {
+                progressBar.setVisibility(View.VISIBLE);
             }
-        }, userId, postId, perPage, page, commentId, token);
+        }, userId, postID, perPage, page, commentId, token);
 
         postLikeListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-*/
     }
 
-    private void setUpRecyclerView(UserListResponse followInfo) {
+    private void setUpRecyclerView(UserListResponse personList) {
 
-        ListItemClickListener listItemClickListener = new ListItemClickListener() {
+        PersonListItemClickListener personListItemClickListener = new PersonListItemClickListener() {
             @Override
-            public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
-                CommonUtils.showToast(getContext(), "Clicked : " + rowItem.getName());
-                startPersonInfoProcess(rowItem, clickedPosition);
+            public void onClick(View view, User user, int clickedPosition) {
+                CommonUtils.showToast(getContext(), "Clicked : " + user.getName());
+                startPersonInfoProcess(user,clickedPosition);
             }
         };
 
-        //personListAdapter = new PersonListAdapter(getActivity(), followInfo.getResultArray(), listItemClickListener);
+
+
+        personListAdapter = new PersonListAdapter(getActivity(), personList, personListItemClickListener);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         personList_recyclerView.setLayoutManager(mLayoutManager);
@@ -187,15 +200,18 @@ public class PersonListFragment extends BaseFragment
 
     }
 
-    private void startPersonInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
+    private void startPersonInfoProcess(User user, int clickedPosition) {
 
-        if (mFragmentNavigation != null) {
-            FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
-        }
+        FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
+        rowItem.setUserid(user.getUserid());
+        rowItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
+        rowItem.setName(user.getName());
 
+        FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
+        followInfoListItem.setAdapter(personListAdapter);
+        followInfoListItem.setClickedPosition(clickedPosition);
 
-
+        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, followInfoListItem);
 
     }
 

@@ -118,6 +118,10 @@ public class ProfileFragment extends BaseFragment
         return fragment;
     }
 
+    public ProfileFragment() {
+
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -272,7 +276,7 @@ public class ProfileFragment extends BaseFragment
 
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         vpNews.setAdapter(adp);
-        vpNews.setOffscreenPageLimit(12);
+        //vpNews.setOffscreenPageLimit(12);
         tabs.setupWithViewPager(vpNews);
     }
 
@@ -329,14 +333,14 @@ public class ProfileFragment extends BaseFragment
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
 
-        if (user != null && user.getRelationCountInfo() != null) {
-            Log.i("->UserRelationCountInfo", user.getRelationCountInfo().toString());
+        if (user != null && user.getRelationInfo() != null) {
+            Log.i("->UserRelationCountInfo", user.getRelationInfo().toString());
 
-            if (user.getRelationCountInfo().getFollowerCount() != null && !user.getRelationCountInfo().getFollowerCount().trim().isEmpty())
-                txtFollowerCnt.setText(user.getRelationCountInfo().getFollowerCount() + "\n" + getActivity().getResources().getString(R.string.followers));
+            if (user.getRelationInfo().getFollowerCount() != null && !user.getRelationInfo().getFollowerCount().trim().isEmpty())
+                txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount() + "\n" + getActivity().getResources().getString(R.string.followers));
 
-            if (user.getRelationCountInfo().getFollowingCount() != null && !user.getRelationCountInfo().getFollowingCount().trim().isEmpty())
-                txtFollowingCnt.setText(user.getRelationCountInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.followings));
+            if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
+                txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.followings));
         }
     }
 
@@ -416,7 +420,7 @@ public class ProfileFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, AccountHolderInfo.getUserID(), token);
+        }, AccountHolderInfo.getUserID(), AccountHolderInfo.getUserID(), token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

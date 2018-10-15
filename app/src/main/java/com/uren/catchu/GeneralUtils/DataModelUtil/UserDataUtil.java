@@ -11,17 +11,13 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowings;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.UserProfileRelationCountInfo;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 
-import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
 public class UserDataUtil {
 
@@ -70,7 +66,7 @@ public class UserDataUtil {
     public static void updateFollowButton(Context context, Boolean friendRelation, Boolean pendingFriendRequest, Button displayButton,
                                           Boolean isHideKeybard) {
 
-        if(isHideKeybard != null && isHideKeybard)
+        if (isHideKeybard != null && isHideKeybard)
             CommonUtils.hideKeyBoard(context);
 
         GradientDrawable buttonShape;
@@ -102,6 +98,51 @@ public class UserDataUtil {
         displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
         buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.RECTANGLE, 15, 0);
+        displayButton.setBackground(buttonShape);
+    }
+
+    /**
+     * Like list vs için yeni yazılan serviste takip durumu için tek bir değer dönüyor. 2.versiyon bu yüzden yazıldı.
+     */
+    public static void updateFollowButton2(Context context, String followStatus, Button displayButton,
+                                           Boolean isHideKeybard) {
+
+        if (isHideKeybard != null && isHideKeybard)
+            CommonUtils.hideKeyBoard(context);
+
+        GradientDrawable buttonShape = null;
+        if (followStatus.equals(FOLLOW_STATUS_FOLLOWING)) {
+            //takip ediliyor
+            displayButton.setText(context.getResources().getString(R.string.following));
+            displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                    context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
+
+        } else if (followStatus.equals(FOLLOW_STATUS_PENDING)) {
+            //istek gonderildi
+            displayButton.setText(context.getResources().getString(R.string.request_sended));
+            displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.black_25_transparent, null),
+                    0, GradientDrawable.RECTANGLE, 15, 0);
+
+        } else if (followStatus.equals(FOLLOW_STATUS_OWN)) {
+            //kendisi
+            displayButton.setVisibility(View.GONE);
+        } else if (followStatus.equals(FOLLOW_STATUS_NONE)) {
+            //takip/istek yok
+            displayButton.setText(context.getResources().getString(R.string.follow));
+            displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.RECTANGLE, 15, 0);
+
+        } else {
+            //ne olur ne olmaz durumu :)
+            displayButton.setText(context.getResources().getString(R.string.follow));
+            displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.RECTANGLE, 15, 0);
+        }
+
         displayButton.setBackground(buttonShape);
     }
 

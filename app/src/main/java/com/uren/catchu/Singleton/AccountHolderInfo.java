@@ -3,6 +3,7 @@ package com.uren.catchu.Singleton;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -15,10 +16,9 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 
-import catchu.model.RelationProperties;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
-import catchu.model.UserProfileRelationCountInfo;
+import catchu.model.UserProfileRelationInfo;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
@@ -37,9 +37,9 @@ public class AccountHolderInfo {
     public static AccountHolderInfo getInstance() {
         if (accountHolderInfoInstance == null) {
             userProfile = new UserProfile();
-            UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
+            UserProfileRelationInfo userProfileRelationCountInfo = new UserProfileRelationInfo();
             UserProfileProperties userProfileProperties = new UserProfileProperties();
-            userProfile.setRelationCountInfo(userProfileRelationCountInfo);
+            userProfile.setRelationInfo(userProfileRelationCountInfo);
             userProfile.setUserInfo(userProfileProperties);
             accountHolderInfoInstance = new AccountHolderInfo();
         }
@@ -94,7 +94,7 @@ public class AccountHolderInfo {
             public void onTaskContinue() {
 
             }
-        }, userid, token);
+        }, userid, userid, token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -126,35 +126,47 @@ public class AccountHolderInfo {
 
     public static void updateAccountHolderFollowCnt(String requestType) {
         // TODO: 11.10.2018 - search de gonderilen istek geri alinmak istendiginde patliyor..
-        //
-        int followingCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
-        int followerCnt = Integer.parseInt(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
-        UserProfileRelationCountInfo userProfileRelationCountInfo = new UserProfileRelationCountInfo();
+
+        int followingCnt =0, followerCnt = 0;
+        String followingCount, followerCount;
+
+        followingCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount();
+        followerCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount();
+
+        if(!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)){
+            followingCnt = Integer.parseInt(followingCount);
+        }
+
+        if(!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)){
+            followingCnt = Integer.parseInt(followingCount);
+        }
+
+        UserProfileRelationInfo userProfileRelationCountInfo = new UserProfileRelationInfo();
 
         switch (requestType) {
             case FRIEND_CREATE_FOLLOW_DIRECTLY:
                 followingCnt = followingCnt + 1;
                 userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
+                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount());
                 break;
 
             case FRIEND_DELETE_FOLLOW:
                 followingCnt = followingCnt - 1;
                 userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowerCount());
+                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount());
                 break;
 
             case FRIEND_ACCEPT_REQUEST:
                 followerCnt = followerCnt + 1;
                 userProfileRelationCountInfo.setFollowerCount(Integer.toString(followerCnt));
-                userProfileRelationCountInfo.setFollowingCount(AccountHolderInfo.getInstance().getUser().getRelationCountInfo().getFollowingCount());
+                userProfileRelationCountInfo.setFollowingCount(AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount());
                 break;
 
             default:
                 break;
         }
 
-        AccountHolderInfo.getInstance().getUser().setRelationCountInfo(userProfileRelationCountInfo);
+        AccountHolderInfo.getInstance().getUser().setRelationInfo(userProfileRelationCountInfo);
     }
 
 

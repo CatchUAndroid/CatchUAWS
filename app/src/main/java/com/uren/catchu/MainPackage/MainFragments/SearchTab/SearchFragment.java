@@ -165,7 +165,7 @@ public class SearchFragment extends BaseFragment {
             public void onTaskContinue() {
 
             }
-        }, AccountHolderInfo.getUserID(), token);
+        }, AccountHolderInfo.getUserID(), AccountHolderInfo.getUserID(), token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

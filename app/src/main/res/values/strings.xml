@@ -187,6 +187,7 @@
     <string name="emptyFeed">Start following people, posts will be shown here :)</string>
     <string name="likes">Likes</string>
     <string name="comments">Comments</string>
+    <string name="loading">Loading</string>
 
 
 </resources>
