@@ -19,10 +19,8 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -38,9 +36,9 @@ import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.FriendGridListAdapter;
-import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.SaveGroupProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderContactList;
@@ -307,20 +305,20 @@ public class AddGroupActivity extends AppCompatActivity {
         } else if(requestCode == permissionModule.PERMISSION_READ_PHONE_STATE){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-                String mPhoneNumber = tMgr.getLine1Number();
+                //String mPhoneNumber = tMgr.getLine1Number();
 
 
                 // TODO: 12.10.2018 - ugur silinecek
                 if(permissionModule.checkReadContactsPermission()){
                     TelephonyManager tMgrr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-                    String mPhoneNumberrr = tMgrr.getLine1Number();
-                    Log.i("Info", "mPhoneNumber:" + mPhoneNumberrr);
+                    //String mPhoneNumberrr = tMgrr.getLine1Number();
+                    //Log.i("Info", "mPhoneNumber:" + mPhoneNumberrr);
                 }else
                     ActivityCompat.requestPermissions(AddGroupActivity.this,
                             new String[]{Manifest.permission.READ_CONTACTS},permissionModule.PERMISSION_READ_CONTACTS);
 
 
-                Log.i("Info", "mPhoneNumber:" + mPhoneNumber);
+                //Log.i("Info", "mPhoneNumber:" + mPhoneNumber);
             }
         }else if(requestCode == permissionModule.PERMISSION_READ_CONTACTS){
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -343,7 +341,7 @@ public class AddGroupActivity extends AppCompatActivity {
 
 
     public void saveGroup() {
-        new SaveGroupProcess(AddGroupActivity.this, photoSelectUtil, groupNameEditText.getText().toString(), new SaveGroupCallback() {
+        new SaveGroupProcess(AddGroupActivity.this, photoSelectUtil, groupNameEditText.getText().toString(), new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
                 returnPreviousActivity();

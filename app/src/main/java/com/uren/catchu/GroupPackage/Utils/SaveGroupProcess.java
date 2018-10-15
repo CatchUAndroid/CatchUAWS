@@ -3,7 +3,6 @@ package com.uren.catchu.GroupPackage.Utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -12,7 +11,7 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.GroupPackage.Interfaces.SaveGroupCallback;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -42,9 +41,9 @@ public class SaveGroupProcess {
     List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
     GroupRequest groupRequest;
     String groupName;
-    SaveGroupCallback saveGroupCallback;
+    ServiceCompleteCallback saveGroupCallback;
 
-    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, SaveGroupCallback saveGroupCallback) {
+    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, ServiceCompleteCallback saveGroupCallback) {
         this.context = context;
         this.photoSelectUtil = photoSelectUtil;
         this.groupName = groupName;
