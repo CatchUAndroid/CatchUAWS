@@ -31,6 +31,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
@@ -71,7 +73,6 @@ public class SearchFragment extends BaseFragment {
 
     //nurullah - person ve group fragmentları tek bir tane yaratılacak şekilde düzenlendi
     private PersonFragment personFragment;
-    private GroupFragment groupFragment;
 
     private EditText editTextSearch;
     private ImageView imgCancelSearch;
@@ -83,6 +84,17 @@ public class SearchFragment extends BaseFragment {
     private Boolean refreshSearch = true;
 
     PermissionModule permissionModule;
+
+    public SearchFragment(){
+
+    }
+
+    public static SearchFragment newInstance() {
+        Bundle args = new Bundle();
+        SearchFragment fragment = new SearchFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -146,7 +158,7 @@ public class SearchFragment extends BaseFragment {
         UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
             @Override
             public void onSuccess(UserProfile up) {
-                UserProfile userProfile = new UserProfile();
+                UserProfile userProfile = (UserProfile) up;
                 userid = userProfile.getUserInfo().getUserid();
                 setupViewPager(viewPager);
                 tabLayout.setupWithViewPager(viewPager);
@@ -171,12 +183,11 @@ public class SearchFragment extends BaseFragment {
     }
 
     private void setupViewPager(final ViewPager viewPager) {
-        personFragment = new PersonFragment(userid, verticalShown, "A", context);
-        groupFragment = new GroupFragment(context, userid);
+        personFragment = PersonFragment.newInstance("A");
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(personFragment, getResources().getString(R.string.friends));
-        adapter.addFragment(groupFragment, getResources().getString(R.string.groups));
+        adapter.addFragment(GroupFragment.newInstance(), getResources().getString(R.string.groups));
         viewPager.setAdapter(adapter);
     }
 
@@ -255,13 +266,13 @@ public class SearchFragment extends BaseFragment {
                 // TODO : search text boş olduğunda recyler view ler boş olmalı mı? şimdilik A'lar geliyor.
                 if (tempSearchText.matches("")) {
                     if (!refreshSearch) return;
-                    searchForPersons("A");
+                    personFragment.getSearchResult("A");
                     searchText = tempSearchText;
                     return;
                 }
 
                 if (!tempSearchText.matches(searchText)) {
-                    searchForPersons(tempSearchText);
+                    personFragment.getSearchResult(tempSearchText);
                     imgCancelSearch.setVisibility(View.VISIBLE);
                     searchText = tempSearchText;
                 }
@@ -296,11 +307,6 @@ public class SearchFragment extends BaseFragment {
                 });
             }
         });
-    }
-
-    public void searchForPersons(String searchText) {
-        adapter.updateFragment(personFragmentTab, personFragment);
-        personFragment.getSearchResult(userid, searchText);
     }
 
     public static void reloadAdapter() {

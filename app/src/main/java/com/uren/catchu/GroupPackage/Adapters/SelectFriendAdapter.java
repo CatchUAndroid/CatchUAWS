@@ -140,7 +140,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             this.position = position;
             this.selectedFriend = selectedFriend;
             setUserName();
-            setName();
+            UserDataUtil.setName(selectedFriend.getName(), nameTextView);
             UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                     selectedFriend.getName(), shortUserNameTv, profilePicImgView);
             updateRadioButtonValue();
@@ -149,15 +149,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         public void setUserName() {
             if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty())
                 this.usernameTextView.setText(selectedFriend.getUsername());
-        }
-
-        public void setName() {
-            if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                if (selectedFriend.getName().length() > 30)
-                    this.nameTextView.setText(selectedFriend.getName().trim().substring(0, 30) + "...");
-                else
-                    this.nameTextView.setText(selectedFriend.getName());
-            }
         }
 
         public void updateRadioButtonValue() {

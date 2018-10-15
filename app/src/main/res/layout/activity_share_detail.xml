@@ -10,10 +10,10 @@
     tools:context=".SharePackage.ShareDetailActivity">
 
     <LinearLayout
+        android:id="@+id/shareMainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/shareMainLinearLayout">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/mapLayout"
@@ -26,8 +26,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/gradient_try_bg">
-            </FrameLayout>
+                android:background="@drawable/gradient_try_bg"></FrameLayout>
 
             <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/map"
@@ -51,6 +50,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/publicShareLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -78,7 +78,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/friendsShareLayout">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -123,7 +124,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/groupsShareLayout">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -171,7 +173,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/justMeLayout">
 
                 <ImageView
                     android:id="@+id/justShareMeImgv"
@@ -196,14 +199,14 @@
             android:id="@+id/mainEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:focusable="false"
-            android:gravity="top"
-            android:hint="@string/typeToAddText"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="5dp"
+            android:background="@color/transparent"
+            android:focusable="false"
+            android:gravity="top"
+            android:hint="@string/typeToAddText"
             android:scrollbars="vertical"
             android:textColor="@color/White"
             android:textColorHint="@color/transparent_white" />

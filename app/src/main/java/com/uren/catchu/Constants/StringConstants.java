@@ -96,4 +96,10 @@ public class StringConstants {
     public static final String FOLLOW_STATUS_NONE = "NONE";
 
 
+    //Provider list Follow Status
+    public static final String PROVIDER_FOLLOW_STATUS_FOLLOWING = "FOLLOWING";
+    public static final String PROVIDER_FOLLOW_STATUS_PENDING = "PENDING";
+    public static final String PROVIDER_FOLLOW_STATUS_OWN = "OWN";
+    public static final String PROVIDER_FOLLOW_STATUS_NONE = "NONE";
+
 }

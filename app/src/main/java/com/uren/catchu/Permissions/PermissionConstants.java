@@ -3,10 +3,7 @@ package com.uren.catchu.Permissions;
 public class PermissionConstants {
 
     //Permission result constants
-    public static final int codeWriteExternalStoragePermission = 1001;
-    public static final int codeCameraPermission = 1002;
-    public static final int codeAccessFineLocationPermission = 1003;
-    public static final int codeRecordAudioPermission = 1004;
+
 
 
     //Activity Result constants

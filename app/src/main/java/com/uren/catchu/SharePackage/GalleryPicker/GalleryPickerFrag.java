@@ -367,7 +367,7 @@ public class GalleryPickerFrag extends Fragment{
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 if (gridListAdapter.selectedPosition == CODE_GALLERY_POSITION)
@@ -377,7 +377,7 @@ public class GalleryPickerFrag extends Fragment{
                 else
                     gridListAdapter.startGalleryProcess();
             }
-        } else if (requestCode == permissionModule.getCameraPermissionCode()) {
+        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 gridListAdapter.startCameraProcess();
             }

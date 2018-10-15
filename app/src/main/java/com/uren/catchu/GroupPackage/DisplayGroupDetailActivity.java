@@ -2,15 +2,10 @@ package com.uren.catchu.GroupPackage;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.design.widget.SubtitleCollapsingToolbarLayout;
@@ -21,29 +16,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
-import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ExifUtil;
-import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
@@ -54,14 +42,9 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.UserGroups;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.BucketUploadResponse;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -71,15 +54,11 @@ import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LIST;
-import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_NAME;
-import static com.uren.catchu.Constants.StringConstants.UPDATE_GROUP_INFO;
-import static com.uren.catchu.Constants.StringConstants.displayRectangle;
-import static com.uren.catchu.Constants.StringConstants.groupsCacheDirectory;
 
-public class DisplayGroupDetailActivity extends AppCompatActivity implements GroupDetailListAdapter.ItemClickListener {
+public class DisplayGroupDetailActivity extends AppCompatActivity {
 
 
     ImageView groupPictureImgV;
@@ -157,7 +136,11 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
             @Override
             public void onFailed(Exception e) {
-
+                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
         });
     }
@@ -295,7 +278,6 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     private void setupViewRecyclerView() {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new GroupDetailListAdapter(this, groupParticipantList, groupRequestResultResultArrayItem);
-        adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -337,7 +319,11 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
             @Override
             public void onFailure(Exception e) {
-
+                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
 
             @Override
@@ -379,16 +365,16 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
         }
 
         if (!permissionModule.checkWriteExternalStoragePermission())
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.getWriteExternalStoragePermissionCode());
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         else
             checkCameraPermission();
     }
 
     public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.getCameraPermissionCode());
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
         else {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
         }
     }
 
@@ -401,7 +387,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == permissionModule.getCameraPermissionCode()) {
+            if (requestCode == permissionModule.PERMISSION_CAMERA) {
                 photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, CAMERA_TEXT);
                 //groupPictureImgV.setPadding(200, 200, 200, 200);
                 //groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
@@ -423,12 +409,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
         Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
 
-        if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkCameraPermission();
             }
-        } else if (requestCode == permissionModule.getCameraPermissionCode()) {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
+        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
         } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
@@ -448,27 +434,23 @@ public class DisplayGroupDetailActivity extends AppCompatActivity implements Gro
 
                     @Override
                     public void onFailed(Exception e) {
-
+                        DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+                            }
+                        });
                     }
                 });
             }
 
             @Override
             public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this,
-                        getResources().getString(R.string.error),
-                        new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
-
-                            }
-                        });
+                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
         });
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        Toast.makeText(this, "You clicked " + adapter.getItem(position) + " on row number " + position, Toast.LENGTH_SHORT).show();
     }
 }

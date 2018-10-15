@@ -14,8 +14,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uren.catchu.Adapters.UserGroupsListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
@@ -52,7 +53,6 @@ public class SelectGroupActivity extends AppCompatActivity {
         imgCancelSearch =  findViewById(R.id.imgCancelSearch);
         editTextSearch = findViewById(R.id.editTextSearch);
         warningMsgTv = findViewById(R.id.warningMsgTv);
-        warningMsgTv.setText(getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         SelectedGroupList.setInstance(null);
         SelectedGroupList.getInstance();
     }
@@ -74,7 +74,10 @@ public class SelectGroupActivity extends AppCompatActivity {
             @Override
             public void onComplete(Object object) {
                 GroupRequestResult groupRequestResult = (GroupRequestResult) object;
-                setWarningMessageVisibility(groupRequestResult);
+
+                MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
+                        getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+
                 userGroupsListAdapter = new UserGroupsListAdapter(SelectGroupActivity.this, groupRequestResult, new ReturnCallback() {
                     @Override
                     public void onReturn(Object object) {
@@ -89,14 +92,6 @@ public class SelectGroupActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    public void setWarningMessageVisibility(GroupRequestResult groupRequestResult) {
-        if (groupRequestResult != null && groupRequestResult.getResultArray() != null &&
-                groupRequestResult.getResultArray().size() == 0) {
-            warningMsgTv.setVisibility(View.VISIBLE);
-        } else
-            warningMsgTv.setVisibility(View.GONE);
     }
 
     public void addListeners(){

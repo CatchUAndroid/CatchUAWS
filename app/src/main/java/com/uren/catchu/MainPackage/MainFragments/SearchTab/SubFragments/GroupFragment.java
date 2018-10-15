@@ -1,7 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +13,10 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.uren.catchu.Adapters.UserGroupsListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserGroupsListAdapter;
+import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
@@ -23,16 +24,13 @@ import com.uren.catchu.Singleton.UserGroups;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
 
-@SuppressLint("ValidFragment")
 public class GroupFragment extends Fragment {
 
     RecyclerView groupRecyclerView;
 
     private View mView;
-    String userid;
     ViewGroup mContainer;
     LayoutInflater mLayoutInflater;
     TextView warningMsgTv;
@@ -41,15 +39,17 @@ public class GroupFragment extends Fragment {
     RelativeLayout specialSelectRelLayout;
     UserGroupsListAdapter userGroupsListAdapter;
 
-    private Context context;
-
     @BindView(R.id.progressBar)
     public ProgressBar progressBar;
 
-    @SuppressLint("ValidFragment")
-    public GroupFragment(Context context, String userid) {
-        this.userid = userid;
-        this.context = context;
+    public GroupFragment() {
+    }
+
+    public static GroupFragment newInstance() {
+        Bundle args = new Bundle();
+        GroupFragment fragment = new GroupFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -73,7 +73,6 @@ public class GroupFragment extends Fragment {
         groupRecyclerView = mView.findViewById(R.id.specialRecyclerView);
         specialSelectRelLayout = mView.findViewById(R.id.specialSelectRelLayout);
         warningMsgTv = mView.findViewById(R.id.warningMsgTv);
-        warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         getGroups();
     }
 
@@ -83,12 +82,17 @@ public class GroupFragment extends Fragment {
             @Override
             public void onComplete(Object object) {
                 GroupRequestResult groupRequestResult = (GroupRequestResult) object;
-                setWarningMessageVisibility(groupRequestResult);
-                userGroupsListAdapter = new UserGroupsListAdapter(context, groupRequestResult, new ReturnCallback() {
+
+                MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
+                        getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+
+                userGroupsListAdapter = new UserGroupsListAdapter(getActivity(), groupRequestResult, new ReturnCallback() {
                     @Override
                     public void onReturn(Object object) {
                         GroupRequestResult groupRequestResult1 = (GroupRequestResult) object;
-                        setWarningMessageVisibility(groupRequestResult1);
+
+                        MessageDataUtil.setWarningMessageVisibility(groupRequestResult1, warningMsgTv,
+                                getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
                     }
                 });
                 groupRecyclerView.setAdapter(userGroupsListAdapter);
@@ -99,16 +103,12 @@ public class GroupFragment extends Fragment {
 
             @Override
             public void onFailed(Exception e) {
-
+                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
             }
         });
-    }
-
-    public void setWarningMessageVisibility(GroupRequestResult groupRequestResult) {
-        if (groupRequestResult != null && groupRequestResult.getResultArray() != null &&
-                groupRequestResult.getResultArray().size() == 0) {
-            warningMsgTv.setVisibility(View.VISIBLE);
-        } else
-            warningMsgTv.setVisibility(View.GONE);
     }
 }

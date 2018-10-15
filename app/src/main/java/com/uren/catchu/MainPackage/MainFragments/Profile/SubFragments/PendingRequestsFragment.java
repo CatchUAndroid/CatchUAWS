@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
+import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -70,7 +71,6 @@ public class PendingRequestsFragment extends BaseFragment {
         toolbarTitle = mView.findViewById(R.id.toolbarTitle);
         toolbarTitle.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
         imgAddFollowing.setVisibility(View.GONE);
-        warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
         addListeners();
         getData();
     }
@@ -95,7 +95,10 @@ public class PendingRequestsFragment extends BaseFragment {
             @Override
             public void onComplete(Object object) {
                 FriendRequestList friendRequestList = (FriendRequestList) object;
-                setWarningMessageVisibility(friendRequestList);
+
+                MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
+                        getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+
                 pendingRequestAdapter = new PendingRequestAdapter(getActivity(), friendRequestList, new ListItemClickListener() {
                     @Override
                     public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
@@ -105,7 +108,9 @@ public class PendingRequestsFragment extends BaseFragment {
                     @Override
                     public void onReturn(Object object1) {
                         FriendRequestList friendRequestList1 = (FriendRequestList) object1;
-                        setWarningMessageVisibility(friendRequestList1);
+
+                        MessageDataUtil.setWarningMessageVisibility(friendRequestList1, warningMsgTv,
+                                getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
                     }
                 });
                 following_recyclerView.setAdapter(pendingRequestAdapter);
@@ -124,14 +129,6 @@ public class PendingRequestsFragment extends BaseFragment {
                 });
             }
         });
-    }
-
-    public void setWarningMessageVisibility(FriendRequestList friendRequestList) {
-        if (friendRequestList != null && friendRequestList.getResultArray() != null &&
-                friendRequestList.getResultArray().size() == 0) {
-            warningMsgTv.setVisibility(View.VISIBLE);
-        } else
-            warningMsgTv.setVisibility(View.GONE);
     }
 
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {

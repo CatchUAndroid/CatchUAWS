@@ -21,6 +21,15 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 
 public class UserDataUtil {
 
+    public static void setName(String name, TextView nameTextView) {
+        if (name != null && nameTextView != null && !name.isEmpty()) {
+            if (name.length() > 30)
+                nameTextView.setText(name.trim().substring(0, 30) + "...");
+            else
+                nameTextView.setText(name);
+        }
+    }
+
     public static String getShortenUserName(String name) {
         String returnValue = "";
         if (name != null && !name.trim().isEmpty()) {

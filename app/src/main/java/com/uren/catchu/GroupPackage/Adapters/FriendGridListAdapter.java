@@ -12,22 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.ImageCache.ImageLoader;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
-import java.util.ArrayList;
-
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
-
-import static com.uren.catchu.Constants.StringConstants.displayRounded;
-import static com.uren.catchu.Constants.StringConstants.friendsCacheDirectory;
 
 public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAdapter.MyViewHolder> {
     FriendList friendList;

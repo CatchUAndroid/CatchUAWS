@@ -191,12 +191,12 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                             mediaRecorderIsReady();
                         } else
                             requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                                    permissionModule.getRecordAudioPermissionCode());
+                                    permissionModule.PERMISSION_RECORD_AUDIO);
                     } else
                         stopRecorderProcess();
                 } else
                     requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            permissionModule.getCameraPermissionCode());
+                            permissionModule.PERMISSION_CAMERA);
             }
         });
 
@@ -208,7 +208,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                     startGalleryForVideos();
                 } else
                     requestPermissions(new String[]{Manifest.permission.CAMERA},
-                            permissionModule.getWriteExternalStoragePermissionCode());
+                            permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
             }
         });
 
@@ -293,15 +293,15 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == permissionModule.getCameraPermissionCode()) {
+        if (requestCode == permissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             }
-        } else if (requestCode == permissionModule.getWriteExternalStoragePermissionCode()) {
+        } else if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startGalleryForVideos();
             }
-        } else if (requestCode == permissionModule.getRecordAudioPermissionCode()) {
+        } else if (requestCode == permissionModule.PERMISSION_RECORD_AUDIO) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 mediaRecorderIsReady();
             }
@@ -463,7 +463,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             openCamera();
         } else
             requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.getCameraPermissionCode());
+                    permissionModule.PERMISSION_CAMERA);
     }
 
     @Override

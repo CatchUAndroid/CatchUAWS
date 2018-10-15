@@ -85,7 +85,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
                 photoSelectUtil = new PhotoSelectUtil(context, data, GALLERY_TEXT);
                 fillImageShareItemBox();
                 photoSelectCallback.onSelect(photoSelectUtil);
-            } else if (requestCode == permissionModule.getCameraPermissionCode()) {
+            } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
                 photoSelectUtil = new PhotoSelectUtil(context, data, CAMERA_TEXT);
                 fillImageShareItemBox();
                 photoSelectCallback.onSelect(photoSelectUtil);
@@ -179,7 +179,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             startGalleryProcess();
         else
             galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.getWriteExternalStoragePermissionCode());
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     private void checkCameraProcess() {
@@ -192,7 +192,7 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
             startCameraProcess();
         else
             galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.getCameraPermissionCode());
+                    permissionModule.PERMISSION_CAMERA);
     }
 
     public void startGalleryProcess() {
@@ -204,9 +204,9 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     public void startCameraProcess() {
         if (permissionModule.checkWriteExternalStoragePermission()) {
             Activity origin = (Activity) context;
-            origin.startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.getCameraPermissionCode());
+            origin.startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
         } else
             galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.getWriteExternalStoragePermissionCode());
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 }

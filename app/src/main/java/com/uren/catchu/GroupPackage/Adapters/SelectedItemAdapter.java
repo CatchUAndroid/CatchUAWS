@@ -106,18 +106,9 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         public void setData(UserProfileProperties selectedFriend, int position) {
             this.position = position;
             this.selectedFriend = selectedFriend;
-            setName();
+            UserDataUtil.setName(selectedFriend.getName(), specialNameTextView);
             UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                     selectedFriend.getName(), shortenTextView, specialPictureImgView);
-        }
-
-        public void setName() {
-            if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                if (selectedFriend.getName().trim().length() > 30)
-                    this.specialNameTextView.setText(selectedFriend.getName().trim().substring(0, 30) + "...");
-                else
-                    this.specialNameTextView.setText(selectedFriend.getName());
-            }
         }
     }
 
