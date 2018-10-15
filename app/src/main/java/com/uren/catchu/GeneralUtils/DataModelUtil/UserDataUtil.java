@@ -25,6 +25,15 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
 public class UserDataUtil {
 
+    public static void setName(String name, TextView nameTextView) {
+        if (name != null && nameTextView != null && !name.isEmpty()) {
+            if (name.length() > 30)
+                nameTextView.setText(name.trim().substring(0, 30) + "...");
+            else
+                nameTextView.setText(name);
+        }
+    }
+
     public static String getShortenUserName(String name) {
         String returnValue = "";
         if (name != null && !name.trim().isEmpty()) {
@@ -70,7 +79,7 @@ public class UserDataUtil {
     public static void updateFollowButton(Context context, Boolean friendRelation, Boolean pendingFriendRequest, Button displayButton,
                                           Boolean isHideKeybard) {
 
-        if(isHideKeybard != null && isHideKeybard)
+        if (isHideKeybard != null && isHideKeybard)
             CommonUtils.hideKeyBoard(context);
 
         GradientDrawable buttonShape;

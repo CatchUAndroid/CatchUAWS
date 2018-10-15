@@ -44,7 +44,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
 
     View view;
     LayoutInflater layoutInflater;
-    //String userid;
     String searchText;
     Context context;
     Activity activity;
@@ -226,7 +225,7 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
             this.selectedFriend = selectedFriend;
             this.requestedUserid = selectedFriend.getUserid();
             setUserName();
-            setName();
+            UserDataUtil.setName(selectedFriend.getName(), nameTextView);
             UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                     selectedFriend.getName(), shortenTextView, profilePicImgView);
 
@@ -241,15 +240,6 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         public void setUserName() {
             if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty())
                 this.usernameTextView.setText(selectedFriend.getUsername());
-        }
-
-        public void setName() {
-            if (selectedFriend.getName() != null && !selectedFriend.getName().trim().isEmpty()) {
-                if (selectedFriend.getName().length() > 30)
-                    this.nameTextView.setText(selectedFriend.getName().trim().substring(0, 30) + "...");
-                else
-                    this.nameTextView.setText(selectedFriend.getName());
-            }
         }
     }
 

@@ -168,7 +168,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             setName();
             setUserName();
             setGroupAdmin();
-            setUserPicture();
+            UserDataUtil.setProfilePicture(context, userProfile.getProfilePhotoUrl(),
+                    userProfile.getName(), shortUsernameTv, specialProfileImgView);
         }
 
         public void setName() {
@@ -178,9 +179,9 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 if (AccountHolderInfo.getUserID().equals(userProfile.getUserid()))
                     this.nameSurname.setText(context.getResources().getString(R.string.youText));
                 else
-                    this.nameSurname.setText(userProfile.getName());
+                    UserDataUtil.setName(userProfile.getName(), nameSurname);
             } else if (userProfile.getName() != null && !userProfile.getName().trim().isEmpty())
-                this.nameSurname.setText(userProfile.getName());
+                UserDataUtil.setName(userProfile.getName(), nameSurname);
         }
 
         public void setUserName() {
@@ -198,28 +199,6 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                     adminDisplayBtn.setVisibility(View.GONE);
             } else
                 adminDisplayBtn.setVisibility(View.GONE);
-        }
-
-        public void setUserPicture() {
-            if (userProfile.getProfilePhotoUrl() != null && !userProfile.getProfilePhotoUrl().trim().isEmpty()) {
-                shortUsernameTv.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(userProfile.getProfilePhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(specialProfileImgView);
-            } else {
-                if (userProfile.getName() != null && !userProfile.getName().trim().isEmpty()) {
-                    shortUsernameTv.setVisibility(View.VISIBLE);
-                    shortUsernameTv.setText(UserDataUtil.getShortenUserName(userProfile.getName()));
-                    specialProfileImgView.setImageDrawable(null);
-                } else {
-                    shortUsernameTv.setVisibility(View.GONE);
-                    Glide.with(context)
-                            .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(specialProfileImgView);
-                }
-            }
         }
 
         public void exitFromGroup(final String userid) {

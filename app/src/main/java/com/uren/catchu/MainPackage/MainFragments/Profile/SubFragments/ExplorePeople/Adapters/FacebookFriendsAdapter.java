@@ -237,7 +237,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             this.user = user;
             this.requestedUserid = user.getUserid();
             setUserName();
-            setName();
+            UserDataUtil.setName(user.getName(), nameTextView);
             UserDataUtil.setProfilePicture(context, user.getProfilePhotoUrl(), user.getName(), shortenTextView, profilePicImgView);
 
             if (user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
@@ -252,15 +252,6 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
         public void setUserName() {
             if (user.getUsername() != null && !user.getUsername().trim().isEmpty())
                 this.usernameTextView.setText(user.getUsername());
-        }
-
-        public void setName() {
-            if (user.getName() != null && !user.getName().trim().isEmpty()) {
-                if (user.getName().length() > 30)
-                    this.nameTextView.setText(user.getName().trim().substring(0, 30) + "...");
-                else
-                    this.nameTextView.setText(user.getName());
-            }
         }
     }
 
