@@ -38,6 +38,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
@@ -235,6 +236,8 @@ public class ProfileFragment extends BaseFragment
 
                 switch (item.getItemId()) {
                     case R.id.searchItem:
+                        drawerLayout.closeDrawer(Gravity.START);
+                        startExplorePeopleFragment();
                         break;
 
                     case R.id.viewItem:
@@ -453,7 +456,6 @@ public class ProfileFragment extends BaseFragment
             //mFragmentNavigation.pushFragment(new UserEditFragment());
             mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
-
     }
 
     private void followerClicked() {
@@ -462,7 +464,6 @@ public class ProfileFragment extends BaseFragment
             //mFragmentNavigation.pushFragment(new UserEditFragment());
             mFragmentNavigation.pushFragment(new FollowerFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
-
     }
 
     private void followingClicked() {
@@ -485,4 +486,11 @@ public class ProfileFragment extends BaseFragment
             mFragmentNavigation.pushFragment(new PendingRequestsFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
     }
+
+    private void startExplorePeopleFragment() {
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new ExplorePeopleFragment(), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
+
 }
