@@ -27,7 +27,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
+import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.SelectGroupActivity;
@@ -43,7 +43,6 @@ import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
-import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 
 public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> implements Filterable {
 
@@ -59,15 +58,18 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     GradientDrawable groupPhotoShape;
     GradientDrawable adminButtonShape;
     ReturnCallback returnCallback;
+    ItemClickListener itemClickListener;
 
     private static final int SHOW_GROUP_DETAIL = 0;
     private static final int EXIT_FROM_GROUP = 1;
 
-    public UserGroupsListAdapter(Context context, GroupRequestResult groupRequestResult, ReturnCallback returnCallback) {
+    public UserGroupsListAdapter(Context context, GroupRequestResult groupRequestResult, ReturnCallback returnCallback,
+                                 ItemClickListener itemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         this.groupRequestResult = groupRequestResult;
         this.orgGroupRequestResult = groupRequestResult;
         this.returnCallback = returnCallback;
+        this.itemClickListener = itemClickListener;
         this.context = context;
         activity = (Activity) context;
         pendingActivityName = context.getClass().getSimpleName();
@@ -166,9 +168,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
                     if (item == SHOW_GROUP_DETAIL) {
 
-                        Intent intent = new Intent(context, DisplayGroupDetailActivity.class);
-                        intent.putExtra(PUTEXTRA_GROUP_ID, groupRequestResultResultArrayItem.getGroupid());
-                        context.startActivity(intent);
+                        itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
 
                     } else if (item == EXIT_FROM_GROUP) {
 

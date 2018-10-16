@@ -2,9 +2,9 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/groupCoordinatorLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.uren.catchu.GroupPackage.DisplayGroupDetailActivity">
+    android:layout_height="match_parent">
 
 
     <android.support.design.widget.AppBarLayout
@@ -47,7 +47,7 @@
                     android:layout_height="30dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="30dp"
                     android:layout_marginRight="20dp"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"

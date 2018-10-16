@@ -26,7 +26,7 @@ public class DialogBoxUtil {
             adapter.add("  " + context.getResources().getString(R.string.REMOVE_PHOTO));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        if (title != null)
+        if (title != null && !title.isEmpty())
             builder.setTitle(title);
 
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
@@ -89,7 +89,7 @@ public class DialogBoxUtil {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setIcon(R.drawable.success_icon_480);
 
-        if (title != null)
+        if (title != null && !title.isEmpty())
             alertDialog.setTitle(title);
 
         alertDialog.setMessage(message);
@@ -109,7 +109,7 @@ public class DialogBoxUtil {
         builder.setIcon(R.drawable.warning_icon40);
         builder.setMessage(message);
 
-        if (title != null)
+        if (title != null && !title.isEmpty())
             builder.setTitle(title);
 
         builder.setPositiveButton(context.getResources().getString(R.string.upperYes), new DialogInterface.OnClickListener() {
@@ -136,7 +136,7 @@ public class DialogBoxUtil {
         CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if(title != null)
+        if(title != null && !title.isEmpty())
             builder.setTitle(title);
 
         builder.setIcon(R.drawable.success_icon_480);
