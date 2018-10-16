@@ -28,14 +28,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
-import com.uren.catchu.Interfaces.OnBackClicked;
-import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TextCompleteCallback;
 import com.uren.catchu.SharePackage.Utils.ColorSelectCallback;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import butterknife.ButterKnife;
 

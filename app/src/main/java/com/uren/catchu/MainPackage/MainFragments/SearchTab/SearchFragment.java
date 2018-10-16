@@ -31,11 +31,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
-import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFragment;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -46,14 +43,11 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.ButterKnife;
 import catchu.model.FriendList;
-import catchu.model.SearchResult;
 import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.propGroups;
 import static com.uren.catchu.Constants.StringConstants.propPersons;
-import static com.uren.catchu.Constants.StringConstants.verticalShown;
-
 
 public class SearchFragment extends BaseFragment {
 
@@ -71,7 +65,6 @@ public class SearchFragment extends BaseFragment {
     String userid;
     Toolbar mToolBar;
 
-    //nurullah - person ve group fragmentları tek bir tane yaratılacak şekilde düzenlendi
     private PersonFragment personFragment;
 
     private EditText editTextSearch;
@@ -210,7 +203,6 @@ public class SearchFragment extends BaseFragment {
                         selectedProperty = propGroups;
                         break;
                     default:
-                        Log.i("Info", "Tablayout unknown");
                         break;
                 }
             }
