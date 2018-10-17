@@ -95,5 +95,8 @@ public class StringConstants {
     public static final String FOLLOW_STATUS_OWN = "OWN";
     public static final String FOLLOW_STATUS_NONE = "NONE";
 
+    //Person list fragment comingFor values
+    public static final String COMING_FOR_LIKE_LIST = "LIKE_LIST";
+
 
 }

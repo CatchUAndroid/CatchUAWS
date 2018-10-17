@@ -40,6 +40,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
+import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 
 
 public class PersonListFragment extends BaseFragment
@@ -49,6 +50,7 @@ public class PersonListFragment extends BaseFragment
     PersonListAdapter personListAdapter;
     String toolbarTitle;
     String postId;
+    String comingFor;
     String page;
     String perPage;
 
@@ -64,10 +66,11 @@ public class PersonListFragment extends BaseFragment
     @BindView(R.id.imgBack)
     ClickableImageView imgBack;
 
-    public static PersonListFragment newInstance(String toolbarTitle, String postId) {
+    public static PersonListFragment newInstance(String toolbarTitle, String postId, String comingFor) {
         Bundle args = new Bundle();
         args.putString("toolbarTitle", toolbarTitle);
         args.putString("postId", postId);
+        args.putString("comingFor", comingFor);
         PersonListFragment fragment = new PersonListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -101,6 +104,7 @@ public class PersonListFragment extends BaseFragment
         if (args != null) {
             toolbarTitle = (String) args.getString("toolbarTitle");
             postId = (String) args.getString("postId");
+            comingFor = (String) args.getString("comingFor");
         }
     }
 
@@ -134,7 +138,17 @@ public class PersonListFragment extends BaseFragment
 
             @Override
             public void onTokenTaken(String token) {
-                startGetPersonList(token);
+
+                if(comingFor!= null && !comingFor.isEmpty()){
+
+                    if(comingFor.equals(COMING_FOR_LIKE_LIST)){
+                        startGetPersonList(token);
+                    }else{
+                        // lazım oldukca doldurulacak..
+                    }
+
+                }
+
             }
 
         });
