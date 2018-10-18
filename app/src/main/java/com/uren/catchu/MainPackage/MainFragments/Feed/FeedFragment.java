@@ -283,7 +283,7 @@ public class FeedFragment extends BaseFragment {
 
         longitude = "29.03129382";
         latitude = "41.10745331";
-        radius = "1";
+        radius = "100";
 
     }
 

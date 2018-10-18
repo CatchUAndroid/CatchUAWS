@@ -49,6 +49,9 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
 
     private Context context;
     private UserListResponse personList;
+
+
+
     private PersonListItemClickListener personListItemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
@@ -268,6 +271,11 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
 
         notifyItemChanged(position);
     }
+
+    public UserListResponse getPersonList() {
+        return personList;
+    }
+
 }
 
 

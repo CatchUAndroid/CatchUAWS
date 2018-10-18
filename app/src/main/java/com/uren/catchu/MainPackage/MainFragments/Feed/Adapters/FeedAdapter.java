@@ -86,6 +86,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         LinearLayout layoutLike;
         LinearLayout layoutComment;
         LinearLayout profileMainLayout;
+        LinearLayout locationDetailLayout;
 
         View mView;
 
@@ -106,6 +107,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutLike = (LinearLayout) view.findViewById(R.id.layoutLike);
             layoutComment = (LinearLayout) view.findViewById(R.id.layoutComment);
             profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
+            locationDetailLayout = (LinearLayout) view.findViewById(R.id.locationDetailLayout);
 
             setListeners();
 
@@ -164,6 +166,14 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
                     PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, followInfoListItem);
                 }
             });
+            //Location Detail Layout
+            locationDetailLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PostHelper.LocatonDetailClicked.startProcess(mContext, fragmentNavigation, post, imgProfilePic);
+                }
+            });
+
 
         }
 

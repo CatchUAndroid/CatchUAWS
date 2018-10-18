@@ -12,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -45,6 +46,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.FriendRequestList;
+import catchu.model.User;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileRelationInfo;
 
@@ -65,6 +67,7 @@ public class OtherProfileFragment extends BaseFragment
     UserProfile otherProfile;
     FollowInfoListItem followInfoListItem;
     FollowInfoResultArrayItem selectedProfile;
+    String followStatus;
     private int followingCount, followerCount;
 
     @BindView(R.id.progressBar)
@@ -310,6 +313,11 @@ public class OtherProfileFragment extends BaseFragment
                 } else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
                     ((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
                 } else if (followInfoListItem.getAdapter() instanceof PersonListAdapter) {
+                    if(followStatus != null && !followStatus.isEmpty()){
+                        PersonListAdapter adapter = (PersonListAdapter) followInfoListItem.getAdapter();
+                        User user = adapter.getPersonList().getItems().get(followInfoListItem.getClickedPosition());
+                        user.setFollowStatus(followStatus);
+                    }
                     ((PersonListAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
                 }
             }
@@ -397,17 +405,20 @@ public class OtherProfileFragment extends BaseFragment
                 otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount - 1));
                 txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
                 otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_NONE);
+                followStatus = FOLLOW_STATUS_NONE;
                 break;
 
             case FRIEND_DELETE_PENDING_FOLLOW_REQUEST:
                 selectedProfile.setIsFollow(false);
                 selectedProfile.setIsPendingRequest(false);
                 otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_NONE);
+                followStatus = FOLLOW_STATUS_NONE;
                 break;
 
             case FRIEND_FOLLOW_REQUEST:
                 selectedProfile.setIsPendingRequest(true);
                 otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_PENDING);
+                followStatus = FOLLOW_STATUS_PENDING;
                 break;
 
             case FRIEND_CREATE_FOLLOW_DIRECTLY:
@@ -418,6 +429,7 @@ public class OtherProfileFragment extends BaseFragment
                 otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount + 1));
                 txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
                 otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_FOLLOWING);
+                followStatus = FOLLOW_STATUS_FOLLOWING;
                 break;
 
             default:
