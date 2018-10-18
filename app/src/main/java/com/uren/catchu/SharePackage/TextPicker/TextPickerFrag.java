@@ -28,8 +28,6 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GroupPackage.EditGroupNameActivity;
-import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
 import com.uren.catchu.SharePackage.TextPicker.Adapters.PostitAdapter;

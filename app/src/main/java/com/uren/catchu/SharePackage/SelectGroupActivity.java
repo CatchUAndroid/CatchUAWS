@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
@@ -83,7 +84,13 @@ public class SelectGroupActivity extends AppCompatActivity {
                     public void onReturn(Object object) {
 
                     }
+                }, new ItemClickListener() {
+                    @Override
+                    public void onClick(Object object, int clickedItem) {
+
+                    }
                 });
+
                 recyclerView.setAdapter(userGroupsListAdapter);
             }
 

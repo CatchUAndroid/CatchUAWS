@@ -7,15 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.design.widget.SubtitleCollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.SubtitleCollapsingToolbarLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -36,20 +39,30 @@ import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.UserGroups;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -57,20 +70,26 @@ import static com.uren.catchu.Constants.StringConstants.GET_GROUP_PARTICIPANT_LI
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_NAME;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_FRIEND_COUNT;
+import static com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter.CODE_DISPLAY_PROFILE;
+import static com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter.CODE_REMOVE_FROM_GROUP;
 
-public class DisplayGroupDetailActivity extends AppCompatActivity {
+public class DisplayGroupDetailFragment extends BaseFragment {
 
-
+    View mView;
     ImageView groupPictureImgV;
     ImageView editImageView;
-    public static TextView personCntTv;
-    public static SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
+    CoordinatorLayout groupCoordinatorLayout;
+    TextView personCntTv;
+    SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
     boolean photoExistOnImgv = false;
 
-    String groupId;
-    public static Context context;
+    public static final int REQUEST_CODE_GRP_NAME_CHANGED = 414;
+    public static final int REQUEST_CODE_SELECT_FRIEND = 415;
 
-    public static GroupDetailListAdapter adapter;
+    String groupId;
+
+    GroupDetailListAdapter adapter;
 
     CardView addFriendCardView;
     CardView deleteGroupCardView;
@@ -83,38 +102,54 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     ProgressDialog mProgressDialog;
 
     ProgressBar progressBar;
-    public static RecyclerView recyclerView;
+    RecyclerView recyclerView;
     PhotoSelectUtil photoSelectUtil;
 
+    public static DisplayGroupDetailFragment newInstance(String groupId) {
+        Bundle args = new Bundle();
+        args.putSerializable(PUTEXTRA_GROUP_ID, groupId);
+        DisplayGroupDetailFragment fragment = new DisplayGroupDetailFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_group_detail);
+    }
 
-        context = this;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        groupParticipantList = new ArrayList<>();
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.activity_display_group_detail, container, false);
+            ButterKnife.bind(this, mView);
 
-        Intent i = getIntent();
-        groupId = (String) i.getSerializableExtra(PUTEXTRA_GROUP_ID);
+            Bundle args = getArguments();
+            if (args != null)
+                groupId = (String) args.getSerializable(PUTEXTRA_GROUP_ID);
 
-        setGUIVariables();
-        getGroupInformation();
-        getGroupParticipants();
-        addListeners();
+            setGUIVariables();
+            getGroupInformation();
+            getGroupParticipants();
+            addListeners();
+        }
+        return mView;
     }
 
     public void setGUIVariables() {
-        groupPictureImgV = findViewById(R.id.groupPictureImgv);
-        editImageView = findViewById(R.id.editImageView);
-        personCntTv = findViewById(R.id.personCntTv);
-        addFriendCardView = findViewById(R.id.addFriendCardView);
-        deleteGroupCardView = findViewById(R.id.deleteGroupCardView);
-        progressBar = findViewById(R.id.progressBar);
-        subtitleCollapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        permissionModule = new PermissionModule(context);
-        mProgressDialog = new ProgressDialog(this);
-        recyclerView = findViewById(R.id.recyclerView);
+        groupPictureImgV = mView.findViewById(R.id.groupPictureImgv);
+        editImageView = mView.findViewById(R.id.editImageView);
+        personCntTv = mView.findViewById(R.id.personCntTv);
+        addFriendCardView = mView.findViewById(R.id.addFriendCardView);
+        deleteGroupCardView = mView.findViewById(R.id.deleteGroupCardView);
+        progressBar = mView.findViewById(R.id.progressBar);
+        groupCoordinatorLayout = mView.findViewById(R.id.groupCoordinatorLayout);
+        subtitleCollapsingToolbarLayout = mView.findViewById(R.id.collapsing_toolbar);
+        permissionModule = new PermissionModule(getActivity());
+        mProgressDialog = new ProgressDialog(getActivity());
+        recyclerView = mView.findViewById(R.id.recyclerView);
+        groupParticipantList = new ArrayList<>();
     }
 
     private void getGroupInformation() {
@@ -125,7 +160,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
                 groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
 
                 if (groupRequestResultResultArrayItem == null)
-                    CommonUtils.showToast(DisplayGroupDetailActivity.this,
+                    CommonUtils.showToast(getActivity(),
                             getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
                 else {
                     setCardViewVisibility();
@@ -136,7 +171,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                     }
@@ -174,7 +209,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
             @Override
             public void onFailure(Exception e) {
                 progressBar.setVisibility(View.GONE);
-                CommonUtils.showToast(DisplayGroupDetailActivity.this, getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showToast(getActivity(), getResources().getString(R.string.error) + e.getMessage());
             }
 
             @Override
@@ -186,11 +221,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+
     public void setParticipantCount() {
         personCntTv.setText(Integer.toString(groupParticipantList.size()));
     }
 
-    public static int getParticipantCount() {
+    public int getParticipantCount() {
         return groupParticipantList.size();
     }
 
@@ -221,7 +257,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
             photoExistOnImgv = false;
             groupPictureImgV.setPadding(200, 200, 200, 200);
             Glide.with(this)
-                    .load(getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
+                    .load(getResources().getIdentifier("groups_icon_500", "drawable", getActivity().getPackageName()))
                     .apply(RequestOptions.centerInsideTransform())
                     .into(groupPictureImgV);
         }
@@ -232,17 +268,17 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         addFriendCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SelectFriendToGroupActivity.class);
-                intent.putExtra(PUTEXTRA_ACTIVITY_NAME, DisplayGroupDetailActivity.class.getSimpleName());
+                Intent intent = new Intent(getActivity(), SelectFriendToGroupActivity.class);
+                intent.putExtra(PUTEXTRA_ACTIVITY_NAME, DisplayGroupDetailFragment.class.getSimpleName());
                 intent.putExtra(PUTEXTRA_GROUP_ID, groupId);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_SELECT_FRIEND);
             }
         });
 
         deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogBoxUtil.showYesNoDialog(DisplayGroupDetailActivity.this, null, getResources().getString(R.string.areYouSureExitFromGroup), new YesNoDialogBoxCallback() {
+                DialogBoxUtil.showYesNoDialog(getActivity(), null, getResources().getString(R.string.areYouSureExitFromGroup), new YesNoDialogBoxCallback() {
                     @Override
                     public void yesClick() {
                         exitFromGroup(AccountHolderInfo.getUserID());
@@ -260,10 +296,10 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(DisplayGroupDetailActivity.this, EditGroupNameActivity.class);
+                Intent intent = new Intent(getActivity(), EditGroupNameActivity.class);
                 intent.putExtra(PUTEXTRA_GROUP_ID, groupRequestResultResultArrayItem.getGroupid());
                 intent.putExtra(PUTEXTRA_GROUP_NAME, groupRequestResultResultArrayItem.getName());
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_CODE_GRP_NAME_CHANGED);
             }
         });
 
@@ -276,9 +312,30 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     }
 
     private void setupViewRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new GroupDetailListAdapter(this, groupParticipantList, groupRequestResultResultArrayItem);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateAdapter();
         recyclerView.setAdapter(adapter);
+    }
+
+    public void updateAdapter() {
+        adapter = new GroupDetailListAdapter(getActivity(), groupParticipantList, groupRequestResultResultArrayItem, new ItemClickListener() {
+            @Override
+            public void onClick(Object object, int clickedItem) {
+                if (clickedItem == CODE_DISPLAY_PROFILE) {
+                    if (mFragmentNavigation != null) {
+                        FollowInfoResultArrayItem followInfoResultArrayItem = (FollowInfoResultArrayItem) object;
+                        FollowInfoListItem followInfoListItem = new FollowInfoListItem(followInfoResultArrayItem);
+                        followInfoListItem.setAdapter(adapter);
+                        followInfoListItem.setClickedPosition(clickedItem);
+                        mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                    }
+                } else if (clickedItem == CODE_REMOVE_FROM_GROUP) {
+                    List<UserProfileProperties> groupParticipantList1 = (List<UserProfileProperties>) object;
+                    groupParticipantList.clear();
+                    groupParticipantList.addAll(groupParticipantList1);
+                }
+            }
+        });
     }
 
     @Override
@@ -286,8 +343,9 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         super.onStart();
     }
 
-    public static void reloadAdapter() {
-        adapter = new GroupDetailListAdapter(context, groupParticipantList, groupRequestResultResultArrayItem);
+    public void reloadAdapter() {
+
+        updateAdapter();
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
     }
@@ -314,12 +372,12 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
             public void onSuccess(Object object) {
                 UserGroups.removeGroupFromList(groupRequestResultResultArrayItem);
                 SearchFragment.reloadAdapter();
-                finish();
+                getActivity().onBackPressed();
             }
 
             @Override
             public void onFailure(Exception e) {
-                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                     }
@@ -336,7 +394,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     }
 
     private void startChooseImageProc() {
-        DialogBoxUtil.photoChosenDialogBox(DisplayGroupDetailActivity.this, getResources().
+        DialogBoxUtil.photoChosenDialogBox(getActivity(), getResources().
                 getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
             @Override
             public void onGallerySelected() {
@@ -359,8 +417,8 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
 
     public void startCameraProcess() {
 
-        if (!CommonUtils.checkCameraHardware(this)) {
-            CommonUtils.showToast(DisplayGroupDetailActivity.this, getResources().getString(R.string.deviceHasNoCamera));
+        if (!CommonUtils.checkCameraHardware(getActivity())) {
+            CommonUtils.showToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
             return;
         }
 
@@ -384,30 +442,28 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == permissionModule.PERMISSION_CAMERA) {
-                photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, CAMERA_TEXT);
-                //groupPictureImgV.setPadding(200, 200, 200, 200);
-                //groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
+                photoSelectUtil = new PhotoSelectUtil(getActivity(), data, CAMERA_TEXT);
                 updateGroup();
             } else if (requestCode == permissionModule.getImageGalleryPermission()) {
-                photoSelectUtil = new PhotoSelectUtil(DisplayGroupDetailActivity.this, data, GALLERY_TEXT);
-                //groupPictureImgV.setPadding(200, 200, 200, 200);
-                //groupPictureImgV.setImageBitmap(photoSelectUtil.getBitmap());
+                photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
                 updateGroup();
-            } else
-                CommonUtils.showToastLong(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError) + requestCode);
-        } else
-            CommonUtils.showToastLong(DisplayGroupDetailActivity.this, getResources().getString(R.string.technicalError) + requestCode + resultCode);
+            } else if (requestCode == REQUEST_CODE_GRP_NAME_CHANGED) {
+                String groupName = (String) data.getSerializableExtra(PUTEXTRA_GROUP_NAME);
+                subtitleCollapsingToolbarLayout.setTitle(groupName);
+            } else if (requestCode == REQUEST_CODE_SELECT_FRIEND) {
+                groupParticipantList.addAll(SelectedFriendList.getInstance().getSelectedFriendList().getResultArray());
+                reloadAdapter();
+                personCntTv.setText(Integer.toString(getParticipantCount()));
+            }
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        Log.i("Info", "onRequestPermissionsResult+++++++++++++++++++++++++++++++++++++");
 
         if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -416,11 +472,11 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
         } else
-            CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
+            CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError) + requestCode);
     }
 
     public void updateGroup() {
-        new UpdateGroupProcess(DisplayGroupDetailActivity.this, photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
+        new UpdateGroupProcess(getActivity(), photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
             public void onSuccess(final GroupRequestResultResultArrayItem groupItem) {
 
@@ -434,7 +490,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailed(Exception e) {
-                        DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                        DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                             @Override
                             public void okClick() {
                             }
@@ -445,7 +501,7 @@ public class DisplayGroupDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(DisplayGroupDetailActivity.this, DisplayGroupDetailActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                     }

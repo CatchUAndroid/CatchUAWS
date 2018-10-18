@@ -18,15 +18,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.GroupPackage.DisplayGroupDetailActivity;
+import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -35,6 +33,7 @@ import com.uren.catchu.Singleton.UserGroups;
 import java.util.ArrayList;
 import java.util.List;
 
+import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -50,6 +49,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
     LayoutInflater layoutInflater;
     List<UserProfileProperties> groupParticipantList;
     GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
+    ItemClickListener itemClickListener;
 
     Context context;
     Activity activity;
@@ -66,11 +66,13 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
     GradientDrawable imageShape;
     GradientDrawable adminButtonShape;
 
-    public GroupDetailListAdapter(Context context, List<UserProfileProperties> groupParticipantList, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem) {
+    public GroupDetailListAdapter(Context context, List<UserProfileProperties> groupParticipantList, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem,
+                                  ItemClickListener itemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         initVaribles();
         this.groupParticipantList.addAll(groupParticipantList);
         this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
+        this.itemClickListener = itemClickListener;
         this.context = context;
         activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
@@ -143,6 +145,10 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                 if (item == CODE_DISPLAY_PROFILE) {
 
                                     Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
+                                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
+                                    followInfoResultArrayItem = getFollowProperties();
+                                    itemClickListener.onClick(followInfoResultArrayItem, item);
+
                                 } else if (item == CODE_REMOVE_FROM_GROUP) {
                                     exitFromGroup(userProfile.getUserid());
                                 } else if (item == CODE_CHANGE_AS_ADMIN) {
@@ -160,6 +166,16 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                     }
                 }
             });
+        }
+
+        public FollowInfoResultArrayItem getFollowProperties() {
+            FollowInfoResultArrayItem followItem = new FollowInfoResultArrayItem();
+            followItem.setBirthday(userProfile.getName());
+            followItem.setEmail(userProfile.getUsername());
+            followItem.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());
+            followItem.setUserid(userProfile.getUserid());
+            followItem.setIsPrivateAccount(userProfile.getIsPrivateAccount());
+            return followItem;
         }
 
         public void setData(UserProfileProperties userProfile, int position) {
@@ -222,8 +238,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 @Override
                 public void onSuccess(Object object) {
                     groupParticipantList.remove(position);
-                    DisplayGroupDetailActivity.groupParticipantList.clear();
-                    DisplayGroupDetailActivity.groupParticipantList.addAll(groupParticipantList);
+                    itemClickListener.onClick(groupParticipantList, CODE_REMOVE_FROM_GROUP);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, getItemCount());
                     textview.setText(Integer.toString(getItemCount()));

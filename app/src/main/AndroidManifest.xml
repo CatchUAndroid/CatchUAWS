@@ -64,7 +64,6 @@
 
         <activity android:name=".GroupPackage.AddGroupActivity" />
         <activity android:name=".GroupPackage.SelectFriendToGroupActivity" />
-        <activity android:name=".GroupPackage.DisplayGroupDetailActivity" />
         <activity android:name=".SharePackage.VideoPicker.WillDelete.AudioRecorderActivity" />
         <activity
             android:name=".GroupPackage.EditGroupNameActivity"

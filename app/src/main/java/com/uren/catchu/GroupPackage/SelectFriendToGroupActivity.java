@@ -201,10 +201,10 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
         if (pendingActivityName == null)
             return friendList;
-        else if (pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
-            if (DisplayGroupDetailActivity.groupParticipantList == null)
+        else if (pendingActivityName.equals(DisplayGroupDetailFragment.class.getSimpleName())) {
+            if (DisplayGroupDetailFragment.groupParticipantList == null)
                 return friendList;
-            else if (DisplayGroupDetailActivity.groupParticipantList.size() == 0)
+            else if (DisplayGroupDetailFragment.groupParticipantList.size() == 0)
                 return friendList;
             else {
                 return extractGroupParticipants(friendList);
@@ -217,7 +217,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
     public FriendList extractGroupParticipants(FriendList friendListTemp) {
 
-        for (UserProfileProperties userProfileProperties1 : DisplayGroupDetailActivity.groupParticipantList) {
+        for (UserProfileProperties userProfileProperties1 : DisplayGroupDetailFragment.groupParticipantList) {
 
             int index = 0;
 
@@ -243,9 +243,8 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         }
 
         if (pendingActivityName != null) {
-            if (pendingActivityName.equals(DisplayGroupDetailActivity.class.getSimpleName())) {
+            if (pendingActivityName.equals(DisplayGroupDetailFragment.class.getSimpleName())) {
                 addParticipantToGroup();
-                finish();
             } else if (pendingActivityName.equals(ShareDetailActivity.class.getSimpleName())) {
                 setResultForShareActivity();
                 finish();
@@ -271,7 +270,6 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
                 startAddParticipantToGroup(token);
             }
         });
-
     }
 
     private void startAddParticipantToGroup(String token) {
@@ -281,24 +279,16 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
         groupRequest.setGroupParticipantArray(fillSelectedFriendList());
 
-        // TODO: 30.08.2018 - ProgressDialog yada progressbar ekleyelim...
-        //mProgressDialog = new ProgressDialog(this);
-        //mProgressDialog.setMessage(getResources().getString(R.string.friendsAdding));
-        //mProgressDialog.show();
-
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                //if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
-                DisplayGroupDetailActivity.groupParticipantList.addAll(selectedFriendListInstance.getSelectedFriendList().getResultArray());
-                DisplayGroupDetailActivity.reloadAdapter();
-                DisplayGroupDetailActivity.personCntTv.setText(Integer.toString(DisplayGroupDetailActivity.getParticipantCount()));
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
                 finish();
             }
 
             @Override
             public void onFailure(Exception e) {
-                //if(mProgressDialog.isShowing()) mProgressDialog.dismiss();
                 CommonUtils.showToast(SelectFriendToGroupActivity.this, getResources().getString(R.string.error) + e.getMessage());
             }
 

@@ -1,5 +1,6 @@
 package com.uren.catchu.Adapters;
 
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -47,5 +48,10 @@ public class SpecialSelectTabAdapter extends FragmentStatePagerAdapter {
 
     public void updateFragmentTitle(int position, String title){
         mFragmentListTitles.set(position, title);
+    }
+
+    @Override
+    public Parcelable saveState() {
+        return null;
     }
 }

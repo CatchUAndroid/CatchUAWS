@@ -24,6 +24,7 @@ import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.SelectedGroupList;
 import com.uren.catchu.Singleton.UserGroups;
 
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -31,6 +32,7 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_ID;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_GROUP_NAME;
+import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COUNT;
 
 public class EditGroupNameActivity extends AppCompatActivity {
 
@@ -149,7 +151,7 @@ public class EditGroupNameActivity extends AppCompatActivity {
             @Override
             public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
                 UserGroups.changeGroupItem(groupId, groupItem);
-                DisplayGroupDetailActivity.subtitleCollapsingToolbarLayout.setTitle(groupNameEditText.getText().toString());
+                setResultForShareActivity();
                 SearchFragment.reloadAdapter();
                 finish();
             }
@@ -159,6 +161,12 @@ public class EditGroupNameActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setResultForShareActivity() {
+        Intent intent = new Intent();
+        intent.putExtra(PUTEXTRA_GROUP_NAME, groupNameEditText.getText().toString());
+        setResult(RESULT_OK, intent);
     }
 
 }

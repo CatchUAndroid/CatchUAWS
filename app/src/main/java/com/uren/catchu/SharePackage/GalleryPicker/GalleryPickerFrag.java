@@ -1,59 +1,38 @@
 package com.uren.catchu.SharePackage.GalleryPicker;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.ClipData;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.DragEvent;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.uren.catchu.GeneralUtils.BaseBackPressedListener;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.Interfaces.OnBackPressedListener;
-import com.uren.catchu.MainPackage.Interfaces.IOnBackPressed;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.PhotoSelectCallback;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TextCompleteCallback;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TrashDragDropCallback;
-import com.uren.catchu.SharePackage.MainShareActivity;
-import com.uren.catchu.SharePackage.Utils.ColorSelectCallback;
-import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoPickerFrag;
-import com.uren.catchu.SharePackage.VideoPicker.fragment.VideoViewFragment;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.io.File;
@@ -66,7 +45,7 @@ import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 
 
 @SuppressLint("ValidFragment")
-public class GalleryPickerFrag extends Fragment{
+public class GalleryPickerFrag extends Fragment {
     RecyclerView specialRecyclerView;
     RelativeLayout photoRelLayout;
     RelativeLayout addPropRelLayout;
@@ -206,10 +185,12 @@ public class GalleryPickerFrag extends Fragment{
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) { }
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
             @Override
-            public void onStopTrackingTouch(SeekBar seekBar) { }
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
         });
     }
 
@@ -385,17 +366,16 @@ public class GalleryPickerFrag extends Fragment{
             CommonUtils.showToast(getActivity(), getActivity().getString(R.string.technicalError) + requestCode);
     }
 
-    public void textFragBackPressed(){
+    public void textFragBackPressed() {
         cancelImageView.setVisibility(View.VISIBLE);
         addTextImgv.setVisibility(View.VISIBLE);
         textView.setVisibility(View.VISIBLE);
     }
 
-    public void checkTextIsAddedOrNot(){
-        if(textView != null && !textView.getText().toString().trim().isEmpty()){
+    public void checkTextIsAddedOrNot() {
+        if (textView != null && !textView.getText().toString().trim().isEmpty()) {
             Bitmap bitmap = BitmapConversion.getScreenShot(photoRelLayout);
             photoUtil.setScreeanShotBitmap(bitmap);
         }
-
     }
 }

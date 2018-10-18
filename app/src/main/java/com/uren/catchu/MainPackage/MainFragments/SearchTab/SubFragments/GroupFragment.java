@@ -13,6 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.uren.catchu.GroupPackage.DisplayGroupDetailFragment;
+import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -25,8 +30,11 @@ import com.uren.catchu.Singleton.UserGroups;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 
-public class GroupFragment extends Fragment {
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+
+public class GroupFragment extends BaseFragment {
 
     RecyclerView groupRecyclerView;
 
@@ -94,7 +102,17 @@ public class GroupFragment extends Fragment {
                         MessageDataUtil.setWarningMessageVisibility(groupRequestResult1, warningMsgTv,
                                 getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
                     }
+                }, new ItemClickListener() {
+                    @Override
+                    public void onClick(Object object, int clickedItem) {
+                        GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = (GroupRequestResultResultArrayItem) object;
+                        String groupId = groupRequestResultResultArrayItem.getGroupid();
+
+                        if (mFragmentNavigation != null)
+                            mFragmentNavigation.pushFragment(DisplayGroupDetailFragment.newInstance(groupId), ANIMATE_RIGHT_TO_LEFT);
+                    }
                 });
+
                 groupRecyclerView.setAdapter(userGroupsListAdapter);
                 linearLayoutManager = new LinearLayoutManager(getActivity());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

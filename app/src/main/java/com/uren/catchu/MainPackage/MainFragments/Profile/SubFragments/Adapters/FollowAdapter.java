@@ -123,9 +123,9 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
         public void setData(FollowInfoResultArrayItem rowItem, int position) {
 
-            this.profileName.setText(rowItem.getName());
             this.followListItem = rowItem;
             this.position = position;
+            UserDataUtil.setName(rowItem.getName(), profileName);
             UserDataUtil.setProfilePicture(context, followListItem.getProfilePhotoUrl(),
                     followListItem.getName(), shortUserNameTv, profileImage);
             UserDataUtil.updateFollowButton(context, followListItem.getIsFollow(), followListItem.getIsPendingRequest(), btnFollowStatus, true);
@@ -141,7 +141,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
                 @Override
                 public void noClick() {
-
+                    btnFollowStatus.setEnabled(true);
                 }
             };
 

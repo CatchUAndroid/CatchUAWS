@@ -305,7 +305,8 @@ public class OtherProfileFragment extends BaseFragment
 
         if (v == imgBackBtn) {
 
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            if (getActivity() instanceof NextActivity)
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
 
             if (followInfoListItem.getAdapter() != null) {
                 if (followInfoListItem.getAdapter() instanceof FollowAdapter) {
