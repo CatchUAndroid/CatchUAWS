@@ -71,6 +71,9 @@
     <string name="VIEW_PENDING_REQUEST">Gelen Istekleri Görüntüle</string>
     <string name="THERE_IS_NO_GROUP_CREATE_OR_INCLUDE">Oluşturduğunuz veya dahil olduğunuz bir grup bulunmamaktadır</string>
     <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">CatchU uygulamasını kullanan Facebook arkadaşınız bulunmamaktadır</string>
+    <string name="PHONE_NUM">Telefon Numarası</string>
+    <string name="SELECT_COUNTRY">Ülke Seç</string>
+    <string name="COUNTRY_NAME_OR_CODE">Ülke Adı veya Kodu</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

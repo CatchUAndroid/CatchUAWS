@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -36,7 +37,8 @@ import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_SHARE_GROUP_COU
 
 public class EditGroupNameActivity extends AppCompatActivity {
 
-    Toolbar toolbar;
+    ImageView backImgv;
+    TextView toolbarTitleTv;
     EditText groupNameEditText;
     TextView textSizeCntTv;
     Button cancelButton;
@@ -69,14 +71,14 @@ public class EditGroupNameActivity extends AppCompatActivity {
     }
 
     private void initVariables() {
-        toolbar = findViewById(R.id.toolbar);
+        backImgv = findViewById(R.id.backImgv);
+        toolbarTitleTv = findViewById(R.id.toolbarTitleTv);
         groupNameEditText = findViewById(R.id.groupNameEditText);
         textSizeCntTv = findViewById(R.id.textSizeCntTv);
         cancelButton = findViewById(R.id.cancelButton);
         approveButton = findViewById(R.id.approveButton);
         relLayout = findViewById(R.id.relLayout);
-        toolbar.setTitle(getResources().getString(R.string.giveNewName));
-        toolbar.setTitleTextColor(getResources().getColor(R.color.White, null));
+        toolbarTitleTv.setText(getResources().getString(R.string.giveNewName));
         setButtonShapes();
     }
 
@@ -93,6 +95,13 @@ public class EditGroupNameActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CommonUtils.hideKeyBoard(EditGroupNameActivity.this);
+            }
+        });
+
+        backImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
             }
         });
 

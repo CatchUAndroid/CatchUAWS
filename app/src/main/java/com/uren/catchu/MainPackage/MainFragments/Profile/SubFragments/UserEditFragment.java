@@ -57,6 +57,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -80,6 +81,7 @@ import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_FAIL;
 import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_OK;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
 import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
 
@@ -187,6 +189,7 @@ public class UserEditFragment extends BaseFragment
         txtCancel.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
         edtBirthDay.setOnClickListener(this);
+        edtPhone.setOnClickListener(this);
         setBirthDayDataSetListener();
         setGenderClickListener();
         profilPicChanged = false;
@@ -314,6 +317,16 @@ public class UserEditFragment extends BaseFragment
 
         if (v == edtBirthDay) {
             birthDayClicked();
+        }
+
+        if (v == edtPhone) {
+            startEditPhoneNumber();
+        }
+    }
+
+    public void startEditPhoneNumber(){
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(PhoneNumEditFragment.newInstance(edtPhone.getText().toString()), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

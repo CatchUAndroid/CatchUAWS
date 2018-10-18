@@ -29,7 +29,7 @@ public class StringConstants {
     public static final String PUTEXTRA_ACTIVITY_NAME = "ACTIVITY_NAME";
     public static final String PUTEXTRA_SHARE_FRIEND_COUNT = "SHARE_FRIEND_COUNT";
     public static final String PUTEXTRA_SHARE_GROUP_COUNT = "SHARE_GROUP_COUNT";
-
+    public static final String PUTEXTRA_PHONE_NUM = "PHONE_NUM";
 
     //Group Request Types
     public static final String GET_AUTHENTICATED_USER_GROUP_LIST = "GET_AUTHENTICATED_USER_GROUP_LIST"; //Kullanicinin dahil oldugu gruplar
