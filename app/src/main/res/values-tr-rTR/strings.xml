@@ -74,6 +74,7 @@
     <string name="PHONE_NUM">Telefon Numarası</string>
     <string name="SELECT_COUNTRY">Ülke Seç</string>
     <string name="COUNTRY_NAME_OR_CODE">Ülke Adı veya Kodu</string>
+    <string name="WRITE_PHONE_NUMBER">Telefon numarasını yazın</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

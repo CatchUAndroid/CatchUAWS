@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.Toolbar;
@@ -50,6 +52,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
@@ -63,6 +66,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -78,6 +82,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_PHONE_NUM;
 
+@SuppressLint("ValidFragment")
 public class PhoneNumEditFragment extends BaseFragment {
 
     View mView;
@@ -89,18 +94,16 @@ public class PhoneNumEditFragment extends BaseFragment {
     EditText phoneNumEt;
     View counSelectMainLayout;
     RelativeLayout editPhoneMainLayout;
+    String selectedCountry = "";
+    CountryListResponse countryListResponse;
 
     EditText selectCountryEt;
     ListView countryListView;
 
     String phoneNum = "";
 
-    public static PhoneNumEditFragment newInstance(String phoneNum) {
-        Bundle args = new Bundle();
-        args.putSerializable(PUTEXTRA_PHONE_NUM, phoneNum);
-        PhoneNumEditFragment fragment = new PhoneNumEditFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public PhoneNumEditFragment(String phoneNum) {
+        this.phoneNum = phoneNum;
     }
 
     @Nullable
@@ -111,12 +114,6 @@ public class PhoneNumEditFragment extends BaseFragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.edit_phonenum_layout, container, false);
             ButterKnife.bind(this, mView);
-
-            Bundle args = getArguments();
-
-            if (args != null)
-                phoneNum = (String) args.getSerializable(PUTEXTRA_PHONE_NUM);
-
             init();
             addListeners();
             checkPhoneNumExistance();
@@ -139,6 +136,8 @@ public class PhoneNumEditFragment extends BaseFragment {
         phoneNumEt = mView.findViewById(R.id.phoneNumEt);
         editPhoneMainLayout = mView.findViewById(R.id.editPhoneMainLayout);
         toolbarTitleTv.setText(getResources().getString(R.string.PHONE_NUM));
+        countryListResponse = new CountryListResponse();
+        countryListResponse.setItems(new ArrayList<Country>());
     }
 
     public void addListeners() {
@@ -159,14 +158,14 @@ public class PhoneNumEditFragment extends BaseFragment {
         countryNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startCountryFragment();
             }
         });
 
         countryCodeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startCountryFragment();
             }
         });
 
@@ -204,50 +203,35 @@ public class PhoneNumEditFragment extends BaseFragment {
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry() != null) {
 
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode().trim().isEmpty())
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode().trim().isEmpty() &&
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName().trim().isEmpty()) {
                 countryCodeTv.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode());
-
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName().trim().isEmpty())
                 countryNameTv.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName());
-        } else{
-            if (mFragmentNavigation != null) {
-                mFragmentNavigation.pushFragment(new SelectCountryFragment(), ANIMATE_DOWN_TO_UP);
-            }
-            /*getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.editPhoneMainLayout, SelectCountryFragment.newInstance(), SelectCountryFragment.class.getName())
-                    .addToBackStack(SelectCountryFragment.class.getName())
-                    .commit();*/
-        }
-            //openCountrySelectLayout();
+            } else
+                getCountryList();
+        } else
+            getCountryList();
     }
 
-    public void openCountrySelectLayout() {
-        if (counSelectMainLayout == null) {
-            counSelectMainLayout = getLayoutInflater().inflate(R.layout.country_select_layout, editPhoneMainLayout, false);
-            selectCountryEt = counSelectMainLayout.findViewById(R.id.selectCountryEt);
-            countryListView = counSelectMainLayout.findViewById(R.id.countryListView);
-            getCountryList();
+    public void startCountryFragment() {
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new SelectCountryFragment(new ItemClickListener() {
+                @Override
+                public void onClick(Object object, int clickedItem) {
+                    selectedCountry = (String) object;
+                    parseSelectedCountry(selectedCountry);
+                }
+            }), ANIMATE_DOWN_TO_UP);
         }
+    }
 
-        editPhoneMainLayout.addView(counSelectMainLayout);
+    public void parseSelectedCountry(String selectedCountry) {
+        String[] parts = selectedCountry.split("\\(");
+        countryNameTv.setText(parts[0]);
 
-        selectCountryEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        String[] parts2 = parts[1].split("\\)");
+        countryCodeTv.setText(parts2[0]);
     }
 
     public void getCountryList() {
@@ -258,8 +242,21 @@ public class PhoneNumEditFragment extends BaseFragment {
                 CountryListProcess countryListProcess = new CountryListProcess(new OnEventListener() {
                     @Override
                     public void onSuccess(Object object) {
-                        if (object != null)
-                            fillCountryList(object);
+                        if (object != null) {
+                            countryListResponse = (CountryListResponse) object;
+
+                            String locale = getActivity().getResources().getConfiguration().locale.getCountry();
+
+                            for (Country country : countryListResponse.getItems()) {
+                                if (country != null && country.getCode() != null && !country.getCode().trim().isEmpty()) {
+                                    if (country.getCode().trim().equals(locale)) {
+                                        countryCodeTv.setText(country.getDialCode());
+                                        countryNameTv.setText(country.getName());
+                                        break;
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     @Override
@@ -281,27 +278,4 @@ public class PhoneNumEditFragment extends BaseFragment {
             }
         });
     }
-
-    public void fillCountryList(Object object) {
-        CountryListResponse countryListResponse = (CountryListResponse) object;
-        List<String> countryList = new ArrayList<String>();
-
-        for (Country country : countryListResponse.getItems()) {
-            String countryItem = "";
-
-            if (country.getName() != null && !country.getName().trim().isEmpty() &&
-                    country.getDialCode() != null && !country.getDialCode().trim().isEmpty()) {
-                countryItem = country.getName() + "(" + country.getDialCode() + ")";
-                countryList.add(countryItem);
-            }
-        }
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                countryList);
-
-        countryListView.setAdapter(arrayAdapter);
-    }
-
 }

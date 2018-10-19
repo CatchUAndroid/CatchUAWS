@@ -92,6 +92,7 @@
     <string name="PHONE_NUM">Phone Number</string>
     <string name="SELECT_COUNTRY">Select Country</string>
     <string name="COUNTRY_NAME_OR_CODE">Country Name or Code</string>
+    <string name="WRITE_PHONE_NUMBER">Write phone number</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

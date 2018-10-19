@@ -326,7 +326,7 @@ public class UserEditFragment extends BaseFragment
 
     public void startEditPhoneNumber(){
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(PhoneNumEditFragment.newInstance(edtPhone.getText().toString()), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new PhoneNumEditFragment(edtPhone.getText().toString()), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
