@@ -279,7 +279,7 @@ public class ProfileFragment extends BaseFragment
 
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         vpNews.setAdapter(adp);
-        //vpNews.setOffscreenPageLimit(12);
+        vpNews.setOffscreenPageLimit(12);
         tabs.setupWithViewPager(vpNews);
     }
 

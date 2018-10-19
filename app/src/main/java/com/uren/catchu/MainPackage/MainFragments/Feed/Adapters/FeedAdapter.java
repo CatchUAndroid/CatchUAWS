@@ -35,6 +35,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoL
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import catchu.model.BaseRequest;
@@ -87,6 +88,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         LinearLayout layoutComment;
         LinearLayout profileMainLayout;
         LinearLayout locationDetailLayout;
+        TextView txtLocationDistance;
 
         View mView;
 
@@ -108,6 +110,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment = (LinearLayout) view.findViewById(R.id.layoutComment);
             profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
             locationDetailLayout = (LinearLayout) view.findViewById(R.id.locationDetailLayout);
+            txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
 
             setListeners();
 
@@ -139,7 +142,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String toolbarTitle = mContext.getResources().getString(R.string.likes) ;
+                    String toolbarTitle = mContext.getResources().getString(R.string.likes);
                     CommonUtils.showToast(mContext, toolbarTitle);
                     PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
                 }
@@ -149,7 +152,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String toolbarTitle = mContext.getResources().getString(R.string.comments) ;
+                    String toolbarTitle = mContext.getResources().getString(R.string.comments);
                     PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
                 }
             });
@@ -170,7 +173,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             locationDetailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LocatonDetailClicked.startProcess(mContext, fragmentNavigation, post, imgProfilePic);
+                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, imgProfilePic);
                 }
             });
 
@@ -231,6 +234,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
+            //Location distance
+            if (post.getDistance() != null) {
+                txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
+            }
 
 
         }
@@ -244,6 +251,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         }
 
     }
+
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {

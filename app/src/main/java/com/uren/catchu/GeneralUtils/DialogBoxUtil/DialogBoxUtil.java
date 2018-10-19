@@ -1,8 +1,10 @@
 package com.uren.catchu.GeneralUtils.DialogBoxUtil;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.Window;
 import android.widget.ArrayAdapter;
@@ -13,6 +15,7 @@ import com.uren.catchu.R;
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
+import static com.uren.catchu.SharePackage.ShareDetailActivity.REQUEST_CODE_ENABLE_LOCATION;
 
 public class DialogBoxUtil {
 
@@ -152,4 +155,18 @@ public class DialogBoxUtil {
             }
         }, timeInMs);
     }
+
+    public static void showSettingsAlert(final Activity act){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(act);
+        alertDialog.setTitle(act.getResources().getString(R.string.gpsSettings));
+        alertDialog.setMessage(act.getResources().getString(R.string.gpsSettingMessage));
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton(act.getResources().getString(R.string.settings), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                act.startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
+            }
+        });
+        alertDialog.show();
+    }
+
 }
