@@ -80,6 +80,8 @@
     <string name="CHANGE_PHONE_NUMBER">Numarayı Değiştir</string>
     <string name="INVALID_VERIFICATION_CODE_ENTERED">Hatalı kod girişi yapıldı</string>
     <string name="VERIFY_PHONE_NUMBER">Telefon Numarasını Doğrula</string>
+    <string name="REMAINING_TIME">Kalan Süre : </string>
+    <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">Size verilen süre içinde kodu girmediniz. Lütfen tekrar kodu gönderiniz!</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

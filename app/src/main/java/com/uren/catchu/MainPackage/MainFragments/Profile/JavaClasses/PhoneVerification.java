@@ -23,6 +23,8 @@ import com.uren.catchu.R;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
+
 public class PhoneVerification {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     private boolean mVerificationInProgress = false;
@@ -65,13 +67,7 @@ public class PhoneVerification {
                 // for instance if the the phone number format is not valid.
 
                 mVerificationInProgress = false;
-
-                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-
-                    }
-                });
+                completeCallback.onFailed(e);
             }
 
             @Override
@@ -90,11 +86,11 @@ public class PhoneVerification {
 
     public void startPhoneNumberVerification() {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNum,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                activity,               // Activity (for callback binding)
-                mCallbacks);        // OnVerificationStateChangedCallbacks
+                phoneNum,                           // Phone number to verify
+                VERIFY_PHONE_NUM_DURATION,          // Timeout duration
+                TimeUnit.SECONDS,                   // Unit of timeout
+                activity,                           // Activity (for callback binding)
+                mCallbacks);                        // OnVerificationStateChangedCallbacks
 
         mVerificationInProgress = true;
     }
@@ -102,12 +98,12 @@ public class PhoneVerification {
     public void resendVerificationCode(String phoneNumber,
                                         PhoneAuthProvider.ForceResendingToken token) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phoneNumber,        // Phone number to verify
-                60,                 // Timeout duration
-                TimeUnit.SECONDS,   // Unit of timeout
-                activity,               // Activity (for callback binding)
-                mCallbacks,         // OnVerificationStateChangedCallbacks
-                token);             // ForceResendingToken from callbacks
+                phoneNumber,                        // Phone number to verify
+                VERIFY_PHONE_NUM_DURATION,          // Timeout duration
+                TimeUnit.SECONDS,                   // Unit of timeout
+                activity,                           // Activity (for callback binding)
+                mCallbacks,                         // OnVerificationStateChangedCallbacks
+                token);                             // ForceResendingToken from callbacks
     }
 
     public PhoneAuthCredential getmCredential() {

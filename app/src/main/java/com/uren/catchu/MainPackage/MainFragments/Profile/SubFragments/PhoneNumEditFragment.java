@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -103,6 +104,7 @@ public class PhoneNumEditFragment extends BaseFragment {
     CountryListResponse countryListResponse;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
+    ProgressDialog mProgressDialog;
 
     EditText selectCountryEt;
     ListView countryListView;
@@ -144,6 +146,7 @@ public class PhoneNumEditFragment extends BaseFragment {
         phoneNumEt = mView.findViewById(R.id.phoneNumEt);
         editPhoneMainLayout = mView.findViewById(R.id.editPhoneMainLayout);
         toolbarTitleTv.setText(getResources().getString(R.string.PHONE_NUM));
+        mProgressDialog = new ProgressDialog(getActivity());
         countryListResponse = new CountryListResponse();
         countryListResponse.setItems(new ArrayList<Country>());
     }
@@ -289,11 +292,13 @@ public class PhoneNumEditFragment extends BaseFragment {
     }
 
     public void sendVerificationCode(){
+        dialogShow();
         final String completePhoneNum = countryCodeTv.getText().toString().trim() + phoneNumEt.getText().toString().trim();
 
         phoneVerification = new PhoneVerification(getActivity(), completePhoneNum, new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
+                dialogDismiss();
                 if(object != null) {
                     startVerifyPhoneNumFragment(completePhoneNum);
                 }
@@ -301,7 +306,13 @@ public class PhoneNumEditFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
+                dialogDismiss();
+                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
 
+                    }
+                });
             }
         });
         phoneVerification.startPhoneNumberVerification();
@@ -313,6 +324,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 @Override
                 public void onComplete(Object object) {
                     completeCallback.onComplete(completePhoneNum);
+                    getActivity().onBackPressed();
                 }
 
                 @Override
@@ -321,5 +333,13 @@ public class PhoneNumEditFragment extends BaseFragment {
                 }
             }), ANIMATE_DOWN_TO_UP);
         }
+    }
+
+    public void dialogShow() {
+        if (!mProgressDialog.isShowing()) mProgressDialog.show();
+    }
+
+    public void dialogDismiss() {
+        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     }
 }

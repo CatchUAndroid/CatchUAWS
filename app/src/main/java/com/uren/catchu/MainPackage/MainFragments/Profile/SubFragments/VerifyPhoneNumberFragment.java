@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -41,6 +42,8 @@ import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
 
+import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
+
 @SuppressLint("ValidFragment")
 public class VerifyPhoneNumberFragment extends Fragment {
 
@@ -53,6 +56,9 @@ public class VerifyPhoneNumberFragment extends Fragment {
     ImageView backImgv;
     ImageView nextImgv;
     TextView toolbarTitleTv;
+    TextView warningMessageTv;
+    TextView remainingTimeTv;
+    LinearLayout remTimeLayout;
     GradientDrawable buttonShape;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
@@ -89,12 +95,15 @@ public class VerifyPhoneNumberFragment extends Fragment {
 
     private void init() {
         phoneNumberTv = mView.findViewById(R.id.phoneNumberTv);
+        remainingTimeTv = mView.findViewById(R.id.remainingTimeTv);
         sendCodeAgainBtn = mView.findViewById(R.id.sendCodeAgainBtn);
         changePhoneBtn = mView.findViewById(R.id.changePhoneBtn);
         verifyCodeEt = mView.findViewById(R.id.verifyCodeEt);
         backImgv = mView.findViewById(R.id.backImgv);
         nextImgv = mView.findViewById(R.id.nextImgv);
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
+        remTimeLayout = mView.findViewById(R.id.remTimeLayout);
+        warningMessageTv = mView.findViewById(R.id.warningMessageTv);
         setPhoneNum();
         setToolbarTitle();
     }
@@ -185,6 +194,29 @@ public class VerifyPhoneNumberFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    public void setTimer(){
+        remTimeLayout.setVisibility(View.VISIBLE);
+
+        new CountDownTimer(VERIFY_PHONE_NUM_DURATION * 1000, 1000) {
+
+            int duration = VERIFY_PHONE_NUM_DURATION;
+
+            public void onTick(long millisUntilFinished) {
+                remainingTimeTv.setText(checkDigit(duration));
+                duration--;
+            }
+
+            public void onFinish() {
+                warningMessageTv.setVisibility(View.VISIBLE);
+            }
+
+        }.start();
+    }
+
+    public String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
     }
 
 }

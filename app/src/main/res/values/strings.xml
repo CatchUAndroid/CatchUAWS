@@ -98,6 +98,8 @@
     <string name="CHANGE_PHONE_NUMBER">Change Phone Number</string>
     <string name="INVALID_VERIFICATION_CODE_ENTERED">Invalid verification code entered</string>
     <string name="VERIFY_PHONE_NUMBER">Verify Phone Number</string>
+    <string name="REMAINING_TIME">Remaining Time : </string>
+    <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">You did not enter the code within the given time. Please send the code again!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
