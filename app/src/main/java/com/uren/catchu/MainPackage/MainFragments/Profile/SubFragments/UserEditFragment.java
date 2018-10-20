@@ -55,6 +55,7 @@ import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
@@ -326,7 +327,20 @@ public class UserEditFragment extends BaseFragment
 
     public void startEditPhoneNumber(){
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new PhoneNumEditFragment(edtPhone.getText().toString()), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new PhoneNumEditFragment(edtPhone.getText().toString(), new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    if(object != null){
+                        String phoneNum = (String) object;
+                        edtPhone.setText(phoneNum);
+                    }
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

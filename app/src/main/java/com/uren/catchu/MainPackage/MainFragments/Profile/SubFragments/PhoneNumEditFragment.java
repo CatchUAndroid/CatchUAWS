@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.firebase.auth.PhoneAuthCredential;
 import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -52,15 +53,19 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.PhoneVerification;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.TextEditFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.UgurDeneme.PhoneAuthActivity;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -96,14 +101,17 @@ public class PhoneNumEditFragment extends BaseFragment {
     RelativeLayout editPhoneMainLayout;
     String selectedCountry = "";
     CountryListResponse countryListResponse;
+    PhoneVerification phoneVerification;
+    CompleteCallback completeCallback;
 
     EditText selectCountryEt;
     ListView countryListView;
 
     String phoneNum = "";
 
-    public PhoneNumEditFragment(String phoneNum) {
+    public PhoneNumEditFragment(String phoneNum, CompleteCallback completeCallback) {
         this.phoneNum = phoneNum;
+        this.completeCallback = completeCallback;
     }
 
     @Nullable
@@ -151,13 +159,14 @@ public class PhoneNumEditFragment extends BaseFragment {
         nextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sendVerificationCode();
             }
         });
 
         countryNameTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //startActivity(new Intent(getActivity(), PhoneAuthActivity.class));
                 startCountryFragment();
             }
         });
@@ -277,5 +286,40 @@ public class PhoneNumEditFragment extends BaseFragment {
                 countryListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
+    }
+
+    public void sendVerificationCode(){
+        final String completePhoneNum = countryCodeTv.getText().toString().trim() + phoneNumEt.getText().toString().trim();
+
+        phoneVerification = new PhoneVerification(getActivity(), completePhoneNum, new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                if(object != null) {
+                    startVerifyPhoneNumFragment(completePhoneNum);
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
+        phoneVerification.startPhoneNumberVerification();
+    }
+
+    public void startVerifyPhoneNumFragment(final String completePhoneNum){
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new VerifyPhoneNumberFragment(completePhoneNum, phoneVerification, new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    completeCallback.onComplete(completePhoneNum);
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            }), ANIMATE_DOWN_TO_UP);
+        }
     }
 }

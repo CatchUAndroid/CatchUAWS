@@ -93,6 +93,11 @@
     <string name="SELECT_COUNTRY">Select Country</string>
     <string name="COUNTRY_NAME_OR_CODE">Country Name or Code</string>
     <string name="WRITE_PHONE_NUMBER">Write phone number</string>
+    <string name="PLEASE_WRITE_VERIFICATION_CODE">Enter the 6 digit confirmation code that we send this number : </string>
+    <string name="SEND_VERIFICATION_CODE_AGAIN">Send Code Again</string>
+    <string name="CHANGE_PHONE_NUMBER">Change Phone Number</string>
+    <string name="INVALID_VERIFICATION_CODE_ENTERED">Invalid verification code entered</string>
+    <string name="VERIFY_PHONE_NUMBER">Verify Phone Number</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -188,6 +193,7 @@
     <string name="PASSWORD_LINK_SEND_SUCCESS">Renew password link has sent to your email address.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
     <string name="SHARE_IS_SUCCESSFUL">Share is Successful</string>
+    <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Verification is Successful</string>
 
     <string name="emptyFeed">Start following people, posts will be shown here :)</string>
     <string name="likes">Likes</string>
