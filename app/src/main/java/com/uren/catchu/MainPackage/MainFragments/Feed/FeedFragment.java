@@ -24,6 +24,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import com.dinuscxj.refresh.RecyclerRefreshLayout.OnRefreshListener;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -73,8 +75,8 @@ import static java.math.BigDecimal.*;
 public class FeedFragment extends BaseFragment {
 
     View mView;
-    private LinearLayoutManager layoutManager;
     FeedAdapter feedAdapter;
+    LinearLayoutManager mLayoutManager;
     UserProfileProperties myProfile;
 
     @BindView(R.id.rv_feed)
@@ -83,8 +85,21 @@ public class FeedFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
+    @BindView(R.id.progressLoadMore)
+    ProgressBar progressLoadMore;
+
     @BindView(R.id.txtNoFeed)
     TextView txtNoFeed;
+
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
+
+    private boolean loading = true;
+    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private int perPageCnt = 3;
+    private int pageCnt = 1;
+    List<Post> postList = new ArrayList<Post>();
+    private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
 
     //todo : NT degerler current locationdan alınacak..
     private LocationTrackerAdapter locationTrackObj;
@@ -105,6 +120,7 @@ public class FeedFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_feed, container, false);
             ButterKnife.bind(this, mView);
@@ -120,6 +136,66 @@ public class FeedFragment extends BaseFragment {
         return mView;
     }
 
+    private void init() {
+        //layout manager
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(mLayoutManager);
+        //feed adapter
+        feedAdapter = new FeedAdapter(getActivity(), getContext(), mFragmentNavigation);
+        recyclerView.setAdapter(feedAdapter);
+        setRecyclerViewProperties();
+
+        refresh_layout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                checkLocationAndRetrievePosts();
+            }
+        });
+
+        setRecyclerViewScroll();
+
+    }
+
+
+    private void setRecyclerViewScroll() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+
+                    Log.i("visibleItemCount", String.valueOf(visibleItemCount));
+                    Log.i("totalItemCount", String.valueOf(totalItemCount));
+                    Log.i("pastVisiblesItems", String.valueOf(pastVisiblesItems));
+                    Log.i("loading", String.valueOf(loading));
+
+                    if (loading) {
+
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            loading = false;
+                            Log.v("...", "Last Item Wow !");
+                            //Do pagination.. i.e. fetch new data
+                            pageCnt++;
+                            getPosts();
+
+                        }
+
+                    }
+
+
+                }
+
+
+            }
+        });
+
+    }
 
     private void checkLocationAndRetrievePosts() {
         permissionModule = new PermissionModule(getContext());
@@ -149,7 +225,7 @@ public class FeedFragment extends BaseFragment {
                     requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
                 }
-            }else{
+            } else {
                 getPosts();
             }
         }
@@ -188,10 +264,6 @@ public class FeedFragment extends BaseFragment {
     }
 
 
-    private void init() {
-        layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-    }
-
     private void getPosts() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
@@ -207,8 +279,8 @@ public class FeedFragment extends BaseFragment {
         setLocationInfo();
 
         //todo NT - pagination yapılacak
-        String perpage = "10";
-        String page = "1";
+        String perpage = String.valueOf(perPageCnt);
+        String page = String.valueOf(pageCnt);
 
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
@@ -219,7 +291,7 @@ public class FeedFragment extends BaseFragment {
 
                 } else {
                     CommonUtils.LOG_OK("PostListResponseProcess");
-                    if (postListResponse.getItems().size() == 0) {
+                    if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                         setTextNoFeedVisible(true, R.string.emptyFeed);
                     } else {
                         setTextNoFeedVisible(false, 0);
@@ -228,17 +300,27 @@ public class FeedFragment extends BaseFragment {
                 }
 
                 progressBar.setVisibility(View.GONE);
+                progressLoadMore.setVisibility(View.VISIBLE);
+                refresh_layout.setRefreshing(false);
+
             }
 
             @Override
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
+                progressLoadMore.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
+
+                if(pageCnt == 1){
+                    progressBar.setVisibility(View.VISIBLE);
+                }else{
+                    progressLoadMore.setVisibility(View.VISIBLE);
+                }
+
             }
         }, baseRequest, longitude, latitude, radius, perpage, page, token);
 
@@ -257,48 +339,19 @@ public class FeedFragment extends BaseFragment {
 
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
-        List<Post> postList;
-        postList = postListResponse.getItems();
+        loading = true;
 
+        for (int i = 0; i < postListResponse.getItems().size(); i++) {
+            postList.add(postListResponse.getItems().get(i));
+        }
         //postList=setJunkData();
         //logPostId(postList); //todo NT - silinecek
-
-        feedAdapter = new FeedAdapter(getActivity(), getContext(), postList, mFragmentNavigation);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-
-        setRecyclerViewProperties(postList);
+        feedAdapter.addAll(postListResponse.getItems());
+        preDownloadUrls(postListResponse.getItems());
 
     }
 
-    //todo NT - silinecek
-    private void logPostId(List<Post> postList) {
-        int postNumber;
-        for (int i = 0; i < postList.size(); i++) {
-            postNumber = i + 1;
-            if (postList.get(i).getPostid() != null && !postList.get(i).getPostid().isEmpty()) {
-                Log.i("post-" + postNumber + " :", postList.get(i).getPostid());
-            }
-        }
-    }
-
-
-    private void setRecyclerViewProperties(List<Post> postList) {
-        //todo before setAdapter
-        recyclerView.setActivity(getActivity());
-
-        //optional - to play only first visible video
-        recyclerView.setPlayOnlyFirstVideo(false); // false by default
-
-        //optional - by default we check if url ends with ".mp4". If your urls do not end with mp4, you can set this param to false and implement your own check to see if video points to url
-        recyclerView.setCheckForMp4(false); //true by default
-
-        //optional - download videos to local storage (requires "android.permission.WRITE_EXTERNAL_STORAGE" in manifest or ask in runtime)
-        recyclerView.setDownloadPath(Environment.getExternalStorageDirectory() + "/MyVideo"); // (Environment.getExternalStorageDirectory() + "/NT_Video") by default
-
-        recyclerView.setDownloadVideos(false); // false by default
-
-        recyclerView.setVisiblePercent(50); // percentage of View that needs to be visible to start playing
+    private void preDownloadUrls(List<Post> items) {
 
         //extra - start downloading all videos in background before loading RecyclerView
         List<String> urls = new ArrayList<>();
@@ -315,11 +368,42 @@ public class FeedFragment extends BaseFragment {
 
         recyclerView.preDownload(urls);
 
-        recyclerView.setAdapter(feedAdapter);
+    }
+
+    //todo NT - silinecek
+    private void logPostId(List<Post> postList) {
+        int postNumber;
+        for (int i = 0; i < postList.size(); i++) {
+            postNumber = i + 1;
+            if (postList.get(i).getPostid() != null && !postList.get(i).getPostid().isEmpty()) {
+                Log.i("post-" + postNumber + " :", postList.get(i).getPostid());
+            }
+        }
+    }
+
+
+    private void setRecyclerViewProperties() {
+
+        //todo before setAdapter
+        recyclerView.setActivity(getActivity());
+
+        //optional - to play only first visible video
+        recyclerView.setPlayOnlyFirstVideo(false); // false by default
+
+        //optional - by default we check if url ends with ".mp4". If your urls do not end with mp4, you can set this param to false and implement your own check to see if video points to url
+        recyclerView.setCheckForMp4(false); //true by default
+
+        //optional - download videos to local storage (requires "android.permission.WRITE_EXTERNAL_STORAGE" in manifest or ask in runtime)
+        recyclerView.setDownloadPath(Environment.getExternalStorageDirectory() + "/MyVideo"); // (Environment.getExternalStorageDirectory() + "/NT_Video") by default
+
+        recyclerView.setDownloadVideos(false); // false by default
+
+        recyclerView.setVisiblePercent(50); // percentage of View that needs to be visible to start playing
+
         //call this functions when u want to start autoplay on loading async lists (eg firebase)
         recyclerView.smoothScrollBy(0, 1);
         recyclerView.smoothScrollBy(0, -1);
-        //recyclerView.setItemViewCacheSize(mediaList.size());
+        recyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
     }
 
@@ -372,9 +456,9 @@ public class FeedFragment extends BaseFragment {
 
     private void setLocationInfo() {
 
-        longitude = String.valueOf(locationTrackObj.getLocation().getLongitude()) ;
-        latitude =  String.valueOf(locationTrackObj.getLocation().getLatitude()) ;
-        radius = "100";
+        longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
+        latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
+        radius = "10";
 
     }
 

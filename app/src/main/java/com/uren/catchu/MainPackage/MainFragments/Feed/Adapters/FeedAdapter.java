@@ -36,6 +36,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import catchu.model.BaseRequest;
@@ -53,12 +54,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     private List<Post> postList;
     BaseFragment.FragmentNavigation fragmentNavigation;
 
-    public FeedAdapter(Activity activity, Context context, List<Post> postList,
+    public FeedAdapter(Activity activity, Context context,
                        BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
         this.mContext = context;
-        this.postList = postList;
         this.fragmentNavigation = fragmentNavigation;
+        this.postList = new ArrayList<>();
     }
 
     @Override
@@ -263,7 +264,13 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
 
     @Override
     public int getItemCount() {
-        return postList.size();
+        return (postList != null ? postList.size() : 0);
+    }
+
+    public void addAll(List<Post> addedPostList) {
+
+        postList.addAll(addedPostList);
+        notifyItemRangeInserted(postList.size(), postList.size() + addedPostList.size());
     }
 
 
