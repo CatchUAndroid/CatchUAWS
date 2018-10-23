@@ -91,6 +91,7 @@
     <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">There is no Facebook friend who using CatchU</string>
     <string name="PHONE_NUM">Phone Number</string>
     <string name="SELECT_COUNTRY">Select Country</string>
+    <string name="COUNTRY_NAME">Country Name</string>
     <string name="COUNTRY_NAME_OR_CODE">Country Name or Code</string>
     <string name="WRITE_PHONE_NUMBER">Write phone number</string>
     <string name="PLEASE_WRITE_VERIFICATION_CODE">Enter the 6 digit confirmation code that we send this number : </string>
@@ -100,6 +101,7 @@
     <string name="VERIFY_PHONE_NUMBER">Verify Phone Number</string>
     <string name="REMAINING_TIME">Remaining Time : </string>
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">You did not enter the code within the given time. Please send the code again!</string>
+    <string name="UPDATE_IS_SUCCESSFUL">Update is Successful</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

@@ -24,7 +24,7 @@ public class NumericConstants {
     public static final int CODE_PHOTO_REMOVE = 2;
 
     //Phone num verify duration
-    public static final int VERIFY_PHONE_NUM_DURATION = 60;
+    public static final int VERIFY_PHONE_NUM_DURATION = 30;
 
 
 }

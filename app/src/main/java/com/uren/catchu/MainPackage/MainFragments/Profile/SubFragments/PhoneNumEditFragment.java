@@ -96,15 +96,16 @@ public class PhoneNumEditFragment extends BaseFragment {
     ImageView nextImgv;
     TextView toolbarTitleTv;
     TextView countryNameTv;
-    TextView countryCodeTv;
+    TextView countryDialCodeTv;
     EditText phoneNumEt;
     View counSelectMainLayout;
     RelativeLayout editPhoneMainLayout;
-    String selectedCountry = "";
+    Country selectedCountry;
     CountryListResponse countryListResponse;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
     ProgressDialog mProgressDialog;
+    String completePhoneNum;
 
     EditText selectCountryEt;
     ListView countryListView;
@@ -142,13 +143,14 @@ public class PhoneNumEditFragment extends BaseFragment {
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
         nextImgv = mView.findViewById(R.id.nextImgv);
         countryNameTv = mView.findViewById(R.id.countryNameTv);
-        countryCodeTv = mView.findViewById(R.id.countryCodeTv);
+        countryDialCodeTv = mView.findViewById(R.id.countryCodeTv);
         phoneNumEt = mView.findViewById(R.id.phoneNumEt);
         editPhoneMainLayout = mView.findViewById(R.id.editPhoneMainLayout);
         toolbarTitleTv.setText(getResources().getString(R.string.PHONE_NUM));
         mProgressDialog = new ProgressDialog(getActivity());
         countryListResponse = new CountryListResponse();
         countryListResponse.setItems(new ArrayList<Country>());
+        selectedCountry = new Country();
     }
 
     public void addListeners() {
@@ -174,7 +176,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             }
         });
 
-        countryCodeTv.setOnClickListener(new View.OnClickListener() {
+        countryDialCodeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startCountryFragment();
@@ -217,9 +219,12 @@ public class PhoneNumEditFragment extends BaseFragment {
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode() != null &&
                     !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode().trim().isEmpty() &&
                     AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName().trim().isEmpty()) {
-                countryCodeTv.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getCode());
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName().trim().isEmpty() &&
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getDialCode() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getDialCode().trim().isEmpty()) {
+                countryDialCodeTv.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getDialCode());
                 countryNameTv.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry().getName());
+                selectedCountry = AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry();
             } else
                 getCountryList();
         } else
@@ -231,22 +236,16 @@ public class PhoneNumEditFragment extends BaseFragment {
             mFragmentNavigation.pushFragment(new SelectCountryFragment(new ItemClickListener() {
                 @Override
                 public void onClick(Object object, int clickedItem) {
-                    selectedCountry = (String) object;
-                    parseSelectedCountry(selectedCountry);
+                    selectedCountry = (Country) object;
+                    countryNameTv.setText(selectedCountry.getName());
+                    countryDialCodeTv.setText(selectedCountry.getDialCode());
                 }
             }), ANIMATE_DOWN_TO_UP);
         }
     }
 
-    public void parseSelectedCountry(String selectedCountry) {
-        String[] parts = selectedCountry.split("\\(");
-        countryNameTv.setText(parts[0]);
-
-        String[] parts2 = parts[1].split("\\)");
-        countryCodeTv.setText(parts2[0]);
-    }
-
     public void getCountryList() {
+        dialogShow();
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -262,17 +261,20 @@ public class PhoneNumEditFragment extends BaseFragment {
                             for (Country country : countryListResponse.getItems()) {
                                 if (country != null && country.getCode() != null && !country.getCode().trim().isEmpty()) {
                                     if (country.getCode().trim().equals(locale)) {
-                                        countryCodeTv.setText(country.getDialCode());
+                                        countryDialCodeTv.setText(country.getDialCode());
                                         countryNameTv.setText(country.getName());
+                                        selectedCountry = country;
                                         break;
                                     }
                                 }
                             }
                         }
+                        dialogDismiss();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
+                        dialogDismiss();
                         DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                             @Override
                             public void okClick() {
@@ -291,16 +293,16 @@ public class PhoneNumEditFragment extends BaseFragment {
         });
     }
 
-    public void sendVerificationCode(){
+    public void sendVerificationCode() {
         dialogShow();
-        final String completePhoneNum = countryCodeTv.getText().toString().trim() + phoneNumEt.getText().toString().trim();
+        completePhoneNum = countryDialCodeTv.getText().toString().trim() + phoneNumEt.getText().toString().trim();
 
         phoneVerification = new PhoneVerification(getActivity(), completePhoneNum, new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
                 dialogDismiss();
-                if(object != null) {
-                    startVerifyPhoneNumFragment(completePhoneNum);
+                if (object != null) {
+                    startVerifyPhoneNumFragment();
                 }
             }
 
@@ -318,9 +320,9 @@ public class PhoneNumEditFragment extends BaseFragment {
         phoneVerification.startPhoneNumberVerification();
     }
 
-    public void startVerifyPhoneNumFragment(final String completePhoneNum){
+    public void startVerifyPhoneNumFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new VerifyPhoneNumberFragment(completePhoneNum, phoneVerification, new CompleteCallback() {
+            mFragmentNavigation.pushFragment(new VerifyPhoneNumberFragment(selectedCountry, phoneNumEt.getText().toString().trim(), phoneVerification, new CompleteCallback() {
                 @Override
                 public void onComplete(Object object) {
                     completeCallback.onComplete(completePhoneNum);

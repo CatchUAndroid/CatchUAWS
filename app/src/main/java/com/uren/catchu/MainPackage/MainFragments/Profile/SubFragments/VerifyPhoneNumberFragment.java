@@ -31,7 +31,9 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.PhoneVerification;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -41,6 +43,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
 
@@ -58,13 +61,14 @@ public class VerifyPhoneNumberFragment extends Fragment {
     TextView toolbarTitleTv;
     TextView warningMessageTv;
     TextView remainingTimeTv;
-    LinearLayout remTimeLayout;
     GradientDrawable buttonShape;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
+    Country myCountry;
 
-    public VerifyPhoneNumberFragment(String phoneNum, PhoneVerification phoneVerification, CompleteCallback completeCallback) {
+    public VerifyPhoneNumberFragment(Country myCountry, String phoneNum, PhoneVerification phoneVerification, CompleteCallback completeCallback) {
         this.phoneNum = phoneNum;
+        this.myCountry = myCountry;
         this.phoneVerification = phoneVerification;
         this.completeCallback = completeCallback;
     }
@@ -102,18 +106,20 @@ public class VerifyPhoneNumberFragment extends Fragment {
         backImgv = mView.findViewById(R.id.backImgv);
         nextImgv = mView.findViewById(R.id.nextImgv);
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        remTimeLayout = mView.findViewById(R.id.remTimeLayout);
         warningMessageTv = mView.findViewById(R.id.warningMessageTv);
         setPhoneNum();
         setToolbarTitle();
+        setTimer();
     }
 
     private void setPhoneNum() {
-        if (phoneNum != null && !phoneNum.trim().isEmpty())
-            phoneNumberTv.setText(phoneNum);
+        if (phoneNum != null && !phoneNum.trim().isEmpty()){
+            if(myCountry != null && myCountry.getDialCode() != null && !myCountry.getDialCode().trim().isEmpty())
+                phoneNumberTv.setText(myCountry.getDialCode() + phoneNum);
+        }
     }
 
-    public void setToolbarTitle(){
+    public void setToolbarTitle() {
         toolbarTitleTv.setText(getResources().getString(R.string.VERIFY_PHONE_NUMBER));
     }
 
@@ -140,14 +146,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
                             verifyCodeEt.getText() != null && !verifyCodeEt.getText().toString().trim().isEmpty()) {
 
                         if (verifyCodeEt.getText().toString().equals(phoneVerification.getmCredential().getSmsCode())) {
-
-                            DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(), null,  getResources().getString(R.string.PHONE_VERIFICATION_IS_SUCCESSFUL), 1000, new InfoDialogBoxCallback() {
-                                @Override
-                                public void okClick() {
-                                    completeCallback.onComplete(null);
-                                    getActivity().onBackPressed();
-                                }
-                            });
+                            saveUserPhoneAndCountry();
                         } else
                             DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
                                 @Override
@@ -184,7 +183,9 @@ public class VerifyPhoneNumberFragment extends Fragment {
         sendCodeAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                phoneVerification.resendVerificationCode(phoneNum, phoneVerification.getmResendToken());
+                warningMessageTv.setVisibility(View.GONE);
+                phoneVerification.resendVerificationCode(myCountry.getDialCode() + phoneNum, phoneVerification.getmResendToken());
+                setTimer();
             }
         });
 
@@ -196,8 +197,39 @@ public class VerifyPhoneNumberFragment extends Fragment {
         });
     }
 
-    public void setTimer(){
-        remTimeLayout.setVisibility(View.VISIBLE);
+    public void saveUserPhoneAndCountry() {
+        UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
+        userProfileProperties.setPhoneCountry(myCountry);
+        userProfileProperties.setPhone(phoneNum);
+
+        new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
+            @Override
+            public void onSuccess() {
+                DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(),null, getActivity().getResources().getString(R.string.UPDATE_IS_SUCCESSFUL), 1500, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                        completeCallback.onComplete(null);
+                        getActivity().onBackPressed();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                DialogBoxUtil.showErrorDialog(getActivity(), e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+
+                    }
+                });
+                e.printStackTrace();
+            }
+        }, false, userProfileProperties, null);
+
+    }
+
+    public void setTimer() {
+        sendCodeAgainBtn.setEnabled(false);
 
         new CountDownTimer(VERIFY_PHONE_NUM_DURATION * 1000, 1000) {
 
@@ -209,9 +241,10 @@ public class VerifyPhoneNumberFragment extends Fragment {
             }
 
             public void onFinish() {
+                remainingTimeTv.setText(checkDigit(0));
+                sendCodeAgainBtn.setEnabled(true);
                 warningMessageTv.setVisibility(View.VISIBLE);
             }
-
         }.start();
     }
 

@@ -73,6 +73,7 @@
     <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">CatchU uygulamasını kullanan Facebook arkadaşınız bulunmamaktadır</string>
     <string name="PHONE_NUM">Telefon Numarası</string>
     <string name="SELECT_COUNTRY">Ülke Seç</string>
+    <string name="COUNTRY_NAME">Ülke Adı</string>
     <string name="COUNTRY_NAME_OR_CODE">Ülke Adı veya Kodu</string>
     <string name="WRITE_PHONE_NUMBER">Telefon numarasını yazın</string>
     <string name="PLEASE_WRITE_VERIFICATION_CODE">Şu numaraya gönderdiğimiz 6 haneli onay kodunu giriniz : </string>
@@ -82,6 +83,7 @@
     <string name="VERIFY_PHONE_NUMBER">Telefon Numarasını Doğrula</string>
     <string name="REMAINING_TIME">Kalan Süre : </string>
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">Size verilen süre içinde kodu girmediniz. Lütfen tekrar kodu gönderiniz!</string>
+    <string name="UPDATE_IS_SUCCESSFUL">Güncelendi</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

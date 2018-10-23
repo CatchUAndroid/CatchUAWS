@@ -65,7 +65,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="7dp"
                 android:background="@null"
-                android:hint="@string/COUNTRY_NAME_OR_CODE"
+                android:hint="@string/COUNTRY_NAME"
                 android:textSize="15sp" />
 
         </LinearLayout>
