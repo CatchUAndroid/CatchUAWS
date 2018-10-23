@@ -5,11 +5,14 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -263,19 +267,20 @@ public class PostHelper {
         static BaseFragment.FragmentNavigation fragmentNavigation;
         static Post post;
         static ImageView imgProfilePic;
+        static TextView txtProfilePic;
         LocationTrackerAdapter locationTrackObj;
         GoogleMap mMap;
         MapRipple mapRipple;
         static Activity mAct;
         PermissionModule permissionModule;
 
-        public static final void startProcess(Activity activity, Context context, BaseFragment.FragmentNavigation fragmNav, Post post, ImageView imgProfilePic) {
+        public static final void startProcess(Activity activity, Context context, BaseFragment.FragmentNavigation fragmNav, Post post, TextView txtProfilePic, ImageView imgProfilePic) {
 
             fragmentNavigation = fragmNav;
             LocatonDetailClicked.post = post;
             LocatonDetailClicked.imgProfilePic = imgProfilePic;
             LocatonDetailClicked.mAct = activity;
-
+            LocatonDetailClicked.txtProfilePic = txtProfilePic;
 
             LocatonDetailClicked locatonDetailClicked = new LocatonDetailClicked(context);
         }
@@ -325,16 +330,17 @@ public class PostHelper {
                             marker = mMap.addMarker(options);
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-                            if(post.getDistance().intValue()>10){
+                            if (post.getDistance().intValue() > 10) {
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(11), 2000, null);
-                            }else if(post.getDistance().intValue()>5){
+                            } else if (post.getDistance().intValue() > 5) {
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(12), 2000, null);
-                            }else if(post.getDistance().intValue()>2){
+                            } else if (post.getDistance().intValue() > 2) {
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(13), 2000, null);
-                            }
-                            else{
+                            } else {
                                 mMap.animateCamera(CameraUpdateFactory.zoomTo(15), 2000, null);
                             }
+                        } else {
+
                         }
 
                         setMyLocation(context);
@@ -350,6 +356,7 @@ public class PostHelper {
             initLocationTracker(context);
             checkCanGetLocation(context);
         }
+
         private void initLocationTracker(Context context) {
             locationTrackObj = new LocationTrackerAdapter(context, new LocationCallback() {
                 @Override
@@ -358,6 +365,7 @@ public class PostHelper {
                 }
             });
         }
+
         private void checkCanGetLocation(Context context) {
             if (!locationTrackObj.canGetLocation())
                 DialogBoxUtil.showSettingsAlert(mAct);
@@ -366,11 +374,12 @@ public class PostHelper {
                     if (permissionModule.checkAccessFineLocationPermission()) {
                         mMap.setMyLocationEnabled(true);
                     }
-                }else{
+                } else {
                     mMap.setMyLocationEnabled(true);
                 }
             }
         }
+
         //todo NT - harita modu açıkken mapRipple'ın hareket edip etmediği test edilmeli..
         private void showMyLocation() {
             Location location = locationTrackObj.getLocation();
@@ -394,9 +403,14 @@ public class PostHelper {
                 RectF bitmapRect = new RectF();
                 canvas.save();
 
-
-                Bitmap bitmap = ((BitmapDrawable) imgProfilePic.getDrawable()).getBitmap();
+                Bitmap bitmap;
                 //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*generate bitmap here if your image comes from any url*/
+                if (imgProfilePic.getDrawable() != null) {
+                    bitmap = ((BitmapDrawable) imgProfilePic.getDrawable()).getBitmap();
+                } else {
+                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon);
+                }
+
                 if (bitmap != null) {
                     BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
                     Matrix matrix = new Matrix();
@@ -412,39 +426,42 @@ public class PostHelper {
                 try {
                     canvas.setBitmap(null);
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
+        } catch(
+        Throwable t)
+
+        {
+            t.printStackTrace();
+        }
             return result;
-        }
-
-        public int dp(float value, Context context) {
-            if (value == 0) {
-                return 0;
-            }
-            return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
-        }
-
-
-
     }
 
-    public static class Utils {
-
-        public static final String calculateDistance(Double distance) {
-            String distanceValue;
-            if (distance < 1) {
-                distance = distance * 1000;
-                distanceValue = distance.intValue() + "m";
-            } else {
-                distanceValue = String.format("%.2f", distance) + "km";
-            }
-            return distanceValue;
+    public int dp(float value, Context context) {
+        if (value == 0) {
+            return 0;
         }
-
-
+        return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
     }
+
+
+}
+
+public static class Utils {
+
+    public static final String calculateDistance(Double distance) {
+        String distanceValue;
+        if (distance < 1) {
+            distance = distance * 1000;
+            distanceValue = distance.intValue() + "m";
+        } else {
+            distanceValue = String.format("%.2f", distance) + "km";
+        }
+        return distanceValue;
+    }
+
+
+}
 
 
 }

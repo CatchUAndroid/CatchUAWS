@@ -173,7 +173,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             locationDetailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, imgProfilePic);
+                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post,txtProfilePic, imgProfilePic);
                 }
             });
 
