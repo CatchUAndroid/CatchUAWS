@@ -1,19 +1,13 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -29,47 +23,32 @@ import com.dinuscxj.refresh.RecyclerRefreshLayout.OnRefreshListener;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentListClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.LikeListClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
-import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.VideoPlay.CustomRecyclerView;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.BaseRequest;
-import catchu.model.BaseResponse;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
-import static android.content.Context.LOCATION_SERVICE;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
-import static com.uren.catchu.SharePackage.ShareDetailActivity.REQUEST_CODE_ENABLE_LOCATION;
-import static java.math.BigDecimal.*;
 
 
 public class FeedFragment extends BaseFragment {
@@ -84,9 +63,6 @@ public class FeedFragment extends BaseFragment {
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
-    @BindView(R.id.progressLoadMore)
-    ProgressBar progressLoadMore;
 
     @BindView(R.id.txtNoFeed)
     TextView txtNoFeed;
@@ -137,23 +113,30 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void init() {
-        //layout manager
+
+        setLayoutManager();
+        setAdapter();
+        setRecyclerViewProperties();
+        setPullToRefresh();
+        setRecyclerViewScroll();
+
+    }
+
+    private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        //feed adapter
+    }
+    private void setAdapter() {
         feedAdapter = new FeedAdapter(getActivity(), getContext(), mFragmentNavigation);
         recyclerView.setAdapter(feedAdapter);
-        setRecyclerViewProperties();
-
+    }
+    private void setPullToRefresh() {
         refresh_layout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
                 checkLocationAndRetrievePosts();
             }
         });
-
-        setRecyclerViewScroll();
-
     }
 
 
@@ -182,16 +165,12 @@ public class FeedFragment extends BaseFragment {
                             Log.v("...", "Last Item Wow !");
                             //Do pagination.. i.e. fetch new data
                             pageCnt++;
+                            feedAdapter.addProgressLoading();
                             getPosts();
 
                         }
-
                     }
-
-
                 }
-
-
             }
         });
 
@@ -277,8 +256,6 @@ public class FeedFragment extends BaseFragment {
 
         BaseRequest baseRequest = getBaseRequest();
         setLocationInfo();
-
-        //todo NT - pagination yapılacak
         String perpage = String.valueOf(perPageCnt);
         String page = String.valueOf(pageCnt);
 
@@ -300,7 +277,6 @@ public class FeedFragment extends BaseFragment {
                 }
 
                 progressBar.setVisibility(View.GONE);
-                progressLoadMore.setVisibility(View.VISIBLE);
                 refresh_layout.setRefreshing(false);
 
             }
@@ -309,18 +285,15 @@ public class FeedFragment extends BaseFragment {
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
-                progressLoadMore.setVisibility(View.VISIBLE);
+                refresh_layout.setRefreshing(false);
             }
 
             @Override
             public void onTaskContinue() {
 
-                if(pageCnt == 1){
+                if (pageCnt == 1) {
                     progressBar.setVisibility(View.VISIBLE);
-                }else{
-                    progressLoadMore.setVisibility(View.VISIBLE);
                 }
-
             }
         }, baseRequest, longitude, latitude, radius, perpage, page, token);
 
@@ -340,6 +313,11 @@ public class FeedFragment extends BaseFragment {
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
         loading = true;
+        preDownloadUrls(postListResponse.getItems());
+
+        if (pageCnt != 1) {
+            feedAdapter.removeProgressLoading();
+        }
 
         for (int i = 0; i < postListResponse.getItems().size(); i++) {
             postList.add(postListResponse.getItems().get(i));
@@ -347,7 +325,6 @@ public class FeedFragment extends BaseFragment {
         //postList=setJunkData();
         //logPostId(postList); //todo NT - silinecek
         feedAdapter.addAll(postListResponse.getItems());
-        preDownloadUrls(postListResponse.getItems());
 
     }
 

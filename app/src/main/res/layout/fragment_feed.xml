@@ -64,28 +64,12 @@
                 android:id="@+id/rv_feed"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:scrollbars="vertical">
 
             </com.uren.catchu.VideoPlay.CustomRecyclerView>
 
         </com.dinuscxj.refresh.RecyclerRefreshLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom"
-            android:background="@color/red"
-            android:gravity="center">
-
-            <ProgressBar
-                android:id="@+id/progressLoadMore"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:visibility="gone"/>
-
-        </LinearLayout>
-
 
     </LinearLayout>
 
