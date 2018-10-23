@@ -104,6 +104,7 @@
         <activity android:name=".UgurDeneme.PhotoDenemeActivity" />
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.ImageActivity" />
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.VideoActivity" />
+        <activity android:name=".UgurDeneme.PhoneAuthActivity"></activity>
     </application>
 
 </manifest>

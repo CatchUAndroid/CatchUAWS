@@ -55,6 +55,7 @@ import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
@@ -143,7 +144,6 @@ public class UserEditFragment extends BaseFragment
     @BindView(R.id.edtEmail)
     EditText edtEmail;
 
-    @BindView(R.id.edtPhone)
     EditText edtPhone;
 
     //@BindView(R.id.edtGender)
@@ -185,6 +185,8 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void init() {
+        edtPhone = mView.findViewById(R.id.edtPhone);
+
         txtSave.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
@@ -258,7 +260,8 @@ public class UserEditFragment extends BaseFragment
                 edtEmail.setText(userInfo.getEmail());
             }
             if (userInfo.getPhone() != null && !userInfo.getPhone().isEmpty()) {
-                edtPhone.setText(userInfo.getPhone());
+                if (userInfo.getPhoneCountry() != null && userInfo.getPhoneCountry().getDialCode() != null && !userInfo.getPhoneCountry().getDialCode().trim().isEmpty())
+                    edtPhone.setText(userInfo.getPhoneCountry().getDialCode().trim() + userInfo.getPhone());
             }
             if (userInfo.getBirthday() != null && !userInfo.getBirthday().isEmpty()) {
                 edtBirthDay.setText(userInfo.getUsername());
@@ -324,9 +327,23 @@ public class UserEditFragment extends BaseFragment
         }
     }
 
-    public void startEditPhoneNumber(){
+    public void startEditPhoneNumber() {
+
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new PhoneNumEditFragment(edtPhone.getText().toString()), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new PhoneNumEditFragment(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone(), new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    if (object != null) {
+                        String phoneNum = (String) object;
+                        edtPhone.setText(phoneNum, TextView.BufferType.EDITABLE);
+                    }
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
@@ -364,7 +381,6 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setProfilePhotoUrl(userProfile.getUserInfo().getProfilePhotoUrl());
         }
 
-
         if (edtName.getText().toString().isEmpty()) {
             userProfileProperties.setName("");
         } else {
@@ -395,11 +411,14 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setEmail(edtEmail.getText().toString());
         }
 
-        if (edtPhone.getText().toString().isEmpty()) {
+        /*if (edtPhone.getText().toString().isEmpty()) {
             userProfileProperties.setPhone("");
         } else {
             userProfileProperties.setPhone(edtPhone.getText().toString());
-        }
+        }*/
+
+        userProfileProperties.setPhone(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone());
+        userProfileProperties.setPhoneCountry(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry());
 
         if (selectedGender.isEmpty()) {
             userProfileProperties.setGender("");

@@ -57,6 +57,8 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     List<String> orgCountryList;
     List<String> countryList;
     ItemClickListener listener;
+    CountryListResponse countryListResponse;
+    Country myCountry;
 
     public SelectCountryFragment(ItemClickListener listener) {
         this.listener = listener;
@@ -122,10 +124,27 @@ public class SelectCountryFragment extends Fragment implements Filterable {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCountry = (String) countryListView.getItemAtPosition(position);
-                listener.onClick(selectedCountry, 0);
+                parseSelectedCountry(selectedCountry);
                 getActivity().onBackPressed();
             }
         });
+    }
+
+    public void parseSelectedCountry(String selectedCountry) {
+        String[] parts = selectedCountry.split("\\(");
+
+        String[] parts2 = parts[1].split("\\)");
+        String countryDialCode = parts2[0];
+
+        for(Country country : countryListResponse.getItems()){
+            if(country != null && country.getDialCode() != null && !country.getDialCode().trim().isEmpty()){
+                if(countryDialCode.trim().equals(country.getDialCode())){
+                    myCountry = country;
+                    break;
+                }
+            }
+        }
+        listener.onClick(myCountry, 0);
     }
 
     public void getCountryList() {
@@ -161,7 +180,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     }
 
     public void fillCountryList(Object object) {
-        CountryListResponse countryListResponse = (CountryListResponse) object;
+        countryListResponse = (CountryListResponse) object;
         orgCountryList = new ArrayList<String>();
 
         for (Country country : countryListResponse.getItems()) {

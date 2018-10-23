@@ -41,7 +41,7 @@ public class UpdateUserProfileProcess {
         this.userProfileProperties = userProfileProperties;
         this.bitmap = bitmap;
         mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(context.getResources().getString(R.string.profileUpdating));
+        mProgressDialog.setMessage(context.getResources().getString(R.string.UPDATING));
         dialogShow();
 
         if(this.profilPicChanged)
@@ -175,5 +175,6 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setGender(up.getUserInfo().getGender());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setProfilePhotoUrl(up.getUserInfo().getProfilePhotoUrl());
+        AccountHolderInfo.getInstance().getUser().getUserInfo().setPhoneCountry(up.getUserInfo().getPhoneCountry());
     }
 }
