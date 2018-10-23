@@ -158,6 +158,7 @@
     <string name="SHARE_IS_SUCCESSFUL">Paylaşım Başarılı</string>
 
     <string name="emptyFeed">Arkadaşlarınızın paylaşımlarını görebilmek için onları takip etmeye başlayın :)</string>
+    <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
     <string name="loading">Yükleniyor</string>

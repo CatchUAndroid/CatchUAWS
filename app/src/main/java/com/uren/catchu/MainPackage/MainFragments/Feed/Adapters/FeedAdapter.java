@@ -4,7 +4,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 
-import android.os.AsyncTask;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
@@ -15,57 +14,76 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentListClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.LikeListClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.BaseRequest;
-import catchu.model.BaseResponse;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
-import catchu.model.User;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+public class FeedAdapter extends RecyclerView.Adapter {
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> {
+    private final int VIEW_ITEM = 1;
+    private final int VIEW_PROG = 0;
 
     private Activity mActivity;
     private Context mContext;
     private List<Post> postList;
-    BaseFragment.FragmentNavigation fragmentNavigation;
+    private BaseFragment.FragmentNavigation fragmentNavigation;
 
-    public FeedAdapter(Activity activity, Context context, List<Post> postList,
+    public FeedAdapter(Activity activity, Context context,
                        BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
         this.mContext = context;
-        this.postList = postList;
         this.fragmentNavigation = fragmentNavigation;
+        this.postList = new ArrayList<Post>();
+
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.feed_vert_list_item, parent, false);
+    public int getItemViewType(int position) {
+        return postList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+    }
 
-        return new MyViewHolder(itemView);
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        RecyclerView.ViewHolder viewHolder;
+        if (viewType == VIEW_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.feed_vert_list_item, parent, false);
+
+            viewHolder = new MyViewHolder(itemView);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            viewHolder = new ProgressViewHolder(v);
+        }
+        return viewHolder;
+
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if( holder instanceof MyViewHolder){
+            Post post = postList.get(position);
+            ((MyViewHolder) holder).setData(post, position);
+        }else{
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+        }
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -87,6 +105,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
         LinearLayout layoutComment;
         LinearLayout profileMainLayout;
         LinearLayout locationDetailLayout;
+        TextView txtLocationDistance;
 
         View mView;
 
@@ -108,6 +127,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment = (LinearLayout) view.findViewById(R.id.layoutComment);
             profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
             locationDetailLayout = (LinearLayout) view.findViewById(R.id.locationDetailLayout);
+            txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
 
             setListeners();
 
@@ -139,7 +159,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String toolbarTitle = mContext.getResources().getString(R.string.likes) ;
+                    String toolbarTitle = mContext.getResources().getString(R.string.likes);
                     CommonUtils.showToast(mContext, toolbarTitle);
                     PostHelper.LikeListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
                 }
@@ -149,7 +169,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             layoutComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String toolbarTitle = mContext.getResources().getString(R.string.comments) ;
+                    String toolbarTitle = mContext.getResources().getString(R.string.comments);
                     PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
                 }
             });
@@ -170,13 +190,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             locationDetailLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LocatonDetailClicked.startProcess(mContext, fragmentNavigation, post, imgProfilePic);
+                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post,txtProfilePic, imgProfilePic);
                 }
             });
 
-
         }
-
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -231,6 +249,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
+            //Location distance
+            if (post.getDistance() != null) {
+                txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
+            }
 
 
         }
@@ -246,17 +268,34 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
-
-        Post post = postList.get(position);
-        holder.setData(post, position);
-
-    }
-
-    @Override
     public int getItemCount() {
-        return postList.size();
+        return (postList != null ? postList.size() : 0);
     }
 
+    public void addAll(List<Post> addedPostList) {
+        if(addedPostList != null){
+            postList.addAll(addedPostList);
+            notifyItemRangeInserted(postList.size(), postList.size() + addedPostList.size());
+        }
+    }
+
+    public void addProgressLoading() {
+        postList.add(null);
+        notifyItemInserted(postList.size() - 1);
+    }
+
+    public void removeProgressLoading() {
+        postList.remove(postList.size() - 1);
+        notifyItemRemoved(postList.size());
+    }
+
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+        }
+    }
 
 }
