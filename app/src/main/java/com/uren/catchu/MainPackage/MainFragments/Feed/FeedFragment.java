@@ -122,11 +122,9 @@ public class FeedFragment extends BaseFragment {
 
 
     private void checkLocationAndRetrievePosts() {
-
         permissionModule = new PermissionModule(getContext());
         initLocationTracker();
         checkCanGetLocation();
-
     }
 
     private void initLocationTracker() {
@@ -191,20 +189,16 @@ public class FeedFragment extends BaseFragment {
 
 
     private void init() {
-
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
     }
 
     private void getPosts() {
-
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startGetPosts(token);
             }
         });
-
     }
 
     private void startGetPosts(String token) {
@@ -262,8 +256,6 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void setUpRecyclerView(PostListResponse postListResponse) {
-
-        //Log.i("postCount ", String.valueOf(postListResponse.getItems().size()));
 
         List<Post> postList;
         postList = postListResponse.getItems();
@@ -380,8 +372,8 @@ public class FeedFragment extends BaseFragment {
 
     private void setLocationInfo() {
 
-        longitude = "29.03129382";
-        latitude = "41.10745331";
+        longitude = String.valueOf(locationTrackObj.getLocation().getLongitude()) ;
+        latitude =  String.valueOf(locationTrackObj.getLocation().getLatitude()) ;
         radius = "100";
 
     }

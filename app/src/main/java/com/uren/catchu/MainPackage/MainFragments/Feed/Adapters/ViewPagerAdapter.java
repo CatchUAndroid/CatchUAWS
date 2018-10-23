@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,14 +56,14 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         orderedAttachments = new ArrayList<>();
 
-        for (int i = 0; i < attachments.size(); i++){
-            if(attachments.get(i).getType().equals(VIDEO_TYPE)){
+        for (int i = 0; i < attachments.size(); i++) {
+            if (attachments.get(i).getType().equals(VIDEO_TYPE)) {
                 orderedAttachments.add(attachments.get(i));
             }
         }
 
-        for (int i = 0; i < attachments.size(); i++){
-            if(attachments.get(i).getType().equals(IMAGE_TYPE)){
+        for (int i = 0; i < attachments.size(); i++) {
+            if (attachments.get(i).getType().equals(IMAGE_TYPE)) {
                 orderedAttachments.add(attachments.get(i));
             }
         }
@@ -107,12 +108,23 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         if (videoCounter < videoList.size()) {
             clickedItemType = VIDEO_TYPE;
+
+            /*Ana sayfadan video oynatma özelliği kaldırıldı*/
+            /*
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.viewpager_video, collection, false);
 
             loadVideo(itemView);
             loadImage(itemView, VIEWPAGER_VIDEO);
             videoCounter++;
+            */
+
+            itemView = LayoutInflater.from(mContext)
+                    .inflate(R.layout.viewpager_image, collection, false);
+
+            loadImage(itemView, VIEWPAGER_VIDEO);
+            videoCounter++;
+
 
         } else if (imageCounter < imageList.size()) {
             clickedItemType = IMAGE_TYPE;
@@ -166,16 +178,28 @@ public class ViewPagerAdapter extends PagerAdapter {
             }
 
             //Bitmap bm =  getVideoImageUrl(videoList.get(videoCounter).getVideo_url().toString());
-
+            /* Ana sayfadan video oynatma özelliği kaldırıldı
             Glide.with(mContext)
                     .load(loadUrl)
                     .apply(RequestOptions.centerInsideTransform())
                     .into(videoPlay.getImageView());
+                    */
+
+            ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
+            ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
+            iconPlay.setVisibility(View.VISIBLE);
+
+            Glide.with(mContext)
+                    .load(loadUrl)
+                    .apply(RequestOptions.fitCenterTransform())
+                    .into(imgFeedItem);
 
 
         } else if (TAG.equals(VIEWPAGER_IMAGE)) {
 
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
+            ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
+            iconPlay.setVisibility(View.GONE);
 
             if (imageList.get(imageCounter) != null && !imageList.get(imageCounter).isEmpty()) {
                 loadUrl = imageList.get(imageCounter);
