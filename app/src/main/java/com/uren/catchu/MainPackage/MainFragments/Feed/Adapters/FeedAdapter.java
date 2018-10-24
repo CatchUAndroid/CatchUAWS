@@ -169,8 +169,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             layoutComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String toolbarTitle = mContext.getResources().getString(R.string.comments);
-                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
+                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, post.getPostid());
                 }
             });
 

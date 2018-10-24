@@ -211,7 +211,7 @@ public class PhoneNumEditFragment extends BaseFragment {
         if (phoneNum != null && !phoneNum.trim().isEmpty()) {
             phoneNumEt.setText(phoneNum);
         }
-
+/*
         if (AccountHolderInfo.getInstance().getUser() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getPhoneCountry() != null) {
@@ -228,7 +228,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             } else
                 getCountryList();
         } else
-            getCountryList();
+            getCountryList();*/
     }
 
     public void startCountryFragment() {

@@ -8,51 +8,46 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
-import catchu.model.PostListResponse;
+import catchu.model.Comment;
+import catchu.model.CommentRequest;
+import catchu.model.CommentResponse;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
-public class PostLikeProcess extends AsyncTask<Void, Void, BaseResponse> {
+public class PostCommentProcess extends AsyncTask<Void, Void, CommentResponse> {
 
-    private OnEventListener<BaseResponse> mCallBack;
+    private OnEventListener<CommentResponse> mCallBack;
     private Context mContext;
     public Exception mException;
     private String userId;
     private String postId;
     private String commentId;
-    private boolean isPostLiked;
+    private CommentRequest commentRequest;
     private String token;
 
-    public PostLikeProcess(Context context, OnEventListener callback, String userId, String postId, String commentId, boolean isPostLiked, String token) {
+    public PostCommentProcess(Context context, OnEventListener callback,
+                              String userId, String postId, String commentId,
+                              CommentRequest commentRequest, String token) {
         mCallBack = callback;
         mContext = context;
         this.userId = userId;
         this.postId = postId;
         this.commentId = commentId;
-        this.isPostLiked = isPostLiked;
+        this.commentRequest = commentRequest;
         this.token = token;
     }
 
     @Override
-    protected BaseResponse doInBackground(Void... voids) {
+    protected CommentResponse doInBackground(Void... voids) {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            BaseResponse baseResponse;
 
-            if (isPostLiked) {
-                //call post like service
-                Log.i("info", "goes server for LIKE");
-                baseResponse = instance.client.postsPostidCommentsCommentidLikePost(userId, postId, token, commentId);
-            } else {
-                //call post dislike service
-                Log.i("info", "goes server for DISLIKE");
-                baseResponse = instance.client.postsPostidCommentsCommentidLikeDelete(userId, postId, token, commentId);
-            }
+            CommentResponse commentResponse = instance.client.postsPostidCommentsCommentidPost(userId, postId, token, commentId, commentRequest);
 
-            if (baseResponse.getError().getCode() == RESPONSE_OK) {
-                return baseResponse;
+            if (commentResponse.getError().getCode() == RESPONSE_OK) {
+                return commentResponse;
             } else {
                 return null;
             }
@@ -77,12 +72,12 @@ public class PostLikeProcess extends AsyncTask<Void, Void, BaseResponse> {
     }
 
     @Override
-    protected void onPostExecute(BaseResponse baseResponse) {
-        super.onPostExecute(baseResponse);
+    protected void onPostExecute(CommentResponse commentResponse) {
+        super.onPostExecute(commentResponse);
 
         if (mCallBack != null) {
             if (mException == null) {
-                mCallBack.onSuccess(baseResponse);
+                mCallBack.onSuccess(commentResponse);
             } else {
                 mCallBack.onFailure(mException);
             }
