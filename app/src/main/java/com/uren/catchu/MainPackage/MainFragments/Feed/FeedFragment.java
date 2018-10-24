@@ -319,11 +319,9 @@ public class FeedFragment extends BaseFragment {
             feedAdapter.removeProgressLoading();
         }
 
-        for (int i = 0; i < postListResponse.getItems().size(); i++) {
-            postList.add(postListResponse.getItems().get(i));
-        }
         //postList=setJunkData();
         //logPostId(postList); //todo NT - silinecek
+        postList.addAll(postListResponse.getItems());
         feedAdapter.addAll(postListResponse.getItems());
 
     }

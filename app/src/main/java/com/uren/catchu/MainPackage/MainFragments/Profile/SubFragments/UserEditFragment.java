@@ -257,8 +257,8 @@ public class UserEditFragment extends BaseFragment
             if (userInfo.getEmail() != null && !userInfo.getEmail().isEmpty()) {
                 edtEmail.setText(userInfo.getEmail());
             }
-            if (userInfo.getPhone() != null && !userInfo.getPhone().isEmpty()) {
-                edtPhone.setText(userInfo.getPhone());
+            if (userInfo.getPhone() != null ) {
+                edtPhone.setText(userInfo.getPhone().getDialCode() + userInfo.getPhone().getPhoneNumber());
             }
             if (userInfo.getBirthday() != null && !userInfo.getBirthday().isEmpty()) {
                 edtBirthDay.setText(userInfo.getUsername());
@@ -394,13 +394,13 @@ public class UserEditFragment extends BaseFragment
         } else {
             userProfileProperties.setEmail(edtEmail.getText().toString());
         }
-
+        /*
         if (edtPhone.getText().toString().isEmpty()) {
             userProfileProperties.setPhone("");
         } else {
             userProfileProperties.setPhone(edtPhone.getText().toString());
         }
-
+        */
         if (selectedGender.isEmpty()) {
             userProfileProperties.setGender("");
         } else {

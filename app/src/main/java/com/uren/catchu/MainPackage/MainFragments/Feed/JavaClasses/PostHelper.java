@@ -39,6 +39,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.PostCommentProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -46,6 +47,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
@@ -57,6 +59,9 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
+import catchu.model.Comment;
+import catchu.model.CommentRequest;
+import catchu.model.CommentResponse;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.User;
@@ -98,7 +103,7 @@ public class PostHelper {
 
         private void startPostLikeClickedProcess(Context context, String token) {
 
-            BaseRequest baseRequest = getBaseRequest();
+            String userId = AccountHolderInfo.getUserID();
             String postId = post.getPostid();
             String commentId = null;
 
@@ -121,7 +126,7 @@ public class PostHelper {
                 @Override
                 public void onTaskContinue() {
                 }
-            }, postId, commentId, baseRequest, isPostLiked, token);
+            }, userId, postId, commentId, isPostLiked, token);
 
             postLikeProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -161,7 +166,7 @@ public class PostHelper {
         private void postLikeListClickedProcess(Context context) {
             if (fragmentNavigation != null) {
                 String comingFor = COMING_FOR_LIKE_LIST;
-                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle, postId, comingFor), ANIMATE_DOWN_TO_UP);
+                fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle, postId, comingFor), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
@@ -171,14 +176,12 @@ public class PostHelper {
     public static class CommentListClicked {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
-        static String toolbarTitle;
         static String postId;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav,
                                               String postId) {
 
             fragmentNavigation = fragmNav;
-            CommentListClicked.toolbarTitle = toolbarTitle;
             CommentListClicked.postId = postId;
 
             CommentListClicked commentListClicked = new CommentListClicked(context);
@@ -190,7 +193,7 @@ public class PostHelper {
 
         private void postCommentListClickedProcess(Context context) {
             if (fragmentNavigation != null) {
-                //fragmentNavigation.pushFragment(PersonListFragment.newInstance(toolbarTitle, postId), ANIMATE_DOWN_TO_UP);
+                fragmentNavigation.pushFragment(CommentListFragment.newInstance(postId), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
@@ -428,40 +431,108 @@ public class PostHelper {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-        } catch(
-        Throwable t)
+            } catch (
+                    Throwable t)
 
-        {
-            t.printStackTrace();
-        }
+            {
+                t.printStackTrace();
+            }
             return result;
-    }
-
-    public int dp(float value, Context context) {
-        if (value == 0) {
-            return 0;
         }
-        return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
-    }
 
-
-}
-
-public static class Utils {
-
-    public static final String calculateDistance(Double distance) {
-        String distanceValue;
-        if (distance < 1) {
-            distance = distance * 1000;
-            distanceValue = distance.intValue() + "m";
-        } else {
-            distanceValue = String.format("%.2f", distance) + "km";
+        public int dp(float value, Context context) {
+            if (value == 0) {
+                return 0;
+            }
+            return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
         }
-        return distanceValue;
+
+
     }
 
+    public static class AddComment {
 
-}
+        static String postId;
+        static Comment comment;
 
+        public static final void startProcess(Context context, String postId, Comment comment) {
+
+            AddComment.postId = postId;
+            AddComment.comment = comment;
+
+            AddComment addComment = new AddComment(context);
+        }
+
+        private AddComment(Context context) {
+            postAddCommentProcess(context);
+        }
+
+        private void postAddCommentProcess(final Context context) {
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startPostAddCommentProcess(context, token);
+                }
+            });
+
+        }
+
+        private void startPostAddCommentProcess(Context context, String token) {
+
+            String userId = AccountHolderInfo.getUserID();
+            String postId = this.postId;
+            String commentId = null;
+            CommentRequest commentRequest = getCommentRequest();
+
+            PostCommentProcess postCommentProcess = new PostCommentProcess(context, new OnEventListener<CommentResponse>() {
+                @Override
+                public void onSuccess(CommentResponse commentResponse) {
+                    if (commentResponse == null) {
+                        CommonUtils.LOG_OK_BUT_NULL("PostCommentProcess");
+                    } else {
+                        CommonUtils.LOG_OK("PostCommentProcess");
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    CommonUtils.LOG_FAIL("PostCommentProcess", e.toString());
+                }
+
+                @Override
+                public void onTaskContinue() {
+
+                }
+            }, userId, postId, commentId, commentRequest, token);
+
+            postCommentProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
+
+        private CommentRequest getCommentRequest() {
+            CommentRequest commentRequest = new CommentRequest();
+            commentRequest.setComment(comment);
+            return commentRequest;
+        }
+
+
+    }
+
+    public static class Utils {
+
+        public static final String calculateDistance(Double distance) {
+            String distanceValue;
+            if (distance < 1) {
+                distance = distance * 1000;
+                distanceValue = distance.intValue() + "m";
+            } else {
+                distanceValue = String.format("%.2f", distance) + "km";
+            }
+            return distanceValue;
+        }
+
+
+    }
 
 }
