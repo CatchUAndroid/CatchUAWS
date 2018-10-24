@@ -198,6 +198,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     public void saveUserPhoneAndCountry() {
+        /*todo:phone
         UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
         userProfileProperties.setPhoneCountry(myCountry);
         userProfileProperties.setPhone(phoneNum);
@@ -225,6 +226,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
                 e.printStackTrace();
             }
         }, false, userProfileProperties, null);
+        */
 
     }
 

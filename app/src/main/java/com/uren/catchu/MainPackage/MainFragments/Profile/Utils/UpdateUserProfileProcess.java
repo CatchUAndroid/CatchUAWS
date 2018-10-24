@@ -175,6 +175,9 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setGender(up.getUserInfo().getGender());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setProfilePhotoUrl(up.getUserInfo().getProfilePhotoUrl());
+
+        /*todo:phone
         AccountHolderInfo.getInstance().getUser().getUserInfo().setPhoneCountry(up.getUserInfo().getPhoneCountry());
+        */
     }
 }
