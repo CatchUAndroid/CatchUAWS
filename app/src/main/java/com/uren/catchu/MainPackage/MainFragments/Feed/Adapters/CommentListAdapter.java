@@ -70,9 +70,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView imgProfilePic;
+        TextView txtProfilePic;
         TextView profileName;
-        TextView shortUserNameTv;
-        ImageView profileImage;
+        TextView txtUsername;
+        TextView commentMessage;
         CardView cardView;
         Comment comment;
         int position;
@@ -81,10 +83,12 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             super(view);
 
             profileName = (TextView) view.findViewById(R.id.profile_name);
-            shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-            profileImage = (ImageView) view.findViewById(R.id.profile_image);
+            txtUsername = (TextView) view.findViewById(R.id.txtUsername);
+            imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
+            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
             cardView = (CardView) view.findViewById(R.id.card_view);
-            profileImage.setBackground(imageShape);
+            imgProfilePic.setBackground(imageShape);
+            commentMessage = (TextView) view.findViewById(R.id.commentMessage);
 
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -98,11 +102,15 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         public void setData(Comment comment, int position) {
 
-            this.profileName.setText(comment.getUser().getName());
+            //this.profileName.setText(comment.getUser().getName());
+            this.txtUsername.setText(comment.getUser().getUsername());
             this.comment = comment;
             this.position = position;
+            this.commentMessage.setText(comment.getMessage());
             UserDataUtil.setProfilePicture(context, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(), shortUserNameTv, profileImage);
+                   comment.getUser().getName(), txtProfilePic, imgProfilePic);
+
+
 
         }
 

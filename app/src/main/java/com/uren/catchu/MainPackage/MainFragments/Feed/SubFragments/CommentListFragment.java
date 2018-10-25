@@ -210,6 +210,7 @@ public class CommentListFragment extends BaseFragment
         Comment comment = createCommentBody();
         PostHelper.AddComment.startProcess(getContext(), postId, comment);
         commentListAdapter.add(comment);
+        commentList_recyclerView.smoothScrollToPosition(commentListAdapter.getItemCount());
     }
 
     private Comment createCommentBody() {
@@ -221,7 +222,7 @@ public class CommentListFragment extends BaseFragment
         user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
 
         Comment comment = new Comment() ;
-        comment.setMessage("message");
+        comment.setMessage(edtAddComment.getText().toString());
         comment.setUser(user);
         return comment;
     }

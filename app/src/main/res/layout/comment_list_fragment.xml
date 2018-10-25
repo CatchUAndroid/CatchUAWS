@@ -7,68 +7,54 @@
 
     <include layout="@layout/layout_progress_bar" />
 
-    <android.support.design.widget.CoordinatorLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="80dp"
+        android:background="@color/colorPrimary">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:orientation="horizontal"
+            android:weightSum="5">
 
+            <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                android:id="@+id/imgBack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|left"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0.7"
+                android:gravity="left"
+                android:src="@drawable/back_arrow2" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarLayout"
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:background="@color/colorPrimary">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="left"
-                    android:orientation="horizontal"
-                    android:weightSum="5">
-
-                    <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                        android:id="@+id/imgBack"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|left"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="0.7"
-                        android:gravity="left"
-                        android:src="@drawable/back_arrow2" />
-
-                    <TextView
-                        android:id="@+id/toolbarTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:layout_marginLeft="20dp"
-                        android:layout_weight="3.3"
-                        android:gravity="center|left"
-                        android:textColor="@android:color/white"
-                        android:textSize="25sp" />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.Toolbar>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/commentList_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
-
-            </android.support.v7.widget.RecyclerView>
-
+            <TextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="3.3"
+                android:gravity="center|left"
+                android:textColor="@android:color/white"
+                android:textSize="25sp" />
 
         </LinearLayout>
 
+    </android.support.v7.widget.Toolbar>
 
-    </android.support.design.widget.CoordinatorLayout>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentList_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/toolbarLayout"
+        android:layout_above="@+id/bottomBox">
+
+    </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/bottomBox"
@@ -80,20 +66,24 @@
         android:weightSum="5">
 
         <EditText
+            android:id="@+id/edtAddComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Add a comment"
+            android:layout_weight="4"
             android:defaultFocusHighlightEnabled="false"
-            android:id="@+id/edtAddComment"
-            android:layout_weight="4"/>
+            android:hint="Add a comment" />
 
         <Button
+            android:id="@+id/btnSendComment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Send"
             android:layout_weight="1"
-            android:id="@+id/btnSendComment"/>
+            android:text="Send" />
 
     </LinearLayout>
+
+
+
+
 
 </RelativeLayout>

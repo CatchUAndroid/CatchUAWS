@@ -38,6 +38,7 @@
 
     <color name="dot_dark_screen3">#ff0000</color>
     <color name="statusFollowing">#1565C0</color>
+    <color name="commentBackground">#E3E3E3</color>
 
     <color name="White">#FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>
