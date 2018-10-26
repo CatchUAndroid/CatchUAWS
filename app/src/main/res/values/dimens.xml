@@ -3,4 +3,5 @@
     <dimen name="shareItemPadSize">30dp</dimen>
     <dimen name="edittextsize">15sp</dimen>
     <dimen name="ADD_GROUP_IMGV_SIZE">70px</dimen>
+    <dimen name="default_elevation">8dp</dimen>
 </resources>

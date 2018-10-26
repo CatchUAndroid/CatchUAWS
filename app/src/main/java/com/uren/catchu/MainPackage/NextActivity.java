@@ -126,7 +126,7 @@ public class NextActivity extends AppCompatActivity implements
         bottomTabLayout = findViewById(R.id.bottom_tab_layout);
         TABS = getResources().getStringArray(R.array.tab_name);
 
-        setStatusBarTransparent();
+        //setStatusBarTransparent();
         initTab();
     }
 
