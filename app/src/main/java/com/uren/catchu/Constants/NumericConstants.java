@@ -26,5 +26,9 @@ public class NumericConstants {
     //Phone num verify duration
     public static final int VERIFY_PHONE_NUM_DURATION = 30;
 
+    //Feed paignation initial values
+    public static final int FEED_PAGE_COUNT = 1;
+    public static final int FEED_PERPAGE_COUNT = 5; // EN AZ 4 OLMALI.
+
 
 }

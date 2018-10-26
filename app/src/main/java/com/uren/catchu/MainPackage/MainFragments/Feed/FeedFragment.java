@@ -28,6 +28,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
@@ -47,6 +48,8 @@ import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.uren.catchu.Constants.NumericConstants.FEED_PAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.FEED_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
@@ -72,10 +75,11 @@ public class FeedFragment extends BaseFragment {
 
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private int perPageCnt = 3;
-    private int pageCnt = 1;
+    private int perPageCnt = FEED_PERPAGE_COUNT;
+    private int pageCnt = FEED_PAGE_COUNT;
     List<Post> postList = new ArrayList<Post>();
     private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
+    private boolean pulledToRefresh = false;
 
     //todo : NT degerler current locationdan alınacak..
     private LocationTrackerAdapter locationTrackObj;
@@ -125,6 +129,7 @@ public class FeedFragment extends BaseFragment {
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new FeedItemAnimator());
     }
     private void setAdapter() {
         feedAdapter = new FeedAdapter(getActivity(), getContext(), mFragmentNavigation);
@@ -134,9 +139,16 @@ public class FeedFragment extends BaseFragment {
         refresh_layout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
+                setPaginationValues();
                 checkLocationAndRetrievePosts();
             }
         });
+    }
+
+    private void setPaginationValues() {
+        pulledToRefresh = true;
+        perPageCnt = FEED_PERPAGE_COUNT;
+        pageCnt = FEED_PAGE_COUNT;
     }
 
 
@@ -291,7 +303,7 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onTaskContinue() {
 
-                if (pageCnt == 1) {
+                if (pageCnt == 1 && !pulledToRefresh) {
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }
@@ -322,7 +334,16 @@ public class FeedFragment extends BaseFragment {
         //postList=setJunkData();
         //logPostId(postList); //todo NT - silinecek
         postList.addAll(postListResponse.getItems());
-        feedAdapter.addAll(postListResponse.getItems());
+
+
+        if(pulledToRefresh){
+            feedAdapter.updatePostListItems(postListResponse.getItems());
+            pulledToRefresh = false;
+        }else{
+            feedAdapter.addAll(postListResponse.getItems());
+        }
+
+
 
     }
 

@@ -482,7 +482,7 @@ public class PostHelper {
 
             String userId = AccountHolderInfo.getUserID();
             String postId = this.postId;
-            String commentId = null;
+            String commentId = "empty";
             CommentRequest commentRequest = getCommentRequest();
 
             PostCommentProcess postCommentProcess = new PostCommentProcess(context, new OnEventListener<CommentResponse>() {

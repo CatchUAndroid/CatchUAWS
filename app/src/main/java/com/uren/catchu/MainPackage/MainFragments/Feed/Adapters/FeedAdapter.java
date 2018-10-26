@@ -6,6 +6,7 @@ import android.content.Context;
 
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,11 +22,14 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import catchu.model.FollowInfoResultArrayItem;
@@ -33,13 +37,17 @@ import catchu.model.Post;
 
 public class FeedAdapter extends RecyclerView.Adapter {
 
-    private final int VIEW_ITEM = 1;
-    private final int VIEW_PROG = 0;
+    public static final int VIEW_ITEM = 1;
+    public static final int VIEW_PROG = 0;
 
     private Activity mActivity;
     private Context mContext;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
+    private HashMap<String, Post> postHashMap;
+    HashMap<String, Post> tempPostHashMap;
+    private HashMap<String, Integer> postPositionHashMap;
+
 
     public FeedAdapter(Activity activity, Context context,
                        BaseFragment.FragmentNavigation fragmentNavigation) {
@@ -47,7 +55,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.postList = new ArrayList<Post>();
-
+        this.postHashMap = new HashMap<String, Post>();
+        this.tempPostHashMap = new HashMap<String, Post>();
+        this.postPositionHashMap = new HashMap<String, Integer>();
     }
 
     @Override
@@ -101,6 +111,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
         Post post;
         TextView txtLikeCount;
         TextView txtCommentCount;
+        int likeCount;
+        int commentCount;
         LinearLayout layoutLike;
         LinearLayout layoutComment;
         LinearLayout profileMainLayout;
@@ -128,6 +140,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
             profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
             locationDetailLayout = (LinearLayout) view.findViewById(R.id.locationDetailLayout);
             txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
+            likeCount = 0;
+            commentCount = 0;
 
             setListeners();
 
@@ -201,20 +215,25 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             if (isClientOperation) {
                 if (isPostLiked) {
-                    post.setLikeCount(post.getLikeCount() + 1);
+                    post.setLikeCount(likeCount++);
                 } else {
-                    post.setLikeCount(post.getLikeCount() - 1);
+                    post.setLikeCount(likeCount--);
                 }
             }
-            txtLikeCount.setText(String.valueOf(post.getLikeCount()));
+            int postLikeCnt = post.getLikeCount();
+            txtLikeCount.setText(String.valueOf(likeCount));
 
         }
 
         public void setData(Post post, int position) {
 
+            postPositionHashMap.put(post.getPostid(), position);
+
             this.position = position;
             this.post = post;
             this.isPostLiked = post.getIsLiked();
+            this.likeCount = post.getLikeCount();
+            this.commentCount = post.getCommentCount();
 
             //todo NT - profil fotosu düzenlenecek
             //profile picture
@@ -260,7 +279,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
             viewPager.setOffscreenPageLimit(post.getAttachments().size());
-            ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
+            if(post.getAttachments().size() > 0){
+                ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
+            }
 
         }
 
@@ -273,6 +294,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
     public void addAll(List<Post> addedPostList) {
         if(addedPostList != null){
+            for(int i=0; i<addedPostList.size(); i++){
+                postHashMap.put(addedPostList.get(i).getPostid(), addedPostList.get(i));
+            }
             postList.addAll(addedPostList);
             notifyItemRangeInserted(postList.size(), postList.size() + addedPostList.size());
         }
@@ -288,6 +312,21 @@ public class FeedAdapter extends RecyclerView.Adapter {
         notifyItemRemoved(postList.size());
     }
 
+    public void removeAll() {
+        int initalSize = postList.size();
+        notifyItemRangeChanged(0, initalSize);
+
+    }
+
+    public void updatePostListItems(List<Post> newPostList) {
+        final PostDiffCallback diffCallback = new PostDiffCallback(this.postList, newPostList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.postList.clear();
+        this.postList.addAll(newPostList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;
 
@@ -296,5 +335,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
             progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
         }
     }
+
 
 }

@@ -143,7 +143,7 @@ public class CommentListFragment extends BaseFragment
 
         String userId = AccountHolderInfo.getUserID();
         String postID = postId;
-        String commentId = null;
+        String commentId = "empty";
 
         PostCommentListProcess postCommentListProcess = new PostCommentListProcess(getContext(), new OnEventListener<CommentListResponse>() {
 
