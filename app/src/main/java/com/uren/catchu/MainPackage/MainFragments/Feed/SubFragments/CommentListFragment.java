@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentListProcess;
-import com.uren.catchu.ApiGatewayFunctions.PostLikeListProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -34,9 +33,7 @@ import catchu.model.Comment;
 import catchu.model.CommentListResponse;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.User;
-import catchu.model.UserListResponse;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 
@@ -64,6 +61,7 @@ public class CommentListFragment extends BaseFragment
 
     @BindView(R.id.btnSendComment)
     Button btnSendComment;
+
 
     public static CommentListFragment newInstance(String postId) {
         Bundle args = new Bundle();
@@ -110,6 +108,8 @@ public class CommentListFragment extends BaseFragment
         btnSendComment.setOnClickListener(this);
 
     }
+
+
 
 
     @Override

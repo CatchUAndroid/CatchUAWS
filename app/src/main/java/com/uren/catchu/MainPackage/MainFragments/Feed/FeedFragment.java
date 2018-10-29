@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -14,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +32,9 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
+import com.uren.catchu.PulseView.PulsatorLayout;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -72,6 +77,12 @@ public class FeedFragment extends BaseFragment {
 
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
+
+    @BindView(R.id.pulsator)
+    PulsatorLayout mPulsator;
+
+    @BindView(R.id.rlFirstPage)
+    RelativeLayout rlFirstPage;
 
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -118,6 +129,7 @@ public class FeedFragment extends BaseFragment {
 
     private void init() {
 
+        mPulsator.start();
         setLayoutManager();
         setAdapter();
         setRecyclerViewProperties();
@@ -288,23 +300,27 @@ public class FeedFragment extends BaseFragment {
                     setUpRecyclerView(postListResponse);
                 }
 
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
+                mPulsator.stop();
+                rlFirstPage.setVisibility(View.GONE);
 
             }
 
             @Override
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
-                progressBar.setVisibility(View.GONE);
+                //progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
+                mPulsator.stop();
+                rlFirstPage.setVisibility(View.GONE);
             }
 
             @Override
             public void onTaskContinue() {
 
                 if (pageCnt == 1 && !pulledToRefresh) {
-                    progressBar.setVisibility(View.VISIBLE);
+                    //progressBar.setVisibility(View.VISIBLE);
                 }
             }
         }, baseRequest, longitude, latitude, radius, perpage, page, token);
