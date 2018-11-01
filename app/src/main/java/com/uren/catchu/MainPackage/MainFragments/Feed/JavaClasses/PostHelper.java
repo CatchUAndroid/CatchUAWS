@@ -11,8 +11,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -66,7 +64,6 @@ import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.User;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
@@ -385,11 +382,13 @@ public class PostHelper {
 
         //todo NT - harita modu açıkken mapRipple'ın hareket edip etmediği test edilmeli..
         private void showMyLocation() {
+
             Location location = locationTrackObj.getLocation();
-            if (location != null) {
+            if(location != null){
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mapRipple = new MapRipple(mMap, latLng, mAct);
             }
+
         }
 
         private Bitmap createUserBitmap(Context context) {

@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +12,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.ViewPagerClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
-import com.uren.catchu.VideoPlay.VideoPlay;
+import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.uren.catchu.PulseView;
+package com.uren.catchu._Libraries.PulseView;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -342,7 +342,7 @@ public class PulsatorLayout extends RelativeLayout {
     /**
      * Reset views and animations.
      */
-    private void reset() {
+    public void reset() {
         boolean isStarted = isStarted();
 
         clear();

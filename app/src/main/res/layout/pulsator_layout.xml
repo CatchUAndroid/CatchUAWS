@@ -1,29 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rl_pulsator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@mipmap/first_page"
-    android:id="@+id/rlFirstPage">
+    android:background="@mipmap/first_page">
 
-    <com.uren.catchu.PulseView.PulsatorLayout
+    <com.uren.catchu._Libraries.PulseView.PulsatorLayout
         android:id="@+id/pulsator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:pulse_count="4"
-        app:pulse_duration="5000"
-        app:pulse_repeat="0"
         app:pulse_color="@color/colorPrimary"
-        app:pulse_startFromScratch="true"
-        app:pulse_interpolator="Decelerate">
+        app:pulse_count="8"
+        app:pulse_duration="5000"
+        app:pulse_interpolator="Decelerate"
+        app:pulse_repeat="0"
+        app:pulse_startFromScratch="true">
 
         <ImageView
+            android:id="@+id/profileImage"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:layout_centerInParent="true"
             android:src="@mipmap/app_icon" />
 
-    </com.uren.catchu.PulseView.PulsatorLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profileImage"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="40dp"
+            android:paddingTop="30dp"
+            android:text="@string/checkingAround"
+            android:textColor="@color/black"
+            android:textSize="17sp" />
+
+    </com.uren.catchu._Libraries.PulseView.PulsatorLayout>
 
 
 </RelativeLayout>

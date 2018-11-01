@@ -1,4 +1,4 @@
-package com.uren.catchu.VideoPlay;
+package com.uren.catchu._Libraries.VideoPlay;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

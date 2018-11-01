@@ -5,11 +5,10 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
 import com.uren.catchu.R;
-import com.uren.catchu.VideoPlay.VideoPlay;
+import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 
 import catchu.model.Media;
 

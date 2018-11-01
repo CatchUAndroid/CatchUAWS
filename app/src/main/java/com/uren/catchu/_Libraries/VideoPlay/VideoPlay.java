@@ -1,4 +1,4 @@
-package com.uren.catchu.VideoPlay;
+package com.uren.catchu._Libraries.VideoPlay;
 
 import android.app.Activity;
 import android.net.Uri;

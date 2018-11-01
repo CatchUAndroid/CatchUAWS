@@ -17,7 +17,6 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -34,13 +33,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
-import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
-import com.uren.catchu.GroupPackage.EditGroupNameActivity;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -386,7 +383,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
             CommonUtils.showToast(ShareDetailActivity.this, getString(R.string.technicalError) + requestCode);
     }
 
-    private void initializeMap(GoogleMap mMap) {
+    private void initializeMap(final GoogleMap mMap) {
         if (mMap != null) {
             mMap.getUiSettings().setScrollGesturesEnabled(true);
             mMap.getUiSettings().setAllGesturesEnabled(true);
@@ -403,6 +400,7 @@ public class ShareDetailActivity extends FragmentActivity implements OnMapReadyC
                         LatLng(location.getLatitude(),
                         location.getLongitude()), 17));
             }
+
         }
     }
 

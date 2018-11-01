@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,13 +30,14 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
-import com.uren.catchu.PulseView.PulsatorLayout;
+
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.VideoPlay.CustomRecyclerView;
+import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
+import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,6 @@ import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
-import catchu.model.UserProfileProperties;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.FEED_PAGE_COUNT;
@@ -64,7 +62,6 @@ public class FeedFragment extends BaseFragment {
     View mView;
     FeedAdapter feedAdapter;
     LinearLayoutManager mLayoutManager;
-    UserProfileProperties myProfile;
 
     @BindView(R.id.rv_feed)
     CustomRecyclerView recyclerView;
@@ -72,17 +69,21 @@ public class FeedFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.txtNoFeed)
-    TextView txtNoFeed;
+    @BindView(R.id.rl_no_feed)
+    RelativeLayout rl_no_feed;
 
-    @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    @BindView(R.id.txtNoFeedExplanation)
+    TextView txtNoFeedExplanation;
+
+    @BindView(R.id.rl_pulsator)
+    RelativeLayout rl_pulsator;
 
     @BindView(R.id.pulsator)
     PulsatorLayout mPulsator;
 
-    @BindView(R.id.rlFirstPage)
-    RelativeLayout rlFirstPage;
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
+
 
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -91,6 +92,7 @@ public class FeedFragment extends BaseFragment {
     List<Post> postList = new ArrayList<Post>();
     private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
     private boolean pulledToRefresh = false;
+    private boolean isFirstFetch = false;
 
     //todo : NT degerler current locationdan alınacak..
     private LocationTrackerAdapter locationTrackObj;
@@ -98,10 +100,6 @@ public class FeedFragment extends BaseFragment {
     String longitude;
     String latitude;
     String radius;
-    // The minimum distance to change Updates in meters
-    private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 1 meters
-    // The minimum time between updates in milliseconds
-    private static final long MIN_TIME_BW_UPDATES = 1000; // 1 sec
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -124,12 +122,19 @@ public class FeedFragment extends BaseFragment {
 
         }
 
+        if(!mPulsator.isStarted()){
+            mPulsator.reset();
+            mPulsator.start();
+        }
+
         return mView;
     }
 
     private void init() {
 
-        mPulsator.start();
+        showPulsatorLayout(true);
+
+        isFirstFetch = true;
         setLayoutManager();
         setAdapter();
         setRecyclerViewProperties();
@@ -254,7 +259,9 @@ public class FeedFragment extends BaseFragment {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-                    setTextNoFeedVisible(true, R.string.needLocationPermission);
+                    showPulsatorLayout(false);
+                    showNoFeedLayout(true, R.string.needLocationPermission);
+                    refresh_layout.setRefreshing(false);
                 }
 
             }
@@ -270,8 +277,15 @@ public class FeedFragment extends BaseFragment {
     private void getPosts() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
-            public void onTokenTaken(String token) {
-                startGetPosts(token);
+            public void onTokenTaken(final String token) {
+                Location location = locationTrackObj.getLocation();
+                if(location != null){
+                    startGetPosts(token);
+                }else{
+                    showPulsatorLayout(false);
+                    showNoFeedLayout(true, R.string.locationError );
+                    refresh_layout.setRefreshing(false);
+                }
             }
         });
     }
@@ -285,25 +299,23 @@ public class FeedFragment extends BaseFragment {
 
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
-            public void onSuccess(PostListResponse postListResponse) {
+            public void onSuccess(final PostListResponse postListResponse) {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
-
                 } else {
                     CommonUtils.LOG_OK("PostListResponseProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        setTextNoFeedVisible(true, R.string.emptyFeed);
+                        showNoFeedLayout(true, R.string.emptyFeed);
                     } else {
-                        setTextNoFeedVisible(false, 0);
+                        showNoFeedLayout(false, 0);
                     }
                     setUpRecyclerView(postListResponse);
                 }
 
                 //progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
-                mPulsator.stop();
-                rlFirstPage.setVisibility(View.GONE);
+                showPulsatorLayout(false);
 
             }
 
@@ -312,8 +324,8 @@ public class FeedFragment extends BaseFragment {
                 CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
                 //progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
-                mPulsator.stop();
-                rlFirstPage.setVisibility(View.GONE);
+                showPulsatorLayout(false);
+                showNoFeedLayout(true, R.string.serverError);
             }
 
             @Override
@@ -329,12 +341,24 @@ public class FeedFragment extends BaseFragment {
 
     }
 
-    private void setTextNoFeedVisible(boolean setVisible, int textDetail) {
+    private void showPulsatorLayout(boolean isShowPulsator) {
+        if(isShowPulsator){
+            rl_pulsator.setVisibility(View.VISIBLE);
+            mPulsator.start();
+        }else{
+            mPulsator.stop();
+            rl_pulsator.setVisibility(View.GONE);
+        }
+    }
+
+
+    private void showNoFeedLayout(boolean setVisible, int textDetail) {
         if (setVisible) {
-            txtNoFeed.setVisibility(View.VISIBLE);
-            txtNoFeed.setText(textDetail);
+            rl_no_feed.setVisibility(View.VISIBLE);
+            txtNoFeedExplanation.setText(textDetail);
         } else {
-            txtNoFeed.setVisibility(View.GONE);
+            rl_no_feed.setVisibility(View.GONE);
+            txtNoFeedExplanation.setText("");
         }
     }
 
@@ -467,7 +491,6 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void setLocationInfo() {
-
         longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
         latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
         radius = "10";

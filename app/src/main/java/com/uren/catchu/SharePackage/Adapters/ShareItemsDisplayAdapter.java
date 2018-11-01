@@ -15,7 +15,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
-import com.uren.catchu.VideoPlay.VideoPlay;
+import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 
 import static com.uren.catchu.Constants.StringConstants.VIEWPAGER_IMAGE;
 import static com.uren.catchu.Constants.StringConstants.VIEWPAGER_VIDEO;
