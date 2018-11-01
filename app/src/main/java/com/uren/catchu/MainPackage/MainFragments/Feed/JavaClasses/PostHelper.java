@@ -297,6 +297,7 @@ public class PostHelper {
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.half_map_view);
                 dialog.show();
+                dialog.setCanceledOnTouchOutside(false);
 
                 MapView mMapView = (MapView) dialog.findViewById(R.id.mapView);
                 ClickableImageView btnCloseMap = (ClickableImageView) dialog.findViewById(R.id.btnCloseMap);

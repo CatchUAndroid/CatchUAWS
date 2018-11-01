@@ -209,6 +209,7 @@
     <string name="checkingAround">Checking posts around...</string>
     <string name="serverError">Amazon Server Error</string>
     <string name="locationError">Can not access your location, please check your permission settings!</string>
+    <string name="noLikesYet">There is no likes yet!</string>
 
 
 </resources>

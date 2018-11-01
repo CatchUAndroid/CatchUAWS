@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -22,6 +24,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
@@ -87,10 +91,10 @@ public class FeedAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if( holder instanceof MyViewHolder){
+        if (holder instanceof MyViewHolder) {
             Post post = postList.get(position);
             ((MyViewHolder) holder).setData(post, position);
-        }else{
+        } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
@@ -113,10 +117,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
         TextView txtCommentCount;
         int likeCount;
         int commentCount;
-        LinearLayout layoutLike;
-        LinearLayout layoutComment;
+        ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
         LinearLayout profileMainLayout;
-        LinearLayout locationDetailLayout;
         TextView txtLocationDistance;
 
         View mView;
@@ -135,11 +137,12 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgLike = (ImageView) view.findViewById(R.id.imgLike);
             txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
             txtCommentCount = (TextView) view.findViewById(R.id.txtCommentCount);
-            layoutLike = (LinearLayout) view.findViewById(R.id.layoutLike);
-            layoutComment = (LinearLayout) view.findViewById(R.id.layoutComment);
             profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
-            locationDetailLayout = (LinearLayout) view.findViewById(R.id.locationDetailLayout);
             txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
+            imgBtnLike = (ImageButton) view.findViewById(R.id.imgBtnLike);
+            imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
+            imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
+            imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
             likeCount = 0;
             commentCount = 0;
 
@@ -170,7 +173,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             });
 
             //Like layout
-            layoutLike.setOnClickListener(new View.OnClickListener() {
+            imgBtnLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     String toolbarTitle = mContext.getResources().getString(R.string.likes);
@@ -180,13 +183,39 @@ public class FeedAdapter extends RecyclerView.Adapter {
             });
 
             //Comment layout
-            layoutComment.setOnClickListener(new View.OnClickListener() {
+            imgBtnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, post.getPostid());
                 }
             });
+            //More layout
+            imgBtnMore.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, position, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
+                        @Override
+                        public void onReportClick(int feedItem) {
 
+                        }
+
+                        @Override
+                        public void onSharePhotoClick(int feedItem) {
+
+                        }
+
+                        @Override
+                        public void onCopyShareUrlClick(int feedItem) {
+
+                        }
+
+                        @Override
+                        public void onCancelClick(int feedItem) {
+                            FeedContextMenuManager.getInstance().hideContextMenu();
+                        }
+                    });
+                }
+            });
             //Profile layout
             profileMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -200,10 +229,10 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 }
             });
             //Location Detail Layout
-            locationDetailLayout.setOnClickListener(new View.OnClickListener() {
+            imgBtnLocationDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post,txtProfilePic, imgProfilePic);
+                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, txtProfilePic, imgProfilePic);
                 }
             });
 
@@ -267,6 +296,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
+            //Comment Count
+            txtCommentCount.setText(String.valueOf(commentCount));
             //Location distance
             if (post.getDistance() != null) {
                 txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
@@ -279,7 +310,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
             viewPager.setOffscreenPageLimit(post.getAttachments().size());
-            if(post.getAttachments().size() > 0){
+            if (post.getAttachments().size() > 0) {
                 ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
             }
 
@@ -293,8 +324,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
     }
 
     public void addAll(List<Post> addedPostList) {
-        if(addedPostList != null){
-            for(int i=0; i<addedPostList.size(); i++){
+        if (addedPostList != null) {
+            for (int i = 0; i < addedPostList.size(); i++) {
                 postHashMap.put(addedPostList.get(i).getPostid(), addedPostList.get(i));
             }
             postList.addAll(addedPostList);

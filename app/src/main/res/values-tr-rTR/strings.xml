@@ -175,6 +175,7 @@
     <string name="loading">Yükleniyor...</string>
     <string name="checkingAround">Etrafınızdaki paylaşımlar aranıyor...</string>
     <string name="locationError">Konumunuza erişim sağlanamıyor, lütfen lokasyon ayarlarınızı kontrol ediniz...</string>
+    <string name="noLikesYet">Henüz beğeni yok!</string>
 
 
 </resources>

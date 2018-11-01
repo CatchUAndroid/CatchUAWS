@@ -5,7 +5,7 @@
     android:clipChildren="false"
     android:clipToPadding="false"
     android:orientation="vertical"
-    android:padding="15dp">
+    android:padding="5dp">
 
     <!--rest of the code-->
 
@@ -37,10 +37,10 @@
 
                     <!-- Profile layout /-->
                     <LinearLayout
+                        android:id="@+id/profileMainLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:id="@+id/profileMainLayout">
+                        android:orientation="horizontal">
 
                         <!-- Profile Picture /-->
                         <LinearLayout
@@ -99,7 +99,6 @@
                     </LinearLayout>
 
 
-
                     <!-- Like Icon /-->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -110,8 +109,8 @@
 
                         <ImageView
                             android:id="@+id/imgLike"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
                             android:layout_marginRight="10dp"
                             android:src="@mipmap/icon_like" />
 
@@ -149,12 +148,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginTop="2dp"
                     android:gravity="left"
                     android:orientation="horizontal"
-                    android:weightSum="3"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="10dp">
+                    android:weightSum="3">
 
                     <!-- Like layout  /-->
                     <LinearLayout
@@ -162,22 +162,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginRight="3dp"
+                        android:layout_weight="0.4"
                         android:gravity="left|center"
-                        android:orientation="horizontal"
-                        android:layout_weight="0.5">
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
-                            android:layout_marginRight="2dp"
-                            android:src="@mipmap/icon_like_gray"
-                            />
+                        <ImageButton
+                            android:id="@+id/imgBtnLike"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/btn_feed_action"
+                            android:padding="14dp"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/icon_like_gray" />
 
                         <TextView
                             android:id="@+id/txtLikeCount"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
+                            android:layout_marginLeft="-5dp"
                             android:gravity="center" />
 
                     </LinearLayout>
@@ -188,22 +190,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.4"
                         android:gravity="left|center"
-                        android:orientation="horizontal"
-                        android:layout_weight="0.5">
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
-                            android:layout_marginRight="2dp"
-                            android:src="@mipmap/icon_comment_gray"
-                            />
+                        <ImageButton
+                            android:id="@+id/imgBtnComment"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/btn_feed_action"
+                            android:padding="14dp"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/icon_comment_gray" />
 
                         <TextView
                             android:id="@+id/txtCommentCount"
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
+                            android:layout_marginLeft="-5dp"
                             android:gravity="center" />
 
                     </LinearLayout>
@@ -214,17 +218,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
+                        android:layout_weight="0.4"
                         android:gravity="left|center"
-                        android:orientation="horizontal"
-                        android:layout_weight="0.5">
+                        android:orientation="horizontal">
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="20dp"
-                            android:layout_marginRight="2dp"
-                            android:src="@mipmap/icon_more_gray"
-                            />
+                        <ImageButton
+                            android:id="@+id/imgBtnMore"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/btn_feed_action"
+                            android:padding="15dp"
+                            android:scaleType="fitCenter"
+                            android:src="@mipmap/icon_more_gray" />
 
                     </LinearLayout>
 
@@ -234,28 +239,33 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginRight="5dp"
+                        android:layout_weight="1.8"
                         android:gravity="right"
-                        android:orientation="horizontal"
-                        android:layout_weight="1.5">
+                        android:orientation="horizontal">
 
                         <LinearLayout
+                            android:id="@+id/locationDetailLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/locationDetailLayout">
+                            android:gravity="center">
+
                             <TextView
                                 android:id="@+id/txtLocationDistance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
                                 android:gravity="center"
-                                android:text="450m"/>
+                                android:text="450m"
+                                android:layout_marginRight="-5dp"/>
 
 
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="20dp"
-                                android:layout_marginRight="5dp"
+                            <ImageButton
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:background="@drawable/btn_feed_action"
+                                android:padding="15dp"
+                                android:scaleType="fitCenter"
                                 android:src="@mipmap/icon_location"
-                                android:layout_gravity="center"/>
+                                android:id="@+id/imgBtnLocationDetail"/>
 
                         </LinearLayout>
 
