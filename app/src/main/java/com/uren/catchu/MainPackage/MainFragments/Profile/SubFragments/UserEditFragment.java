@@ -274,7 +274,7 @@ public class UserEditFragment extends BaseFragment
                 0, GradientDrawable.OVAL, 50, 0);
         imgProfile.setBackground(imageShape);
         setUserPhoto(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
-        // TODO : NT: Update Cover picture
+        // TODO : NT: Update Cover picture - NurullahT
     }
 
     private void setUserPhoto(String url) {
@@ -298,6 +298,7 @@ public class UserEditFragment extends BaseFragment
                     .into(imgProfile);
         }
     }
+
 
     @Override
     public void onClick(View v) {
