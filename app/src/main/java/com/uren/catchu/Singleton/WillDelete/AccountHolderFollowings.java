@@ -1,4 +1,4 @@
-package com.uren.catchu.Singleton;
+package com.uren.catchu.Singleton.WillDelete;
 
 import android.os.AsyncTask;
 
@@ -19,7 +19,7 @@ import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 public class AccountHolderFollowings {
 
-    private static AccountHolderFollowings accountHolderFollowings = null;
+    /*private static AccountHolderFollowings accountHolderFollowings = null;
     private static FollowInfo followInfo;
     private static CompleteCallback mCompleteCallback;
 
@@ -146,5 +146,5 @@ public class AccountHolderFollowings {
                 }
             });
         }
-    }
+    }*/
 }

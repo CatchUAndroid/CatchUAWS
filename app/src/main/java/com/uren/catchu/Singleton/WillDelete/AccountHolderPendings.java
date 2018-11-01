@@ -1,4 +1,4 @@
-package com.uren.catchu.Singleton;
+package com.uren.catchu.Singleton.WillDelete;
 
 import android.os.AsyncTask;
 
@@ -6,6 +6,7 @@ import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FriendRequestList;
 import catchu.model.UserProfileProperties;
@@ -14,7 +15,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_GET_REQUESTING_FO
 
 public class AccountHolderPendings {
 
-    private static AccountHolderPendings accountHolderPendings = null;
+    /*private static AccountHolderPendings accountHolderPendings = null;
     private static FriendRequestList friendRequestList;
     private static CompleteCallback mCompleteCallback;
 
@@ -94,5 +95,5 @@ public class AccountHolderPendings {
         }, FRIEND_GET_REQUESTING_FOLLOW_LIST, AccountHolderInfo.getUserID(), " ", token);
 
         friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    }*/
 }

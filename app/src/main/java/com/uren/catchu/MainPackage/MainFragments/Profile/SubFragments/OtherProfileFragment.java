@@ -23,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserDetailAdapter;
-import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -45,7 +47,6 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.FriendRequestList;
 import catchu.model.User;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileRelationInfo;
@@ -358,38 +359,23 @@ public class OtherProfileFragment extends BaseFragment
 
     private void updateFollowStatus(final String requestType) {
 
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startUpdateFollowStatus(requestType, token);
-            }
-        });
-    }
+        AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
+                , selectedProfile.getUserid(), new CompleteCallback() {
+                    @Override
+                    public void onComplete(Object object) {
+                        updateFollowUI(requestType);
+                    }
 
-    private void startUpdateFollowStatus(final String requestType, String token) {
-
-        FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
-            @Override
-            public void onSuccess(FriendRequestList object) {
-                updateFollowUI(requestType);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                CommonUtils.showToastLong(getContext(), getContext().getResources().getString(R.string.error) + e.toString());
-            }
-
-            @Override
-            public void onTaskContinue() {
-
-            }
-        }, requestType
-                , AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                , selectedProfile.getUserid()
-                , token);
-
-        friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
+                    @Override
+                    public void onFailed(Exception e) {
+                        DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+                            }
+                        });
+                        btnFollowStatus.setEnabled(true);
+                    }
+                });
     }
 
     private void updateFollowUI(String requestType) {

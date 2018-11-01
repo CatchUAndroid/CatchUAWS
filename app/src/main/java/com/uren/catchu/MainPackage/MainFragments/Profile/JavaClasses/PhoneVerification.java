@@ -34,7 +34,7 @@ public class PhoneVerification {
     private CompleteCallback completeCallback;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private Activity activity;
-    private PhoneAuthCredential mCredential;
+    //private PhoneAuthCredential mCredential;
 
     public PhoneVerification(Context context, String phoneNum, CompleteCallback completeCallback){
         this.context = context;
@@ -56,9 +56,9 @@ public class PhoneVerification {
                 //     detect the incoming verification SMS and perform verification without
                 //     user action.
 
-                mCredential = credential;
+                //mCredential = credential;
                 mVerificationInProgress = false;
-                completeCallback.onComplete(credential);
+                //completeCallback.onComplete(credential);
             }
 
             @Override
@@ -80,8 +80,25 @@ public class PhoneVerification {
                 // Save verification ID and resending token so we can use them later
                 mVerificationId = verificationId;
                 mResendToken = token;
+                completeCallback.onComplete(verificationId);
             }
         };
+    }
+
+    public boolean verifyPhoneNumberWithCode(String verificationId, String code) {
+
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+
+        if(credential != null && credential.getSmsCode() != null && !credential.getSmsCode().trim().isEmpty()){
+
+            if(code != null && !code.trim().isEmpty()){
+
+                if(code.trim().equals(credential.getSmsCode().trim()))
+                    return true;
+            }
+
+        }
+        return false;
     }
 
     public void startPhoneNumberVerification() {
@@ -106,13 +123,13 @@ public class PhoneVerification {
                 token);                             // ForceResendingToken from callbacks
     }
 
-    public PhoneAuthCredential getmCredential() {
+    /*public PhoneAuthCredential getmCredential() {
         return mCredential;
-    }
+    }*/
 
-    public void setmCredential(PhoneAuthCredential mCredential) {
+    /*public void setmCredential(PhoneAuthCredential mCredential) {
         this.mCredential = mCredential;
-    }
+    }*/
 
     public PhoneAuthProvider.ForceResendingToken getmResendToken() {
         return mResendToken;
@@ -120,5 +137,13 @@ public class PhoneVerification {
 
     public void setmResendToken(PhoneAuthProvider.ForceResendingToken mResendToken) {
         this.mResendToken = mResendToken;
+    }
+
+    public String getmVerificationId() {
+        return mVerificationId;
+    }
+
+    public void setmVerificationId(String mVerificationId) {
+        this.mVerificationId = mVerificationId;
     }
 }

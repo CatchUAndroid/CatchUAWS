@@ -125,8 +125,6 @@ public class AccountHolderInfo {
     }
 
     public static void updateAccountHolderFollowCnt(String requestType) {
-        // TODO: 11.10.2018 - search de gonderilen istek geri alinmak istendiginde patliyor..
-
         int followingCnt =0, followerCnt = 0;
         String followingCount, followerCount;
 
@@ -141,36 +139,26 @@ public class AccountHolderInfo {
             followingCnt = Integer.parseInt(followingCount);
         }
 
-        UserProfileRelationInfo userProfileRelationCountInfo = new UserProfileRelationInfo();
-
         switch (requestType) {
             case FRIEND_CREATE_FOLLOW_DIRECTLY:
                 followingCnt = followingCnt + 1;
-                userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount());
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
                 break;
 
             case FRIEND_DELETE_FOLLOW:
                 followingCnt = followingCnt - 1;
-                userProfileRelationCountInfo.setFollowingCount(Integer.toString(followingCnt));
-                userProfileRelationCountInfo.setFollowerCount(AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount());
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
                 break;
 
             case FRIEND_ACCEPT_REQUEST:
                 followerCnt = followerCnt + 1;
-                userProfileRelationCountInfo.setFollowerCount(Integer.toString(followerCnt));
-                userProfileRelationCountInfo.setFollowingCount(AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount());
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
                 break;
 
             default:
                 break;
         }
-
-        AccountHolderInfo.getInstance().getUser().setRelationInfo(userProfileRelationCountInfo);
     }
-
-
-
 }
 
 

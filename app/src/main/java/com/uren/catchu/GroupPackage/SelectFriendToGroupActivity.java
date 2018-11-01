@@ -23,22 +23,25 @@ import android.widget.Toast;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Adapters.SelectFriendAdapter;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
-import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import catchu.model.Error;
 import catchu.model.FriendList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
@@ -59,12 +62,11 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
     public static Activity thisActivity;
 
-    private static SelectedFriendList selectedFriendListInstance;
-
     public static SelectFriendAdapter adapter;
     String pendingActivityName;
     String groupId;
-    FriendList friendList;
+    FriendList followerList;
+    ProgressDialogUtil progressDialogUtil;
 
     public static RecyclerView recyclerView;
 
@@ -96,7 +98,16 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
         imgCancelSearch = findViewById(R.id.imgCancelSearch);
         editTextSearch = findViewById(R.id.editTextSearch);
         selectAllCb = findViewById(R.id.selectAllCb);
+        initFollowerList();
         SelectedFriendList.setInstance(null);
+        progressDialogUtil = new ProgressDialogUtil(SelectFriendToGroupActivity.this, null, false);
+        progressDialogUtil.dialogShow();
+    }
+
+    public void initFollowerList(){
+        followerList = new FriendList();
+        followerList.setResultArray(new ArrayList<UserProfileProperties>());
+        followerList.setError(new Error());
     }
 
     private void getIntentValues(Bundle savedInstanceState) {
@@ -167,20 +178,24 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     }
 
     public void setFriendCountTextView() {
-        friendCountTv.setText(Integer.toString(friendList.getResultArray().size()));
+        friendCountTv.setText(Integer.toString(followerList.getResultArray().size()));
     }
 
     private void getFriendSelectionPage() {
 
-        AccountHolderFollowers.getInstance(new CompleteCallback() {
+        AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                friendList = getUserFollowers((FriendList) object);
-                setAdapter();
+                if(object != null) {
+                    followerList = getUserFollowers((FriendList) object);
+                    setAdapter();
+                }
+                progressDialogUtil.dialogDismiss();
             }
 
             @Override
             public void onFailed(Exception e) {
+                progressDialogUtil.dialogDismiss();
                 DialogBoxUtil.showErrorDialog(SelectFriendToGroupActivity.this, SelectFriendToGroupActivity.this.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
@@ -193,26 +208,34 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
     public void setAdapter() {
         setFriendCountTextView();
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new SelectFriendAdapter(this, friendList);
+        adapter = new SelectFriendAdapter(this, followerList, new ReturnCallback() {
+            @Override
+            public void onReturn(Object object) {
+                if(followerList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
+                    selectAllCb.setChecked(true);
+                else
+                    selectAllCb.setChecked(false);
+            }
+        });
         recyclerView.setAdapter(adapter);
     }
 
-    public FriendList getUserFollowers(FriendList friendList) {
+    public FriendList getUserFollowers(FriendList tempFriendList) {
 
         if (pendingActivityName == null)
-            return friendList;
+            return tempFriendList;
         else if (pendingActivityName.equals(DisplayGroupDetailFragment.class.getSimpleName())) {
             if (DisplayGroupDetailFragment.groupParticipantList == null)
-                return friendList;
+                return tempFriendList;
             else if (DisplayGroupDetailFragment.groupParticipantList.size() == 0)
-                return friendList;
+                return tempFriendList;
             else {
-                return extractGroupParticipants(friendList);
+                return extractGroupParticipants(tempFriendList);
             }
         } else if (pendingActivityName.equals(NextActivity.class.getSimpleName())) {
-            return friendList;
+            return tempFriendList;
         } else
-            return friendList;
+            return tempFriendList;
     }
 
     public FriendList extractGroupParticipants(FriendList friendListTemp) {
@@ -235,9 +258,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
     public void checkSelectedPerson() {
 
-        selectedFriendListInstance = SelectedFriendList.getInstance();
-
-        if (selectedFriendListInstance.getSelectedFriendList().getResultArray().size() == 0) {
+        if (SelectedFriendList.getInstance().getSelectedFriendList().getResultArray().size() == 0) {
             Toast.makeText(this, getResources().getString(R.string.selectLeastOneFriend), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -306,7 +327,7 @@ public class SelectFriendToGroupActivity extends AppCompatActivity {
 
         List<GroupRequestGroupParticipantArrayItem> selectedFriendList = new ArrayList<>();
 
-        for (UserProfileProperties userProfileProperties : selectedFriendListInstance.getSelectedFriendList().getResultArray()) {
+        for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
             GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
             groupRequestGroupParticipantArrayItem.setParticipantUserid(userProfileProperties.getUserid());
             selectedFriendList.add(groupRequestGroupParticipantArrayItem);

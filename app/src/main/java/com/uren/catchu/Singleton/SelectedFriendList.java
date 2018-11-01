@@ -9,14 +9,13 @@ import catchu.model.UserProfileProperties;
 public class SelectedFriendList {
 
     private static SelectedFriendList instance = null;
-    private static FriendList friendList;
+    private static FriendList selectedFriendList;
 
     public static SelectedFriendList getInstance(){
 
         if(instance == null) {
-            friendList = new FriendList();
-            List<UserProfileProperties> userProfileProperties = new ArrayList<UserProfileProperties>();
-            friendList.setResultArray(userProfileProperties);
+            selectedFriendList = new FriendList();
+            selectedFriendList.setResultArray(new ArrayList<UserProfileProperties>());
             instance = new SelectedFriendList();
         }
         return instance;
@@ -28,7 +27,7 @@ public class SelectedFriendList {
 
     public boolean isUserInList(String userid){
 
-        for(UserProfileProperties userProfileProperties: friendList.getResultArray()){
+        for(UserProfileProperties userProfileProperties: selectedFriendList.getResultArray()){
             if(userProfileProperties.getUserid().equals(userid)){
                 return true;
             }
@@ -38,36 +37,42 @@ public class SelectedFriendList {
     }
 
     public FriendList getSelectedFriendList() {
-        return friendList;
+        return selectedFriendList;
     }
 
     public void setSelectedFriendList(FriendList friendList) {
-        this.friendList = friendList;
+        //selectedFriendList.setResultArray(friendList.getResultArray());
+        //selectedFriendList = friendList;
+
+        for(UserProfileProperties userProfileProperties: friendList.getResultArray()){
+            SelectedFriendList.getInstance().addFriend(userProfileProperties);
+        }
     }
 
     public int getSize(){
-        return friendList.getResultArray().size();
+        return selectedFriendList.getResultArray().size();
     }
 
     public void addFriend(UserProfileProperties userProfileProperties){
-        friendList.getResultArray().add(userProfileProperties);
+        selectedFriendList.getResultArray().add(userProfileProperties);
     }
 
     public UserProfileProperties getFriend(int position){
-        return friendList.getResultArray().get(position);
+        return selectedFriendList.getResultArray().get(position);
     }
 
     public static void updateFriendList(List<UserProfileProperties> userProfilePropertiesList){
-        friendList.setResultArray(userProfilePropertiesList);
+        selectedFriendList.setResultArray(userProfilePropertiesList);
     }
 
     public void removeFriend(UserProfileProperties userProfileProperties){
-        friendList.getResultArray().remove(userProfileProperties);
+        selectedFriendList.getResultArray().remove(userProfileProperties);
     }
 
     public void clearFriendList(){
-        if(friendList.getResultArray().size() > 0) {
-            friendList.setResultArray(new ArrayList<UserProfileProperties>());
+
+        if(selectedFriendList.getResultArray().size() > 0) {
+            selectedFriendList.setResultArray(new ArrayList<UserProfileProperties>());
         }
     }
 }

@@ -7,15 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -27,6 +23,7 @@ import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -38,7 +35,6 @@ import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFra
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
-import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.ButterKnife;
@@ -277,16 +273,19 @@ public class SearchFragment extends BaseFragment {
     }
 
     public void addNewGroup() {
-        AccountHolderFollowers.getInstance(new CompleteCallback() {
+
+        AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                FriendList friendList = (FriendList) object;
-                if (friendList.getResultArray().size() == 0)
-                    CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
-                else {
-                    Intent intent = new Intent(context, SelectFriendToGroupActivity.class);
-                    intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
-                    startActivity(intent);
+                if(object != null) {
+                    FriendList friendList = (FriendList) object;
+                    if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0)
+                        CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
+                    else {
+                        Intent intent = new Intent(context, SelectFriendToGroupActivity.class);
+                        intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
+                        startActivity(intent);
+                    }
                 }
             }
 

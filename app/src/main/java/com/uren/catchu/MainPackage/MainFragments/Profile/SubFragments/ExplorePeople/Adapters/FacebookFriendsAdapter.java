@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePe
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +16,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -27,7 +24,6 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
@@ -39,13 +35,13 @@ import catchu.model.RelationProperties;
 import catchu.model.User;
 import catchu.model.UserListResponse;
 
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.PROVIDER_FOLLOW_STATUS_FOLLOWING;
-import static com.uren.catchu.Constants.StringConstants.PROVIDER_FOLLOW_STATUS_NONE;
-import static com.uren.catchu.Constants.StringConstants.PROVIDER_FOLLOW_STATUS_PENDING;
 
 public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriendsAdapter.MyViewHolder> implements Filterable {
 
@@ -135,17 +131,17 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             followItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
             followItem.setUserid(user.getUserid());
             followItem.setIsPrivateAccount(user.getIsPrivateAccount());
-            followItem.setIsPendingRequest(user.getFollowStatus().equals(PROVIDER_FOLLOW_STATUS_PENDING));
-            followItem.setIsFollow(user.getFollowStatus().equals(PROVIDER_FOLLOW_STATUS_FOLLOWING));
+            followItem.setIsPendingRequest(user.getFollowStatus().equals(FOLLOW_STATUS_PENDING));
+            followItem.setIsFollow(user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING));
             return followItem;
         }
 
         public void checkFriendRelation() {
 
             if (user.getFollowStatus() != null) {
-                if (user.getFollowStatus().equals(PROVIDER_FOLLOW_STATUS_FOLLOWING))
+                if (user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING))
                     processFriendRequest(FRIEND_DELETE_FOLLOW);
-                else if (user.getFollowStatus().equals(PROVIDER_FOLLOW_STATUS_PENDING))
+                else if (user.getFollowStatus().equals(FOLLOW_STATUS_PENDING))
                     processFriendRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
                 else {
                     if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount())
@@ -157,79 +153,38 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
         }
 
         public void processFriendRequest(final String requestType) {
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    startFriendRequest(requestType, token);
-                }
-            });
-        }
 
-        private void startFriendRequest(final String requestType, String token) {
-            final FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
-
-                @Override
-                public void onSuccess(FriendRequestList object) {
-                    RelationProperties relationProperties = object.getUpdatedUserRelationInfo();
-
-                    if (relationProperties.getFriendRelation())
-                        user.setFollowStatus(PROVIDER_FOLLOW_STATUS_FOLLOWING);
-                    else if (relationProperties.getPendingFriendRequest())
-                        user.setFollowStatus(PROVIDER_FOLLOW_STATUS_PENDING);
-                    else
-                        user.setFollowStatus(PROVIDER_FOLLOW_STATUS_NONE);
-
-                    userListResponse.getItems().remove(position);
-                    userListResponse.getItems().add(position, user);
-
-                    UserDataUtil.updateFollowButton(context, relationProperties.getFriendRelation(), relationProperties.getPendingFriendRequest(), statuDisplayBtn, true);
-                    AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
-                    updateFollowingList(requestType);
-                    statuDisplayBtn.setEnabled(true);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    statuDisplayBtn.setEnabled(true);
-                    DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+            AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid,
+                    new CompleteCallback() {
                         @Override
-                        public void okClick() {
+                        public void onComplete(Object object) {
+                            RelationProperties relationProperties = ((FriendRequestList)object).getUpdatedUserRelationInfo();
+
+                            if (relationProperties.getFriendRelation())
+                                user.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
+                            else if (relationProperties.getPendingFriendRequest())
+                                user.setFollowStatus(FOLLOW_STATUS_PENDING);
+                            else
+                                user.setFollowStatus(FOLLOW_STATUS_NONE);
+
+                            userListResponse.getItems().remove(position);
+                            userListResponse.getItems().add(position, user);
+
+                            UserDataUtil.updateFollowButton(context, relationProperties.getFriendRelation(), relationProperties.getPendingFriendRequest(), statuDisplayBtn, true);
+                            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
+                            statuDisplayBtn.setEnabled(true);
+                        }
+
+                        @Override
+                        public void onFailed(Exception e) {
+                            statuDisplayBtn.setEnabled(true);
+                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
                         }
                     });
-                }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid, token);
-
-            friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
-        public void updateFollowingList(final String requestType) {
-
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-                    followInfoResultArrayItem.setName(user.getName());
-                    followInfoResultArrayItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
-                    followInfoResultArrayItem.setUserid(user.getUserid());
-                    followInfoResultArrayItem.setUsername(user.getUsername());
-                    AccountHolderFollowings.updateFriendListByFollowType(requestType, followInfoResultArrayItem);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-
-                        }
-                    });
-                }
-            });
         }
 
         public void setData(User user, int position) {
@@ -243,8 +198,8 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             if (user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
                 statuDisplayBtn.setVisibility(View.GONE);
             else {
-                UserDataUtil.updateFollowButton(context, user.getFollowStatus().equals(PROVIDER_FOLLOW_STATUS_FOLLOWING),
-                        user.getFollowStatus().equals(PROVIDER_FOLLOW_STATUS_PENDING), statuDisplayBtn, false);
+                UserDataUtil.updateFollowButton(context, user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING),
+                        user.getFollowStatus().equals(FOLLOW_STATUS_PENDING), statuDisplayBtn, false);
                 statuDisplayBtn.setVisibility(View.VISIBLE);
             }
         }

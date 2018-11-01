@@ -24,6 +24,7 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
 import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
@@ -40,21 +41,23 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     Context context;
     Activity activity;
     FriendList friendList;
-    SelectedFriendList selectedFriendList;
     FriendList orginalFriendList;
     RecyclerView horRecyclerView;
     LinearLayoutManager linearLayoutManager;
     boolean horAdapterUpdateChk;
     SelectedItemAdapter selectedItemAdapter = null;
     GradientDrawable imageShape;
+    ReturnCallback returnCallback;
 
-    public SelectFriendAdapter(Context context, FriendList friendList) {
+    public SelectFriendAdapter(Context context, FriendList friendList, ReturnCallback returnCallback) {
         layoutInflater = LayoutInflater.from(context);
         this.context = context;
-        this.friendList = friendList;
-        this.orginalFriendList = friendList;
+        this.friendList = new FriendList();
+        this.friendList.setResultArray(friendList.getResultArray());
+        orginalFriendList = new FriendList();
+        orginalFriendList.setResultArray(this.friendList.getResultArray());
         activity = (Activity) context;
-        selectedFriendList = SelectedFriendList.getInstance();
+        this.returnCallback = returnCallback;
         horAdapterUpdateChk = false;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 context.getResources().getColor(R.color.Orange, null), GradientDrawable.OVAL, 50, 0);
@@ -105,12 +108,14 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                     CommonUtils.hideKeyBoard(context);
                     if (selectRadioBtn.isChecked()) {
                         selectRadioBtn.setChecked(false);
-                        selectedFriendList.removeFriend(selectedFriend);
+                        SelectedFriendList.getInstance().removeFriend(selectedFriend);
                         checkHorizontalAdapter();
+                        returnCallback.onReturn(null);
                     } else {
                         selectRadioBtn.setChecked(true);
-                        selectedFriendList.addFriend(selectedFriend);
+                        SelectedFriendList.getInstance().addFriend(selectedFriend);
                         checkHorizontalAdapter();
+                        returnCallback.onReturn(null);
                     }
                 }
             });
@@ -120,14 +125,16 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 public void onClick(View v) {
                     CommonUtils.hideKeyBoard(context);
                     if (selectRadioBtn.isChecked()) {
-                        if (!selectedFriendList.isUserInList(selectedFriend.getUserid())) {
-                            selectedFriendList.addFriend(selectedFriend);
+                        if (!SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid())) {
+                            SelectedFriendList.getInstance().addFriend(selectedFriend);
                             checkHorizontalAdapter();
+                            returnCallback.onReturn(null);
                         }
                     } else {
-                        if (selectedFriendList.isUserInList(selectedFriend.getUserid())) {
-                            selectedFriendList.removeFriend(selectedFriend);
+                        if (SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid())) {
+                            SelectedFriendList.getInstance().removeFriend(selectedFriend);
                             checkHorizontalAdapter();
+                            returnCallback.onReturn(null);
                         }
                     }
                 }
@@ -152,7 +159,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         }
 
         public void updateRadioButtonValue() {
-            if (selectedFriendList.isUserInList(selectedFriend.getUserid()))
+            if (SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid()))
                 selectRadioBtn.setChecked(true);
             else
                 selectRadioBtn.setChecked(false);
@@ -165,8 +172,9 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
                     SelectFriendAdapter.this.notifyDataSetChanged();
 
-                    if (selectedFriendList.getSize() == 0)
+                    if (SelectedFriendList.getInstance().getSize() == 0)
                         horRecyclerView.setVisibility(View.GONE);
+                    returnCallback.onReturn(null);
                 }
             });
 
@@ -177,7 +185,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             } else {
                 horRecyclerView.setAdapter(selectedItemAdapter);
 
-                if (selectedFriendList.getSize() == 0) {
+                if (SelectedFriendList.getInstance().getSize() == 0) {
                     horRecyclerView.setVisibility(View.GONE);
                 } else if (horRecyclerView.getVisibility() == View.GONE) {
                     horRecyclerView.setVisibility(View.VISIBLE);
@@ -197,7 +205,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             protected FilterResults performFiltering(CharSequence charSequence) {
                 String searchString = charSequence.toString();
                 if (searchString.trim().isEmpty())
-                    friendList = orginalFriendList;
+                    friendList.setResultArray(orginalFriendList.getResultArray());
                 else {
                     FriendList tempFriendList = new FriendList();
                     List<UserProfileProperties> userList = new ArrayList<>();
@@ -206,7 +214,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                         if (userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase()))
                             tempFriendList.getResultArray().add(userProfileProperties);
                     }
-                    friendList = tempFriendList;
+                    friendList.setResultArray(tempFriendList.getResultArray());
                 }
                 FilterResults filterResults = new FilterResults();
                 filterResults.values = friendList;
@@ -223,14 +231,16 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
     public void updateAdapterForSelectAll(int selectType) {
         if (selectType == SelectFriendToGroupActivity.CODE_SELECT_ALL) {
+            SelectedFriendList.getInstance().clearFriendList();
             SelectedFriendList.getInstance().setSelectedFriendList(orginalFriendList);
             horRecyclerView.setVisibility(View.VISIBLE);
+            if (selectedItemAdapter != null)
+                selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();
         } else if (selectType == SelectFriendToGroupActivity.CODE_UNSELECT_ALL) {
-            FriendList friendList = new FriendList();
-            friendList.setResultArray(new ArrayList<UserProfileProperties>());
-            SelectedFriendList.getInstance().setSelectedFriendList(friendList);
+            SelectedFriendList.getInstance().clearFriendList();
             horRecyclerView.setVisibility(View.GONE);
+            selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();
         }
     }

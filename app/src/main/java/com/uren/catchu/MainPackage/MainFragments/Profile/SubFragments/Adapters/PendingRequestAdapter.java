@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,22 +13,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowers;
-import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.AccountHolderPendings;
 
+import catchu.model.FollowInfo;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.FriendRequestList;
 import catchu.model.UserProfileProperties;
@@ -94,7 +90,11 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                 @Override
                 public void onClick(final View v) {
 
-                    AccountHolderFollowings.getInstance(new CompleteCallback() {
+                    final ProgressDialogUtil progressDialogUtil = new ProgressDialogUtil(context,
+                            context.getResources().getString(R.string.loading), false);
+                    progressDialogUtil.dialogShow();
+
+                    AccountHolderFollowProcess.getFollowings(new CompleteCallback() {
                         @Override
                         public void onComplete(Object object) {
                             FollowInfoResultArrayItem followItem = new FollowInfoResultArrayItem();
@@ -103,17 +103,26 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                             followItem.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
                             followItem.setUserid(userProfileProperties.getUserid());
                             followItem.setIsPrivateAccount(userProfileProperties.getIsPrivateAccount());
+                            followItem.setIsFollow(false);
 
-                            if (AccountHolderFollowings.isFollowing(userProfileProperties.getUserid()))
-                                followItem.setIsFollow(true);
-                            else
-                                followItem.setIsFollow(false);
-
+                            if(object != null){
+                                FollowInfo followInfo = (FollowInfo) object;
+                                for(FollowInfoResultArrayItem item : followInfo.getResultArray()){
+                                    if(item != null && item.getUserid() != null && !item.getUserid().isEmpty()){
+                                        if(item.getUserid().equals(userProfileProperties.getUserid())){
+                                            followItem.setIsFollow(true);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            progressDialogUtil.dialogDismiss();
                             listItemClickListener.onClick(v, followItem, position);
                         }
 
                         @Override
                         public void onFailed(Exception e) {
+                            progressDialogUtil.dialogDismiss();
                             DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
@@ -127,72 +136,25 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         }
 
         public void managePendingRequest() {
-            AccountHolderInfo.getToken(new TokenCallback() {
+
+            AccountHolderFollowProcess.acceptFriendRequest(userProfileProperties.getUserid(), new CompleteCallback() {
                 @Override
-                public void onTokenTaken(String token) {
-                    startFriendRequest(token);
-                }
-            });
-        }
-
-        private void startFriendRequest(String token) {
-            final FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
-
-                @Override
-                public void onSuccess(FriendRequestList object) {
-
-                    AccountHolderPendings.getInstance(new CompleteCallback() {
-                        @Override
-                        public void onComplete(Object object) {
-                            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(FRIEND_ACCEPT_REQUEST);
-                            AccountHolderPendings.removePending(userProfileProperties.getUserid());
-                            addFollower();
-                            notifyItemRemoved(position);
-                            notifyItemRangeChanged(position, getItemCount());
-                            returnCallback.onReturn(AccountHolderPendings.getPendingList());
-                        }
-
-                        @Override
-                        public void onFailed(Exception e) {
-                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                @Override
-                                public void okClick() {
-
-                                }
-                            });
-                        }
-                    });
+                public void onComplete(Object object) {
+                    AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(FRIEND_ACCEPT_REQUEST);
+                    friendRequestList.getResultArray().remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount());
+                    returnCallback.onReturn(null);
                 }
 
                 @Override
-                public void onFailure(Exception e) {
+                public void onFailed(Exception e) {
                     DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
 
                         }
                     });
-                }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, FRIEND_ACCEPT_REQUEST, userProfileProperties.getUserid(), AccountHolderInfo.getUserID(), token);
-
-            friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
-        public void addFollower() {
-            AccountHolderFollowers.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    AccountHolderFollowers.addFollower(userProfileProperties);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
                 }
             });
         }

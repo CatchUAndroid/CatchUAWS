@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthProvider;
 import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -43,6 +44,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
+import catchu.model.Phone;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
@@ -51,7 +53,7 @@ import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATI
 public class VerifyPhoneNumberFragment extends Fragment {
 
     View mView;
-    String phoneNum;
+    //String phoneNum;
     TextView phoneNumberTv;
     Button sendCodeAgainBtn;
     Button changePhoneBtn;
@@ -64,11 +66,13 @@ public class VerifyPhoneNumberFragment extends Fragment {
     GradientDrawable buttonShape;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
-    Country myCountry;
+    Phone phone;
+    //Country myCountry;
 
-    public VerifyPhoneNumberFragment(Country myCountry, String phoneNum, PhoneVerification phoneVerification, CompleteCallback completeCallback) {
-        this.phoneNum = phoneNum;
-        this.myCountry = myCountry;
+    public VerifyPhoneNumberFragment(Phone phone, PhoneVerification phoneVerification, CompleteCallback completeCallback) {
+  /*      this.phoneNum = phoneNum;
+        this.myCountry = myCountry;*/
+        this.phone = phone;
         this.phoneVerification = phoneVerification;
         this.completeCallback = completeCallback;
     }
@@ -113,9 +117,8 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     private void setPhoneNum() {
-        if (phoneNum != null && !phoneNum.trim().isEmpty()){
-            if(myCountry != null && myCountry.getDialCode() != null && !myCountry.getDialCode().trim().isEmpty())
-                phoneNumberTv.setText(myCountry.getDialCode() + phoneNum);
+        if (phone != null && phone.getDialCode() != null && phone.getPhoneNumber() != null) {
+            phoneNumberTv.setText(phone.getDialCode().trim() + phone.getPhoneNumber().toString().trim());
         }
     }
 
@@ -141,7 +144,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
         nextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (phoneVerification.getmCredential() != null) {
+                /*if (phoneVerification.getmCredential() != null) {
                     if (phoneVerification.getmCredential().getSmsCode() != null && !phoneVerification.getmCredential().getSmsCode().trim().isEmpty() &&
                             verifyCodeEt.getText() != null && !verifyCodeEt.getText().toString().trim().isEmpty()) {
 
@@ -156,7 +159,37 @@ public class VerifyPhoneNumberFragment extends Fragment {
                             });
 
                     }
-                }
+                } */
+
+                /*if (phoneVerification.getmVerificationId() != null && !phoneVerification.getmVerificationId().trim().isEmpty() &&
+                        verifyCodeEt.getText() != null && !verifyCodeEt.getText().toString().trim().isEmpty()) {
+
+                    if (verifyCodeEt.getText().toString().equals(phoneVerification.getmVerificationId().trim())) {
+                        saveUserPhoneAndCountry();
+                    } else
+                        DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+
+                            }
+                        });
+                }*/
+
+
+
+                boolean verifyResult = phoneVerification.verifyPhoneNumberWithCode(phoneVerification.getmVerificationId(), verifyCodeEt.getText().toString().trim());
+
+                if (verifyResult)
+                    saveUserPhoneAndCountry();
+                else
+                    DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+
+
             }
         });
 
@@ -184,7 +217,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 warningMessageTv.setVisibility(View.GONE);
-                phoneVerification.resendVerificationCode(myCountry.getDialCode() + phoneNum, phoneVerification.getmResendToken());
+                phoneVerification.resendVerificationCode(phone.getDialCode().trim() + phone.getPhoneNumber().toString().trim(), phoneVerification.getmResendToken());
                 setTimer();
             }
         });
@@ -198,15 +231,14 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     public void saveUserPhoneAndCountry() {
-        /*todo:phone
+
         UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
-        userProfileProperties.setPhoneCountry(myCountry);
-        userProfileProperties.setPhone(phoneNum);
+        userProfileProperties.setPhone(phone);
 
         new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
-                DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(),null, getActivity().getResources().getString(R.string.UPDATE_IS_SUCCESSFUL), 1500, new InfoDialogBoxCallback() {
+                DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(), null, getActivity().getResources().getString(R.string.UPDATE_IS_SUCCESSFUL), 1500, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                         completeCallback.onComplete(null);
@@ -226,8 +258,6 @@ public class VerifyPhoneNumberFragment extends Fragment {
                 e.printStackTrace();
             }
         }, false, userProfileProperties, null);
-        */
-
     }
 
     public void setTimer() {

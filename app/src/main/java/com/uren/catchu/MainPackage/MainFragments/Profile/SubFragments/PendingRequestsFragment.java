@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -23,7 +24,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoL
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.PendingRequestAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderPendings;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +91,8 @@ public class PendingRequestsFragment extends BaseFragment {
     }
 
     public void getData() {
-        AccountHolderPendings.getInstance(new CompleteCallback() {
+
+        AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
                 FriendRequestList friendRequestList = (FriendRequestList) object;
@@ -107,10 +108,19 @@ public class PendingRequestsFragment extends BaseFragment {
                 }, new ReturnCallback() {
                     @Override
                     public void onReturn(Object object1) {
-                        FriendRequestList friendRequestList1 = (FriendRequestList) object1;
+                        AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
+                            @Override
+                            public void onComplete(Object object) {
+                                FriendRequestList friendRequestList = (FriendRequestList) object;
+                                MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
+                                        getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                            }
 
-                        MessageDataUtil.setWarningMessageVisibility(friendRequestList1, warningMsgTv,
-                                getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                            @Override
+                            public void onFailed(Exception e) {
+
+                            }
+                        });
                     }
                 });
                 following_recyclerView.setAdapter(pendingRequestAdapter);

@@ -28,7 +28,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
     LayoutInflater layoutInflater;
     Context context;
     Activity activity;
-    SelectedFriendList selectedFriendList;
+    //SelectedFriendList selectedFriendList;
     ClickCallback clickCallback;
     GradientDrawable imageShape;
     GradientDrawable deleteImgvShape;
@@ -38,7 +38,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         this.context = context;
         this.clickCallback = clickCallback;
         activity = (Activity) context;
-        selectedFriendList = SelectedFriendList.getInstance();
+        //selectedFriendList = SelectedFriendList.getInstance();
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
         deleteImgvShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
@@ -56,7 +56,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
     @Override
     public void onBindViewHolder(@NonNull SelectedItemAdapter.MyViewHolder myViewHolder, int position) {
 
-        UserProfileProperties userProfileProperties = selectedFriendList.getSelectedFriendList().getResultArray().get(position);
+        UserProfileProperties userProfileProperties = SelectedFriendList.getInstance().getSelectedFriendList().getResultArray().get(position);
         myViewHolder.setData(userProfileProperties, position);
     }
 
@@ -98,7 +98,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         }
 
         private void removeItem(int position) {
-            selectedFriendList.removeFriend(selectedFriend);
+            SelectedFriendList.getInstance().removeFriend(selectedFriend);
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, getItemCount());
         }
@@ -114,6 +114,6 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
 
     @Override
     public int getItemCount() {
-        return selectedFriendList.getSize();
+        return SelectedFriendList.getInstance().getSize();
     }
 }
