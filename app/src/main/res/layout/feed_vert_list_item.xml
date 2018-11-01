@@ -32,7 +32,7 @@
                 <!-- Top of Post Text /-->
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="70dp"
+                    android:layout_height="60dp"
                     android:orientation="horizontal">
 
                     <!-- Profile layout /-->
@@ -44,7 +44,7 @@
 
                         <!-- Profile Picture /-->
                         <LinearLayout
-                            android:layout_width="70dp"
+                            android:layout_width="60dp"
                             android:layout_height="match_parent"
                             android:padding="10dp">
 
@@ -84,8 +84,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Name Surname"
-                                android:textColor="@color/black"
-                                android:textSize="17sp" />
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/txtUserName"
@@ -153,7 +153,8 @@
                     android:gravity="left"
                     android:orientation="horizontal"
                     android:weightSum="3"
-                    android:layout_marginBottom="5dp">
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="10dp">
 
                     <!-- Like layout  /-->
                     <LinearLayout
@@ -161,13 +162,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginRight="3dp"
                         android:gravity="left|center"
                         android:orientation="horizontal"
-                        android:layout_weight="0.7">
+                        android:layout_weight="0.5">
 
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="25dp"
                             android:layout_height="20dp"
                             android:layout_marginRight="2dp"
                             android:src="@mipmap/icon_like_gray"
@@ -190,13 +191,13 @@
                         android:layout_marginRight="5dp"
                         android:gravity="left|center"
                         android:orientation="horizontal"
-                        android:layout_weight="0.7">
+                        android:layout_weight="0.5">
 
                         <ImageView
-                            android:layout_width="wrap_content"
+                            android:layout_width="25dp"
                             android:layout_height="20dp"
                             android:layout_marginRight="2dp"
-                            android:src="@mipmap/icon_chat_gray"
+                            android:src="@mipmap/icon_comment_gray"
                             />
 
                         <TextView
@@ -204,6 +205,26 @@
                             android:layout_width="wrap_content"
                             android:layout_height="30dp"
                             android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <!-- More layout  /-->
+                    <LinearLayout
+                        android:id="@+id/layoutMore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginRight="5dp"
+                        android:gravity="left|center"
+                        android:orientation="horizontal"
+                        android:layout_weight="0.5">
+
+                        <ImageView
+                            android:layout_width="25dp"
+                            android:layout_height="20dp"
+                            android:layout_marginRight="2dp"
+                            android:src="@mipmap/icon_more_gray"
+                            />
 
                     </LinearLayout>
 
@@ -215,7 +236,7 @@
                         android:layout_marginRight="5dp"
                         android:gravity="right"
                         android:orientation="horizontal"
-                        android:layout_weight="1.6">
+                        android:layout_weight="1.5">
 
                         <LinearLayout
                             android:layout_width="wrap_content"

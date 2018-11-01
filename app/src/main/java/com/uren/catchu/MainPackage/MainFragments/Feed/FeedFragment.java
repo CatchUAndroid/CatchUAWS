@@ -140,6 +140,16 @@ public class FeedFragment extends BaseFragment {
         return mView;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     private void init() {
 
         showPulsatorLayout(true);

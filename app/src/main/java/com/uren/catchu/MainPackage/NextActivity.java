@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;

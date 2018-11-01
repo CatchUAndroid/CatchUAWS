@@ -32,6 +32,11 @@ public class ViewPagerUtils {
 
         sliderDotspanel.removeAllViews();
 
+        if(dotscount<2){
+            sliderDotspanel.setVisibility(View.GONE);
+            return;
+        }
+
         for (int i = 0; i < dotscount; i++) {
             dots[i] = new ImageView(context);
             dots[i].setImageDrawable(ContextCompat.getDrawable(context, R.drawable.non_active_dot));
