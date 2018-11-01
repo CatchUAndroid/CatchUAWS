@@ -121,7 +121,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     public void updateAdapter(String searchText) {
-        if (searchText != null)
+        if (searchText != null && facebookFriendsAdapter != null)
             facebookFriendsAdapter.updateAdapter(searchText);
     }
 }

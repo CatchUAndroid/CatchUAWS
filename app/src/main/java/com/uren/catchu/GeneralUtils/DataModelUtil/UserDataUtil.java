@@ -22,9 +22,10 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 public class UserDataUtil {
 
     public static void setName(String name, TextView nameTextView) {
+        int nameMaxLen = 25;
         if (name != null && nameTextView != null && !name.isEmpty()) {
-            if (name.length() > 30)
-                nameTextView.setText(name.trim().substring(0, 30) + "...");
+            if (name.length() > nameMaxLen)
+                nameTextView.setText(name.trim().substring(0, nameMaxLen) + "...");
             else
                 nameTextView.setText(name);
         }

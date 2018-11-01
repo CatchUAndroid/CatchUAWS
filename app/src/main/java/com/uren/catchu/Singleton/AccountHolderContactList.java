@@ -15,6 +15,7 @@ import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 import com.uren.catchu.Permissions.PermissionModule;
 
 import java.util.ArrayList;
@@ -102,26 +103,5 @@ public class AccountHolderContactList {
 
         }
         phones.close();
-    }
-
-    public class Contact{
-        String name;
-        String phoneNumber;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getPhoneNumber() {
-            return phoneNumber;
-        }
-
-        public void setPhoneNumber(String phoneNumber) {
-            this.phoneNumber = phoneNumber;
-        }
     }
 }

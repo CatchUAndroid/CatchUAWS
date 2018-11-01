@@ -101,35 +101,6 @@ public class AddGroupActivity extends AppCompatActivity {
         imageShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
                 0, GradientDrawable.OVAL, 50, 0);
         groupPictureImgv.setBackground(imageShape);
-
-
-        // TODO: 12.10.2018 - ugur silinecek
-        /*if(permissionModule.checkReadPhoneStatePermission()){
-            TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-            String mPhoneNumber = tMgr.getLine1Number();
-            Log.i("Info", "mPhoneNumber:" + mPhoneNumber);
-        }else
-            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, permissionModule.getReadPhoneStateCode());*/
-
-        /*if(permissionModule.checkReadContactsPermission()){
-            TelephonyManager tMgrr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-            String mPhoneNumberrr = tMgrr.getLine1Number();
-            Log.i("Info", "mPhoneNumber:" + mPhoneNumberrr);
-        }else
-            ActivityCompat.requestPermissions(AddGroupActivity.this,
-                    new String[]{Manifest.permission.READ_CONTACTS},permissionModule.getReadContactsCode());*/
-
-        AccountHolderContactList.getInstance(AddGroupActivity.this, null, new CompleteCallback() {
-            @Override
-            public void onComplete(Object object) {
-
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-
-            }
-        });
     }
 
     private void setGroupTextSize() {
@@ -302,40 +273,7 @@ public class AddGroupActivity extends AppCompatActivity {
             }
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
-        } else if(requestCode == permissionModule.PERMISSION_READ_PHONE_STATE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                TelephonyManager tMgr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-                //String mPhoneNumber = tMgr.getLine1Number();
-
-
-                // TODO: 12.10.2018 - ugur silinecek
-                if(permissionModule.checkReadContactsPermission()){
-                    TelephonyManager tMgrr = (TelephonyManager)this.getSystemService(Context.TELEPHONY_SERVICE);
-                    //String mPhoneNumberrr = tMgrr.getLine1Number();
-                    //Log.i("Info", "mPhoneNumber:" + mPhoneNumberrr);
-                }else
-                    ActivityCompat.requestPermissions(AddGroupActivity.this,
-                            new String[]{Manifest.permission.READ_CONTACTS},permissionModule.PERMISSION_READ_CONTACTS);
-
-
-                //Log.i("Info", "mPhoneNumber:" + mPhoneNumber);
-            }
-        }else if(requestCode == permissionModule.PERMISSION_READ_CONTACTS){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                AccountHolderContactList.setInstance(null);
-                AccountHolderContactList.getInstance(AddGroupActivity.this, null, new CompleteCallback() {
-                    @Override
-                    public void onComplete(Object object) {
-
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-
-                    }
-                });
-            }
-        }else
+        } else
             CommonUtils.showToast(this, getResources().getString(R.string.technicalError) + requestCode);
     }
 

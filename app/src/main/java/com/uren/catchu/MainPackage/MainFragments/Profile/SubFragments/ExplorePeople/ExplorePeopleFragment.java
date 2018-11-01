@@ -25,7 +25,7 @@ import com.uren.catchu.R;
 
 import butterknife.ButterKnife;
 
-public class ExplorePeopleFragment extends BaseFragment{
+public class ExplorePeopleFragment extends BaseFragment {
 
     Context context;
     View view;
@@ -38,16 +38,13 @@ public class ExplorePeopleFragment extends BaseFragment{
     FacebookFriendsFragment facebookFriendsFragment;
     ContactFriendsFragment contactFriendsFragment;
 
-    //FacebookFriendsFragment facebookFriendsFragment;
-    //ContactFriendsFragment contactFriendsFragment;
-
     private EditText editTextSearch;
     private ImageView imgCancelSearch;
-    private String searchText = "";
+   /* private String searchText = "";
     private String tempSearchText = "";
     private RelativeLayout rl;
     private RelativeLayout r2;
-    private Boolean refreshSearch = true;
+    private Boolean refreshSearch = true;*/
 
     PermissionModule permissionModule;
 
@@ -75,9 +72,9 @@ public class ExplorePeopleFragment extends BaseFragment{
 
             context = getActivity();
             initializeItems();
-        } else {
+        } /*else {
             refreshSearch = false;
-        }
+        }*/
 
         permissionModule = new PermissionModule(context);
         permissionModule.checkWriteExternalStoragePermission();
@@ -122,15 +119,15 @@ public class ExplorePeopleFragment extends BaseFragment{
                 switch (tab.getPosition()) {
 
                     case TAB_FACEBOOK:
-                        /*rl.setVisibility(View.VISIBLE);
-                        r2.setVisibility(View.GONE);*/
                         selectedProperty = TAB_FACEBOOK;
+                        searchTextClear();
                         break;
 
                     case TAB_CONTACTS:
-                       /* rl.setVisibility(View.VISIBLE);
-                        r2.setVisibility(View.GONE);*/
                         selectedProperty = TAB_CONTACTS;
+                        searchTextClear();
+                        if (adapter != null && adapter.getItem(TAB_CONTACTS) != null)
+                            ((ContactFriendsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter("");
                         break;
 
                     default:
@@ -150,20 +147,21 @@ public class ExplorePeopleFragment extends BaseFragment{
         });
     }
 
+    public void searchTextClear() {
+        if (editTextSearch != null && editTextSearch.getText() != null)
+            editTextSearch.getText().clear();
+    }
+
     private void overwriteToolbar() {
         mToolBar = view.findViewById(R.id.toolbar);
         editTextSearch = view.findViewById(R.id.editTextSearch);
         imgCancelSearch = view.findViewById(R.id.imgCancelSearch);
-        rl = view.findViewById(R.id.rl);
-        r2 = view.findViewById(R.id.r2);
 
         imgCancelSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                refreshSearch = true;
-                editTextSearch.getText().clear();
+                searchTextClear();
                 imgCancelSearch.setVisibility(View.GONE);
-
             }
         });
 
@@ -183,10 +181,10 @@ public class ExplorePeopleFragment extends BaseFragment{
                 else
                     imgCancelSearch.setVisibility(View.GONE);
 
-                if(selectedProperty == TAB_FACEBOOK){
-                    ((FacebookFriendsFragment)adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
-                }else if(selectedProperty == TAB_CONTACTS){
-                    //((ContactFriendsFragment)adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
+                if (selectedProperty == TAB_FACEBOOK) {
+                    ((FacebookFriendsFragment) adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
+                } else if (selectedProperty == TAB_CONTACTS) {
+                    ((ContactFriendsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
                 }
             }
         });

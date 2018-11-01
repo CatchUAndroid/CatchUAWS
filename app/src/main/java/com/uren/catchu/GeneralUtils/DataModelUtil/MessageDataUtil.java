@@ -3,6 +3,10 @@ package com.uren.catchu.GeneralUtils.DataModelUtil;
 import android.view.View;
 import android.widget.TextView;
 
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
+
+import java.util.List;
+
 import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
 import catchu.model.UserListResponse;
@@ -27,7 +31,7 @@ public class MessageDataUtil {
                 warningMsgTv.setVisibility(View.GONE);
         }
 
-        if (object instanceof GroupRequestResult) {
+        else if (object instanceof GroupRequestResult) {
             GroupRequestResult groupRequestResult = (GroupRequestResult) object;
 
             if (groupRequestResult == null)
@@ -40,7 +44,7 @@ public class MessageDataUtil {
                 warningMsgTv.setVisibility(View.GONE);
         }
 
-        if (object instanceof UserListResponse) {
+        else if (object instanceof UserListResponse) {
             UserListResponse userListResponse = (UserListResponse) object;
 
             if (userListResponse == null)
@@ -52,5 +56,10 @@ public class MessageDataUtil {
             else
                 warningMsgTv.setVisibility(View.GONE);
         }
+
+        else if(object == null){
+            warningMsgTv.setVisibility(View.VISIBLE);
+        }
+
     }
 }

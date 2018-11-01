@@ -88,6 +88,7 @@ public class StringConstants {
     //Provider Types
     public static final String PROVIDER_TYPE_FACEBOOK = "facebook";
     public static final String PROVIDER_TYPE_TWITTER = "twitter";
+    public static final String PROVIDER_TYPE_PHONE = "phone";
 
     //Follow Status
     public static final String FOLLOW_STATUS_FOLLOWING = "FOLLOWING";

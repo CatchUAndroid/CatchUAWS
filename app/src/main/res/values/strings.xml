@@ -89,6 +89,7 @@
     <string name="VIEW_PENDING_REQUEST">View Pending Requests</string>
     <string name="THERE_IS_NO_GROUP_CREATE_OR_INCLUDE">There is no group you created or included</string>
     <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">There is no Facebook friend who using CatchU</string>
+    <string name="THERE_IS_NO_CONTACTFRIEND_WHO_USING_CATCHU">There is no Contact friend who using CatchU</string>
     <string name="PHONE_NUM">Phone Number</string>
     <string name="SELECT_COUNTRY">Select Country</string>
     <string name="COUNTRY_NAME">Country Name</string>
