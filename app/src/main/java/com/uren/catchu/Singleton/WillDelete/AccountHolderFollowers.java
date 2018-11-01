@@ -1,4 +1,4 @@
-package com.uren.catchu.Singleton;
+package com.uren.catchu.Singleton.WillDelete;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -7,14 +7,17 @@ import com.uren.catchu.ApiGatewayFunctions.FriendListRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import java.util.ArrayList;
 
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
 public class AccountHolderFollowers {
-
+/*
     private static AccountHolderFollowers accountHolderFollowers = null;
-    private static FriendList friendList;
+    private static FriendList followerFriendList;
     private static CompleteCallback mCompleteCallback;
 
     public static void getInstance(CompleteCallback completeCallback) {
@@ -22,10 +25,11 @@ public class AccountHolderFollowers {
         mCompleteCallback = completeCallback;
 
         if (accountHolderFollowers == null) {
-            friendList = new FriendList();
+            followerFriendList = new FriendList();
+            followerFriendList.setResultArray(new ArrayList<UserProfileProperties>());
             accountHolderFollowers = new AccountHolderFollowers();
         }else
-            mCompleteCallback.onComplete(friendList);
+            mCompleteCallback.onComplete(followerFriendList);
     }
 
     public AccountHolderFollowers() {
@@ -33,11 +37,11 @@ public class AccountHolderFollowers {
     }
 
     public static FriendList getFriendList() {
-        return friendList;
+        return followerFriendList;
     }
 
     public int getSize() {
-        return friendList.getResultArray().size();
+        return followerFriendList.getResultArray().size();
     }
 
     public static void setInstance(AccountHolderFollowers instance) {
@@ -54,15 +58,15 @@ public class AccountHolderFollowers {
     }
 
     public static void addFollower(UserProfileProperties userProfileProperties) {
-        friendList.getResultArray().add(userProfileProperties);
+        followerFriendList.getResultArray().add(userProfileProperties);
     }
 
     public static void removeFollower(String userid) {
         if (userid != null && !userid.trim().isEmpty()) {
             int index = 0;
-            for (UserProfileProperties userProfileProperties : friendList.getResultArray()) {
+            for (UserProfileProperties userProfileProperties : followerFriendList.getResultArray()) {
                 if (userProfileProperties.getUserid().equals(userid)) {
-                    friendList.getResultArray().remove(index);
+                    followerFriendList.getResultArray().remove(index);
                     break;
                 }
                 index = index + 1;
@@ -77,8 +81,8 @@ public class AccountHolderFollowers {
             public void onSuccess(Object object) {
                 if (object != null) {
                     Log.i("**FriendListRequestProc", "OK");
-                    friendList = (FriendList) object;
-                    mCompleteCallback.onComplete(friendList);
+                    followerFriendList = (FriendList) object;
+                    mCompleteCallback.onComplete(followerFriendList);
                 }
             }
 
@@ -95,5 +99,5 @@ public class AccountHolderFollowers {
         }, AccountHolderInfo.getUserID(), token);
 
         friendListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    }*/
 }

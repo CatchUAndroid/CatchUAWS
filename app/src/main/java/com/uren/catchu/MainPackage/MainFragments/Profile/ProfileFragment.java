@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,12 +31,12 @@ import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
@@ -49,7 +48,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFr
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.AccountHolderPendings;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -349,34 +347,35 @@ public class ProfileFragment extends BaseFragment
     }
 
     private void getPendingFriendList(){
-        AccountHolderPendings.getInstance(new CompleteCallback() {
+
+        AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                FriendRequestList friendRequestList = (FriendRequestList) object;
+                if(object != null){
+                    FriendRequestList friendRequestList = (FriendRequestList) object;
 
-                if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
-                    pendReqCntTv.setVisibility(View.VISIBLE);
-                    pendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
-                }else
-                    pendReqCntTv.setVisibility(View.GONE);
+                    if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
+                        pendReqCntTv.setVisibility(View.VISIBLE);
+                        pendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
+                    }else
+                        pendReqCntTv.setVisibility(View.GONE);
 
 
-                Menu menu = navViewLayout.getMenu();
-                for(int index = 0; index < menu.size(); index++){
-                    MenuItem menuItem = menu.getItem(index);
-                    if(menuItem.getItemId() == R.id.viewItem){
-                        RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
-                        navPendReqCntTv = rootView.findViewById(R.id.pendReqCntTv);
+                    Menu menu = navViewLayout.getMenu();
+                    for(int index = 0; index < menu.size(); index++){
+                        MenuItem menuItem = menu.getItem(index);
+                        if(menuItem.getItemId() == R.id.viewItem){
+                            RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
+                            navPendReqCntTv = rootView.findViewById(R.id.pendReqCntTv);
 
-                        if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
-                            navPendReqCntTv.setVisibility(View.VISIBLE);
-                            navPendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
-                        }else
-                            navPendReqCntTv.setVisibility(View.GONE);
+                            if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
+                                navPendReqCntTv.setVisibility(View.VISIBLE);
+                                navPendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
+                            }else
+                                navPendReqCntTv.setVisibility(View.GONE);
+                        }
                     }
                 }
-
-
             }
 
             @Override

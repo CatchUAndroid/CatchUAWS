@@ -13,6 +13,7 @@ import com.uren.catchu.ApiGatewayFunctions.PostRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
@@ -20,7 +21,6 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.SharePackage.ShareDetailActivity;
-import com.uren.catchu.Singleton.AccountHolderFollowers;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.SelectedGroupList;
@@ -286,14 +286,17 @@ public class SharePostProcess {
             saveToNeo(token, SHARE_TYPE_EVERYONE);
         else if (selectedItem == ShareDetailActivity.CODE_FRIEND_SHARED) {
 
-            AccountHolderFollowers.getInstance(new CompleteCallback() {
+            AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
                 @Override
                 public void onComplete(Object object) {
-                    FriendList friendList = (FriendList) object;
-                    if (friendList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
-                        saveToNeo(token, SHARE_TYPE_ALL_FOLLOWERS);
-                    else
-                        saveToNeo(token, SHARE_TYPE_CUSTOM);
+                    if (object != null) {
+                        FriendList friendList = (FriendList) object;
+                        if (friendList != null && friendList.getResultArray() != null) {
+                            if (friendList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
+                                saveToNeo(token, SHARE_TYPE_ALL_FOLLOWERS);
+                        } else
+                            saveToNeo(token, SHARE_TYPE_CUSTOM);
+                    }
                 }
 
                 @Override
@@ -303,7 +306,7 @@ public class SharePostProcess {
             });
         } else if (selectedItem == ShareDetailActivity.CODE_JUSTME_SHARED)
             saveToNeo(token, SHARE_TYPE_SELF);
-        else if(selectedItem == ShareDetailActivity.CODE_GROUP_SHARED)
+        else if (selectedItem == ShareDetailActivity.CODE_GROUP_SHARED)
             saveToNeo(token, SHARE_TYPE_GROUP);
     }
 

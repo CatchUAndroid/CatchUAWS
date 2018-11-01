@@ -24,7 +24,7 @@ public class NumericConstants {
     public static final int CODE_PHOTO_REMOVE = 2;
 
     //Phone num verify duration
-    public static final int VERIFY_PHONE_NUM_DURATION = 30;
+    public static final int VERIFY_PHONE_NUM_DURATION = 60;
 
     //Feed paignation initial values
     public static final int FEED_PAGE_COUNT = 1;

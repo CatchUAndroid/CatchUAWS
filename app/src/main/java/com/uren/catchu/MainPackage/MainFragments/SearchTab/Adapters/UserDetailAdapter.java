@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +14,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -26,7 +22,6 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FollowInfoResultArrayItem;
@@ -156,68 +151,32 @@ public class UserDetailAdapter extends RecyclerView.Adapter<UserDetailAdapter.My
         }
 
         public void processFriendRequest(final String requestType) {
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    startFriendRequest(requestType, token);
-                }
-            });
-        }
 
-        private void startFriendRequest(final String requestType, String token) {
-            final FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
-
-                @Override
-                public void onSuccess(FriendRequestList object) {
-                    RelationProperties relationProperties = object.getUpdatedUserRelationInfo();
-                    selectedFriend.setFriendRelation(relationProperties.getFriendRelation());
-                    selectedFriend.setPendingFriendRequest(relationProperties.getPendingFriendRequest());
-                    searchResult.getResultArray().remove(position);
-                    searchResult.getResultArray().add(position, selectedFriend);
-                    UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn, true);
-                    AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
-                    updateFollowingList(requestType);
-                    statuDisplayBtn.setEnabled(true);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.toString());
-                    statuDisplayBtn.setEnabled(true);
-                }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid, token);
-
-            friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
-        public void updateFollowingList(final String requestType) {
-
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-                    followInfoResultArrayItem.setName(selectedFriend.getName());
-                    followInfoResultArrayItem.setProfilePhotoUrl(selectedFriend.getProfilePhotoUrl());
-                    followInfoResultArrayItem.setUserid(selectedFriend.getUserid());
-                    followInfoResultArrayItem.setUsername(selectedFriend.getUsername());
-                    AccountHolderFollowings.updateFriendListByFollowType(requestType, followInfoResultArrayItem);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+            AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid,
+                    new CompleteCallback() {
                         @Override
-                        public void okClick() {
+                        public void onComplete(Object object) {
+                            RelationProperties relationProperties = ((FriendRequestList)object).getUpdatedUserRelationInfo();
+                            selectedFriend.setFriendRelation(relationProperties.getFriendRelation());
+                            selectedFriend.setPendingFriendRequest(relationProperties.getPendingFriendRequest());
+                            searchResult.getResultArray().remove(position);
+                            searchResult.getResultArray().add(position, selectedFriend);
+                            UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn, true);
+                            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
+                            statuDisplayBtn.setEnabled(true);
+                        }
 
+                        @Override
+                        public void onFailed(Exception e) {
+                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+
+                                }
+                            });
+                            statuDisplayBtn.setEnabled(true);
                         }
                     });
-                }
-            });
         }
 
         public void setData(SearchResultResultArrayItem selectedFriend, int position) {

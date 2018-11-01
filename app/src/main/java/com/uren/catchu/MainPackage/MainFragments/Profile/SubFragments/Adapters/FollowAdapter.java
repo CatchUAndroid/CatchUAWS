@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,10 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -25,13 +21,11 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowings;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.List;
 
 import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.FriendRequestList;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
@@ -150,40 +144,24 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
         private void updateFollowStatus(final String requestType) {
 
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    startUpdateFollowStatus(requestType, token);
-                }
-            });
-        }
+            AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                    followListItem.getUserid(), new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                            updateFollowUI(requestType);
+                            btnFollowStatus.setEnabled(true);
+                        }
 
-        private void startUpdateFollowStatus(final String requestType, String token) {
-
-            FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
-                @Override
-                public void onSuccess(FriendRequestList object) {
-                    updateFollowUI(requestType);
-                    updateFollowingList(requestType);
-                    btnFollowStatus.setEnabled(true);
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.toString());
-                    btnFollowStatus.setEnabled(true);
-                }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, requestType
-                    , AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                    , followListItem.getUserid()
-                    , token);
-
-            friendRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        @Override
+                        public void onFailed(Exception e) {
+                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                    btnFollowStatus.setEnabled(true);
+                                }
+                            });
+                        }
+                    });
         }
 
         private void updateFollowUI(String updateType) {
@@ -193,7 +171,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
             notifyItemChanged(position, followListItem.getIsFollow());
         }
 
-        public void updateFollowTypeAfterOperation(String updateType){
+        public void updateFollowTypeAfterOperation(String updateType) {
             switch (updateType) {
                 case FRIEND_DELETE_FOLLOW:
                     followListItem.setIsFollow(false);
@@ -216,31 +194,6 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 default:
                     break;
             }
-        }
-
-        public void updateFollowingList(final String requestType) {
-
-            AccountHolderFollowings.getInstance(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-                    followInfoResultArrayItem.setName(followListItem.getName());
-                    followInfoResultArrayItem.setProfilePhotoUrl(followListItem.getProfilePhotoUrl());
-                    followInfoResultArrayItem.setUserid(followListItem.getUserid());
-                    followInfoResultArrayItem.setUsername(followListItem.getUsername());
-                    AccountHolderFollowings.updateFriendListByFollowType(requestType, followInfoResultArrayItem);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-
-                        }
-                    });
-                }
-            });
         }
     }
 

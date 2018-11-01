@@ -171,7 +171,7 @@
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
-    <string name="loading">Yükleniyor</string>
+    <string name="loading">Yükleniyor...</string>
     <string name="checkingAround">Etrafınızdaki paylaşımlar aranıyor...</string>
     <string name="locationError">Konumunuza erişim sağlanamıyor, lütfen lokasyon ayarlarınızı kontrol ediniz...</string>
 

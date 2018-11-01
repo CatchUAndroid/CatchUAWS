@@ -25,8 +25,6 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderFollowings;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.Comment;
 import catchu.model.CommentListResponse;
