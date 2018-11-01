@@ -166,8 +166,10 @@ public class FeedFragment extends BaseFragment {
         refresh_layout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
-                setPaginationValues();
-                checkLocationAndRetrievePosts();
+                if(!mPulsator.isStarted()){
+                    setPaginationValues();
+                    checkLocationAndRetrievePosts();
+                }
             }
         });
     }
