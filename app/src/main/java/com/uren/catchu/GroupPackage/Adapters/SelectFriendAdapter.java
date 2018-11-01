@@ -72,7 +72,22 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         horRecyclerView.setLayoutManager(linearLayoutManager);
+        setHorizontalAdapter();
         return holder;
+    }
+
+    private void setHorizontalAdapter() {
+        selectedItemAdapter = new SelectedItemAdapter(context, new ClickCallback() {
+            @Override
+            public void onItemClick() {
+
+                SelectFriendAdapter.this.notifyDataSetChanged();
+
+                if (SelectedFriendList.getInstance().getSize() == 0)
+                    horRecyclerView.setVisibility(View.GONE);
+                returnCallback.onReturn(null);
+            }
+        });
     }
 
     @Override
@@ -166,18 +181,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         }
 
         public void checkHorizontalAdapter() {
-            selectedItemAdapter = new SelectedItemAdapter(context, new ClickCallback() {
-                @Override
-                public void onItemClick() {
-
-                    SelectFriendAdapter.this.notifyDataSetChanged();
-
-                    if (SelectedFriendList.getInstance().getSize() == 0)
-                        horRecyclerView.setVisibility(View.GONE);
-                    returnCallback.onReturn(null);
-                }
-            });
-
             if (horAdapterUpdateChk == false) {
                 horRecyclerView.setVisibility(View.VISIBLE);
                 horRecyclerView.setAdapter(selectedItemAdapter);
@@ -240,7 +243,8 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         } else if (selectType == SelectFriendToGroupActivity.CODE_UNSELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
             horRecyclerView.setVisibility(View.GONE);
-            selectedItemAdapter.notifyDataSetChanged();
+            if (selectedItemAdapter != null)
+                selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();
         }
     }
