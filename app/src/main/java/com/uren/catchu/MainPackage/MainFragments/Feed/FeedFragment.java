@@ -322,7 +322,7 @@ public class FeedFragment extends BaseFragment {
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
-                Log.i("isFirstFetch", String.valueOf(isFirstFetch) );
+
                 if(isFirstFetch){
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
@@ -336,7 +336,6 @@ public class FeedFragment extends BaseFragment {
                 }else{
                     setFetchData(postListResponse);
                 }
-
 
             }
 

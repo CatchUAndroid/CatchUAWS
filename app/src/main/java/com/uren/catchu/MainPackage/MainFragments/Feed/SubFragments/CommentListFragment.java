@@ -35,6 +35,7 @@ import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 
 
 public class CommentListFragment extends BaseFragment
@@ -143,7 +144,7 @@ public class CommentListFragment extends BaseFragment
 
         String userId = AccountHolderInfo.getUserID();
         String postID = postId;
-        String commentId = "empty";
+        String commentId = AWS_EMPTY;
 
         PostCommentListProcess postCommentListProcess = new PostCommentListProcess(getContext(), new OnEventListener<CommentListResponse>() {
 

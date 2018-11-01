@@ -65,6 +65,7 @@ import catchu.model.Post;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
@@ -102,7 +103,7 @@ public class PostHelper {
 
             String userId = AccountHolderInfo.getUserID();
             String postId = post.getPostid();
-            String commentId = null;
+            String commentId = AWS_EMPTY;
 
             PostLikeProcess postLikeProcess = new PostLikeProcess(context, new OnEventListener<BaseResponse>() {
                 @Override
@@ -481,7 +482,7 @@ public class PostHelper {
 
             String userId = AccountHolderInfo.getUserID();
             String postId = this.postId;
-            String commentId = "empty";
+            String commentId = AWS_EMPTY;
             CommentRequest commentRequest = getCommentRequest();
 
             PostCommentProcess postCommentProcess = new PostCommentProcess(context, new OnEventListener<CommentResponse>() {

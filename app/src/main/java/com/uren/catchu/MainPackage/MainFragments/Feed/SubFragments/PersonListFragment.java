@@ -40,6 +40,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
+import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 
 
@@ -161,7 +162,7 @@ public class PersonListFragment extends BaseFragment
         String postID = postId;
         String perPage = "100";
         String page = "1";
-        String commentId = null;
+        String commentId = AWS_EMPTY;
 
 
         PostLikeListProcess postLikeListProcess = new PostLikeListProcess(getContext(), new OnEventListener<UserListResponse>() {
@@ -206,7 +207,7 @@ public class PersonListFragment extends BaseFragment
 
 
 
-        personListAdapter = new PersonListAdapter(getActivity(), personList, personListItemClickListener);
+        personListAdapter = new PersonListAdapter(getContext(), personList, personListItemClickListener);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         personList_recyclerView.setLayoutManager(mLayoutManager);
