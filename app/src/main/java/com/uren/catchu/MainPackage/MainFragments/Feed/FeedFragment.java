@@ -133,7 +133,6 @@ public class FeedFragment extends BaseFragment {
 
         if(!mPulsator.isStarted()){
             mPulsator.reset();
-            //showPulsatorLayout(true);
             mPulsator.start();
         }
 
