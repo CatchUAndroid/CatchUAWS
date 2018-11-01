@@ -17,20 +17,39 @@
         app:pulse_repeat="0"
         app:pulse_startFromScratch="true">
 
-        <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/app_icon" />
+            android:id="@+id/rl_profile_image">
+
+            <ImageView
+                android:id="@+id/imgProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:padding="1dp" />
+
+            <TextView
+                android:id="@+id/txtProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/profileImage"
+            android:layout_below="@+id/rl_profile_image"
             android:layout_centerInParent="true"
             android:layout_marginTop="40dp"
-            android:paddingTop="30dp"
+            android:paddingTop="50dp"
             android:text="@string/checkingAround"
             android:textColor="@color/black"
             android:textSize="17sp" />

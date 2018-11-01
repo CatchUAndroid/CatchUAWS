@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
@@ -35,6 +38,7 @@ import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
 
@@ -49,6 +53,7 @@ import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
+import catchu.model.UserProfile;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.FEED_PAGE_COUNT;
@@ -84,6 +89,10 @@ public class FeedFragment extends BaseFragment {
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
 
+    @BindView(R.id.imgProfile)
+    ImageView imgProfile;
+    @BindView(R.id.txtProfile)
+    TextView txtProfile;
 
     private boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
@@ -124,6 +133,7 @@ public class FeedFragment extends BaseFragment {
 
         if(!mPulsator.isStarted()){
             mPulsator.reset();
+            //showPulsatorLayout(true);
             mPulsator.start();
         }
 
@@ -300,22 +310,21 @@ public class FeedFragment extends BaseFragment {
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
-
-                if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
-                } else {
-                    CommonUtils.LOG_OK("PostListResponseProcess");
-                    if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        showNoFeedLayout(true, R.string.emptyFeed);
-                    } else {
-                        showNoFeedLayout(false, 0);
-                    }
-                    setUpRecyclerView(postListResponse);
+                Log.i("isFirstFetch", String.valueOf(isFirstFetch) );
+                if(isFirstFetch){
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Do something after 5s = 5000ms
+                            isFirstFetch=false;
+                            setFetchData(postListResponse);
+                        }
+                    }, 2500);
+                }else{
+                    setFetchData(postListResponse);
                 }
 
-                //progressBar.setVisibility(View.GONE);
-                refresh_layout.setRefreshing(false);
-                showPulsatorLayout(false);
 
             }
 
@@ -341,8 +350,39 @@ public class FeedFragment extends BaseFragment {
 
     }
 
+    private void setFetchData(PostListResponse postListResponse) {
+
+        if (postListResponse == null) {
+            CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
+        } else {
+            CommonUtils.LOG_OK("PostListResponseProcess");
+            if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
+                showNoFeedLayout(true, R.string.emptyFeed);
+            } else {
+                showNoFeedLayout(false, 0);
+            }
+            setUpRecyclerView(postListResponse);
+        }
+
+        //progressBar.setVisibility(View.GONE);
+        refresh_layout.setRefreshing(false);
+        showPulsatorLayout(false);
+
+    }
+
     private void showPulsatorLayout(boolean isShowPulsator) {
         if(isShowPulsator){
+            UserProfile user = AccountHolderInfo.getInstance().getUser();
+            UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), txtProfile, imgProfile);
+            AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
+                @Override
+                public void onAccountHolderIfoTaken(UserProfile userProfile) {
+                    UserDataUtil.setProfilePicture(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
+                            userProfile.getUserInfo().getName(), txtProfile, imgProfile);
+                }
+            });
+
             rl_pulsator.setVisibility(View.VISIBLE);
             mPulsator.start();
         }else{
@@ -350,7 +390,6 @@ public class FeedFragment extends BaseFragment {
             rl_pulsator.setVisibility(View.GONE);
         }
     }
-
 
     private void showNoFeedLayout(boolean setVisible, int textDetail) {
         if (setVisible) {

@@ -15,6 +15,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
@@ -29,6 +30,7 @@ public class AccountHolderInfo {
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
     private static Context context;
+    private static AccountHolderInfoCallback accountHolderInfoCallback;
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
@@ -81,6 +83,9 @@ public class AccountHolderInfo {
                 if(up != null){
                     if(up.getUserInfo() != null){
                         userProfile = up;
+                        if(accountHolderInfoCallback!=null){
+                            accountHolderInfoCallback.onAccountHolderIfoTaken(up);
+                        }
                     }
                 }
             }
@@ -169,7 +174,9 @@ public class AccountHolderInfo {
         AccountHolderInfo.getInstance().getUser().setRelationInfo(userProfileRelationCountInfo);
     }
 
-
+    public static void setAccountHolderInfoCallback(AccountHolderInfoCallback accountHolderInfoCallback){
+        AccountHolderInfo.accountHolderInfoCallback = accountHolderInfoCallback;
+    }
 
 }
 
