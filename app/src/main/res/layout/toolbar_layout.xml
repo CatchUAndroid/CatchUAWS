@@ -3,31 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="@color/colorPrimary">
-
-    <LinearLayout
-        android:id="@+id/l1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="10dp"
-        android:orientation="vertical"
-        android:weightSum="4">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1.5">
-
-        </LinearLayout>
+    android:layout_height="?attr/actionBarSize"
+    android:background="?attr/colorPrimary"
+    app:elevation="@dimen/default_elevation"
+    app:layout_scrollFlags="scroll|enterAlways"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    android:gravity="center">
 
         <!-- değişiklikler burada yapılmalı/-->
         <LinearLayout
             android:id="@+id/l2"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -56,7 +44,7 @@
                     android:gravity="left"
                     android:hint="Ara"
                     android:inputType="text"
-                    android:paddingStart="10dp"
+                    android:paddingTop="15dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/clearWhite" />
 
@@ -97,8 +85,6 @@
 
         </LinearLayout>
 
-
-    </LinearLayout>
 
 
 </android.support.v7.widget.Toolbar>
