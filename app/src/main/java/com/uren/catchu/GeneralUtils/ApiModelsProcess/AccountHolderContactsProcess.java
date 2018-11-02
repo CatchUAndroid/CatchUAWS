@@ -40,7 +40,6 @@ public class AccountHolderContactsProcess {
                 contactList.add(contact);
             }
             previousPhoneNum = phoneNumber;
-
         }
         phones.close();
         completeCallback.onComplete(contactList);

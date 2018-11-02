@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static com.uren.catchu.Constants.StringConstants.APP_GOOGLE_PLAY_DEFAULT_LINK;
+
 public class CommonUtils {
 
     public static String serverPrefix = "**";
@@ -251,6 +253,10 @@ public class CommonUtils {
         if (activity.getCurrentFocus() != null) {
             inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
+    }
+
+    public static String getGooglePlayAppLink(Context context){
+        return APP_GOOGLE_PLAY_DEFAULT_LINK + context.getPackageName();
     }
 
 }

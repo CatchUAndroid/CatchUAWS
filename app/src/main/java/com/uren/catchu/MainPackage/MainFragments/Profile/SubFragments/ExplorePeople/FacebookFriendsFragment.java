@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +16,7 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
@@ -30,15 +32,19 @@ import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 
+@SuppressLint("ValidFragment")
 public class FacebookFriendsFragment extends BaseFragment {
 
     View mView;
     TextView warningMsgTv;
     FacebookFriendsAdapter facebookFriendsAdapter;
     RecyclerView personRecyclerView;
+    OnLoadedListener onLoadedListener;
 
-    public FacebookFriendsFragment() {
+    public FacebookFriendsFragment(OnLoadedListener onLoadedListener) {
+        this.onLoadedListener = onLoadedListener;
     }
 
     @Override
@@ -59,7 +65,18 @@ public class FacebookFriendsFragment extends BaseFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initVariables();
         addListeners();
-        getFacebookFriends();
+        checkUserLoggedInWithFacebook();
+    }
+
+    public void checkUserLoggedInWithFacebook(){
+        if(AccountHolderInfo.getInstance().getUser().getUserInfo().getProvider() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getProvider().getProviderType().equals(PROVIDER_TYPE_FACEBOOK)){
+            getFacebookFriends();
+        }else {
+            MessageDataUtil.setWarningMessageVisibility(null, warningMsgTv,
+                    getActivity().getResources().getString(R.string.CONNECT_FACEBOOK));
+            onLoadedListener.onLoaded();
+        }
     }
 
     public void initVariables() {
@@ -93,15 +110,12 @@ public class FacebookFriendsFragment extends BaseFragment {
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     personRecyclerView.setLayoutManager(linearLayoutManager);
                 }
+                onLoadedListener.onLoaded();
             }
 
             @Override
             public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                    }
-                });
+                onLoadedListener.onError(e.getMessage());
             }
         });
     }

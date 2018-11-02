@@ -142,6 +142,7 @@
     <string name="followings">Followings</string>
     <string name="follow">Follow</string>
     <string name="following">Following</string>
+    <string name="invite">Invite</string>
     <string name="request_sended">Request sent</string>
     <string name="ACCEPT_REQUEST">Accept Request</string>
     <string name="cancel_following">Remove from followings?</string>
@@ -150,6 +151,8 @@
     <string name="feed">Feeds</string>
     <string name="PENDING_REQUESTS">Pending Requests</string>
     <string name="THERE_IS_NO_PENDING_REQUEST">There is no pending request</string>
+    <string name="CONTACT_INVITE_MESSAGE">Do you want to share in CatchU and follow your friends? You can download the application from this link:</string>
+    <string name="CONNECT_FACEBOOK">Connect Facebook</string>
 
 
     <string name="red">Red</string>

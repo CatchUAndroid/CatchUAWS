@@ -99,5 +99,5 @@ public class StringConstants {
     //Person list fragment comingFor values
     public static final String COMING_FOR_LIKE_LIST = "LIKE_LIST";
 
-
+    public static final String APP_GOOGLE_PLAY_DEFAULT_LINK = "https://play.google.com/store/apps/details?id=";
 }

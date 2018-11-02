@@ -126,6 +126,7 @@
     <string name="followings">Takiptesin</string>
     <string name="follow">Takip et</string>
     <string name="following">Takip ediliyor</string>
+    <string name="invite">Davet Et</string>
     <string name="request_sended">İstek gönderildi</string>
     <string name="ACCEPT_REQUEST">Kabul Et</string>
     <string name="cancel_following">Takip etmeyi bırak?</string>
@@ -134,7 +135,8 @@
     <string name="feed">Paylaşımlar</string>
     <string name="PENDING_REQUESTS">Bekleyen Istekler</string>
     <string name="THERE_IS_NO_PENDING_REQUEST">Bekleyen isteğiniz bulunmamaktadır</string>
-
+    <string name="CONTACT_INVITE_MESSAGE">CatchU\'da paylaşım yapıp arkadaşlarını takip etmek ister misin? Uygulamayı bu linkten indirebilirsin:</string>
+    <string name="CONNECT_FACEBOOK">Facebook\'a Bağlan</string>
 
     <!-- LoginActivity Constants-->
     // Uygulama alanlari
