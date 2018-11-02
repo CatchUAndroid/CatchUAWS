@@ -91,7 +91,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
                 @Override
                 public void onClick(View v) {
 
-                    personListItemClickListener.onClick(v, person, position);
+                    personListItemClickListener.onPersonListItemClicked(v, person, position);
                 }
             });
         }

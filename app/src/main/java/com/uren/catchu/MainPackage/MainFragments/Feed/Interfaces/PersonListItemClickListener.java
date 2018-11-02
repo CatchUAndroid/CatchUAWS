@@ -6,5 +6,5 @@ import catchu.model.User;
 
 public interface PersonListItemClickListener {
 
-    void onClick(View view, User user, int clickedPosition);
+    void onPersonListItemClicked(View view, User user, int clickedPosition);
 }

@@ -1,5 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +52,11 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     private PersonListItemClickListener personListItemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
+
+    private boolean animationsLocked = false;
+    private boolean delayEnterAnimation = true;
+    private int lastAnimatedPosition = -1;
+
 
     public CommentListAdapter(Context context, CommentListResponse commentList) {
         this.context = context;
@@ -92,7 +100,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
                 @Override
                 public void onClick(View v) {
 
-                    personListItemClickListener.onClick(v, comment.getUser(), position);
+                    personListItemClickListener.onPersonListItemClicked(v, comment.getUser(), position);
                 }
             });
         }
@@ -117,8 +125,44 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
+        runEnterAnimation(holder.itemView, position);
         Comment comment = commentList.getItems().get(position);
         holder.setData(comment, position);
+    }
+
+    private void runEnterAnimation(View view, int position) {
+        if (animationsLocked) return;
+
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            view.setTranslationY(100);
+            view.setAlpha(0.f);
+            view.animate()
+                    .translationY(0).alpha(1.f)
+                    .setStartDelay(delayEnterAnimation ? 20 * (position) : 0)
+                    .setInterpolator(new DecelerateInterpolator(2.f))
+                    .setDuration(300)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            animationsLocked = true;
+                        }
+                    })
+                    .start();
+        }
+    }
+
+    public void setAnimationsLocked(boolean animationsLocked) {
+        this.animationsLocked = animationsLocked;
+    }
+
+    public void setDelayEnterAnimation(boolean delayEnterAnimation) {
+        this.delayEnterAnimation = delayEnterAnimation;
+    }
+
+    public void updateItems() {
+        /**/
+        notifyDataSetChanged();
     }
 
     @Override

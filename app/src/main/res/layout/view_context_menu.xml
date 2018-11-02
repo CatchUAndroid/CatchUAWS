@@ -2,20 +2,21 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Button
-        android:id="@+id/btnReport"
+        android:id="@+id/btnCopyShareUrl"
         style="@style/ContextMenuButton"
-        android:text="REPORT"
-        android:textColor="@color/btn_context_menu_text_red" />
+        android:text="@string/unfollow" />
 
     <Button
         android:id="@+id/btnSharePhoto"
         style="@style/ContextMenuButton"
-        android:text="SHARE PHOTO" />
+        android:text="@string/disableComment" />
 
     <Button
-        android:id="@+id/btnCopyShareUrl"
+        android:id="@+id/btnReport"
         style="@style/ContextMenuButton"
-        android:text="COPY SHARE URL" />
+        android:text="@string/report"
+        android:textColor="@color/btn_context_menu_text_red" />
+
 
     <View
         android:layout_width="match_parent"
@@ -25,6 +26,6 @@
     <Button
         android:id="@+id/btnCancel"
         style="@style/ContextMenuButton"
-        android:text="CANCEL" />
+        android:text="@string/cancel" />
 
 </merge>

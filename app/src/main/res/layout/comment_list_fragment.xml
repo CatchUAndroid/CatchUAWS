@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,8 +11,11 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorPrimary">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:elevation="@dimen/default_elevation"
+        app:layout_scrollFlags="scroll|enterAlways"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,44 +50,66 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/commentList_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_below="@id/toolbarLayout"
-        android:layout_above="@+id/bottomBox">
-
-    </android.support.v7.widget.RecyclerView>
-
     <LinearLayout
-        android:id="@+id/bottomBox"
+        android:id="@+id/contentRoot"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:background="@android:color/darker_gray"
-        android:orientation="horizontal"
-        android:weightSum="5">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarLayout"
+        android:background="@color/bg_comments"
+        android:elevation="@dimen/default_elevation"
+        android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/edtAddComment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:defaultFocusHighlightEnabled="false"
-            android:hint="Add a comment" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/btnSendComment"
-            android:layout_width="0dp"
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/commentList_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="none" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:layout_gravity="bottom"
+                android:background="@drawable/shadow_top" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/llAddComment"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Send" />
+            android:background="@color/bg_comments"
+            android:elevation="@dimen/default_elevation"
+            android:gravity="center_vertical"
+            android:paddingBottom="4dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp">
+
+            <EditText
+                android:id="@+id/edtAddComment"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="#555555"
+                android:textSize="14sp" />
+
+            <com.uren.catchu._Libraries.SendCommentButton.SendCommentButton
+                android:id="@+id/btnSendComment"
+                android:layout_width="72dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="2dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/btn_send_comment"
+                android:elevation="4dp"
+                android:orientation="vertical" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
-
-
 
 
 </RelativeLayout>

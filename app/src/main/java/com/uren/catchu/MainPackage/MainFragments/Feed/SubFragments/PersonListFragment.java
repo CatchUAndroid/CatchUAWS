@@ -199,13 +199,11 @@ public class PersonListFragment extends BaseFragment
 
         PersonListItemClickListener personListItemClickListener = new PersonListItemClickListener() {
             @Override
-            public void onClick(View view, User user, int clickedPosition) {
+            public void onPersonListItemClicked(View view, User user, int clickedPosition) {
                 CommonUtils.showToast(getContext(), "Clicked : " + user.getName());
                 startPersonInfoProcess(user,clickedPosition);
             }
         };
-
-
 
         personListAdapter = new PersonListAdapter(getContext(), personList, personListItemClickListener);
 
