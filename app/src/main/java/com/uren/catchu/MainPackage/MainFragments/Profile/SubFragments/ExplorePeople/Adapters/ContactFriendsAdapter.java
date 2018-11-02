@@ -201,7 +201,7 @@ public class ContactFriendsAdapter extends RecyclerView.Adapter<ContactFriendsAd
         }
 
         public void setPhoneNum(){
-            if(user.getProvider() != null && user.getProvider().getProviderid() != null){
+            if(user.getProvider() != null && user.getProvider().getProviderid() != null && user.getProvider().getProviderType() != null){
                 if(user.getProvider().getProviderType().equals(PROVIDER_TYPE_PHONE)){
                     this.phoneNumTextView.setText(user.getProvider().getProviderid());
                 }

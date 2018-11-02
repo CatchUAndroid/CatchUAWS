@@ -6,12 +6,8 @@ import android.os.AsyncTask;
 import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
-import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
@@ -65,7 +61,7 @@ public class PhoneNumberFormatUtil {
     }
 
     public static void formatNumbersWithDialCode(String dialCode, String locale, final List<Contact> contactList, CompleteCallback completeCallback){
-        List<String> fixedPhoneList = new ArrayList<>();
+        List<Contact> reformedContactList = new ArrayList<>();
 
         if(locale.equals("TR")){
             for(Contact contact: contactList){
@@ -74,12 +70,15 @@ public class PhoneNumberFormatUtil {
                     String completeNumber = "";
                     String reverseText = new StringBuilder(contact.getPhoneNumber().trim()).reverse().toString();
                     completeNumber = dialCode.trim() + new StringBuilder(reverseText.substring(0,10)).reverse().toString();
-                    fixedPhoneList.add(completeNumber);
+
+                    Contact contactTemp = new Contact();
+                    contactTemp.setName(contact.getName());
+                    contactTemp.setPhoneNumber(completeNumber);
+
+                    reformedContactList.add(contactTemp);
                 }
             }
         }
-
-        completeCallback.onComplete(fixedPhoneList);
+        completeCallback.onComplete(reformedContactList);
     }
-
 }

@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePe
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -9,18 +10,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
+import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
+import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
 import butterknife.ButterKnife;
@@ -34,22 +36,19 @@ public class ExplorePeopleFragment extends BaseFragment {
     int selectedProperty;
     SpecialSelectTabAdapter adapter;
     Toolbar mToolBar;
+    ProgressDialogUtil progressDialogUtil;
 
     FacebookFriendsFragment facebookFriendsFragment;
     ContactFriendsFragment contactFriendsFragment;
 
     private EditText editTextSearch;
     private ImageView imgCancelSearch;
-   /* private String searchText = "";
-    private String tempSearchText = "";
-    private RelativeLayout rl;
-    private RelativeLayout r2;
-    private Boolean refreshSearch = true;*/
-
-    PermissionModule permissionModule;
 
     private static final int TAB_FACEBOOK = 0;
     private static final int TAB_CONTACTS = 1;
+
+    boolean facebookFragLoaded = false;
+    boolean contactFragLoaded = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,12 +71,7 @@ public class ExplorePeopleFragment extends BaseFragment {
 
             context = getActivity();
             initializeItems();
-        } /*else {
-            refreshSearch = false;
-        }*/
-
-        permissionModule = new PermissionModule(context);
-        permissionModule.checkWriteExternalStoragePermission();
+        }
 
         return view;
     }
@@ -88,6 +82,9 @@ public class ExplorePeopleFragment extends BaseFragment {
     }
 
     private void initializeItems() {
+        progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
+        progressDialogUtil.dialogShow();
+        checkFragmentsLoaded();
         overwriteToolbar();
 
         viewPager = view.findViewById(R.id.viewpager);
@@ -100,9 +97,54 @@ public class ExplorePeopleFragment extends BaseFragment {
         addListeners();
     }
 
+    private void checkFragmentsLoaded() {
+
+        final Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable(){
+            public void run(){
+                if (facebookFragLoaded && contactFragLoaded) {
+                    progressDialogUtil.dialogDismiss();
+                    handler.removeCallbacksAndMessages(this);
+                }
+                handler.postDelayed(this, 500);
+            }
+        }, 500);
+    }
+
     private void setupViewPager(final ViewPager viewPager) {
-        facebookFriendsFragment = new FacebookFriendsFragment();
-        contactFriendsFragment = new ContactFriendsFragment();
+        facebookFriendsFragment = new FacebookFriendsFragment(new OnLoadedListener() {
+            @Override
+            public void onLoaded() {
+                facebookFragLoaded = true;
+            }
+
+            @Override
+            public void onError(String message) {
+                progressDialogUtil.dialogDismiss();
+                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + message, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
+            }
+        });
+        contactFriendsFragment = new ContactFriendsFragment(new OnLoadedListener() {
+            @Override
+            public void onLoaded() {
+                contactFragLoaded = true;
+            }
+
+            @Override
+            public void onError(String message) {
+                progressDialogUtil.dialogDismiss();
+                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + message, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
+            }
+        });
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
@@ -121,6 +163,8 @@ public class ExplorePeopleFragment extends BaseFragment {
                     case TAB_FACEBOOK:
                         selectedProperty = TAB_FACEBOOK;
                         searchTextClear();
+                        if (adapter != null && adapter.getItem(TAB_FACEBOOK) != null)
+                            ((FacebookFriendsFragment) adapter.getItem(TAB_FACEBOOK)).updateAdapter("");
                         break;
 
                     case TAB_CONTACTS:

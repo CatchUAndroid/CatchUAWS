@@ -89,7 +89,7 @@ public class UserDataUtil {
             if (pendingFriendRequest != null && pendingFriendRequest) {
                 displayButton.setText(context.getResources().getString(R.string.request_sended));
                 displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
-                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.black_25_transparent, null),
+                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                         0, GradientDrawable.RECTANGLE, 15, 0);
             } else {
                 displayButton.setText(context.getResources().getString(R.string.follow));
@@ -132,7 +132,7 @@ public class UserDataUtil {
             //istek gonderildi
             displayButton.setText(context.getResources().getString(R.string.request_sended));
             displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
-            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.black_25_transparent, null),
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                     0, GradientDrawable.RECTANGLE, 15, 0);
 
         } else if (followStatus.equals(FOLLOW_STATUS_OWN)) {
@@ -156,4 +156,17 @@ public class UserDataUtil {
         displayButton.setBackground(buttonShape);
     }
 
+    public static void updateInviteButton(Context context,Button displayButton, Boolean isHideKeyboard) {
+
+        if (isHideKeyboard != null && isHideKeyboard)
+            CommonUtils.hideKeyBoard(context);
+
+        GradientDrawable buttonShape;
+        displayButton.setText(context.getResources().getString(R.string.invite));
+        displayButton.setTextColor(context.getResources().getColor(R.color.Coral, null));
+        buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                context.getResources().getColor(R.color.Coral, null), GradientDrawable.RECTANGLE, 15, 2);
+
+        displayButton.setBackground(buttonShape);
+    }
 }
