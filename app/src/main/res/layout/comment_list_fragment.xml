@@ -33,6 +33,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_weight="0.7"
                 android:gravity="left"
+                android:padding="5dp"
                 android:src="@drawable/back_arrow2" />
 
             <TextView
@@ -44,7 +45,8 @@
                 android:layout_weight="3.3"
                 android:gravity="center|left"
                 android:textColor="@android:color/white"
-                android:textSize="25sp" />
+                android:fontFamily="@font/alike_angular"
+                android:textSize="@dimen/toolbarTextSize" />
 
         </LinearLayout>
 

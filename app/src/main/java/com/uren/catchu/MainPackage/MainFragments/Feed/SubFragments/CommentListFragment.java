@@ -17,7 +17,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -145,21 +144,6 @@ public class CommentListFragment extends BaseFragment
         llAddComment.setTranslationY(200);
     }
 
-    private void animateContent() {
-        commentListAdapter.updateItems();
-        llAddComment.animate().translationY(0)
-                .setInterpolator(new DecelerateInterpolator())
-                .setDuration(200)
-                .start();
-    }
-
-
-
-
-
-
-
-
     @Override
     public void onClick(View v) {
 
@@ -236,10 +220,20 @@ public class CommentListFragment extends BaseFragment
                     public void onAnimationEnd(Animator animation) {
                         ViewCompat.setElevation(toolbarLayout, Utils.dpToPx(8));
                         animateContent();
+
                     }
                 })
                 .start();
 
+
+    }
+
+    private void animateContent() {
+        commentListAdapter.updateItems();
+        llAddComment.animate().translationY(0)
+                .setInterpolator(new DecelerateInterpolator())
+                .setDuration(200)
+                .start();
     }
 
     private void startPersonInfoProcess(User user, int clickedPosition) {

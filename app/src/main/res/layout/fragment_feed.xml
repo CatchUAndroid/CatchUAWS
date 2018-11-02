@@ -62,10 +62,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|center"
                         android:layout_weight="5"
+                        android:fontFamily="@font/alike_angular"
                         android:gravity="center"
                         android:text="@string/feed"
                         android:textColor="@android:color/white"
-                        android:textSize="25sp" />
+                        android:textSize="@dimen/toolbarTextSize" />
 
                 </LinearLayout>
             </android.support.v7.widget.Toolbar>
