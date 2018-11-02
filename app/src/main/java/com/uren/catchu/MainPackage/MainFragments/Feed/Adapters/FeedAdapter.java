@@ -343,6 +343,13 @@ public class FeedAdapter extends RecyclerView.Adapter {
         notifyItemRemoved(postList.size());
     }
 
+    public boolean isShowingProgressLoading() {
+        if (getItemViewType(postList.size() - 1) == VIEW_PROG)
+            return true;
+        else
+            return false;
+    }
+
     public void removeAll() {
         int initalSize = postList.size();
         notifyItemRangeChanged(0, initalSize);

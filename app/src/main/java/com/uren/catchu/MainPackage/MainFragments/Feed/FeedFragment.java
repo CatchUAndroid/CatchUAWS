@@ -358,6 +358,10 @@ public class FeedFragment extends BaseFragment {
                         }
                     });
                     showNoFeedLayout(false, 0);
+                    if(feedAdapter.isShowingProgressLoading()){
+                        feedAdapter.removeProgressLoading();
+                    }
+
                 }else{
                     showNoFeedLayout(true, R.string.serverError);
                 }
