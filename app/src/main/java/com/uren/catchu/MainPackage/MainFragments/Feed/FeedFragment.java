@@ -30,6 +30,7 @@ import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
@@ -349,7 +350,18 @@ public class FeedFragment extends BaseFragment {
                 //progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
                 showPulsatorLayout(false);
-                showNoFeedLayout(true, R.string.serverError);
+                if(postList.size()>0){
+                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+                    showNoFeedLayout(false, 0);
+                }else{
+                    showNoFeedLayout(true, R.string.serverError);
+                }
+
             }
 
             @Override
