@@ -70,7 +70,9 @@
                 android:id="@+id/commentList_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none" />
+                android:scrollbars="none"
+                android:layout_marginTop="3dp"
+                android:background="@color/clearWhite"/>
 
             <View
                 android:layout_width="match_parent"
@@ -97,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="#555555"
-                android:textSize="14sp" />
+                android:textSize="16sp"
+                android:hint="@string/commentHint" />
 
             <com.uren.catchu._Libraries.SendCommentButton.SendCommentButton
                 android:id="@+id/btnSendComment"

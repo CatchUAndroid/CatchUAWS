@@ -235,6 +235,8 @@
     <string name="unfollow">Unfollow</string>
     <string name="disableComment">Disable comment</string>
     <string name="report">Report</string>
+    <string name="commentHint">What do you think?</string>
+    <string name="like">Like</string>
 
 
 </resources>

@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.FriendRequestProcess;
@@ -27,7 +29,18 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
 
 import catchu.model.Comment;
 import catchu.model.CommentListResponse;
@@ -46,8 +59,9 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
 public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.MyViewHolder> {
 
-    private Context context;
-    private CommentListResponse commentList;
+    private Context mContext;
+    private String postId;
+    private List<Comment> commentList;
 
     private PersonListItemClickListener personListItemClickListener;
     GradientDrawable imageShape;
@@ -58,9 +72,10 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     private int lastAnimatedPosition = -1;
 
 
-    public CommentListAdapter(Context context, CommentListResponse commentList) {
-        this.context = context;
-        this.commentList = commentList;
+    public CommentListAdapter(Context context, String postId) {
+        this.mContext = context;
+        this.postId = postId;
+        this.commentList = new ArrayList<Comment>();
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -84,6 +99,13 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         CardView cardView;
         Comment comment;
         int position;
+        boolean isCommentLiked = false;
+
+        LinearLayout llProfile;
+        TextView txtLikeCount, txtLike, txtCreateDate;
+        ImageView imgLike;
+        int likeCount = 0;
+
 
         public MyViewHolder(View view) {
             super(view);
@@ -95,28 +117,101 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             cardView = (CardView) view.findViewById(R.id.card_view);
             imgProfilePic.setBackground(imageShape);
             commentMessage = (TextView) view.findViewById(R.id.commentMessage);
+            llProfile = (LinearLayout) view.findViewById(R.id.llProfile);
+            txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
+            txtLike = (TextView) view.findViewById(R.id.txtLike);
+            txtCreateDate = (TextView) view.findViewById(R.id.txtCreateDate);
+            imgLike = (ImageView) view.findViewById(R.id.imgLike);
 
-            cardView.setOnClickListener(new View.OnClickListener() {
+            setListeners();
+
+
+        }
+
+        private void setListeners() {
+
+            //imgLike
+            txtLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
+                    imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+                    int tempLikeCount = comment.getLikeCount();
+                    if (isCommentLiked) {
+                        isCommentLiked = false;
+                        comment.setIsLiked(false);
+                        tempLikeCount--;
+                        comment.setLikeCount(tempLikeCount);
+                        setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
+                        PostHelper.LikeClicked.startProcess(mContext, postId ,comment.getCommentid(), isCommentLiked);
+                    } else {
+                        isCommentLiked = true;
+                        comment.setIsLiked(true);
+                        tempLikeCount++;
+                        comment.setLikeCount(tempLikeCount);
+                        setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
+                        PostHelper.LikeClicked.startProcess(mContext, postId ,comment.getCommentid(), isCommentLiked);
+                    }
+                }
+            });
+            //Profile layout
+            llProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     personListItemClickListener.onPersonListItemClicked(v, comment.getUser(), position);
                 }
             });
+
         }
 
 
         public void setData(Comment comment, int position) {
 
-            //this.profileName.setText(comment.getUser().getName());
-            this.txtUsername.setText(comment.getUser().getUsername());
-            this.comment = comment;
             this.position = position;
-            this.commentMessage.setText(comment.getMessage());
-            UserDataUtil.setProfilePicture(context, comment.getUser().getProfilePhotoUrl(),
-                   comment.getUser().getName(), txtProfilePic, imgProfilePic);
+            this.comment = comment;
+            this.isCommentLiked = comment.getIsLiked();
+            this.likeCount = comment.getLikeCount();
 
+            //profile picture
+            UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
+                    comment.getUser().getName(), txtProfilePic, imgProfilePic);
+            //Username
+            if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
+                this.txtUsername.setText(comment.getUser().getUsername());
+            }
+            //Comment message
+            if (comment.getMessage() != null && !comment.getMessage().isEmpty()) {
+                this.commentMessage.setText(comment.getMessage());
+            }
+            //Date
+            if (comment.getCreateAt() != null) {
+                txtCreateDate.setText(comment.getCreateAt());
+            }
+            //Like
+            if (comment.getIsLiked()) {
+                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
+            } else {
+                setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
+            }
 
+        }
+
+        private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
+            imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
+            imgLike.setImageResource(icon);
+
+            if (isClientOperation) {
+                if (isCommentLiked) {
+                    likeCount++;
+                    comment.setLikeCount(likeCount);
+                } else {
+                    likeCount--;
+                    comment.setLikeCount(likeCount);
+
+                }
+            }
+
+            txtLikeCount.setText(String.valueOf(likeCount));
 
         }
 
@@ -125,8 +220,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
-        runEnterAnimation(holder.itemView, position);
-        Comment comment = commentList.getItems().get(position);
+        //runEnterAnimation(holder.itemView, position);
+        Comment comment = commentList.get(position);
         holder.setData(comment, position);
     }
 
@@ -167,7 +262,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
     @Override
     public int getItemCount() {
-        return commentList.getItems().size();
+        return (commentList != null ? commentList.size() : 0);
     }
 
     public void updateAdapterWithPosition(int position) {
@@ -175,7 +270,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         notifyItemChanged(position);
     }
 
-    public CommentListResponse getPersonList() {
+    public List<Comment> getCommentList() {
         return commentList;
     }
 
@@ -184,8 +279,15 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     }
 
     public void add(Comment comment) {
-        commentList.getItems().add(comment);
-        notifyItemInserted(commentList.getItems().size() - 1);
+        commentList.add(comment);
+        notifyItemInserted(commentList.size() - 1);
+    }
+
+    public void addAll(List<Comment> addedCommentList) {
+        if (addedCommentList != null) {
+            commentList.addAll(addedCommentList);
+            notifyItemRangeInserted(commentList.size(), commentList.size() + addedCommentList.size());
+        }
     }
 
 }

@@ -18,6 +18,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -43,6 +44,7 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
@@ -74,14 +76,16 @@ public class PostHelper {
 
     public static class LikeClicked {
 
-        static Post post;
-        static boolean isPostLiked;
+        static String postId;
+        static String commentId;
+        static boolean isLiked;
 
-        public static final void startProcess(Context context1, Post post1, boolean isPostLiked1) {
-            post = post1;
-            isPostLiked = isPostLiked1;
+        public static final void startProcess(Context context, String postId, String commentId, boolean isPostLiked) {
+            LikeClicked.postId = postId;
+            LikeClicked.commentId = commentId;
+            LikeClicked.isLiked = isPostLiked;
 
-            LikeClicked likeClicked = new LikeClicked(context1);
+            LikeClicked likeClicked = new LikeClicked(context);
         }
 
         private LikeClicked(Context context) {
@@ -102,8 +106,13 @@ public class PostHelper {
         private void startPostLikeClickedProcess(Context context, String token) {
 
             String userId = AccountHolderInfo.getUserID();
-            String postId = post.getPostid();
-            String commentId = AWS_EMPTY;
+            String postId = LikeClicked.postId;
+            String commentId;
+            if(LikeClicked.commentId == null){
+                commentId = AWS_EMPTY;
+            }else{
+                commentId = LikeClicked.commentId;
+            }
 
             PostLikeProcess postLikeProcess = new PostLikeProcess(context, new OnEventListener<BaseResponse>() {
                 @Override
@@ -124,7 +133,7 @@ public class PostHelper {
                 @Override
                 public void onTaskContinue() {
                 }
-            }, userId, postId, commentId, isPostLiked, token);
+            }, userId, postId, commentId, isLiked, token);
 
             postLikeProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -175,12 +184,14 @@ public class PostHelper {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
         static String postId;
+        static int position;
 
         public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav,
-                                              String postId) {
+                                              String postId, int position) {
 
             fragmentNavigation = fragmNav;
             CommentListClicked.postId = postId;
+            CommentListClicked.position = position;
 
             CommentListClicked commentListClicked = new CommentListClicked(context);
         }
@@ -191,7 +202,7 @@ public class PostHelper {
 
         private void postCommentListClickedProcess(Context context) {
             if (fragmentNavigation != null) {
-                fragmentNavigation.pushFragment(CommentListFragment.newInstance(postId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(CommentListFragment.newInstance(postId, position), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
@@ -455,11 +466,14 @@ public class PostHelper {
 
         static String postId;
         static Comment comment;
+        static int position;
+        static CommentAddCallback commentAddCallback;
 
-        public static final void startProcess(Context context, String postId, Comment comment) {
+        public static final void startProcess(Context context, String postId, Comment comment, int position) {
 
             AddComment.postId = postId;
             AddComment.comment = comment;
+            AddComment.position = position;
 
             AddComment addComment = new AddComment(context);
         }
@@ -482,7 +496,7 @@ public class PostHelper {
         private void startPostAddCommentProcess(Context context, String token) {
 
             String userId = AccountHolderInfo.getUserID();
-            String postId = this.postId;
+            final String postId = this.postId;
             String commentId = AWS_EMPTY;
             CommentRequest commentRequest = getCommentRequest();
 
@@ -494,7 +508,9 @@ public class PostHelper {
                     } else {
                         CommonUtils.LOG_OK("PostCommentProcess");
                     }
+                    commentAddCallback.onCommentAdd(position);
                 }
+
 
                 @Override
                 public void onFailure(Exception e) {
@@ -515,6 +531,10 @@ public class PostHelper {
             CommentRequest commentRequest = new CommentRequest();
             commentRequest.setComment(comment);
             return commentRequest;
+        }
+
+        public static final void setCommentAddCallback(CommentAddCallback commentAddCallback) {
+            AddComment.commentAddCallback = commentAddCallback;
         }
 
 

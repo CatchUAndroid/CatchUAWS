@@ -24,6 +24,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
@@ -158,15 +159,21 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
 
                     imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
-
+                    int tempLikeCount = post.getLikeCount();
                     if (isPostLiked) {
                         isPostLiked = false;
+                        post.setIsLiked(false);
+                        tempLikeCount--;
+                        post.setLikeCount(tempLikeCount);
                         setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post, isPostLiked);
+                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
                     } else {
                         isPostLiked = true;
+                        post.setIsLiked(true);
+                        tempLikeCount++;
+                        post.setLikeCount(tempLikeCount);
                         setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post, isPostLiked);
+                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
                     }
 
                 }
@@ -186,7 +193,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgBtnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, post.getPostid());
+                    PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, post.getPostid(), position);
                 }
             });
             //More layout
@@ -236,21 +243,14 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 }
             });
 
-        }
+            PostHelper.AddComment.setCommentAddCallback(new CommentAddCallback() {
+                @Override
+                public void onCommentAdd(int position) {
 
-        private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
-            imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
-            imgLike.setImageResource(icon);
-
-            if (isClientOperation) {
-                if (isPostLiked) {
-                    post.setLikeCount(likeCount++);
-                } else {
-                    post.setLikeCount(likeCount--);
+                    postList.get(position).setCommentCount(postList.get(position).getCommentCount() + 1);
+                    notifyItemChanged(position);
                 }
-            }
-            int postLikeCnt = post.getLikeCount();
-            txtLikeCount.setText(String.valueOf(likeCount));
+            });
 
         }
 
@@ -303,6 +303,23 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
             }
 
+        }
+
+        private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
+            imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
+            imgLike.setImageResource(icon);
+
+            if (isClientOperation) {
+                if (isPostLiked) {
+                    likeCount++;
+                    post.setLikeCount(likeCount);
+                } else {
+                    likeCount--;
+                    post.setLikeCount(likeCount);
+                }
+            }
+
+            txtLikeCount.setText(String.valueOf(likeCount));
 
         }
 
