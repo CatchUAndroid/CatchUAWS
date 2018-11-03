@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.amazonaws.mobile.auth.core.IdentityManager;
 import com.facebook.login.LoginManager;
@@ -66,6 +68,8 @@ public class SettingsFragment extends BaseFragment{
     LinearLayout addFromContactLayout;
     LinearLayout inviteForInstallLayout;
     LinearLayout changePasswordLayout;
+    //ToggleButton privateToogleButton;
+    Switch privateAccSwitch;
 
     public SettingsFragment() {
 
@@ -96,12 +100,21 @@ public class SettingsFragment extends BaseFragment{
         addFromContactLayout = mView.findViewById(R.id.addFromContactLayout);
         inviteForInstallLayout = mView.findViewById(R.id.inviteForInstallLayout);
         changePasswordLayout = mView.findViewById(R.id.changePasswordLayout);
+        privateAccSwitch = mView.findViewById(R.id.privateAccSwitch);
+        //privateToogleButton = (ToggleButton) mView.findViewById(R.id.privateAccSwitch);
         progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
         fragment = this;
     }
 
     public void setDefaultUIValues(){
         toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
+
+        if(AccountHolderInfo.getInstance().getUser() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount().booleanValue())
+            privateAccSwitch.setChecked(true);
+        else
+            privateAccSwitch.setChecked(false);
     }
 
     public void addListeners(){
@@ -147,6 +160,13 @@ public class SettingsFragment extends BaseFragment{
                 startChangePasswordFragment();
             }
         });
+
+        privateAccSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeUserPrivateSpec();
+            }
+        });
     }
 
     public void startFacebookFriendsFragment(){
@@ -184,6 +204,12 @@ public class SettingsFragment extends BaseFragment{
     public void startChangePasswordFragment(){
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new ChangePasswordFragment(), ANIMATE_LEFT_TO_RIGHT);
+        }
+    }
+
+    public void changeUserPrivateSpec(){
+        if(AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount().booleanValue()){
+
         }
     }
 

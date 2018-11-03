@@ -10,6 +10,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
+import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -31,7 +32,8 @@ public class UpdateUserProfileProcess {
     boolean profilPicChanged;
     UserProfileProperties userProfileProperties;
     Bitmap bitmap;
-    ProgressDialog mProgressDialog;
+    ProgressDialogUtil progressDialogUtil;
+    //ProgressDialog mProgressDialog;
 
     public UpdateUserProfileProcess(Context context, ServiceCompleteCallback serviceCompleteCallback, boolean profilPicChanged,
                                     UserProfileProperties userProfileProperties, Bitmap bitmap){
@@ -40,22 +42,14 @@ public class UpdateUserProfileProcess {
         this.profilPicChanged = profilPicChanged;
         this.userProfileProperties = userProfileProperties;
         this.bitmap = bitmap;
-        mProgressDialog = new ProgressDialog(context);
-        mProgressDialog.setMessage(context.getResources().getString(R.string.UPDATING));
-        dialogShow();
+        progressDialogUtil = new ProgressDialogUtil(context, context.getResources().getString(R.string.UPDATING), false);
+        progressDialogUtil.dialogShow();
+
 
         if(this.profilPicChanged)
             uploadMediaToS3();
         else
             updateUserProfile();
-    }
-
-    public void dialogShow() {
-        if (!mProgressDialog.isShowing()) mProgressDialog.show();
-    }
-
-    public void dialogDismiss() {
-        if (mProgressDialog.isShowing()) mProgressDialog.dismiss();
     }
 
     public void uploadMediaToS3(){
@@ -91,14 +85,14 @@ public class UpdateUserProfileProcess {
                                 serviceCompleteCallback.onFailed(new Exception(is.toString()));
                             }
                         } catch (IOException e) {
-                            dialogDismiss();
+                            progressDialogUtil.dialogDismiss();
                             serviceCompleteCallback.onFailed(e);
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        dialogDismiss();
+                        progressDialogUtil.dialogDismiss();
                         serviceCompleteCallback.onFailed(e);
                     }
 
@@ -112,7 +106,7 @@ public class UpdateUserProfileProcess {
 
             @Override
             public void onFailure(Exception e) {
-                dialogDismiss();
+                progressDialogUtil.dialogDismiss();
                 serviceCompleteCallback.onFailed(e);
             }
 
@@ -147,13 +141,13 @@ public class UpdateUserProfileProcess {
             public void onSuccess(UserProfile userProfile) {
                 if (userProfile != null)
                     updateAccountHolderInfo(userProfile);
-                dialogDismiss();
+                progressDialogUtil.dialogDismiss();
                 serviceCompleteCallback.onSuccess();
             }
 
             @Override
             public void onFailure(Exception e) {
-                dialogDismiss();
+                progressDialogUtil.dialogDismiss();
                 serviceCompleteCallback.onFailed(e);
             }
 

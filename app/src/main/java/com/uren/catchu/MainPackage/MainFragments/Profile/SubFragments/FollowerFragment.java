@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -47,11 +49,11 @@ public class FollowerFragment extends BaseFragment
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.imgBack)
-    ClickableImageView imgBack;
-    @BindView(R.id.imgAddFollower)
-    ClickableImageView imgAddFollower;
+    @BindView(R.id.backImgv)
+    ImageView backImgv;
 
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
 
     public FollowerFragment() {
 
@@ -69,9 +71,6 @@ public class FollowerFragment extends BaseFragment
             getFollowerList();
         }
 
-
-
-
         return mView;
     }
 
@@ -82,29 +81,18 @@ public class FollowerFragment extends BaseFragment
     }
 
     private void init() {
-
-        imgBack.setOnClickListener(this);
-        imgAddFollower.setOnClickListener(this);
-
+        backImgv.setOnClickListener(this);
+        toolbarTitleTv.setText(getContext().getResources().getString(R.string.followers));
         followInfo = new FollowInfo();
-
     }
-
 
     @Override
     public void onClick(View v) {
 
-        if (v == imgBack) {
-
+        if (v == backImgv) {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
-
         }
-
-        if (v == imgAddFollower) {
-            //follower...
-        }
-
     }
 
     private void getFollowerList() {
@@ -120,7 +108,6 @@ public class FollowerFragment extends BaseFragment
             }
 
         });
-
     }
 
     private void startFollowInfoProcess(String token) {

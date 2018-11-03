@@ -135,6 +135,35 @@
                         android:text="@string/CHANGE_PASSWORD" />
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/privateAccountLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:text="@string/PRIVATE_ACCOUNT" />
+
+                    <Switch
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:id="@+id/privateAccSwitch"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="20dp"
+                        android:gravity="right"
+                        android:background="@drawable/img_border"/>
+
+                </RelativeLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

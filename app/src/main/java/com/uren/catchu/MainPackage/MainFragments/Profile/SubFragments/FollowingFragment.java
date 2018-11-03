@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -49,10 +51,11 @@ public class FollowingFragment extends BaseFragment
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.imgBack)
-    ClickableImageView imgBack;
-    @BindView(R.id.imgAddFollowing)
-    ClickableImageView imgAddFollowing;
+    @BindView(R.id.backImgv)
+    ImageView backImgv;
+
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
 
     public FollowingFragment() {
     }
@@ -74,7 +77,6 @@ public class FollowingFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
     }
 
     @Override
@@ -87,8 +89,8 @@ public class FollowingFragment extends BaseFragment
 
     private void init() {
 
-        imgBack.setOnClickListener(this);
-        imgAddFollowing.setOnClickListener(this);
+        backImgv.setOnClickListener(this);
+        toolbarTitleTv.setText(getContext().getResources().getString(R.string.followings));
         followInfo = new FollowInfo();
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
     }
@@ -97,17 +99,10 @@ public class FollowingFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == imgBack) {
-
+        if (v ==  backImgv) {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
-
         }
-
-        if (v == imgAddFollowing) {
-            //following..
-        }
-
     }
 
     private void getFollowingList() {
