@@ -144,38 +144,6 @@ public class VerifyPhoneNumberFragment extends Fragment {
         nextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (phoneVerification.getmCredential() != null) {
-                    if (phoneVerification.getmCredential().getSmsCode() != null && !phoneVerification.getmCredential().getSmsCode().trim().isEmpty() &&
-                            verifyCodeEt.getText() != null && !verifyCodeEt.getText().toString().trim().isEmpty()) {
-
-                        if (verifyCodeEt.getText().toString().equals(phoneVerification.getmCredential().getSmsCode())) {
-                            saveUserPhoneAndCountry();
-                        } else
-                            DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
-                                @Override
-                                public void okClick() {
-
-                                }
-                            });
-
-                    }
-                } */
-
-                /*if (phoneVerification.getmVerificationId() != null && !phoneVerification.getmVerificationId().trim().isEmpty() &&
-                        verifyCodeEt.getText() != null && !verifyCodeEt.getText().toString().trim().isEmpty()) {
-
-                    if (verifyCodeEt.getText().toString().equals(phoneVerification.getmVerificationId().trim())) {
-                        saveUserPhoneAndCountry();
-                    } else
-                        DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
-
-                            }
-                        });
-                }*/
-
-
 
                 boolean verifyResult = phoneVerification.verifyPhoneNumberWithCode(phoneVerification.getmVerificationId(), verifyCodeEt.getText().toString().trim());
 
@@ -188,8 +156,6 @@ public class VerifyPhoneNumberFragment extends Fragment {
 
                         }
                     });
-
-
             }
         });
 

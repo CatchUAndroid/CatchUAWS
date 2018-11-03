@@ -5,88 +5,209 @@
     android:layout_height="match_parent"
     tools:context=".MainPackage.MainFragments.Profile.SubFragments.SettingsFragment">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:background="@color/colorPrimary">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:weightSum="5"
-            android:layout_marginBottom="10dp">
-
-
-            <TextView
-                android:id="@+id/txtCancel"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:text="İptal"
-                android:textColor="@color/clearWhite"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/toolbarTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:text="@string/settings"
-                android:textColor="@android:color/white"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/txtSave"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:textColor="@color/clearWhite"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbarLayout">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include layout="@layout/common_toolbar_layout" />
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp">
 
-
-            <!-- Settings Layout /-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
                 android:orientation="vertical">
 
-                <Button
+                <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/signOut"
-                    android:id="@+id/btnSignOut"/>
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/ADD_YOUR_FRIENDS"
+                    android:textStyle="bold|italic" />
+
+                <LinearLayout
+                    android:id="@+id/addFromFacebookLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/facebook_circular_icon" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/FACEBOOK_FRIENDS" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/addFromContactLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@android:drawable/ic_menu_call" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:text="@string/CONTACT_FRIENDS" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/INVITE_YOUR_FRIENDS"
+                    android:textStyle="bold|italic" />
+
+                <LinearLayout
+                    android:id="@+id/inviteForInstallLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/invite" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/ACCOUNT"
+                    android:textStyle="bold|italic" />
+
+                <LinearLayout
+                    android:id="@+id/changePasswordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/CHANGE_PASSWORD" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:gravity="center_vertical"
+                    android:text="@string/SUPPORT"
+                    android:textStyle="bold|italic" />
+
+                <LinearLayout
+                    android:id="@+id/helpCenterLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/HELP_CENTER" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/problemInformLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/REPORT_PROBLEM" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+                <LinearLayout
+                    android:id="@+id/logoutLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/signOut"
+                        android:textColor="@color/Red" />
+                </LinearLayout>
 
 
             </LinearLayout>
 
 
-        </LinearLayout>
+        </ScrollView>
 
-
-    </ScrollView>
+    </LinearLayout>
 
 
 </RelativeLayout>

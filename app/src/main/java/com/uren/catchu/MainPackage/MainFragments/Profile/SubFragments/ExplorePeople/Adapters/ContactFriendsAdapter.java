@@ -24,6 +24,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -60,6 +61,7 @@ public class ContactFriendsAdapter extends RecyclerView.Adapter<ContactFriendsAd
     ItemClickListener itemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
+    ReturnCallback returnCallback;
 
     public ContactFriendsAdapter(Context context, UserListResponse userListResponse, ItemClickListener itemClickListener) {
         layoutInflater = LayoutInflater.from(context);
@@ -244,11 +246,17 @@ public class ContactFriendsAdapter extends RecyclerView.Adapter<ContactFriendsAd
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 userListResponse = (UserListResponse) filterResults.values;
                 notifyDataSetChanged();
+
+                if(userListResponse != null && userListResponse.getItems() != null && userListResponse.getItems().size() > 0)
+                    returnCallback.onReturn(userListResponse.getItems().size());
+                else
+                    returnCallback.onReturn(0);
             }
         };
     }
 
-    public void updateAdapter(String searchText) {
+    public void updateAdapter(String searchText, ReturnCallback returnCallback) {
+        this.returnCallback = returnCallback;
         getFilter().filter(searchText);
     }
 
@@ -257,7 +265,4 @@ public class ContactFriendsAdapter extends RecyclerView.Adapter<ContactFriendsAd
         return userListResponse.getItems().size();
     }
 
-    public void updateAdapterWithPosition(int position) {
-        notifyItemChanged(position);
-    }
 }

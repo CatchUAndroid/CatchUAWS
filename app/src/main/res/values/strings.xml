@@ -103,6 +103,8 @@
     <string name="REMAINING_TIME">Remaining Time : </string>
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">You did not enter the code within the given time. Please send the code again!</string>
     <string name="UPDATE_IS_SUCCESSFUL">Update is Successful</string>
+    <string name="THERE_IS_NO_SEARCH_RESULT">No results found.</string>
+    <string name="USERS_OF_APPLICATION">Users of the application</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -153,6 +155,20 @@
     <string name="THERE_IS_NO_PENDING_REQUEST">There is no pending request</string>
     <string name="CONTACT_INVITE_MESSAGE">Do you want to share in CatchU and follow your friends? You can download the application from this link:</string>
     <string name="CONNECT_FACEBOOK">Connect Facebook</string>
+    <string name="INVITE_YOUR_FRIENDS">Invite Your Friends</string>
+    <string name="ADD_YOUR_FRIENDS">Add Your Friends</string>
+    <string name="FACEBOOK_FRIENDS">Facebook Friends</string>
+    <string name="ACCOUNT">Account</string>
+    <string name="CHANGE_PASSWORD">Change Password</string>
+    <string name="SUPPORT">Support</string>
+    <string name="HELP_CENTER">Help Center</string>
+    <string name="REPORT_PROBLEM">Report a Problem</string>
+    <string name="CONTACT_FRIENDS">Contact Friends</string>
+
+    <!-- Change Password variables-->
+    <string name="CURRENT_PASSWORD">Current password</string>
+    <string name="NEW_PASSWORD">New password</string>
+    <string name="NEW_PASSWORD_AGAIN">New password, again</string>
 
 
     <string name="red">Red</string>
@@ -193,6 +209,7 @@
     <string name="PASSWORD_ERR_REQUIRED">Password can not be empty!</string>
     <string name="PASSWORD_ERR_LENGTH">Password length must be at least 6!</string>
     <string name="USERNAME_ERR_REQUIRED">Username can not be empty!</string>
+    <string name="CHECK_PASSWORD_VALIDATION_VALUE">The validation field is incorrect. Check again.</string>
     <string name="COLLISION_EXCEPTION">E-mail is already registered, please try another one!</string>
     <string name="INVALID_CREDENTIALS">Email or password is wrong!</string>
     <string name="INVALID_USER">Invalid email address</string>
@@ -203,6 +220,8 @@
     <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
     <string name="SHARE_IS_SUCCESSFUL">Share is Successful</string>
     <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Verification is Successful</string>
+    <string name="PASSWORD_IS_CHANGED">Password is changed</string>
+    <string name="CURRENT_PASSWORD_INCORRECT">Current password is incorrect</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

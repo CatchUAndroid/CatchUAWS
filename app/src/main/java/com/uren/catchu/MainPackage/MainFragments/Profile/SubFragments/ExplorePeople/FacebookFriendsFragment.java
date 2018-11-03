@@ -9,6 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.FragmentControllers.FragNavController;
@@ -31,6 +34,7 @@ import butterknife.ButterKnife;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.UserListResponse;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 
@@ -42,9 +46,15 @@ public class FacebookFriendsFragment extends BaseFragment {
     FacebookFriendsAdapter facebookFriendsAdapter;
     RecyclerView personRecyclerView;
     OnLoadedListener onLoadedListener;
+    boolean showTollbar;
+    LinearLayout toolbarLayout;
+    ImageView backImgv;
+    TextView toolbarTitleTv;
+    ProgressBar progressBar;
 
-    public FacebookFriendsFragment(OnLoadedListener onLoadedListener) {
+    public FacebookFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
         this.onLoadedListener = onLoadedListener;
+        this.showTollbar = showTollbar;
     }
 
     @Override
@@ -64,6 +74,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         initVariables();
+        checkToolbarVisibility();
         addListeners();
         checkUserLoggedInWithFacebook();
     }
@@ -82,13 +93,31 @@ public class FacebookFriendsFragment extends BaseFragment {
     public void initVariables() {
         personRecyclerView = mView.findViewById(R.id.specialRecyclerView);
         warningMsgTv = mView.findViewById(R.id.warningMsgTv);
+        toolbarLayout = mView.findViewById(R.id.toolbarLayout);
+        backImgv = mView.findViewById(R.id.backImgv);
+        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
+        progressBar = mView.findViewById(R.id.progressBar);
+    }
+
+    private void checkToolbarVisibility() {
+        if(showTollbar) {
+            toolbarLayout.setVisibility(View.VISIBLE);
+            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.FACEBOOK_FRIENDS));
+        }
     }
 
     private void addListeners() {
-
+        backImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     public void getFacebookFriends() {
+        progressBar.setVisibility(View.VISIBLE);
         AccountHolderFacebookFriends.getInstance(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
@@ -98,8 +127,8 @@ public class FacebookFriendsFragment extends BaseFragment {
                         getActivity().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
 
                 if (userListResponse != null && userListResponse.getItems() != null &&
-                        userListResponse.getItems().size() > 0) {
-                    facebookFriendsAdapter = new FacebookFriendsAdapter(getActivity(), userListResponse, new ListItemClickListener() {
+                        userListResponse.getItems().size() > 0 && getContext() != null) {
+                    facebookFriendsAdapter = new FacebookFriendsAdapter(getContext(), userListResponse, new ListItemClickListener() {
                         @Override
                         public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
                             displayUserProfile(rowItem, clickedPosition);
@@ -110,11 +139,13 @@ public class FacebookFriendsFragment extends BaseFragment {
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     personRecyclerView.setLayoutManager(linearLayoutManager);
                 }
+                progressBar.setVisibility(View.GONE);
                 onLoadedListener.onLoaded();
             }
 
             @Override
             public void onFailed(Exception e) {
+                progressBar.setVisibility(View.GONE);
                 onLoadedListener.onError(e.getMessage());
             }
         });
@@ -123,7 +154,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     private void displayUserProfile(FollowInfoResultArrayItem rowItem, int clickedPosition) {
 
         if (!rowItem.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
-            if (mFragmentNavigation != null) {
+            if (mFragmentNavigation != null && facebookFriendsAdapter != null) {
                 FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
                 followInfoListItem.setAdapter(facebookFriendsAdapter);
                 followInfoListItem.setClickedPosition(clickedPosition);

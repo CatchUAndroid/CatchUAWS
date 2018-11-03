@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 import com.uren.catchu.R;
 
@@ -25,7 +26,6 @@ import java.util.List;
 
 public class InviteContactsAdapter extends RecyclerView.Adapter<InviteContactsAdapter.MyViewHolder> implements Filterable {
 
-
     View view;
     LayoutInflater layoutInflater;
     Context context;
@@ -33,6 +33,7 @@ public class InviteContactsAdapter extends RecyclerView.Adapter<InviteContactsAd
     List<Contact> contactList = new ArrayList<>();
     List<Contact> orgContactList = new ArrayList<>();
     ItemClickListener itemClickListener;
+    ReturnCallback returnCallback;
 
     public InviteContactsAdapter(Context context, List<Contact> contactList, ItemClickListener itemClickListener) {
         layoutInflater = LayoutInflater.from(context);
@@ -118,6 +119,8 @@ public class InviteContactsAdapter extends RecyclerView.Adapter<InviteContactsAd
 
                 String searchString = charSequence.toString();
 
+                contactList.clear();
+
                 if (searchString.trim().isEmpty())
                     contactList.addAll(orgContactList);
                 else {
@@ -142,11 +145,17 @@ public class InviteContactsAdapter extends RecyclerView.Adapter<InviteContactsAd
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 contactList = (List<Contact>) filterResults.values;
                 notifyDataSetChanged();
+
+                if(contactList != null && contactList.size() > 0)
+                    returnCallback.onReturn(contactList.size());
+                else
+                    returnCallback.onReturn(0);
             }
         };
     }
 
-    public void updateAdapter(String searchText) {
+    public void updateAdapter(String searchText, ReturnCallback returnCallback) {
+        this.returnCallback = returnCallback;
         getFilter().filter(searchText);
     }
 

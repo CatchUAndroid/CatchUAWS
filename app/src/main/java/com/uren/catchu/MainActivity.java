@@ -88,18 +88,16 @@ public class MainActivity extends AppCompatActivity {
         User user = new User();
         Bundle extras = getIntent().getExtras();
         Provider provider = new Provider();
+        LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
 
-        if (extras != null) {
+        if (extras != null && loginUser != null) {
 
             /**
              * New user sign in
              */
-
-            LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
             user.setUserid(loginUser.getUserId());
             user.setUsername(loginUser.getUsername());
             user.setEmail(loginUser.getEmail());
-
 
             if (loginUser.getName() != null && !loginUser.getName().isEmpty()) {
                 user.setName(loginUser.getName());
@@ -118,14 +116,12 @@ public class MainActivity extends AppCompatActivity {
             /**
              * Already signed-in
              */
-
             user.setUserid(firebaseAuth.getCurrentUser().getUid());
             user.setEmail(firebaseAuth.getCurrentUser().getEmail());
             user.setUsername("default");
             provider.setProviderid("");
             provider.setProviderType("");
             user.setProvider(provider);
-
         }
 
         displayUserInfo(user);

@@ -103,5 +103,8 @@ public class StringConstants {
     //AWS null representer
     public static final String AWS_EMPTY = "empty";
 
+    //Dynamic Link constants
+    public static final String DYNAMIC_LINK_DOMAIN = "f2wrp.app.goo.gl";
+
 
 }

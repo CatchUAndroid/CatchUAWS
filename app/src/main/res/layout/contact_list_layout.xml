@@ -1,70 +1,103 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/specialSelectRelLayout"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Uygulamayi kullananlar"
-            android:gravity="center|left"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/DodgerBlue"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginBottom="5dp"
-            android:id="@+id/warningMsgLayout"
             android:visibility="gone">
 
-            <include layout="@layout/warning_message_tv"></include>
+            <include layout="@layout/common_toolbar_layout" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center|left"
+                android:text="@string/USERS_OF_APPLICATION"
+                android:textColor="@color/DodgerBlue"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/warningMsgLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="25dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/warningMsgTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/appUsersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center|left"
+                android:text="@string/invite"
+                android:textColor="@color/DodgerBlue"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/inviteRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+
+        <LinearLayout
+            android:id="@+id/inviteWarningMsgLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="25dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/inviteWarningMsgTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center" />
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/appUsersRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Davet"
-            android:gravity="center|left"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:textStyle="bold"
-            android:textColor="@color/DodgerBlue"/>
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/inviteRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.v7.widget.RecyclerView>
-
-
-   <!-- <include layout="@layout/layout_progress_bar" />-->
-
-</LinearLayout>
+    <include layout="@layout/layout_progress_bar" />
+</RelativeLayout>

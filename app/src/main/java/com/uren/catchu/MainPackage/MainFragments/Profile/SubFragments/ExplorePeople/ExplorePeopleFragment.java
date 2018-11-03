@@ -49,6 +49,9 @@ public class ExplorePeopleFragment extends BaseFragment {
 
     boolean facebookFragLoaded = false;
     boolean contactFragLoaded = false;
+    Handler handler = new Handler();
+
+    private static final int FRAGMENTS_LOADED_DELAY = 500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,7 +87,7 @@ public class ExplorePeopleFragment extends BaseFragment {
     private void initializeItems() {
         progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
         progressDialogUtil.dialogShow();
-        checkFragmentsLoaded();
+        handler.postDelayed(runnable, FRAGMENTS_LOADED_DELAY);
         overwriteToolbar();
 
         viewPager = view.findViewById(R.id.viewpager);
@@ -97,20 +100,16 @@ public class ExplorePeopleFragment extends BaseFragment {
         addListeners();
     }
 
-    private void checkFragmentsLoaded() {
-
-        final Handler handler = new Handler();
-
-        handler.postDelayed(new Runnable(){
-            public void run(){
-                if (facebookFragLoaded && contactFragLoaded) {
-                    progressDialogUtil.dialogDismiss();
-                    handler.removeCallbacksAndMessages(this);
-                }
-                handler.postDelayed(this, 500);
-            }
-        }, 500);
-    }
+    public Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            if (facebookFragLoaded && contactFragLoaded) {
+                progressDialogUtil.dialogDismiss();
+                handler.removeCallbacks(runnable);
+            } else
+                handler.postDelayed(this, FRAGMENTS_LOADED_DELAY);
+        }
+    };
 
     private void setupViewPager(final ViewPager viewPager) {
         facebookFriendsFragment = new FacebookFriendsFragment(new OnLoadedListener() {
@@ -128,7 +127,8 @@ public class ExplorePeopleFragment extends BaseFragment {
                     }
                 });
             }
-        });
+        }, false);
+
         contactFriendsFragment = new ContactFriendsFragment(new OnLoadedListener() {
             @Override
             public void onLoaded() {
@@ -144,7 +144,7 @@ public class ExplorePeopleFragment extends BaseFragment {
                     }
                 });
             }
-        });
+        }, false);
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));

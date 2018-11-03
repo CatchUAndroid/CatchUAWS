@@ -35,6 +35,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GroupPackage.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.GroupPackage.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
@@ -101,9 +102,10 @@ public class DisplayGroupDetailFragment extends BaseFragment {
     PermissionModule permissionModule;
     ProgressDialog mProgressDialog;
 
-    ProgressBar progressBar;
+    //ProgressBar progressBar;
     RecyclerView recyclerView;
     PhotoSelectUtil photoSelectUtil;
+    ProgressDialogUtil progressDialogUtil;
 
     public static DisplayGroupDetailFragment newInstance(String groupId) {
         Bundle args = new Bundle();
@@ -131,7 +133,6 @@ public class DisplayGroupDetailFragment extends BaseFragment {
 
             setGUIVariables();
             getGroupInformation();
-            getGroupParticipants();
             addListeners();
         }
         return mView;
@@ -143,34 +144,34 @@ public class DisplayGroupDetailFragment extends BaseFragment {
         personCntTv = mView.findViewById(R.id.personCntTv);
         addFriendCardView = mView.findViewById(R.id.addFriendCardView);
         deleteGroupCardView = mView.findViewById(R.id.deleteGroupCardView);
-        progressBar = mView.findViewById(R.id.progressBar);
+        //progressBar = mView.findViewById(R.id.progressBar);
         groupCoordinatorLayout = mView.findViewById(R.id.groupCoordinatorLayout);
         subtitleCollapsingToolbarLayout = mView.findViewById(R.id.collapsing_toolbar);
         permissionModule = new PermissionModule(getActivity());
         mProgressDialog = new ProgressDialog(getActivity());
         recyclerView = mView.findViewById(R.id.recyclerView);
         groupParticipantList = new ArrayList<>();
+        progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
     }
 
     private void getGroupInformation() {
-
+        progressDialogUtil.dialogShow();
         UserGroups.getInstance(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
                 groupRequestResultResultArrayItem = UserGroups.getGroupWithId(groupId);
 
-                if (groupRequestResultResultArrayItem == null)
-                    CommonUtils.showToast(getActivity(),
-                            getResources().getString(R.string.error) + getResources().getString(R.string.technicalError));
-                else {
+                if(groupRequestResultResultArrayItem != null){
                     setCardViewVisibility();
                     setGroupTitle();
                     setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                    getGroupParticipants();
                 }
             }
 
             @Override
             public void onFailed(Exception e) {
+                progressDialogUtil.dialogDismiss();
                 DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
@@ -199,22 +200,21 @@ public class DisplayGroupDetailFragment extends BaseFragment {
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                progressBar.setVisibility(View.GONE);
                 groupRequestResult = (GroupRequestResult) object;
                 groupParticipantList.addAll(groupRequestResult.getResultArrayParticipantList());
                 setParticipantCount();
                 setupViewRecyclerView();
+                progressDialogUtil.dialogDismiss();
             }
 
             @Override
             public void onFailure(Exception e) {
-                progressBar.setVisibility(View.GONE);
+                progressDialogUtil.dialogDismiss();
                 CommonUtils.showToast(getActivity(), getResources().getString(R.string.error) + e.getMessage());
             }
 
             @Override
             public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
             }
         }, groupRequest, token);
 

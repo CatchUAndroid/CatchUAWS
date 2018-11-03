@@ -14,7 +14,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -28,6 +30,7 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.PhoneNumberFormatUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.OnLoadedListener;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.ContactFriendsAdapter;
@@ -60,6 +63,8 @@ public class ContactFriendsFragment extends BaseFragment {
     RecyclerView inviteRecyclerView;
     LinearLayout warningMsgLayout;
     TextView warningMsgTv;
+    LinearLayout inviteWarningMsgLayout;
+    TextView inviteWarningMsgTv;
     PermissionModule permissionModule;
     ContactFriendsAdapter contactFriendsAdapter;
     InviteContactsAdapter inviteContactsAdapter;
@@ -67,9 +72,15 @@ public class ContactFriendsFragment extends BaseFragment {
     List<Contact> inviteContactsList;
     UserListResponse appUsersList;
     OnLoadedListener onLoadedListener;
+    LinearLayout toolbarLayout;
+    ImageView backImgv;
+    TextView toolbarTitleTv;
+    boolean showTollbar;
+    ProgressBar progressBar;
 
-    public ContactFriendsFragment(OnLoadedListener onLoadedListener) {
+    public ContactFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
         this.onLoadedListener = onLoadedListener;
+        this.showTollbar = showTollbar;
     }
 
     @Override
@@ -82,15 +93,17 @@ public class ContactFriendsFragment extends BaseFragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.contact_list_layout, container, false);
             ButterKnife.bind(this, mView);
+            initVariables();
+            checkToolbarVisibility();
+            addListeners();
+            getContactList();
         }
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initVariables();
-        addListeners();
-        getContactList();
+
     }
 
     public void initVariables() {
@@ -98,13 +111,32 @@ public class ContactFriendsFragment extends BaseFragment {
         inviteRecyclerView = mView.findViewById(R.id.inviteRecyclerView);
         warningMsgLayout = mView.findViewById(R.id.warningMsgLayout);
         warningMsgTv = mView.findViewById(R.id.warningMsgTv);
+        inviteWarningMsgLayout = mView.findViewById(R.id.inviteWarningMsgLayout);
+        inviteWarningMsgTv = mView.findViewById(R.id.inviteWarningMsgTv);
+        toolbarLayout = mView.findViewById(R.id.toolbarLayout);
+        backImgv = mView.findViewById(R.id.backImgv);
+        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
+        progressBar = mView.findViewById(R.id.progressBar);
         permissionModule = new PermissionModule(getActivity());
         reformedContactList = new ArrayList<>();
         inviteContactsList = new ArrayList<>();
     }
 
-    private void addListeners() {
+    private void checkToolbarVisibility() {
+        if(showTollbar) {
+            toolbarLayout.setVisibility(View.VISIBLE);
+            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.CONTACT_FRIENDS));
+        }
+    }
 
+    private void addListeners() {
+        backImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+                getActivity().onBackPressed();
+            }
+        });
     }
 
     public void getContactList() {
@@ -116,7 +148,7 @@ public class ContactFriendsFragment extends BaseFragment {
     }
 
     public void startGetContactList() {
-        //progressDialogUtil.dialogShow();
+        progressBar.setVisibility(View.VISIBLE);
         AccountHolderContactsProcess.getContactList(getActivity(), new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
@@ -143,6 +175,7 @@ public class ContactFriendsFragment extends BaseFragment {
 
                     @Override
                     public void onFailed(Exception e) {
+                        progressBar.setVisibility(View.GONE);
                         onLoadedListener.onError(e.getMessage());
                     }
                 });
@@ -150,6 +183,7 @@ public class ContactFriendsFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
+                progressBar.setVisibility(View.GONE);
                 onLoadedListener.onError(e.getMessage());
             }
         });
@@ -185,29 +219,31 @@ public class ContactFriendsFragment extends BaseFragment {
                         if (object != null) {
                             appUsersList = (UserListResponse) object;
 
-                            if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
-                                contactFriendsAdapter = new ContactFriendsAdapter(getActivity(), appUsersList, new ItemClickListener() {
-                                    @Override
-                                    public void onClick(Object object, int clickedItem) {
-                                        displayUserProfile((String) object, clickedItem);
-                                    }
-                                });
-                                appUsersRecyclerView.setAdapter(contactFriendsAdapter);
-                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-                                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                                appUsersRecyclerView.setLayoutManager(linearLayoutManager);
-                            } else {
-                                warningMsgLayout.setVisibility(View.VISIBLE);
-                                MessageDataUtil.setWarningMessageVisibility(null, warningMsgTv,
-                                        getActivity().getResources().getString(R.string.THERE_IS_NO_CONTACTFRIEND_WHO_USING_CATCHU));
-                            }
+                            if(getContext() != null) {
+                                if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
+                                    contactFriendsAdapter = new ContactFriendsAdapter(getContext(), appUsersList, new ItemClickListener() {
+                                        @Override
+                                        public void onClick(Object object, int clickedItem) {
+                                            displayUserProfile((String) object, clickedItem);
+                                        }
+                                    });
+                                    appUsersRecyclerView.setAdapter(contactFriendsAdapter);
+                                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+                                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                                    appUsersRecyclerView.setLayoutManager(linearLayoutManager);
+                                } else {
+                                    warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_CONTACTFRIEND_WHO_USING_CATCHU));
+                                    warningMsgLayout.setVisibility(View.VISIBLE);
+                                }
 
-                            setInviteFriendsAdapter();
+                                setInviteFriendsAdapter();
+                            }
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
+                        progressBar.setVisibility(View.GONE);
                         onLoadedListener.onError(e.getMessage());
                     }
 
@@ -226,8 +262,8 @@ public class ContactFriendsFragment extends BaseFragment {
 
         prepareInviteContactList();
 
-        if (inviteContactsList != null && inviteContactsList.size() > 0) {
-            inviteContactsAdapter = new InviteContactsAdapter(getActivity(), inviteContactsList, new ItemClickListener() {
+        if (inviteContactsList != null && inviteContactsList.size() > 0 && getContext() != null) {
+            inviteContactsAdapter = new InviteContactsAdapter(getContext(), inviteContactsList, new ItemClickListener() {
                 @Override
                 public void onClick(Object object, int clickedItem) {
                     Contact contact = (Contact) object;
@@ -240,6 +276,7 @@ public class ContactFriendsFragment extends BaseFragment {
             inviteRecyclerView.setLayoutManager(linearLayoutManager);
         }
 
+        progressBar.setVisibility(View.GONE);
         onLoadedListener.onLoaded();
     }
 
@@ -299,8 +336,35 @@ public class ContactFriendsFragment extends BaseFragment {
     }
 
     public void updateAdapter(String searchText) {
-        if (searchText != null && contactFriendsAdapter != null)
-            contactFriendsAdapter.updateAdapter(searchText);
+        if (searchText != null && contactFriendsAdapter != null) {
+            contactFriendsAdapter.updateAdapter(searchText, new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    int itemSize = (int) object;
+
+                    if(itemSize == 0){
+                        warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
+                        warningMsgLayout.setVisibility(View.VISIBLE);
+                    }else
+                        warningMsgLayout.setVisibility(View.GONE);
+                }
+            });
+        }
+
+        if(searchText != null && inviteContactsAdapter != null){
+            inviteContactsAdapter.updateAdapter(searchText, new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    int itemSize = (int) object;
+
+                    if(itemSize == 0){
+                        inviteWarningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
+                        inviteWarningMsgLayout.setVisibility(View.VISIBLE);
+                    }else
+                        inviteWarningMsgLayout.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
 }

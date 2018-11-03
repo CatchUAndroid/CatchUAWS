@@ -165,15 +165,14 @@ public class FollowingFragment extends BaseFragment
                 CommonUtils.showToast(getContext(), "Clicked : " + rowItem.getName());
                 startFollowingInfoProcess(rowItem, clickedPosition);
             }
-
         };
 
-
-        followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray(), listItemClickListener);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        following_recyclerView.setLayoutManager(mLayoutManager);
-        following_recyclerView.setAdapter(followAdapter);
+        if(getActivity() != null) {
+            followAdapter = new FollowAdapter(getContext(), followInfo.getResultArray(), listItemClickListener);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            following_recyclerView.setLayoutManager(mLayoutManager);
+            following_recyclerView.setAdapter(followAdapter);
+        }
     }
 
     private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {

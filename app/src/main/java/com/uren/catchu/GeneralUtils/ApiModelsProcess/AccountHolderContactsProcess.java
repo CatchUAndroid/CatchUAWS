@@ -10,6 +10,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Con
 import com.uren.catchu.Singleton.AccountHolderContactList;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AccountHolderContactsProcess {
@@ -42,6 +44,14 @@ public class AccountHolderContactsProcess {
             previousPhoneNum = phoneNumber;
         }
         phones.close();
+        Collections.sort(contactList, new CustomComparator());
         completeCallback.onComplete(contactList);
+    }
+
+    public static class CustomComparator implements Comparator<Contact> {
+        @Override
+        public int compare(Contact o1, Contact o2) {
+            return o1.getName().compareToIgnoreCase(o2.getName());
+        }
     }
 }

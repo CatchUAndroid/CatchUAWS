@@ -165,12 +165,12 @@ public class FollowerFragment extends BaseFragment
             }
         };
 
-        followAdapter = new FollowAdapter(getActivity(), followInfo.getResultArray(), listItemClickListener);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        follower_recyclerView.setLayoutManager(mLayoutManager);
-        follower_recyclerView.setAdapter(followAdapter);
-
+        if(getActivity() != null) {
+            followAdapter = new FollowAdapter(getContext(), followInfo.getResultArray(), listItemClickListener);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+            follower_recyclerView.setLayoutManager(mLayoutManager);
+            follower_recyclerView.setAdapter(followAdapter);
+        }
     }
 
     private void startFollowerInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
@@ -180,17 +180,7 @@ public class FollowerFragment extends BaseFragment
             FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
             followInfoListItem.setAdapter(followAdapter);
             followInfoListItem.setClickedPosition(clickedPosition);
-
             mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
-
-            //mFragmentNavigation.pushFragment(new UserEditFragment());
-
         }
-
-
-
-
     }
-
-
 }

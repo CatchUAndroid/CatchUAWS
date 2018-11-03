@@ -85,6 +85,8 @@
     <string name="REMAINING_TIME">Kalan Süre : </string>
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">Size verilen süre içinde kodu girmediniz. Lütfen tekrar kodu gönderiniz!</string>
     <string name="UPDATE_IS_SUCCESSFUL">Güncelendi</string>
+    <string name="THERE_IS_NO_SEARCH_RESULT">Hiç bir sonuç bulunamadı.</string>
+    <string name="USERS_OF_APPLICATION">Uygulamayı Kullananlar</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -137,6 +139,20 @@
     <string name="THERE_IS_NO_PENDING_REQUEST">Bekleyen isteğiniz bulunmamaktadır</string>
     <string name="CONTACT_INVITE_MESSAGE">CatchU\'da paylaşım yapıp arkadaşlarını takip etmek ister misin? Uygulamayı bu linkten indirebilirsin:</string>
     <string name="CONNECT_FACEBOOK">Facebook\'a Bağlan</string>
+    <string name="INVITE_YOUR_FRIENDS">Arkadaşlarını Davet Et</string>
+    <string name="ADD_YOUR_FRIENDS">Arkadaşlarını Ekle</string>
+    <string name="FACEBOOK_FRIENDS">Facebook Arkadaşları</string>
+    <string name="ACCOUNT">Hesap</string>
+    <string name="CHANGE_PASSWORD">Şifreyi Değiştir</string>
+    <string name="SUPPORT">Destek</string>
+    <string name="HELP_CENTER">Yardım Merkezi</string>
+    <string name="REPORT_PROBLEM">Sorun Bildir</string>
+    <string name="CONTACT_FRIENDS">Rehber Kişileri</string>
+
+    <!-- Change Password variables-->
+    <string name="CURRENT_PASSWORD">Mevcut şifre</string>
+    <string name="NEW_PASSWORD">Yeni şifre</string>
+    <string name="NEW_PASSWORD_AGAIN">Yeni şifre, tekrar</string>
 
     <!-- LoginActivity Constants-->
     // Uygulama alanlari
@@ -159,6 +175,7 @@
     <string name="PASSWORD_ERR_REQUIRED">Şifre boş olamaz!</string>
     <string name="PASSWORD_ERR_LENGTH">Şifre en az 6 karakter olmalıdır!</string>
     <string name="USERNAME_ERR_REQUIRED">Kullanıcı adı boş olamaz!</string>
+    <string name="CHECK_PASSWORD_VALIDATION_VALUE">Doğrulama alanı hatali. Tekrar kontrol ediniz.</string>
     <string name="COLLISION_EXCEPTION">E-mail adresi kayıtlı. Lütfen başka e-mail adresi giriniz.</string>
     <string name="INVALID_CREDENTIALS">Email veya şifre yanlış..</string>
     <string name="INVALID_USER">Email adresi tanımlı değil..</string>
@@ -169,6 +186,8 @@
     <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
     <string name="SHARE_IS_SUCCESSFUL">Paylaşım Başarılı</string>
     <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Doğrulama Başarılı</string>
+    <string name="PASSWORD_IS_CHANGED">Şifre değiştirildi</string>
+    <string name="CURRENT_PASSWORD_INCORRECT">Mevcut şifre hatalı</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
