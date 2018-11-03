@@ -4,36 +4,55 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="5dp">
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_gravity="center"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0.0px"
+        android:elevation="2dp"
+        card_view:cardCornerRadius="5dp"
+        card_view:cardElevation="4dp"
+        card_view:cardPreventCornerOverlap="false"
+        >
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_view"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            >
+            android:orientation="vertical"
+            android:id="@+id/llContent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="10dp"
+                android:id="@+id/llTop">
 
-                <RelativeLayout
-                    android:id="@+id/rlProfileImage"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="5dp">
+                <!-- Profile layout/-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:gravity="center|left"
+
+                    android:id="@+id/llProfile">
 
                     <!-- Profile Picture /-->
                     <LinearLayout
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:layout_centerHorizontal="true">
+                        android:layout_centerHorizontal="true"
+                        android:id="@+id/llProfileImage">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -58,74 +77,100 @@
 
                     </LinearLayout>
 
-                </RelativeLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtUsername"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:textSize="17sp"
+                        android:layout_marginLeft="10dp"/>
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <android.support.v7.widget.CardView
+                    android:layout_height="match_parent"
+                    android:id="@+id/llDate"
+                    android:gravity="center|right"
+                    >
+                    <TextView
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:elevation="2dp"
-                        card_view:cardCornerRadius="20dp"
-                        card_view:cardElevation="4dp"
-                        card_view:cardBackgroundColor="@color/commentBackground"
-                        android:layout_marginRight="5dp"
-                        android:id="@+id/cardViewComment">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_margin="10dp"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="denemeeee"
-                                android:id="@+id/txtUsername"
-                                android:textColor="@color/black"
-                                android:textStyle="bold"
-                                android:textSize="17sp"/>
-
-
-                            <TextView
-                                android:id="@+id/commentMessage"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textSize="20sp"
-                                android:textColor="@color/black"/>
-
-
-
-                        </LinearLayout>
-
-                    </android.support.v7.widget.CardView>
-
-                    <LinearLayout
-                        android:id="@+id/infoLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="5dp"
-                        android:orientation="horizontal">
-
-                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@mipmap/icon_like" />
-
-                    </LinearLayout>
-
+                        android:layout_height="wrap_content"
+                        android:text="10 days ago"
+                        android:id="@+id/txtCreateDate"
+                        />
                 </LinearLayout>
 
 
             </LinearLayout>
 
-        </android.support.v7.widget.CardView>
 
-    </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom"
+                android:background="#cccccc" />
+
+            <!-- Content layout/-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp">
+
+
+                <TextView
+                    android:id="@+id/commentMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"
+                    android:text="sfsfsdfsd"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/infoLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                >
+
+                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@mipmap/icon_like"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/imgLike"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/txtLikeCount"
+                    android:layout_marginRight="20dp"/>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/like"
+                    android:gravity="center"
+                    android:background="@drawable/btn_feed_action"
+                    android:clickable="true"
+                    android:id="@+id/txtLike"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
 
 
 </RelativeLayout>

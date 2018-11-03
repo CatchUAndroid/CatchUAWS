@@ -563,7 +563,7 @@ public class FeedFragment extends BaseFragment {
     private void setLocationInfo() {
         longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
         latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
-        radius = "100";
+        radius = "1000000";
 
     }
 

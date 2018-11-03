@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -29,7 +30,10 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.CommentListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.Utils;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
@@ -37,6 +41,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.SendCommentButton.SendCommentButton;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,7 +60,9 @@ public class CommentListFragment extends BaseFragment
 
     View mView;
     String postId;
+    int position;
     CommentListAdapter commentListAdapter;
+    LinearLayoutManager mLayoutManager;
 
     @BindView(R.id.toolbarLayout)
     Toolbar toolbarLayout;
@@ -84,9 +92,10 @@ public class CommentListFragment extends BaseFragment
 
     private int drawingStartLocation = 0;
 
-    public static CommentListFragment newInstance(String postId) {
+    public static CommentListFragment newInstance(String postId, int position) {
         Bundle args = new Bundle();
         args.putString("postId", postId);
+        args.putInt("position", position);
         CommentListFragment fragment = new CommentListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -129,12 +138,25 @@ public class CommentListFragment extends BaseFragment
         Bundle args = getArguments();
         if (args != null) {
             postId = (String) args.getString("postId");
+            position = (Integer) args.getInt("position");
         }
     }
     private void init() {
         txtToolbarTitle.setText(R.string.comments);
         imgBack.setOnClickListener(this);
         btnSendComment.setOnSendClickListener(this);
+
+        setLayoutManager();
+        setAdapter();
+    }
+
+    private void setLayoutManager() {
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        commentList_recyclerView.setLayoutManager(mLayoutManager);
+    }
+    private void setAdapter() {
+        commentListAdapter = new CommentListAdapter(getContext(), postId);
+        commentList_recyclerView.setAdapter(commentListAdapter);
     }
 
     private void startIntroAnimation() {
@@ -205,11 +227,9 @@ public class CommentListFragment extends BaseFragment
 
     private void setUpRecyclerView(CommentListResponse commentList) {
 
-        commentListAdapter = new CommentListAdapter(getActivity(), commentList);
         commentListAdapter.setPersonListItemClickListener(this);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        commentList_recyclerView.setLayoutManager(mLayoutManager);
-        commentList_recyclerView.setAdapter(commentListAdapter);
+        commentListAdapter.addAll(commentList.getItems());
+
 
         contentRoot.animate()
                 .scaleY(1)
@@ -263,6 +283,9 @@ public class CommentListFragment extends BaseFragment
 
         Comment comment = new Comment() ;
         comment.setMessage(edtAddComment.getText().toString());
+        comment.setLikeCount(0);
+        comment.setIsLiked(false);
+        comment.setCreateAt("Just now");
         comment.setUser(user);
         return comment;
     }
@@ -282,12 +305,12 @@ public class CommentListFragment extends BaseFragment
     public void onSendClickListener(View v) {
         if (validateComment()) {
             Comment comment = createCommentBody();
-            PostHelper.AddComment.startProcess(getContext(), postId, comment);
+            PostHelper.AddComment.startProcess(getContext(), postId, comment, position);
             commentListAdapter.add(comment);
             commentListAdapter.setAnimationsLocked(false);
             commentListAdapter.setDelayEnterAnimation(false);
-            commentList_recyclerView.smoothScrollBy(0, commentList_recyclerView.getChildAt(0).getHeight() * commentListAdapter.getItemCount());
 
+           commentList_recyclerView.smoothScrollToPosition(commentListAdapter.getItemCount());
             edtAddComment.setText(null);
             btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
         }
