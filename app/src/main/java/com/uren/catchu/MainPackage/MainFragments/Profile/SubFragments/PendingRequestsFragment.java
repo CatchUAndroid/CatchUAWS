@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -36,19 +37,22 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 public class PendingRequestsFragment extends BaseFragment {
 
     RecyclerView following_recyclerView;
-    TextView toolbarTitle;
+
     View mView;
     PendingRequestAdapter pendingRequestAdapter;
     LinearLayoutManager linearLayoutManager;
 
     @BindView(R.id.progressBar)
     public ProgressBar progressBar;
-    @BindView(R.id.imgBack)
-    ClickableImageView imgBack;
-    @BindView(R.id.imgAddFollowing)
-    ClickableImageView imgAddFollowing;
+
     @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
+
+    @BindView(R.id.backImgv)
+    ImageView backImgv;
+
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
 
     public PendingRequestsFragment() {
     }
@@ -68,15 +72,13 @@ public class PendingRequestsFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         following_recyclerView = mView.findViewById(R.id.following_recyclerView);
-        toolbarTitle = mView.findViewById(R.id.toolbarTitle);
-        toolbarTitle.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
-        imgAddFollowing.setVisibility(View.GONE);
+        toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
         addListeners();
         getData();
     }
 
     private void addListeners() {
-        imgBack.setOnClickListener(new View.OnClickListener() {
+        backImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;

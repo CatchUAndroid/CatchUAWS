@@ -98,7 +98,7 @@ public class UserEditFragment extends BaseFragment
     private ArrayAdapter<String> genderSpinnerAdapter;
 
     //Change Image variables
-    private boolean profilPicChanged;
+    boolean profilPicChanged = false;
     Bitmap bitmap;
     boolean photoExist = false;
 
@@ -106,22 +106,24 @@ public class UserEditFragment extends BaseFragment
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.toolbarLayout)
-    Toolbar mToolBar;
-    @BindView(R.id.toolbarTitle)
-    TextView toolbarTitle;
+
     //@BindView(R.id.rlCoverPicture)
     //RelativeLayout rlCoverPicture;
     @BindView(R.id.rlProfilePicture)
     RelativeLayout rlProfilePicture;
 
+    @BindView(R.id.backImgv)
+    ImageView backImgv;
+
+    @BindView(R.id.nextImgv)
+    ImageView nextImgv;
+
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
+
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
 
-    @BindView(R.id.txtCancel)
-    TextView txtCancel;
-    @BindView(R.id.txtSave)
-    TextView txtSave;
     @BindView(R.id.shortUserNameTv)
     TextView shortUserNameTv;
 
@@ -146,9 +148,6 @@ public class UserEditFragment extends BaseFragment
 
     @BindView(R.id.edtPhone)
     EditText edtPhone;
-
-    //@BindView(R.id.edtGender)
-    EditText edtGender;
 
     @BindView(R.id.genderSpinner)
     Spinner genderSpinner;
@@ -186,8 +185,8 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void init() {
-        txtSave.setOnClickListener(this);
-        txtCancel.setOnClickListener(this);
+        nextImgv.setOnClickListener(this);
+        backImgv.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
         edtBirthDay.setOnClickListener(this);
         edtPhone.setOnClickListener(this);
@@ -195,8 +194,10 @@ public class UserEditFragment extends BaseFragment
         setGenderClickListener();
         profilPicChanged = false;
         userProfileProperties = new UserProfileProperties();
-
+        toolbarTitleTv.setText(getContext().getResources().getString(R.string.editProfile));
+        nextImgv.setVisibility(View.VISIBLE);
     }
+
 
     private void setBirthDayDataSetListener() {
         mDateSetListener = new DatePickerDialog.OnDateSetListener() {
@@ -302,11 +303,11 @@ public class UserEditFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == txtCancel) {
+        if (v == backImgv) {
             editProfileCancelClicked();
         }
 
-        if (v == txtSave) {
+        if (v == nextImgv) {
             CommonUtils.hideKeyBoard(getActivity());
             editProfileConfirmClicked();
         }
@@ -378,7 +379,6 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setProfilePhotoUrl(userProfile.getUserInfo().getProfilePhotoUrl());
         }
 
-
         if (edtName.getText().toString().isEmpty()) {
             userProfileProperties.setName("");
         } else {
@@ -408,13 +408,6 @@ public class UserEditFragment extends BaseFragment
         } else {
             userProfileProperties.setEmail(edtEmail.getText().toString());
         }
-        /*
-        if (edtPhone.getText().toString().isEmpty()) {
-            userProfileProperties.setPhone("");
-        } else {
-            userProfileProperties.setPhone(edtPhone.getText().toString());
-        }
-        */
 
         userProfileProperties.setPhone(userProfile.getUserInfo().getPhone());
 

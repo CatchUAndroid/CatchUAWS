@@ -144,10 +144,6 @@
                 </LinearLayout>
 
 
-                <!--android:layout_marginBottom="48dp"
-                   app:layout_collapseMode="pin"
-                   yaparsak toolbar tepede sabit kalır.
-                /-->
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/htab_toolbar"
                     android:layout_width="match_parent"

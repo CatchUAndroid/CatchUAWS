@@ -148,6 +148,7 @@
     <string name="HELP_CENTER">Yardım Merkezi</string>
     <string name="REPORT_PROBLEM">Sorun Bildir</string>
     <string name="CONTACT_FRIENDS">Rehber Kişileri</string>
+    <string name="PRIVATE_ACCOUNT">Gizli Hesap</string>
 
     <!-- Change Password variables-->
     <string name="CURRENT_PASSWORD">Mevcut şifre</string>
@@ -167,6 +168,12 @@
     <string name="sendLink">Link Gönder</string>
     <string name="forgetPassText">Mail adresinize göndereceğimiz link ile şifrenizi sıfırlayabilirsiniz.</string>
     <string name="rememberMe">Beni Hatırla</string>
+
+    <!-- User edit constants constants-->
+    <string name="NAME">İsim</string>
+    <string name="BIRTHDAY">Doğum günü</string>
+    <string name="PHONE">Telefon</string>
+    <string name="GENDER">Cinsiyet</string>
 
     // Mesajlar-Uyarılar
     <string name="UNKNOWN_ERROR">İşlem tamamlanamadı!</string>

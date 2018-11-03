@@ -5,86 +5,78 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
+    android:gravity="center"
     app:elevation="@dimen/default_elevation"
     app:layout_scrollFlags="scroll|enterAlways"
-    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    android:gravity="center">
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <!-- değişiklikler burada yapılmalı/-->
-        <LinearLayout
-            android:id="@+id/l2"
+    <!-- değişiklikler burada yapılmalı/-->
+    <LinearLayout
+        android:id="@+id/l2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:layout_marginRight="30dp">
 
-            <RelativeLayout
-                android:id="@+id/rl"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:src="@mipmap/search" />
+
+            <EditText
+                android:id="@+id/editTextSearch"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="30dp">
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:focusedByDefault="false"
+                android:gravity="left"
+                android:hint="Ara"
+                android:inputType="text"
+                android:paddingTop="15dp"
+                android:textColor="@color/white"
+                android:textColorHint="@color/clearWhite" />
 
+            <ImageView
+                android:id="@+id/imgCancelSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="30dp"
+                android:src="@mipmap/cancel2"
+                android:visibility="gone" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingLeft="10dp"
-                    android:src="@mipmap/search" />
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/r2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginRight="30dp">
 
-                <EditText
-                    android:id="@+id/editTextSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_marginLeft="30dp"
-                    android:layout_marginRight="30dp"
-                    android:focusedByDefault="false"
-                    android:gravity="left"
-                    android:hint="Ara"
-                    android:inputType="text"
-                    android:paddingTop="15dp"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/clearWhite" />
+            <TextView
+                android:id="@+id/txtAddGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="20dp"
+                android:text="@string/addGroup"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
-                <ImageView
-                    android:id="@+id/imgCancelSearch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingRight="30dp"
-                    android:src="@mipmap/cancel2"
-                    android:visibility="gone" />
+        </RelativeLayout>
 
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/r2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginRight="30dp">
-
-                <TextView
-                    android:id="@+id/txtAddGroup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:paddingRight="20dp"
-                    android:text="@string/addGroup"
-                    android:textSize="20sp"
-                    android:textColor="@color/white"
-                    />
-
-
-            </RelativeLayout>
-
-
-        </LinearLayout>
-
-
+    </LinearLayout>
 
 </android.support.v7.widget.Toolbar>

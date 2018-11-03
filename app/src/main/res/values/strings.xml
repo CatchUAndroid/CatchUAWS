@@ -164,6 +164,7 @@
     <string name="HELP_CENTER">Help Center</string>
     <string name="REPORT_PROBLEM">Report a Problem</string>
     <string name="CONTACT_FRIENDS">Contact Friends</string>
+    <string name="PRIVATE_ACCOUNT">Private Account</string>
 
     <!-- Change Password variables-->
     <string name="CURRENT_PASSWORD">Current password</string>
@@ -201,6 +202,12 @@
     <string name="sendLink">Send Link</string>
     <string name="forgetPassText">We will send a link to your mail address. You can renew your password.</string>
     <string name="rememberMe">Remember Me</string>
+
+    <!-- User edit constants constants-->
+    <string name="NAME">Name</string>
+    <string name="BIRTHDAY">Birthday</string>
+    <string name="PHONE">Phone</string>
+    <string name="GENDER">Gender</string>
 
     //Messages-Warnings
     <string name="UNKNOWN_ERROR">Operation failed!</string>
