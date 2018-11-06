@@ -97,15 +97,15 @@ public class FeedFragment extends BaseFragment {
     TextView txtProfile;
 
     private boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt = FEED_PERPAGE_COUNT;
     private int pageCnt = FEED_PAGE_COUNT;
-    List<Post> postList = new ArrayList<Post>();
+    private List<Post> postList = new ArrayList<Post>();
     private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
     private boolean pulledToRefresh = false;
     private boolean isFirstFetch = false;
 
-    //todo : NT degerler current locationdan alınacak..
+    //Location
     private LocationTrackerAdapter locationTrackObj;
     PermissionModule permissionModule;
     String longitude;
@@ -206,16 +206,16 @@ public class FeedFragment extends BaseFragment {
                 {
                     visibleItemCount = mLayoutManager.getChildCount();
                     totalItemCount = mLayoutManager.getItemCount();
-                    pastVisiblesItems = mLayoutManager.findFirstVisibleItemPosition();
+                    pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
 
                     Log.i("visibleItemCount", String.valueOf(visibleItemCount));
                     Log.i("totalItemCount", String.valueOf(totalItemCount));
-                    Log.i("pastVisiblesItems", String.valueOf(pastVisiblesItems));
+                    Log.i("pastVisibleItems", String.valueOf(pastVisibleItems));
                     Log.i("loading", String.valueOf(loading));
 
                     if (loading) {
 
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             loading = false;
                             Log.v("...", "Last Item Wow !");
                             //Do pagination.. i.e. fetch new data
