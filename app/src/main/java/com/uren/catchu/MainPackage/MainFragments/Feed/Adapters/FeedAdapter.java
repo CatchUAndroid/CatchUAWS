@@ -52,8 +52,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
-    private HashMap<String, Post> postHashMap;
-    HashMap<String, Post> tempPostHashMap;
     private HashMap<String, Integer> postPositionHashMap;
 
 
@@ -63,8 +61,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.postList = new ArrayList<Post>();
-        this.postHashMap = new HashMap<String, Post>();
-        this.tempPostHashMap = new HashMap<String, Post>();
         this.postPositionHashMap = new HashMap<String, Integer>();
     }
 
@@ -284,7 +280,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(Post post, int position) {
-
+            
+            //her postID bir position ile entegre halde...
             postPositionHashMap.put(post.getPostid(), position);
 
             this.position = position;
@@ -370,9 +367,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
     public void addAll(List<Post> addedPostList) {
         if (addedPostList != null) {
-            for (int i = 0; i < addedPostList.size(); i++) {
-                postHashMap.put(addedPostList.get(i).getPostid(), addedPostList.get(i));
-            }
             postList.addAll(addedPostList);
             notifyItemRangeInserted(postList.size(), postList.size() + addedPostList.size());
         }
