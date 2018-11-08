@@ -1,4 +1,4 @@
-package com.uren.catchu.GroupPackage.Utils;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -12,8 +12,6 @@ import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Interfaces.ServiceCompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;

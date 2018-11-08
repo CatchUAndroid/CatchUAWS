@@ -15,12 +15,12 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
-import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.R;
@@ -160,18 +160,19 @@ public class EditGroupNameFragment extends BaseFragment{
     public void updateGroup() {
         groupRequestResultResultArrayItem.setName(groupNameEditText.getText().toString());
 
-        new UpdateGroupProcess(getContext(), null, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
-            @Override
-            public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
-                completeCallback.onComplete(groupNameEditText.getText().toString());
-                getActivity().onBackPressed();
-            }
+        UserGroupsProcess.updateGroup(getContext(), null, groupRequestResultResultArrayItem,
+                new UpdateGroupCallback() {
+                    @Override
+                    public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
+                        completeCallback.onComplete(groupNameEditText.getText().toString());
+                        getActivity().onBackPressed();
+                    }
 
-            @Override
-            public void onFailed(Exception e) {
-                completeCallback.onFailed(e);
-            }
-        });
+                    @Override
+                    public void onFailed(Exception e) {
+                        completeCallback.onFailed(e);
+                    }
+                });
     }
 
 }

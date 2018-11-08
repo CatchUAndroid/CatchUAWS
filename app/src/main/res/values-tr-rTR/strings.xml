@@ -202,6 +202,8 @@
     <string name="YOU_LIKED_POSTS">Beğendiğin Gönderiler</string>
     <string name="POST_DETAIL">Paylaşım Detayı</string>
     <string name="THERE_IS_NO_MEDIA_TO_POST">Paylaşım için herhangi bir medya seçilmedi</string>
+    <string name="SHOW_IN_LIST_MODE">Liste Şeklinde Göster</string>
+    <string name="SHOW_IN_NORMAL_MODE">Normal Göster</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

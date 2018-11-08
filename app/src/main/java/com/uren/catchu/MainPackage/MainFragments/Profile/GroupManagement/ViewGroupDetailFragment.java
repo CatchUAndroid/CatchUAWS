@@ -1,4 +1,5 @@
-package com.uren.catchu.GroupPackage;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement;
+
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -34,7 +35,6 @@ import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
-import com.uren.catchu.GroupPackage.Utils.UpdateGroupProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
@@ -68,7 +68,7 @@ import static com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.
 import static com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter.CODE_REMOVE_FROM_GROUP;
 
 @SuppressLint("ValidFragment")
-public class DisplayGroupDetailFragment extends BaseFragment {
+public class ViewGroupDetailFragment extends BaseFragment {
 
     View mView;
 
@@ -106,7 +106,7 @@ public class DisplayGroupDetailFragment extends BaseFragment {
 
     RecyclerViewAdapterCallback recyclerViewAdapterCallback;
 
-    public DisplayGroupDetailFragment(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, RecyclerViewAdapterCallback recyclerViewAdapterCallback) {
+    public ViewGroupDetailFragment(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, RecyclerViewAdapterCallback recyclerViewAdapterCallback) {
         this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
         this.recyclerViewAdapterCallback = recyclerViewAdapterCallback;
     }
@@ -217,7 +217,7 @@ public class DisplayGroupDetailFragment extends BaseFragment {
 
                 if (mFragmentNavigation != null) {
                     mFragmentNavigation.pushFragment(new SelectFriendFragment(groupRequestResultResultArrayItem.getGroupid(),
-                            groupParticipantList, DisplayGroupDetailFragment.class.getName(),
+                            groupParticipantList, ViewGroupDetailFragment.class.getName(),
                             new ReturnCallback() {
                                 @Override
                                 public void onReturn(Object object) {
@@ -408,24 +408,26 @@ public class DisplayGroupDetailFragment extends BaseFragment {
     }
 
     public void updateGroup() {
-        new UpdateGroupProcess(getActivity(), photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
-            @Override
-            public void onSuccess(final GroupRequestResultResultArrayItem groupItem) {
-                if (groupItem != null) {
-                    groupRequestResultResultArrayItem = groupItem;
-                    setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
-                    recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
-                }
-            }
 
-            @Override
-            public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+        UserGroupsProcess.updateGroup(getContext(), photoSelectUtil, groupRequestResultResultArrayItem,
+                new UpdateGroupCallback() {
                     @Override
-                    public void okClick() {
+                    public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
+                        if (groupItem != null) {
+                            groupRequestResultResultArrayItem = groupItem;
+                            setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                            recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+                        DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+                            }
+                        });
                     }
                 });
-            }
-        });
     }
 }

@@ -2,19 +2,15 @@ package com.uren.catchu.GeneralUtils.ApiModelsProcess;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.view.View;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.GroupPackage.Utils.SaveGroupProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.SaveGroupProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.UpdateGroupProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.R;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
@@ -23,6 +19,7 @@ import java.util.List;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.StringConstants.ADD_PARTICIPANT_INTO_GROUP;
 import static com.uren.catchu.Constants.StringConstants.CHANGE_GROUP_ADMIN;
@@ -92,6 +89,21 @@ public class UserGroupsProcess {
             @Override
             public void onFailed(Exception e) {
                 completeCallback.onFailed(e);
+            }
+        });
+    }
+
+    public static void updateGroup(Context context, PhotoSelectUtil photoSelectUtil, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem,
+                                   final UpdateGroupCallback updateGroupCallback){
+        new UpdateGroupProcess(context, photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
+            @Override
+            public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
+                updateGroupCallback.onSuccess(groupItem);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                updateGroupCallback.onFailed(e);
             }
         });
     }

@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement;
 
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -28,16 +26,13 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GroupPackage.DisplayGroupDetailFragment;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserGroupsListAdapter;
-import com.uren.catchu.MainPackage.NextActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareDetailFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedGroupList;
 
@@ -231,7 +226,7 @@ public class GroupManagementFragment extends BaseFragment {
                                     selectedGroupItem = (GroupRequestResultResultArrayItem) object;
 
                                     if (mFragmentNavigation != null)
-                                        mFragmentNavigation.pushFragment(new DisplayGroupDetailFragment(selectedGroupItem, new RecyclerViewAdapterCallback() {
+                                        mFragmentNavigation.pushFragment(new ViewGroupDetailFragment(selectedGroupItem, new RecyclerViewAdapterCallback() {
                                             @Override
                                             public void OnRemoved() {
                                                 localGroupOperation(ITEM_REMOVED, null);

@@ -30,7 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -41,7 +41,6 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
@@ -49,7 +48,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserSharedPostFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -116,10 +115,11 @@ public class ProfileFragment extends BaseFragment
     RelativeLayout menuLayout;
     @BindView(R.id.backLayout)
     RelativeLayout backLayout;
-    @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    //@BindView(R.id.refresh_layout)
+    //RecyclerRefreshLayout refresh_layout;
 
     TextView navPendReqCntTv;
+    SpecialSelectTabAdapter adapter;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -180,7 +180,7 @@ public class ProfileFragment extends BaseFragment
     }
 
     private void setPullToRefresh() {
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        /*refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 AccountHolderInfo.getToken(new TokenCallback() {
@@ -190,7 +190,7 @@ public class ProfileFragment extends BaseFragment
                     }
                 });
             }
-        });
+        });*/
     }
 
     private void setCollapsingToolbar() {
@@ -297,21 +297,17 @@ public class ProfileFragment extends BaseFragment
 
     private void setUpPager() {
 
-        NewsPagerAdapter adp = new NewsPagerAdapter(getFragmentManager());
-        NewsList n1 = new NewsList();
+        adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
+        UserSharedPostFragment n1 = new UserSharedPostFragment();
         NewsList n2 = new NewsList();
         NewsList n3 = new NewsList();
-        NewsList n4 = new NewsList();
-        NewsList n5 = new NewsList();
 
-        adp.addFrag(n1, "World");
-        adp.addFrag(n2, "Special");
-        adp.addFrag(n3, "International");
-        adp.addFrag(n4, "Technology");
-        adp.addFrag(n5, "Finance");
+        adapter.addFragment(n1, "World");
+        adapter.addFragment(n2, "Special");
+        adapter.addFragment(n3, "International");
 
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        vpNews.setAdapter(adp);
+        vpNews.setAdapter(adapter);
         vpNews.setOffscreenPageLimit(12);
         tabs.setupWithViewPager(vpNews);
     }
@@ -368,7 +364,7 @@ public class ProfileFragment extends BaseFragment
             }
         }
         setUserFollowerAndFollowingCnt(user);
-        refresh_layout.setRefreshing(false);
+        //refresh_layout.setRefreshing(false);
     }
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
@@ -450,12 +446,12 @@ public class ProfileFragment extends BaseFragment
                 progressBar.setVisibility(View.GONE);
                 myProfile = up;
                 setProfileDetail(up);
-                refresh_layout.setRefreshing(false);
+                //refresh_layout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Exception e) {
-                refresh_layout.setRefreshing(false);
+                //refresh_layout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
 

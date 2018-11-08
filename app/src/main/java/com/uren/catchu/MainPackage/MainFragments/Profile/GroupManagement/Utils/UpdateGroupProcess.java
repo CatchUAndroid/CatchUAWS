@@ -1,4 +1,4 @@
-package com.uren.catchu.GroupPackage.Utils;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;

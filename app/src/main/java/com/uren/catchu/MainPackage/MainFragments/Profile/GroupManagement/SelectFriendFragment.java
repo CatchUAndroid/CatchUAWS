@@ -28,7 +28,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.SelectFriendAdapter;
-import com.uren.catchu.GroupPackage.DisplayGroupDetailFragment;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -257,7 +256,7 @@ public class SelectFriendFragment extends BaseFragment{
         }
 
         if (pendingName != null) {
-            if (pendingName.equals(DisplayGroupDetailFragment.class.getName())) {
+            if (pendingName.equals(ViewGroupDetailFragment.class.getName())) {
                 startAddParticipantToGroup();
             }else if(pendingName.equals(ShareDetailFragment.class.getName())){
                 getActivity().onBackPressed();

@@ -1,12 +1,10 @@
-package com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,19 +27,16 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareDetailFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedGroupList;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
-import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 
