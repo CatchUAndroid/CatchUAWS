@@ -4,7 +4,7 @@ import catchu.model.Post;
 
 public interface PostLikeClickCallback {
 
-    void onPostLikeClicked(Post post, boolean isPostLiked);
+    void onPostLikeClicked(boolean isPostLiked, int newLikeCount, int position);
 
 }
 

@@ -4,11 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-
-import catchu.model.PostRequest;
-import catchu.model.PostResponse;
 import catchu.model.ProviderList;
-import catchu.model.SearchResult;
 import catchu.model.UserListResponse;
 
 public class ProviderListRequestProcess extends AsyncTask<Void, Void, UserListResponse> {

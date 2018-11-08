@@ -45,10 +45,13 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
@@ -490,7 +493,6 @@ public class PostHelper {
                     startPostAddCommentProcess(context, token);
                 }
             });
-
         }
 
         private void startPostAddCommentProcess(Context context, String token) {
@@ -508,7 +510,7 @@ public class PostHelper {
                     } else {
                         CommonUtils.LOG_OK("PostCommentProcess");
                     }
-                    commentAddCallback.onCommentAdd(position);
+
                 }
 
 
@@ -537,8 +539,73 @@ public class PostHelper {
             AddComment.commentAddCallback = commentAddCallback;
         }
 
+        public static void postCommentCountChanged(int position) {
+            commentAddCallback.onCommentAdd(position);
+        }
 
     }
+
+    public static class SinglePostClicked {
+
+        static BaseFragment.FragmentNavigation fragmentNavigation;
+        static String toolbarTitle;
+        static String postId;
+        static PostLikeClickCallback postLikeClickCallback;
+        static int position;
+
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
+                                              String postId, int position) {
+
+            fragmentNavigation = fragmNav;
+            SinglePostClicked.toolbarTitle = toolbarTitle;
+            SinglePostClicked.postId = postId;
+            SinglePostClicked.position = position;
+
+            SinglePostClicked singlePostClicked = new SinglePostClicked(context);
+        }
+
+        private SinglePostClicked(Context context) {
+            singlePostClickedProcess(context);
+        }
+
+        private void singlePostClickedProcess(Context context) {
+            if (fragmentNavigation != null) {
+                fragmentNavigation.pushFragment(SinglePostFragment.newInstance(toolbarTitle, postId, position), ANIMATE_RIGHT_TO_LEFT);
+            }
+        }
+
+        public static void setPostLikeClickCallback(PostLikeClickCallback postLikeClickCallback) {
+            SinglePostClicked.postLikeClickCallback = postLikeClickCallback;
+        }
+
+        public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position) {
+            postLikeClickCallback.onPostLikeClicked(isPostLiked, newLikeCount, position);
+        }
+
+    }
+
+    public static class FeedRefresh {
+
+        static FeedRefreshCallback feedRefreshCallback;
+
+        public static final void startProcess(Context context) {
+
+            SinglePostClicked singlePostClicked = new SinglePostClicked(context);
+        }
+
+        private FeedRefresh(Context context) {
+        }
+
+        public static void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
+            FeedRefresh.feedRefreshCallback = feedRefreshCallback;
+        }
+
+        public static void feedRefreshStart(int radius) {
+            feedRefreshCallback.onFeedRefresh(radius);
+        }
+
+    }
+
 
     public static class Utils {
 

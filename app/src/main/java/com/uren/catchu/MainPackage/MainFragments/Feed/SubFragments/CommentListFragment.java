@@ -56,7 +56,7 @@ import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 
 
 public class CommentListFragment extends BaseFragment
-        implements View.OnClickListener, SendCommentButton.OnSendClickListener, PersonListItemClickListener  {
+        implements View.OnClickListener, SendCommentButton.OnSendClickListener, PersonListItemClickListener {
 
     View mView;
     String postId;
@@ -134,6 +134,7 @@ public class CommentListFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
 
     }
+
     private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
@@ -141,6 +142,7 @@ public class CommentListFragment extends BaseFragment
             position = (Integer) args.getInt("position");
         }
     }
+
     private void init() {
         txtToolbarTitle.setText(R.string.comments);
         imgBack.setOnClickListener(this);
@@ -154,6 +156,7 @@ public class CommentListFragment extends BaseFragment
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         commentList_recyclerView.setLayoutManager(mLayoutManager);
     }
+
     private void setAdapter() {
         commentListAdapter = new CommentListAdapter(getContext(), postId);
         commentList_recyclerView.setAdapter(commentListAdapter);
@@ -272,7 +275,6 @@ public class CommentListFragment extends BaseFragment
     }
 
 
-
     private Comment createCommentBody() {
 
         User user = new User();
@@ -281,7 +283,7 @@ public class CommentListFragment extends BaseFragment
         user.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
         user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
 
-        Comment comment = new Comment() ;
+        Comment comment = new Comment();
         comment.setMessage(edtAddComment.getText().toString());
         comment.setLikeCount(0);
         comment.setIsLiked(false);
@@ -289,7 +291,6 @@ public class CommentListFragment extends BaseFragment
         comment.setUser(user);
         return comment;
     }
-
 
 
     private boolean validateComment() {
@@ -310,7 +311,7 @@ public class CommentListFragment extends BaseFragment
             commentListAdapter.setAnimationsLocked(false);
             commentListAdapter.setDelayEnterAnimation(false);
 
-           commentList_recyclerView.smoothScrollToPosition(commentListAdapter.getItemCount());
+            commentList_recyclerView.smoothScrollToPosition(commentListAdapter.getItemCount());
             edtAddComment.setText(null);
             btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
         }
@@ -318,6 +319,6 @@ public class CommentListFragment extends BaseFragment
 
     @Override
     public void onPersonListItemClicked(View view, User user, int clickedPosition) {
-        startPersonInfoProcess(user,clickedPosition);
+        startPersonInfoProcess(user, clickedPosition);
     }
 }

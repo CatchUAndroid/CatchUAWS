@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment">
+
+    <include layout="@layout/layout_progress_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
+            app:elevation="@dimen/default_elevation"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:weightSum="5">
+
+                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|left"
+                    android:layout_weight="0.7"
+                    android:gravity="left"
+                    android:paddingRight="17dp"
+                    android:paddingTop="17dp"
+                    android:paddingBottom="17dp"
+                    android:src="@mipmap/icon_back" />
+
+                <!-- Top of Post Text /-->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4.3"
+                    android:orientation="horizontal">
+
+                    <!-- Profile layout /-->
+                    <LinearLayout
+                        android:id="@+id/profileMainLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <!-- Profile Picture /-->
+                        <LinearLayout
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:padding="5dp">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:id="@+id/imgProfilePic"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center" />
+
+                                <TextView
+                                    android:id="@+id/txtProfilePic"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:gravity="center"
+                                    android:textAllCaps="true"
+                                    android:textSize="20sp"
+                                    android:visibility="gone" />
+
+                            </RelativeLayout>
+
+                        </LinearLayout>
+
+                        <!-- Profile Detail Name-Username /-->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center|left"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="'@'username"
+                                android:textColor="?attr/colorPrimary"
+                                android:textSize="17sp" />
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+
+                    <!-- Like Icon /-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|right"
+                        android:gravity="right"
+                        android:paddingRight="15dp">
+
+                        <ImageView
+                            android:id="@+id/imgLike"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/icon_like" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.Toolbar>
+
+        <LinearLayout
+            android:id="@+id/contentRoot"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbarLayout"
+            android:background="@color/bg_comments"
+            android:elevation="@dimen/default_elevation"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.dinuscxj.refresh.RecyclerRefreshLayout
+                    android:id="@+id/refresh_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/White"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                    <com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView
+                        android:id="@+id/rv_single_post"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="3dp"
+                        android:background="@color/Seashell"
+                        android:scrollbars="none">
+
+                    </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>
+
+                </com.dinuscxj.refresh.RecyclerRefreshLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/shadow_top" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/llAddComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_comments"
+                android:elevation="@dimen/default_elevation"
+                android:gravity="center_vertical"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="8dp">
+
+                <EditText
+                    android:id="@+id/edtAddComment"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/commentHint"
+                    android:textColor="#555555"
+                    android:textSize="16sp" />
+
+                <com.uren.catchu._Libraries.SendCommentButton.SendCommentButton
+                    android:id="@+id/btnSendComment"
+                    android:layout_width="72dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="2dp"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/btn_send_comment"
+                    android:elevation="4dp"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</RelativeLayout>

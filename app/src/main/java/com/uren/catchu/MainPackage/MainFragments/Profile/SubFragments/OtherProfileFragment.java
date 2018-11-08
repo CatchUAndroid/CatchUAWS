@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserDetailAdapter;
+
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -312,8 +312,8 @@ public class OtherProfileFragment extends BaseFragment
             if (followInfoListItem.getAdapter() != null) {
                 if (followInfoListItem.getAdapter() instanceof FollowAdapter) {
                     ((FollowAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
-                } else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
-                    ((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
+                // else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
+                    //((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
                 } else if (followInfoListItem.getAdapter() instanceof PersonListAdapter) {
                     if(followStatus != null && !followStatus.isEmpty()){
                         PersonListAdapter adapter = (PersonListAdapter) followInfoListItem.getAdapter();

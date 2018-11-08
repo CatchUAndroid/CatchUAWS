@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -25,6 +26,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.uren.catchu.R;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import static com.uren.catchu.Constants.StringConstants.APP_GOOGLE_PLAY_DEFAULT_LINK;
 
@@ -258,5 +268,66 @@ public class CommonUtils {
     public static String getGooglePlayAppLink(Context context){
         return APP_GOOGLE_PLAY_DEFAULT_LINK + context.getPackageName();
     }
+
+    public static String timeAgo(Context context, String createAt) {
+
+        String convTime = "";
+        Resources resources = context.getResources();
+        String suffix = resources.getString(R.string.ago);
+
+
+        try {
+            Date nowTime = new Date();
+            Date date = CommonUtils.fromISO8601UTC(createAt);
+
+            long dateDiff = nowTime.getTime() - date.getTime();
+
+            long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
+            long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
+            long hour   = TimeUnit.MILLISECONDS.toHours(dateDiff);
+            long day  = TimeUnit.MILLISECONDS.toDays(dateDiff);
+
+            if (second < 60) {
+                convTime = second+" " + resources.getString(R.string.seconds) +" "+suffix;
+            } else if (minute < 60) {
+                convTime = minute+" " + resources.getString(R.string.minutes) +" "+suffix;
+            } else if (hour < 24) {
+                convTime = hour+" " + resources.getString(R.string.hours) +" "+suffix;
+            } else if (day >= 7) {
+                if (day > 30) {
+                    convTime = (day / 30)+" " + resources.getString(R.string.months) +" "+suffix;
+                } else if (day > 360) {
+                    convTime = (day / 360)+" " + resources.getString(R.string.years) +" "+suffix;
+                } else {
+                    convTime = (day / 7) + " " + resources.getString(R.string.weeks) +" "+suffix;
+                }
+            } else if (day < 7) {
+                convTime = day+" " + resources.getString(R.string.days) +" "+suffix;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return convTime;
+    }
+
+    public static Date fromISO8601UTC(String dateStr) {
+
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        df.setTimeZone(tz);
+
+        try {
+            return df.parse(dateStr);
+        } catch (ParseException e) {
+            Log.e("dateError","Date Parse error");
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
 
 }

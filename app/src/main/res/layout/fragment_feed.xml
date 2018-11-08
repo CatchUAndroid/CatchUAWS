@@ -46,29 +46,86 @@
                 android:background="?attr/colorPrimary"
                 app:elevation="@dimen/default_elevation"
                 app:layout_scrollFlags="scroll|enterAlways"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
                 app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
                 <LinearLayout
+                    android:id="@+id/llToolbar"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="left"
                     android:orientation="horizontal"
-                    android:weightSum="5">
+                    android:baselineAligned="false"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/toolbarTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|center"
-                        android:layout_weight="5"
-                        android:fontFamily="@font/alike_angular"
-                        android:gravity="center"
-                        android:text="@string/feed"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/toolbarTextSize" />
+                    <LinearLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/llFilter">
+
+                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@mipmap/icon_filterr"
+                            android:padding="3dp"
+                            android:layout_marginTop="3dp"
+                            android:id="@+id/imgFilter"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:id="@+id/llSearch"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:padding="10dp">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@mipmap/search"
+                                    android:layout_gravity="center|left"
+                                    android:layout_marginLeft="10dp"/>
+
+                                <TextView
+                                    android:layout_width="270dp"
+                                    android:layout_height="match_parent"
+                                    android:text="@string/search"
+                                    android:gravity="center"
+                                    android:textSize="17sp"
+                                    android:background="@drawable/search_edittext"/>
+
+
+                            </FrameLayout>
+
+
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/llOther"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
 
                 </LinearLayout>
+
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.AppBarLayout>
