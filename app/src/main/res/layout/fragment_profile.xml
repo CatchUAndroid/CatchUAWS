@@ -264,11 +264,7 @@
                     app:tabSelectedTextColor="@android:color/white"
                     app:tabMaxWidth="0dp"
                     app:tabGravity="fill"
-                    app:tabMode="fixed"
-                    android:layout_weight="4"
-                    android:background="@drawable/img_border"
-                    app:tabIndicatorHeight="0dp"
-                    app:tabTextColor="@color/white"/>
+                    app:tabMode="fixed" />
 
             </android.support.design.widget.CollapsingToolbarLayout>
 
