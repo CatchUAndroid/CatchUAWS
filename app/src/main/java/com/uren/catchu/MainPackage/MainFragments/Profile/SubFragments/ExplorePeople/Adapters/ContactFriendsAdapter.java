@@ -30,11 +30,11 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import catchu.model.FriendRequestList;
 import catchu.model.RelationProperties;
 import catchu.model.User;
 import catchu.model.UserListResponse;
+
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
