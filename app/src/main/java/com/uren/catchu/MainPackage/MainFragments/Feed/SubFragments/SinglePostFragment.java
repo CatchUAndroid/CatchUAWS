@@ -302,7 +302,7 @@ public class SinglePostFragment extends BaseFragment
         singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation);
         singlePostAdapter.setPersonListItemClickListener(this);
         recyclerView.setAdapter(singlePostAdapter);
-        
+
     }
 
     private void setPullToRefresh() {
