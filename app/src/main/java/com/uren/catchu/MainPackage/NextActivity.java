@@ -57,9 +57,7 @@ public class NextActivity extends AppCompatActivity implements
 
     private int[] mTabIconsSelected = {
             R.drawable.tab_home,
-            R.drawable.tab_search,
             R.drawable.tab_share,
-            R.drawable.tab_news,
             R.drawable.tab_profile};
 
     public static String[] TABS;
@@ -179,7 +177,7 @@ public class NextActivity extends AppCompatActivity implements
     public static void switchTab(int position) {
         mNavController.switchTab(position);
 
-        if(position != mNavController.TAB3){
+        if(position != mNavController.TAB2){
             prevPosition = position;
         }
     }
@@ -227,19 +225,12 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public static void switchAndUpdateTabSelection(int position){
-        if(position != FragNavController.TAB3)
+        if(position != FragNavController.TAB2)
             bottomTabLayout.setVisibility(View.VISIBLE);
         switchTab(position);
         updateTabSelection(position);
     }
 
-    public static void switchAndUpdateTabSelectionWithInterface(int position, CompleteCallback completeCallback){
-        if(position != FragNavController.TAB3)
-            bottomTabLayout.setVisibility(View.VISIBLE);
-        switchTab(position);
-        updateTabSelection(position);
-        completeCallback.onComplete(null);
-    }
 
     private void setTransactionOption() {
         if (transactionOptions == null) {
@@ -337,13 +328,10 @@ public class NextActivity extends AppCompatActivity implements
             case FragNavController.TAB1:
                 return new FeedFragment();
             case FragNavController.TAB2:
-                return new SearchFragment();
-            case FragNavController.TAB3:
                 return new ShareFragment();
-            case FragNavController.TAB4:
-                return new NewsFragment();
-            case FragNavController.TAB5:
+            case FragNavController.TAB3:
                 return new ProfileFragment();
+
         }
         throw new IllegalStateException("Need to send an index that we know");
     }

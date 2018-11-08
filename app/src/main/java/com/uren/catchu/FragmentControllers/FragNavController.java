@@ -38,8 +38,6 @@ public class FragNavController {
     public static final int TAB1 = 0;
     public static final int TAB2 = 1;
     public static final int TAB3 = 2;
-    public static final int TAB4 = 3;
-    public static final int TAB5 = 4;
 
     private static final int MAX_NUM_TABS = 5;
 
@@ -872,12 +870,6 @@ public class FragNavController {
                 case TAB3:
                     switchTab(TAB3);
                     break;
-                case TAB4:
-                    switchTab(TAB4);
-                    break;
-                case TAB5:
-                    switchTab(TAB5);
-                    break;
             }
 
             //Successfully restored state
@@ -895,7 +887,7 @@ public class FragNavController {
     }
 
     //Declare the TabIndex annotation
-    @IntDef({NO_TAB, TAB1, TAB2, TAB3, TAB4, TAB5})
+    @IntDef({NO_TAB, TAB1, TAB2, TAB3})
     @Retention(RetentionPolicy.SOURCE)
     public @interface TabIndex {
     }

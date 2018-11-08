@@ -161,7 +161,7 @@ public class FacebookFriendsFragment extends BaseFragment {
                 mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {
-            NextActivity.switchAndUpdateTabSelection(FragNavController.TAB5);
+            NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
         }
     }
 
