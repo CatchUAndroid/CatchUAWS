@@ -123,6 +123,16 @@
         <item>Belirtilmemiş</item>
     </array>
 
+    <!-- Time constants-->
+    <string name="ago">önce</string>
+    <string name="seconds">saniye</string>
+    <string name="minutes">dakika</string>
+    <string name="hours">saat</string>
+    <string name="days">gün</string>
+    <string name="weeks">hafta</string>
+    <string name="months">ay</string>
+    <string name="years">yıl</string>
+
     <string name="signOut">Çıkış yap</string>
     <string name="followers">Takipçiler</string>
     <string name="followings">Takiptesin</string>
@@ -209,6 +219,11 @@
     <string name="report">Şikayet et</string>
     <string name="commentHint">Ne düşünüyorsunuz?</string>
     <string name="like">Beğen</string>
+    <string name="filterSettings">Filtre Ayarları</string>
+    <string name="apply">Uygula</string>
+    <string name="nearby">YAKININDA OLANLAR</string>
+    <string name="meter">metre</string>
+    <string name="clearFilter">Sıfırla</string>
 
 
 </resources>

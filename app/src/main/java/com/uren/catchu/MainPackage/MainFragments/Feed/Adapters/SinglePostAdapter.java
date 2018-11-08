@@ -71,17 +71,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public int getItemViewType(int position) {
-        if (postList.size() > position) {
-            return VIEW_POST;
-        } else if (commentList.get(position - postList.size()) != null) {
-            return VIEW_COMMENT;
-        } else {
-            return VIEW_PROG;
-        }
-    }
-
-    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         RecyclerView.ViewHolder viewHolder;
@@ -103,6 +92,17 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         }
         return viewHolder;
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (postList.size() > position) {
+            return VIEW_POST;
+        } else if (commentList.get(position - postList.size()) != null) {
+            return VIEW_COMMENT;
+        } else {
+            return VIEW_PROG;
+        }
     }
 
     @Override
@@ -429,7 +429,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
     public void updateLikeCount(int newLikeCount) {
         post.setLikeCount(newLikeCount);
-        notifyItemChanged(0, post.getLikeCount());
+         notifyItemChanged(0, post);
     }
 
     public void updateItems() {

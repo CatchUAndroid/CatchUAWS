@@ -4,37 +4,45 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import catchu.model.UserListResponse;
 
-import catchu.CatchUMobileAPIClient;
-import catchu.model.SearchResult;
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
-public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
+public class SearchResultProcess extends AsyncTask<Void, Void, UserListResponse> {
 
-    private OnEventListener<SearchResult> mCallBack;
+    private OnEventListener<UserListResponse> mCallBack;
     private Context mContext;
     public Exception mException;
     public String userid;
     public String searchText;
+    public String perpage;
+    public String page;
     private String token;
 
-    public SearchResultProcess(Context context, OnEventListener callback, String userid, String searchText, String token) {
+    public SearchResultProcess(Context context, OnEventListener callback, String userid, String searchText, String perpage, String page, String token) {
         this.mCallBack = callback;
         this.mContext = context;
         this.userid = userid;
         this.searchText = searchText;
+        this.page = page;
+        this.perpage = perpage;
         this.token = token;
     }
 
     @Override
-    protected SearchResult doInBackground(Void... voids) {
+    protected UserListResponse doInBackground(Void... voids) {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            SearchResult searchResult = instance.client.searchGet(userid, token, searchText);
-            return searchResult;
+            UserListResponse userListResponse = instance.client.searchGet(userid, searchText, token, perpage, page);
+
+            if(userListResponse.getError().getCode().intValue() == RESPONSE_OK){
+                return userListResponse;
+            }else{
+                return null;
+            }
 
         } catch (Exception e) {
             mException = e;
@@ -55,7 +63,7 @@ public class SearchResultProcess extends AsyncTask<Void, Void, SearchResult> {
     }
 
     @Override
-    protected void onPostExecute(SearchResult searchResult) {
+    protected void onPostExecute(UserListResponse searchResult) {
         super.onPostExecute(searchResult);
 
         if (mCallBack != null) {

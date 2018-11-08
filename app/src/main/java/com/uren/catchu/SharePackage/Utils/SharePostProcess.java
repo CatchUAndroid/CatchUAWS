@@ -20,7 +20,6 @@ import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
-import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.SelectedGroupList;

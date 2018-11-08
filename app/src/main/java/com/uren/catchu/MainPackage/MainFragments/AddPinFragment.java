@@ -9,8 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
-import com.uren.catchu.MainPackage.NextActivity;
+
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.MainShareActivity;
 

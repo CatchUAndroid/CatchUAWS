@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,10 +36,17 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
@@ -104,7 +112,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         ImageView imgProfilePic;
         TextView txtProfilePic;
-        TextView txtName;
+        //TextView txtName;
         TextView txtUserName;
         TextView txtDetail;
         ViewPager viewPager;
@@ -120,6 +128,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
         LinearLayout profileMainLayout;
         TextView txtLocationDistance;
+        TextView txtCreateAt;
 
         View mView;
 
@@ -130,7 +139,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             cardView = (CardView) view.findViewById(R.id.card_view);
             imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
             txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
-            txtName = (TextView) view.findViewById(R.id.txtName);
+            //txtName = (TextView) view.findViewById(R.id.txtName);
             txtUserName = (TextView) view.findViewById(R.id.txtUserName);
             txtDetail = (TextView) view.findViewById(R.id.txtDetail);
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
@@ -143,6 +152,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
             imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
             imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
+            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
             likeCount = 0;
             commentCount = 0;
 
@@ -158,22 +168,20 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 public void onClick(View v) {
 
                     imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
-                    int tempLikeCount = post.getLikeCount();
+
                     if (isPostLiked) {
                         isPostLiked = false;
                         post.setIsLiked(false);
-                        tempLikeCount--;
-                        post.setLikeCount(tempLikeCount);
+                        post.setLikeCount(post.getLikeCount() - 1);
                         setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
                     } else {
                         isPostLiked = true;
                         post.setIsLiked(true);
-                        tempLikeCount++;
-                        post.setLikeCount(tempLikeCount);
+                        post.setLikeCount(post.getLikeCount() + 1);
                         setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
                     }
+
+                    PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
 
                 }
             });
@@ -280,7 +288,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(Post post, int position) {
-            
+
             //her postID bir position ile entegre halde...
             postPositionHashMap.put(post.getPostid(), position);
 
@@ -295,7 +303,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
                     post.getUser().getName(), txtProfilePic, imgProfilePic);
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
-                this.txtName.setText(post.getUser().getName());
+                //this.txtName.setText(post.getUser().getName());
             }
             //Username
             if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
@@ -325,10 +333,17 @@ public class FeedAdapter extends RecyclerView.Adapter {
             txtCommentCount.setText(String.valueOf(commentCount));
             //Location distance
             if (post.getDistance() != null) {
-                txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
+                txtLocationDistance.setText(String.valueOf(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue())));
             }
-
+            //Create at
+            if (post.getCreateAt() != null) {
+                txtCreateAt.setText(CommonUtils.timeAgo(mContext, post.getCreateAt()));
+            }
         }
+
+
+
+
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);

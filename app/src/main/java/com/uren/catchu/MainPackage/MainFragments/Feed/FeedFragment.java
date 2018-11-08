@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,14 +28,19 @@ import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.NewSearchFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 
 import com.uren.catchu.R;
@@ -58,13 +64,16 @@ import catchu.model.User;
 import catchu.model.UserProfile;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.uren.catchu.Constants.NumericConstants.FEED_PAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.FEED_PERPAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_RADIUS;
+import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 
-public class FeedFragment extends BaseFragment {
+public class FeedFragment extends BaseFragment implements View.OnClickListener{
 
     View mView;
     FeedAdapter feedAdapter;
@@ -96,10 +105,17 @@ public class FeedFragment extends BaseFragment {
     @BindView(R.id.txtProfile)
     TextView txtProfile;
 
+    @BindView(R.id.imgFilter)
+    ClickableImageView imgFilter;
+    @BindView(R.id.llFilter)
+    LinearLayout llFilter;
+    @BindView(R.id.llSearch)
+    LinearLayout llSearch;
+
     private boolean loading = true;
     int pastVisibleItems, visibleItemCount, totalItemCount;
-    private int perPageCnt = FEED_PERPAGE_COUNT;
-    private int pageCnt = FEED_PAGE_COUNT;
+    private int perPageCnt;
+    private int pageCnt;
     private List<Post> postList = new ArrayList<Post>();
     private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
     private boolean pulledToRefresh = false;
@@ -126,8 +142,8 @@ public class FeedFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
 
             CommonUtils.LOG_NEREDEYIZ("FeedFragment");
-
-            init();
+            initListeners();
+            initRecyclerView();
             checkLocationAndRetrievePosts();
             //getPosts();
 
@@ -141,17 +157,13 @@ public class FeedFragment extends BaseFragment {
         return mView;
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void initListeners() {
+        imgFilter.setOnClickListener(this);
+        //llFilter.setOnClickListener(this);
+        llSearch.setOnClickListener(this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    private void init() {
+    private void initRecyclerView() {
 
         showPulsatorLayout(true);
 
@@ -161,7 +173,23 @@ public class FeedFragment extends BaseFragment {
         setRecyclerViewProperties();
         setPullToRefresh();
         setRecyclerViewScroll();
+        setPaginationValues();
+        setFeedRefreshListener();
 
+    }
+
+    private void setFeedRefreshListener() {
+        PostHelper.FeedRefresh.startProcess(getContext());
+        PostHelper.FeedRefresh.setFeedRefreshCallback(new FeedRefreshCallback() {
+            @Override
+            public void onFeedRefresh(int newRadius) {
+                CommonUtils.showToast(getContext(), "Feed refreshing..");
+                pulledToRefresh = true;
+                float nR = newRadius/1000;
+                radius = String.valueOf(nR);
+                checkLocationAndRetrievePosts();
+            }
+        });
     }
 
     private void setLayoutManager() {
@@ -178,7 +206,7 @@ public class FeedFragment extends BaseFragment {
             @Override
             public void onRefresh() {
                 if(rl_pulsator.getVisibility() != View.VISIBLE){
-                    setPaginationValues();
+                    pulledToRefresh = true;
                     checkLocationAndRetrievePosts();
                 }
 
@@ -187,9 +215,9 @@ public class FeedFragment extends BaseFragment {
     }
 
     private void setPaginationValues() {
-        pulledToRefresh = true;
-        perPageCnt = FEED_PERPAGE_COUNT;
-        pageCnt = FEED_PAGE_COUNT;
+        perPageCnt = DEFAULT_FEED_PERPAGE_COUNT;
+        pageCnt = DEFAULT_FEED_PAGE_COUNT;
+        radius = String.valueOf(DEFAULT_FEED_RADIUS);
     }
 
 
@@ -563,9 +591,25 @@ public class FeedFragment extends BaseFragment {
     private void setLocationInfo() {
         longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
         latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
-        radius = "1000000";
+
 
     }
+
+
+    @Override
+    public void onClick(View view) {
+
+        if(view == imgFilter ){
+            mFragmentNavigation.pushFragment(FilterFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if(view == llSearch){
+            mFragmentNavigation.pushFragment(NewSearchFragment.newInstance(), "");
+        }
+
+    }
+
+
 
 
 }

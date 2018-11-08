@@ -53,7 +53,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:paddingRight="30dp"
-                android:src="@mipmap/cancel2"
+                android:src="@mipmap/cancel"
                 android:visibility="gone" />
 
         </RelativeLayout>

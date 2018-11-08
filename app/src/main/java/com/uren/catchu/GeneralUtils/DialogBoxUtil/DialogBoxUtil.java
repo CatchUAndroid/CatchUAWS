@@ -15,7 +15,6 @@ import com.uren.catchu.R;
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
-import static com.uren.catchu.SharePackage.ShareDetailActivity.REQUEST_CODE_ENABLE_LOCATION;
 
 public class DialogBoxUtil {
 
@@ -157,6 +156,8 @@ public class DialogBoxUtil {
     }
 
     public static void showSettingsAlert(final Activity act){
+        /*
+
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(act);
         alertDialog.setTitle(act.getResources().getString(R.string.gpsSettings));
         alertDialog.setMessage(act.getResources().getString(R.string.gpsSettingMessage));
@@ -167,6 +168,7 @@ public class DialogBoxUtil {
             }
         });
         alertDialog.show();
+        */
     }
 
 }

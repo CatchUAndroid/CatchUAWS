@@ -45,6 +45,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
@@ -581,9 +582,30 @@ public class PostHelper {
             postLikeClickCallback.onPostLikeClicked(isPostLiked, newLikeCount, position);
         }
 
+    }
 
+    public static class FeedRefresh {
+
+        static FeedRefreshCallback feedRefreshCallback;
+
+        public static final void startProcess(Context context) {
+
+            SinglePostClicked singlePostClicked = new SinglePostClicked(context);
+        }
+
+        private FeedRefresh(Context context) {
+        }
+
+        public static void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
+            FeedRefresh.feedRefreshCallback = feedRefreshCallback;
+        }
+
+        public static void feedRefreshStart(int radius) {
+            feedRefreshCallback.onFeedRefresh(radius);
+        }
 
     }
+
 
     public static class Utils {
 

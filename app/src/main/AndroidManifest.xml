@@ -69,9 +69,6 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".SharePackage.MainShareActivity" />
         <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
-        <activity
-            android:name=".SharePackage.ShareDetailActivity"
-            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".SharePackage.SelectGroupActivity" />
         <activity android:name=".SharePackage.VideoPicker.WillDelete.Camera2Activity" />
 

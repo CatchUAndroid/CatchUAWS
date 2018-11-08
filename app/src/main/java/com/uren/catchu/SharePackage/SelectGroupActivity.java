@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.Adapters.UserGroupsListAdapter;
+
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -36,7 +36,7 @@ public class SelectGroupActivity extends AppCompatActivity {
     ImageView imgCancelSearch;
     EditText editTextSearch;
     TextView warningMsgTv;
-    UserGroupsListAdapter userGroupsListAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +78,6 @@ public class SelectGroupActivity extends AppCompatActivity {
 
                 MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
                         getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
-
-                userGroupsListAdapter = new UserGroupsListAdapter(SelectGroupActivity.this, groupRequestResult, new ReturnCallback() {
-                    @Override
-                    public void onReturn(Object object) {
-
-                    }
-                }, new ItemClickListener() {
-                    @Override
-                    public void onClick(Object object, int clickedItem) {
-
-                    }
-                });
-
-                recyclerView.setAdapter(userGroupsListAdapter);
             }
 
             @Override
@@ -138,7 +124,6 @@ public class SelectGroupActivity extends AppCompatActivity {
                 else
                     imgCancelSearch.setVisibility(View.GONE);
 
-                userGroupsListAdapter.updateAdapter(s.toString());
             }
         });
     }

@@ -16,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -52,6 +53,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallb
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.Utils;
@@ -74,14 +76,9 @@ import catchu.model.CommentListResponse;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
 import catchu.model.User;
-import catchu.model.UserListResponse;
-
 import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.uren.catchu.Constants.NumericConstants.FEED_PAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.FEED_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
-import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 
 
 public class SinglePostFragment extends BaseFragment
@@ -208,7 +205,7 @@ public class SinglePostFragment extends BaseFragment
         imgLike = (ImageView) mView.findViewById(R.id.imgLike);
 
         //imgBack
-        imgBack.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgBack.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
         imgBack.setOnClickListener(this);
         //profile picture
         UserDataUtil.setProfilePicture(getContext(), post.getUser().getProfilePhotoUrl(),
@@ -249,24 +246,21 @@ public class SinglePostFragment extends BaseFragment
             public void onClick(View v) {
 
                 imgLike.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                int tempLikeCount = post.getLikeCount();
+
                 if (isPostLiked) {
                     isPostLiked = false;
                     post.setIsLiked(false);
-                    tempLikeCount--;
-                    post.setLikeCount(tempLikeCount);
+                    post.setLikeCount(post.getLikeCount() - 1);
                     setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                    PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
                 } else {
                     isPostLiked = true;
                     post.setIsLiked(true);
-                    tempLikeCount++;
-                    post.setLikeCount(tempLikeCount);
+                    post.setLikeCount(post.getLikeCount() + 1);
                     setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
-                    PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
                 }
-                singlePostAdapter.updateLikeCount(post.getLikeCount());
+                PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
                 PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position);
+                singlePostAdapter.updateLikeCount(post.getLikeCount());
 
             }
         });
@@ -294,12 +288,15 @@ public class SinglePostFragment extends BaseFragment
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new FeedItemAnimator());
     }
 
     private void setAdapter() {
         singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation);
-        recyclerView.setAdapter(singlePostAdapter);
         singlePostAdapter.setPersonListItemClickListener(this);
+        recyclerView.setAdapter(singlePostAdapter);
+
+
     }
 
     private void setPullToRefresh() {

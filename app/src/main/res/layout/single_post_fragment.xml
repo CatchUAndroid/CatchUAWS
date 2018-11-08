@@ -17,6 +17,8 @@
             android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:contentInsetLeft="0dp"
+            app:contentInsetStart="0dp"
             app:elevation="@dimen/default_elevation"
             app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -26,6 +28,8 @@
                 android:layout_height="match_parent"
                 android:gravity="left"
                 android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
                 android:weightSum="5">
 
                 <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
@@ -33,12 +37,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|left"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="0.7"
                     android:gravity="left"
-
-                    android:padding="14dp"
-                    android:src="@drawable/back_arrow2" />
+                    android:paddingRight="17dp"
+                    android:paddingTop="17dp"
+                    android:paddingBottom="17dp"
+                    android:src="@mipmap/icon_back" />
 
                 <!-- Top of Post Text /-->
                 <LinearLayout
@@ -146,7 +150,7 @@
                     android:id="@+id/refresh_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@color/clearWhite"
+                    android:background="@color/White"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                     <com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView
@@ -154,7 +158,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="3dp"
-                        android:background="@color/clearWhite"
+                        android:background="@color/Seashell"
                         android:scrollbars="none">
 
                     </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>

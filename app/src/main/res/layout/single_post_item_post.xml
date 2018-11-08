@@ -20,7 +20,9 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="0.0px"
             android:elevation="2dp"
-card_view:cardCornerRadius="15dp"
+            card_view:cardCornerRadius="5dp"
+            android:layout_marginTop="-5dp"
+            android:layout_marginBottom="-5dp"
             card_view:cardElevation="4dp"
             card_view:cardPreventCornerOverlap="false">
 
@@ -124,9 +126,9 @@ card_view:cardCornerRadius="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="20dp"
+                    android:text=""
                     android:textColor="@color/black"
-                    android:textSize="17sp"
-                    android:text="" />
+                    android:textSize="17sp" />
 
                 <!-- ViewPager /-->
                 <android.support.v4.view.ViewPager
@@ -254,19 +256,19 @@ card_view:cardCornerRadius="15dp"
                                 android:id="@+id/txtLocationDistance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
+                                android:layout_marginRight="-5dp"
                                 android:gravity="center"
-                                android:text="450m"
-                                android:layout_marginRight="-5dp"/>
+                                android:text="450m" />
 
 
                             <ImageButton
+                                android:id="@+id/imgBtnLocationDetail"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
                                 android:background="@drawable/btn_feed_action"
                                 android:padding="15dp"
                                 android:scaleType="fitCenter"
-                                android:src="@mipmap/icon_location"
-                                android:id="@+id/imgBtnLocationDetail"/>
+                                android:src="@mipmap/icon_location" />
 
                         </LinearLayout>
 
@@ -274,7 +276,18 @@ card_view:cardCornerRadius="15dp"
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1.5dp"
+                    android:background="@color/gray"
+                    android:alpha="0.4">
+
+                </View>
+
+
             </LinearLayout>
+
+
 
         </android.support.v7.widget.CardView>
 

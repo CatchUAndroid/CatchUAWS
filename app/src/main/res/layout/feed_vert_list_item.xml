@@ -77,21 +77,39 @@
                             android:layout_height="match_parent"
                             android:gravity="center|left"
                             android:orientation="vertical"
-                            android:padding="10dp">
-
-                            <TextView
-                                android:id="@+id/txtName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Name Surname"
-                                android:textColor="@color/colorPrimaryDark"
-                                android:textSize="15sp" />
+                            android:padding="5dp">
 
                             <TextView
                                 android:id="@+id/txtUserName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="'@'username" />
+                                android:layout_marginBottom="3dp"
+                                android:text="'@'username"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="17sp" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginRight="5dp"
+                                    android:scaleType="fitXY"
+                                    android:src="@mipmap/icon_time" />
+
+                                <TextView
+                                    android:id="@+id/txtCreateAt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="asdasd" />
+
+                            </LinearLayout>
 
 
                         </LinearLayout>
@@ -125,9 +143,9 @@
                     android:paddingBottom="20dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
+                    android:text=""
                     android:textColor="@color/black"
-                    android:textSize="17sp"
-                    android:text="" />
+                    android:textSize="17sp" />
 
                 <!-- ViewPager /-->
                 <android.support.v4.view.ViewPager
@@ -255,25 +273,41 @@
                                 android:id="@+id/txtLocationDistance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
+                                android:layout_marginRight="-5dp"
                                 android:gravity="center"
-                                android:text="450m"
-                                android:layout_marginRight="-5dp"/>
+                                android:text="450m" />
 
 
                             <ImageButton
+                                android:id="@+id/imgBtnLocationDetail"
                                 android:layout_width="48dp"
                                 android:layout_height="48dp"
                                 android:background="@drawable/btn_feed_action"
                                 android:padding="15dp"
                                 android:scaleType="fitCenter"
-                                android:src="@mipmap/icon_location"
-                                android:id="@+id/imgBtnLocationDetail"/>
+                                android:src="@mipmap/icon_location" />
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <!-- Date layout  /-->
+                <!--LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:layout_margin="10dp"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txtCreateAt" />
+
+
+                </LinearLayout-->
 
             </LinearLayout>
 
