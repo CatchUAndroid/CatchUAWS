@@ -63,7 +63,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfile
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareDetailActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.File;

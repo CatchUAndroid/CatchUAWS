@@ -100,9 +100,7 @@ public class PhoneNumEditFragment extends BaseFragment {
     TextView countryCodeTv;
     TextView countryDialCodeTv;
     EditText phoneNumEt;
-    View counSelectMainLayout;
     RelativeLayout editPhoneMainLayout;
-    //Country selectedCountry;
     CountryListResponse countryListResponse;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
@@ -110,10 +108,6 @@ public class PhoneNumEditFragment extends BaseFragment {
     String completePhoneNum;
     Phone selectedPhone;
 
-    EditText selectCountryEt;
-    ListView countryListView;
-
-    //String phoneNum = "";
     Phone phone;
 
     public PhoneNumEditFragment(Phone phone, CompleteCallback completeCallback) {
@@ -124,8 +118,6 @@ public class PhoneNumEditFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-
         if (mView == null) {
             mView = inflater.inflate(R.layout.edit_phonenum_layout, container, false);
             ButterKnife.bind(this, mView);
@@ -154,7 +146,6 @@ public class PhoneNumEditFragment extends BaseFragment {
         mProgressDialog = new ProgressDialog(getActivity());
         countryListResponse = new CountryListResponse();
         countryListResponse.setItems(new ArrayList<Country>());
-        //selectedCountry = new Country();
         selectedPhone = new Phone();
     }
 
@@ -169,14 +160,13 @@ public class PhoneNumEditFragment extends BaseFragment {
         nextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sendVerificationCode();
+                preControlBeforeVerification();
             }
         });
 
         countryCodeTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(getActivity(), PhoneAuthActivity.class));
                 startCountryFragment();
             }
         });
@@ -202,16 +192,16 @@ public class PhoneNumEditFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
 
-                if(s != null && !s.toString().isEmpty()){
-                    if(phone != null && phone.getPhoneNumber() != null){
+                if (s != null && !s.toString().isEmpty()) {
+                    if (phone != null && phone.getPhoneNumber() != null) {
                         if (s.toString().trim().equals(phone.getPhoneNumber().toString()))
                             nextImgv.setVisibility(View.GONE);
                         else
                             nextImgv.setVisibility(View.VISIBLE);
-                    }else
+                    } else
                         nextImgv.setVisibility(View.VISIBLE);
-                }else
-                    nextImgv.setVisibility(View.GONE);
+                } else
+                    nextImgv.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -303,11 +293,42 @@ public class PhoneNumEditFragment extends BaseFragment {
         });
     }
 
-    public void setSelectedPhone(Country country){
+    public void setSelectedPhone(Country country) {
         countryDialCodeTv.setText(country.getDialCode());
         countryCodeTv.setText(country.getCode());
         selectedPhone.setCountryCode(country.getCode());
         selectedPhone.setDialCode(country.getDialCode());
+    }
+
+    public void preControlBeforeVerification() {
+        if (phoneNumEt != null && phoneNumEt.getText() != null && phoneNumEt.getText().toString().isEmpty()) {
+            clearUserPhoneNum();
+        } else
+            sendVerificationCode();
+    }
+
+    public void clearUserPhoneNum() {
+        UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
+        userProfileProperties.setPhone(null);
+
+        new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
+            @Override
+            public void onSuccess() {
+                completeCallback.onComplete(" ");
+                getActivity().onBackPressed();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                DialogBoxUtil.showErrorDialog(getActivity(), e.getMessage(), new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+
+                    }
+                });
+                e.printStackTrace();
+            }
+        }, false, userProfileProperties, null);
     }
 
     public void sendVerificationCode() {

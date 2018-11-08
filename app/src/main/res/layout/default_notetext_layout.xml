@@ -1,32 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:gravity="center"
-    android:background="@color/transparentBlack"
-    android:id="@+id/noteTextMainLayout">
+    android:background="@color/White"
+    android:id="@+id/noteTextMainLayout"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/cancelTextImgv"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/cancel_gray" />
+    <include layout="@layout/common_toolbar_layout" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="50dp"
+        android:layout_margin="10dp"
         android:orientation="vertical">
 
         <ScrollView
             android:id="@+id/noteScrollView"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="match_parent"
             android:layout_marginBottom="2dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
@@ -42,9 +33,8 @@
                 android:gravity="top"
                 android:hint="@string/typeToAddText"
                 android:inputType="textMultiLine"
-                android:lines="20"
-                android:maxLines="20"
-                android:minLines="6"
+                android:lines="50"
+                android:maxLines="50"
                 android:scrollbars="vertical"
                 android:textColor="@color/White"
                 android:textColorHint="@color/transparent_white"
@@ -54,23 +44,6 @@
 
         </ScrollView>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/approveImgv"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:padding="1dp"
-                android:src="@drawable/approve_icon_96" />
-
-        </LinearLayout>
-
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

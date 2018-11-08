@@ -26,14 +26,15 @@ import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class PhotoSelectUtil {
 
-    static Bitmap bitmap = null;
-    static Bitmap screeanShotBitmap = null;
-    static Uri mediaUri = null;
-    static String imageRealPath = null;
-    static Context context;
-    static Intent data;
-    static String type;
-    static boolean portraitMode;
+    Bitmap bitmap = null;
+    Bitmap screeanShotBitmap = null;
+    Bitmap resizedBitmap = null;
+    Uri mediaUri = null;
+    String imageRealPath = null;
+    Context context;
+    Intent data;
+    String type;
+    boolean portraitMode;
 
     public PhotoSelectUtil(Context context, Intent data, String type) {
         this.context = context;
@@ -62,12 +63,21 @@ public class PhotoSelectUtil {
                 onSelectFromFileResult();
                 break;
             default:
-                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.photoSelectTypeUnknown), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() { }
-                });
                 break;
         }
+    }
+
+    public Bitmap getResizedBitmap() {
+        if (getScreeanShotBitmap() != null)
+            resizedBitmap = Bitmap.createScaledBitmap(getScreeanShotBitmap(),
+                    (int) (getScreeanShotBitmap().getWidth() * 0.8),
+                    (int) (getScreeanShotBitmap().getHeight() * 0.8), true);
+        else if(getBitmap() != null)
+            resizedBitmap = Bitmap.createScaledBitmap(getBitmap(),
+                    (int) (getBitmap().getWidth() * 0.8),
+                    (int) (getBitmap().getHeight() * 0.8), true);
+
+        return resizedBitmap;
     }
 
     private void onSelectFromFileResult() {
@@ -82,7 +92,7 @@ public class PhotoSelectUtil {
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
-    public static void onSelectFromGalleryResult(){
+    public void onSelectFromGalleryResult() {
         try {
             mediaUri = data.getData();
             if (data != null) {
@@ -94,26 +104,26 @@ public class PhotoSelectUtil {
                     e.printStackTrace();
                 }
             }
-        }catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
 
-    public static void onSelectFromCameraResult() {
+    public void onSelectFromCameraResult() {
         bitmap = (Bitmap) data.getExtras().get("data");
         mediaUri = data.getData();
         imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
-    public static void setPortraitMode(){
-        if(bitmap == null)
+    public void setPortraitMode() {
+        if (bitmap == null)
             return;
 
         int width = bitmap.getWidth();
         int heigth = bitmap.getHeight();
 
-        if(heigth > width)
+        if (heigth > width)
             portraitMode = true;
         else
             portraitMode = false;
@@ -124,7 +134,7 @@ public class PhotoSelectUtil {
     }
 
     public void setBitmap(Bitmap bitmap) {
-        PhotoSelectUtil.bitmap = bitmap;
+        this.bitmap = bitmap;
     }
 
     public Uri getMediaUri() {
@@ -132,7 +142,7 @@ public class PhotoSelectUtil {
     }
 
     public void setMediaUri(Uri mediaUri) {
-        PhotoSelectUtil.mediaUri = mediaUri;
+        this.mediaUri = mediaUri;
     }
 
     public String getImageRealPath() {
@@ -140,7 +150,7 @@ public class PhotoSelectUtil {
     }
 
     public void setImageRealPath(String imageRealPath) {
-        PhotoSelectUtil.imageRealPath = imageRealPath;
+        this.imageRealPath = imageRealPath;
     }
 
     public boolean isPortraitMode() {
@@ -148,7 +158,7 @@ public class PhotoSelectUtil {
     }
 
     public void setPortraitMode(boolean portraitMode) {
-        PhotoSelectUtil.portraitMode = portraitMode;
+        this.portraitMode = portraitMode;
     }
 
     public Bitmap getScreeanShotBitmap() {
@@ -156,6 +166,6 @@ public class PhotoSelectUtil {
     }
 
     public void setScreeanShotBitmap(Bitmap screeanShotBitmap) {
-        PhotoSelectUtil.screeanShotBitmap = screeanShotBitmap;
+        this.screeanShotBitmap = screeanShotBitmap;
     }
 }

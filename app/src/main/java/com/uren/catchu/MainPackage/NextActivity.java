@@ -2,10 +2,8 @@ package com.uren.catchu.MainPackage;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -17,15 +15,11 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.MainPackage.MainFragments.AddPinFragment;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
@@ -97,7 +91,8 @@ public class NextActivity extends AppCompatActivity implements
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 fragmentHistory.push(tab.getPosition());
-                switchTab(tab.getPosition());
+                //switchTab(tab.getPosition());
+                switchAndUpdateTabSelection(tab.getPosition());
             }
 
             @Override
@@ -107,8 +102,10 @@ public class NextActivity extends AppCompatActivity implements
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                mNavController.clearStack();
-                switchTab(tab.getPosition());
+                fragmentHistory.push(tab.getPosition());
+                switchAndUpdateTabSelection(tab.getPosition());
+                /*mNavController.clearStack();
+                switchTab(tab.getPosition());*/
             }
         });
 
@@ -230,8 +227,18 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public static void switchAndUpdateTabSelection(int position){
+        if(position != FragNavController.TAB3)
+            bottomTabLayout.setVisibility(View.VISIBLE);
         switchTab(position);
         updateTabSelection(position);
+    }
+
+    public static void switchAndUpdateTabSelectionWithInterface(int position, CompleteCallback completeCallback){
+        if(position != FragNavController.TAB3)
+            bottomTabLayout.setVisibility(View.VISIBLE);
+        switchTab(position);
+        updateTabSelection(position);
+        completeCallback.onComplete(null);
     }
 
     private void setTransactionOption() {
@@ -332,7 +339,7 @@ public class NextActivity extends AppCompatActivity implements
             case FragNavController.TAB2:
                 return new SearchFragment();
             case FragNavController.TAB3:
-                return new AddPinFragment();
+                return new ShareFragment();
             case FragNavController.TAB4:
                 return new NewsFragment();
             case FragNavController.TAB5:
@@ -340,25 +347,6 @@ public class NextActivity extends AppCompatActivity implements
         }
         throw new IllegalStateException("Need to send an index that we know");
     }
-
-/*
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.logOut) {
-
-            //AWS sig-out
-            IdentityManager.getDefaultIdentityManager().signOut();
-
-            finish();
-            startActivity(new Intent(this, MainActivity.class));
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-*/
 
     @Override
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {

@@ -1,74 +1,51 @@
 package com.uren.catchu.SharePackage.GalleryPicker;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ExifUtil;
-import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
 import java.io.File;
 import java.util.ArrayList;
 
-import android.preference.PreferenceManager;
-
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.PhotoSelectCallback;
-import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
-import com.uren.catchu.Singleton.Share.ShareItems;
-
-import catchu.model.Media;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
-import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
-public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridListAdapter.MyViewHolder> implements PreferenceManager.OnActivityResultListener {
+public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridListAdapter.MyViewHolder> {
 
-    private ArrayList<File> fileList;
+    ArrayList<File> fileList;
     View view;
     PhotoSelectCallback photoSelectCallback;
 
     LayoutInflater layoutInflater;
 
-    public static Context context;
+    Context context;
 
     int selectedPosition = 0;
     private static final int paddingSize = 80;
 
-    PermissionModule permissionModule;
-    GalleryPickerFrag galleryPickerFrag;
     PhotoSelectUtil photoSelectUtil;
+    PhotoChosenCallback photoChosenCallback;
 
-    public GalleryGridListAdapter(Context context, ArrayList<File> fileList, GalleryPickerFrag galleryPickerFrag,
-                                  PhotoSelectCallback photoSelectCallback) {
+    public GalleryGridListAdapter(Context context, ArrayList<File> fileList,
+                                  PhotoSelectCallback photoSelectCallback, PhotoChosenCallback photoChosenCallback) {
         layoutInflater = LayoutInflater.from(context);
         this.fileList = fileList;
         this.context = context;
         this.photoSelectCallback = photoSelectCallback;
-        this.galleryPickerFrag = galleryPickerFrag;
-        permissionModule = new PermissionModule(context);
+        this.photoChosenCallback = photoChosenCallback;
     }
 
     @Override
@@ -76,32 +53,6 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
         view = layoutInflater.inflate(R.layout.media_item_view, parent, false);
         GalleryGridListAdapter.MyViewHolder holder = new GalleryGridListAdapter.MyViewHolder(view);
         return holder;
-    }
-
-    @Override
-    public boolean onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == permissionModule.getImageGalleryPermission()) {
-                photoSelectUtil = new PhotoSelectUtil(context, data, GALLERY_TEXT);
-                fillImageShareItemBox();
-                photoSelectCallback.onSelect(photoSelectUtil);
-            } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
-                photoSelectUtil = new PhotoSelectUtil(context, data, CAMERA_TEXT);
-                fillImageShareItemBox();
-                photoSelectCallback.onSelect(photoSelectUtil);
-            } else
-                DialogBoxUtil.showErrorDialog(context,  "GalleryGridListAdapter:resultCode:" + Integer.toString(resultCode) + "-requestCode:" + Integer.toString(requestCode), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() { }
-                });
-        }
-        return false;
-    }
-
-    public void fillImageShareItemBox() {
-        ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
-        ShareItems.getInstance().clearImageShareItemBox();
-        ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -121,19 +72,15 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
                     selectedPosition = getAdapterPosition();
 
                     if (selectedPosition == CODE_GALLERY_POSITION)
-                        checkGalleryProcess();
+                        photoChosenCallback.onGallerySelected();
                     else if (selectedPosition == CODE_CAMERA_POSITION)
-                        checkCameraProcess();
-                    else
-                        showSelectedPicture();
+                        photoChosenCallback.onCameraSelected();
+                    else {
+                        photoSelectUtil = new PhotoSelectUtil(context, Uri.fromFile(selectedFile), FROM_FILE_TEXT);
+                        photoSelectCallback.onSelect(photoSelectUtil);
+                    }
                 }
             });
-        }
-
-        public void showSelectedPicture() {
-            photoSelectUtil = new PhotoSelectUtil(context, Uri.fromFile(selectedFile), FROM_FILE_TEXT);
-            photoSelectCallback.onSelect(photoSelectUtil);
-            fillImageShareItemBox();
         }
 
         public void setData(File selectedFile, int position) {
@@ -172,41 +119,5 @@ public class GalleryGridListAdapter extends RecyclerView.Adapter<GalleryGridList
     @Override
     public int getItemCount() {
         return fileList.size() + 2;
-    }
-
-    private void checkGalleryProcess() {
-        if (permissionModule.checkWriteExternalStoragePermission())
-            startGalleryProcess();
-        else
-            galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-    }
-
-    private void checkCameraProcess() {
-        if (!CommonUtils.checkCameraHardware(context)) {
-            CommonUtils.showToast(context, context.getResources().getString(R.string.deviceHasNoCamera));
-            return;
-        }
-
-        if (permissionModule.checkCameraPermission())
-            startCameraProcess();
-        else
-            galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.PERMISSION_CAMERA);
-    }
-
-    public void startGalleryProcess() {
-        Activity origin = (Activity) context;
-        origin.startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                context.getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
-    }
-
-    public void startCameraProcess() {
-        if (permissionModule.checkWriteExternalStoragePermission()) {
-            Activity origin = (Activity) context;
-            origin.startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
-        } else
-            galleryPickerFrag.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 }

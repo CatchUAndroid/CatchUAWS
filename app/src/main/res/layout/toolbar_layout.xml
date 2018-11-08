@@ -13,7 +13,7 @@
     <!-- değişiklikler burada yapılmalı/-->
     <LinearLayout
         android:id="@+id/l2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginBottom="5dp"
         android:orientation="horizontal">
@@ -21,59 +21,64 @@
         <RelativeLayout
             android:id="@+id/rl"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="30dp">
+            android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/backImgv"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/baseline_arrow_back_white_48dp"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/searchImgv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:paddingLeft="10dp"
                 android:src="@mipmap/search" />
 
-            <EditText
-                android:id="@+id/editTextSearch"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:focusedByDefault="false"
-                android:gravity="left"
-                android:hint="Ara"
-                android:inputType="text"
-                android:paddingTop="15dp"
-                android:textColor="@color/white"
-                android:textColorHint="@color/clearWhite" />
+                android:layout_marginRight="50dp">
+
+                <EditText
+                    android:id="@+id/editTextSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginLeft="30dp"
+                    android:focusedByDefault="false"
+                    android:gravity="left"
+                    android:hint="@string/search"
+                    android:inputType="text"
+                    android:paddingTop="15dp"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/clearWhite" />
+
+                <ImageView
+                    android:id="@+id/imgCancelSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@mipmap/cancel2"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
 
             <ImageView
-                android:id="@+id/imgCancelSearch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/addItemImgv"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:paddingRight="30dp"
-                android:src="@mipmap/cancel2"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/baseline_add_white_48"
                 android:visibility="gone" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/r2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginRight="30dp">
-
-            <TextView
-                android:id="@+id/txtAddGroup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingRight="20dp"
-                android:text="@string/addGroup"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
 
         </RelativeLayout>
 

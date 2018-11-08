@@ -24,11 +24,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -36,7 +38,9 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
@@ -45,6 +49,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
+import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -56,6 +61,8 @@ import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 
 public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
@@ -67,6 +74,8 @@ public class ProfileFragment extends BaseFragment
 
     TextView navViewNameTv;
     TextView navViewUsernameTv;
+    ImageView navImgProfile;
+    TextView navViewShortenTextView;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -107,6 +116,8 @@ public class ProfileFragment extends BaseFragment
     RelativeLayout menuLayout;
     @BindView(R.id.backLayout)
     RelativeLayout backLayout;
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
 
     TextView navPendReqCntTv;
 
@@ -137,6 +148,7 @@ public class ProfileFragment extends BaseFragment
 
             checkBundle();
             setCollapsingToolbar();
+            setPullToRefresh();
             addListeners();
             setUpPager();
             setNavViewItems();
@@ -149,7 +161,7 @@ public class ProfileFragment extends BaseFragment
         Bundle args = getArguments();
         if (args != null) {
             Boolean comingFromTab = (Boolean) args.getBoolean(ARGS_INSTANCE);
-            if(!comingFromTab){
+            if (!comingFromTab) {
                 //if not coming from Tab, edits disabled..
                 imgUserEdit.setVisibility(View.GONE);
                 menuLayout.setVisibility(View.GONE);
@@ -159,10 +171,26 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    private void setNavViewItems(){
+    private void setNavViewItems() {
         View v = navViewLayout.getHeaderView(0);
         navViewNameTv = v.findViewById(R.id.navViewNameTv);
         navViewUsernameTv = v.findViewById(R.id.navViewUsernameTv);
+        navImgProfile = v.findViewById(R.id.navImgProfile);
+        navViewShortenTextView = v.findViewById(R.id.navViewShortenTextView);
+    }
+
+    private void setPullToRefresh() {
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AccountHolderInfo.getToken(new TokenCallback() {
+                    @Override
+                    public void onTokenTaken(String token) {
+                        startGetProfileDetail(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), token);
+                    }
+                });
+            }
+        });
     }
 
     private void setCollapsingToolbar() {
@@ -218,7 +246,8 @@ public class ProfileFragment extends BaseFragment
         menuImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(pendReqCntTv != null)
+                menuImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                if (pendReqCntTv != null)
                     pendReqCntTv.setVisibility(View.GONE);
 
                 if (mDrawerState) {
@@ -240,11 +269,16 @@ public class ProfileFragment extends BaseFragment
                         break;
 
                     case R.id.viewItem:
-                        if(navPendReqCntTv != null)
+                        if (navPendReqCntTv != null)
                             navPendReqCntTv.setVisibility(View.GONE);
 
                         drawerLayout.closeDrawer(Gravity.START);
                         startPendingRequestFragment();
+                        break;
+
+                    case R.id.manageGroupsItem:
+                        drawerLayout.closeDrawer(Gravity.START);
+                        startGroupSettingFragment();
                         break;
 
                     case R.id.settingsItem:
@@ -318,19 +352,23 @@ public class ProfileFragment extends BaseFragment
                 navViewNameTv.setText(user.getUserInfo().getName());
             }
 
-            UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), txtProfile, imgProfile);
+
+            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
 
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 txtUserName.setText(user.getUserInfo().getUsername());
-                navViewUsernameTv.setText(user.getUserInfo().getUsername());
+                navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
             }
 
-            if(user.getUserInfo().getIsPrivateAccount() != null){
+            if (user.getUserInfo().getIsPrivateAccount() != null) {
                 getPendingFriendList();
             }
         }
         setUserFollowerAndFollowingCnt(user);
+        refresh_layout.setRefreshing(false);
     }
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
@@ -346,32 +384,32 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    private void getPendingFriendList(){
+    private void getPendingFriendList() {
 
         AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                if(object != null){
+                if (object != null) {
                     FriendRequestList friendRequestList = (FriendRequestList) object;
 
-                    if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
+                    if (friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0) {
                         pendReqCntTv.setVisibility(View.VISIBLE);
                         pendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
-                    }else
+                    } else
                         pendReqCntTv.setVisibility(View.GONE);
 
 
                     Menu menu = navViewLayout.getMenu();
-                    for(int index = 0; index < menu.size(); index++){
+                    for (int index = 0; index < menu.size(); index++) {
                         MenuItem menuItem = menu.getItem(index);
-                        if(menuItem.getItemId() == R.id.viewItem){
+                        if (menuItem.getItemId() == R.id.viewItem) {
                             RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
                             navPendReqCntTv = rootView.findViewById(R.id.pendReqCntTv);
 
-                            if(friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0){
+                            if (friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0) {
                                 navPendReqCntTv.setVisibility(View.VISIBLE);
                                 navPendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
-                            }else
+                            } else
                                 navPendReqCntTv.setVisibility(View.GONE);
                         }
                     }
@@ -412,10 +450,12 @@ public class ProfileFragment extends BaseFragment
                 progressBar.setVisibility(View.GONE);
                 myProfile = up;
                 setProfileDetail(up);
+                refresh_layout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Exception e) {
+                refresh_layout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -432,18 +472,21 @@ public class ProfileFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == imgUserEdit) {
+            imgUserEdit.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             userEditClicked();
         }
 
         if (v == txtFollowerCnt) {
+            txtFollowerCnt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             followerClicked();
         }
 
         if (v == txtFollowingCnt) {
+            txtFollowingCnt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             followingClicked();
         }
 
-        if(v == imgBackBtn){
+        if (v == imgBackBtn) {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
@@ -490,6 +533,18 @@ public class ProfileFragment extends BaseFragment
     private void startExplorePeopleFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new ExplorePeopleFragment(), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
+
+    private void startGroupSettingFragment(){
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new GroupManagementFragment(GROUP_OP_VIEW_TYPE,
+                            new ReturnCallback() {
+                                @Override
+                                public void onReturn(Object object) {
+
+                                }
+                            }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

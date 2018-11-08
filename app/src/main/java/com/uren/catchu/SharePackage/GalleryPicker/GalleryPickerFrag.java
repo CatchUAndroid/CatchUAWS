@@ -1,7 +1,10 @@
 package com.uren.catchu.SharePackage.GalleryPicker;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ClipData;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -18,6 +21,7 @@ import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -27,12 +31,18 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.SharePackage.AddMessageToPostFragment;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.PhotoSelectCallback;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TextCompleteCallback;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TrashDragDropCallback;
+import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.io.File;
@@ -42,7 +52,9 @@ import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
-
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 @SuppressLint("ValidFragment")
 public class GalleryPickerFrag extends Fragment {
@@ -73,24 +85,33 @@ public class GalleryPickerFrag extends Fragment {
     public GalleryGridListAdapter gridListAdapter;
     PermissionModule permissionModule;
     View trashLayout = null;
+    //OnLoadedListener onLoadedListener;
+
+    public GalleryPickerFrag() {
+
+    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.gallery_picker_layout, container, false);
-            ButterKnife.bind(this, mView);
-        }
-        return mView;
+    public void onResume() {
+        super.onResume();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.gallery_picker_layout, container, false);
+        ButterKnife.bind(this, mView);
+        initVariables();
+        getData();
+        addListeners();
+        return mView;
+    }
+
+    public void initVariables() {
         specialRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
         photoRelLayout = mView.findViewById(R.id.photoRelLayout);
         selectImageView = mView.findViewById(R.id.selectImageView);
@@ -101,8 +122,11 @@ public class GalleryPickerFrag extends Fragment {
         photoMainLayout = mView.findViewById(R.id.photoMainLayout);
         textView = mView.findViewById(R.id.textView);
         seekbar = mView.findViewById(R.id.seekbar);
-        getData();
-        addListeners();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -110,6 +134,7 @@ public class GalleryPickerFrag extends Fragment {
         addTextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                addTextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 setDefaultTextView();
                 startTextEditFragment();
             }
@@ -118,6 +143,7 @@ public class GalleryPickerFrag extends Fragment {
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cancelImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 ShareItems.getInstance().clearImageShareItemBox();
                 photoMainLayout.setVisibility(View.GONE);
                 specialRecyclerView.setVisibility(View.VISIBLE);
@@ -211,6 +237,26 @@ public class GalleryPickerFrag extends Fragment {
         seekbar.setVisibility(View.GONE);
         textView.setVisibility(View.GONE);
 
+        /*if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new TextEditFragment(textView, photoUtil, new TextCompleteCallback() {
+                @Override
+                public void textCompleted(View view) {
+                    cancelImageView.setVisibility(View.VISIBLE);
+                    addTextImgv.setVisibility(View.VISIBLE);
+                    EditText returnEditText = (EditText) view;
+                    if (returnEditText != null) {
+                        if (!returnEditText.getText().toString().trim().isEmpty()) {
+                            textView.setTextColor(returnEditText.getCurrentTextColor());
+                            textView.setText(returnEditText.getText().toString());
+                            textView.setVisibility(View.VISIBLE);
+                            seekbar.setVisibility(View.VISIBLE);
+                        } else
+                            seekbar.setVisibility(View.GONE);
+                    }
+                }
+            }), ANIMATE_RIGHT_TO_LEFT);
+        }*/
+
         TextEditFragment nextFrag = new TextEditFragment(textView, new TextCompleteCallback() {
             @Override
             public void textCompleted(View view) {
@@ -230,7 +276,7 @@ public class GalleryPickerFrag extends Fragment {
         });
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.addPropRelLayout, nextFrag, TextEditFragment.class.getName())
-                .addToBackStack(TextEditFragment.class.getName())
+                .addToBackStack(GalleryPickerFrag.class.getName())
                 .commit();
     }
 
@@ -263,22 +309,78 @@ public class GalleryPickerFrag extends Fragment {
 
     public void getData() {
         fetchMedia();
-        gridListAdapter = new GalleryGridListAdapter(getActivity(), mFiles, GalleryPickerFrag.this, new PhotoSelectCallback() {
-            @Override
-            public void onSelect(PhotoSelectUtil photoSelectUtil) {
-                photoUtil = photoSelectUtil;
-                resetPhotoImageView(photoUtil.isPortraitMode());
-                Glide.with(getActivity()).load(photoUtil.getMediaUri()).into(selectImageView);
-                photoMainLayout.setVisibility(View.VISIBLE);
-                specialRecyclerView.setVisibility(View.GONE);
-                seekbar.setVisibility(View.GONE);
-            }
-        });
+        if (getContext() != null) {
+            gridListAdapter = new GalleryGridListAdapter(getContext(), mFiles, new PhotoSelectCallback() {
+                @Override
+                public void onSelect(PhotoSelectUtil photoSelectUtil) {
+                    photoUtil = photoSelectUtil;
+                    photoSelected();
+                    fillImageShareItemBox();
+                }
+            }, new PhotoChosenCallback() {
+                @Override
+                public void onGallerySelected() {
+                    checkGalleryProcess();
+                }
 
-        specialRecyclerView.setAdapter(gridListAdapter);
-        gridLayoutManager = new GridLayoutManager(getActivity(), spanCount);
-        specialRecyclerView.addItemDecoration(addItemDecoration());
-        specialRecyclerView.setLayoutManager(gridLayoutManager);
+                @Override
+                public void onCameraSelected() {
+                    checkCameraProcess();
+                }
+
+                @Override
+                public void onPhotoRemoved() {
+
+                }
+            });
+
+            specialRecyclerView.setAdapter(gridListAdapter);
+            gridLayoutManager = new GridLayoutManager(getContext(), spanCount);
+            specialRecyclerView.addItemDecoration(addItemDecoration());
+            specialRecyclerView.setLayoutManager(gridLayoutManager);
+        }
+    }
+
+    public void photoSelected(){
+        resetPhotoImageView(photoUtil.isPortraitMode());
+        Glide.with(getContext()).load(photoUtil.getMediaUri()).into(selectImageView);
+        photoMainLayout.setVisibility(View.VISIBLE);
+        specialRecyclerView.setVisibility(View.GONE);
+        seekbar.setVisibility(View.GONE);
+    }
+
+    private void checkGalleryProcess() {
+        if (permissionModule.checkWriteExternalStoragePermission())
+            startGalleryProcess();
+        else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+    }
+
+    private void checkCameraProcess() {
+        if (!CommonUtils.checkCameraHardware(getContext())) {
+            CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
+            return;
+        }
+
+        if (permissionModule.checkCameraPermission())
+            startCameraProcess();
+        else
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    permissionModule.PERMISSION_CAMERA);
+    }
+
+    public void startGalleryProcess() {
+        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                getContext().getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
+    }
+
+    public void startCameraProcess() {
+        if (permissionModule.checkWriteExternalStoragePermission()) {
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+        } else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     public void resetPhotoImageView(boolean portraitMode) {
@@ -352,18 +454,39 @@ public class GalleryPickerFrag extends Fragment {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 if (gridListAdapter.selectedPosition == CODE_GALLERY_POSITION)
-                    gridListAdapter.startGalleryProcess();
+                    startGalleryProcess();
                 else if (gridListAdapter.selectedPosition == CODE_CAMERA_POSITION)
-                    gridListAdapter.startCameraProcess();
+                    startCameraProcess();
                 else
-                    gridListAdapter.startGalleryProcess();
+                    startGalleryProcess();
             }
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                gridListAdapter.startCameraProcess();
+                startCameraProcess();
             }
-        } else
-            CommonUtils.showToast(getActivity(), getActivity().getString(R.string.technicalError) + requestCode);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == permissionModule.getImageGalleryPermission()) {
+                photoUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
+                fillImageShareItemBox();
+                photoSelected();
+            } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+                photoUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
+                fillImageShareItemBox();
+                photoSelected();
+            }
+        }
+    }
+
+    public void fillImageShareItemBox() {
+        ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoUtil);
+        ShareItems.getInstance().clearImageShareItemBox();
+        ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
     }
 
     public void textFragBackPressed() {

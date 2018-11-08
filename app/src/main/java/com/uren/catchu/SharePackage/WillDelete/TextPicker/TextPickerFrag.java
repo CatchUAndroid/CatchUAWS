@@ -1,8 +1,7 @@
-package com.uren.catchu.SharePackage.TextPicker;
+package com.uren.catchu.SharePackage.WillDelete.TextPicker;
 
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
@@ -30,8 +29,8 @@ import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
-import com.uren.catchu.SharePackage.TextPicker.Adapters.PostitAdapter;
-import com.uren.catchu.SharePackage.TextPicker.Interfaces.PostitSelectCallback;
+import com.uren.catchu.SharePackage.WillDelete.TextPicker.Adapters.PostitAdapter;
+import com.uren.catchu.SharePackage.WillDelete.TextPicker.Interfaces.PostitSelectCallback;
 import com.uren.catchu.SharePackage.Utils.ColorSelectCallback;
 import com.uren.catchu.Singleton.Share.ShareItems;
 

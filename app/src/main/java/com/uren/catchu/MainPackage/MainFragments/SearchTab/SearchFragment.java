@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.SearchTab;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -28,11 +27,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Permissions.PermissionModule;
-import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.GroupFragment;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SubFragments.PersonFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -41,7 +37,6 @@ import butterknife.ButterKnife;
 import catchu.model.FriendList;
 import catchu.model.UserProfile;
 
-import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_ACTIVITY_NAME;
 import static com.uren.catchu.Constants.StringConstants.propGroups;
 import static com.uren.catchu.Constants.StringConstants.propPersons;
 
@@ -72,9 +67,7 @@ public class SearchFragment extends BaseFragment {
     private TextView txtAddGroup;
     private Boolean refreshSearch = true;
 
-    PermissionModule permissionModule;
-
-    public SearchFragment(){
+    public SearchFragment() {
 
     }
 
@@ -109,9 +102,6 @@ public class SearchFragment extends BaseFragment {
         } else {
             refreshSearch = false;
         }
-
-        permissionModule = new PermissionModule(context);
-        permissionModule.checkWriteExternalStoragePermission();
 
         return view;
     }
@@ -176,7 +166,7 @@ public class SearchFragment extends BaseFragment {
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(personFragment, getResources().getString(R.string.friends));
-        adapter.addFragment(GroupFragment.newInstance(), getResources().getString(R.string.groups));
+        adapter.addFragment(new GroupFragment(), getResources().getString(R.string.groups));
         viewPager.setAdapter(adapter);
     }
 
@@ -221,14 +211,15 @@ public class SearchFragment extends BaseFragment {
         editTextSearch = view.findViewById(R.id.editTextSearch);
         imgCancelSearch = view.findViewById(R.id.imgCancelSearch);
         rl = view.findViewById(R.id.rl);
-        r2 = view.findViewById(R.id.r2);
-        txtAddGroup = view.findViewById(R.id.txtAddGroup);
+      /*  r2 = view.findViewById(R.id.r2);
+        txtAddGroup = view.findViewById(R.id.txtAddGroup);*/
 
         imgCancelSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 refreshSearch = true;
-                editTextSearch.getText().clear();
+                if (editTextSearch != null && editTextSearch.getText() != null)
+                    editTextSearch.setText("");
                 imgCancelSearch.setVisibility(View.GONE);
 
             }
@@ -277,14 +268,12 @@ public class SearchFragment extends BaseFragment {
         AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                if(object != null) {
+                if (object != null) {
                     FriendList friendList = (FriendList) object;
                     if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0)
                         CommonUtils.showToast(context, context.getResources().getString(R.string.addFriendFirst));
                     else {
-                        Intent intent = new Intent(context, SelectFriendToGroupActivity.class);
-                        intent.putExtra(PUTEXTRA_ACTIVITY_NAME, NextActivity.class.getSimpleName());
-                        startActivity(intent);
+
                     }
                 }
             }

@@ -1,7 +1,10 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.accounts.Account;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +13,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -36,26 +40,33 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DynamicLinkUtil.DynamicLinkUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.OnLoadedListener;
+import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactFriendsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.FacebookFriendsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.UgurDeneme.FirebaseMLActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.DYNAMIC_LINK_DOMAIN;
 
 
-public class SettingsFragment extends BaseFragment{
+public class SettingsFragment extends BaseFragment {
 
     View mView;
     ProgressDialogUtil progressDialogUtil;
@@ -70,6 +81,9 @@ public class SettingsFragment extends BaseFragment{
     LinearLayout changePasswordLayout;
     //ToggleButton privateToogleButton;
     Switch privateAccSwitch;
+
+    // TODO: 5.11.2018 - silinecek
+    LinearLayout mlDeneme;
 
     public SettingsFragment() {
 
@@ -101,15 +115,16 @@ public class SettingsFragment extends BaseFragment{
         inviteForInstallLayout = mView.findViewById(R.id.inviteForInstallLayout);
         changePasswordLayout = mView.findViewById(R.id.changePasswordLayout);
         privateAccSwitch = mView.findViewById(R.id.privateAccSwitch);
+        mlDeneme = mView.findViewById(R.id.mlDeneme);
         //privateToogleButton = (ToggleButton) mView.findViewById(R.id.privateAccSwitch);
         progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
         fragment = this;
     }
 
-    public void setDefaultUIValues(){
+    public void setDefaultUIValues() {
         toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
 
-        if(AccountHolderInfo.getInstance().getUser() != null &&
+        if (AccountHolderInfo.getInstance().getUser() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount().booleanValue())
             privateAccSwitch.setChecked(true);
@@ -117,7 +132,17 @@ public class SettingsFragment extends BaseFragment{
             privateAccSwitch.setChecked(false);
     }
 
-    public void addListeners(){
+    @SuppressLint("ClickableViewAccessibility")
+    public void addListeners() {
+
+        mlDeneme.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), FirebaseMLActivity.class));
+            }
+        });
+
+
         backImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,15 +186,22 @@ public class SettingsFragment extends BaseFragment{
             }
         });
 
-        privateAccSwitch.setOnClickListener(new View.OnClickListener() {
+        privateAccSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                changeUserPrivateSpec();
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        SettingOperation.changeUserPrivacy(getContext(), privateAccSwitch);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
             }
         });
     }
 
-    public void startFacebookFriendsFragment(){
+    public void startFacebookFriendsFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new FacebookFriendsFragment(new OnLoadedListener() {
                 @Override
@@ -185,7 +217,7 @@ public class SettingsFragment extends BaseFragment{
         }
     }
 
-    public void startContactFriendsFragment(){
+    public void startContactFriendsFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new ContactFriendsFragment(new OnLoadedListener() {
                 @Override
@@ -201,21 +233,15 @@ public class SettingsFragment extends BaseFragment{
         }
     }
 
-    public void startChangePasswordFragment(){
+    public void startChangePasswordFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new ChangePasswordFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
-    public void changeUserPrivateSpec(){
-        if(AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount().booleanValue()){
-
-        }
-    }
-
     private void signOutClicked() {
 
-        UserDataUtil.userSignOut();
+        SettingOperation.userSignOut();
         getActivity().finish();
         startActivity(new Intent(getActivity(), MainActivity.class));
     }

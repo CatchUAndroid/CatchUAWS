@@ -1,4 +1,4 @@
-package com.uren.catchu.GroupPackage.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
 
 import android.app.Activity;
@@ -12,11 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.ClickCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 

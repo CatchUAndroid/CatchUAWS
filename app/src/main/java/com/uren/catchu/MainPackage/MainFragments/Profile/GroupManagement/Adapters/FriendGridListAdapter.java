@@ -1,9 +1,7 @@
-package com.uren.catchu.GroupPackage.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +12,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
@@ -26,16 +24,18 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
     View view;
     LayoutInflater layoutInflater;
     Context context;
-    TextView participantCntTv;
-    Activity activity;
+    //TextView participantCntTv;
+    //Activity activity;
     GradientDrawable imageShape;
     GradientDrawable deleteShape;
+    ReturnCallback returnCallback;
 
-    public FriendGridListAdapter(Context context, FriendList friendList) {
+    public FriendGridListAdapter(Context context, FriendList friendList, ReturnCallback returnCallback) {
         layoutInflater = LayoutInflater.from(context);
         this.friendList = friendList;
         this.context = context;
-        activity = (Activity) context;
+        this.returnCallback = returnCallback;
+        //activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
         deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
@@ -51,9 +51,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
 
         view = layoutInflater.inflate(R.layout.special_grid_list_item, parent, false);
         FriendGridListAdapter.MyViewHolder holder = new FriendGridListAdapter.MyViewHolder(view);
-
-        participantCntTv = activity.findViewById(R.id.participantSize);
-
         return holder;
     }
 
@@ -81,11 +78,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
                 public void onClick(View v) {
 
                     removeItem(position);
-
-                    if (getItemCount() == 0)
-                        activity.finish();
-                    else
-                        participantCntTv.setText(Integer.toString(getItemCount()));
+                    returnCallback.onReturn(getItemCount());
                 }
             });
         }
@@ -95,7 +88,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
             SelectedFriendList.updateFriendList(friendList.getResultArray());
             notifyItemRemoved(position);
             notifyItemRangeChanged(position, getItemCount());
-            SelectFriendToGroupActivity.adapter.notifyDataSetChanged();
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {

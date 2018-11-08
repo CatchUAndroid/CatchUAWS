@@ -22,15 +22,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.SelectGroupActivity;
+import com.uren.catchu.SharePackage.ShareDetailFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedGroupList;
 
@@ -43,6 +42,8 @@ import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
+import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 
 public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> implements Filterable {
 
@@ -52,19 +53,20 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     GroupRequestResult groupRequestResult;
     GroupRequestResult orgGroupRequestResult;
     Activity activity;
-    String pendingActivityName;
+    String operationType;
     GroupRequestResultResultArrayItem seledtedGroup;
     int beforeSelectedPosition = -1;
     GradientDrawable groupPhotoShape;
     GradientDrawable adminButtonShape;
     ReturnCallback returnCallback;
+    ReturnCallback searchResultCallback;
     ItemClickListener itemClickListener;
 
     private static final int SHOW_GROUP_DETAIL = 0;
     private static final int EXIT_FROM_GROUP = 1;
 
     public UserGroupsListAdapter(Context context, GroupRequestResult groupRequestResult, ReturnCallback returnCallback,
-                                 ItemClickListener itemClickListener) {
+                                 ItemClickListener itemClickListener, String operationType) {
         layoutInflater = LayoutInflater.from(context);
         this.groupRequestResult = groupRequestResult;
         this.orgGroupRequestResult = groupRequestResult;
@@ -72,7 +74,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         this.itemClickListener = itemClickListener;
         this.context = context;
         activity = (Activity) context;
-        pendingActivityName = context.getClass().getSimpleName();
+        this.operationType = operationType;
         adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                 context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
         groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
@@ -110,15 +112,17 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             adminDisplayButton.setBackground(adminButtonShape);
             groupPicImgView.setBackground(groupPhotoShape);
 
-            if (pendingActivityName.equals(SelectGroupActivity.class.getSimpleName()))
+            if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
                 selectGroupRb.setVisibility(View.VISIBLE);
 
             groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (pendingActivityName.equals(SelectGroupActivity.class.getSimpleName())) {
+                    if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
                         selectGroupRb.setChecked(true);
                         manageSelectedItem();
+                    } else if(operationType.equals(GROUP_OP_VIEW_TYPE)){
+                        showGroupDetail();
                     }
                 }
             });
@@ -187,24 +191,9 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
         public void exitFromGroup() {
 
-            AccountHolderInfo.getToken(new TokenCallback() {
+            UserGroupsProcess.exitFromGroup(AccountHolderInfo.getUserID(), groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
                 @Override
-                public void onTokenTaken(String token) {
-                    startExitFromGroupProcess(token);
-                }
-            });
-        }
-
-        private void startExitFromGroupProcess(String token) {
-
-            final GroupRequest groupRequest = new GroupRequest();
-            groupRequest.setRequestType(EXIT_GROUP);
-            groupRequest.setUserid(AccountHolderInfo.getUserID());
-            groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
-
-            GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
+                public void onComplete(Object object) {
                     groupRequestResult.getResultArray().remove(groupRequestResultResultArrayItem);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, getItemCount());
@@ -212,17 +201,10 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 }
 
                 @Override
-                public void onFailure(Exception e) {
+                public void onFailed(Exception e) {
 
                 }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, groupRequest, token);
-
-            groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            });
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {
@@ -269,7 +251,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             String returnValue = "";
             String[] seperatedName = groupRequestResultResultArrayItem.getName().trim().split(" ");
             for (String word : seperatedName) {
-                if (returnValue.length() < 5)
+                if (returnValue.length() < 3)
                     returnValue = returnValue + word.substring(0, 1).toUpperCase();
             }
             return returnValue;
@@ -309,7 +291,8 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         return groupRequestResult.getResultArray().size();
     }
 
-    public void updateAdapter(String searchText) {
+    public void updateAdapter(String searchText, ReturnCallback searchResultCallback) {
+        this.searchResultCallback = searchResultCallback;
         getFilter().filter(searchText);
     }
 
@@ -345,6 +328,11 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 groupRequestResult = (GroupRequestResult) filterResults.values;
                 notifyDataSetChanged();
+
+                if(groupRequestResult != null && groupRequestResult.getResultArray() != null && groupRequestResult.getResultArray().size() > 0)
+                    searchResultCallback.onReturn(groupRequestResult.getResultArray().size());
+                else
+                    searchResultCallback.onReturn(0);
             }
         };
     }

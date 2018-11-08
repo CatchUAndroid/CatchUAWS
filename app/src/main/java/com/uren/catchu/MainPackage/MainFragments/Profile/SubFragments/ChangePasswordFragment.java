@@ -29,6 +29,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -192,7 +193,7 @@ public class ChangePasswordFragment extends BaseFragment {
         public void run() {
             try {
                 Thread.sleep(3000);
-                UserDataUtil.userSignOut();
+                SettingOperation.userSignOut();
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), MainActivity.class));
             } catch (Exception e) {

@@ -16,6 +16,12 @@
         app:actionLayout="@layout/navmenu_action_layout"/>
 
     <item
+        android:id="@+id/manageGroupsItem"
+        android:checkable="true"
+        android:icon="@drawable/groups_icon_500"
+        android:title="@string/GROUP_SETTINGS"/>
+
+    <item
         android:id="@+id/settingsItem"
         android:checkable="true"
         android:icon="@mipmap/settings"

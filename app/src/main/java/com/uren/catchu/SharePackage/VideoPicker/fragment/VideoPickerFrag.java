@@ -91,8 +91,6 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
     boolean mediaPlayerIsPlaying = false;
     File videoFile = null;
 
-    // TODO: 13.09.2018 -- Bu video oynatilamiyor BUG ini cozemedim
-
     private int RESULT_CODE_VIDEO_GALLERY_SELECT = 1001;
 
     private static final String[] FLASH_OPTIONS = {
@@ -114,10 +112,8 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.video_picker, container, false);
-            ButterKnife.bind(this, mView);
-        }
+        mView = inflater.inflate(R.layout.video_picker, container, false);
+        ButterKnife.bind(this, mView);
         return mView;
     }
 

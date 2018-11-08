@@ -30,5 +30,18 @@ public class NumericConstants {
     public static final int FEED_PAGE_COUNT = 1;
     public static final int FEED_PERPAGE_COUNT = 5; // EN AZ 4 OLMALI.
 
+    //Share type values
+    public static final int CODE_PUBLIC_SHARED = 0;
+    public static final int CODE_FRIEND_SHARED = 1;
+    public static final int CODE_GROUP_SHARED = 2;
+    public static final int CODE_JUSTME_SHARED = 3;
 
+    public static final int SHARE_TRY_COUNT = 2;
+
+    //Select unselect all constants
+    public static final int CODE_SELECT_ALL = 0;
+    public static final int CODE_UNSELECT_ALL = 1;
+
+    //Share
+    public static final int REQUEST_CODE_ENABLE_LOCATION = 3003;
 }

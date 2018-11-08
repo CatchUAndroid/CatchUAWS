@@ -1,4 +1,4 @@
-package com.uren.catchu.SharePackage.TextPicker.Models;
+package com.uren.catchu.SharePackage.WillDelete.TextPicker.Models;
 
 import com.uren.catchu.R;
 

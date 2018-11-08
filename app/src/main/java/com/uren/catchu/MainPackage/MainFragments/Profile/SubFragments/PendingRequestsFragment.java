@@ -43,7 +43,7 @@ public class PendingRequestsFragment extends BaseFragment {
     LinearLayoutManager linearLayoutManager;
 
     @BindView(R.id.progressBar)
-    public ProgressBar progressBar;
+    ProgressBar progressBar;
 
     @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
@@ -81,7 +81,7 @@ public class PendingRequestsFragment extends BaseFragment {
         backImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -93,7 +93,7 @@ public class PendingRequestsFragment extends BaseFragment {
     }
 
     public void getData() {
-
+        progressBar.setVisibility(View.VISIBLE);
         AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
@@ -102,38 +102,42 @@ public class PendingRequestsFragment extends BaseFragment {
                 MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
                         getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
 
-                pendingRequestAdapter = new PendingRequestAdapter(getActivity(), friendRequestList, new ListItemClickListener() {
-                    @Override
-                    public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
-                        startFollowingInfoProcess(rowItem, clickedPosition);
-                    }
-                }, new ReturnCallback() {
-                    @Override
-                    public void onReturn(Object object1) {
-                        AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
-                            @Override
-                            public void onComplete(Object object) {
-                                FriendRequestList friendRequestList = (FriendRequestList) object;
-                                MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
-                                        getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
-                            }
+                if(getContext() != null) {
+                    pendingRequestAdapter = new PendingRequestAdapter(getContext(), friendRequestList, new ListItemClickListener() {
+                        @Override
+                        public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
+                            startFollowingInfoProcess(rowItem, clickedPosition);
+                        }
+                    }, new ReturnCallback() {
+                        @Override
+                        public void onReturn(Object object1) {
+                            AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
+                                @Override
+                                public void onComplete(Object object) {
+                                    FriendRequestList friendRequestList = (FriendRequestList) object;
+                                    MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
+                                            getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                                }
 
-                            @Override
-                            public void onFailed(Exception e) {
+                                @Override
+                                public void onFailed(Exception e) {
 
-                            }
-                        });
-                    }
-                });
-                following_recyclerView.setAdapter(pendingRequestAdapter);
-                linearLayoutManager = new LinearLayoutManager(getActivity());
-                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                following_recyclerView.setLayoutManager(linearLayoutManager);
+                                }
+                            });
+                        }
+                    });
+                    following_recyclerView.setAdapter(pendingRequestAdapter);
+                    linearLayoutManager = new LinearLayoutManager(getContext());
+                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                    following_recyclerView.setLayoutManager(linearLayoutManager);
+                }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                progressBar.setVisibility(View.GONE);
+                DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
 

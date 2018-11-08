@@ -4,5 +4,5 @@
     <dimen name="edittextsize">15sp</dimen>
     <dimen name="ADD_GROUP_IMGV_SIZE">70px</dimen>
     <dimen name="default_elevation">8dp</dimen>
-    <dimen name="toolbarTextSize">25sp</dimen>
+    <dimen name="toolbarTextSize">20sp</dimen>
 </resources>

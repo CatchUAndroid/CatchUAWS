@@ -20,7 +20,6 @@ import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
-import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.R;
@@ -193,7 +192,7 @@ public class ExplorePeopleFragment extends BaseFragment {
 
     public void searchTextClear() {
         if (editTextSearch != null && editTextSearch.getText() != null)
-            editTextSearch.getText().clear();
+            editTextSearch.setText("");
     }
 
     private void overwriteToolbar() {
@@ -220,15 +219,17 @@ public class ExplorePeopleFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (!s.toString().trim().isEmpty())
-                    imgCancelSearch.setVisibility(View.VISIBLE);
-                else
-                    imgCancelSearch.setVisibility(View.GONE);
+                if(s != null && s.toString() != null) {
+                    if (!s.toString().trim().isEmpty())
+                        imgCancelSearch.setVisibility(View.VISIBLE);
+                    else
+                        imgCancelSearch.setVisibility(View.GONE);
 
-                if (selectedProperty == TAB_FACEBOOK) {
-                    ((FacebookFriendsFragment) adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
-                } else if (selectedProperty == TAB_CONTACTS) {
-                    ((ContactFriendsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
+                    if (selectedProperty == TAB_FACEBOOK) {
+                        ((FacebookFriendsFragment) adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
+                    } else if (selectedProperty == TAB_CONTACTS) {
+                        ((ContactFriendsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
+                    }
                 }
             }
         });

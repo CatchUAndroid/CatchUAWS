@@ -176,21 +176,4 @@ public class UserDataUtil {
 
         displayButton.setBackground(buttonShape);
     }
-
-    public static void userSignOut() {
-
-        //Normal users
-        FirebaseAuth firebaseAuth = AccountHolderInfo.getFirebaseAuth();
-        firebaseAuth.signOut();
-
-        //Facebook users
-        if(LoginManager.getInstance()!=null){
-            LoginManager.getInstance().logOut();
-        }
-
-        //Twitter users
-        if(TwitterCore.getInstance()!=null){
-            TwitterCore.getInstance().getSessionManager().clearActiveSession();
-        }
-    }
 }

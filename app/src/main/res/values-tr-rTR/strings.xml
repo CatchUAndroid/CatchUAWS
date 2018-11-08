@@ -87,6 +87,8 @@
     <string name="UPDATE_IS_SUCCESSFUL">Güncelendi</string>
     <string name="THERE_IS_NO_SEARCH_RESULT">Hiç bir sonuç bulunamadı.</string>
     <string name="USERS_OF_APPLICATION">Uygulamayı Kullananlar</string>
+    <string name="DEFAULT_POST_ERROR_MESSAGE">Paylaşım esnasında bir hata ile karşılaşıldı, tekrar denemek ister misiniz?</string>
+    <string name="GROUP_SETTINGS">Grup Ayarları</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -195,6 +197,11 @@
     <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Doğrulama Başarılı</string>
     <string name="PASSWORD_IS_CHANGED">Şifre değiştirildi</string>
     <string name="CURRENT_PASSWORD_INCORRECT">Mevcut şifre hatalı</string>
+    <string name="ASK_FOR_REMOVE_ACCOUNT_PRIVACY">Hesabınızın gizliliğini kaldırmak istiyor musunuz?</string>
+    <string name="ASK_FOR_MAKE_ACCOUNT_PRIVACY">Hesabınızı gizli yapmak istiyor musunuz?</string>
+    <string name="YOU_LIKED_POSTS">Beğendiğin Gönderiler</string>
+    <string name="POST_DETAIL">Paylaşım Detayı</string>
+    <string name="THERE_IS_NO_MEDIA_TO_POST">Paylaşım için herhangi bir medya seçilmedi</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

@@ -1,4 +1,4 @@
-package com.uren.catchu.GroupPackage.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,17 +18,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.UserGroups;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,17 +144,12 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                     Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
                                     FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
                                     followInfoResultArrayItem = getFollowProperties();
-                                    itemClickListener.onClick(followInfoResultArrayItem, item);
+                                    itemClickListener.onClick(followInfoResultArrayItem, CODE_DISPLAY_PROFILE);
 
-                                } else if (item == CODE_REMOVE_FROM_GROUP) {
+                                } else if (item == CODE_REMOVE_FROM_GROUP)
                                     exitFromGroup(userProfile.getUserid());
-                                } else if (item == CODE_CHANGE_AS_ADMIN) {
+                                else if (item == CODE_CHANGE_AS_ADMIN)
                                     changeAdministrator(userProfile.getUserid());
-                                    Toast.makeText(context, "Change as admin clicked", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
-                                            context.getResources().getString(R.string.technicalError));
-                                }
                             }
                         });
 
@@ -219,24 +211,9 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
         public void exitFromGroup(final String userid) {
 
-            AccountHolderInfo.getToken(new TokenCallback() {
+            UserGroupsProcess.exitFromGroup(userid, groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
                 @Override
-                public void onTokenTaken(String token) {
-                    startExitFromGroupProcess(userid, token);
-                }
-            });
-        }
-
-        private void startExitFromGroupProcess(String userid, String token) {
-
-            final GroupRequest groupRequest = new GroupRequest();
-            groupRequest.setRequestType(EXIT_GROUP);
-            groupRequest.setUserid(userid);
-            groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
-
-            GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
+                public void onComplete(Object object) {
                     groupParticipantList.remove(position);
                     itemClickListener.onClick(groupParticipantList, CODE_REMOVE_FROM_GROUP);
                     notifyItemRemoved(position);
@@ -245,68 +222,32 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 }
 
                 @Override
-                public void onFailure(Exception e) {
+                public void onFailed(Exception e) {
                     CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
                             e.getMessage());
-                }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, groupRequest, token);
-
-            groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
-
-        public void changeAdministrator(final String userid) {
-
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    startChangeAdministrator(userid, token);
                 }
             });
         }
 
-        private void startChangeAdministrator(final String userid, String token) {
+        public void changeAdministrator(final String userid) {
 
-            final GroupRequest groupRequest = new GroupRequest();
+            UserGroupsProcess.changeGroupAdmin(userid, AccountHolderInfo.getUserID(), groupRequestResultResultArrayItem.getGroupid(),
+                    new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                            addFriendCardView.setVisibility(View.GONE);
+                            groupRequestResultResultArrayItem.setGroupAdmin(userid);
+                            notifyItemChanged(position);
+                            notifyItemChanged(groupAdminPosition);
+                            itemClickListener.onClick(groupRequestResultResultArrayItem, CODE_CHANGE_AS_ADMIN);
+                        }
 
-            List<GroupRequestGroupParticipantArrayItem> list = new ArrayList<GroupRequestGroupParticipantArrayItem>();
-            GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
-            groupRequestGroupParticipantArrayItem.setParticipantUserid(userid);
-            list.add(groupRequestGroupParticipantArrayItem);
-
-            groupRequest.setRequestType(CHANGE_GROUP_ADMIN);
-            groupRequest.setUserid(AccountHolderInfo.getUserID());
-            groupRequest.setGroupParticipantArray(list);
-            groupRequest.setGroupid(groupRequestResultResultArrayItem.getGroupid());
-
-            GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
-                    addFriendCardView.setVisibility(View.GONE);
-                    groupRequestResultResultArrayItem.setGroupAdmin(userid);
-                    UserGroups.changeGroupAdmin(groupRequestResultResultArrayItem.getGroupid(), userid);
-                    notifyItemChanged(position);
-                    notifyItemChanged(groupAdminPosition);
-                    SearchFragment.reloadAdapter();
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
-                            e.getMessage());
-                }
-
-                @Override
-                public void onTaskContinue() {
-
-                }
-            }, groupRequest, token);
-
-            groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        @Override
+                        public void onFailed(Exception e) {
+                            CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
+                                    e.getMessage());
+                        }
+                    });
         }
     }
 

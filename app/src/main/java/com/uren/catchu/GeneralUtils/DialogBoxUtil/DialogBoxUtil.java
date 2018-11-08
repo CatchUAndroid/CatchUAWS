@@ -15,7 +15,7 @@ import com.uren.catchu.R;
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
-import static com.uren.catchu.SharePackage.ShareDetailActivity.REQUEST_CODE_ENABLE_LOCATION;
+import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
 
 public class DialogBoxUtil {
 
@@ -111,6 +111,7 @@ public class DialogBoxUtil {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(R.drawable.warning_icon40);
         builder.setMessage(message);
+        builder.setCancelable(false);
 
         if (title != null && !title.isEmpty())
             builder.setTitle(title);
@@ -144,6 +145,7 @@ public class DialogBoxUtil {
 
         builder.setIcon(R.drawable.success_icon_480);
         builder.setMessage(message);
+        builder.setCancelable(false);
         final AlertDialog alert = builder.create();
         alert.show();
 

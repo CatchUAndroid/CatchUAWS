@@ -20,6 +20,8 @@ public class ShareItems{
     private static List<ImageShareItemBox> imageShareItemBoxes;
     private static List<VideoShareItemBox> videoShareItemBoxes;
     private static Bitmap textBitmap;
+    int selectedShareType;
+    int shareTryCount = 0;
 
     public static ShareItems getInstance(){
         if(shareItemsInstance == null) {
@@ -93,4 +95,19 @@ public class ShareItems{
         return videoShareItemBoxes.size() + imageShareItemBoxes.size();
     }
 
+    public int getSelectedShareType() {
+        return selectedShareType;
+    }
+
+    public void setSelectedShareType(int selectedShareType) {
+        this.selectedShareType = selectedShareType;
+    }
+
+    public int getShareTryCount() {
+        return shareTryCount;
+    }
+
+    public void setShareTryCount(int shareTryCount) {
+        this.shareTryCount = shareTryCount;
+    }
 }

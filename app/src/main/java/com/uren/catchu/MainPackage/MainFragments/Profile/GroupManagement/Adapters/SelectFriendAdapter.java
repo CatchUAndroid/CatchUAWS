@@ -1,4 +1,4 @@
-package com.uren.catchu.GroupPackage.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -17,13 +16,10 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.GroupPackage.Interfaces.ClickCallback;
-import com.uren.catchu.GroupPackage.SelectFriendToGroupActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.ClickCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -33,6 +29,9 @@ import java.util.List;
 
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
+
+import static com.uren.catchu.Constants.NumericConstants.CODE_SELECT_ALL;
+import static com.uren.catchu.Constants.NumericConstants.CODE_UNSELECT_ALL;
 
 public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapter.MyViewHolder> implements Filterable {
 
@@ -233,14 +232,14 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     }
 
     public void updateAdapterForSelectAll(int selectType) {
-        if (selectType == SelectFriendToGroupActivity.CODE_SELECT_ALL) {
+        if (selectType == CODE_SELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
             SelectedFriendList.getInstance().setSelectedFriendList(orginalFriendList);
             horRecyclerView.setVisibility(View.VISIBLE);
             if (selectedItemAdapter != null)
                 selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();
-        } else if (selectType == SelectFriendToGroupActivity.CODE_UNSELECT_ALL) {
+        } else if (selectType == CODE_UNSELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
             horRecyclerView.setVisibility(View.GONE);
             if (selectedItemAdapter != null)

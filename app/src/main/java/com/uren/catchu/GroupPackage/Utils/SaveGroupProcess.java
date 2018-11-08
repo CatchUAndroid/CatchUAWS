@@ -11,12 +11,12 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.UserGroups;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,13 +41,13 @@ public class SaveGroupProcess {
     List<GroupRequestGroupParticipantArrayItem> participantArrayItems;
     GroupRequest groupRequest;
     String groupName;
-    ServiceCompleteCallback saveGroupCallback;
+    CompleteCallback completeCallback;
 
-    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, ServiceCompleteCallback saveGroupCallback) {
+    public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, CompleteCallback completeCallback) {
         this.context = context;
         this.photoSelectUtil = photoSelectUtil;
         this.groupName = groupName;
-        this.saveGroupCallback = saveGroupCallback;
+        this.completeCallback = completeCallback;
         mProgressDialog = new ProgressDialog(context);
         mProgressDialog.setMessage(context.getResources().getString(R.string.groupIsCreating));
         dialogShow();
@@ -94,12 +94,12 @@ public class SaveGroupProcess {
                             } else {
                                 InputStream is = urlConnection.getErrorStream();
                                 CommonUtils.showToast(context, is.toString());
-                                saveGroupCallback.onFailed(new Exception(is.toString()));
+                                completeCallback.onFailed(new Exception(is.toString()));
                             }
                         } catch (IOException e) {
                             dialogDismiss();
                             CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-                            saveGroupCallback.onFailed(e);
+                            completeCallback.onFailed(e);
                         }
                     }
 
@@ -107,7 +107,7 @@ public class SaveGroupProcess {
                     public void onFailure(Exception e) {
                         dialogDismiss();
                         CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-                        saveGroupCallback.onFailed(e);
+                        completeCallback.onFailed(e);
                     }
 
                     @Override
@@ -123,7 +123,7 @@ public class SaveGroupProcess {
             public void onFailure(Exception e) {
                 dialogDismiss();
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
-                saveGroupCallback.onFailed(e);
+                completeCallback.onFailed(e);
             }
 
             @Override
@@ -178,16 +178,16 @@ public class SaveGroupProcess {
         GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
+                dialogDismiss();
                 GroupRequestResult groupRequestResult = (GroupRequestResult) object;
                 addGroupToUsersGroup(groupRequestResult);
-                saveGroupCallback.onSuccess();
             }
 
             @Override
             public void onFailure(Exception e) {
                 dialogDismiss();
                 CommonUtils.showToast(context, context.getResources().getString(R.string.error) + e.getMessage());
-                saveGroupCallback.onFailed(e);
+                completeCallback.onFailed(e);
             }
 
             @Override
@@ -205,7 +205,6 @@ public class SaveGroupProcess {
         groupRequestResultResultArrayItem.setGroupPhotoUrl(groupRequestResult.getResultArray().get(0).getGroupPhotoUrl());
         groupRequestResultResultArrayItem.setName(groupRequestResult.getResultArray().get(0).getName());
         groupRequestResultResultArrayItem.setCreateAt(groupRequestResult.getResultArray().get(0).getCreateAt());
-        UserGroups.addGroupToRequestResult(groupRequestResultResultArrayItem);
-        SearchFragment.reloadAdapter();
+        completeCallback.onComplete(groupRequestResultResultArrayItem);
     }
 }

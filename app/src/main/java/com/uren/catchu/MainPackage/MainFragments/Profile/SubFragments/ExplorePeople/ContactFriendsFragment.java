@@ -11,9 +11,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -73,10 +76,13 @@ public class ContactFriendsFragment extends BaseFragment {
     UserListResponse appUsersList;
     OnLoadedListener onLoadedListener;
     LinearLayout toolbarLayout;
-    ImageView backImgv;
-    TextView toolbarTitleTv;
     boolean showTollbar;
     ProgressBar progressBar;
+    EditText editTextSearch;
+    ImageView imgCancelSearch;
+    ImageView backImgv;
+    ImageView searchImgv;
+    boolean edittextFocused = false;
 
     public ContactFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
         this.onLoadedListener = onLoadedListener;
@@ -115,7 +121,9 @@ public class ContactFriendsFragment extends BaseFragment {
         inviteWarningMsgTv = mView.findViewById(R.id.inviteWarningMsgTv);
         toolbarLayout = mView.findViewById(R.id.toolbarLayout);
         backImgv = mView.findViewById(R.id.backImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
+        imgCancelSearch = mView.findViewById(R.id.imgCancelSearch);
+        editTextSearch = mView.findViewById(R.id.editTextSearch);
+        searchImgv = mView.findViewById(R.id.searchImgv);
         progressBar = mView.findViewById(R.id.progressBar);
         permissionModule = new PermissionModule(getActivity());
         reformedContactList = new ArrayList<>();
@@ -123,18 +131,83 @@ public class ContactFriendsFragment extends BaseFragment {
     }
 
     private void checkToolbarVisibility() {
-        if(showTollbar) {
+        if (showTollbar)
             toolbarLayout.setVisibility(View.VISIBLE);
-            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.CONTACT_FRIENDS));
-        }
     }
 
     private void addListeners() {
         backImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
-                getActivity().onBackPressed();
+                if (edittextFocused) {
+                    CommonUtils.hideKeyBoard(getContext());
+                    backImgv.setVisibility(View.GONE);
+                    searchImgv.setVisibility(View.VISIBLE);
+                    if (editTextSearch != null)
+                        editTextSearch.setText("");
+                } else {
+                    ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+                    getActivity().onBackPressed();
+                }
+            }
+        });
+
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.toString() != null && !s.toString().trim().isEmpty()) {
+                    updateAdapter(s.toString());
+                    imgCancelSearch.setVisibility(View.VISIBLE);
+                } else {
+                    updateAdapter("");
+                    imgCancelSearch.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        editTextSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    backImgv.setVisibility(View.VISIBLE);
+                    searchImgv.setVisibility(View.GONE);
+                    edittextFocused = true;
+                } else {
+                    backImgv.setVisibility(View.GONE);
+                    searchImgv.setVisibility(View.VISIBLE);
+                    edittextFocused = false;
+                }
+            }
+        });
+
+        editTextSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backImgv.setVisibility(View.VISIBLE);
+                searchImgv.setVisibility(View.GONE);
+            }
+        });
+
+        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editTextSearch != null)
+                    editTextSearch.setText("");
+                imgCancelSearch.setVisibility(View.GONE);
+                CommonUtils.hideKeyBoard(getContext());
+                backImgv.setVisibility(View.GONE);
+                searchImgv.setVisibility(View.VISIBLE);
+
             }
         });
     }
@@ -189,21 +262,21 @@ public class ContactFriendsFragment extends BaseFragment {
         });
     }
 
-    public void clearDuplicateNumbers(List<Contact> tempContactList){
-        for(Contact contact: tempContactList){
+    public void clearDuplicateNumbers(List<Contact> tempContactList) {
+        for (Contact contact : tempContactList) {
 
             boolean isExist = false;
 
-            for(Contact tempContact : reformedContactList){
-                if(tempContact != null && tempContact.getPhoneNumber() != null){
-                    if(contact.getPhoneNumber().trim().equals(tempContact.getPhoneNumber().trim())){
+            for (Contact tempContact : reformedContactList) {
+                if (tempContact != null && tempContact.getPhoneNumber() != null) {
+                    if (contact.getPhoneNumber().trim().equals(tempContact.getPhoneNumber().trim())) {
                         isExist = true;
                         break;
                     }
                 }
             }
 
-            if(!isExist)
+            if (!isExist)
                 reformedContactList.add(contact);
         }
     }
@@ -219,7 +292,7 @@ public class ContactFriendsFragment extends BaseFragment {
                         if (object != null) {
                             appUsersList = (UserListResponse) object;
 
-                            if(getContext() != null) {
+                            if (getContext() != null) {
                                 if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
                                     contactFriendsAdapter = new ContactFriendsAdapter(getContext(), appUsersList, new ItemClickListener() {
                                         @Override
@@ -280,8 +353,8 @@ public class ContactFriendsFragment extends BaseFragment {
         onLoadedListener.onLoaded();
     }
 
-    public void sendSmsToInvite(Contact contact){
-        if(contact != null && contact.getPhoneNumber() != null){
+    public void sendSmsToInvite(Contact contact) {
+        if (contact != null && contact.getPhoneNumber() != null) {
             Intent sendIntent = new Intent(Intent.ACTION_VIEW);
             sendIntent.setData(Uri.parse("sms:" + contact.getPhoneNumber()));
             sendIntent.putExtra("sms_body", getActivity().getResources().getString(R.string.CONTACT_INVITE_MESSAGE) + CommonUtils.getGooglePlayAppLink(getActivity()));
@@ -289,23 +362,23 @@ public class ContactFriendsFragment extends BaseFragment {
         }
     }
 
-    public void prepareInviteContactList(){
+    public void prepareInviteContactList() {
         if (reformedContactList != null && reformedContactList.size() > 0) {
             if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
-                for(Contact contact:reformedContactList){
+                for (Contact contact : reformedContactList) {
 
                     boolean isExist = false;
 
-                    for(User user: appUsersList.getItems()){
-                        if(user != null && user.getProvider() != null && user.getProvider().getProviderType() != null && user.getProvider().getProviderType().equals(PROVIDER_TYPE_PHONE)){
-                            if(user.getProvider().getProviderid().trim().equals(contact.getPhoneNumber().trim())){
+                    for (User user : appUsersList.getItems()) {
+                        if (user != null && user.getProvider() != null && user.getProvider().getProviderType() != null && user.getProvider().getProviderType().equals(PROVIDER_TYPE_PHONE)) {
+                            if (user.getProvider().getProviderid().trim().equals(contact.getPhoneNumber().trim())) {
                                 isExist = true;
                                 break;
                             }
                         }
                     }
 
-                    if(!isExist)
+                    if (!isExist)
                         inviteContactsList.add(contact);
                 }
             }
@@ -342,25 +415,25 @@ public class ContactFriendsFragment extends BaseFragment {
                 public void onReturn(Object object) {
                     int itemSize = (int) object;
 
-                    if(itemSize == 0){
+                    if (itemSize == 0) {
                         warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
                         warningMsgLayout.setVisibility(View.VISIBLE);
-                    }else
+                    } else
                         warningMsgLayout.setVisibility(View.GONE);
                 }
             });
         }
 
-        if(searchText != null && inviteContactsAdapter != null){
+        if (searchText != null && inviteContactsAdapter != null) {
             inviteContactsAdapter.updateAdapter(searchText, new ReturnCallback() {
                 @Override
                 public void onReturn(Object object) {
                     int itemSize = (int) object;
 
-                    if(itemSize == 0){
+                    if (itemSize == 0) {
                         inviteWarningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
                         inviteWarningMsgLayout.setVisibility(View.VISIBLE);
-                    }else
+                    } else
                         inviteWarningMsgLayout.setVisibility(View.GONE);
                 }
             });

@@ -300,7 +300,6 @@ public class FeedFragment extends BaseFragment {
 
     }
 
-
     private void getPosts() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override

@@ -1,4 +1,4 @@
-package com.uren.catchu.SharePackage.TextPicker.Adapters;
+package com.uren.catchu.SharePackage.WillDelete.TextPicker.Adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.TextPicker.Interfaces.PostitSelectCallback;
-import com.uren.catchu.SharePackage.TextPicker.Models.PostitModel;
+import com.uren.catchu.SharePackage.WillDelete.TextPicker.Interfaces.PostitSelectCallback;
+import com.uren.catchu.SharePackage.WillDelete.TextPicker.Models.PostitModel;
 
 public class PostitAdapter extends PagerAdapter{
     private Context context;

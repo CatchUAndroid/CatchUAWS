@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/shareMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    android:orientation="vertical"
-    tools:context=".SharePackage.ShareDetailActivity">
+    android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/shareMainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <include layout="@layout/common_toolbar_layout" />
 
         <RelativeLayout
             android:id="@+id/mapLayout"
@@ -28,16 +29,10 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/gradient_try_bg"></FrameLayout>
 
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            <com.google.android.gms.maps.MapView
                 android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="1.5dp"
-                android:layout_marginRight="1.5dp"
-                android:layout_marginTop="5dp" />
+                android:layout_height="match_parent" />
 
         </RelativeLayout>
 
@@ -194,100 +189,51 @@
             </LinearLayout>
         </LinearLayout>
 
-
-        <EditText
-            android:id="@+id/mainEditText"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:background="@color/transparent"
-            android:focusable="false"
-            android:gravity="top"
-            android:hint="@string/typeToAddText"
-            android:scrollbars="vertical"
-            android:textColor="@color/White"
-            android:textColorHint="@color/transparent_white" />
+            android:layout_height="match_parent">
 
-        <!--ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="0.15">
-
-            <EditText
-                android:id="@+id/mainEditText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/transparent"
-                android:focusable="false"
-                android:gravity="top"
-                android:hint="@string/typeToAddText"
-                android:scrollbars="vertical"
+            <TextView
+                android:id="@+id/mediaWarningMsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/THERE_IS_NO_MEDIA_TO_POST"
                 android:textColor="@color/White"
-                android:textColorHint="@color/transparent_white" />
+                android:visibility="gone" />
 
-        </ScrollView-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/mediaLayout"
+                android:visibility="visible">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"></android.support.v4.view.ViewPager>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp">
 
-        <LinearLayout
-            android:id="@+id/SliderDots"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/viewPager"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal" />
+                </android.support.v4.view.ViewPager>
 
-        <!--EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_weight="0.5"
-            android:background="@drawable/layout_border_shape"
-            android:hint="@string/typeToAddText"
-            android:textColor="@color/White"
-            android:textColorHint="@color/transparent_white"
-            android:gravity="top" /-->
+                <LinearLayout
+                    android:id="@+id/SliderDots"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/viewPager"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:orientation="horizontal" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
 
-        <Button
-            android:id="@+id/shareButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/DodgerBlue"
-            android:text="@string/share"
-            android:textColor="@color/white"
-            android:textStyle="bold" />
-
-        <!--LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="10dp"
-            android:layout_weight="0.5"
-            android:gravity="center">
-
-
-
-        </LinearLayout-->
 
     </LinearLayout>
 
 
-</FrameLayout>
+</LinearLayout>

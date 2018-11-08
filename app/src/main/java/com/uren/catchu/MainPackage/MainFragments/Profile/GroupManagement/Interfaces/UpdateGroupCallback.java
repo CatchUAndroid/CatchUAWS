@@ -1,4 +1,4 @@
-package com.uren.catchu.GroupPackage.Interfaces;
+package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces;
 
 import catchu.model.GroupRequestResultResultArrayItem;
 

@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,16 +28,20 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Adapters.ColorPaletteAdapter;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.TextCompleteCallback;
 import com.uren.catchu.SharePackage.Utils.ColorSelectCallback;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressLint("ValidFragment")
-public class TextEditFragment extends Fragment{
+public class TextEditFragment extends Fragment {
 
     View mView;
     Button finishButton;
@@ -49,8 +54,7 @@ public class TextEditFragment extends Fragment{
     ColorPaletteAdapter colorPaletteAdapter;
     TextCompleteCallback textCompleteCallback;
 
-    @SuppressLint("ValidFragment")
-    public TextEditFragment(View view, TextCompleteCallback textCompleteCallback){
+    public TextEditFragment(View view, TextCompleteCallback textCompleteCallback) {
         this.textView = (TextView) view;
         this.textCompleteCallback = textCompleteCallback;
     }
@@ -86,15 +90,15 @@ public class TextEditFragment extends Fragment{
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("Info", "editText.getTextSize22():" + editText.getTextSize());
+                finishButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 textCompleteCallback.textCompleted(editText);
-                getActivity().onBackPressed();
+                getActivity().getSupportFragmentManager().popBackStackImmediate() ;
             }
         });
     }
 
     public void colorPalettePrepare() {
-        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), R.drawable.img_border,  new ColorSelectCallback() {
+        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), R.drawable.img_border, new ColorSelectCallback() {
             @Override
             public void onClick(int colorCode) {
                 brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);

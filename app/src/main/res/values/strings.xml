@@ -105,6 +105,8 @@
     <string name="UPDATE_IS_SUCCESSFUL">Update is Successful</string>
     <string name="THERE_IS_NO_SEARCH_RESULT">No results found.</string>
     <string name="USERS_OF_APPLICATION">Users of the application</string>
+    <string name="DEFAULT_POST_ERROR_MESSAGE">There was an error during the sharing, would you like to try again?</string>
+    <string name="GROUP_SETTINGS">Group Settings</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -229,6 +231,11 @@
     <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Verification is Successful</string>
     <string name="PASSWORD_IS_CHANGED">Password is changed</string>
     <string name="CURRENT_PASSWORD_INCORRECT">Current password is incorrect</string>
+    <string name="ASK_FOR_REMOVE_ACCOUNT_PRIVACY">Do you want to remove the privacy of the account?</string>
+    <string name="ASK_FOR_MAKE_ACCOUNT_PRIVACY">Do you want to make your account private?</string>
+    <string name="POST_DETAIL">Post Detail</string>
+    <string name="THERE_IS_NO_MEDIA_TO_POST">There is no media to post</string>
+
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
