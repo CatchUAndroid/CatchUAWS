@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -124,7 +125,6 @@ public class NewSearchFragment extends BaseFragment
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new FeedItemAnimator());
     }
 
     private void setAdapter() {
@@ -201,8 +201,11 @@ public class NewSearchFragment extends BaseFragment
 
     private void setUpRecyclerView(UserListResponse userListResponse) {
 
-        searchResultAdapter.addAll(userListResponse);
+        for(int i=0; i<userListResponse.getItems().size(); i++){
+            Log.i("user ", userListResponse.getItems().get(i).getName());
+        }
 
+        searchResultAdapter.updateListItems(userListResponse.getItems());
     }
 
 

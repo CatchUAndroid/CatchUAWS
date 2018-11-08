@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
@@ -72,7 +73,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         boolean isCommentLiked = false;
 
         LinearLayout llProfile;
-        TextView txtLikeCount, txtLike, txtCreateDate;
+        TextView txtLikeCount, txtLike, txtCreateAt;
         ImageView imgLike;
         int likeCount = 0;
 
@@ -90,7 +91,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             llProfile = (LinearLayout) view.findViewById(R.id.llProfile);
             txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
             txtLike = (TextView) view.findViewById(R.id.txtLike);
-            txtCreateDate = (TextView) view.findViewById(R.id.txtCreateDate);
+            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
             imgLike = (ImageView) view.findViewById(R.id.imgLike);
 
             setListeners();
@@ -155,7 +156,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             }
             //Date
             if (comment.getCreateAt() != null) {
-                txtCreateDate.setText(comment.getCreateAt());
+                txtCreateAt.setText(CommonUtils.timeAgo(mContext, comment.getCreateAt()));
             }
             //Like
             if (comment.getIsLiked()) {

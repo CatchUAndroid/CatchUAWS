@@ -273,7 +273,8 @@ public class CommonUtils {
 
         String convTime = "";
         Resources resources = context.getResources();
-        String suffix = resources.getString(R.string.ago);
+        //String suffix = resources.getString(R.string.ago);
+        String suffix = "";
 
 
         try {

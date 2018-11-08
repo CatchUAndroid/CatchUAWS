@@ -395,6 +395,10 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         int totalSize = postList.size() + commentList.size();
         commentList.add(comment);
         notifyItemRangeInserted(totalSize, totalSize + 1);
+        notifyItemChanged(0);
+
+
+
     }
 
     public void addProgressLoading() {
@@ -450,7 +454,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         boolean isCommentLiked = false;
 
         LinearLayout llProfile;
-        TextView txtLikeCount, txtLike, txtCreateDate;
+        TextView txtLikeCount, txtLike, txtCreateAt;
         ImageView imgLike;
         int likeCount = 0;
 
@@ -468,7 +472,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             llProfile = (LinearLayout) view.findViewById(R.id.llProfile);
             txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
             txtLike = (TextView) view.findViewById(R.id.txtLike);
-            txtCreateDate = (TextView) view.findViewById(R.id.txtCreateDate);
+            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
             imgLike = (ImageView) view.findViewById(R.id.imgLike);
 
             setListeners();
@@ -531,7 +535,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             }
             //Date
             if (comment.getCreateAt() != null) {
-                txtCreateDate.setText(comment.getCreateAt());
+                txtCreateAt.setText(CommonUtils.timeAgo(mContext, comment.getCreateAt()));
             }
             //Like
             if (comment.getIsLiked()) {

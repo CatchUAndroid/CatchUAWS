@@ -60,7 +60,7 @@
                         android:src="@mipmap/search" />
 
                     <RelativeLayout
-                        android:layout_width="270dp"
+                        android:layout_width="240dp"
                         android:layout_height="match_parent">
 
                         <EditText

@@ -185,8 +185,9 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
             public void onFeedRefresh(int newRadius) {
                 CommonUtils.showToast(getContext(), "Feed refreshing..");
                 pulledToRefresh = true;
-                float nR = newRadius/1000;
-                radius = String.valueOf(nR);
+                Log.i("---> radius", String.valueOf(newRadius));
+                Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
+                setPaginationValues();
                 checkLocationAndRetrievePosts();
             }
         });
@@ -207,6 +208,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
             public void onRefresh() {
                 if(rl_pulsator.getVisibility() != View.VISIBLE){
                     pulledToRefresh = true;
+                    setPaginationValues();
                     checkLocationAndRetrievePosts();
                 }
 
@@ -217,7 +219,9 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
     private void setPaginationValues() {
         perPageCnt = DEFAULT_FEED_PERPAGE_COUNT;
         pageCnt = DEFAULT_FEED_PAGE_COUNT;
-        radius = String.valueOf(DEFAULT_FEED_RADIUS);
+        float radiusInKm = (float) ((double)FILTERED_FEED_RADIUS/ (double)1000);
+        Log.i("radiusInKm", String.valueOf(radiusInKm));
+        radius = String.valueOf(radiusInKm);
     }
 
 
@@ -257,7 +261,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
             }
         });
 
-
     }
 
     private void checkLocationAndRetrievePosts() {
@@ -278,6 +281,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
 
         if (!locationTrackObj.canGetLocation())
             //gps ve network provider olup olmadığı kontrol edilir
+            //todo NT - gps kapatıldığında case'i handle et
             DialogBoxUtil.showSettingsAlert(getActivity());
         else {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -472,15 +476,12 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
         //logPostId(postList); //todo NT - silinecek
         postList.addAll(postListResponse.getItems());
 
-
         if(pulledToRefresh){
             feedAdapter.updatePostListItems(postListResponse.getItems());
             pulledToRefresh = false;
         }else{
             feedAdapter.addAll(postListResponse.getItems());
         }
-
-
 
     }
 

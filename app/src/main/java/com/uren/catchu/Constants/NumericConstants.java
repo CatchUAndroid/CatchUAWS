@@ -29,10 +29,8 @@ public class NumericConstants {
     //Feed paignation initial values
     public static final int DEFAULT_FEED_PAGE_COUNT = 1;
     public static final int DEFAULT_FEED_PERPAGE_COUNT = 5; // EN AZ 4 OLMALI.
-    public static final int DEFAULT_FEED_RADIUS = 10000; //metre cinsinden
+    public static final int DEFAULT_FEED_RADIUS = 5000; //metre cinsinden
     public static  int FILTERED_FEED_RADIUS = 5000; //metre cinsinden
-    public static final int FEED_PAGE_COUNT = 1;
-    public static final int FEED_PERPAGE_COUNT = 5; // EN AZ 4 OLMALI.
 
     //Share type values
     public static final int CODE_PUBLIC_SHARED = 0;

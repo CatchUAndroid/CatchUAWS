@@ -96,6 +96,7 @@ public class SinglePostFragment extends BaseFragment
     ImageView imgProfilePic;
     TextView txtProfilePic;
     TextView txtUserName;
+    TextView txtCreateAt;
     LinearLayout profileMainLayout;
     ImageView imgLike;
     boolean isPostLiked = false;
@@ -201,6 +202,7 @@ public class SinglePostFragment extends BaseFragment
         imgProfilePic = (ImageView) mView.findViewById(R.id.imgProfilePic);
         txtProfilePic = (TextView) mView.findViewById(R.id.txtProfilePic);
         txtUserName = (TextView) mView.findViewById(R.id.txtUserName);
+        txtCreateAt = (TextView) mView.findViewById(R.id.txtCreateAt);
         profileMainLayout = (LinearLayout) mView.findViewById(R.id.profileMainLayout);
         imgLike = (ImageView) mView.findViewById(R.id.imgLike);
 
@@ -224,6 +226,11 @@ public class SinglePostFragment extends BaseFragment
             setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
         } else {
             setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
+        }
+        //create At
+        if(post.getCreateAt()!=null){
+            String text = CommonUtils.timeAgo(getContext(), post.getCreateAt());
+            txtCreateAt.setText(text);
         }
 
     }
@@ -295,8 +302,7 @@ public class SinglePostFragment extends BaseFragment
         singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation);
         singlePostAdapter.setPersonListItemClickListener(this);
         recyclerView.setAdapter(singlePostAdapter);
-
-
+        
     }
 
     private void setPullToRefresh() {
@@ -479,7 +485,6 @@ public class SinglePostFragment extends BaseFragment
     private void setComments(CommentListResponse commentListResponse) {
         singlePostAdapter.removeProgressLoading();
         singlePostAdapter.addAll(null, commentListResponse.getItems());
-
     }
 
     @Override

@@ -88,23 +88,64 @@
 
                         </LinearLayout>
 
-                        <!-- Profile Detail Name-Username /-->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
-                            android:gravity="center|left"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:layout_gravity="center"
+                            android:weightSum="3">
 
-                            <TextView
-                                android:id="@+id/txtUserName"
+
+                            <!-- Profile Detail Name-Username /-->
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="'@'username"
-                                android:textColor="?attr/colorPrimary"
-                                android:textSize="17sp" />
+                                android:gravity="center|left"
+                                android:orientation="vertical"
+                                android:layout_weight="2"
+                                >
+
+                                <TextView
+                                    android:id="@+id/txtUserName"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="'@'username"
+                                    android:textColor="?attr/colorPrimary"
+                                    android:textSize="17sp" />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:id="@+id/llCreateAt"
+                                android:layout_marginBottom="5dp"
+                                android:gravity="center"
+                                android:layout_weight="1">
+
+                                <ImageView
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:layout_marginRight="5dp"
+                                    android:scaleType="fitXY"
+                                    android:src="@mipmap/icon_time" />
+
+                                <TextView
+                                    android:id="@+id/txtCreateAt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/gray"/>
+
+                            </LinearLayout>
 
 
                         </LinearLayout>
+
+
+
+
 
                     </LinearLayout>
 

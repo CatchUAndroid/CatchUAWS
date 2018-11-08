@@ -24,7 +24,6 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
-import com.uren.catchu.MainPackage.MainFragments.SearchTab.SearchFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;

@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
@@ -20,6 +22,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SearchResultDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -42,14 +45,14 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.MyViewHolder> {
 
     private Context mContext;
-    private List<User> personList;
+    private List<User> userList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
     GradientDrawable imageShape;
 
     public SearchResultAdapter(Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
-        this.personList = new ArrayList<User>();
+        this.userList = new ArrayList<User>();
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -70,7 +73,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         ImageView profileImage;
         Button btnFollowStatus;
         CardView cardView;
-        User person;
+        User user;
         int position;
 
         public MyViewHolder(View view) {
@@ -102,9 +105,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                 @Override
                 public void onClick(View v) {
                     FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-                    rowItem.setUserid(person.getUserid());
-                    rowItem.setProfilePhotoUrl(person.getProfilePhotoUrl());
-                    rowItem.setName(person.getName());
+                    rowItem.setUserid(user.getUserid());
+                    rowItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
+                    rowItem.setName(user.getName());
+                    rowItem.setUsername(user.getUsername());
                     FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
                     PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, followInfoListItem);
                 }
@@ -115,18 +119,18 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         public void manageFollowStatus() {
 
             //takip ediliyor ise
-            if (person.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
-                if (person.getIsPrivateAccount() != null && person.getIsPrivateAccount()) {
+            if (user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
                     openDialogBox();
                 } else {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
                 }
-            } else if (person.getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
+            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
                 //istek gonderilmis ise
                 updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-            } else if (person.getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
+            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
                 //takip istegi yok ise
-                if (person.getIsPrivateAccount() != null && person.getIsPrivateAccount()) {
+                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
                     updateFollowStatus(FRIEND_FOLLOW_REQUEST);
                 } else {
                     updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
@@ -136,26 +140,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             }
         }
 
-        public void setData(User selectedFriend, int position) {
+        public void setData(User user, int position) {
 
-            /*
+            this.user = user;
             this.position = position;
-            this.selectedFriend = selectedFriend;
-            this.requestedUserid = selectedFriend.getUserid();
-            setUserName();
-            UserDataUtil.setName(selectedFriend.getName(), nameTextView);
-            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                    selectedFriend.getName(), shortenTextView, profilePicImgView);
+            UserDataUtil.setName(user.getName(), profileName);
+            UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
+                    user.getName(), shortUserNameTv, profileImage);
 
-            if(selectedFriend.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
-                statuDisplayBtn.setVisibility(View.GONE);
-            else {
-                UserDataUtil.updateFollowButton(context, selectedFriend.getFriendRelation(), selectedFriend.getPendingFriendRequest(), statuDisplayBtn, false);
-                statuDisplayBtn.setVisibility(View.VISIBLE);
-            }
+            UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
 
-
-            */
         }
 
 
@@ -179,7 +173,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         private void updateFollowStatus(final String requestType) {
 
             AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                    , person.getUserid(), new CompleteCallback() {
+                    , user.getUserid(), new CompleteCallback() {
                         @Override
                         public void onComplete(Object object) {
                             updateFollowUI(requestType);
@@ -201,25 +195,25 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         private void updateFollowUI(String updateType) {
             AccountHolderInfo.updateAccountHolderFollowCnt(updateType);
             updateFollowTypeAfterOperation(updateType);
-            notifyItemChanged(position, person.getFollowStatus());
+            notifyItemChanged(position, user.getFollowStatus());
         }
 
         public void updateFollowTypeAfterOperation(String updateType) {
             switch (updateType) {
                 case FRIEND_DELETE_FOLLOW:
-                    person.setFollowStatus(FOLLOW_STATUS_NONE);
+                    user.setFollowStatus(FOLLOW_STATUS_NONE);
                     break;
 
                 case FRIEND_DELETE_PENDING_FOLLOW_REQUEST:
-                    person.setFollowStatus(FOLLOW_STATUS_NONE);
+                    user.setFollowStatus(FOLLOW_STATUS_NONE);
                     break;
 
                 case FRIEND_FOLLOW_REQUEST:
-                    person.setFollowStatus(FOLLOW_STATUS_PENDING);
+                    user.setFollowStatus(FOLLOW_STATUS_PENDING);
                     break;
 
                 case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                    person.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
+                    user.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
                     break;
 
                 default:
@@ -230,13 +224,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        User user = personList.get(position);
+        User user = userList.get(position);
         holder.setData(user, position);
     }
 
     @Override
     public int getItemCount() {
-        return personList.size();
+        return userList.size();
     }
 
     public void updateAdapterWithPosition(int position) {
@@ -245,17 +239,26 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     public List<User> getPersonList() {
-        return personList;
+        return userList;
     }
 
     public void addAll(UserListResponse userListResponse) {
 
         if (userListResponse != null) {
 
-            personList.addAll(userListResponse.getItems());
-            notifyItemRangeInserted(personList.size(), personList.size() + userListResponse.getItems().size());
+            userList.addAll(userListResponse.getItems());
+            notifyItemRangeInserted(userList.size(), userList.size() + userListResponse.getItems().size());
 
         }
+    }
+
+    public void updateListItems(List<User> newUserList) {
+        final SearchResultDiffCallback diffCallback = new SearchResultDiffCallback(this.getPersonList(), newUserList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.userList.clear();
+        this.userList.addAll(newUserList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
 }
