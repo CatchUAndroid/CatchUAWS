@@ -8,6 +8,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseRequest;
 import catchu.model.PostListResponse;
+import catchu.model.PostResponse;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
@@ -15,23 +16,27 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
 
     private OnEventListener<PostListResponse> mCallBack;
     private Context mContext;
+    private String userId;
     public Exception mException;
     public String longitude;
     public String latitude;
     public String radius;
-    public BaseRequest baseRequest;
     public String perpage;
     public String page;
+    private String postId;
+    private String catchType;
     private String token;
 
-    public PostListResponseProcess(Context context, OnEventListener callback,
-                                    BaseRequest baseRequest, String longitude, String latitude, String radius, String perpage, String page, String token) {
+    public PostListResponseProcess(Context context, OnEventListener callback, String userId, String postId, String catchType,
+                                     String longitude, String latitude, String radius, String perpage, String page, String token) {
         mCallBack = callback;
         mContext = context;
         this.longitude = longitude;
         this.latitude = latitude;
         this.radius = radius;
-        this.baseRequest = baseRequest;
+        this.userId = userId;
+        this.postId = postId;
+        this.catchType = catchType;
         this.perpage = perpage;
         this.page = page;
         this.token= token;
@@ -44,8 +49,8 @@ public class PostListResponseProcess extends AsyncTask<Void, Void, PostListRespo
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            //todo NT - servislere verilen parametreler düzenlenecek...
-            PostListResponse postListResponse = instance.client.postsGeolocationPost(token, baseRequest, longitude, perpage, latitude, radius, page);
+
+            PostListResponse postListResponse = instance.client.postsPostidGet(userId, token, postId, catchType,longitude, perpage, latitude, radius,  page);
 
             if(postListResponse.getError().getCode().intValue() == RESPONSE_OK){
                 return postListResponse;

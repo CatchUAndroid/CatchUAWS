@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +42,12 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentListProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeListProcess;
+import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
@@ -71,11 +75,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.BaseRequest;
 import catchu.model.Comment;
 import catchu.model.CommentListResponse;
 import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
+import catchu.model.PostListResponse;
 import catchu.model.User;
+
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
@@ -136,9 +143,7 @@ public class SinglePostFragment extends BaseFragment
 
     private boolean pulledToRefresh = false;
     private List<Post> postList = new ArrayList<Post>();
-
     private int drawingStartLocation = 0;
-
 
     public static SinglePostFragment newInstance(String toolbarTitle, String postId, int position) {
         Bundle args = new Bundle();
@@ -158,10 +163,13 @@ public class SinglePostFragment extends BaseFragment
             mView = inflater.inflate(R.layout.single_post_fragment, container, false);
             ButterKnife.bind(this, mView);
 
+            //input for the fragment
+            post = SinglePost.getInstance().getPost();
             getItemsFromBundle();
+
+            //setting content
             init();
-            checkLocationAndRetrievePosts();
-            getCommentList();
+            setContent();
 
         }
 
@@ -185,30 +193,26 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void init() {
-        post = SinglePost.getInstance().getPost();
-        setVariables();
-        setListeners();
-        setLayoutManager();
-        setAdapter();
-        setPullToRefresh();
-    }
 
-    private void setVariables() {
-
-        if (toolbarTitle != null && !toolbarTitle.isEmpty()) {
-            //txtToolbarTitle.setText(toolbarTitle);
+        if (validOperation()) {
+            setVariables();
+            setLayoutManager();
+            setAdapter();
+            setPullToRefresh();
         }
 
-        imgProfilePic = (ImageView) mView.findViewById(R.id.imgProfilePic);
-        txtProfilePic = (TextView) mView.findViewById(R.id.txtProfilePic);
-        txtUserName = (TextView) mView.findViewById(R.id.txtUserName);
-        txtCreateAt = (TextView) mView.findViewById(R.id.txtCreateAt);
-        profileMainLayout = (LinearLayout) mView.findViewById(R.id.profileMainLayout);
-        imgLike = (ImageView) mView.findViewById(R.id.imgLike);
+    }
 
-        //imgBack
-        imgBack.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgBack.setOnClickListener(this);
+    private boolean validOperation() {
+        if (post == null && postId == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void setPostDetailOnToolbar() {
+
         //profile picture
         UserDataUtil.setProfilePicture(getContext(), post.getUser().getProfilePhotoUrl(),
                 post.getUser().getName(), txtProfilePic, imgProfilePic);
@@ -228,10 +232,30 @@ public class SinglePostFragment extends BaseFragment
             setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
         }
         //create At
-        if(post.getCreateAt()!=null){
+        if (post.getCreateAt() != null) {
             String text = CommonUtils.timeAgo(getContext(), post.getCreateAt());
             txtCreateAt.setText(text);
         }
+
+
+    }
+
+    private void setVariables() {
+
+        if (toolbarTitle != null && !toolbarTitle.isEmpty()) {
+            //txtToolbarTitle.setText(toolbarTitle);
+        }
+
+        imgProfilePic = (ImageView) mView.findViewById(R.id.imgProfilePic);
+        txtProfilePic = (TextView) mView.findViewById(R.id.txtProfilePic);
+        txtUserName = (TextView) mView.findViewById(R.id.txtUserName);
+        txtCreateAt = (TextView) mView.findViewById(R.id.txtCreateAt);
+        profileMainLayout = (LinearLayout) mView.findViewById(R.id.profileMainLayout);
+        imgLike = (ImageView) mView.findViewById(R.id.imgLike);
+
+        //imgBack
+        imgBack.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgBack.setOnClickListener(this);
 
     }
 
@@ -355,13 +379,13 @@ public class SinglePostFragment extends BaseFragment
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 if (permissionModule.checkAccessFineLocationPermission()) {
-                    setPost();
+                    getPost();
                 } else {
                     requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
                 }
             } else {
-                setPost();
+                getPost();
             }
         }
     }
@@ -380,8 +404,7 @@ public class SinglePostFragment extends BaseFragment
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
                     Toast.makeText(getApplicationContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
-                    setPost();
-
+                    getPost();
                 } else {
 
                     // permission denied, boo! Disable the
@@ -400,18 +423,104 @@ public class SinglePostFragment extends BaseFragment
 
     }
 
-    private void setPost() {
-        if (post != null) {
-            setPostDetail(post);
+    private void setContent() {
+
+        Log.i("nrlh_postId", post.getPostid());
+
+        //sadece postId ile gelindiğinde
+        if (post == null && postId != null) {
+            checkLocationAndRetrievePosts();
         } else {
-            getPostDetail();
+            //post ile gelindiğinde
+            if (post != null) {
+                fillContent(post);
+            }
         }
+
     }
 
-    private void getPostDetail() {
-        if (postId != null) {
-            //get Post detail with postId
-        }
+    private void fillContent(Post post){
+        setListeners();
+        setPostDetailOnToolbar();
+        setPostDetail(post);
+        getCommentList();
+    }
+
+
+    private void getPost() {
+        //get post detail...
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(final String token) {
+                Location location = locationTrackObj.getLocation();
+                if(location != null){
+                    startGetPost(token);
+                }else{
+                    //showPulsatorLayout(false);
+                    //showNoFeedLayout(true, R.string.locationError );
+                    refresh_layout.setRefreshing(false);
+                }
+            }
+        });
+
+    }
+
+    private void startGetPost(String token) {
+
+        setLocationInfo();
+
+        String sUserId = AccountHolderInfo.getUserID();
+        String sPostId = postId;
+        String sCatchType = "";
+        String sLongitude = longitude;
+        String sLatitude = latitude;
+        String sRadius = radius;
+        String sPerpage = String.valueOf(1);
+        String sPage = String.valueOf(1);
+
+        PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
+            @Override
+            public void onSuccess(final PostListResponse postListResponse) {
+                if (postListResponse == null) {
+                    CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
+                } else {
+                    CommonUtils.LOG_OK("PostListResponseProcess");
+                    if (postListResponse.getItems().size() == 0) {
+                        //no such data
+                    }
+                    fillContent(postListResponse.getItems().get(0));
+                }
+
+                progressBar.setVisibility(View.GONE);
+                refresh_layout.setRefreshing(false);
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
+                progressBar.setVisibility(View.GONE);
+                refresh_layout.setRefreshing(false);
+
+            }
+
+            @Override
+            public void onTaskContinue() {
+
+                if (!pulledToRefresh) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        }, sUserId, sPostId, sCatchType, sLongitude, sLatitude, sRadius, sPerpage, sPage, token);
+
+        postListResponseProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
+
+    private void setLocationInfo() {
+        longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
+        latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
     }
 
     private void setPostDetail(Post post) {

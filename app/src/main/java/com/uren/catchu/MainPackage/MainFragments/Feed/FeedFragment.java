@@ -69,11 +69,12 @@ import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_CO
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_RADIUS;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 
-public class FeedFragment extends BaseFragment implements View.OnClickListener{
+public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
     View mView;
     FeedAdapter feedAdapter;
@@ -149,7 +150,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
 
         }
 
-        if(!mPulsator.isStarted()){
+        if (!mPulsator.isStarted()) {
             mPulsator.reset();
             mPulsator.start();
         }
@@ -198,15 +199,17 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new FeedItemAnimator());
     }
+
     private void setAdapter() {
         feedAdapter = new FeedAdapter(getActivity(), getContext(), mFragmentNavigation);
         recyclerView.setAdapter(feedAdapter);
     }
+
     private void setPullToRefresh() {
         refresh_layout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(rl_pulsator.getVisibility() != View.VISIBLE){
+                if (rl_pulsator.getVisibility() != View.VISIBLE) {
                     pulledToRefresh = true;
                     setPaginationValues();
                     checkLocationAndRetrievePosts();
@@ -219,7 +222,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
     private void setPaginationValues() {
         perPageCnt = DEFAULT_FEED_PERPAGE_COUNT;
         pageCnt = DEFAULT_FEED_PAGE_COUNT;
-        float radiusInKm = (float) ((double)FILTERED_FEED_RADIUS/ (double)1000);
+        float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
         Log.i("radiusInKm", String.valueOf(radiusInKm));
         radius = String.valueOf(radiusInKm);
     }
@@ -337,11 +340,11 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
             @Override
             public void onTokenTaken(final String token) {
                 Location location = locationTrackObj.getLocation();
-                if(location != null){
+                if (location != null) {
                     startGetPosts(token);
-                }else{
+                } else {
                     showPulsatorLayout(false);
-                    showNoFeedLayout(true, R.string.locationError );
+                    showNoFeedLayout(true, R.string.locationError);
                     refresh_layout.setRefreshing(false);
                 }
             }
@@ -350,26 +353,32 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
 
     private void startGetPosts(String token) {
 
-        BaseRequest baseRequest = getBaseRequest();
         setLocationInfo();
-        String perpage = String.valueOf(perPageCnt);
-        String page = String.valueOf(pageCnt);
+
+        String sUserId = AccountHolderInfo.getUserID();
+        String sPostId = AWS_EMPTY;
+        String sCatchType = "";
+        String sLongitude = longitude;
+        String sLatitude = latitude;
+        String sRadius = radius;
+        String sPerpage = String.valueOf(perPageCnt);
+        String sPage = String.valueOf(pageCnt);
 
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
 
-                if(isFirstFetch){
+                if (isFirstFetch) {
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             // Do something after 5s = 5000ms
-                            isFirstFetch=false;
+                            isFirstFetch = false;
                             setFetchData(postListResponse);
                         }
                     }, 2500);
-                }else{
+                } else {
                     setFetchData(postListResponse);
                 }
 
@@ -381,7 +390,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
                 //progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
                 showPulsatorLayout(false);
-                if(postList.size()>0){
+                if (postList.size() > 0) {
                     DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
@@ -389,14 +398,13 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
                         }
                     });
                     showNoFeedLayout(false, 0);
-                    if(feedAdapter.isShowingProgressLoading()){
+                    if (feedAdapter.isShowingProgressLoading()) {
                         feedAdapter.removeProgressLoading();
                     }
 
-                }else{
+                } else {
                     showNoFeedLayout(true, R.string.serverError);
                 }
-
             }
 
             @Override
@@ -406,7 +414,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
                     //progressBar.setVisibility(View.VISIBLE);
                 }
             }
-        }, baseRequest, longitude, latitude, radius, perpage, page, token);
+        }, sUserId, sPostId, sCatchType, sLongitude, sLatitude, sRadius, sPerpage, sPage, token);
 
         postListResponseProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -433,7 +441,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
     }
 
     private void showPulsatorLayout(boolean isShowPulsator) {
-        if(isShowPulsator){
+        if (isShowPulsator) {
             UserProfile user = AccountHolderInfo.getInstance().getUser();
             UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), txtProfile, imgProfile);
@@ -447,7 +455,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
 
             rl_pulsator.setVisibility(View.VISIBLE);
             mPulsator.start();
-        }else{
+        } else {
             mPulsator.stop();
             rl_pulsator.setVisibility(View.GONE);
         }
@@ -476,10 +484,10 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
         //logPostId(postList); //todo NT - silinecek
         postList.addAll(postListResponse.getItems());
 
-        if(pulledToRefresh){
+        if (pulledToRefresh) {
             feedAdapter.updatePostListItems(postListResponse.getItems());
             pulledToRefresh = false;
-        }else{
+        } else {
             feedAdapter.addAll(postListResponse.getItems());
         }
 
@@ -578,38 +586,25 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener{
 
     }
 
-    private BaseRequest getBaseRequest() {
-
-        BaseRequest baseRequest = new BaseRequest();
-        User user = new User();
-        user.setUserid(AccountHolderInfo.getUserID());
-        baseRequest.setUser(user);
-
-        return baseRequest;
-    }
 
     private void setLocationInfo() {
         longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
         latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
-
-
     }
 
 
     @Override
     public void onClick(View view) {
 
-        if(view == imgFilter ){
+        if (view == imgFilter) {
             mFragmentNavigation.pushFragment(FilterFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
         }
 
-        if(view == llSearch){
+        if (view == llSearch) {
             mFragmentNavigation.pushFragment(NewSearchFragment.newInstance(), "");
         }
 
     }
-
-
 
 
 }
