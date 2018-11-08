@@ -141,6 +141,7 @@ public class MainShareActivity extends FragmentActivity {
                 setShareItemUser();
                 VideoFileListForDelete.getInstance().deleteAllFile();
                 galleryPickerFrag.checkTextIsAddedOrNot();
+                
                 startActivity(new Intent(MainShareActivity.this, ShareDetailActivity.class));
             }
         });
