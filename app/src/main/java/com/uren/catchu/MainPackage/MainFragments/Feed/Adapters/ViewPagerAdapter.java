@@ -3,15 +3,23 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
@@ -186,9 +194,24 @@ public class ViewPagerAdapter extends PagerAdapter {
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
             iconPlay.setVisibility(View.VISIBLE);
+            final LinearLayout llProgress = (LinearLayout) itemView.findViewById(R.id.llProgress);
+            final ProgressBar progressLoading = (ProgressBar) itemView.findViewById(R.id.progressLoading);
 
             Glide.with(mContext)
                     .load(loadUrl)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            progressLoading.setVisibility(View.GONE);
+                            llProgress.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .apply(RequestOptions.fitCenterTransform())
                     .into(imgFeedItem);
 
@@ -198,6 +221,9 @@ public class ViewPagerAdapter extends PagerAdapter {
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
             iconPlay.setVisibility(View.GONE);
+            final LinearLayout llProgress = (LinearLayout) itemView.findViewById(R.id.llProgress);
+            final ProgressBar progressLoading = (ProgressBar) itemView.findViewById(R.id.progressLoading);
+
 
             if (imageList.get(imageCounter) != null && !imageList.get(imageCounter).isEmpty()) {
                 loadUrl = imageList.get(imageCounter);
@@ -205,6 +231,19 @@ public class ViewPagerAdapter extends PagerAdapter {
 
             Glide.with(mContext)
                     .load(loadUrl)
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            progressLoading.setVisibility(View.GONE);
+                            llProgress.setVisibility(View.GONE);
+                            return false;
+                        }
+                    })
                     .apply(RequestOptions.fitCenterTransform())
                     .into(imgFeedItem);
 
