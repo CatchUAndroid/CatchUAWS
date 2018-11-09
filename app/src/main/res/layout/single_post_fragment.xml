@@ -111,7 +111,8 @@
                                     android:layout_height="wrap_content"
                                     android:text="'@'username"
                                     android:textColor="?attr/colorPrimary"
-                                    android:textSize="17sp" />
+                                    android:textSize="15sp"
+                                    android:fontFamily="@font/capriola"/>
 
 
                             </LinearLayout>
@@ -198,8 +199,6 @@
                         android:id="@+id/rv_single_post"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginTop="3dp"
-                        android:background="@color/Seashell"
                         android:scrollbars="none">
 
                     </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>
