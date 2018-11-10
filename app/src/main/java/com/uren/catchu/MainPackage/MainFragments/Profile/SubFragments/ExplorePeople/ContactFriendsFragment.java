@@ -35,7 +35,7 @@ import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.ContactFriendsAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.InviteContactsAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Provider;
 import catchu.model.ProviderList;
 import catchu.model.User;
@@ -389,10 +388,10 @@ public class ContactFriendsFragment extends BaseFragment {
 
         if (!userid.equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
             if (mFragmentNavigation != null) {
-                FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-                followInfoResultArrayItem.setUserid(userid);
-                FollowInfoListItem followInfoListItem = new FollowInfoListItem(followInfoResultArrayItem);
-                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                User user = new User();
+                user.setUserid(userid);
+                UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {
             NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);

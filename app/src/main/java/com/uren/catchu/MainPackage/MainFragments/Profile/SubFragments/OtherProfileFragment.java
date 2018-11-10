@@ -12,7 +12,6 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +36,8 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -46,7 +46,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FollowInfoResultArrayItem;
+
 import catchu.model.User;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileRelationInfo;
@@ -66,8 +66,8 @@ public class OtherProfileFragment extends BaseFragment
 
     View mView;
     UserProfile otherProfile;
-    FollowInfoListItem followInfoListItem;
-    FollowInfoResultArrayItem selectedProfile;
+    UserInfoListItem userInfoListItem;
+    User selectedUser;
     String followStatus;
     private int followingCount, followerCount;
 
@@ -99,14 +99,14 @@ public class OtherProfileFragment extends BaseFragment
     Button btnFollowStatus;
 
     /**
-     * @param rowItem i) userId -> ZORUNLU,
-     *                ii) profilePicUrl ve username -> nice to have.
-     *                iii) eger adaptor beslenecek ise onBack press fonksiyonu icerisinde ilgili
-     *                adaptor icin kosul eklenmeli..
+     * @param user i) userId -> ZORUNLU,
+     *             ii) profilePicUrl ve username -> nice to have.
+     *             iii) eger adaptor beslenecek ise updateAdapters fonksiyonu icerisinde ilgili
+     *             adaptor icin kosul eklenmeli..
      */
-    public static OtherProfileFragment newInstance(FollowInfoListItem rowItem) {
+    public static OtherProfileFragment newInstance(UserInfoListItem user) {
         Bundle args = new Bundle();
-        args.putSerializable(ARGS_INSTANCE, rowItem);
+        args.putSerializable(ARGS_INSTANCE, user);
         OtherProfileFragment fragment = new OtherProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -127,8 +127,8 @@ public class OtherProfileFragment extends BaseFragment
 
             Bundle args = getArguments();
             if (args != null) {
-                followInfoListItem = (FollowInfoListItem) args.getSerializable(ARGS_INSTANCE);
-                selectedProfile = followInfoListItem.getResultArrayItem();
+                userInfoListItem = (UserInfoListItem) args.getSerializable(ARGS_INSTANCE);
+                selectedUser = userInfoListItem.getUser();
             }
 
             setCollapsingToolbar();
@@ -212,7 +212,7 @@ public class OtherProfileFragment extends BaseFragment
         txtFollowingCnt.setClickable(false);
 
         //profil fotografi varsa set edilir.
-        UserDataUtil.setProfilePicture(getActivity(), selectedProfile.getProfilePhotoUrl(), selectedProfile.getName(),
+        UserDataUtil.setProfilePicture(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
                 txtUserName, imgProfile);
 
         getProfileDetail();
@@ -296,7 +296,7 @@ public class OtherProfileFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, AccountHolderInfo.getUserID(), selectedProfile.getUserid(), token);
+        }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -309,21 +309,6 @@ public class OtherProfileFragment extends BaseFragment
             if (getActivity() instanceof NextActivity)
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
 
-            if (followInfoListItem.getAdapter() != null) {
-                if (followInfoListItem.getAdapter() instanceof FollowAdapter) {
-                    ((FollowAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
-                // else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
-                    //((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
-                } else if (followInfoListItem.getAdapter() instanceof PersonListAdapter) {
-                    if(followStatus != null && !followStatus.isEmpty()){
-                        PersonListAdapter adapter = (PersonListAdapter) followInfoListItem.getAdapter();
-                        User user = adapter.getPersonList().getItems().get(followInfoListItem.getClickedPosition());
-                        user.setFollowStatus(followStatus);
-                    }
-                    ((PersonListAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
-                }
-            }
-
             getActivity().onBackPressed();
         }
 
@@ -331,6 +316,7 @@ public class OtherProfileFragment extends BaseFragment
             btnFollowStatusClicked();
         }
     }
+
 
     private void btnFollowStatusClicked() {
 
@@ -360,7 +346,7 @@ public class OtherProfileFragment extends BaseFragment
     private void updateFollowStatus(final String requestType) {
 
         AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                , selectedProfile.getUserid(), new CompleteCallback() {
+                , selectedUser.getUserid(), new CompleteCallback() {
                     @Override
                     public void onComplete(Object object) {
                         updateFollowUI(requestType);
@@ -380,51 +366,60 @@ public class OtherProfileFragment extends BaseFragment
 
     private void updateFollowUI(String requestType) {
 
-        UserProfile user = AccountHolderInfo.getInstance().getUser();
 
         switch (requestType) {
             case FRIEND_DELETE_FOLLOW:
-                selectedProfile.setIsFollow(false);
-                selectedProfile.setIsPendingRequest(false);
-                followingCount = Integer.parseInt(user.getRelationInfo().getFollowingCount());
-                user.getRelationInfo().setFollowingCount(String.valueOf(followingCount - 1));
-                followerCount = Integer.parseInt(otherProfile.getRelationInfo().getFollowerCount());
-                otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount - 1));
-                txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
-                otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_NONE);
                 followStatus = FOLLOW_STATUS_NONE;
+                updateSelectedUserProfile();               //gelinen yerdeki kişinin follow statüsü(UI)
+                updateOtherUserProfile(-1);     //other profildeki kişinin follow statüsü(UI)
+                updateCurrentUserProfile(-1);  //current userın follow count degerleri (UI)
+
                 break;
 
             case FRIEND_DELETE_PENDING_FOLLOW_REQUEST:
-                selectedProfile.setIsFollow(false);
-                selectedProfile.setIsPendingRequest(false);
-                otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_NONE);
                 followStatus = FOLLOW_STATUS_NONE;
+                updateSelectedUserProfile();
+                otherProfile.getRelationInfo().setFollowStatus(followStatus);
                 break;
 
             case FRIEND_FOLLOW_REQUEST:
-                selectedProfile.setIsPendingRequest(true);
-                otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_PENDING);
                 followStatus = FOLLOW_STATUS_PENDING;
+                updateSelectedUserProfile();
+                otherProfile.getRelationInfo().setFollowStatus(followStatus);
                 break;
 
             case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                selectedProfile.setIsFollow(true);
-                followingCount = Integer.parseInt(user.getRelationInfo().getFollowingCount());
-                user.getRelationInfo().setFollowingCount(String.valueOf(followingCount + 1));
-                followerCount = Integer.parseInt(otherProfile.getRelationInfo().getFollowerCount());
-                otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount + 1));
-                txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
-                otherProfile.getRelationInfo().setFollowStatus(FOLLOW_STATUS_FOLLOWING);
                 followStatus = FOLLOW_STATUS_FOLLOWING;
+                updateSelectedUserProfile();
+                updateOtherUserProfile(1);
+                updateCurrentUserProfile(1);
                 break;
 
             default:
                 break;
         }
 
+        updateAdapters();
         UserDataUtil.updateFollowButton2(getActivity(), otherProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
     }
+
+    private void updateSelectedUserProfile() {
+        selectedUser.setFollowStatus(followStatus);
+    }
+
+    private void updateOtherUserProfile(int updateValue) {
+        followerCount = Integer.parseInt(otherProfile.getRelationInfo().getFollowerCount());
+        otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount + updateValue));
+        otherProfile.getRelationInfo().setFollowStatus(followStatus);
+        txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
+    }
+
+    private void updateCurrentUserProfile(int updateValue) {
+        UserProfile user = AccountHolderInfo.getInstance().getUser();
+        followingCount = Integer.parseInt(user.getRelationInfo().getFollowingCount());
+        user.getRelationInfo().setFollowingCount(String.valueOf(followingCount + updateValue));
+    }
+
 
     private void openDialogBox() {
 
@@ -441,6 +436,33 @@ public class OtherProfileFragment extends BaseFragment
         };
 
         DialogBoxUtil.showYesNoDialog(getContext(), "", getContext().getString(R.string.cancel_following), yesNoDialogBoxCallback);
+
+    }
+
+    private void updateAdapters() {
+
+        if (userInfoListItem.getAdapter() != null) {
+            if (userInfoListItem.getAdapter() instanceof FollowAdapter) {
+                ((FollowAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
+                // else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
+                //((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
+            } else if (userInfoListItem.getAdapter() instanceof PersonListAdapter) {
+                if (followStatus != null && !followStatus.isEmpty()) {
+                    PersonListAdapter adapter = (PersonListAdapter) userInfoListItem.getAdapter();
+                    User user = adapter.getPersonList().getItems().get(userInfoListItem.getClickedPosition());
+                    user.setFollowStatus(followStatus);
+                }
+                ((PersonListAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
+            } else if (userInfoListItem.getAdapter() instanceof SearchResultAdapter) {
+                if (followStatus != null && !followStatus.isEmpty()) {
+                    SearchResultAdapter adapter = (SearchResultAdapter) userInfoListItem.getAdapter();
+                    User user = adapter.getPersonList().get(userInfoListItem.getClickedPosition());
+                    user.setFollowStatus(followStatus);
+                }
+                ((SearchResultAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
+            }
+        }
+
 
     }
 

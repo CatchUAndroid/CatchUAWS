@@ -2,25 +2,23 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
-
 import java.io.Serializable;
 
-import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.User;
 
-public class FollowInfoListItem implements Serializable {
+public class UserInfoListItem implements Serializable {
 
-    FollowInfoResultArrayItem resultArrayItem;
+    User user;
     int clickedPosition;
     RecyclerView.Adapter adapter;
 
-    public FollowInfoListItem(FollowInfoResultArrayItem resultArrayItem) {
-        this.resultArrayItem = resultArrayItem;
+    public UserInfoListItem(User user) {
+        this.user = user;
     }
 
-    public FollowInfoResultArrayItem getResultArrayItem() {
-        return resultArrayItem;
-    }
+    public User getUser() {return user; }
+
+    public void setUser(User user) { this.user = user; }
 
     public RecyclerView.Adapter getAdapter() {
         return adapter;

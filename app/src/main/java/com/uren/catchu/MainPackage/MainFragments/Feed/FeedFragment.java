@@ -40,7 +40,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMen
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.NewSearchFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SearchFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 
 import com.uren.catchu.R;
@@ -56,7 +56,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.BaseRequest;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
@@ -66,10 +65,10 @@ import catchu.model.UserProfile;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_RADIUS;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
+import static com.uren.catchu.Constants.StringConstants.FEED_TYPE_PUBLIC;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
@@ -183,10 +182,9 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         PostHelper.FeedRefresh.startProcess(getContext());
         PostHelper.FeedRefresh.setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
-            public void onFeedRefresh(int newRadius) {
-                CommonUtils.showToast(getContext(), "Feed refreshing..");
+            public void onFeedRefresh() {
+                CommonUtils.showToast(getContext(), "Feed - Feed refreshing..");
                 pulledToRefresh = true;
-                Log.i("---> radius", String.valueOf(newRadius));
                 Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 setPaginationValues();
                 checkLocationAndRetrievePosts();
@@ -357,7 +355,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
         String sUserId = AccountHolderInfo.getUserID();
         String sPostId = AWS_EMPTY;
-        String sCatchType = "";
+        String sCatchType = FEED_TYPE_PUBLIC;
         String sLongitude = longitude;
         String sLatitude = latitude;
         String sRadius = radius;
@@ -601,7 +599,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         }
 
         if (view == llSearch) {
-            mFragmentNavigation.pushFragment(NewSearchFragment.newInstance(), "");
+            mFragmentNavigation.pushFragment(SearchFragment.newInstance(), "");
         }
 
     }

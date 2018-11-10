@@ -54,20 +54,18 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.GeneralUtils.UriAdapter;
+
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+
 import java.util.Calendar;
 
 import butterknife.BindArray;
@@ -77,13 +75,9 @@ import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
 import static android.app.Activity.RESULT_OK;
-import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_FAIL;
-import static com.uren.catchu.Constants.NumericConstants.UPDATE_RESULT_OK;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.SPACE_VALUE;
-import static com.uren.catchu.Constants.StringConstants.USER_PROFILE_UPDATE;
+
 
 public class UserEditFragment extends BaseFragment
         implements View.OnClickListener {

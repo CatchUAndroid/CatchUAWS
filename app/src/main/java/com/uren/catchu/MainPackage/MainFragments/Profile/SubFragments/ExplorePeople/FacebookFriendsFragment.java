@@ -16,13 +16,11 @@ import android.widget.TextView;
 
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.FacebookFriendsAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -31,7 +29,8 @@ import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.ButterKnife;
-import catchu.model.FollowInfoResultArrayItem;
+
+import catchu.model.User;
 import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
@@ -130,8 +129,8 @@ public class FacebookFriendsFragment extends BaseFragment {
                         userListResponse.getItems().size() > 0 && getContext() != null) {
                     facebookFriendsAdapter = new FacebookFriendsAdapter(getContext(), userListResponse, new ListItemClickListener() {
                         @Override
-                        public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
-                            displayUserProfile(rowItem, clickedPosition);
+                        public void onClick(View view, User user, int clickedPosition) {
+                            displayUserProfile(user, clickedPosition);
                         }
                     });
                     personRecyclerView.setAdapter(facebookFriendsAdapter);
@@ -151,14 +150,14 @@ public class FacebookFriendsFragment extends BaseFragment {
         });
     }
 
-    private void displayUserProfile(FollowInfoResultArrayItem rowItem, int clickedPosition) {
+    private void displayUserProfile(User user, int clickedPosition) {
 
-        if (!rowItem.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
+        if (!user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
             if (mFragmentNavigation != null && facebookFriendsAdapter != null) {
-                FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-                followInfoListItem.setAdapter(facebookFriendsAdapter);
-                followInfoListItem.setClickedPosition(clickedPosition);
-                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                userInfoListItem.setAdapter(facebookFriendsAdapter);
+                userInfoListItem.setClickedPosition(clickedPosition);
+                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {
             NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);

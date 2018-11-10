@@ -266,6 +266,7 @@
     <string name="nearby">NEARBY</string>
     <string name="meter">metre</string>
     <string name="clearFilter">Clear</string>
+    <string name="now">Just now</string>
 
 
 </resources>

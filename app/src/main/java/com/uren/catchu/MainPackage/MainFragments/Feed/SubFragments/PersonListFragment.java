@@ -20,26 +20,20 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FollowInfo;
-import catchu.model.FollowInfoResultArrayItem;
+
 import catchu.model.User;
 import catchu.model.UserListResponse;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 
@@ -215,16 +209,11 @@ public class PersonListFragment extends BaseFragment
 
     private void startPersonInfoProcess(User user, int clickedPosition) {
 
-        FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-        rowItem.setUserid(user.getUserid());
-        rowItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        rowItem.setName(user.getName());
+        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+        userInfoListItem.setAdapter(personListAdapter);
+        userInfoListItem.setClickedPosition(clickedPosition);
 
-        FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-        followInfoListItem.setAdapter(personListAdapter);
-        followInfoListItem.setClickedPosition(clickedPosition);
-
-        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, followInfoListItem);
+        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
 
     }
 

@@ -23,15 +23,18 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.User;
 import catchu.model.UserListResponse;
 
-public class NewSearchFragment extends BaseFragment
-        implements View.OnClickListener {
+public class SearchFragment extends BaseFragment
+        implements View.OnClickListener, ListItemClickListener {
 
     View mView;
     SearchResultAdapter searchResultAdapter;
@@ -52,9 +55,9 @@ public class NewSearchFragment extends BaseFragment
     @BindView(R.id.edtSearch)
     EditText edtSearch;
 
-    public static NewSearchFragment newInstance() {
+    public static SearchFragment newInstance() {
         Bundle args = new Bundle();
-        NewSearchFragment fragment = new NewSearchFragment();
+        SearchFragment fragment = new SearchFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -130,6 +133,7 @@ public class NewSearchFragment extends BaseFragment
     private void setAdapter() {
         searchResultAdapter = new SearchResultAdapter(getContext(), mFragmentNavigation);
         recyclerView.setAdapter(searchResultAdapter);
+        searchResultAdapter.setListItemClickListener(this);
     }
 
     private void showKeyboard(boolean showKeyboard) {
@@ -209,4 +213,11 @@ public class NewSearchFragment extends BaseFragment
     }
 
 
+    @Override
+    public void onClick(View view, User user, int clickedPosition) {
+        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+        userInfoListItem.setAdapter(searchResultAdapter);
+        userInfoListItem.setClickedPosition(clickedPosition);
+        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
+    }
 }

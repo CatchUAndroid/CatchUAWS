@@ -1,43 +1,41 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
-import catchu.model.FollowInfo;
-import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.UserProfile;
+import catchu.model.FollowInfoListResponse;
+import catchu.model.User;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
+public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfoListResponse> {
 
-public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
-
-    private OnEventListener<FollowInfo> mCallBack;
+    private OnEventListener<FollowInfoListResponse> mCallBack;
     public Exception mException;
-    public FollowInfo followInfo;
+    private String userId;
+    private String requestType;
     private String token;
 
-    public FollowInfoProcess(OnEventListener callback, FollowInfo followInfo, String token) {
+    public FollowInfoProcess(OnEventListener callback, String userId, String requestType, String token) {
         mCallBack = callback;
-        this.followInfo = followInfo;
+        this.userId = userId;
+        this.requestType = requestType;
         this.token = token;
     }
 
 
     @Override
-    protected FollowInfo doInBackground(Void... voids) {
+    protected FollowInfoListResponse doInBackground(Void... voids) {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
+            FollowInfoListResponse followInfoListResponse = instance.client.usersFollowGet(userId, requestType, token);
 
-            FollowInfo rsp = instance.client.usersFollowPost(token, followInfo);
-
-            if (rsp.getError().getCode().intValue() == RESPONSE_OK) {
-                return rsp;
+            if (followInfoListResponse.getError().getCode().intValue() == RESPONSE_OK) {
+                return followInfoListResponse;
             } else {
                 return null;
             }
@@ -62,12 +60,12 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfo> {
     }
 
     @Override
-    protected void onPostExecute(FollowInfo followInfo) {
-        super.onPostExecute(followInfo);
+    protected void onPostExecute(FollowInfoListResponse followInfoListResponse) {
+        super.onPostExecute(followInfoListResponse);
 
         if (mCallBack != null) {
             if (mException == null) {
-                mCallBack.onSuccess(followInfo);
+                mCallBack.onSuccess(followInfoListResponse);
             } else {
                 mCallBack.onFailure(mException);
             }

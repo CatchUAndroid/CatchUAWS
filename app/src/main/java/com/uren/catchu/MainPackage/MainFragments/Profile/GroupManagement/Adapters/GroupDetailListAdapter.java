@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,14 +29,9 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.GroupRequest;
-import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.GroupRequestResultResultArrayItem;
+import catchu.model.User;
 import catchu.model.UserProfileProperties;
-
-import static com.uren.catchu.Constants.StringConstants.CHANGE_GROUP_ADMIN;
-import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
 
 public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailListAdapter.MyViewHolder> {
 
@@ -142,9 +136,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                 if (item == CODE_DISPLAY_PROFILE) {
 
                                     Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
-                                    FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-                                    followInfoResultArrayItem = getFollowProperties();
-                                    itemClickListener.onClick(followInfoResultArrayItem, CODE_DISPLAY_PROFILE);
+                                    User user = getFollowProperties();
+                                    itemClickListener.onClick(user, CODE_DISPLAY_PROFILE);
 
                                 } else if (item == CODE_REMOVE_FROM_GROUP)
                                     exitFromGroup(userProfile.getUserid());
@@ -160,14 +153,13 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             });
         }
 
-        public FollowInfoResultArrayItem getFollowProperties() {
-            FollowInfoResultArrayItem followItem = new FollowInfoResultArrayItem();
-            followItem.setBirthday(userProfile.getName());
-            followItem.setEmail(userProfile.getUsername());
-            followItem.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());
-            followItem.setUserid(userProfile.getUserid());
-            followItem.setIsPrivateAccount(userProfile.getIsPrivateAccount());
-            return followItem;
+        public User getFollowProperties() {
+            User user = new User();
+            user.setEmail(userProfile.getUsername());
+            user.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());
+            user.setUserid(userProfile.getUserid());
+            user.setIsPrivateAccount(userProfile.getIsPrivateAccount());
+            return user;
         }
 
         public void setData(UserProfileProperties userProfile, int position) {

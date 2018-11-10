@@ -46,49 +46,33 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.FileAdapter;
-import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
-import com.uren.catchu.GeneralUtils.ShapeUtil;
+
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
-import com.uren.catchu.LoginPackage.LoginActivity;
+
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.PhoneVerification;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
-import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.TextEditFragment;
-import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.UgurDeneme.PhoneAuthActivity;
 
-import java.io.File;
+import com.uren.catchu.R;
+
+import com.uren.catchu.Singleton.AccountHolderInfo;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Locale;
 
-import butterknife.BindArray;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
 import catchu.model.Phone;
-import catchu.model.UserProfile;
+
 import catchu.model.UserProfileProperties;
 
-import static android.app.Activity.RESULT_OK;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.PUTEXTRA_PHONE_NUM;
 
 @SuppressLint("ValidFragment")
 public class PhoneNumEditFragment extends BaseFragment {

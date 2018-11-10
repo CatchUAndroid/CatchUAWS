@@ -20,17 +20,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.FollowInfo;
-import catchu.model.FollowInfoResultArrayItem;
+
 import catchu.model.Provider;
 import catchu.model.ProviderList;
 import catchu.model.User;
 import catchu.model.UserListResponse;
-import catchu.model.UserProfileProperties;
-
-import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
-import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 
 public class AccountHolderFacebookFriends {

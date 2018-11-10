@@ -30,13 +30,12 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.CommentListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.Utils;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -48,7 +47,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Comment;
 import catchu.model.CommentListResponse;
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
@@ -260,18 +258,8 @@ public class CommentListFragment extends BaseFragment
     }
 
     private void startPersonInfoProcess(User user, int clickedPosition) {
-
-        FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-        rowItem.setUserid(user.getUserid());
-        rowItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        rowItem.setName(user.getName());
-
-        FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-        followInfoListItem.setAdapter(commentListAdapter);
-        followInfoListItem.setClickedPosition(clickedPosition);
-
-        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, followInfoListItem);
-
+        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
     }
 
 

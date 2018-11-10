@@ -10,7 +10,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import catchu.model.FollowInfo;
+import catchu.model.FollowInfoListResponse;
 import catchu.model.FriendList;
 import catchu.model.FriendRequestList;
 
@@ -140,15 +140,15 @@ public class AccountHolderFollowProcess {
 
     //Get following list
     public static void startGetFollowings(String token, final CompleteCallback completeCallback) {
-        FollowInfo followInfoTemp = new FollowInfo();
-        followInfoTemp.setRequestType(GET_USER_FOLLOWINGS);
-        followInfoTemp.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
 
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
+        String userId = AccountHolderInfo.getUserID();
+        String requestType = GET_USER_FOLLOWINGS;
+
+        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfoListResponse>() {
             @Override
-            public void onSuccess(FollowInfo resp) {
-                if(resp != null)
-                    completeCallback.onComplete((FollowInfo) resp);
+            public void onSuccess(FollowInfoListResponse followInfoListResponse) {
+                if(followInfoListResponse != null)
+                    completeCallback.onComplete((FollowInfoListResponse) followInfoListResponse);
             }
 
             @Override
@@ -159,7 +159,7 @@ public class AccountHolderFollowProcess {
             @Override
             public void onTaskContinue() {
             }
-        }, followInfoTemp, token);
+        }, userId, requestType, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

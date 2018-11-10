@@ -52,7 +52,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivit
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -249,12 +249,12 @@ public class PostHelper {
     public static class ProfileClicked {
 
         static BaseFragment.FragmentNavigation fragmentNavigation;
-        static FollowInfoListItem followInfoListItem;
+        static UserInfoListItem userInfoListItem;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, FollowInfoListItem followInfoListItem) {
+        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, UserInfoListItem userInfoListItem) {
 
             fragmentNavigation = fragmNav;
-            ProfileClicked.followInfoListItem = followInfoListItem;
+            ProfileClicked.userInfoListItem = userInfoListItem;
 
             ProfileClicked commentListClicked = new ProfileClicked(context);
         }
@@ -265,12 +265,12 @@ public class PostHelper {
 
         private void postProfileClickedProcess(Context context) {
             if (fragmentNavigation != null) {
-                if (followInfoListItem.getResultArrayItem().getUserid().equals(AccountHolderInfo.getUserID())) {
+                if (userInfoListItem.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
                     //clicked own profile
                     fragmentNavigation.pushFragment(ProfileFragment.newInstance(false), ANIMATE_RIGHT_TO_LEFT);
                 } else {
                     //clicked others profile
-                    fragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                    fragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
                 }
             }
         }
@@ -600,8 +600,8 @@ public class PostHelper {
             FeedRefresh.feedRefreshCallback = feedRefreshCallback;
         }
 
-        public static void feedRefreshStart(int radius) {
-            feedRefreshCallback.onFeedRefresh(radius);
+        public static void feedRefreshStart() {
+            feedRefreshCallback.onFeedRefresh();
         }
 
     }

@@ -1,35 +1,29 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
+
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
+
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
-import android.widget.ImageButton;
+;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -41,27 +35,23 @@ import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentListProcess;
-import com.uren.catchu.ApiGatewayFunctions.PostLikeListProcess;
+
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ViewPagerUtils;
+
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.ViewPagerAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.Utils;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -75,10 +65,10 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.BaseRequest;
+
 import catchu.model.Comment;
 import catchu.model.CommentListResponse;
-import catchu.model.FollowInfoResultArrayItem;
+
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
@@ -86,6 +76,7 @@ import catchu.model.User;
 import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
+import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
 
 
 public class SinglePostFragment extends BaseFragment
@@ -104,7 +95,6 @@ public class SinglePostFragment extends BaseFragment
     TextView txtProfilePic;
     TextView txtUserName;
     TextView txtCreateAt;
-    LinearLayout profileMainLayout;
     ImageView imgLike;
     boolean isPostLiked = false;
     int likeCount = 0;
@@ -133,6 +123,10 @@ public class SinglePostFragment extends BaseFragment
     LinearLayout llAddComment;
     @BindView(R.id.toolbarLayout)
     Toolbar toolbarLayout;
+    @BindView(R.id.llProfilePic)
+    LinearLayout llProfilePic;
+    @BindView(R.id.llUserName)
+    LinearLayout llUserName;
 
     //Location
     private LocationTrackerAdapter locationTrackObj;
@@ -250,7 +244,6 @@ public class SinglePostFragment extends BaseFragment
         txtProfilePic = (TextView) mView.findViewById(R.id.txtProfilePic);
         txtUserName = (TextView) mView.findViewById(R.id.txtUserName);
         txtCreateAt = (TextView) mView.findViewById(R.id.txtCreateAt);
-        profileMainLayout = (LinearLayout) mView.findViewById(R.id.profileMainLayout);
         imgLike = (ImageView) mView.findViewById(R.id.imgLike);
 
         //imgBack
@@ -264,7 +257,13 @@ public class SinglePostFragment extends BaseFragment
         btnSendComment.setOnSendClickListener(this);
 
         //Profile layout
-        profileMainLayout.setOnClickListener(new View.OnClickListener() {
+        llProfilePic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startPersonInfoProcess(post.getUser(), 0);
+            }
+        });
+        llUserName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startPersonInfoProcess(post.getUser(), 0);
@@ -625,17 +624,8 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void startPersonInfoProcess(User user, int clickedPosition) {
-
-        FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-        rowItem.setUserid(user.getUserid());
-        rowItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
-        rowItem.setName(user.getName());
-
-        FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-        followInfoListItem.setAdapter(singlePostAdapter);
-        followInfoListItem.setClickedPosition(clickedPosition);
-
-        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, followInfoListItem);
+        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
     }
 
     private Comment createCommentBody() {
@@ -650,7 +640,7 @@ public class SinglePostFragment extends BaseFragment
         comment.setMessage(edtAddComment.getText().toString());
         comment.setLikeCount(0);
         comment.setIsLiked(false);
-        comment.setCreateAt("Just now");
+        comment.setCreateAt(CREATE_AT_NOW);
         comment.setUser(user);
         return comment;
     }

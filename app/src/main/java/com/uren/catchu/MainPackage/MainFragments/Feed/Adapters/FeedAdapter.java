@@ -31,24 +31,15 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMen
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
-
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
 
 public class FeedAdapter extends RecyclerView.Adapter {
@@ -227,12 +218,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
             profileMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-                    rowItem.setUserid(post.getUser().getUserid());
-                    rowItem.setProfilePhotoUrl(post.getUser().getProfilePhotoUrl());
-                    rowItem.setName(post.getUser().getName());
-                    FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, followInfoListItem);
+                    UserInfoListItem userInfoListItem = new UserInfoListItem(post.getUser());
+                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, userInfoListItem);
                 }
             });
             //Location Detail Layout

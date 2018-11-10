@@ -23,10 +23,12 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClic
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import java.util.List;
+import catchu.model.FollowInfoListResponse;
+import catchu.model.User;
 
-import catchu.model.FollowInfoResultArrayItem;
-
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
@@ -34,15 +36,15 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
 public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHolder> {
 
-    private Context context;
-    private List<FollowInfoResultArrayItem> followList;
+    private Context mContext;
+    private FollowInfoListResponse followInfoListResponse;
     private ListItemClickListener listItemClickListener;
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public FollowAdapter(Context context, List<FollowInfoResultArrayItem> followList, ListItemClickListener listItemClickListener) {
-        this.context = context;
-        this.followList = followList;
+    public FollowAdapter(Context context, FollowInfoListResponse followInfoListResponse, ListItemClickListener listItemClickListener) {
+        this.mContext = context;
+        this.followInfoListResponse = followInfoListResponse;
         this.listItemClickListener = listItemClickListener;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -63,7 +65,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
         ImageView profileImage;
         Button btnFollowStatus;
         CardView cardView;
-        FollowInfoResultArrayItem followListItem;
+        User user;
         int position;
 
         public MyViewHolder(View view) {
@@ -80,7 +82,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 @Override
                 public void onClick(View view) {
                     btnFollowStatus.setEnabled(false);
-                    btnFollowStatus.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
+                    btnFollowStatus.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
                     manageFollowStatus();
                 }
             });
@@ -89,40 +91,46 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 @Override
                 public void onClick(View v) {
 
-                    listItemClickListener.onClick(v, followListItem, position);
+                    listItemClickListener.onClick(v, user, position);
                 }
             });
         }
 
         public void manageFollowStatus() {
-            if (followListItem.getIsFollow() != null && followListItem.getIsFollow()) {
 
-                if (followListItem.getIsPrivateAccount() != null && followListItem.getIsPrivateAccount()) {
+            //takip ediliyor ise
+            if (user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
                     openDialogBox();
                 } else {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
                 }
-
-            } else if (followListItem.getIsFollow() != null && followListItem.getIsPendingRequest()) {
-
+            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
+                //istek gonderilmis ise
                 updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-            } else {
-                if (followListItem.getIsPrivateAccount() != null && followListItem.getIsPrivateAccount()) {
+            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
+                //takip istegi yok ise
+                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
                     updateFollowStatus(FRIEND_FOLLOW_REQUEST);
                 } else {
                     updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
                 }
+            } else {
+                //do nothing
             }
         }
 
-        public void setData(FollowInfoResultArrayItem rowItem, int position) {
+        public void setData(User user, int position) {
 
-            this.followListItem = rowItem;
+            this.user = user;
             this.position = position;
-            UserDataUtil.setName(rowItem.getName(), profileName);
-            UserDataUtil.setProfilePicture(context, followListItem.getProfilePhotoUrl(),
-                    followListItem.getName(), shortUserNameTv, profileImage);
-            UserDataUtil.updateFollowButton(context, followListItem.getIsFollow(), followListItem.getIsPendingRequest(), btnFollowStatus, true);
+            UserDataUtil.setName(user.getName(), profileName);
+            UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
+                    user.getName(), shortUserNameTv, profileImage);
+
+            UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
+
+
         }
 
         private void openDialogBox() {
@@ -139,13 +147,13 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
                 }
             };
 
-            DialogBoxUtil.showYesNoDialog(context, "", context.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
         }
 
         private void updateFollowStatus(final String requestType) {
 
-            AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
-                    followListItem.getUserid(), new CompleteCallback() {
+            AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
+                    , user.getUserid(), new CompleteCallback() {
                         @Override
                         public void onComplete(Object object) {
                             updateFollowUI(requestType);
@@ -154,41 +162,38 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
                         @Override
                         public void onFailed(Exception e) {
-                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                            DialogBoxUtil.showErrorDialog(mContext, mContext.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
-                                    btnFollowStatus.setEnabled(true);
                                 }
                             });
+                            btnFollowStatus.setEnabled(true);
                         }
                     });
         }
 
         private void updateFollowUI(String updateType) {
-            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(updateType);
+            AccountHolderInfo.updateAccountHolderFollowCnt(updateType);
             updateFollowTypeAfterOperation(updateType);
-            notifyItemChanged(position, followListItem.getIsPendingRequest());
-            notifyItemChanged(position, followListItem.getIsFollow());
+            notifyItemChanged(position, user.getFollowStatus());
         }
 
         public void updateFollowTypeAfterOperation(String updateType) {
             switch (updateType) {
                 case FRIEND_DELETE_FOLLOW:
-                    followListItem.setIsFollow(false);
-                    followListItem.setIsPendingRequest(false);
+                    user.setFollowStatus(FOLLOW_STATUS_NONE);
                     break;
 
                 case FRIEND_DELETE_PENDING_FOLLOW_REQUEST:
-                    followListItem.setIsFollow(false);
-                    followListItem.setIsPendingRequest(false);
+                    user.setFollowStatus(FOLLOW_STATUS_NONE);
                     break;
 
                 case FRIEND_FOLLOW_REQUEST:
-                    followListItem.setIsPendingRequest(true);
+                    user.setFollowStatus(FOLLOW_STATUS_PENDING);
                     break;
 
                 case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                    followListItem.setIsFollow(true);
+                    user.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
                     break;
 
                 default:
@@ -199,18 +204,16 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-
-        FollowInfoResultArrayItem followInfoResultArrayItem = followList.get(position);
-        holder.setData(followInfoResultArrayItem, position);
+        User user = followInfoListResponse.getItems().get(position);
+        holder.setData(user, position);
     }
 
     @Override
     public int getItemCount() {
-        return followList.size();
+        return followInfoListResponse.getItems().size();
     }
 
     public void updateAdapterWithPosition(int position) {
-
         notifyItemChanged(position);
     }
 }

@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -21,15 +20,15 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.PendingRequestAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.FriendRequestList;
+import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -105,8 +104,8 @@ public class PendingRequestsFragment extends BaseFragment {
                 if(getContext() != null) {
                     pendingRequestAdapter = new PendingRequestAdapter(getContext(), friendRequestList, new ListItemClickListener() {
                         @Override
-                        public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
-                            startFollowingInfoProcess(rowItem, clickedPosition);
+                        public void onClick(View view, User user, int clickedPosition) {
+                            startFollowingInfoProcess(user, clickedPosition);
                         }
                     }, new ReturnCallback() {
                         @Override
@@ -147,13 +146,13 @@ public class PendingRequestsFragment extends BaseFragment {
         });
     }
 
-    private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
+    private void startFollowingInfoProcess(User user, int clickedPosition) {
 
         if (mFragmentNavigation != null) {
-            FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-            followInfoListItem.setAdapter(pendingRequestAdapter);
-            followInfoListItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+            userInfoListItem.setAdapter(pendingRequestAdapter);
+            userInfoListItem.setClickedPosition(clickedPosition);
+            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 }

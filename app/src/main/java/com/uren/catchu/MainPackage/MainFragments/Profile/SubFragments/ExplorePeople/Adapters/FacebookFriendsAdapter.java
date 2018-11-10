@@ -29,7 +29,6 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.FriendRequestList;
 import catchu.model.RelationProperties;
 import catchu.model.User;
@@ -118,22 +117,20 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             personRootCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FollowInfoResultArrayItem followItem = getFollowProperties();
-                    listItemClickListener.onClick(v, followItem, position);
+                    User newUser = getFollowProperties();
+                    listItemClickListener.onClick(v, newUser, position);
                 }
             });
         }
 
-        public FollowInfoResultArrayItem getFollowProperties() {
-            FollowInfoResultArrayItem followItem = new FollowInfoResultArrayItem();
-            followItem.setBirthday(user.getName());
-            followItem.setEmail(user.getUsername());
-            followItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
-            followItem.setUserid(user.getUserid());
-            followItem.setIsPrivateAccount(user.getIsPrivateAccount());
-            followItem.setIsPendingRequest(user.getFollowStatus().equals(FOLLOW_STATUS_PENDING));
-            followItem.setIsFollow(user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING));
-            return followItem;
+        public User getFollowProperties() {
+            User tempUser = new User();
+            tempUser.setEmail(user.getUsername());
+            tempUser.setProfilePhotoUrl(user.getProfilePhotoUrl());
+            tempUser.setUserid(user.getUserid());
+            tempUser.setIsPrivateAccount(user.getIsPrivateAccount());
+            tempUser.setFollowStatus(user.getFollowStatus());
+            return tempUser;
         }
 
         public void checkFriendRelation() {

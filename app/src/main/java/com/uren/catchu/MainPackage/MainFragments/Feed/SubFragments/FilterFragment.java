@@ -171,7 +171,7 @@ public class FilterFragment extends BaseFragment
         if (v == txtApply) {
             //Save changes
             FILTERED_FEED_RADIUS = radius;
-            PostHelper.FeedRefresh.feedRefreshStart(radius);
+            PostHelper.FeedRefresh.feedRefreshStart();
             getActivity().onBackPressed();
 
         }

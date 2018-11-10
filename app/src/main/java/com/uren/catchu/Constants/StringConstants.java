@@ -74,8 +74,8 @@ public class StringConstants {
     public static final String USER_PROFILE_UPDATE = "USER_PROFILE_UPDATE";
 
     //Follow Request Types
-    public static final String GET_USER_FOLLOWERS = "GET_USER_FOLLOWERS";
-    public static final String GET_USER_FOLLOWINGS = "GET_USER_FOLLOWINGS";
+    public static final String GET_USER_FOLLOWERS = "followers";
+    public static final String GET_USER_FOLLOWINGS = "followings";
 
     // Upload media types
     public static final String VIDEO_TYPE = "video";
@@ -112,5 +112,10 @@ public class StringConstants {
     public static final String GROUP_OP_CHOOSE_TYPE = "CHOOSE";
     public static final String GROUP_OP_VIEW_TYPE = "VIEW";
 
+    public static final String CREATE_AT_NOW = "NOW";
+
+    //FEED TYPES
+    public static final String FEED_TYPE_PUBLIC = "public";
+    public static final String FEED_TYPE_CATCHED = "catched";
 
 }

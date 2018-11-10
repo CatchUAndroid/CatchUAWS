@@ -23,14 +23,15 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SearchResultDiffCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.User;
 import catchu.model.UserListResponse;
 
@@ -47,6 +48,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     private Context mContext;
     private List<User> userList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
+    private ListItemClickListener listItemClickListener;
     GradientDrawable imageShape;
 
     public SearchResultAdapter(Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
@@ -104,13 +106,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-                    rowItem.setUserid(user.getUserid());
-                    rowItem.setProfilePhotoUrl(user.getProfilePhotoUrl());
-                    rowItem.setName(user.getName());
-                    rowItem.setUsername(user.getUsername());
-                    FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, followInfoListItem);
+                    listItemClickListener.onClick(v, user, position);
                 }
             });
 
@@ -234,7 +230,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     public void updateAdapterWithPosition(int position) {
-
         notifyItemChanged(position);
     }
 
@@ -259,6 +254,10 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         this.userList.clear();
         this.userList.addAll(newUserList);
         diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void setListItemClickListener(ListItemClickListener listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
     }
 
 }

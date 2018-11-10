@@ -40,9 +40,8 @@ import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.EditGroupNameFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -53,10 +52,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FollowInfoResultArrayItem;
-import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
+import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -289,11 +287,11 @@ public class ViewGroupDetailFragment extends BaseFragment {
             public void onClick(Object object, int clickedItem) {
                 if (clickedItem == CODE_DISPLAY_PROFILE) {
                     if (mFragmentNavigation != null) {
-                        FollowInfoResultArrayItem followInfoResultArrayItem = (FollowInfoResultArrayItem) object;
-                        FollowInfoListItem followInfoListItem = new FollowInfoListItem(followInfoResultArrayItem);
-                        followInfoListItem.setAdapter(adapter);
-                        followInfoListItem.setClickedPosition(clickedItem);
-                        mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                        User user = (User) object;
+                        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                        userInfoListItem.setAdapter(adapter);
+                        userInfoListItem.setClickedPosition(clickedItem);
+                        mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
                     }
                 } else if (clickedItem == CODE_REMOVE_FROM_GROUP) {
                     List<UserProfileProperties> groupParticipantList1 = (List<UserProfileProperties>) object;

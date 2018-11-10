@@ -30,16 +30,17 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMen
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
+
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import catchu.model.Comment;
-import catchu.model.FollowInfoResultArrayItem;
 import catchu.model.Post;
+
+import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
 
 public class SinglePostAdapter extends RecyclerView.Adapter {
 
@@ -248,12 +249,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             profileMainLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FollowInfoResultArrayItem rowItem = new FollowInfoResultArrayItem();
-                    rowItem.setUserid(post.getUser().getUserid());
-                    rowItem.setProfilePhotoUrl(post.getUser().getProfilePhotoUrl());
-                    rowItem.setName(post.getUser().getName());
-                    FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, followInfoListItem);
+                    UserInfoListItem userInfoListItem = new UserInfoListItem(post.getUser());
+                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, userInfoListItem);
                 }
             });
             //Location Detail Layout
@@ -512,6 +509,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                     personListItemClickListener.onPersonListItemClicked(v, comment.getUser(), position);
                 }
             });
+            txtUsername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    personListItemClickListener.onPersonListItemClicked(v, comment.getUser(), position);
+                }
+            });
+
 
         }
 
@@ -535,7 +539,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             }
             //Date
             if (comment.getCreateAt() != null) {
-                txtCreateAt.setText(CommonUtils.timeAgo(mContext, comment.getCreateAt()));
+                if(comment.getCreateAt().equals(CREATE_AT_NOW)){
+                    txtCreateAt.setText(mContext.getResources().getString(R.string.now));
+                }else{
+                    txtCreateAt.setText(CommonUtils.timeAgo(mContext, comment.getCreateAt()));
+                }
             }
             //Like
             if (comment.getIsLiked()) {

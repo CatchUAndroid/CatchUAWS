@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,24 +15,24 @@ import android.widget.TextView;
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.FollowInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FollowInfo;
-import catchu.model.FollowInfoResultArrayItem;
+import catchu.model.FollowInfoListResponse;
+import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 
@@ -41,7 +40,6 @@ public class FollowingFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    FollowInfo followInfo;
     private LinearLayoutManager layoutManager;
     FollowAdapter followAdapter;
 
@@ -91,7 +89,6 @@ public class FollowingFragment extends BaseFragment
 
         backImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.followings));
-        followInfo = new FollowInfo();
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
     }
 
@@ -116,24 +113,26 @@ public class FollowingFragment extends BaseFragment
     }
 
     private void startGetFollowingList(String token) {
+        String userId = AccountHolderInfo.getUserID();
+        String requestType = GET_USER_FOLLOWINGS;
 
-        followInfo.setRequestType(GET_USER_FOLLOWINGS);
-        followInfo.setUserId(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
-
-        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfo>() {
+        FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfoListResponse>() {
             @Override
-            public void onSuccess(FollowInfo resp) {
+            public void onSuccess(FollowInfoListResponse followInfoListResponse) {
 
-                Log.i("count ", String.valueOf(resp.getResultArray().size()));
-
-                setUpRecyclerView(resp);
+                if (followInfoListResponse == null) {
+                    CommonUtils.LOG_OK_BUT_NULL("FollowInfoProcess");
+                } else {
+                    CommonUtils.LOG_OK("FollowInfoProcess");
+                    setUpRecyclerView(followInfoListResponse);
+                }
 
                 progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Exception e) {
-
+                CommonUtils.LOG_FAIL("FollowInfoProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -141,42 +140,42 @@ public class FollowingFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, followInfo, token);
+        }, userId, requestType, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
     }
 
-    private void setUpRecyclerView(FollowInfo followInfo) {
+    private void setUpRecyclerView(FollowInfoListResponse followInfoListResponse) {
 
         //Takip edilenlerin isFollow degerleri set edilir.
-        for(FollowInfoResultArrayItem item:followInfo.getResultArray()){
-            item.setIsFollow(true);
+        for(User item:followInfoListResponse.getItems()){
+            item.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
         }
 
         ListItemClickListener listItemClickListener = new ListItemClickListener() {
             @Override
-            public void onClick(View view, FollowInfoResultArrayItem rowItem, int clickedPosition) {
-                CommonUtils.showToast(getContext(), "Clicked : " + rowItem.getName());
-                startFollowingInfoProcess(rowItem, clickedPosition);
+            public void onClick(View view, User user, int clickedPosition) {
+                CommonUtils.showToast(getContext(), "Clicked : " + user.getName());
+                startFollowingInfoProcess(user, clickedPosition);
             }
         };
 
         if(getActivity() != null) {
-            followAdapter = new FollowAdapter(getContext(), followInfo.getResultArray(), listItemClickListener);
+            followAdapter = new FollowAdapter(getContext(), followInfoListResponse, listItemClickListener);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
             following_recyclerView.setLayoutManager(mLayoutManager);
             following_recyclerView.setAdapter(followAdapter);
         }
     }
 
-    private void startFollowingInfoProcess(FollowInfoResultArrayItem rowItem, int clickedPosition) {
+    private void startFollowingInfoProcess(User user, int clickedPosition) {
 
         if (mFragmentNavigation != null) {
-            FollowInfoListItem followInfoListItem = new FollowInfoListItem(rowItem);
-            followInfoListItem.setAdapter(followAdapter);
-            followInfoListItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+            userInfoListItem.setAdapter(followAdapter);
+            userInfoListItem.setClickedPosition(clickedPosition);
+            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
