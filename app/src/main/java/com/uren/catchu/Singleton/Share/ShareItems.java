@@ -8,6 +8,7 @@ import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import java.util.ArrayList;
 import java.util.List;
 
+import catchu.model.BucketUploadResponse;
 import catchu.model.Comment;
 import catchu.model.Media;
 import catchu.model.Post;
@@ -15,13 +16,15 @@ import catchu.model.User;
 
 public class ShareItems{
 
-    private static ShareItems shareItemsInstance = null;
-    private static Post post;
-    private static List<ImageShareItemBox> imageShareItemBoxes;
-    private static List<VideoShareItemBox> videoShareItemBoxes;
-    private static Bitmap textBitmap;
+    static ShareItems shareItemsInstance = null;
+    Post post;
+    List<ImageShareItemBox> imageShareItemBoxes;
+    List<VideoShareItemBox> videoShareItemBoxes;
+    Bitmap textBitmap;
     int selectedShareType;
     int shareTryCount = 0;
+    BucketUploadResponse bucketUploadResponse;
+    boolean shareStartedValue;
 
     public static ShareItems getInstance(){
         if(shareItemsInstance == null) {
@@ -43,12 +46,20 @@ public class ShareItems{
         shareItemsInstance = shareItems;
     }
 
+    public static ShareItems getShareItemsInstance() {
+        return shareItemsInstance;
+    }
+
+    public void setShareItemsInstance(ShareItems shareItemsInstance) {
+        this.shareItemsInstance = shareItemsInstance;
+    }
+
     public Post getPost() {
         return post;
     }
 
     public void setPost(Post post) {
-        ShareItems.post = post;
+        this.post = post;
     }
 
     public Bitmap getTextBitmap() {
@@ -56,7 +67,7 @@ public class ShareItems{
     }
 
     public void setTextBitmap(Bitmap textBitmap) {
-        ShareItems.textBitmap = textBitmap;
+        this.textBitmap = textBitmap;
     }
 
     public List<ImageShareItemBox> getImageShareItemBoxes() {
@@ -64,7 +75,7 @@ public class ShareItems{
     }
 
     public void setImageShareItemBoxes(List<ImageShareItemBox> imageShareItemBoxes) {
-        ShareItems.imageShareItemBoxes = imageShareItemBoxes;
+        this.imageShareItemBoxes = imageShareItemBoxes;
     }
 
     public List<VideoShareItemBox> getVideoShareItemBoxes() {
@@ -72,7 +83,7 @@ public class ShareItems{
     }
 
     public void setVideoShareItemBoxes(List<VideoShareItemBox> videoShareItemBoxes) {
-        ShareItems.videoShareItemBoxes = videoShareItemBoxes;
+        this.videoShareItemBoxes = videoShareItemBoxes;
     }
 
     public void addImageShareItemBox(ImageShareItemBox shareItemBox){
@@ -109,5 +120,21 @@ public class ShareItems{
 
     public void setShareTryCount(int shareTryCount) {
         this.shareTryCount = shareTryCount;
+    }
+
+    public BucketUploadResponse getBucketUploadResponse() {
+        return bucketUploadResponse;
+    }
+
+    public void setBucketUploadResponse(BucketUploadResponse bucketUploadResponse) {
+        this.bucketUploadResponse = bucketUploadResponse;
+    }
+
+    public boolean isShareStartedValue() {
+        return shareStartedValue;
+    }
+
+    public void setShareStartedValue(boolean shareStartedValue) {
+        this.shareStartedValue = shareStartedValue;
     }
 }

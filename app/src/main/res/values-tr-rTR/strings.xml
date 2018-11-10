@@ -214,6 +214,8 @@
     <string name="THERE_IS_NO_MEDIA_TO_POST">Paylaşım için herhangi bir medya seçilmedi</string>
     <string name="SHOW_IN_LIST_MODE">Liste Şeklinde Göster</string>
     <string name="SHOW_IN_NORMAL_MODE">Normal Göster</string>
+    <string name="BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG">Biraz önce yapmış olduğunuz paylaşım henüz sonlanmadı. Lütfen biraz bekleyin.</string>
+    <string name="SHARE_IS_UNSUCCESSFUL">Maalesef yaptığınız paylaşım başarılı sonuclanmadı :(</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

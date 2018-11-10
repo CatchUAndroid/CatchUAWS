@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -392,6 +393,8 @@ public class ContactFriendsFragment extends BaseFragment {
                 FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
                 followInfoResultArrayItem.setUserid(userid);
                 FollowInfoListItem followInfoListItem = new FollowInfoListItem(followInfoResultArrayItem);
+                followInfoListItem.setAdapter(contactFriendsAdapter);
+                followInfoListItem.setClickedPosition(clickedItem);
                 mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {

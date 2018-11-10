@@ -242,9 +242,12 @@
     <string name="ASK_FOR_REMOVE_ACCOUNT_PRIVACY">Do you want to remove the privacy of the account?</string>
     <string name="ASK_FOR_MAKE_ACCOUNT_PRIVACY">Do you want to make your account private?</string>
     <string name="POST_DETAIL">Post Detail</string>
+    <string name="YOU_LIKED_POSTS">Liked Posts</string>
     <string name="THERE_IS_NO_MEDIA_TO_POST">There is no media to post</string>
     <string name="SHOW_IN_LIST_MODE">View in List Mode</string>
     <string name="SHOW_IN_NORMAL_MODE">View in Normal Mode </string>
+    <string name="BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG">The share you have just made has not ended. Please wait a moment.</string>
+    <string name="SHARE_IS_UNSUCCESSFUL">Sorry, your share has not been successfully concluded :(</string>
 
 
     <string name="emptyFeed">No posts yets...</string>

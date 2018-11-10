@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -30,6 +31,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -37,6 +39,7 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -48,6 +51,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserGroupsPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserSharedPostFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -68,13 +72,13 @@ public class ProfileFragment extends BaseFragment
 
     View mView;
     UserProfile myProfile;
-    GradientDrawable imageShape;
     boolean mDrawerState;
 
     TextView navViewNameTv;
     TextView navViewUsernameTv;
     ImageView navImgProfile;
     TextView navViewShortenTextView;
+    RelativeLayout profileNavViewLayout;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -115,11 +119,21 @@ public class ProfileFragment extends BaseFragment
     RelativeLayout menuLayout;
     @BindView(R.id.backLayout)
     RelativeLayout backLayout;
-    //@BindView(R.id.refresh_layout)
-    //RecyclerRefreshLayout refresh_layout;
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
+    @BindView(R.id.htab_collapse_toolbar)
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    @BindView(R.id.htab_appbar)
+    AppBarLayout appBarLayout;
 
     TextView navPendReqCntTv;
     SpecialSelectTabAdapter adapter;
+
+    boolean appBarLayoutCollapsed = false;
+    boolean collapsedOneTime = false;
+
+    UserSharedPostFragment userSharedPostFragment;
+    UserGroupsPostFragment userGroupsPostFragment;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -148,10 +162,12 @@ public class ProfileFragment extends BaseFragment
 
             checkBundle();
             setCollapsingToolbar();
-            setPullToRefresh();
+            setPullToRefreshListener();
             addListeners();
             setUpPager();
             setNavViewItems();
+
+            System.out.println("appBarLayout.getTotalScrollRange()+++:" + appBarLayout.getTotalScrollRange());
         }
 
         return mView;
@@ -177,25 +193,27 @@ public class ProfileFragment extends BaseFragment
         navViewUsernameTv = v.findViewById(R.id.navViewUsernameTv);
         navImgProfile = v.findViewById(R.id.navImgProfile);
         navViewShortenTextView = v.findViewById(R.id.navViewShortenTextView);
+        profileNavViewLayout = v.findViewById(R.id.profileNavViewLayout);
+        profileNavViewLayout.setBackground(ShapeUtil.getGradientBackground(getResources().getColor(R.color.Chocolate, null),
+                getResources().getColor(R.color.DarkBlue, null)));
     }
 
-    private void setPullToRefresh() {
-        /*refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+    private void setPullToRefreshListener() {
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 AccountHolderInfo.getToken(new TokenCallback() {
                     @Override
                     public void onTokenTaken(String token) {
                         startGetProfileDetail(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), token);
+                        userGroupsPostFragment.getUserGroups();
                     }
                 });
             }
-        });*/
+        });
     }
 
     private void setCollapsingToolbar() {
-
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) mView.findViewById(R.id.htab_collapse_toolbar);
 
         try {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
@@ -293,18 +311,41 @@ public class ProfileFragment extends BaseFragment
                 return false;
             }
         });
+
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+
+                System.out.println("appBarLayout.verticalOffset     :" + verticalOffset);
+                //System.out.println("appBarLayout.getTotalScrollRange:" + appBarLayout.getTotalScrollRange());
+
+                if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
+                    //  Collapsed
+                    appBarLayoutCollapsed = true;
+                    collapsedOneTime = true;
+                    refresh_layout.setRefreshing(false);
+                    refresh_layout.setOnRefreshListener(null);
+
+                } else if (verticalOffset < 0) {
+                    refresh_layout.setRefreshing(false);
+                    refresh_layout.setOnRefreshListener(null);
+                } else if (verticalOffset == 0) {
+                    setPullToRefreshListener();
+                }
+            }
+        });
     }
 
     private void setUpPager() {
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
-        UserSharedPostFragment n1 = new UserSharedPostFragment();
+        userSharedPostFragment = new UserSharedPostFragment();
         NewsList n2 = new NewsList();
-        NewsList n3 = new NewsList();
+        userGroupsPostFragment = new UserGroupsPostFragment(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
 
-        adapter.addFragment(n1, "World");
+        adapter.addFragment(userSharedPostFragment, "World");
         adapter.addFragment(n2, "Special");
-        adapter.addFragment(n3, "International");
+        adapter.addFragment(userGroupsPostFragment, "International");
 
         tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         vpNews.setAdapter(adapter);
@@ -364,7 +405,7 @@ public class ProfileFragment extends BaseFragment
             }
         }
         setUserFollowerAndFollowingCnt(user);
-        //refresh_layout.setRefreshing(false);
+        refresh_layout.setRefreshing(false);
     }
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
@@ -446,12 +487,12 @@ public class ProfileFragment extends BaseFragment
                 progressBar.setVisibility(View.GONE);
                 myProfile = up;
                 setProfileDetail(up);
-                //refresh_layout.setRefreshing(false);
+                refresh_layout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Exception e) {
-                //refresh_layout.setRefreshing(false);
+                refresh_layout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -532,15 +573,15 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    private void startGroupSettingFragment(){
+    private void startGroupSettingFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new GroupManagementFragment(GROUP_OP_VIEW_TYPE,
-                            new ReturnCallback() {
-                                @Override
-                                public void onReturn(Object object) {
+                    new ReturnCallback() {
+                        @Override
+                        public void onReturn(Object object) {
 
-                                }
-                            }), ANIMATE_RIGHT_TO_LEFT);
+                        }
+                    }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

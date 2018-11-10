@@ -41,22 +41,33 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressLint("ValidFragment")
-public class TextEditFragment extends Fragment {
+public class TextEditFragment extends BaseFragment {
 
     View mView;
+
+    @BindView(R.id.selectedImageView)
+    ImageView selectedImageView;
+    @BindView(R.id.finishButton)
     Button finishButton;
+    @BindView(R.id.editText)
     EditText editText;
+    @BindView(R.id.brushImgv)
     ImageView brushImgv;
+    @BindView(R.id.colorViewPager)
     ViewPager colorViewPager;
+    @BindView(R.id.layoutDots)
     LinearLayout dotsLayout;
+
     TextView textView;
 
     ColorPaletteAdapter colorPaletteAdapter;
     TextCompleteCallback textCompleteCallback;
+    PhotoSelectUtil photoSelectUtil;
 
-    public TextEditFragment(View view, TextCompleteCallback textCompleteCallback) {
+    public TextEditFragment(View view, PhotoSelectUtil photoSelectUtil, TextCompleteCallback textCompleteCallback) {
         this.textView = (TextView) view;
         this.textCompleteCallback = textCompleteCallback;
+        this.photoSelectUtil = photoSelectUtil;
     }
 
     @Override
@@ -67,32 +78,32 @@ public class TextEditFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.text_edit_frag_layout, container, false);
-            ButterKnife.bind(this, mView);
-        }
+        mView = inflater.inflate(R.layout.text_edit_frag_layout, container, false);
+        ButterKnife.bind(this, mView);
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        finishButton = mView.findViewById(R.id.finishButton);
-        editText = mView.findViewById(R.id.editText);
-        brushImgv = mView.findViewById(R.id.brushImgv);
-        colorViewPager = mView.findViewById(R.id.colorViewPager);
-        dotsLayout = mView.findViewById(R.id.layoutDots);
+        setSelectedPhoto();
         colorPalettePrepare();
         focusEditText();
         addListeners();
+    }
+
+    public void setSelectedPhoto(){
+        Glide.with(getContext())
+                .load(photoSelectUtil.getMediaUri())
+                .into(selectedImageView);
     }
 
     private void addListeners() {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finishButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                //finishButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 textCompleteCallback.textCompleted(editText);
-                getActivity().getSupportFragmentManager().popBackStackImmediate() ;
+                getActivity().onBackPressed();
             }
         });
     }
