@@ -22,11 +22,11 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
-import com.uren.catchu.MainPackage.MainFragments.NewsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,7 +46,6 @@ public class NextActivity extends AppCompatActivity implements
     private int onPauseCount = 0;
     private boolean onPausedInd = false;
     public static Activity thisActivity;
-    public static int prevPosition = 0;
 
     @BindView(R.id.content_frame)
     FrameLayout contentFrame;
@@ -87,9 +86,7 @@ public class NextActivity extends AppCompatActivity implements
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                fragmentHistory.push(tab.getPosition());
-                //switchTab(tab.getPosition());
-                switchAndUpdateTabSelection(tab.getPosition());
+                tabSelectionControl(tab);
             }
 
             @Override
@@ -99,14 +96,33 @@ public class NextActivity extends AppCompatActivity implements
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                fragmentHistory.push(tab.getPosition());
-                switchAndUpdateTabSelection(tab.getPosition());
+                tabSelectionControl(tab);
+                /*fragmentHistory.push(tab.getPosition());
+                switchAndUpdateTabSelection(tab.getPosition());*/
                 /*mNavController.clearStack();
                 switchTab(tab.getPosition());*/
             }
         });
 
         fillAccountHolder();
+    }
+
+    public void tabSelectionControl(TabLayout.Tab tab){
+        if(tab.getPosition() != FragNavController.TAB2) {
+            fragmentHistory.push(tab.getPosition());
+            switchAndUpdateTabSelection(tab.getPosition());
+        }else if(!checkShareProceeding()){
+            fragmentHistory.push(tab.getPosition());
+            switchAndUpdateTabSelection(tab.getPosition());
+        }
+    }
+
+    public boolean checkShareProceeding() {
+        if (ShareItems.getShareItemsInstance() != null && ShareItems.getShareItemsInstance().isShareStartedValue()) {
+            CommonUtils.showToast(NextActivity.this, getResources().getString(R.string.BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG));
+            return true;
+        }
+        return false;
     }
 
     public void fillAccountHolder() {
@@ -175,10 +191,6 @@ public class NextActivity extends AppCompatActivity implements
 
     public static void switchTab(int position) {
         mNavController.switchTab(position);
-
-        if(position != mNavController.TAB2){
-            prevPosition = position;
-        }
     }
 
     @Override
@@ -223,8 +235,8 @@ public class NextActivity extends AppCompatActivity implements
         }
     }
 
-    public static void switchAndUpdateTabSelection(int position){
-        if(position != FragNavController.TAB2)
+    public static void switchAndUpdateTabSelection(int position) {
+        if (position != FragNavController.TAB2)
             bottomTabLayout.setVisibility(View.VISIBLE);
         switchTab(position);
         updateTabSelection(position);
@@ -236,34 +248,37 @@ public class NextActivity extends AppCompatActivity implements
             transactionOptions = FragNavTransactionOptions.newBuilder().build();
         }
 
-        switch (ANIMATION_TAG) {
-            case ANIMATE_RIGHT_TO_LEFT:
-                transactionOptions.enterAnimation = R.anim.slide_from_right;
-                transactionOptions.exitAnimation = R.anim.slide_to_left;
-                transactionOptions.popEnterAnimation = R.anim.slide_from_left;
-                transactionOptions.popExitAnimation = R.anim.slide_to_right;
-                break;
-            case ANIMATE_LEFT_TO_RIGHT:
-                transactionOptions.enterAnimation = R.anim.slide_from_left;
-                transactionOptions.exitAnimation = R.anim.slide_to_right;
-                transactionOptions.popEnterAnimation = R.anim.slide_from_right;
-                transactionOptions.popExitAnimation = R.anim.slide_to_left;
-                break;
-            case ANIMATE_DOWN_TO_UP:
-                transactionOptions.enterAnimation = R.anim.slide_from_down;
-                transactionOptions.exitAnimation = R.anim.slide_to_up;
-                transactionOptions.popEnterAnimation = R.anim.slide_from_up;
-                transactionOptions.popExitAnimation = R.anim.slide_to_down;
-                break;
-            case ANIMATE_UP_TO_DOWN:
-                transactionOptions.enterAnimation = R.anim.slide_from_up;
-                transactionOptions.exitAnimation = R.anim.slide_to_down;
-                transactionOptions.popEnterAnimation = R.anim.slide_from_down;
-                transactionOptions.popExitAnimation = R.anim.slide_to_up;
-                break;
-            default:
-                transactionOptions = null;
-        }
+        if (ANIMATION_TAG != null) {
+            switch (ANIMATION_TAG) {
+                case ANIMATE_RIGHT_TO_LEFT:
+                    transactionOptions.enterAnimation = R.anim.slide_from_right;
+                    transactionOptions.exitAnimation = R.anim.slide_to_left;
+                    transactionOptions.popEnterAnimation = R.anim.slide_from_left;
+                    transactionOptions.popExitAnimation = R.anim.slide_to_right;
+                    break;
+                case ANIMATE_LEFT_TO_RIGHT:
+                    transactionOptions.enterAnimation = R.anim.slide_from_left;
+                    transactionOptions.exitAnimation = R.anim.slide_to_right;
+                    transactionOptions.popEnterAnimation = R.anim.slide_from_right;
+                    transactionOptions.popExitAnimation = R.anim.slide_to_left;
+                    break;
+                case ANIMATE_DOWN_TO_UP:
+                    transactionOptions.enterAnimation = R.anim.slide_from_down;
+                    transactionOptions.exitAnimation = R.anim.slide_to_up;
+                    transactionOptions.popEnterAnimation = R.anim.slide_from_up;
+                    transactionOptions.popExitAnimation = R.anim.slide_to_down;
+                    break;
+                case ANIMATE_UP_TO_DOWN:
+                    transactionOptions.enterAnimation = R.anim.slide_from_up;
+                    transactionOptions.exitAnimation = R.anim.slide_to_down;
+                    transactionOptions.popEnterAnimation = R.anim.slide_from_down;
+                    transactionOptions.popExitAnimation = R.anim.slide_to_up;
+                    break;
+                default:
+                    transactionOptions = null;
+            }
+        } else
+            transactionOptions = null;
     }
 
     public static void updateTabSelection(int currentTab) {
@@ -302,7 +317,6 @@ public class NextActivity extends AppCompatActivity implements
         if (mNavController != null) {
             mNavController.pushFragment(fragment, transactionOptions);
         }
-
     }
 
     @Override

@@ -6,6 +6,23 @@
     android:orientation="horizontal"
     android:background="@color/transparentBlack">
 
+    <RelativeLayout
+        android:id="@+id/photoRelLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/black">
+
+        <ImageView
+            android:id="@+id/selectedImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:adjustViewBounds="true" />
+
+    </RelativeLayout>
+
     <Button
         android:id="@+id/finishButton"
         android:layout_width="wrap_content"
@@ -41,7 +58,13 @@
 
         <include layout="@layout/color_palette_layout"></include>
 
-
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_try_bg">
+    </FrameLayout>
+
 
 </RelativeLayout>

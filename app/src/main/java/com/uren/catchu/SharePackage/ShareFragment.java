@@ -38,7 +38,7 @@ public class ShareFragment extends BaseFragment {
     ImageView cancelImgv;
     ImageView nextImgv;
 
-    static SpecialSelectTabAdapter adapter;
+    SpecialSelectTabAdapter adapter;
 
     GalleryPickerFrag galleryPickerFrag;
     VideoPickerFrag videoPickerFrag;
@@ -80,12 +80,12 @@ public class ShareFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        if (view == null) {
+        if(view == null) {
             view = inflater.inflate(R.layout.fragment_share, container, false);
             ButterKnife.bind(this, view);
             initializeItems();
             addListeners();
-            checkWriteStoragePermission();
+            setupViewPager();
             setShareItemUser();
         }
         return view;
@@ -114,26 +114,7 @@ public class ShareFragment extends BaseFragment {
         ShareItems.getInstance().getPost().setUser(user);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-
-        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                setupViewPager(viewPager);
-            } else
-                setupViewPager(viewPager);
-        }
-    }
-
-    public void checkWriteStoragePermission() {
-        if (!permissionModule.checkWriteExternalStoragePermission())
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        else
-            setupViewPager(viewPager);
-    }
-
-    private void setupViewPager(final ViewPager viewPager) {
+    private void setupViewPager() {
         galleryPickerFrag = new GalleryPickerFrag();
         videoPickerFrag = new VideoPickerFrag();
 
@@ -196,12 +177,13 @@ public class ShareFragment extends BaseFragment {
             public void onClick(View v) {
                 setShareItemUser();
                 VideoFileListForDelete.getInstance().deleteAllFile();
-                galleryPickerFrag.checkTextIsAddedOrNot();
+                /*galleryPickerFrag.checkTextIsAddedOrNot();*/
 
                 if (mFragmentNavigation != null) {
                     mFragmentNavigation.pushFragment(new ShareDetailFragment(new ReturnCallback() {
                         @Override
                         public void onReturn(Object object) {
+                            galleryPickerFrag.updateAfterShare();
                             getActivity().onBackPressed();
                         }
                     }), ANIMATE_RIGHT_TO_LEFT);

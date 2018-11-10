@@ -2,6 +2,7 @@ package com.uren.catchu.SharePackage;
 
 import android.annotation.SuppressLint;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
@@ -30,6 +35,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.TextEditFragment;
 import com.uren.catchu.SharePackage.Utils.CheckShareItems;
 import com.uren.catchu.SharePackage.Utils.SharePostProcess;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.util.List;
@@ -139,26 +145,25 @@ public class AddMessageToPostFragment extends BaseFragment {
     }
 
     public void sharePost() {
+        ShareItems.getShareItemsInstance().setShareStartedValue(true);
         getActivity().onBackPressed();
         returnCallback.onReturn(null);
         startToShare();
     }
 
     public void startToShare() {
-        if(ShareItems.getInstance() != null && ShareItems.getInstance().getShareTryCount() < SHARE_TRY_COUNT) {
+        int tryCount = ShareItems.getInstance().getShareTryCount();
+        ShareItems.getInstance().setShareTryCount(tryCount + 1);
 
-            int tryCount = ShareItems.getInstance().getShareTryCount();
-            ShareItems.getInstance().setShareTryCount(tryCount + 1);
+        new SharePostProcess(NextActivity.thisActivity, new ServiceCompleteCallback() {
+            @Override
+            public void onSuccess() {
+                ShareItems.setInstance(null);
+            }
 
-            new SharePostProcess(NextActivity.thisActivity, new ServiceCompleteCallback() {
-                @Override
-                public void onSuccess() {
-                    ShareItems.setInstance(null);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
+            @Override
+            public void onFailed(Exception e) {
+                if(ShareItems.getInstance().getShareTryCount() <= SHARE_TRY_COUNT) {
                     if (NextActivity.thisActivity != null && ShareItems.getInstance() != null) {
                         DialogBoxUtil.showYesNoDialog(NextActivity.thisActivity, null,
                                 NextActivity.thisActivity.getResources().getString(R.string.DEFAULT_POST_ERROR_MESSAGE)
@@ -170,12 +175,49 @@ public class AddMessageToPostFragment extends BaseFragment {
 
                                     @Override
                                     public void noClick() {
-                                        // TODO: 7.11.2018 - postlari silme akisi eklenecek.
+                                        deleteUploadedItems();
                                     }
                                 });
+                    }else {
+                        CommonUtils.showToast(NextActivity.thisActivity,
+                                NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
+                        deleteUploadedItems();
                     }
                 }
-            });
+            }
+        });
+    }
+
+    public void deleteUploadedItems() {
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startDeleteUploadedItems(token);
+            }
+        });
+    }
+
+    public void startDeleteUploadedItems(String token) {
+        if (ShareItems.getInstance() != null && ShareItems.getInstance().getBucketUploadResponse() != null) {
+            SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    ShareItems.setInstance(null);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    ShareItems.setInstance(null);
+                }
+
+                @Override
+                public void onTaskContinue() {
+
+                }
+            }, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                    token,
+                    ShareItems.getInstance().getBucketUploadResponse());
+            signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
     }
 }

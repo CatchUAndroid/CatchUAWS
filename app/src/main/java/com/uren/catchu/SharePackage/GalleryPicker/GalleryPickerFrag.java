@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -36,6 +37,10 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.AddMessageToPostFragment;
@@ -48,6 +53,7 @@ import com.uren.catchu.Singleton.Share.ShareItems;
 import java.io.File;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
@@ -56,17 +62,15 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
-@SuppressLint("ValidFragment")
-public class GalleryPickerFrag extends Fragment {
+public class GalleryPickerFrag extends BaseFragment {
+    @BindView(R.id.specialRecyclerView)
     RecyclerView specialRecyclerView;
-    RelativeLayout photoRelLayout;
-    RelativeLayout addPropRelLayout;
+    @BindView(R.id.photoMainLayout)
     RelativeLayout photoMainLayout;
+    @BindView(R.id.selectImageView)
     ImageView selectImageView;
+    @BindView(R.id.cancelImageView)
     ImageView cancelImageView;
-    ImageView addTextImgv;
-    TextView textView;
-    SeekBar seekbar;
 
     View mView;
     ArrayList<File> mFiles;
@@ -84,16 +88,9 @@ public class GalleryPickerFrag extends Fragment {
 
     public GalleryGridListAdapter gridListAdapter;
     PermissionModule permissionModule;
-    View trashLayout = null;
-    //OnLoadedListener onLoadedListener;
 
     public GalleryPickerFrag() {
 
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -102,26 +99,39 @@ public class GalleryPickerFrag extends Fragment {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.gallery_picker_layout, container, false);
-        ButterKnife.bind(this, mView);
-        initVariables();
-        getData();
-        addListeners();
+        initLayoutView(inflater, container);
         return mView;
     }
 
+    public void initLayoutView(LayoutInflater inflater, ViewGroup container){
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.gallery_picker_layout, container, false);
+            ButterKnife.bind(this, mView);
+            initVariables();
+            getData();
+            addListeners();
+            setShapes();
+        }
+    }
+
+    public void setShapes(){
+        cancelImageView.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.transparentBlack, null),
+                0, GradientDrawable.OVAL, 50, 0));
+    }
+
     public void initVariables() {
-        specialRecyclerView = (RecyclerView) mView.findViewById(R.id.specialRecyclerView);
-        photoRelLayout = mView.findViewById(R.id.photoRelLayout);
-        selectImageView = mView.findViewById(R.id.selectImageView);
         permissionModule = new PermissionModule(getActivity());
-        cancelImageView = mView.findViewById(R.id.cancelImageView);
-        addTextImgv = mView.findViewById(R.id.addTextImgv);
-        addPropRelLayout = mView.findViewById(R.id.addPropRelLayout);
-        photoMainLayout = mView.findViewById(R.id.photoMainLayout);
-        textView = mView.findViewById(R.id.textView);
-        seekbar = mView.findViewById(R.id.seekbar);
     }
 
     @Override
@@ -129,16 +139,7 @@ public class GalleryPickerFrag extends Fragment {
 
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
-        addTextImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                setDefaultTextView();
-                startTextEditFragment();
-            }
-        });
 
         cancelImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,175 +148,26 @@ public class GalleryPickerFrag extends Fragment {
                 ShareItems.getInstance().clearImageShareItemBox();
                 photoMainLayout.setVisibility(View.GONE);
                 specialRecyclerView.setVisibility(View.VISIBLE);
-                setDefaultTextView();
             }
         });
-
-        textView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-                v.startDrag(data, shadowBuilder, v, 0);
-                if (addPropRelLayout.getVisibility() == View.VISIBLE) {
-                    addPropRelLayout.setVisibility(View.GONE);
-                    trashDragProcess();
-                }
-                return false;
-            }
-        });
-
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startTextEditFragment();
-            }
-        });
-
-        photoRelLayout.setOnDragListener(new View.OnDragListener() {
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-                int x = (int) event.getX();
-                int y = (int) event.getY();
-                final TextView draggedView = (TextView) event.getLocalState();
-
-                switch (event.getAction()) {
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-                        return true;
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        return true;
-                    case DragEvent.ACTION_DRAG_ENDED:
-                        Log.i("Info", "photoRelLayout ACTION_DRAG_ENDED");
-                        return true;
-                    case DragEvent.ACTION_DROP:
-                        Log.i("Info", "photoRelLayout ACTION_DROP");
-                        closeTrashLayout();
-                        draggedView.setX((float) x - (draggedView.getWidth() / 2));
-                        draggedView.setY((float) y - (draggedView.getHeight() / 2));
-                        return true;
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        return true;
-                    default:
-                        return true;
-                }
-            }
-        });
-
-        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if (textView != null)
-                    textView.setTextSize(progress);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-            }
-        });
-    }
-
-    private void setDefaultTextView() {
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        textView.setTextColor(getActivity().getResources().getColor(R.color.White, null));
-        textView.setText("");
-        textView.setVisibility(View.GONE);
-        textView.setLayoutParams(layoutParams);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f);
-    }
-
-    private void startTextEditFragment() {
-        cancelImageView.setVisibility(View.GONE);
-        addTextImgv.setVisibility(View.GONE);
-        seekbar.setVisibility(View.GONE);
-        textView.setVisibility(View.GONE);
-
-        /*if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new TextEditFragment(textView, photoUtil, new TextCompleteCallback() {
-                @Override
-                public void textCompleted(View view) {
-                    cancelImageView.setVisibility(View.VISIBLE);
-                    addTextImgv.setVisibility(View.VISIBLE);
-                    EditText returnEditText = (EditText) view;
-                    if (returnEditText != null) {
-                        if (!returnEditText.getText().toString().trim().isEmpty()) {
-                            textView.setTextColor(returnEditText.getCurrentTextColor());
-                            textView.setText(returnEditText.getText().toString());
-                            textView.setVisibility(View.VISIBLE);
-                            seekbar.setVisibility(View.VISIBLE);
-                        } else
-                            seekbar.setVisibility(View.GONE);
-                    }
-                }
-            }), ANIMATE_RIGHT_TO_LEFT);
-        }*/
-
-        TextEditFragment nextFrag = new TextEditFragment(textView, new TextCompleteCallback() {
-            @Override
-            public void textCompleted(View view) {
-                cancelImageView.setVisibility(View.VISIBLE);
-                addTextImgv.setVisibility(View.VISIBLE);
-                EditText returnEditText = (EditText) view;
-                if (returnEditText != null) {
-                    if (!returnEditText.getText().toString().trim().isEmpty()) {
-                        textView.setTextColor(returnEditText.getCurrentTextColor());
-                        textView.setText(returnEditText.getText().toString());
-                        textView.setVisibility(View.VISIBLE);
-                        seekbar.setVisibility(View.VISIBLE);
-                    } else
-                        seekbar.setVisibility(View.GONE);
-                }
-            }
-        });
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.addPropRelLayout, nextFrag, TextEditFragment.class.getName())
-                .addToBackStack(GalleryPickerFrag.class.getName())
-                .commit();
-    }
-
-    public void closeTrashLayout() {
-        if (trashLayout != null) {
-            addPropRelLayout.setVisibility(View.VISIBLE);
-            photoRelLayout.removeView(trashLayout);
-            trashLayout = null;
-        }
-    }
-
-    private void trashDragProcess() {
-        addPropRelLayout.setVisibility(View.GONE);
-        trashLayout = getLayoutInflater().inflate(R.layout.text_drag_layout, addPropRelLayout, false);
-        ImageView trashImgv = trashLayout.findViewById(R.id.trashImgv);
-        photoRelLayout.addView(trashLayout);
-        trashImgv.setOnDragListener(new TrashDragListener(new TrashDragDropCallback() {
-            @Override
-            public void onDropped() {
-                addPropRelLayout.setVisibility(View.VISIBLE);
-                if (trashLayout != null) {
-                    photoRelLayout.removeView(trashLayout);
-                    setDefaultTextView();
-                    seekbar.setVisibility(View.GONE);
-                    trashLayout = null;
-                }
-            }
-        }));
     }
 
     public void getData() {
+        if (!permissionModule.checkWriteExternalStoragePermission())
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+        else
+            setGridListAdapter();
+    }
+
+    public void setGridListAdapter() {
         fetchMedia();
         if (getContext() != null) {
             gridListAdapter = new GalleryGridListAdapter(getContext(), mFiles, new PhotoSelectCallback() {
                 @Override
                 public void onSelect(PhotoSelectUtil photoSelectUtil) {
                     photoUtil = photoSelectUtil;
-                    photoSelected();
-                    fillImageShareItemBox();
+                    startPhotoSelectedFragment();
                 }
             }, new PhotoChosenCallback() {
                 @Override
@@ -341,17 +193,35 @@ public class GalleryPickerFrag extends Fragment {
         }
     }
 
-    public void photoSelected(){
-        resetPhotoImageView(photoUtil.isPortraitMode());
-        Glide.with(getContext()).load(photoUtil.getMediaUri()).into(selectImageView);
+    public void startPhotoSelectedFragment(){
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new PhotoSelectedFragment(photoUtil, new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    photoUtil = (PhotoSelectUtil) object;
+                    photoSelected();
+                    fillImageShareItemBox();
+                }
+            }));
+        }
+    }
+
+    public void photoSelected() {
+        CommonUtils.setImageScaleType(photoUtil, selectImageView);
+
+        if (photoUtil.getScreeanShotBitmap() != null) {
+            Glide.with(getContext()).load(photoUtil.getScreeanShotBitmap()).into(selectImageView);
+        } else
+            Glide.with(getContext()).load(photoUtil.getMediaUri()).into(selectImageView);
+
         photoMainLayout.setVisibility(View.VISIBLE);
         specialRecyclerView.setVisibility(View.GONE);
-        seekbar.setVisibility(View.GONE);
     }
 
     private void checkGalleryProcess() {
         if (permissionModule.checkWriteExternalStoragePermission())
-            startGalleryProcess();
+            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                    getContext().getResources().getString(R.string.selectPicture)), permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         else
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
@@ -364,30 +234,10 @@ public class GalleryPickerFrag extends Fragment {
         }
 
         if (permissionModule.checkCameraPermission())
-            startCameraProcess();
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
         else
             requestPermissions(new String[]{Manifest.permission.CAMERA},
                     permissionModule.PERMISSION_CAMERA);
-    }
-
-    public void startGalleryProcess() {
-        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                getContext().getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
-    }
-
-    public void startCameraProcess() {
-        if (permissionModule.checkWriteExternalStoragePermission()) {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
-        } else
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-    }
-
-    public void resetPhotoImageView(boolean portraitMode) {
-        if (portraitMode)
-            selectImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        else
-            selectImageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
     }
 
     private RecyclerView.ItemDecoration addItemDecoration() {
@@ -453,16 +303,18 @@ public class GalleryPickerFrag extends Fragment {
         if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                if (gridListAdapter.selectedPosition == CODE_GALLERY_POSITION)
-                    startGalleryProcess();
-                else if (gridListAdapter.selectedPosition == CODE_CAMERA_POSITION)
-                    startCameraProcess();
-                else
-                    startGalleryProcess();
+                if (gridListAdapter != null) {
+                    if (gridListAdapter.selectedPosition == CODE_GALLERY_POSITION)
+                        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                                getContext().getResources().getString(R.string.selectPicture)), permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                    else if (gridListAdapter.selectedPosition == CODE_CAMERA_POSITION)
+                        startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+                } else
+                    setGridListAdapter();
             }
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCameraProcess();
+                startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
             }
         }
     }
@@ -471,14 +323,12 @@ public class GalleryPickerFrag extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == permissionModule.getImageGalleryPermission()) {
+            if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
                 photoUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
-                fillImageShareItemBox();
-                photoSelected();
+                startPhotoSelectedFragment();
             } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
                 photoUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
-                fillImageShareItemBox();
-                photoSelected();
+                startPhotoSelectedFragment();
             }
         }
     }
@@ -489,16 +339,10 @@ public class GalleryPickerFrag extends Fragment {
         ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
     }
 
-    public void textFragBackPressed() {
-        cancelImageView.setVisibility(View.VISIBLE);
-        addTextImgv.setVisibility(View.VISIBLE);
-        textView.setVisibility(View.VISIBLE);
-    }
-
-    public void checkTextIsAddedOrNot() {
-        if (textView != null && !textView.getText().toString().trim().isEmpty()) {
-            Bitmap bitmap = BitmapConversion.getScreenShot(photoRelLayout);
-            photoUtil.setScreeanShotBitmap(bitmap);
+    public void updateAfterShare(){
+        if(mView != null){
+            photoMainLayout.setVisibility(View.GONE);
+            specialRecyclerView.setVisibility(View.VISIBLE);
         }
     }
 }

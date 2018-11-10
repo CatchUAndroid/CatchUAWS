@@ -1,5 +1,6 @@
 package com.uren.catchu.GeneralUtils;
 
+import android.graphics.ColorFilter;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 
@@ -23,5 +24,21 @@ public class ShapeUtil {
         if (strokeWidth != 0 && borderColor != 0)
             shape.setStroke(strokeWidth, borderColor);
         return shape;
+    }
+
+    public static GradientDrawable getGradientBackground(int startColor, int endColor) {
+        GradientDrawable gd = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{startColor, endColor});
+        gd.setCornerRadius(0f);
+        return gd;
+    }
+
+    public static GradientDrawable getGradientBackgroundWithMiddleColor(int startColor, int middleColor, int endColor) {
+        GradientDrawable gd = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{startColor, middleColor, endColor});
+        gd.setCornerRadius(0f);
+        return gd;
     }
 }

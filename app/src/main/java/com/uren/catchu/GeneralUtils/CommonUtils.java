@@ -23,10 +23,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.R;
 
 import java.text.DateFormat;
@@ -328,7 +331,10 @@ public class CommonUtils {
         return null;
     }
 
-
-
-
+    public static void setImageScaleType(PhotoSelectUtil photoSelectUtil, ImageView imageView){
+        if (photoSelectUtil.isPortraitMode())
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        else
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+    }
 }

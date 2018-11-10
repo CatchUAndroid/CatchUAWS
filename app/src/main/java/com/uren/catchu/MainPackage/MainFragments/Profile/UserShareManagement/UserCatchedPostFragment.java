@@ -1,41 +1,24 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement;
 
-
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
-import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.SelectFriendAdapter;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.SelectedFriendList;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.FriendList;
-import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.NumericConstants.CODE_SELECT_ALL;
-import static com.uren.catchu.Constants.NumericConstants.CODE_UNSELECT_ALL;
+public class UserCatchedPostFragment extends BaseFragment{
 
-public class UserSharedPostFragment extends BaseFragment{
 
     View mView;
 
@@ -45,16 +28,14 @@ public class UserSharedPostFragment extends BaseFragment{
     TextView changeViewTv;
     @BindView(R.id.nextImgv)
     ImageView nextImgv;
-    @BindView(R.id.shareListViewRecyclerView)
-    RecyclerView shareListViewRecyclerView;
-    @BindView(R.id.shareNormViewRecyclerView)
-    RecyclerView shareNormViewRecyclerView;
+    @BindView(R.id.shareRecyclerView)
+    RecyclerView shareRecyclerView;
     @BindView(R.id.changeViewLayout)
     LinearLayout changeViewLayout;
 
     boolean listViewSelected = false;
 
-    public UserSharedPostFragment() {
+    public UserCatchedPostFragment() {
     }
 
     @Override
@@ -67,7 +48,7 @@ public class UserSharedPostFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if(mView == null) {
-            mView = inflater.inflate(R.layout.fragment_users_share, container, false);
+            mView = inflater.inflate(R.layout.fragment_user_catched_post_layout, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
             setInitVariables();
@@ -105,4 +86,3 @@ public class UserSharedPostFragment extends BaseFragment{
         changeViewTv.setText(getResources().getString(R.string.SHOW_IN_LIST_MODE));
     }
 }
-

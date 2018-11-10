@@ -191,9 +191,11 @@ public class ContactFriendsAdapter extends RecyclerView.Adapter<ContactFriendsAd
             if (user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
                 statuDisplayBtn.setVisibility(View.GONE);
             else {
-                UserDataUtil.updateFollowButton(context, user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING),
-                        user.getFollowStatus().equals(FOLLOW_STATUS_PENDING), statuDisplayBtn, false);
+                /*UserDataUtil.updateFollowButton(context, user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING),
+                        user.getFollowStatus().equals(FOLLOW_STATUS_PENDING), statuDisplayBtn, false);*/
                 statuDisplayBtn.setVisibility(View.VISIBLE);
+
+                UserDataUtil.updateFollowButton2(context, user.getFollowStatus(), statuDisplayBtn, false);
             }
         }
 
@@ -260,4 +262,11 @@ public class ContactFriendsAdapter extends RecyclerView.Adapter<ContactFriendsAd
         return userListResponse.getItems().size();
     }
 
+    public void updateAdapterWithPosition(int position) {
+        notifyItemChanged(position);
+    }
+
+    public UserListResponse getPersonList() {
+        return userListResponse;
+    }
 }

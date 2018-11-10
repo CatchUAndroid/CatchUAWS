@@ -90,6 +90,7 @@ public class SharePostProcess {
             @Override
             public void onSuccess(Object object) {
                 final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
+                ShareItems.getInstance().setBucketUploadResponse(commonS3BucketResult);
 
                 int counter = 0;
                 for (final ImageShareItemBox imageShareItemBox : ShareItems.getInstance().getImageShareItemBoxes()) {
