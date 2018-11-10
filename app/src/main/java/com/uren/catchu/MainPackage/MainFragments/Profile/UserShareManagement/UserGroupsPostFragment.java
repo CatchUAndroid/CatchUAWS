@@ -92,16 +92,18 @@ public class UserGroupsPostFragment extends BaseFragment {
             @Override
             public void onComplete(Object object) {
 
-                userGroupsPostAdapter = new UserGroupsPostAdapter(getContext(), (GroupRequestResult) object, new ReturnCallback() {
-                    @Override
-                    public void onReturn(Object object) {
-                        GroupRequestResultResultArrayItem selectedGroupItem = (GroupRequestResultResultArrayItem) object;
-                    }
-                });
-                groupsPostRecyclerView.setAdapter(userGroupsPostAdapter);
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
-                //groupsPostRecyclerView.addItemDecoration(addItemDecoration());
-                groupsPostRecyclerView.setLayoutManager(gridLayoutManager);
+                if(getContext() != null) {
+                    userGroupsPostAdapter = new UserGroupsPostAdapter(getContext(), (GroupRequestResult) object, new ReturnCallback() {
+                        @Override
+                        public void onReturn(Object object) {
+                            GroupRequestResultResultArrayItem selectedGroupItem = (GroupRequestResultResultArrayItem) object;
+                        }
+                    });
+                    groupsPostRecyclerView.setAdapter(userGroupsPostAdapter);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
+                    //groupsPostRecyclerView.addItemDecoration(addItemDecoration());
+                    groupsPostRecyclerView.setLayoutManager(gridLayoutManager);
+                }
                 progressBar.setVisibility(View.GONE);
             }
 

@@ -123,8 +123,8 @@ public class ProfileFragment extends BaseFragment
     RecyclerRefreshLayout refresh_layout;
     @BindView(R.id.htab_collapse_toolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.htab_appbar)
-    AppBarLayout appBarLayout;
+    /*@BindView(R.id.htab_appbar)
+    AppBarLayout appBarLayout;*/
 
     TextView navPendReqCntTv;
     SpecialSelectTabAdapter adapter;
@@ -167,7 +167,7 @@ public class ProfileFragment extends BaseFragment
             setUpPager();
             setNavViewItems();
 
-            System.out.println("appBarLayout.getTotalScrollRange()+++:" + appBarLayout.getTotalScrollRange());
+            //System.out.println("appBarLayout.getTotalScrollRange()+++:" + appBarLayout.getTotalScrollRange());
         }
 
         return mView;
@@ -312,7 +312,7 @@ public class ProfileFragment extends BaseFragment
             }
         });
 
-        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        /*appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
 
@@ -333,7 +333,7 @@ public class ProfileFragment extends BaseFragment
                     setPullToRefreshListener();
                 }
             }
-        });
+        });*/
     }
 
     private void setUpPager() {

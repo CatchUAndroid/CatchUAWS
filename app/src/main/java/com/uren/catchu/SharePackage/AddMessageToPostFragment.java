@@ -1,6 +1,7 @@
 package com.uren.catchu.SharePackage;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -85,6 +87,7 @@ public class AddMessageToPostFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
             initVariables();
             addListeners();
+            focusEditText();
         }
         return mView;
     }
@@ -97,6 +100,12 @@ public class AddMessageToPostFragment extends BaseFragment {
     public void initVariables() {
         nextImgv.setVisibility(View.VISIBLE);
         toolbarTitleTv.setText(getResources().getString(R.string.typeToAddText));
+    }
+
+    public void focusEditText() {
+        noteTextEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(noteTextEditText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     public void addListeners() {
