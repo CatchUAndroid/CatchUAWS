@@ -170,13 +170,6 @@ public class SinglePostFragment extends BaseFragment
         return mView;
     }
 
-    private void startIntroAnimation() {
-        ViewCompat.setElevation(toolbarLayout, 0);
-        contentRoot.setScaleY(0.1f);
-        contentRoot.setPivotY(drawingStartLocation);
-        llAddComment.setTranslationY(200);
-    }
-
     private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
@@ -195,6 +188,62 @@ public class SinglePostFragment extends BaseFragment
             setPullToRefresh();
         }
 
+    }
+
+    private void setContent() {
+
+        Log.i("nrlh_postId", post.getPostid());
+
+        //sadece postId ile gelindiğinde
+        if (post == null && postId != null) {
+            checkLocationAndRetrievePosts();
+        } else {
+            //post ile gelindiğinde
+            if (post != null) {
+                fillContent(post);
+            }
+        }
+    }
+
+    private void checkLocationAndRetrievePosts() {
+        permissionModule = new PermissionModule(getContext());
+        initLocationTracker();
+        checkCanGetLocation();
+    }
+
+    private void fillContent(Post post) {
+        setListeners();
+        setPostDetailOnToolbar();
+        setPostDetail(post);
+        getCommentList();
+    }
+
+    private void initLocationTracker() {
+        locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
+            @Override
+            public void onLocationChanged(Location location) {
+            }
+        });
+    }
+
+    private void checkCanGetLocation() {
+
+        if (!locationTrackObj.canGetLocation())
+            //gps ve network provider olup olmadığı kontrol edilir
+            DialogBoxUtil.showSettingsAlert(getActivity());
+        else {
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                if (permissionModule.checkAccessFineLocationPermission()) {
+                    getPost();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
+                }
+            } else {
+                getPost();
+            }
+        }
     }
 
     private boolean validOperation() {
@@ -355,39 +404,7 @@ public class SinglePostFragment extends BaseFragment
     }
 
 
-    private void checkLocationAndRetrievePosts() {
-        permissionModule = new PermissionModule(getContext());
-        initLocationTracker();
-        checkCanGetLocation();
-    }
 
-    private void initLocationTracker() {
-        locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
-            @Override
-            public void onLocationChanged(Location location) {
-            }
-        });
-    }
-
-    private void checkCanGetLocation() {
-
-        if (!locationTrackObj.canGetLocation())
-            //gps ve network provider olup olmadığı kontrol edilir
-            DialogBoxUtil.showSettingsAlert(getActivity());
-        else {
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                if (permissionModule.checkAccessFineLocationPermission()) {
-                    getPost();
-                } else {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
-                }
-            } else {
-                getPost();
-            }
-        }
-    }
 
 
     @Override
@@ -422,30 +439,6 @@ public class SinglePostFragment extends BaseFragment
 
     }
 
-    private void setContent() {
-
-        Log.i("nrlh_postId", post.getPostid());
-
-        //sadece postId ile gelindiğinde
-        if (post == null && postId != null) {
-            checkLocationAndRetrievePosts();
-        } else {
-            //post ile gelindiğinde
-            if (post != null) {
-                fillContent(post);
-            }
-        }
-
-    }
-
-    private void fillContent(Post post){
-        setListeners();
-        setPostDetailOnToolbar();
-        setPostDetail(post);
-        getCommentList();
-    }
-
-
     private void getPost() {
         //get post detail...
 
@@ -453,9 +446,9 @@ public class SinglePostFragment extends BaseFragment
             @Override
             public void onTokenTaken(final String token) {
                 Location location = locationTrackObj.getLocation();
-                if(location != null){
+                if (location != null) {
                     startGetPost(token);
-                }else{
+                } else {
                     //showPulsatorLayout(false);
                     //showNoFeedLayout(true, R.string.locationError );
                     refresh_layout.setRefreshing(false);
