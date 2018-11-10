@@ -393,12 +393,6 @@ public class ContactFriendsFragment extends BaseFragment {
                 user.setUserid(userid);
                 UserInfoListItem userInfoListItem = new UserInfoListItem(user);
                 mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
-                FollowInfoResultArrayItem followInfoResultArrayItem = new FollowInfoResultArrayItem();
-                followInfoResultArrayItem.setUserid(userid);
-                FollowInfoListItem followInfoListItem = new FollowInfoListItem(followInfoResultArrayItem);
-                followInfoListItem.setAdapter(contactFriendsAdapter);
-                followInfoListItem.setClickedPosition(clickedItem);
-                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(followInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {
             NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
