@@ -80,8 +80,8 @@ public class ContactFriendsFragment extends BaseFragment {
     ProgressBar progressBar;
     EditText editTextSearch;
     ImageView imgCancelSearch;
-    ImageView backImgv;
-    ImageView searchImgv;
+    ImageView searchToolbarBackImgv;
+    //ImageView searchImgv;
     boolean edittextFocused = false;
 
     public ContactFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
@@ -120,10 +120,10 @@ public class ContactFriendsFragment extends BaseFragment {
         inviteWarningMsgLayout = mView.findViewById(R.id.inviteWarningMsgLayout);
         inviteWarningMsgTv = mView.findViewById(R.id.inviteWarningMsgTv);
         toolbarLayout = mView.findViewById(R.id.toolbarLayout);
-        backImgv = mView.findViewById(R.id.backImgv);
+        searchToolbarBackImgv = mView.findViewById(R.id.searchToolbarBackImgv);
         imgCancelSearch = mView.findViewById(R.id.imgCancelSearch);
         editTextSearch = mView.findViewById(R.id.editTextSearch);
-        searchImgv = mView.findViewById(R.id.searchImgv);
+        //searchImgv = mView.findViewById(R.id.searchImgv);
         progressBar = mView.findViewById(R.id.progressBar);
         permissionModule = new PermissionModule(getActivity());
         reformedContactList = new ArrayList<>();
@@ -136,13 +136,13 @@ public class ContactFriendsFragment extends BaseFragment {
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (edittextFocused) {
                     CommonUtils.hideKeyBoard(getContext());
-                    backImgv.setVisibility(View.GONE);
-                    searchImgv.setVisibility(View.VISIBLE);
+                    searchToolbarBackImgv.setVisibility(View.GONE);
+                    //searchImgv.setVisibility(View.VISIBLE);
                     if (editTextSearch != null)
                         editTextSearch.setText("");
                 } else {
@@ -179,12 +179,12 @@ public class ContactFriendsFragment extends BaseFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    backImgv.setVisibility(View.VISIBLE);
-                    searchImgv.setVisibility(View.GONE);
+                    searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    //searchImgv.setVisibility(View.GONE);
                     edittextFocused = true;
                 } else {
-                    backImgv.setVisibility(View.GONE);
-                    searchImgv.setVisibility(View.VISIBLE);
+                    searchToolbarBackImgv.setVisibility(View.GONE);
+                    //searchImgv.setVisibility(View.VISIBLE);
                     edittextFocused = false;
                 }
             }
@@ -193,8 +193,8 @@ public class ContactFriendsFragment extends BaseFragment {
         editTextSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backImgv.setVisibility(View.VISIBLE);
-                searchImgv.setVisibility(View.GONE);
+                searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                //searchImgv.setVisibility(View.GONE);
             }
         });
 
@@ -205,8 +205,8 @@ public class ContactFriendsFragment extends BaseFragment {
                     editTextSearch.setText("");
                 imgCancelSearch.setVisibility(View.GONE);
                 CommonUtils.hideKeyBoard(getContext());
-                backImgv.setVisibility(View.GONE);
-                searchImgv.setVisibility(View.VISIBLE);
+                searchToolbarBackImgv.setVisibility(View.GONE);
+                //searchImgv.setVisibility(View.VISIBLE);
 
             }
         });

@@ -47,8 +47,8 @@ public class PendingRequestsFragment extends BaseFragment {
     @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
 
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
@@ -77,7 +77,7 @@ public class PendingRequestsFragment extends BaseFragment {
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;

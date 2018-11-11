@@ -47,7 +47,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     OnLoadedListener onLoadedListener;
     boolean showTollbar;
     LinearLayout toolbarLayout;
-    ImageView backImgv;
+    ImageView commonToolbarbackImgv;
     TextView toolbarTitleTv;
     ProgressBar progressBar;
 
@@ -93,7 +93,7 @@ public class FacebookFriendsFragment extends BaseFragment {
         personRecyclerView = mView.findViewById(R.id.specialRecyclerView);
         warningMsgTv = mView.findViewById(R.id.warningMsgTv);
         toolbarLayout = mView.findViewById(R.id.toolbarLayout);
-        backImgv = mView.findViewById(R.id.backImgv);
+        commonToolbarbackImgv = mView.findViewById(R.id.commonToolbarbackImgv);
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
         progressBar = mView.findViewById(R.id.progressBar);
     }
@@ -106,7 +106,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;

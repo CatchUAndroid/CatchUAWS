@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
@@ -123,8 +124,8 @@ public class ProfileFragment extends BaseFragment
     RecyclerRefreshLayout refresh_layout;
     @BindView(R.id.htab_collapse_toolbar)
     CollapsingToolbarLayout collapsingToolbarLayout;
-    /*@BindView(R.id.htab_appbar)
-    AppBarLayout appBarLayout;*/
+    @BindView(R.id.htab_appbar)
+    AppBarLayout appBarLayout;
 
     TextView navPendReqCntTv;
     SpecialSelectTabAdapter adapter;
@@ -166,6 +167,16 @@ public class ProfileFragment extends BaseFragment
             addListeners();
             setUpPager();
             setNavViewItems();
+
+
+           /* CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
+            AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
+            behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
+                @Override
+                public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
+                    return false;
+                }
+            });*/
 
             //System.out.println("appBarLayout.getTotalScrollRange()+++:" + appBarLayout.getTotalScrollRange());
         }

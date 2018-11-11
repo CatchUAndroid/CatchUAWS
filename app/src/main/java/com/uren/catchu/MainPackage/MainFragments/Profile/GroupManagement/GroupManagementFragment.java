@@ -32,6 +32,7 @@ import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.UserGroupsListAdapter;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedGroupList;
@@ -42,6 +43,7 @@ import catchu.model.FriendList;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
 
@@ -61,15 +63,15 @@ public class GroupManagementFragment extends BaseFragment {
     RecyclerView specialRecyclerView;
     @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
-    @BindView(R.id.addItemImgv)
-    ImageView addItemImgv;
+    @BindView(R.id.searchToolbarAddItemImgv)
+    ImageView searchToolbarAddItemImgv;
+    @BindView(R.id.searchToolbarBackImgv)
+    ImageView searchToolbarBackImgv;
 
     @BindView(R.id.editTextSearch)
     EditText editTextSearch;
     @BindView(R.id.imgCancelSearch)
     ImageView imgCancelSearch;
-    @BindView(R.id.searchImgv)
-    ImageView searchImgv;
     @BindView(R.id.searchResultTv)
     TextView searchResultTv;
     @BindView(R.id.nextFab)
@@ -115,7 +117,7 @@ public class GroupManagementFragment extends BaseFragment {
     public void initValues(){
         SelectedGroupList.setInstance(null);
         searchToolbarLayout.setVisibility(View.VISIBLE);
-        addItemImgv.setVisibility(View.VISIBLE);
+        searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
         setFloatButtonVisibility();
         getGroups();
     }
@@ -126,6 +128,14 @@ public class GroupManagementFragment extends BaseFragment {
     }
 
     public void addListeners(){
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                getActivity().onBackPressed();
+            }
+        });
+
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,10 +151,10 @@ public class GroupManagementFragment extends BaseFragment {
             }
         });
 
-        addItemImgv.setOnClickListener(new View.OnClickListener() {
+        searchToolbarAddItemImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 addNewGroup();
             }
         });
@@ -163,10 +173,13 @@ public class GroupManagementFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.toString() != null) {
-                    if (!s.toString().trim().isEmpty())
+                    if (!s.toString().trim().isEmpty()) {
                         imgCancelSearch.setVisibility(View.VISIBLE);
-                    else
+                        searchToolbarBackImgv.setVisibility(View.GONE);
+                    } else {
                         imgCancelSearch.setVisibility(View.GONE);
+                        searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    }
 
                     if (userGroupsListAdapter != null)
                         userGroupsListAdapter.updateAdapter(s.toString(), new ReturnCallback() {
@@ -246,7 +259,7 @@ public class GroupManagementFragment extends BaseFragment {
                                                 localGroupOperation(ITEM_CHANGED, null);
                                                 userGroupsListAdapter.notifyDataSetChanged();
                                             }
-                                        }), ANIMATE_RIGHT_TO_LEFT);
+                                        }));
                                 }
                             }, operationType);
 

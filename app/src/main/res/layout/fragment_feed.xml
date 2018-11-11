@@ -95,22 +95,19 @@
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:src="@mipmap/search"
                                     android:layout_gravity="center|left"
-                                    android:layout_marginLeft="10dp"/>
+                                    android:layout_marginLeft="10dp"
+                                    android:src="@mipmap/search" />
 
                                 <TextView
                                     android:layout_width="240dp"
                                     android:layout_height="match_parent"
-                                    android:text="@string/search"
+                                    android:background="@drawable/search_edittext"
                                     android:gravity="center"
-                                    android:textSize="17sp"
-                                    android:background="@drawable/search_edittext"/>
-
+                                    android:text="@string/search"
+                                    android:textSize="17sp" />
 
                             </FrameLayout>
-
-
 
                         </LinearLayout>
 

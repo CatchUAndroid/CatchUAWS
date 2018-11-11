@@ -72,7 +72,7 @@ public class SettingsFragment extends BaseFragment {
     ProgressDialogUtil progressDialogUtil;
     Fragment fragment;
 
-    ImageView backImgv;
+    ImageView commonToolbarbackImgv;
     TextView toolbarTitleTv;
     LinearLayout logoutLayout;
     LinearLayout addFromFacebookLayout;
@@ -107,7 +107,7 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void init() {
-        backImgv = mView.findViewById(R.id.backImgv);
+        commonToolbarbackImgv = mView.findViewById(R.id.commonToolbarbackImgv);
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
         logoutLayout = mView.findViewById(R.id.logoutLayout);
         addFromFacebookLayout = mView.findViewById(R.id.addFromFacebookLayout);
@@ -143,7 +143,7 @@ public class SettingsFragment extends BaseFragment {
         });
 
 
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;

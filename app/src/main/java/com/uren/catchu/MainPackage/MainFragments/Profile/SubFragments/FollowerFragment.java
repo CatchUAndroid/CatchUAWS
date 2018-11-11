@@ -47,8 +47,8 @@ public class FollowerFragment extends BaseFragment
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
 
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
@@ -79,14 +79,14 @@ public class FollowerFragment extends BaseFragment
     }
 
     private void init() {
-        backImgv.setOnClickListener(this);
+        commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.followers));
     }
 
     @Override
     public void onClick(View v) {
 
-        if (v == backImgv) {
+        if (v == commonToolbarbackImgv) {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }

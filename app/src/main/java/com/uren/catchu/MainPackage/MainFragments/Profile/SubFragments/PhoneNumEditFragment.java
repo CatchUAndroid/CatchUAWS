@@ -78,8 +78,8 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 public class PhoneNumEditFragment extends BaseFragment {
 
     View mView;
-    ImageView backImgv;
-    ImageView nextImgv;
+    ImageView commonToolbarbackImgv;
+    ImageView commonToolbarNextImgv;
     TextView toolbarTitleTv;
     TextView countryCodeTv;
     TextView countryDialCodeTv;
@@ -119,9 +119,9 @@ public class PhoneNumEditFragment extends BaseFragment {
     }
 
     private void init() {
-        backImgv = mView.findViewById(R.id.backImgv);
+        commonToolbarbackImgv = mView.findViewById(R.id.commonToolbarbackImgv);
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        nextImgv = mView.findViewById(R.id.nextImgv);
+        commonToolbarNextImgv = mView.findViewById(R.id.commonToolbarNextImgv);
         countryCodeTv = mView.findViewById(R.id.countryCodeTv);
         countryDialCodeTv = mView.findViewById(R.id.countryDialCodeTv);
         phoneNumEt = mView.findViewById(R.id.phoneNumEt);
@@ -134,14 +134,14 @@ public class PhoneNumEditFragment extends BaseFragment {
     }
 
     public void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preControlBeforeVerification();
@@ -179,13 +179,13 @@ public class PhoneNumEditFragment extends BaseFragment {
                 if (s != null && !s.toString().isEmpty()) {
                     if (phone != null && phone.getPhoneNumber() != null) {
                         if (s.toString().trim().equals(phone.getPhoneNumber().toString()))
-                            nextImgv.setVisibility(View.GONE);
+                            commonToolbarNextImgv.setVisibility(View.GONE);
                         else
-                            nextImgv.setVisibility(View.VISIBLE);
+                            commonToolbarNextImgv.setVisibility(View.VISIBLE);
                     } else
-                        nextImgv.setVisibility(View.VISIBLE);
+                        commonToolbarNextImgv.setVisibility(View.VISIBLE);
                 } else
-                    nextImgv.setVisibility(View.VISIBLE);
+                    commonToolbarNextImgv.setVisibility(View.VISIBLE);
             }
         });
     }

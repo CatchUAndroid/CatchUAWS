@@ -31,6 +31,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapter
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareDetailFragment;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -47,6 +48,7 @@ import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_SELECT_ALL;
 import static com.uren.catchu.Constants.NumericConstants.CODE_UNSELECT_ALL;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 @SuppressLint("ValidFragment")
@@ -66,6 +68,10 @@ public class SelectFriendFragment extends BaseFragment{
     CheckBox selectAllCb;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.searchToolbarBackImgv)
+    ImageView searchToolbarBackImgv;
+    @BindView(R.id.searchToolbarAddItemImgv)
+    ImageView searchToolbarAddItemImgv;
 
 
     FriendList followerList;
@@ -96,7 +102,7 @@ public class SelectFriendFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if(mView == null) {
-            mView = inflater.inflate(R.layout.activity_select_friend_to_group, container, false);
+            mView = inflater.inflate(R.layout.fragment_select_friend, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
             setShapes();
@@ -105,6 +111,7 @@ public class SelectFriendFragment extends BaseFragment{
             SelectedFriendList.setInstance(null);
             progressDialogUtil = new ProgressDialogUtil(getContext(), null, false);
             progressDialogUtil.dialogShow();
+            searchToolbarAddItemImgv.setVisibility(View.GONE);
         }
         return mView;
     }
@@ -115,6 +122,14 @@ public class SelectFriendFragment extends BaseFragment{
     }
 
     public void addListeners(){
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                getActivity().onBackPressed();
+            }
+        });
+
         nextFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,10 +158,14 @@ public class SelectFriendFragment extends BaseFragment{
             @Override
             public void afterTextChanged(Editable s) {
                 if (s != null && s.toString() != null) {
-                    if (!s.toString().trim().isEmpty())
+                    if (!s.toString().trim().isEmpty()) {
                         imgCancelSearch.setVisibility(View.VISIBLE);
-                    else
+                        searchToolbarBackImgv.setVisibility(View.GONE);
+                    } else {
                         imgCancelSearch.setVisibility(View.GONE);
+                        searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    }
+
 
                     if (adapter != null)
                         adapter.updateAdapter(s.toString());

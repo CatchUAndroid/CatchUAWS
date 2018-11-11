@@ -36,8 +36,8 @@ public class EditGroupNameFragment extends BaseFragment{
 
     View mView;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.groupNameEditText)
@@ -71,7 +71,7 @@ public class EditGroupNameFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mView == null) {
-            mView = inflater.inflate(R.layout.activity_edit_group_name, container, false);
+            mView = inflater.inflate(R.layout.fragment_edit_group_name, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
             setGroupVariables();
@@ -102,7 +102,7 @@ public class EditGroupNameFragment extends BaseFragment{
             }
         });
 
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();

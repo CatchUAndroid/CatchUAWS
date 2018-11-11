@@ -105,11 +105,11 @@ public class UserEditFragment extends BaseFragment
     @BindView(R.id.rlProfilePicture)
     RelativeLayout rlProfilePicture;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
 
-    @BindView(R.id.nextImgv)
-    ImageView nextImgv;
+    @BindView(R.id.commonToolbarNextImgv)
+    ImageView commonToolbarNextImgv;
 
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
@@ -178,8 +178,8 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void init() {
-        nextImgv.setOnClickListener(this);
-        backImgv.setOnClickListener(this);
+        commonToolbarNextImgv.setOnClickListener(this);
+        commonToolbarbackImgv.setOnClickListener(this);
         rlProfilePicture.setOnClickListener(this);
         edtBirthDay.setOnClickListener(this);
         edtPhone.setOnClickListener(this);
@@ -188,7 +188,7 @@ public class UserEditFragment extends BaseFragment
         profilPicChanged = false;
         userProfileProperties = new UserProfileProperties();
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.editProfile));
-        nextImgv.setVisibility(View.VISIBLE);
+        commonToolbarNextImgv.setVisibility(View.VISIBLE);
     }
 
 
@@ -296,11 +296,11 @@ public class UserEditFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == backImgv) {
+        if (v == commonToolbarbackImgv) {
             editProfileCancelClicked();
         }
 
-        if (v == nextImgv) {
+        if (v == commonToolbarNextImgv) {
             CommonUtils.hideKeyBoard(getActivity());
             editProfileConfirmClicked();
         }

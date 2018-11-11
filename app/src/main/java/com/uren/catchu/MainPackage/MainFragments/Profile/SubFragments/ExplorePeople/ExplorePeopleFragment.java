@@ -17,31 +17,42 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 public class ExplorePeopleFragment extends BaseFragment {
 
-    Context context;
     View view;
-    ViewPager viewPager;
-    TabLayout tabLayout;
-    int selectedProperty;
-    SpecialSelectTabAdapter adapter;
-    Toolbar mToolBar;
-    ProgressDialogUtil progressDialogUtil;
 
+    @BindView(R.id.editTextSearch)
+    EditText editTextSearch;
+    @BindView(R.id.imgCancelSearch)
+    ImageView imgCancelSearch;
+    @BindView(R.id.viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.searchToolbarBackImgv)
+    ImageView searchToolbarBackImgv;
+    @BindView(R.id.searchToolbarAddItemImgv)
+    ImageView searchToolbarAddItemImgv;
+
+    ProgressDialogUtil progressDialogUtil;
+    SpecialSelectTabAdapter adapter;
     FacebookFriendsFragment facebookFriendsFragment;
     ContactFriendsFragment contactFriendsFragment;
-
-    private EditText editTextSearch;
-    private ImageView imgCancelSearch;
+    int selectedProperty;
 
     private static final int TAB_FACEBOOK = 0;
     private static final int TAB_CONTACTS = 1;
@@ -70,9 +81,8 @@ public class ExplorePeopleFragment extends BaseFragment {
 
             view = inflater.inflate(R.layout.fragment_search, container, false);
             ButterKnife.bind(this, view);
-
-            context = getActivity();
             initializeItems();
+            addListeners();
         }
 
         return view;
@@ -87,16 +97,10 @@ public class ExplorePeopleFragment extends BaseFragment {
         progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
         progressDialogUtil.dialogShow();
         handler.postDelayed(runnable, FRAGMENTS_LOADED_DELAY);
-        overwriteToolbar();
-
-        viewPager = view.findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
-
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        searchToolbarAddItemImgv.setVisibility(View.GONE);
+        setupViewPager();
         tabLayout.setupWithViewPager(viewPager);
-
         selectedProperty = TAB_FACEBOOK;
-        addListeners();
     }
 
     public Runnable runnable = new Runnable() {
@@ -110,7 +114,7 @@ public class ExplorePeopleFragment extends BaseFragment {
         }
     };
 
-    private void setupViewPager(final ViewPager viewPager) {
+    private void setupViewPager() {
         facebookFriendsFragment = new FacebookFriendsFragment(new OnLoadedListener() {
             @Override
             public void onLoaded() {
@@ -153,6 +157,14 @@ public class ExplorePeopleFragment extends BaseFragment {
 
     private void addListeners() {
 
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                getActivity().onBackPressed();
+            }
+        });
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -188,22 +200,13 @@ public class ExplorePeopleFragment extends BaseFragment {
 
             }
         });
-    }
-
-    public void searchTextClear() {
-        if (editTextSearch != null && editTextSearch.getText() != null)
-            editTextSearch.setText("");
-    }
-
-    private void overwriteToolbar() {
-        mToolBar = view.findViewById(R.id.toolbar);
-        editTextSearch = view.findViewById(R.id.editTextSearch);
-        imgCancelSearch = view.findViewById(R.id.imgCancelSearch);
 
         imgCancelSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 searchTextClear();
+                CommonUtils.hideKeyBoard(getContext());
+                searchToolbarBackImgv.setVisibility(View.VISIBLE);
                 imgCancelSearch.setVisibility(View.GONE);
             }
         });
@@ -220,10 +223,13 @@ public class ExplorePeopleFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s != null && s.toString() != null) {
-                    if (!s.toString().trim().isEmpty())
+                    if (!s.toString().trim().isEmpty()) {
                         imgCancelSearch.setVisibility(View.VISIBLE);
-                    else
+                        searchToolbarBackImgv.setVisibility(View.GONE);
+                    }else {
                         imgCancelSearch.setVisibility(View.GONE);
+                        searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    }
 
                     if (selectedProperty == TAB_FACEBOOK) {
                         ((FacebookFriendsFragment) adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
@@ -233,5 +239,10 @@ public class ExplorePeopleFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    public void searchTextClear() {
+        if (editTextSearch != null && editTextSearch.getText() != null)
+            editTextSearch.setText("");
     }
 }

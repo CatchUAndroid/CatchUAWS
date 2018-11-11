@@ -56,10 +56,10 @@ public class AddMessageToPostFragment extends BaseFragment {
     CheckShareItems checkShareItems;
     ReturnCallback returnCallback;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
-    @BindView(R.id.nextImgv)
-    ImageView nextImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.commonToolbarNextImgv)
+    ImageView commonToolbarNextImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.noteTextEditText)
@@ -98,7 +98,7 @@ public class AddMessageToPostFragment extends BaseFragment {
     }
 
     public void initVariables() {
-        nextImgv.setVisibility(View.VISIBLE);
+        commonToolbarNextImgv.setVisibility(View.VISIBLE);
         toolbarTitleTv.setText(getResources().getString(R.string.typeToAddText));
     }
 
@@ -109,17 +109,17 @@ public class AddMessageToPostFragment extends BaseFragment {
     }
 
     public void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                commonToolbarNextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 if (!checkShareItems.shareIsPossible()) {
                     DialogBoxUtil.showInfoDialogBox(getContext(), checkShareItems.getErrMessage(), null, new InfoDialogBoxCallback() {
                         @Override

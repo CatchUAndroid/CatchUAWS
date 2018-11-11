@@ -58,8 +58,8 @@ public class VerifyPhoneNumberFragment extends Fragment {
     Button sendCodeAgainBtn;
     Button changePhoneBtn;
     EditText verifyCodeEt;
-    ImageView backImgv;
-    ImageView nextImgv;
+    ImageView commonToolbarbackImgv;
+    ImageView commonToolbarNextImgv;
     TextView toolbarTitleTv;
     TextView warningMessageTv;
     TextView remainingTimeTv;
@@ -107,8 +107,8 @@ public class VerifyPhoneNumberFragment extends Fragment {
         sendCodeAgainBtn = mView.findViewById(R.id.sendCodeAgainBtn);
         changePhoneBtn = mView.findViewById(R.id.changePhoneBtn);
         verifyCodeEt = mView.findViewById(R.id.verifyCodeEt);
-        backImgv = mView.findViewById(R.id.backImgv);
-        nextImgv = mView.findViewById(R.id.nextImgv);
+        commonToolbarbackImgv = mView.findViewById(R.id.commonToolbarbackImgv);
+        commonToolbarNextImgv = mView.findViewById(R.id.commonToolbarNextImgv);
         toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
         warningMessageTv = mView.findViewById(R.id.warningMessageTv);
         setPhoneNum();
@@ -134,14 +134,14 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     public void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -173,9 +173,9 @@ public class VerifyPhoneNumberFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 6) {
-                    nextImgv.setVisibility(View.VISIBLE);
+                    commonToolbarNextImgv.setVisibility(View.VISIBLE);
                 } else
-                    nextImgv.setVisibility(View.GONE);
+                    commonToolbarNextImgv.setVisibility(View.GONE);
             }
         });
 

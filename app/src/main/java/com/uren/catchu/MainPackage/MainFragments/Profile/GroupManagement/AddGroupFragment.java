@@ -54,8 +54,8 @@ public class AddGroupFragment extends BaseFragment {
 
     View mView;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
 
@@ -117,7 +117,7 @@ public class AddGroupFragment extends BaseFragment {
 
     public void addListeners() {
 
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
