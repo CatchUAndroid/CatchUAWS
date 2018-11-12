@@ -122,7 +122,7 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     String latitude;
     String radius;
 
-    private boolean hasLoadedOnce= false; // your boolean field
+    private boolean hasLoadedOnce = false; // your boolean field
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +147,6 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     }
 
 
-
     @Override
     public void setUserVisibleHint(boolean isFragmentVisible) {
         super.setUserVisibleHint(true);
@@ -169,8 +168,6 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
         initRecyclerView();
         checkLocationAndRetrievePosts();
         //getPosts();
-
-
     }
 
 
@@ -193,11 +190,10 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void setFeedRefreshListener() {
-        PostHelper.FeedRefresh.startProcess(getContext());
-        PostHelper.FeedRefresh.setFeedRefreshCallback(new FeedRefreshCallback() {
+        PostHelper.FeedRefresh.getInstance().setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
             public void onFeedRefresh() {
-                CommonUtils.showToast(getContext(), "Feed - Feed refreshing..");
+                CommonUtils.showToast(getContext(), "Feed - Catched refreshing..");
                 pulledToRefresh = true;
                 Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 setPaginationValues();
@@ -608,8 +604,6 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
     }
-
-
 
 
 }

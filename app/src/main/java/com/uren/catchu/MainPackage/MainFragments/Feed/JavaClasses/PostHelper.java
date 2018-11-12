@@ -60,6 +60,9 @@ import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
 import catchu.model.Comment;
@@ -111,9 +114,9 @@ public class PostHelper {
             String userId = AccountHolderInfo.getUserID();
             String postId = LikeClicked.postId;
             String commentId;
-            if(LikeClicked.commentId == null){
+            if (LikeClicked.commentId == null) {
                 commentId = AWS_EMPTY;
-            }else{
+            } else {
                 commentId = LikeClicked.commentId;
             }
 
@@ -400,7 +403,7 @@ public class PostHelper {
         private void showMyLocation() {
 
             Location location = locationTrackObj.getLocation();
-            if(location != null){
+            if (location != null) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mapRipple = new MapRipple(mMap, latLng, mAct);
             }
@@ -586,22 +589,30 @@ public class PostHelper {
 
     public static class FeedRefresh {
 
-        static FeedRefreshCallback feedRefreshCallback;
+        private static FeedRefresh instance = null;
+        private static List<FeedRefreshCallback> feedRefreshCallbackList;
 
-        public static final void startProcess(Context context) {
-
-            SinglePostClicked singlePostClicked = new SinglePostClicked(context);
+        public FeedRefresh() {
+            feedRefreshCallbackList = new ArrayList<FeedRefreshCallback>();
         }
 
-        private FeedRefresh(Context context) {
+        public static FeedRefresh getInstance() {
+            if (instance == null)
+                instance = new FeedRefresh();
+
+            return instance;
         }
 
         public static void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
-            FeedRefresh.feedRefreshCallback = feedRefreshCallback;
+            feedRefreshCallbackList.add(feedRefreshCallback);
         }
 
         public static void feedRefreshStart() {
-            feedRefreshCallback.onFeedRefresh();
+            if (instance != null) {
+                for (int i = 0; i < feedRefreshCallbackList.size(); i++) {
+                    feedRefreshCallbackList.get(i).onFeedRefresh();
+                }
+            }
         }
 
     }

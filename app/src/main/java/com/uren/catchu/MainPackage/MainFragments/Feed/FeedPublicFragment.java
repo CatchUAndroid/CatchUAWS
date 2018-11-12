@@ -172,11 +172,10 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setFeedRefreshListener() {
-        PostHelper.FeedRefresh.startProcess(getContext());
-        PostHelper.FeedRefresh.setFeedRefreshCallback(new FeedRefreshCallback() {
+        PostHelper.FeedRefresh.getInstance().setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
             public void onFeedRefresh() {
-                CommonUtils.showToast(getContext(), "Feed - Feed refreshing..");
+                CommonUtils.showToast(getContext(), "Feed - Public refreshing..");
                 pulledToRefresh = true;
                 Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 setPaginationValues();
