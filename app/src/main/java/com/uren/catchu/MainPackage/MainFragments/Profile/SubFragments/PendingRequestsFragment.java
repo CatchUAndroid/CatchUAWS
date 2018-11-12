@@ -35,23 +35,20 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class PendingRequestsFragment extends BaseFragment {
 
-    RecyclerView following_recyclerView;
-
     View mView;
     PendingRequestAdapter pendingRequestAdapter;
     LinearLayoutManager linearLayoutManager;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
     @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
-
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
-
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
+    @BindView(R.id.following_recyclerView)
+    RecyclerView following_recyclerView;
 
     public PendingRequestsFragment() {
     }
@@ -63,21 +60,20 @@ public class PendingRequestsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.profile_subfragment_following, container, false);
+        mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
         ButterKnife.bind(this, mView);
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        following_recyclerView = mView.findViewById(R.id.following_recyclerView);
         toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
         addListeners();
         getData();
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;

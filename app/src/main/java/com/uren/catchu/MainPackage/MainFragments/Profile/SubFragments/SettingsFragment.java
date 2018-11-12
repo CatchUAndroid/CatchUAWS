@@ -72,17 +72,25 @@ public class SettingsFragment extends BaseFragment {
     ProgressDialogUtil progressDialogUtil;
     Fragment fragment;
 
-    ImageView backImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
+    @BindView(R.id.logoutLayout)
     LinearLayout logoutLayout;
+    @BindView(R.id.addFromFacebookLayout)
     LinearLayout addFromFacebookLayout;
+    @BindView(R.id.addFromContactLayout)
     LinearLayout addFromContactLayout;
+    @BindView(R.id.inviteForInstallLayout)
     LinearLayout inviteForInstallLayout;
+    @BindView(R.id.changePasswordLayout)
     LinearLayout changePasswordLayout;
-    //ToggleButton privateToogleButton;
+    @BindView(R.id.privateAccSwitch)
     Switch privateAccSwitch;
 
     // TODO: 5.11.2018 - silinecek
+    @BindView(R.id.mlDeneme)
     LinearLayout mlDeneme;
 
     public SettingsFragment() {
@@ -107,16 +115,6 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void init() {
-        backImgv = mView.findViewById(R.id.backImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        logoutLayout = mView.findViewById(R.id.logoutLayout);
-        addFromFacebookLayout = mView.findViewById(R.id.addFromFacebookLayout);
-        addFromContactLayout = mView.findViewById(R.id.addFromContactLayout);
-        inviteForInstallLayout = mView.findViewById(R.id.inviteForInstallLayout);
-        changePasswordLayout = mView.findViewById(R.id.changePasswordLayout);
-        privateAccSwitch = mView.findViewById(R.id.privateAccSwitch);
-        mlDeneme = mView.findViewById(R.id.mlDeneme);
-        //privateToogleButton = (ToggleButton) mView.findViewById(R.id.privateAccSwitch);
         progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
         fragment = this;
     }
@@ -143,7 +141,7 @@ public class SettingsFragment extends BaseFragment {
         });
 
 
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;

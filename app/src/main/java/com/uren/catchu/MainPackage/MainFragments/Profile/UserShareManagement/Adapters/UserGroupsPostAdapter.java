@@ -47,13 +47,13 @@ public class UserGroupsPostAdapter extends RecyclerView.Adapter<UserGroupsPostAd
     LayoutInflater layoutInflater;
     Context context;
     GroupRequestResult groupRequestResult;
-    ReturnCallback returnCallback;
+    ItemClickListener itemClickListener;
 
-    public UserGroupsPostAdapter(Context context, GroupRequestResult groupRequestResult, ReturnCallback returnCallback) {
+    public UserGroupsPostAdapter(Context context, GroupRequestResult groupRequestResult, ItemClickListener itemClickListener) {
         layoutInflater = LayoutInflater.from(context);
         this.groupRequestResult = groupRequestResult;
         this.context = context;
-        this.returnCallback = returnCallback;
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -80,7 +80,7 @@ public class UserGroupsPostAdapter extends RecyclerView.Adapter<UserGroupsPostAd
             itemImgv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    returnCallback.onReturn(groupRequestResultResultArrayItem);
+                    itemClickListener.onClick(groupRequestResultResultArrayItem, position);
                 }
             });
         }

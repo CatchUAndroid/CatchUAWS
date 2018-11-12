@@ -49,6 +49,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Provider;
 import catchu.model.ProviderList;
@@ -62,12 +63,32 @@ import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_PHONE;
 public class ContactFriendsFragment extends BaseFragment {
 
     View mView;
+
+    @BindView(R.id.appUsersRecyclerView)
     RecyclerView appUsersRecyclerView;
+    @BindView(R.id.inviteRecyclerView)
     RecyclerView inviteRecyclerView;
+    @BindView(R.id.warningMsgLayout)
     LinearLayout warningMsgLayout;
+    @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
+    @BindView(R.id.inviteWarningMsgLayout)
     LinearLayout inviteWarningMsgLayout;
+    @BindView(R.id.inviteWarningMsgTv)
     TextView inviteWarningMsgTv;
+    @BindView(R.id.toolbarLayout)
+    LinearLayout toolbarLayout;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+    @BindView(R.id.editTextSearch)
+    EditText editTextSearch;
+    @BindView(R.id.imgCancelSearch)
+    ImageView imgCancelSearch;
+    @BindView(R.id.searchToolbarBackImgv)
+    ImageView searchToolbarBackImgv;
+    @BindView(R.id.searchToolbarAddItemImgv)
+    ImageView searchToolbarAddItemImgv;
+
     PermissionModule permissionModule;
     ContactFriendsAdapter contactFriendsAdapter;
     InviteContactsAdapter inviteContactsAdapter;
@@ -75,13 +96,8 @@ public class ContactFriendsFragment extends BaseFragment {
     List<Contact> inviteContactsList;
     UserListResponse appUsersList;
     OnLoadedListener onLoadedListener;
-    LinearLayout toolbarLayout;
+
     boolean showTollbar;
-    ProgressBar progressBar;
-    EditText editTextSearch;
-    ImageView imgCancelSearch;
-    ImageView backImgv;
-    ImageView searchImgv;
     boolean edittextFocused = false;
 
     public ContactFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
@@ -97,7 +113,7 @@ public class ContactFriendsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.contact_list_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_contact_friends, container, false);
             ButterKnife.bind(this, mView);
             initVariables();
             checkToolbarVisibility();
@@ -113,21 +129,10 @@ public class ContactFriendsFragment extends BaseFragment {
     }
 
     public void initVariables() {
-        appUsersRecyclerView = mView.findViewById(R.id.appUsersRecyclerView);
-        inviteRecyclerView = mView.findViewById(R.id.inviteRecyclerView);
-        warningMsgLayout = mView.findViewById(R.id.warningMsgLayout);
-        warningMsgTv = mView.findViewById(R.id.warningMsgTv);
-        inviteWarningMsgLayout = mView.findViewById(R.id.inviteWarningMsgLayout);
-        inviteWarningMsgTv = mView.findViewById(R.id.inviteWarningMsgTv);
-        toolbarLayout = mView.findViewById(R.id.toolbarLayout);
-        backImgv = mView.findViewById(R.id.backImgv);
-        imgCancelSearch = mView.findViewById(R.id.imgCancelSearch);
-        editTextSearch = mView.findViewById(R.id.editTextSearch);
-        searchImgv = mView.findViewById(R.id.searchImgv);
-        progressBar = mView.findViewById(R.id.progressBar);
         permissionModule = new PermissionModule(getActivity());
         reformedContactList = new ArrayList<>();
         inviteContactsList = new ArrayList<>();
+        searchToolbarAddItemImgv.setVisibility(View.GONE);
     }
 
     private void checkToolbarVisibility() {
@@ -136,13 +141,13 @@ public class ContactFriendsFragment extends BaseFragment {
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (edittextFocused) {
                     CommonUtils.hideKeyBoard(getContext());
-                    backImgv.setVisibility(View.GONE);
-                    searchImgv.setVisibility(View.VISIBLE);
+                    searchToolbarBackImgv.setVisibility(View.GONE);
+                    //searchImgv.setVisibility(View.VISIBLE);
                     if (editTextSearch != null)
                         editTextSearch.setText("");
                 } else {
@@ -179,12 +184,12 @@ public class ContactFriendsFragment extends BaseFragment {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
-                    backImgv.setVisibility(View.VISIBLE);
-                    searchImgv.setVisibility(View.GONE);
+                    searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    //searchImgv.setVisibility(View.GONE);
                     edittextFocused = true;
                 } else {
-                    backImgv.setVisibility(View.GONE);
-                    searchImgv.setVisibility(View.VISIBLE);
+                    searchToolbarBackImgv.setVisibility(View.GONE);
+                    //searchImgv.setVisibility(View.VISIBLE);
                     edittextFocused = false;
                 }
             }
@@ -193,8 +198,8 @@ public class ContactFriendsFragment extends BaseFragment {
         editTextSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                backImgv.setVisibility(View.VISIBLE);
-                searchImgv.setVisibility(View.GONE);
+                searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                //searchImgv.setVisibility(View.GONE);
             }
         });
 
@@ -205,8 +210,8 @@ public class ContactFriendsFragment extends BaseFragment {
                     editTextSearch.setText("");
                 imgCancelSearch.setVisibility(View.GONE);
                 CommonUtils.hideKeyBoard(getContext());
-                backImgv.setVisibility(View.GONE);
-                searchImgv.setVisibility(View.VISIBLE);
+                searchToolbarBackImgv.setVisibility(View.GONE);
+                //searchImgv.setVisibility(View.VISIBLE);
 
             }
         });

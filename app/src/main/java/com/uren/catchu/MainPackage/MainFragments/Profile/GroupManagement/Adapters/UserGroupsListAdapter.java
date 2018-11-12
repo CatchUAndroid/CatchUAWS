@@ -117,18 +117,19 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                         selectGroupRb.setChecked(true);
                         manageSelectedItem();
                     } else if(operationType.equals(GROUP_OP_VIEW_TYPE)){
-                        showGroupDetail();
+                        itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
+                        //showGroupDetail();
                     }
                 }
             });
 
-            groupSelectMainLinLay.setOnLongClickListener(new View.OnLongClickListener() {
+            /*groupSelectMainLinLay.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     showGroupDetail();
                     return false;
                 }
-            });
+            });*/
 
             selectGroupRb.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -153,7 +154,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             SelectedGroupList.getInstance().setGroupRequestResultList(itemList);
         }
 
-        private void showGroupDetail() {
+        /*private void showGroupDetail() {
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
             adapter.add(context.getResources().getString(R.string.groupInformation));
@@ -182,7 +183,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
             AlertDialog alert = builder.create();
             alert.show();
-        }
+        }*/
 
         public void exitFromGroup() {
 

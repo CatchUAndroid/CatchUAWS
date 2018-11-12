@@ -65,6 +65,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
@@ -78,20 +79,28 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 public class PhoneNumEditFragment extends BaseFragment {
 
     View mView;
-    ImageView backImgv;
-    ImageView nextImgv;
+
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.commonToolbarNextImgv)
+    ImageView commonToolbarNextImgv;
+    @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
+    @BindView(R.id.countryCodeTv)
     TextView countryCodeTv;
+    @BindView(R.id.countryDialCodeTv)
     TextView countryDialCodeTv;
+    @BindView(R.id.phoneNumEt)
     EditText phoneNumEt;
+    @BindView(R.id.editPhoneMainLayout)
     RelativeLayout editPhoneMainLayout;
+
     CountryListResponse countryListResponse;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
     ProgressDialog mProgressDialog;
     String completePhoneNum;
     Phone selectedPhone;
-
     Phone phone;
 
     public PhoneNumEditFragment(Phone phone, CompleteCallback completeCallback) {
@@ -103,7 +112,7 @@ public class PhoneNumEditFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.edit_phonenum_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_phone_num_edit, container, false);
             ButterKnife.bind(this, mView);
             init();
             addListeners();
@@ -119,13 +128,6 @@ public class PhoneNumEditFragment extends BaseFragment {
     }
 
     private void init() {
-        backImgv = mView.findViewById(R.id.backImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        nextImgv = mView.findViewById(R.id.nextImgv);
-        countryCodeTv = mView.findViewById(R.id.countryCodeTv);
-        countryDialCodeTv = mView.findViewById(R.id.countryDialCodeTv);
-        phoneNumEt = mView.findViewById(R.id.phoneNumEt);
-        editPhoneMainLayout = mView.findViewById(R.id.editPhoneMainLayout);
         toolbarTitleTv.setText(getResources().getString(R.string.PHONE_NUM));
         mProgressDialog = new ProgressDialog(getActivity());
         countryListResponse = new CountryListResponse();
@@ -134,14 +136,14 @@ public class PhoneNumEditFragment extends BaseFragment {
     }
 
     public void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 preControlBeforeVerification();
@@ -179,13 +181,13 @@ public class PhoneNumEditFragment extends BaseFragment {
                 if (s != null && !s.toString().isEmpty()) {
                     if (phone != null && phone.getPhoneNumber() != null) {
                         if (s.toString().trim().equals(phone.getPhoneNumber().toString()))
-                            nextImgv.setVisibility(View.GONE);
+                            commonToolbarNextImgv.setVisibility(View.GONE);
                         else
-                            nextImgv.setVisibility(View.VISIBLE);
+                            commonToolbarNextImgv.setVisibility(View.VISIBLE);
                     } else
-                        nextImgv.setVisibility(View.VISIBLE);
+                        commonToolbarNextImgv.setVisibility(View.VISIBLE);
                 } else
-                    nextImgv.setVisibility(View.VISIBLE);
+                    commonToolbarNextImgv.setVisibility(View.VISIBLE);
             }
         });
     }

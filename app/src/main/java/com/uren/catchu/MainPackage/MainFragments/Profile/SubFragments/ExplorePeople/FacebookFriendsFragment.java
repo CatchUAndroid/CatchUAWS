@@ -28,6 +28,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import catchu.model.User;
@@ -41,15 +42,23 @@ import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 public class FacebookFriendsFragment extends BaseFragment {
 
     View mView;
+
+    @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
-    FacebookFriendsAdapter facebookFriendsAdapter;
+    @BindView(R.id.specialRecyclerView)
     RecyclerView personRecyclerView;
+    @BindView(R.id.toolbarLayout)
+    LinearLayout toolbarLayout;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
+    FacebookFriendsAdapter facebookFriendsAdapter;
     OnLoadedListener onLoadedListener;
     boolean showTollbar;
-    LinearLayout toolbarLayout;
-    ImageView backImgv;
-    TextView toolbarTitleTv;
-    ProgressBar progressBar;
 
     public FacebookFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
         this.onLoadedListener = onLoadedListener;
@@ -64,7 +73,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_special_select, container, false);
+            mView = inflater.inflate(R.layout.fragment_facebook_friends, container, false);
             ButterKnife.bind(this, mView);
         }
         return mView;
@@ -72,7 +81,6 @@ public class FacebookFriendsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        initVariables();
         checkToolbarVisibility();
         addListeners();
         checkUserLoggedInWithFacebook();
@@ -89,15 +97,6 @@ public class FacebookFriendsFragment extends BaseFragment {
         }
     }
 
-    public void initVariables() {
-        personRecyclerView = mView.findViewById(R.id.specialRecyclerView);
-        warningMsgTv = mView.findViewById(R.id.warningMsgTv);
-        toolbarLayout = mView.findViewById(R.id.toolbarLayout);
-        backImgv = mView.findViewById(R.id.backImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        progressBar = mView.findViewById(R.id.progressBar);
-    }
-
     private void checkToolbarVisibility() {
         if(showTollbar) {
             toolbarLayout.setVisibility(View.VISIBLE);
@@ -106,7 +105,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;

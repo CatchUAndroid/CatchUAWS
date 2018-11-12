@@ -114,10 +114,10 @@ public class ShareDetailFragment extends BaseFragment implements OnMapReadyCallb
     @BindView(R.id.mediaLayout)
     LinearLayout mediaLayout;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
-    @BindView(R.id.nextImgv)
-    ImageView nextImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.commonToolbarNextImgv)
+    ImageView commonToolbarNextImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
 
@@ -176,7 +176,7 @@ public class ShareDetailFragment extends BaseFragment implements OnMapReadyCallb
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         checkShareItems = new CheckShareItems(getContext());
         toolbarTitleTv.setText(getResources().getString(R.string.POST_DETAIL));
-        nextImgv.setVisibility(View.VISIBLE);
+        commonToolbarNextImgv.setVisibility(View.VISIBLE);
     }
 
     public void setMapView() {
@@ -188,14 +188,14 @@ public class ShareDetailFragment extends BaseFragment implements OnMapReadyCallb
     }
 
     private void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!checkShareItems.isLocationLoaded()) {

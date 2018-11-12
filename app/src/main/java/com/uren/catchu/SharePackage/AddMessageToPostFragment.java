@@ -1,6 +1,7 @@
 package com.uren.catchu.SharePackage;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -54,10 +56,10 @@ public class AddMessageToPostFragment extends BaseFragment {
     CheckShareItems checkShareItems;
     ReturnCallback returnCallback;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
-    @BindView(R.id.nextImgv)
-    ImageView nextImgv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.commonToolbarNextImgv)
+    ImageView commonToolbarNextImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.noteTextEditText)
@@ -85,6 +87,7 @@ public class AddMessageToPostFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
             initVariables();
             addListeners();
+            focusEditText();
         }
         return mView;
     }
@@ -95,22 +98,28 @@ public class AddMessageToPostFragment extends BaseFragment {
     }
 
     public void initVariables() {
-        nextImgv.setVisibility(View.VISIBLE);
+        commonToolbarNextImgv.setVisibility(View.VISIBLE);
         toolbarTitleTv.setText(getResources().getString(R.string.typeToAddText));
     }
 
+    public void focusEditText() {
+        noteTextEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(noteTextEditText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+    }
+
     public void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                commonToolbarNextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 if (!checkShareItems.shareIsPossible()) {
                     DialogBoxUtil.showInfoDialogBox(getContext(), checkShareItems.getErrMessage(), null, new InfoDialogBoxCallback() {
                         @Override
@@ -163,7 +172,7 @@ public class AddMessageToPostFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                if(ShareItems.getInstance().getShareTryCount() <= SHARE_TRY_COUNT) {
+                if (ShareItems.getInstance().getShareTryCount() <= SHARE_TRY_COUNT) {
                     if (NextActivity.thisActivity != null && ShareItems.getInstance() != null) {
                         DialogBoxUtil.showYesNoDialog(NextActivity.thisActivity, null,
                                 NextActivity.thisActivity.getResources().getString(R.string.DEFAULT_POST_ERROR_MESSAGE)
@@ -178,11 +187,11 @@ public class AddMessageToPostFragment extends BaseFragment {
                                         deleteUploadedItems();
                                     }
                                 });
-                    }else {
-                        CommonUtils.showToast(NextActivity.thisActivity,
-                                NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
-                        deleteUploadedItems();
                     }
+                } else {
+                    CommonUtils.showToast(NextActivity.thisActivity,
+                            NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
+                    deleteUploadedItems();
                 }
             }
         });

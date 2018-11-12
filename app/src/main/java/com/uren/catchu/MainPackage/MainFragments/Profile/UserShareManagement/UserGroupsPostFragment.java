@@ -19,8 +19,11 @@ import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.ViewGroupDetailFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.Adapters.UserGroupsPostAdapter;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -83,8 +86,8 @@ public class UserGroupsPostFragment extends BaseFragment {
 
     public void setInitVariables() {
         groupsPostRecyclerView.addItemDecoration(addItemDecoration());
+        //groupsPostRecyclerView.setNestedScrollingEnabled(false);
     }
-
 
     public void getUserGroups() {
         progressBar.setVisibility(View.VISIBLE);
@@ -92,16 +95,19 @@ public class UserGroupsPostFragment extends BaseFragment {
             @Override
             public void onComplete(Object object) {
 
-                userGroupsPostAdapter = new UserGroupsPostAdapter(getContext(), (GroupRequestResult) object, new ReturnCallback() {
-                    @Override
-                    public void onReturn(Object object) {
-                        GroupRequestResultResultArrayItem selectedGroupItem = (GroupRequestResultResultArrayItem) object;
-                    }
-                });
-                groupsPostRecyclerView.setAdapter(userGroupsPostAdapter);
-                GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
-                //groupsPostRecyclerView.addItemDecoration(addItemDecoration());
-                groupsPostRecyclerView.setLayoutManager(gridLayoutManager);
+                if(getContext() != null) {
+                    userGroupsPostAdapter = new UserGroupsPostAdapter(getContext(), (GroupRequestResult) object, new ItemClickListener() {
+                        @Override
+                        public void onClick(Object object, int clickedItem) {
+                            GroupRequestResultResultArrayItem selectedGroup = (GroupRequestResultResultArrayItem) object;
+
+
+                        }
+                    });
+                    groupsPostRecyclerView.setAdapter(userGroupsPostAdapter);
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
+                    groupsPostRecyclerView.setLayoutManager(gridLayoutManager);
+                }
                 progressBar.setVisibility(View.GONE);
             }
 
