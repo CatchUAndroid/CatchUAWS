@@ -116,6 +116,6 @@ public class StringConstants {
 
     //FEED TYPES
     public static final String FEED_TYPE_PUBLIC = "public";
-    public static final String FEED_TYPE_CATCHED = "catched";
+    public static final String FEED_TYPE_CATCH = "catch";
 
 }

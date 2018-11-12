@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -41,6 +42,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import catchu.model.Post;
+
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_GROUP;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 public class FeedAdapter extends RecyclerView.Adapter {
 
@@ -120,6 +127,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         LinearLayout profileMainLayout;
         TextView txtLocationDistance;
         TextView txtCreateAt;
+        ImageView imgTarget;
 
         View mView;
 
@@ -144,6 +152,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
             imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
             txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
+            imgTarget = (ImageView) view.findViewById(R.id.imgTarget);
             likeCount = 0;
             commentCount = 0;
 
@@ -326,10 +335,32 @@ public class FeedAdapter extends RecyclerView.Adapter {
             if (post.getCreateAt() != null) {
                 txtCreateAt.setText(CommonUtils.timeAgo(mContext, post.getCreateAt()));
             }
+            //Target
+            if(post.getPrivacyType()!=  null){
+                setTargetImage();
+            }
+
         }
 
-
-
+        private void setTargetImage() {
+            
+            if(post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)){
+                imgTarget.setImageResource(R.drawable.world_icon_96);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else if(post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)){
+                imgTarget.setImageResource(R.drawable.friends);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else if(post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)){
+                imgTarget.setImageResource(R.drawable.groups_icon_500);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else if(post.getPrivacyType().equals(SHARE_TYPE_SELF)){
+                imgTarget.setImageResource(R.drawable.just_me_icon_500);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
+            }else if(post.getPrivacyType().equals(SHARE_TYPE_GROUP)){
+                imgTarget.setImageResource(R.drawable.groups_icon_500);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+        }
 
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {

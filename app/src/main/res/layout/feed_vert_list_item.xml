@@ -76,7 +76,7 @@
 
                         </LinearLayout>
 
-                        <!-- Profile Detail Name-Username /-->
+                        <!-- Profile Detail Name-CreateAt /-->
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
@@ -96,8 +96,8 @@
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-
-                                android:orientation="horizontal">
+                                android:orientation="horizontal"
+                                android:id="@+id/llCreateAt">
 
                                 <ImageView
                                     android:layout_width="15dp"
@@ -110,8 +110,24 @@
                                 <TextView
                                     android:id="@+id/txtCreateAt"
                                     android:layout_width="wrap_content"
+                                    android:layout_gravity="center"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/gray" />
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="10dp"
+                                    android:scaleType="fitXY"
+                                    android:id="@+id/imgTarget"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/gray"
+                                    android:id="@+id/txtTarget"
+                                    android:layout_marginLeft="5dp"/>
 
                             </LinearLayout>
 
