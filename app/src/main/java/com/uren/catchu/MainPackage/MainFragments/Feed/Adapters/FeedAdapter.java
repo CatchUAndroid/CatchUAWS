@@ -343,7 +343,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         }
 
         private void setTargetImage() {
-            
+
             if(post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)){
                 imgTarget.setImageResource(R.drawable.world_icon_96);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
