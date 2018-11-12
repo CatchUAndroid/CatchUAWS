@@ -16,6 +16,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
@@ -30,6 +31,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
@@ -52,6 +54,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserCatchedPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserGroupsPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserSharedPostFragment;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -126,6 +129,8 @@ public class ProfileFragment extends BaseFragment
     CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.htab_appbar)
     AppBarLayout appBarLayout;
+    @BindView(R.id.nestedScrollViewContent)
+    NestedScrollView nestedScrollViewContent;
 
     TextView navPendReqCntTv;
     SpecialSelectTabAdapter adapter;
@@ -135,6 +140,7 @@ public class ProfileFragment extends BaseFragment
 
     UserSharedPostFragment userSharedPostFragment;
     UserGroupsPostFragment userGroupsPostFragment;
+    UserCatchedPostFragment userCatchedPostFragment;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -167,18 +173,6 @@ public class ProfileFragment extends BaseFragment
             addListeners();
             setUpPager();
             setNavViewItems();
-
-
-           /* CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) appBarLayout.getLayoutParams();
-            AppBarLayout.Behavior behavior = (AppBarLayout.Behavior) params.getBehavior();
-            behavior.setDragCallback(new AppBarLayout.Behavior.DragCallback() {
-                @Override
-                public boolean canDrag(@NonNull AppBarLayout appBarLayout) {
-                    return false;
-                }
-            });*/
-
-            //System.out.println("appBarLayout.getTotalScrollRange()+++:" + appBarLayout.getTotalScrollRange());
         }
 
         return mView;
@@ -351,14 +345,13 @@ public class ProfileFragment extends BaseFragment
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         userSharedPostFragment = new UserSharedPostFragment();
-        NewsList n2 = new NewsList();
+        userCatchedPostFragment = new UserCatchedPostFragment();
         userGroupsPostFragment = new UserGroupsPostFragment(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
 
-        adapter.addFragment(userSharedPostFragment, "World");
-        adapter.addFragment(n2, "Special");
-        adapter.addFragment(userGroupsPostFragment, "International");
+        adapter.addFragment(userSharedPostFragment, "MY POSTS");
+        adapter.addFragment(userCatchedPostFragment, "CATCHED POSTS");
+        adapter.addFragment(userGroupsPostFragment, "GROUPS POSTS");
 
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
         vpNews.setAdapter(adapter);
         vpNews.setOffscreenPageLimit(12);
         tabs.setupWithViewPager(vpNews);

@@ -1,56 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.Toolbar
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary"
+    android:gravity="center"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
     app:elevation="@dimen/default_elevation"
     app:layout_scrollFlags="scroll|enterAlways"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:id="@+id/l2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/rl"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/commonToolbarbackImgv"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/baseline_arrow_back_white_48dp"
-                android:layout_gravity="center"/>
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:padding="17dp"
+                android:src="@mipmap/icon_back_white"
+                android:visibility="visible"/>
 
-            <TextView
-                android:id="@+id/toolbarTitleTv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="18dp"
-                android:layout_weight="5"
-                android:fontFamily="@font/alike_angular"
-                android:gravity="center"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/toolbarTextSize"/>
+        </RelativeLayout>
 
-        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5">
 
-        <ImageView
-            android:id="@+id/commonToolbarNextImgv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="3dp"
-            android:src="@drawable/baseline_arrow_forward_white_48dp"
-            android:visibility="gone" />
 
-    </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/toolbarTitleTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_weight="5"
+                        android:fontFamily="@font/alike_angular"
+                        android:gravity="center"
+                        android:text="dsdsds"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/toolbarTextSize" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/commonToolbarNextImgv"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:padding="17dp"
+                android:src="@mipmap/icon_forward_white"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 </android.support.v7.widget.Toolbar>

@@ -41,6 +41,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
@@ -53,25 +54,32 @@ import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATI
 public class VerifyPhoneNumberFragment extends Fragment {
 
     View mView;
-    //String phoneNum;
+
+    @BindView(R.id.phoneNumberTv)
     TextView phoneNumberTv;
+    @BindView(R.id.sendCodeAgainBtn)
     Button sendCodeAgainBtn;
+    @BindView(R.id.changePhoneBtn)
     Button changePhoneBtn;
+    @BindView(R.id.verifyCodeEt)
     EditText verifyCodeEt;
+    @BindView(R.id.commonToolbarbackImgv)
     ImageView commonToolbarbackImgv;
+    @BindView(R.id.commonToolbarNextImgv)
     ImageView commonToolbarNextImgv;
+    @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
+    @BindView(R.id.warningMessageTv)
     TextView warningMessageTv;
+    @BindView(R.id.remainingTimeTv)
     TextView remainingTimeTv;
+
     GradientDrawable buttonShape;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
     Phone phone;
-    //Country myCountry;
 
     public VerifyPhoneNumberFragment(Phone phone, PhoneVerification phoneVerification, CompleteCallback completeCallback) {
-  /*      this.phoneNum = phoneNum;
-        this.myCountry = myCountry;*/
         this.phone = phone;
         this.phoneVerification = phoneVerification;
         this.completeCallback = completeCallback;
@@ -87,7 +95,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mView == null) {
-            mView = inflater.inflate(R.layout.verify_phone_num_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_verify_phone_num, container, false);
             ButterKnife.bind(this, mView);
             init();
             setButtonShapes();
@@ -102,15 +110,6 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     private void init() {
-        phoneNumberTv = mView.findViewById(R.id.phoneNumberTv);
-        remainingTimeTv = mView.findViewById(R.id.remainingTimeTv);
-        sendCodeAgainBtn = mView.findViewById(R.id.sendCodeAgainBtn);
-        changePhoneBtn = mView.findViewById(R.id.changePhoneBtn);
-        verifyCodeEt = mView.findViewById(R.id.verifyCodeEt);
-        commonToolbarbackImgv = mView.findViewById(R.id.commonToolbarbackImgv);
-        commonToolbarNextImgv = mView.findViewById(R.id.commonToolbarNextImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        warningMessageTv = mView.findViewById(R.id.warningMessageTv);
         setPhoneNum();
         setToolbarTitle();
         setTimer();

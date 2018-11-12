@@ -34,6 +34,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -41,13 +42,22 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 public class ChangePasswordFragment extends BaseFragment {
 
     View mView;
-    ImageView backImgv;
+
+    @BindView(R.id.commonToolbarbackImgv)
+    ImageView commonToolbarbackImgv;
+    @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
-    ImageView nextImgv;
+    @BindView(R.id.commonToolbarNextImgv)
+    ImageView commonToolbarNextImgv;
+    @BindView(R.id.currPasswordEdittext)
     EditText currPasswordEdittext;
+    @BindView(R.id.newPasswordEdittext)
     EditText newPasswordEdittext;
+    @BindView(R.id.validatePassEdittext)
     EditText validatePassEdittext;
+    @BindView(R.id.container)
     RelativeLayout container;
+
     FirebaseUser user;
     String newPassword;
 
@@ -65,7 +75,7 @@ public class ChangePasswordFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mView == null) {
-            mView = inflater.inflate(R.layout.change_password_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_change_password, container, false);
             ButterKnife.bind(this, mView);
             init();
             addListeners();
@@ -79,13 +89,6 @@ public class ChangePasswordFragment extends BaseFragment {
     }
 
     private void init() {
-        backImgv = mView.findViewById(R.id.backImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        nextImgv = mView.findViewById(R.id.nextImgv);
-        currPasswordEdittext = mView.findViewById(R.id.currPasswordEdittext);
-        newPasswordEdittext = mView.findViewById(R.id.newPasswordEdittext);
-        validatePassEdittext = mView.findViewById(R.id.validatePassEdittext);
-        container = mView.findViewById(R.id.container);
         setToolbarTitle();
     }
 
@@ -94,7 +97,7 @@ public class ChangePasswordFragment extends BaseFragment {
     }
 
     public void addListeners() {
-        backImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
@@ -102,7 +105,7 @@ public class ChangePasswordFragment extends BaseFragment {
             }
         });
 
-        nextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validatePasswords();
@@ -123,12 +126,12 @@ public class ChangePasswordFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 0) {
-                    nextImgv.setVisibility(View.GONE);
+                    commonToolbarNextImgv.setVisibility(View.GONE);
                 } else {
                     if (currPasswordEdittext.getText().length() > 0 && newPasswordEdittext.getText().length() > 0)
-                        nextImgv.setVisibility(View.VISIBLE);
+                        commonToolbarNextImgv.setVisibility(View.VISIBLE);
                     else
-                        nextImgv.setVisibility(View.GONE);
+                        commonToolbarNextImgv.setVisibility(View.GONE);
                 }
             }
         });

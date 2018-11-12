@@ -172,7 +172,7 @@ public class AddMessageToPostFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                if(ShareItems.getInstance().getShareTryCount() <= SHARE_TRY_COUNT) {
+                if (ShareItems.getInstance().getShareTryCount() <= SHARE_TRY_COUNT) {
                     if (NextActivity.thisActivity != null && ShareItems.getInstance() != null) {
                         DialogBoxUtil.showYesNoDialog(NextActivity.thisActivity, null,
                                 NextActivity.thisActivity.getResources().getString(R.string.DEFAULT_POST_ERROR_MESSAGE)
@@ -187,11 +187,11 @@ public class AddMessageToPostFragment extends BaseFragment {
                                         deleteUploadedItems();
                                     }
                                 });
-                    }else {
-                        CommonUtils.showToast(NextActivity.thisActivity,
-                                NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
-                        deleteUploadedItems();
                     }
+                } else {
+                    CommonUtils.showToast(NextActivity.thisActivity,
+                            NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
+                    deleteUploadedItems();
                 }
             }
         });

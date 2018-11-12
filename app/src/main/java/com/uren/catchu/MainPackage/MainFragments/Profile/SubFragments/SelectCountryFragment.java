@@ -35,6 +35,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
@@ -48,9 +49,14 @@ import static com.uren.catchu.MainPackage.MainFragments.BaseFragment.ARGS_INSTAN
 public class SelectCountryFragment extends Fragment implements Filterable {
 
     View mView;
+
+    @BindView(R.id.selectCountryEt)
     EditText selectCountryEt;
+    @BindView(R.id.countryListView)
     ListView countryListView;
+    @BindView(R.id.mainLinearLayout)
     LinearLayout mainLinearLayout;
+
     ArrayAdapter<String> countryAdapter;
     List<String> orgCountryList;
     List<String> countryList;
@@ -72,7 +78,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (mView == null) {
-            mView = inflater.inflate(R.layout.country_select_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_select_country, container, false);
             ButterKnife.bind(this, mView);
         }
 
@@ -88,9 +94,6 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     }
 
     private void init() {
-        selectCountryEt = mView.findViewById(R.id.selectCountryEt);
-        countryListView = mView.findViewById(R.id.countryListView);
-        mainLinearLayout = mView.findViewById(R.id.mainLinearLayout);
         setShapes();
     }
 

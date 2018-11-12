@@ -65,6 +65,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Country;
 import catchu.model.CountryListResponse;
@@ -78,20 +79,28 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 public class PhoneNumEditFragment extends BaseFragment {
 
     View mView;
+
+    @BindView(R.id.commonToolbarbackImgv)
     ImageView commonToolbarbackImgv;
+    @BindView(R.id.commonToolbarNextImgv)
     ImageView commonToolbarNextImgv;
+    @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
+    @BindView(R.id.countryCodeTv)
     TextView countryCodeTv;
+    @BindView(R.id.countryDialCodeTv)
     TextView countryDialCodeTv;
+    @BindView(R.id.phoneNumEt)
     EditText phoneNumEt;
+    @BindView(R.id.editPhoneMainLayout)
     RelativeLayout editPhoneMainLayout;
+
     CountryListResponse countryListResponse;
     PhoneVerification phoneVerification;
     CompleteCallback completeCallback;
     ProgressDialog mProgressDialog;
     String completePhoneNum;
     Phone selectedPhone;
-
     Phone phone;
 
     public PhoneNumEditFragment(Phone phone, CompleteCallback completeCallback) {
@@ -103,7 +112,7 @@ public class PhoneNumEditFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.edit_phonenum_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_phone_num_edit, container, false);
             ButterKnife.bind(this, mView);
             init();
             addListeners();
@@ -119,13 +128,6 @@ public class PhoneNumEditFragment extends BaseFragment {
     }
 
     private void init() {
-        commonToolbarbackImgv = mView.findViewById(R.id.commonToolbarbackImgv);
-        toolbarTitleTv = mView.findViewById(R.id.toolbarTitleTv);
-        commonToolbarNextImgv = mView.findViewById(R.id.commonToolbarNextImgv);
-        countryCodeTv = mView.findViewById(R.id.countryCodeTv);
-        countryDialCodeTv = mView.findViewById(R.id.countryDialCodeTv);
-        phoneNumEt = mView.findViewById(R.id.phoneNumEt);
-        editPhoneMainLayout = mView.findViewById(R.id.editPhoneMainLayout);
         toolbarTitleTv.setText(getResources().getString(R.string.PHONE_NUM));
         mProgressDialog = new ProgressDialog(getActivity());
         countryListResponse = new CountryListResponse();

@@ -79,7 +79,7 @@ public class ExplorePeopleFragment extends BaseFragment {
 
         if (view == null) {
 
-            view = inflater.inflate(R.layout.fragment_search, container, false);
+            view = inflater.inflate(R.layout.fragment_explore_people, container, false);
             ButterKnife.bind(this, view);
             initializeItems();
             addListeners();
