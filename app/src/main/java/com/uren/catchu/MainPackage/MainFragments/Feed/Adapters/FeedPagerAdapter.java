@@ -1,38 +1,37 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class FeedPagerAdapter extends FragmentPagerAdapter {
 
-    List<Fragment> fragList = new ArrayList<>();
-    List<String> titleList = new ArrayList<>();
+    private int numOfTabs;
 
-    public FeedPagerAdapter(FragmentManager fm) {
+    public FeedPagerAdapter(FragmentManager fm, int numOfTabs) {
         super(fm);
-    }
-
-    public void addFrag(Fragment f, String title) {
-        fragList.add(f);
-        titleList.add(title);
+        this.numOfTabs = numOfTabs;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragList.get(position);
+        switch (position) {
+            case 0:
+                return new FeedPublicFragment();
+            case 1:
+                return new FeedCatchedFragment();
+            default:
+                return null;
+        }
     }
 
     @Override
     public int getCount() {
-        return fragList.size();
+        return numOfTabs;
     }
 
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return titleList.get(position);
-    }
 }

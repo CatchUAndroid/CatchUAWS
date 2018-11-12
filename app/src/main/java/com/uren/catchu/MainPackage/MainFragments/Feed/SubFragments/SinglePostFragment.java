@@ -270,7 +270,7 @@ public class SinglePostFragment extends BaseFragment
         isPostLiked = post.getIsLiked();
         //Like
         if (post.getIsLiked()) {
-            setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
+            setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, false);
         } else {
             setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
         }
@@ -335,7 +335,7 @@ public class SinglePostFragment extends BaseFragment
                     isPostLiked = true;
                     post.setIsLiked(true);
                     post.setLikeCount(post.getLikeCount() + 1);
-                    setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
+                    setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
                 }
                 PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
                 PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position);

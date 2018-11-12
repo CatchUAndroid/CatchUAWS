@@ -7,130 +7,24 @@
 
     <include layout="@layout/pulsator_layout" />
     <include layout="@layout/no_feed_layout" />
+    <include layout="@layout/layout_progress_bar" />
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <com.dinuscxj.refresh.RecyclerRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <include layout="@layout/layout_progress_bar" />
-
-        <com.dinuscxj.refresh.RecyclerRefreshLayout
-            android:id="@+id/refresh_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView
-                android:id="@+id/rv_feed"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:scrollbars="vertical">
-
-            </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>
-
-        </com.dinuscxj.refresh.RecyclerRefreshLayout>
-
-
-        <android.support.design.widget.AppBarLayout
-            android:id="@+id/appBarLayout"
+        <com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView
+            android:id="@+id/rv_feed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:scrollbars="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbarLayout"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
-                app:elevation="@dimen/default_elevation"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:contentInsetLeft="0dp"
-                app:contentInsetStart="0dp"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>
 
-                <LinearLayout
-                    android:id="@+id/llToolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:baselineAligned="false"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:gravity="center">
-
-                    <LinearLayout
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/llFilter">
-
-                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:src="@mipmap/icon_filterr"
-                            android:padding="3dp"
-                            android:layout_marginTop="3dp"
-                            android:id="@+id/imgFilter"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:id="@+id/llSearch"
-                        android:orientation="vertical"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:padding="10dp">
-
-                            <FrameLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@mipmap/search"
-                                    android:layout_gravity="center|left"
-                                    android:layout_marginLeft="10dp"/>
-
-                                <TextView
-                                    android:layout_width="240dp"
-                                    android:layout_height="match_parent"
-                                    android:text="@string/search"
-                                    android:gravity="center"
-                                    android:textSize="17sp"
-                                    android:background="@drawable/search_edittext"/>
-
-
-                            </FrameLayout>
-
-
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:id="@+id/llOther"
-                        android:orientation="horizontal">
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </android.support.v7.widget.Toolbar>
-
-        </android.support.design.widget.AppBarLayout>
-
-    </android.support.design.widget.CoordinatorLayout>
+    </com.dinuscxj.refresh.RecyclerRefreshLayout>
 
 </RelativeLayout>
 

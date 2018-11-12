@@ -106,13 +106,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     @BindView(R.id.txtProfile)
     TextView txtProfile;
 
-    @BindView(R.id.imgFilter)
-    ClickableImageView imgFilter;
-    @BindView(R.id.llFilter)
-    LinearLayout llFilter;
-    @BindView(R.id.llSearch)
-    LinearLayout llSearch;
-
     private boolean loading = true;
     int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt;
@@ -160,9 +153,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
 
     private void initListeners() {
-        imgFilter.setOnClickListener(this);
-        //llFilter.setOnClickListener(this);
-        llSearch.setOnClickListener(this);
+
     }
 
     private void initRecyclerView() {
@@ -596,13 +587,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
 
-        if (view == imgFilter) {
-            mFragmentNavigation.pushFragment(FilterFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
-        }
 
-        if (view == llSearch) {
-            mFragmentNavigation.pushFragment(SearchFragment.newInstance(), "");
-        }
 
     }
 

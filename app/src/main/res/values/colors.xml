@@ -56,6 +56,7 @@
     <color name="btn_context_menu_text_red">#ffff0000</color>
 
     <color name="bg_comments">#ffffff</color>
+    <color name="likeButtonColor">@color/Crimson</color>
 
     <color name="White">#FFFFFF</color>
     <color name="Ivory">#FFFFF0</color>

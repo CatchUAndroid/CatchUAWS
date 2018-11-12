@@ -1,88 +1,49 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.AsyncTask;
-import android.os.Build;
+
+import android.content.Context;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.support.annotation.NonNull;
+
+import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import android.support.v7.widget.Toolbar;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
-import com.dinuscxj.refresh.RecyclerRefreshLayout.OnRefreshListener;
-import com.uren.catchu.Adapters.LocationTrackerAdapter;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SearchFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
-import com.uren.catchu.Permissions.PermissionModule;
 
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
-import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
-import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
-import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.Media;
-import catchu.model.Post;
-import catchu.model.PostListResponse;
-import catchu.model.User;
-import catchu.model.UserProfile;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
-import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
-import static com.uren.catchu.Constants.StringConstants.FEED_TYPE_PUBLIC;
-import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 
 public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
     View mView;
-    FeedAdapter feedAdapter;
-    LinearLayoutManager mLayoutManager;
+    FeedPagerAdapter feedPagerAdapter;
+    ImageView imgFeedPublic, imgFeedCatched;
+    TextView txtFeedTypePublic, txtFeedTypeCatched;
+    TabItem tabChats, tabCalls;
 
     @BindView(R.id.imgFilter)
     ClickableImageView imgFilter;
@@ -90,11 +51,12 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     LinearLayout llFilter;
     @BindView(R.id.llSearch)
     LinearLayout llSearch;
-
+    @BindView(R.id.toolbarLayout)
+    Toolbar toolbar;
+    @BindView(R.id.tablayout)
+    TabLayout tabLayout;
     @BindView(R.id.htab_viewpager)
-    ViewPager vpNews;
-    @BindView(R.id.htab_tabs)
-    TabLayout tabs;
+    ViewPager viewPager;
 
 
     @Override
@@ -106,36 +68,128 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        CommonUtils.LOG_NEREDEYIZ("FeedFragment");
+
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_feed, container, false);
             ButterKnife.bind(this, mView);
 
-            CommonUtils.LOG_NEREDEYIZ("FeedFragment");
+            initItems();
             setUpPager();
+            initListeners();
         }
+
 
         return mView;
     }
 
+    private void initItems() {
+        tabChats = (TabItem) mView.findViewById(R.id.tabChats);
+        tabCalls = (TabItem) mView.findViewById(R.id.tabCalls);
+    }
+
+    private void initListeners() {
+        imgFilter.setOnClickListener(this);
+        llSearch.setOnClickListener(this);
+    }
+
     private void setUpPager() {
 
-        FeedPagerAdapter adp = new FeedPagerAdapter(getFragmentManager());
-        FeedPublicFragment f1 = new FeedPublicFragment();
-        FeedCatchedFragment f2 = new FeedCatchedFragment();
+        feedPagerAdapter = new FeedPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(feedPagerAdapter);
 
-        adp.addFrag(f1, "Public");
-        adp.addFrag(f2, "Catched");
+        setCustomTab();
+        setTabListener();
 
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        vpNews.setAdapter(adp);
-        vpNews.setOffscreenPageLimit(12);
-        tabs.setupWithViewPager(vpNews);
+    }
+
+    private void setCustomTab() {
+
+        View headerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
+                .inflate(R.layout.feed_custom_tab, null, false);
+
+        LinearLayout linearLayout1 = (LinearLayout) headerView.findViewById(R.id.ll);
+        LinearLayout linearLayout2 = (LinearLayout) headerView.findViewById(R.id.ll2);
+        imgFeedPublic = (ImageView) headerView.findViewById(R.id.imgFeedPublic);
+        imgFeedCatched = (ImageView) headerView.findViewById(R.id.imgFeedCatched);
+        txtFeedTypePublic = (TextView) headerView.findViewById(R.id.txtFeedTypePublic);
+        txtFeedTypeCatched = (TextView) headerView.findViewById(R.id.txtFeedTypeCatched);
+
+        //intial values
+        imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+
+        txtFeedTypePublic.setTextColor(ContextCompat.getColor(getContext(), R.color.oceanBlue));
+        txtFeedTypeCatched.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+
+        tabLayout.getTabAt(0).setCustomView(linearLayout1);
+        tabLayout.getTabAt(1).setCustomView(linearLayout2);
+
+    }
+
+    private void setTabListener() {
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+                if (tab.getPosition() == 0) {
+                    imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+
+                    txtFeedTypePublic.setTextColor(ContextCompat.getColor(getContext(), R.color.oceanBlue));
+                    txtFeedTypeCatched.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+
+                    /*
+                    toolbar.setBackgroundColor(ContextCompat.getColor(getContext(),
+                            R.color.colorAccent));
+                    tabLayout.setBackgroundColor(ContextCompat.getColor(getContext(),
+                            R.color.colorAccent));
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(),
+                                R.color.colorAccent));
+                    }
+                    */
+                } else if (tab.getPosition() == 1) {
+                    imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                    //imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.DarkOrange), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imgFeedCatched.clearColorFilter();
+
+                    txtFeedTypePublic.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    txtFeedTypeCatched.setTextColor(ContextCompat.getColor(getContext(), R.color.oceanBlue));
+
+                } else {
+
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
     }
 
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
+
+        if (view == imgFilter) {
+            mFragmentNavigation.pushFragment(FilterFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (view == llSearch) {
+            mFragmentNavigation.pushFragment(SearchFragment.newInstance(), "");
+        }
 
     }
 }

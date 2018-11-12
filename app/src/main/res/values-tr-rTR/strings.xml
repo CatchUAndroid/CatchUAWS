@@ -236,6 +236,7 @@
     <string name="meter">metre</string>
     <string name="clearFilter">Sıfırla</string>
     <string name="now">Şimdi</string>
-
+    <string name="feedTypePublic">Genel</string>
+    <string name="feedTypeCatched">Catched</string>
 
 </resources>

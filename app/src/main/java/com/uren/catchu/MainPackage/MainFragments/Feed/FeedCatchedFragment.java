@@ -106,13 +106,6 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     @BindView(R.id.txtProfile)
     TextView txtProfile;
 
-    @BindView(R.id.imgFilter)
-    ClickableImageView imgFilter;
-    @BindView(R.id.llFilter)
-    LinearLayout llFilter;
-    @BindView(R.id.llSearch)
-    LinearLayout llSearch;
-
     private boolean loading = true;
     int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt;
@@ -129,6 +122,8 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     String latitude;
     String radius;
 
+    private boolean hasLoadedOnce= false; // your boolean field
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,13 +136,6 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_feed_catched, container, false);
             ButterKnife.bind(this, mView);
-
-            CommonUtils.LOG_NEREDEYIZ("FeedFragment");
-            initListeners();
-            initRecyclerView();
-            checkLocationAndRetrievePosts();
-            //getPosts();
-
         }
 
         if (!mPulsator.isStarted()) {
@@ -159,10 +147,34 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     }
 
 
+
+    @Override
+    public void setUserVisibleHint(boolean isFragmentVisible) {
+        super.setUserVisibleHint(true);
+
+        if (this.isVisible()) {
+            // we check that the fragment is becoming visible
+            if (isFragmentVisible && !hasLoadedOnce) {
+                loadData();
+                hasLoadedOnce = true;
+            }
+        }
+    }
+
+    private void loadData() {
+
+        CommonUtils.showToast(getContext(), "load started");
+        CommonUtils.LOG_NEREDEYIZ("FeedFragment");
+        initListeners();
+        initRecyclerView();
+        checkLocationAndRetrievePosts();
+        //getPosts();
+
+
+    }
+
+
     private void initListeners() {
-        imgFilter.setOnClickListener(this);
-        //llFilter.setOnClickListener(this);
-        llSearch.setOnClickListener(this);
     }
 
     private void initRecyclerView() {
@@ -595,16 +607,9 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View view) {
-
-        if (view == imgFilter) {
-            mFragmentNavigation.pushFragment(FilterFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
-        }
-
-        if (view == llSearch) {
-            mFragmentNavigation.pushFragment(SearchFragment.newInstance(), "");
-        }
-
     }
+
+
 
 
 }

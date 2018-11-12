@@ -194,7 +194,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                         post.setIsLiked(true);
                         tempLikeCount++;
                         post.setLikeCount(tempLikeCount);
-                        setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
+                        setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
                         PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
                     }
 
@@ -497,7 +497,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                         comment.setIsLiked(true);
                         tempLikeCount++;
                         comment.setLikeCount(tempLikeCount);
-                        setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, true);
+                        setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
                         PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), comment.getCommentid(), isCommentLiked);
                     }
                 }
@@ -547,7 +547,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             }
             //Like
             if (comment.getIsLiked()) {
-                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
+                setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, false);
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
