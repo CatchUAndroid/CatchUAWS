@@ -81,7 +81,7 @@
     <string name="SEND_VERIFICATION_CODE_AGAIN">Kodu Tekrar Gönder</string>
     <string name="CHANGE_PHONE_NUMBER">Numarayı Değiştir</string>
     <string name="INVALID_VERIFICATION_CODE_ENTERED">Hatalı kod girişi yapıldı</string>
-    <string name="VERIFY_PHONE_NUMBER">Telefon Numarasını Doğrula</string>
+    <string name="VERIFY">Doğrula</string>
     <string name="REMAINING_TIME">Kalan Süre : </string>
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">Size verilen süre içinde kodu girmediniz. Lütfen tekrar kodu gönderiniz!</string>
     <string name="UPDATE_IS_SUCCESSFUL">Güncelendi</string>
@@ -89,6 +89,10 @@
     <string name="USERS_OF_APPLICATION">Uygulamayı Kullananlar</string>
     <string name="DEFAULT_POST_ERROR_MESSAGE">Paylaşım esnasında bir hata ile karşılaşıldı, tekrar denemek ister misiniz?</string>
     <string name="GROUP_SETTINGS">Grup Ayarları</string>
+    <string name="CHOOSE_PHOTO">Fotoğraf Seç</string>
+    <string name="TAKE_SCREENSHOT">Ekran görüntüsü al</string>
+    <string name="CIRCLE_THE_PROBLEM">Sorunu daire içine al</string>
+    <string name="SCREENSHOT">Çek</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -215,7 +219,9 @@
     <string name="SHOW_IN_LIST_MODE">Liste Şeklinde Göster</string>
     <string name="SHOW_IN_NORMAL_MODE">Normal Göster</string>
     <string name="BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG">Biraz önce yapmış olduğunuz paylaşım henüz sonlanmadı. Lütfen biraz bekleyin.</string>
-    <string name="SHARE_IS_UNSUCCESSFUL">Maalesef yaptığınız paylaşım başarılı sonuclanmadı :(</string>
+    <string name="SHARE_IS_UNSUCCESSFUL">Maalesef yaptığınız paylaşım başarılı sonuçlanmadı :(</string>
+    <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Problemi kısaca belirtebilir misiniz?</string>
+    <string name="PROBLEM_NOTIFY_DESCRIPTION">Karşılaşmış olduğunuz problemi yada geliştirmemizi istediklerinizi bildirerek bize yardımcı olabilirsiniz.</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

@@ -97,7 +97,7 @@
     <string name="SEND_VERIFICATION_CODE_AGAIN">Send Code Again</string>
     <string name="CHANGE_PHONE_NUMBER">Change Phone Number</string>
     <string name="INVALID_VERIFICATION_CODE_ENTERED">Invalid verification code entered</string>
-    <string name="VERIFY_PHONE_NUMBER">Verify Phone Number</string>
+    <string name="VERIFY">Verify</string>
     <string name="REMAINING_TIME">Remaining Time : </string>
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">You did not enter the code within the given time. Please send the code again!</string>
     <string name="UPDATE_IS_SUCCESSFUL">Update is Successful</string>
@@ -105,6 +105,10 @@
     <string name="USERS_OF_APPLICATION">Users of the application</string>
     <string name="DEFAULT_POST_ERROR_MESSAGE">There was an error during the sharing, would you like to try again?</string>
     <string name="GROUP_SETTINGS">Group Settings</string>
+    <string name="CHOOSE_PHOTO">Choose Photo</string>
+    <string name="TAKE_SCREENSHOT">Take screenshot</string>
+    <string name="CIRCLE_THE_PROBLEM">Take the problem round</string>
+    <string name="SCREENSHOT">Take</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -248,6 +252,9 @@
     <string name="SHOW_IN_NORMAL_MODE">View in Normal Mode </string>
     <string name="BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG">The share you have just made has not ended. Please wait a moment.</string>
     <string name="SHARE_IS_UNSUCCESSFUL">Sorry, your share has not been successfully concluded :(</string>
+    <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Can you specify the problem briefly?</string>
+    <string name="PROBLEM_NOTIFY_DESCRIPTION">You can help us by notifying us about the problem you have encountered or whether you want us to improve.</string>
+    <string name="REPORT_PROBLEM_OR_COMMENT">Report or comment</string>
 
 
     <string name="emptyFeed">No posts yets...</string>

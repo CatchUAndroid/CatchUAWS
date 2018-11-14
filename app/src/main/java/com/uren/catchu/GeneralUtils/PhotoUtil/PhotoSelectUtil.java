@@ -36,6 +36,10 @@ public class PhotoSelectUtil {
     String type;
     boolean portraitMode;
 
+    public PhotoSelectUtil(){
+
+    }
+
     public PhotoSelectUtil(Context context, Intent data, String type) {
         this.context = context;
         this.data = data;

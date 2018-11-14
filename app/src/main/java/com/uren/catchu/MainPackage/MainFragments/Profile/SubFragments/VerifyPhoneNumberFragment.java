@@ -33,6 +33,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.PhoneVerifyCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.PhoneVerification;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.R;
@@ -65,8 +66,8 @@ public class VerifyPhoneNumberFragment extends Fragment {
     EditText verifyCodeEt;
     @BindView(R.id.commonToolbarbackImgv)
     ImageView commonToolbarbackImgv;
-    @BindView(R.id.commonToolbarNextImgv)
-    ImageView commonToolbarNextImgv;
+    @BindView(R.id.commonToolbarTickImgv)
+    ImageView commonToolbarTickImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.warningMessageTv)
@@ -122,7 +123,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     public void setToolbarTitle() {
-        toolbarTitleTv.setText(getResources().getString(R.string.VERIFY_PHONE_NUMBER));
+        toolbarTitleTv.setText(getResources().getString(R.string.VERIFY));
     }
 
     private void setButtonShapes() {
@@ -140,21 +141,25 @@ public class VerifyPhoneNumberFragment extends Fragment {
             }
         });
 
-        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                boolean verifyResult = phoneVerification.verifyPhoneNumberWithCode(phoneVerification.getmVerificationId(), verifyCodeEt.getText().toString().trim());
+                phoneVerification.verifyPhoneNumberWithCode(phoneVerification.getmVerificationId(),
+                        verifyCodeEt.getText().toString().trim(), getContext(), new PhoneVerifyCallback() {
+                            @Override
+                            public void onReturn(boolean isVerified) {
+                                if(isVerified)
+                                    saveUserPhoneAndCountry();
+                                else
+                                    DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
+                                        @Override
+                                        public void okClick() {
 
-                if (verifyResult)
-                    saveUserPhoneAndCountry();
-                else
-                    DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-
-                        }
-                    });
+                                        }
+                                    });
+                            }
+                        });
             }
         });
 
@@ -172,9 +177,9 @@ public class VerifyPhoneNumberFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 6) {
-                    commonToolbarNextImgv.setVisibility(View.VISIBLE);
+                    commonToolbarTickImgv.setVisibility(View.VISIBLE);
                 } else
-                    commonToolbarNextImgv.setVisibility(View.GONE);
+                    commonToolbarTickImgv.setVisibility(View.GONE);
             }
         });
 

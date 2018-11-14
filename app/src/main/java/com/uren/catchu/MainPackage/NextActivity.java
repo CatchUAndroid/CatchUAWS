@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,17 +13,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -39,7 +44,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
         FragNavController.TransactionListener,
-        FragNavController.RootFragmentListener {
+        FragNavController.RootFragmentListener{
 
     private Context context;
 
@@ -49,6 +54,10 @@ public class NextActivity extends AppCompatActivity implements
 
     @BindView(R.id.content_frame)
     FrameLayout contentFrame;
+    public static LinearLayout profilePageMainLayout;
+    public static RelativeLayout screenShotMainLayout;
+    public static Button screenShotCancelBtn;
+    public static Button screenShotApproveBtn;
 
     public String ANIMATION_TAG;
     public FragNavTransactionOptions transactionOptions;
@@ -62,6 +71,8 @@ public class NextActivity extends AppCompatActivity implements
     public static TabLayout bottomTabLayout;
 
     private static FragNavController mNavController;
+
+    public static NotifyProblemFragment notifyProblemFragment;
 
     private FragmentHistory fragmentHistory;
 
@@ -79,7 +90,6 @@ public class NextActivity extends AppCompatActivity implements
                 .transactionListener(this)
                 .rootFragmentListener(this, TABS.length)
                 .build();
-
 
         switchTab(0);
 
@@ -136,10 +146,22 @@ public class NextActivity extends AppCompatActivity implements
         context = this;
         ButterKnife.bind(this);
         bottomTabLayout = findViewById(R.id.bottom_tab_layout);
+        profilePageMainLayout = findViewById(R.id.profilePageMainLayout);
+        screenShotMainLayout = findViewById(R.id.screenShotMainLayout);
+        screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
+        screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
         TABS = getResources().getStringArray(R.array.tab_name);
+        setShapes();
 
         //setStatusBarTransparent();
         initTab();
+    }
+
+    public void setShapes(){
+        screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Tomato, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+        screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LightGreen, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
     }
 
     private void setStatusBarTransparent() {
@@ -364,6 +386,7 @@ public class NextActivity extends AppCompatActivity implements
 
         getSupportActionBar().setTitle(title);
     }
+
 
 
 }

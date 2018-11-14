@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
+package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement;
 
 import android.accounts.Account;
 import android.annotation.SuppressLint;
@@ -49,6 +49,7 @@ import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ChangePasswordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactFriendsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.FacebookFriendsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
@@ -86,6 +87,8 @@ public class SettingsFragment extends BaseFragment {
     LinearLayout inviteForInstallLayout;
     @BindView(R.id.changePasswordLayout)
     LinearLayout changePasswordLayout;
+    @BindView(R.id.problemInformLayout)
+    LinearLayout problemInformLayout;
     @BindView(R.id.privateAccSwitch)
     Switch privateAccSwitch;
 
@@ -184,6 +187,13 @@ public class SettingsFragment extends BaseFragment {
             }
         });
 
+        problemInformLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startNotifyProblemFragment();
+            }
+        });
+
         privateAccSwitch.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -234,6 +244,14 @@ public class SettingsFragment extends BaseFragment {
     public void startChangePasswordFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new ChangePasswordFragment(), ANIMATE_LEFT_TO_RIGHT);
+        }
+    }
+
+    public void startNotifyProblemFragment(){
+        if (mFragmentNavigation != null) {
+            NextActivity.screenShotMainLayout.setVisibility(View.GONE);
+            NextActivity.notifyProblemFragment = null;
+            mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 

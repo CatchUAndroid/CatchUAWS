@@ -1,8 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,15 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,7 +26,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
@@ -47,12 +41,12 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserCatchedPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserGroupsPostFragment;
@@ -88,7 +82,7 @@ public class ProfileFragment extends BaseFragment
     ProgressBar progressBar;
 
     @BindView(R.id.htab_tabs)
-    TabLayout tabs;
+    TabLayout tabLayout;
     @BindView(R.id.htab_viewpager)
     ViewPager vpNews;
 
@@ -129,18 +123,25 @@ public class ProfileFragment extends BaseFragment
     CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.htab_appbar)
     AppBarLayout appBarLayout;
-    @BindView(R.id.nestedScrollViewContent)
-    NestedScrollView nestedScrollViewContent;
+   /* @BindView(R.id.nestedScrollViewContent)
+    NestedScrollView nestedScrollViewContent;*/
 
     TextView navPendReqCntTv;
     SpecialSelectTabAdapter adapter;
 
     boolean appBarLayoutCollapsed = false;
     boolean collapsedOneTime = false;
+    boolean tabsCreated = false;
 
     UserSharedPostFragment userSharedPostFragment;
     UserGroupsPostFragment userGroupsPostFragment;
     UserCatchedPostFragment userCatchedPostFragment;
+
+    private int[] tabIcons = {
+            R.mipmap.my_share_icon,
+            R.mipmap.catched_posts_icon,
+            R.drawable.groups_icon_500
+    };
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -173,9 +174,20 @@ public class ProfileFragment extends BaseFragment
             addListeners();
             setUpPager();
             setNavViewItems();
+            setupTabIcons();
         }
 
         return mView;
+    }
+
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
+        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
+        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
+        tabLayout.getTabAt(0).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(1).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.DarkGray, null), PorterDuff.Mode.SRC_IN);
+        tabLayout.getTabAt(2).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.DarkGray, null), PorterDuff.Mode.SRC_IN);
+        tabsCreated = true;
     }
 
     private void checkBundle() {
@@ -220,7 +232,7 @@ public class ProfileFragment extends BaseFragment
 
     private void setCollapsingToolbar() {
 
-        try {
+        /*try {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @SuppressWarnings("ResourceType")
@@ -244,7 +256,12 @@ public class ProfileFragment extends BaseFragment
             collapsingToolbarLayout.setStatusBarScrimColor(
                     ContextCompat.getColor(getActivity(), R.color.primary_700)
             );
-        }
+        }*/
+
+        GradientDrawable gradientDrawable = ShapeUtil.getGradientBackgroundWithMiddleColor(getResources().getColor(R.color.DarkSlateBlue, null),
+                getResources().getColor(R.color.MediumTurquoise, null),
+                getResources().getColor(R.color.DarkSlateBlue, null));
+        collapsingToolbarLayout.setBackground(gradientDrawable);
     }
 
     public void addListeners() {
@@ -309,6 +326,11 @@ public class ProfileFragment extends BaseFragment
                         startSettingsFragment();
                         break;
 
+                    case R.id.reportProblemItem:
+                        drawerLayout.closeDrawer(Gravity.START);
+                        startNotifyProblemFragment();
+                        break;
+
                     default:
                         break;
                 }
@@ -317,28 +339,26 @@ public class ProfileFragment extends BaseFragment
             }
         });
 
-        /*appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-
-                System.out.println("appBarLayout.verticalOffset     :" + verticalOffset);
-                //System.out.println("appBarLayout.getTotalScrollRange:" + appBarLayout.getTotalScrollRange());
-
-                if (Math.abs(verticalOffset) - appBarLayout.getTotalScrollRange() == 0) {
-                    //  Collapsed
-                    appBarLayoutCollapsed = true;
-                    collapsedOneTime = true;
-                    refresh_layout.setRefreshing(false);
-                    refresh_layout.setOnRefreshListener(null);
-
-                } else if (verticalOffset < 0) {
-                    refresh_layout.setRefreshing(false);
-                    refresh_layout.setOnRefreshListener(null);
-                } else if (verticalOffset == 0) {
-                    setPullToRefreshListener();
+            public void onTabSelected(TabLayout.Tab tab) {
+                if (tab != null) {
+                    if (tabsCreated && getContext() != null && tab.getIcon() != null)
+                        tab.getIcon().setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
                 }
             }
-        });*/
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                if (tabsCreated && getContext() != null && tab.getIcon() != null)
+                    tab.getIcon().setColorFilter(getContext().getResources().getColor(R.color.DarkGray, null), PorterDuff.Mode.SRC_IN);
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     private void setUpPager() {
@@ -348,13 +368,13 @@ public class ProfileFragment extends BaseFragment
         userCatchedPostFragment = new UserCatchedPostFragment();
         userGroupsPostFragment = new UserGroupsPostFragment(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
 
-        adapter.addFragment(userSharedPostFragment, "MY POSTS");
-        adapter.addFragment(userCatchedPostFragment, "CATCHED POSTS");
-        adapter.addFragment(userGroupsPostFragment, "GROUPS POSTS");
+        adapter.addFragment(userSharedPostFragment, "My Posts");
+        adapter.addFragment(userCatchedPostFragment, "Catched Posts");
+        adapter.addFragment(userGroupsPostFragment, "Groups Posts");
 
         vpNews.setAdapter(adapter);
         vpNews.setOffscreenPageLimit(12);
-        tabs.setupWithViewPager(vpNews);
+        tabLayout.setupWithViewPager(vpNews);
     }
 
     @Override
@@ -589,4 +609,11 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
+    public void startNotifyProblemFragment(){
+        if (mFragmentNavigation != null) {
+            NextActivity.screenShotMainLayout.setVisibility(View.GONE);
+            NextActivity.notifyProblemFragment = null;
+            mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
+        }
+    }
 }

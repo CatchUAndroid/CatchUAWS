@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -109,6 +110,7 @@ public class UserGroupsPostFragment extends BaseFragment {
                     groupsPostRecyclerView.setLayoutManager(gridLayoutManager);
                 }
                 progressBar.setVisibility(View.GONE);
+                ViewCompat.setNestedScrollingEnabled(groupsPostRecyclerView, false);
             }
 
             @Override

@@ -59,7 +59,6 @@
                         android:layout_weight="5"
                         android:fontFamily="@font/alike_angular"
                         android:gravity="center"
-                        android:text="dsdsds"
                         android:textColor="@android:color/white"
                         android:textSize="@dimen/toolbarTextSize" />
 
@@ -79,6 +78,14 @@
                 android:layout_height="?attr/actionBarSize"
                 android:padding="17dp"
                 android:src="@mipmap/icon_forward_white"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/commonToolbarTickImgv"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:padding="17dp"
+                android:src="@mipmap/icon_tick_white"
                 android:visibility="gone"/>
 
         </RelativeLayout>

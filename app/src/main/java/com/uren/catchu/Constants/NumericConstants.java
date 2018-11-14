@@ -21,6 +21,7 @@ public class NumericConstants {
     //Photo Chosen items
     public static final int CODE_GALLERY_POSITION = 0;
     public static final int CODE_CAMERA_POSITION = 1;
+    public static final int CODE_SCREENSHOT_POSITION = 1;
     public static final int CODE_PHOTO_REMOVE = 2;
 
     //Phone num verify duration

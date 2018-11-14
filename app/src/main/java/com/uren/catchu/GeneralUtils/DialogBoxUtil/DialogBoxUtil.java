@@ -15,6 +15,7 @@ import com.uren.catchu.R;
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
+import static com.uren.catchu.Constants.NumericConstants.CODE_SCREENSHOT_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
 
 public class DialogBoxUtil {
@@ -41,6 +42,28 @@ public class DialogBoxUtil {
                 else if (item == CODE_PHOTO_REMOVE){
                     photoChosenCallback.onPhotoRemoved();
                 }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void photoChosenForProblemReportDialogBox(Context context, String title, final PhotoChosenForReportCallback photoChosenForReportCallback) {
+        CommonUtils.hideKeyBoard(context);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        adapter.add("  " + context.getResources().getString(R.string.openGallery));
+        adapter.add("  " + context.getResources().getString(R.string.TAKE_SCREENSHOT));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (title != null && !title.isEmpty())
+            builder.setTitle(title);
+
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == CODE_GALLERY_POSITION)
+                    photoChosenForReportCallback.onGallerySelected();
+                else if (item == CODE_SCREENSHOT_POSITION)
+                    photoChosenForReportCallback.onScreenShot();
             }
         });
         AlertDialog alert = builder.create();

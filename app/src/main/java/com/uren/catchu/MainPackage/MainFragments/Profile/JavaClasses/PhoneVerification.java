@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -18,6 +19,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.PhoneVerifyCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -36,7 +38,7 @@ public class PhoneVerification {
     private Activity activity;
     //private PhoneAuthCredential mCredential;
 
-    public PhoneVerification(Context context, String phoneNum, CompleteCallback completeCallback){
+    public PhoneVerification(Context context, String phoneNum, CompleteCallback completeCallback) {
         this.context = context;
         this.phoneNum = phoneNum;
         this.completeCallback = completeCallback;
@@ -44,7 +46,7 @@ public class PhoneVerification {
         callBackInit();
     }
 
-    public void callBackInit(){
+    public void callBackInit() {
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
@@ -85,20 +87,26 @@ public class PhoneVerification {
         };
     }
 
-    public boolean verifyPhoneNumberWithCode(String verificationId, String code) {
+    public void verifyPhoneNumberWithCode(String verificationId, String code, Context context,
+                                             final PhoneVerifyCallback phoneVerifyCallback) {
 
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
 
-        if(credential != null && credential.getSmsCode() != null && !credential.getSmsCode().trim().isEmpty()){
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener((Activity) context, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            phoneVerifyCallback.onReturn(true);
+                        } else {
+                            phoneVerifyCallback.onReturn(false);
+                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
 
-            if(code != null && !code.trim().isEmpty()){
-
-                if(code.trim().equals(credential.getSmsCode().trim()))
-                    return true;
-            }
-
-        }
-        return false;
+                            }
+                        }
+                    }
+                });
     }
 
     public void startPhoneNumberVerification() {
@@ -113,7 +121,7 @@ public class PhoneVerification {
     }
 
     public void resendVerificationCode(String phoneNumber,
-                                        PhoneAuthProvider.ForceResendingToken token) {
+                                       PhoneAuthProvider.ForceResendingToken token) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 phoneNumber,                        // Phone number to verify
                 VERIFY_PHONE_NUM_DURATION,          // Timeout duration
