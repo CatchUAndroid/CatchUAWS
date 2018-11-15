@@ -283,8 +283,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             this.commentCount = post.getCommentCount();
 
             //profile picture
-            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
-                    post.getUser().getName(), txtProfilePic, imgProfilePic);
+            UserDataUtil.setProfilePicture2(mContext, post.getUser().getProfilePhotoUrl(),
+                    post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
                 this.txtName.setText(post.getUser().getName());

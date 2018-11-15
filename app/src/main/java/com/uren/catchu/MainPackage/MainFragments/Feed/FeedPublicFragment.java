@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -196,7 +197,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setPullToRefresh() {
-        refresh_layout.setOnRefreshListener(new OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (rl_pulsator.getVisibility() != View.VISIBLE) {

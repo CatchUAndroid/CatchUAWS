@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.Adapters.UserCatchedPostAdapter;
 import com.uren.catchu.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +34,7 @@ public class UserCatchedPostFragment extends BaseFragment{
     @BindView(R.id.nextImgv)
     ImageView nextImgv;
     @BindView(R.id.shareRecyclerView)
-    RecyclerView shareRecyclerView;
+    RecyclerView postCatchedRecyclerView;
     @BindView(R.id.changeViewLayout)
     LinearLayout changeViewLayout;
 
@@ -52,6 +57,7 @@ public class UserCatchedPostFragment extends BaseFragment{
             ButterKnife.bind(this, mView);
             addListeners();
             setInitVariables();
+            setUpPager();
         }
         return mView;
     }
@@ -85,4 +91,23 @@ public class UserCatchedPostFragment extends BaseFragment{
         backImgv.setVisibility(View.GONE);
         changeViewTv.setText(getResources().getString(R.string.SHOW_IN_LIST_MODE));
     }
+
+    private void setUpPager() {
+
+        List<String> textList = new ArrayList<String>();
+
+        for(int i=0; i< 200; i++){
+            textList.add("Catched item no : " + i);
+        }
+
+        UserCatchedPostAdapter adapter = new UserCatchedPostAdapter(getContext(), textList);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        postCatchedRecyclerView.setLayoutManager(mLayoutManager);
+        postCatchedRecyclerView.setAdapter(adapter);
+        //shareNormViewRecyclerView.setNestedScrollingEnabled(false);
+
+    }
+
+
 }

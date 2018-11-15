@@ -144,8 +144,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             this.likeCount = comment.getLikeCount();
 
             //profile picture
-            UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(), txtProfilePic, imgProfilePic);
+            UserDataUtil.setProfilePicture2(mContext, comment.getUser().getProfilePhotoUrl(),
+                    comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
                 this.txtUsername.setText(comment.getUser().getUsername());
@@ -160,7 +160,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             }
             //Like
             if (comment.getIsLiked()) {
-                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
+                setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, false);
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }

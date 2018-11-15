@@ -71,6 +71,7 @@
                                     android:layout_height="match_parent"
                                     android:gravity="center"
                                     android:textAllCaps="true"
+                                    android:textColor="@color/White"
                                     android:textSize="20sp"
                                     android:visibility="gone" />
 

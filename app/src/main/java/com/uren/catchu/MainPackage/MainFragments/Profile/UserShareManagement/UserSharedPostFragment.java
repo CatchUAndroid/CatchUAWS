@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,9 +23,13 @@ import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.SelectFriendAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.NewsList;
+import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.Adapters.UserSharedPostAdapter;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -71,8 +76,26 @@ public class UserSharedPostFragment extends BaseFragment{
             ButterKnife.bind(this, mView);
             addListeners();
             setInitVariables();
+            setUpPager();
         }
         return mView;
+    }
+
+    private void setUpPager() {
+
+        List<String> textList = new ArrayList<String>();
+
+        for(int i=0; i< 2; i++){
+           // textList.add("Share item no : " + i);
+        }
+
+        UserSharedPostAdapter adapter = new UserSharedPostAdapter(getContext(), textList);
+
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
+        shareNormViewRecyclerView.setLayoutManager(mLayoutManager);
+        shareNormViewRecyclerView.setAdapter(adapter);
+        //shareNormViewRecyclerView.setNestedScrollingEnabled(false);
+
     }
 
     @Override

@@ -443,13 +443,13 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     private void showPulsatorLayout(boolean isShowPulsator) {
         if (isShowPulsator) {
             UserProfile user = AccountHolderInfo.getInstance().getUser();
-            UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), txtProfile, imgProfile);
+            UserDataUtil.setProfilePicture2(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                 @Override
                 public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                    UserDataUtil.setProfilePicture(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
-                            userProfile.getUserInfo().getName(), txtProfile, imgProfile);
+                    UserDataUtil.setProfilePicture2(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
+                            userProfile.getUserInfo().getName() ,userProfile.getUserInfo().getUsername(), txtProfile, imgProfile);
                 }
             });
 

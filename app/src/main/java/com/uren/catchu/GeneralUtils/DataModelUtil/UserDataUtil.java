@@ -20,6 +20,8 @@ import com.uren.catchu.MainActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import catchu.model.User;
+
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
@@ -58,6 +60,7 @@ public class UserDataUtil {
                     .load(url)
                     .apply(RequestOptions.circleCropTransform())
                     .into(profilePicImgView);
+            profilePicImgView.setPadding(1,1,1,1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
         } else {
             if (name != null && !name.trim().isEmpty()) {
                 shortNameTv.setVisibility(View.VISIBLE);
@@ -73,8 +76,42 @@ public class UserDataUtil {
         }
 
         GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                context.getResources().getColor(R.color.Red, null),
-                GradientDrawable.OVAL, 50, 2);
+                context.getResources().getColor(R.color.White, null),
+                GradientDrawable.OVAL, 50, 3);
+        profilePicImgView.setBackground(imageShape);
+
+
+    }
+
+    public static void setProfilePicture2(Context context, String url, String name, String username, TextView shortNameTv, ImageView profilePicImgView) {
+        if (url != null && !url.trim().isEmpty()) {
+            shortNameTv.setVisibility(View.GONE);
+            Glide.with(context)
+                    .load(url)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profilePicImgView);
+            profilePicImgView.setPadding(1,1,1,1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
+        } else {
+            if (name != null && !name.trim().isEmpty()) {
+                shortNameTv.setVisibility(View.VISIBLE);
+                shortNameTv.setText(UserDataUtil.getShortenUserName(name));
+                profilePicImgView.setImageDrawable(null);
+            }else if(username != null && !username.trim().isEmpty()) {
+                    shortNameTv.setVisibility(View.VISIBLE);
+                    shortNameTv.setText(UserDataUtil.getShortenUserName(username));
+                    profilePicImgView.setImageDrawable(null);
+            } else {
+                shortNameTv.setVisibility(View.GONE);
+                Glide.with(context)
+                        .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(profilePicImgView);
+            }
+        }
+
+        GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                context.getResources().getColor(R.color.White, null),
+                GradientDrawable.OVAL, 50, 3);
         profilePicImgView.setBackground(imageShape);
 
 
