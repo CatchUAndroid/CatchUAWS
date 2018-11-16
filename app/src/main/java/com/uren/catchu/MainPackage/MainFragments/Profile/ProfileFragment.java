@@ -4,7 +4,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,12 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -36,6 +34,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.ProfilePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
@@ -114,6 +113,13 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
 
+    //posts
+    @BindView(R.id.llMyPosts)
+    LinearLayout llMyPosts;
+    @BindView(R.id.llCatchedPosts)
+    LinearLayout llCatchedPosts;
+    @BindView(R.id.llMyGroups)
+    LinearLayout llMyGroups;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -139,13 +145,14 @@ public class ProfileFragment extends BaseFragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
-
             checkBundle();
-            addListeners();
-            setNavViewItems();
 
-            updateUI();
+            //Menu Layout
+            setNavViewItems();
+            setDrawerListeners();
+
             initListeners();
+            updateUI();
             setPullToRefresh();
 
         }
@@ -153,6 +160,40 @@ public class ProfileFragment extends BaseFragment
 
         return mView;
     }
+
+    private void initListeners() {
+
+        imgUserEdit.setOnClickListener(this);
+        txtFollowerCnt.setOnClickListener(this);
+        txtFollowingCnt.setOnClickListener(this);
+
+        llMyPosts.setOnClickListener(this);
+        llCatchedPosts.setOnClickListener(this);
+        llMyGroups.setOnClickListener(this);
+    }
+
+    private void updateUI() {
+
+        if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+            myProfile = AccountHolderInfo.getInstance().getUser();
+            setProfileDetail(myProfile);
+        } else {
+            getProfileDetail(AccountHolderInfo.getUserID());
+        }
+
+    }
+
+    private void setPullToRefresh() {
+
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                updateUI();
+            }
+        });
+    }
+
 
     private void checkBundle() {
         Bundle args = getArguments();
@@ -168,16 +209,7 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    private void setPullToRefresh() {
-        
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
 
-                updateUI();
-            }
-        });
-    }
 
     private void setNavViewItems() {
         View v = navViewLayout.getHeaderView(0);
@@ -190,7 +222,7 @@ public class ProfileFragment extends BaseFragment
                 getResources().getColor(R.color.DarkBlue, null)));
     }
 
-    public void addListeners() {
+    public void setDrawerListeners() {
         drawerLayout.addDrawerListener(new ActionBarDrawerToggle(getActivity(),
                 drawerLayout,
                 null,
@@ -262,30 +294,6 @@ public class ProfileFragment extends BaseFragment
 
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-
-    private void initListeners() {
-
-        imgUserEdit.setOnClickListener(this);
-        txtFollowerCnt.setOnClickListener(this);
-        txtFollowingCnt.setOnClickListener(this);
-    }
-
-    private void updateUI() {
-
-        if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-            myProfile = AccountHolderInfo.getInstance().getUser();
-            setProfileDetail(myProfile);
-        } else {
-            getProfileDetail(AccountHolderInfo.getUserID());
-        }
-
-    }
-
     private void setProfileDetail(UserProfile user) {
 
         if (user != null && user.getUserInfo() != null) {
@@ -307,7 +315,7 @@ public class ProfileFragment extends BaseFragment
 
             UserDataUtil.setProfilePicture2(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
-            imgProfile.setPadding(3,3,3,3);
+            imgProfile.setPadding(3, 3, 3, 3);
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
@@ -442,6 +450,20 @@ public class ProfileFragment extends BaseFragment
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
+
+        if (v == llMyPosts) {
+            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == llCatchedPosts) {
+            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == llMyGroups) {
+            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+
 
     }
 

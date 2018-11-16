@@ -272,5 +272,7 @@
     <string name="now">Just now</string>
     <string name="feedTypePublic">Public</string>
     <string name="feedTypeCatched">Catched</string>
+    <string name="feedViewTypeGrid">Grid</string>
+    <string name="feedViewTypeList">List</string>
 
 </resources>
