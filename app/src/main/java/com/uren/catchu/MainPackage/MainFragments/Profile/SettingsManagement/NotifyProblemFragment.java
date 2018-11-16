@@ -24,12 +24,18 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForReportCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ColorActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.DrawActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.Main2Activity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ProblemNotifyModel;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -125,6 +131,7 @@ public class NotifyProblemFragment extends BaseFragment {
         toolbarTitleTv.setText(getResources().getString(R.string.REPORT_PROBLEM_OR_COMMENT));
         permissionModule = new PermissionModule(getContext());
         NextActivity.notifyProblemFragment = this;
+        commonToolbarTickImgv.setVisibility(View.VISIBLE);
     }
 
     public void setShapes() {
@@ -142,6 +149,17 @@ public class NotifyProblemFragment extends BaseFragment {
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
+            }
+        });
+
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(noteTextEditText != null && noteTextEditText.getText() != null &&
+                        noteTextEditText.getText().toString().isEmpty()){
+                    CommonUtils.showToast(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
+                    return;
+                }
             }
         });
 
@@ -208,26 +226,6 @@ public class NotifyProblemFragment extends BaseFragment {
                 removePhoto();
             }
         });
-
-        noteTextEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null & !s.toString().isEmpty())
-                    commonToolbarTickImgv.setVisibility(View.VISIBLE);
-                else
-                    commonToolbarTickImgv.setVisibility(View.GONE);
-            }
-        });
     }
 
     public void initProblemList() {
@@ -273,12 +271,22 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     public void managePhotoChosen() {
-        for (ProblemNotifyModel problemNotifyModel : problemListBox) {
+        for (final ProblemNotifyModel problemNotifyModel : problemListBox) {
 
             if (problemNotifyModel.getImageView() == chosenImgv) {
                 if (problemNotifyModel.getPhotoSelectUtil() != null) {
+
+                    //startActivity(new Intent(getContext(), Main2Activity.class));
+
                     if (mFragmentNavigation != null) {
-                        mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil()),
+                        mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil(), new ReturnCallback() {
+                                    @Override
+                                    public void onReturn(Object object) {
+                                        PhotoSelectUtil util = (PhotoSelectUtil) object;
+                                        problemNotifyModel.setPhotoSelectUtil(util);
+                                        setPhotoSelectUtil(util);
+                                    }
+                                }),
                                 ANIMATE_RIGHT_TO_LEFT);
                     }
                     return;

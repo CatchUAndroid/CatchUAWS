@@ -6,21 +6,20 @@
 
     <include layout="@layout/common_toolbar_layout" />
 
+
     <RelativeLayout
+        android:id="@+id/markProblemLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/Black">
+        android:layout_margin="15dp"
+        android:padding="1dp">
 
-
-        <ImageView
-            android:id="@+id/selectedImgv"
+        <com.uren.catchu.ModelViews.PaintView
+            android:id="@+id/paintView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="25dp"
-            android:scaleType="fitXY" />
+            android:layout_centerInParent="true" />
 
     </RelativeLayout>
-
-
 
 </LinearLayout>

@@ -29,7 +29,6 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    private static Context context;
     private static AccountHolderInfoCallback accountHolderInfoCallback;
 
     //Firebase
@@ -53,9 +52,8 @@ public class AccountHolderInfo {
         getProfileDetail(getUserIdFromFirebase());
     }
 
-    public static void setInstance(AccountHolderInfo instance, Context context) {
+    public static void setInstance(AccountHolderInfo instance) {
         AccountHolderInfo.accountHolderInfoInstance = instance;
-        AccountHolderInfo.context = context;
     }
 
     public UserProfile getUser() {
@@ -76,7 +74,7 @@ public class AccountHolderInfo {
     }
 
     private void startGetProfileDetail(final String userid, String token) {
-        UserDetail loadUserDetail = new UserDetail(context, new OnEventListener<UserProfile>() {
+        UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
 
             @Override
             public void onSuccess(UserProfile up) {
@@ -92,6 +90,7 @@ public class AccountHolderInfo {
 
             @Override
             public void onFailure(Exception e) {
+                AccountHolderInfo.setInstance(null);
                 CommonUtils.LOG_FAIL("UserDetailProcess", e.toString());
             }
 

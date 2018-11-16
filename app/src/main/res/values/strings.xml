@@ -255,6 +255,7 @@
     <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Can you specify the problem briefly?</string>
     <string name="PROBLEM_NOTIFY_DESCRIPTION">You can help us by notifying us about the problem you have encountered or whether you want us to improve.</string>
     <string name="REPORT_PROBLEM_OR_COMMENT">Report or comment</string>
+    <string name="WHO_WILL_YOU_SHARE">Who will you share?</string>
 
 
     <string name="emptyFeed">No posts yets...</string>

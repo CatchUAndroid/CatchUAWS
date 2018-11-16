@@ -12,7 +12,7 @@ import catchu.model.GroupRequestResultResultArrayItem;
 
 public class VideoFileListForDelete {
 
-    static VideoFileListForDelete instance = null;
+    /*static VideoFileListForDelete instance = null;
     static List<File> fileList;
 
     public static VideoFileListForDelete getInstance(){
@@ -36,5 +36,5 @@ public class VideoFileListForDelete {
         for(File file: fileList)
             file.delete();
         instance = null;
-    }
+    }*/
 }

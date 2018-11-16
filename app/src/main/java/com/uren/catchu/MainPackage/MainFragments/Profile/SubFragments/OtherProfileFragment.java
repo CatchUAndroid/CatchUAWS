@@ -267,7 +267,7 @@ public class OtherProfileFragment extends BaseFragment
 
     private void startGetProfileDetail(String token) {
 
-        UserDetail loadUserDetail = new UserDetail(getApplicationContext(), new OnEventListener<UserProfile>() {
+        UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
 
             @Override
             public void onSuccess(UserProfile userProfile) {

@@ -30,6 +30,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.ShareFragment;
+import com.uren.catchu.SharePackage.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
@@ -137,7 +138,7 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public void fillAccountHolder() {
-        AccountHolderInfo.setInstance(null, getApplicationContext());
+        AccountHolderInfo.setInstance(null);
         AccountHolderInfo.getInstance();
     }
 
@@ -364,7 +365,7 @@ public class NextActivity extends AppCompatActivity implements
             case FragNavController.TAB1:
                 return new FeedFragment();
             case FragNavController.TAB2:
-                return new ShareFragment();
+                return new SharePostFragment();
             case FragNavController.TAB3:
                 return new ProfileFragment();
 
