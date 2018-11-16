@@ -194,4 +194,20 @@ public class DialogBoxUtil {
         alertDialog.show();
     }
 
+    public static void showDialogWithJustPositiveButton(Context context, String title,
+                                                        String message, String buttonDesc, final InfoDialogBoxCallback infoDialogBoxCallback){
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle(title);
+        alertDialog.setMessage(message);
+        alertDialog.setCancelable(false);
+        alertDialog.setPositiveButton(buttonDesc, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                infoDialogBoxCallback.okClick();
+            }
+        });
+        alertDialog.show();
+    }
+
+
+
 }

@@ -11,15 +11,13 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
 
     private OnEventListener<UserProfile> mCallBack;
-    private Context mContext;
     public Exception mException;
     public String userid;
     public String requestedUserId;
     private String token;
 
-    public UserDetail(Context context, OnEventListener callback, String userid, String requestedUserId, String token) {
+    public UserDetail(OnEventListener callback, String userid, String requestedUserId, String token) {
         mCallBack = callback;
-        mContext = context;
         this.userid = userid;
         this.requestedUserId = requestedUserId;
         this.token = token;

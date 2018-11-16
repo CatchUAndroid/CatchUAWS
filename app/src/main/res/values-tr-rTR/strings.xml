@@ -222,6 +222,7 @@
     <string name="SHARE_IS_UNSUCCESSFUL">Maalesef yaptığınız paylaşım başarılı sonuçlanmadı :(</string>
     <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Problemi kısaca belirtebilir misiniz?</string>
     <string name="PROBLEM_NOTIFY_DESCRIPTION">Karşılaşmış olduğunuz problemi yada geliştirmemizi istediklerinizi bildirerek bize yardımcı olabilirsiniz.</string>
+    <string name="WHO_WILL_YOU_SHARE">Kime paylaşacaksın?</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

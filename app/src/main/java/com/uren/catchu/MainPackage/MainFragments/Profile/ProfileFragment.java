@@ -503,7 +503,7 @@ public class ProfileFragment extends BaseFragment
 
     private void startGetProfileDetail(final String userID, String token) {
 
-        UserDetail loadUserDetail = new UserDetail(getContext(), new OnEventListener<UserProfile>() {
+        UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
 
             @Override
             public void onSuccess(UserProfile up) {

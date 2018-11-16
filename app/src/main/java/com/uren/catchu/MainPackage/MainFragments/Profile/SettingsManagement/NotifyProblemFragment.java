@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForReportCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
@@ -130,6 +131,7 @@ public class NotifyProblemFragment extends BaseFragment {
         toolbarTitleTv.setText(getResources().getString(R.string.REPORT_PROBLEM_OR_COMMENT));
         permissionModule = new PermissionModule(getContext());
         NextActivity.notifyProblemFragment = this;
+        commonToolbarTickImgv.setVisibility(View.VISIBLE);
     }
 
     public void setShapes() {
@@ -147,6 +149,17 @@ public class NotifyProblemFragment extends BaseFragment {
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
+            }
+        });
+
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(noteTextEditText != null && noteTextEditText.getText() != null &&
+                        noteTextEditText.getText().toString().isEmpty()){
+                    CommonUtils.showToast(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
+                    return;
+                }
             }
         });
 
@@ -211,26 +224,6 @@ public class NotifyProblemFragment extends BaseFragment {
             public void onClick(View v) {
                 chosenImgv = addPhotoImgv4;
                 removePhoto();
-            }
-        });
-
-        noteTextEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null & !s.toString().isEmpty())
-                    commonToolbarTickImgv.setVisibility(View.VISIBLE);
-                else
-                    commonToolbarTickImgv.setVisibility(View.GONE);
             }
         });
     }

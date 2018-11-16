@@ -161,7 +161,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                 camParamsLayout.setVisibility(View.VISIBLE);
 
                 if (videoFile != null) {
-                    VideoFileListForDelete.getInstance().addFileToList(videoFile);
+                    //VideoFileListForDelete.getInstance().addFileToList(videoFile);
                     /*videoFile.delete();
                     videoFile = null;
                     videoFilePath = null;

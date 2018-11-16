@@ -103,7 +103,7 @@ public class ShareFragment extends BaseFragment {
         nextImgv = view.findViewById(R.id.nextImgv);
         permissionModule = new PermissionModule(getContext());
         ShareItems.setInstance(null);
-        VideoFileListForDelete.setInstance(null);
+        //VideoFileListForDelete.setInstance(null);
     }
 
     private void setShareItemUser() {
@@ -176,7 +176,7 @@ public class ShareFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 setShareItemUser();
-                VideoFileListForDelete.getInstance().deleteAllFile();
+                //VideoFileListForDelete.getInstance().deleteAllFile();
                 /*galleryPickerFrag.checkTextIsAddedOrNot();*/
 
                 if (mFragmentNavigation != null) {
