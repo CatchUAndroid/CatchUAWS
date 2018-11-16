@@ -1,17 +1,10 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 
-import android.graphics.PorterDuff;
-import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -24,12 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
-import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -41,16 +34,13 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.ProfilePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserCatchedPostFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserGroupsPostFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.UserSharedPostFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -77,29 +67,31 @@ public class ProfileFragment extends BaseFragment
     ImageView navImgProfile;
     TextView navViewShortenTextView;
     RelativeLayout profileNavViewLayout;
+    TextView navPendReqCntTv;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
-    @BindView(R.id.htab_tabs)
-    TabLayout tabLayout;
-    @BindView(R.id.htab_viewpager)
-    ViewPager vpNews;
 
     @BindView(R.id.htab_toolbar)
     Toolbar toolbar;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
+
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
-    @BindView(R.id.txtUserName)
-    TextView txtUserName;
+    @BindView(R.id.txtProfile)
+    TextView txtProfile;
+
+    @BindView(R.id.txtName)
+    TextView txtName;
+    @BindView(R.id.txtBio)
+    TextView txtBio;
+
     @BindView(R.id.txtFollowerCnt)
     TextView txtFollowerCnt;
     @BindView(R.id.txtFollowingCnt)
     TextView txtFollowingCnt;
-    @BindView(R.id.txtProfile)
-    TextView txtProfile;
+
     @BindView(R.id.pendReqCntTv)
     TextView pendReqCntTv;
     @BindView(R.id.drawerLayout)
@@ -117,31 +109,17 @@ public class ProfileFragment extends BaseFragment
     RelativeLayout menuLayout;
     @BindView(R.id.backLayout)
     RelativeLayout backLayout;
+
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
-    @BindView(R.id.htab_collapse_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    @BindView(R.id.htab_appbar)
-    AppBarLayout appBarLayout;
-   /* @BindView(R.id.nestedScrollViewContent)
-    NestedScrollView nestedScrollViewContent;*/
 
-    TextView navPendReqCntTv;
-    SpecialSelectTabAdapter adapter;
-
-    boolean appBarLayoutCollapsed = false;
-    boolean collapsedOneTime = false;
-    boolean tabsCreated = false;
-
-    UserSharedPostFragment userSharedPostFragment;
-    UserGroupsPostFragment userGroupsPostFragment;
-    UserCatchedPostFragment userCatchedPostFragment;
-
-    private int[] tabIcons = {
-            R.mipmap.my_share_icon,
-            R.mipmap.catched_posts_icon,
-            R.drawable.groups_icon_500
-    };
+    //posts
+    @BindView(R.id.llMyPosts)
+    LinearLayout llMyPosts;
+    @BindView(R.id.llCatchedPosts)
+    LinearLayout llCatchedPosts;
+    @BindView(R.id.llMyGroups)
+    LinearLayout llMyGroups;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -167,28 +145,55 @@ public class ProfileFragment extends BaseFragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
-
             checkBundle();
-            setCollapsingToolbar();
-            setPullToRefreshListener();
-            addListeners();
-            setUpPager();
+
+            //Menu Layout
             setNavViewItems();
-            setupTabIcons();
+            setDrawerListeners();
+
+            initListeners();
+            updateUI();
+            setPullToRefresh();
+
         }
+
 
         return mView;
     }
 
-    private void setupTabIcons() {
-        tabLayout.getTabAt(0).setIcon(tabIcons[0]);
-        tabLayout.getTabAt(1).setIcon(tabIcons[1]);
-        tabLayout.getTabAt(2).setIcon(tabIcons[2]);
-        tabLayout.getTabAt(0).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        tabLayout.getTabAt(1).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.DarkGray, null), PorterDuff.Mode.SRC_IN);
-        tabLayout.getTabAt(2).getIcon().setColorFilter(getActivity().getResources().getColor(R.color.DarkGray, null), PorterDuff.Mode.SRC_IN);
-        tabsCreated = true;
+    private void initListeners() {
+
+        imgUserEdit.setOnClickListener(this);
+        txtFollowerCnt.setOnClickListener(this);
+        txtFollowingCnt.setOnClickListener(this);
+
+        llMyPosts.setOnClickListener(this);
+        llCatchedPosts.setOnClickListener(this);
+        llMyGroups.setOnClickListener(this);
     }
+
+    private void updateUI() {
+
+        if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+            myProfile = AccountHolderInfo.getInstance().getUser();
+            setProfileDetail(myProfile);
+        } else {
+            getProfileDetail(AccountHolderInfo.getUserID());
+        }
+
+    }
+
+    private void setPullToRefresh() {
+
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                updateUI();
+            }
+        });
+    }
+
 
     private void checkBundle() {
         Bundle args = getArguments();
@@ -204,6 +209,8 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
+
+
     private void setNavViewItems() {
         View v = navViewLayout.getHeaderView(0);
         navViewNameTv = v.findViewById(R.id.navViewNameTv);
@@ -215,56 +222,7 @@ public class ProfileFragment extends BaseFragment
                 getResources().getColor(R.color.DarkBlue, null)));
     }
 
-    private void setPullToRefreshListener() {
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                AccountHolderInfo.getToken(new TokenCallback() {
-                    @Override
-                    public void onTokenTaken(String token) {
-                        startGetProfileDetail(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), token);
-                        userGroupsPostFragment.getUserGroups();
-                    }
-                });
-            }
-        });
-    }
-
-    private void setCollapsingToolbar() {
-
-        /*try {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                @SuppressWarnings("ResourceType")
-                @Override
-                public void onGenerated(Palette palette) {
-
-                    int vibrantColor = palette.getVibrantColor(R.color.primary_500);
-                    int vibrantDarkColor = palette.getDarkVibrantColor(R.color.primary_700);
-                    collapsingToolbarLayout.setContentScrimColor(vibrantColor);
-                    collapsingToolbarLayout.setStatusBarScrimColor(vibrantDarkColor);
-                    //
-                }
-            });
-
-        } catch (Exception e) {
-            // if Bitmap fetch fails, fallback to primary colors
-            Log.e("TAG", "onCreate: failed to create bitmap from background", e.fillInStackTrace());
-            collapsingToolbarLayout.setContentScrimColor(
-                    ContextCompat.getColor(getActivity(), R.color.primary_500)
-            );
-            collapsingToolbarLayout.setStatusBarScrimColor(
-                    ContextCompat.getColor(getActivity(), R.color.primary_700)
-            );
-        }*/
-
-        GradientDrawable gradientDrawable = ShapeUtil.getGradientBackgroundWithMiddleColor(getResources().getColor(R.color.DarkSlateBlue, null),
-                getResources().getColor(R.color.MediumTurquoise, null),
-                getResources().getColor(R.color.DarkSlateBlue, null));
-        collapsingToolbarLayout.setBackground(gradientDrawable);
-    }
-
-    public void addListeners() {
+    public void setDrawerListeners() {
         drawerLayout.addDrawerListener(new ActionBarDrawerToggle(getActivity(),
                 drawerLayout,
                 null,
@@ -339,67 +297,6 @@ public class ProfileFragment extends BaseFragment
             }
         });
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                if (tab != null) {
-                    if (tabsCreated && getContext() != null && tab.getIcon() != null)
-                        tab.getIcon().setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-                if (tabsCreated && getContext() != null && tab.getIcon() != null)
-                    tab.getIcon().setColorFilter(getContext().getResources().getColor(R.color.DarkGray, null), PorterDuff.Mode.SRC_IN);
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-    }
-
-    private void setUpPager() {
-
-        adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
-        userSharedPostFragment = new UserSharedPostFragment();
-        userCatchedPostFragment = new UserCatchedPostFragment();
-        userGroupsPostFragment = new UserGroupsPostFragment(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
-
-        adapter.addFragment(userSharedPostFragment, "My Posts");
-        adapter.addFragment(userCatchedPostFragment, "Catched Posts");
-        adapter.addFragment(userGroupsPostFragment, "Groups Posts");
-
-        vpNews.setAdapter(adapter);
-        vpNews.setOffscreenPageLimit(12);
-        tabLayout.setupWithViewPager(vpNews);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        updateUI();
-        initListeners();
-    }
-
-    private void initListeners() {
-
-        imgUserEdit.setOnClickListener(this);
-        txtFollowerCnt.setOnClickListener(this);
-        txtFollowingCnt.setOnClickListener(this);
-    }
-
-    private void updateUI() {
-
-        if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-            myProfile = AccountHolderInfo.getInstance().getUser();
-            setProfileDetail(myProfile);
-        } else {
-            getProfileDetail(AccountHolderInfo.getUserID());
-        }
-
     }
 
     private void setProfileDetail(UserProfile user) {
@@ -408,26 +305,33 @@ public class ProfileFragment extends BaseFragment
 
             Log.i("->UserInfo", user.getUserInfo().toString());
 
+            //Name
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
-                toolbarTitle.setText(user.getUserInfo().getName());
                 navViewNameTv.setText(user.getUserInfo().getName());
+                txtName.setText(user.getUserInfo().getName());
             }
-
-            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), txtProfile, imgProfile);
-
-            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
-
+            //Username
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
-                txtUserName.setText(user.getUserInfo().getUsername());
+                toolbarTitle.setText(user.getUserInfo().getUsername());
                 navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
             }
+            //profile picture
+
+
+            UserDataUtil.setProfilePicture2(getContext(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
+            imgProfile.setPadding(3, 3, 3, 3);
+            //navigation profile picture
+            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
+            //Biography
+            // todo NT - biography usera beslenmiyor.düzenlenecek
 
             if (user.getUserInfo().getIsPrivateAccount() != null) {
                 getPendingFriendList();
             }
         }
+
         setUserFollowerAndFollowingCnt(user);
         refresh_layout.setRefreshing(false);
     }
@@ -438,10 +342,12 @@ public class ProfileFragment extends BaseFragment
             Log.i("->UserRelationCountInfo", user.getRelationInfo().toString());
 
             if (user.getRelationInfo().getFollowerCount() != null && !user.getRelationInfo().getFollowerCount().trim().isEmpty())
-                txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount() + "\n" + getActivity().getResources().getString(R.string.followers));
+                txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount());
 
             if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
-                txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount() + "\n" + getActivity().getResources().getString(R.string.followings));
+                txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount());
+
+
         }
     }
 
@@ -511,12 +417,10 @@ public class ProfileFragment extends BaseFragment
                 progressBar.setVisibility(View.GONE);
                 myProfile = up;
                 setProfileDetail(up);
-                refresh_layout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(Exception e) {
-                refresh_layout.setRefreshing(false);
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -551,6 +455,20 @@ public class ProfileFragment extends BaseFragment
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
+
+        if (v == llMyPosts) {
+            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == llCatchedPosts) {
+            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == llMyGroups) {
+            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+
 
     }
 
@@ -616,4 +534,7 @@ public class ProfileFragment extends BaseFragment
             mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
+
 }
+
+

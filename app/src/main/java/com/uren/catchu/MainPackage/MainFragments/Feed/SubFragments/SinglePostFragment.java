@@ -257,8 +257,8 @@ public class SinglePostFragment extends BaseFragment
     private void setPostDetailOnToolbar() {
 
         //profile picture
-        UserDataUtil.setProfilePicture(getContext(), post.getUser().getProfilePhotoUrl(),
-                post.getUser().getName(), txtProfilePic, imgProfilePic);
+        UserDataUtil.setProfilePicture2(getContext(), post.getUser().getProfilePhotoUrl(),
+                post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
 
         //Username
         if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {

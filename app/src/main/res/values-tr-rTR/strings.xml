@@ -244,5 +244,7 @@
     <string name="now">Şimdi</string>
     <string name="feedTypePublic">Genel</string>
     <string name="feedTypeCatched">Catched</string>
+    <string name="feedViewTypeGrid">Izgara</string>
+    <string name="feedViewTypeList">Liste</string>
 
 </resources>
