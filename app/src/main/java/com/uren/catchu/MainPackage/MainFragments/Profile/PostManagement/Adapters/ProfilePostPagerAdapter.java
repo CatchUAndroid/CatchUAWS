@@ -11,19 +11,21 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPost
 public class ProfilePostPagerAdapter extends FragmentPagerAdapter {
 
     private int numOfTabs;
+    private String catchType;
 
-    public ProfilePostPagerAdapter(FragmentManager fm, int numOfTabs) {
+    public ProfilePostPagerAdapter(FragmentManager fm, int numOfTabs, String catchType) {
         super(fm);
         this.numOfTabs = numOfTabs;
+        this.catchType = catchType;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new UserPostGridViewFragment();
+                return UserPostGridViewFragment.newInstance(catchType);
             case 1:
-                return new UserPostListViewFragment();
+                return UserPostListViewFragment.newInstance(catchType);
             default:
                 return null;
         }

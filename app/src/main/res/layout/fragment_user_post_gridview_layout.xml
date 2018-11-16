@@ -3,24 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <include layout="@layout/warning_message_tv"></include>
+    <include layout="@layout/layout_progress_bar" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gridRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <include layout="@layout/posts_show_mode_layout" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/shareRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
-
-        <include layout="@layout/warning_message_tv"></include>
-
-        <include layout="@layout/layout_progress_bar" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>

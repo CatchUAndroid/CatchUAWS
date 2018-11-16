@@ -282,5 +282,8 @@
     <string name="feedTypeCatched">Catched</string>
     <string name="feedViewTypeGrid">Grid</string>
     <string name="feedViewTypeList">List</string>
+    <string name="myPosts">My Posts</string>
+    <string name="catchedPosts">Catched Posts</string>
+
 
 </resources>

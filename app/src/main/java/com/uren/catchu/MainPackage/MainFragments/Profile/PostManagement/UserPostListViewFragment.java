@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -26,21 +28,26 @@ import butterknife.ButterKnife;
 public class UserPostListViewFragment extends BaseFragment{
 
     View mView;
+    String catchType;
 
-    @BindView(R.id.backImgv)
-    ImageView backImgv;
-    @BindView(R.id.changeViewTv)
-    TextView changeViewTv;
-    @BindView(R.id.nextImgv)
-    ImageView nextImgv;
-    @BindView(R.id.shareListViewRecyclerView)
-    RecyclerView shareListViewRecyclerView;
-    @BindView(R.id.shareNormViewRecyclerView)
-    RecyclerView shareNormViewRecyclerView;
-    @BindView(R.id.changeViewLayout)
-    LinearLayout changeViewLayout;
+    UserPostListViewAdapter userPostListViewAdapter;
+    LinearLayoutManager mLinearLayoutManager;
 
-    boolean listViewSelected = false;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
+    @BindView(R.id.listRecyclerView)
+    RecyclerView listRecyclerView;
+
+
+    public static UserPostListViewFragment newInstance(String catchType) {
+        Bundle args = new Bundle();
+        args.putString("catchType", catchType);
+        UserPostListViewFragment fragment = new UserPostListViewFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     public UserPostListViewFragment() {
     }
@@ -57,58 +64,20 @@ public class UserPostListViewFragment extends BaseFragment{
         if(mView == null) {
             mView = inflater.inflate(R.layout.fragment_user_post_listview_layout, container, false);
             ButterKnife.bind(this, mView);
-            addListeners();
-            setInitVariables();
-            setUpPager();
+            getItemsFromBundle();
+
         }
         return mView;
     }
 
-    private void setUpPager() {
-
-        List<String> textList = new ArrayList<String>();
-
-        for(int i=0; i< 100; i++){
-           // textList.add("Share item no : " + i);
+    private void getItemsFromBundle() {
+        Bundle args = getArguments();
+        if (args != null) {
+            catchType = (String) args.getString("catchType");
         }
-
-        UserPostListViewAdapter adapter = new UserPostListViewAdapter(getContext(), textList);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        shareNormViewRecyclerView.setLayoutManager(mLayoutManager);
-        shareNormViewRecyclerView.setAdapter(adapter);
-        //shareNormViewRecyclerView.setNestedScrollingEnabled(false);
-
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-    }
 
-    public void addListeners(){
-        changeViewLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!listViewSelected){
-                    listViewSelected = true;
-                    backImgv.setVisibility(View.VISIBLE);
-                    nextImgv.setVisibility(View.GONE);
-                    changeViewTv.setText(getResources().getString(R.string.SHOW_IN_NORMAL_MODE));
-
-                }else {
-                    listViewSelected = false;
-                    backImgv.setVisibility(View.GONE);
-                    nextImgv.setVisibility(View.VISIBLE);
-                    changeViewTv.setText(getResources().getString(R.string.SHOW_IN_LIST_MODE));
-                }
-            }
-        });
-    }
-
-    public void setInitVariables(){
-        backImgv.setVisibility(View.GONE);
-        changeViewTv.setText(getResources().getString(R.string.SHOW_IN_LIST_MODE));
-    }
 }
 

@@ -118,4 +118,9 @@ public class StringConstants {
     public static final String FEED_TYPE_PUBLIC = "public";
     public static final String FEED_TYPE_CATCH = "catch";
 
+    //PROFILE POST TYPE
+    public static final String PROFILE_POST_TYPE_MY_POSTS = "myPosts";
+    public static final String PROFILE_POST_TYPE_CATCHED = "catch";
+
+
 }
