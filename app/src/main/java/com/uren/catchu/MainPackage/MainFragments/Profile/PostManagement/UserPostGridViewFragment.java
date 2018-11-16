@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.UserShareManagement.Adapters.UserSharedPostAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class UserPostGridViewFragment extends BaseFragment{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         if(mView == null) {
-            mView = inflater.inflate(R.layout.fragment_users_share, container, false);
+            mView = inflater.inflate(R.layout.fragment_user_post_listview_layout, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
             setInitVariables();
@@ -72,7 +72,7 @@ public class UserPostGridViewFragment extends BaseFragment{
            // textList.add("Share item no : " + i);
         }
 
-        UserSharedPostAdapter adapter = new UserSharedPostAdapter(getContext(), textList);
+        UserPostGridViewAdapter adapter = new UserPostGridViewAdapter(getContext(), textList);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         shareNormViewRecyclerView.setLayoutManager(mLayoutManager);
