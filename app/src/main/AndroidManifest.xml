@@ -79,6 +79,7 @@
         </provider>
 
         <activity android:name=".LoginPackage.LoginActivity" />
+        <activity android:name=".MainPackage.MainFragments.Profile.SettingsManagement.Models.DrawActivity" />
         <activity android:name=".LoginPackage.RegisterActivity" />
         <activity android:name=".LoginPackage.ForgetPasswordActivity" />
         <!--
@@ -98,6 +99,7 @@
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.VideoActivity" />
         <activity android:name=".UgurDeneme.PhoneAuthActivity" />
         <activity android:name=".UgurDeneme.FirebaseMLActivity" />
+        <activity android:name=".MainPackage.MainFragments.Profile.SettingsManagement.Models.Main2Activity"></activity>
     </application>
 
 </manifest>

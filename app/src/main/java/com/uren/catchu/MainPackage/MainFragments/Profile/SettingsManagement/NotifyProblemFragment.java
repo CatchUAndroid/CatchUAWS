@@ -29,7 +29,12 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForReportCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ColorActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.DrawActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.Main2Activity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ProblemNotifyModel;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -273,12 +278,22 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     public void managePhotoChosen() {
-        for (ProblemNotifyModel problemNotifyModel : problemListBox) {
+        for (final ProblemNotifyModel problemNotifyModel : problemListBox) {
 
             if (problemNotifyModel.getImageView() == chosenImgv) {
                 if (problemNotifyModel.getPhotoSelectUtil() != null) {
+
+                    //startActivity(new Intent(getContext(), Main2Activity.class));
+
                     if (mFragmentNavigation != null) {
-                        mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil()),
+                        mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil(), new ReturnCallback() {
+                                    @Override
+                                    public void onReturn(Object object) {
+                                        PhotoSelectUtil util = (PhotoSelectUtil) object;
+                                        problemNotifyModel.setPhotoSelectUtil(util);
+                                        setPhotoSelectUtil(util);
+                                    }
+                                }),
                                 ANIMATE_RIGHT_TO_LEFT);
                     }
                     return;
