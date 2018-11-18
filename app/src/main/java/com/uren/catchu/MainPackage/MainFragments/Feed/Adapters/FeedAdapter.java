@@ -41,6 +41,7 @@ import com.uren.catchu.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import catchu.model.Post;
 
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
@@ -243,25 +244,31 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgBtnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SinglePost.getInstance().setPost(post);
-                    String toolbarTitle = post.getUser().getUsername();
-                    PostHelper.SinglePostClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), postPositionHashMap.get(post.getPostid()));
+                    setSinglePostFragmentItems();
                 }
             });
             //CardView
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SinglePost.getInstance().setPost(post);
-                    String toolbarTitle = post.getUser().getUsername();
-                    PostHelper.SinglePostClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), postPositionHashMap.get(post.getPostid()));
+                    setSinglePostFragmentItems();
                 }
             });
+
+        }
+
+        private void setSinglePostFragmentItems() {
+
+            SinglePost.getInstance().setPost(post);
+            String toolbarTitle = post.getUser().getUsername();
+
+            PostHelper.SinglePostClicked singlePostClicked = PostHelper.SinglePostClicked.getInstance();
+            singlePostClicked.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), postPositionHashMap.get(post.getPostid()));
 
             /**
              * Like Callback
              */
-            PostHelper.SinglePostClicked.setPostLikeClickCallback(new PostLikeClickCallback() {
+            singlePostClicked.setPostLikeClickCallback(new PostLikeClickCallback() {
                 @Override
                 public void onPostLikeClicked(boolean isPostLiked, int newLikeCount, int position) {
                     postList.get(position).setLikeCount(newLikeCount);
@@ -273,13 +280,15 @@ public class FeedAdapter extends RecyclerView.Adapter {
             /**
              * Comment Callback
              */
-            PostHelper.AddComment.setCommentAddCallback(new CommentAddCallback() {
+            singlePostClicked.setCommentAddCallback(new CommentAddCallback() {
                 @Override
                 public void onCommentAdd(int position) {
                     postList.get(position).setCommentCount(postList.get(position).getCommentCount() + 1);
                     notifyItemChanged(position);
                 }
             });
+
+            singlePostClicked.startSinglePostProcess();
 
         }
 
@@ -336,7 +345,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 txtCreateAt.setText(CommonUtils.timeAgo(mContext, post.getCreateAt()));
             }
             //Target
-            if(post.getPrivacyType()!=  null){
+            if (post.getPrivacyType() != null) {
                 setTargetImage();
             }
 
@@ -344,19 +353,19 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setTargetImage() {
 
-            if(post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)){
+            if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
                 imgTarget.setImageResource(R.drawable.world_icon_96);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else if(post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)){
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
                 imgTarget.setImageResource(R.drawable.friends);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else if(post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)){
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
                 imgTarget.setImageResource(R.drawable.groups_icon_500);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else if(post.getPrivacyType().equals(SHARE_TYPE_SELF)){
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
                 imgTarget.setImageResource(R.drawable.just_me_icon_500);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else if(post.getPrivacyType().equals(SHARE_TYPE_GROUP)){
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
                 imgTarget.setImageResource(R.drawable.groups_icon_500);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -420,12 +429,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
             return true;
         else
             return false;
-    }
-
-    public void removeAll() {
-        int initalSize = postList.size();
-        notifyItemRangeChanged(0, initalSize);
-
     }
 
     public void updatePostListItems(List<Post> newPostList) {

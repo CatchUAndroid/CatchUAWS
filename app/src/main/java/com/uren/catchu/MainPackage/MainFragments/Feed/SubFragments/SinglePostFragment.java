@@ -87,6 +87,7 @@ public class SinglePostFragment extends BaseFragment
     Post post;
     String postId;
     int position;
+    int numberOfCallback;
     SinglePostAdapter singlePostAdapter;
     LinearLayoutManager mLayoutManager;
 
@@ -139,11 +140,12 @@ public class SinglePostFragment extends BaseFragment
     private List<Post> postList = new ArrayList<Post>();
     private int drawingStartLocation = 0;
 
-    public static SinglePostFragment newInstance(String toolbarTitle, String postId, int position) {
+    public static SinglePostFragment newInstance(String toolbarTitle, String postId, int position, int numberOfCallback) {
         Bundle args = new Bundle();
         args.putString("toolbarTitle", toolbarTitle);
         args.putString("postId", postId);
         args.putInt("position", position);
+        args.putInt("numberOfCallback", numberOfCallback);
         SinglePostFragment fragment = new SinglePostFragment();
         fragment.setArguments(args);
         return fragment;
@@ -176,6 +178,7 @@ public class SinglePostFragment extends BaseFragment
             toolbarTitle = (String) args.getString("toolbarTitle");
             postId = (String) args.getString("postId");
             position = (Integer) args.getInt("position");
+            numberOfCallback = (Integer) args.getInt("numberOfCallback");
         }
     }
 
@@ -338,7 +341,7 @@ public class SinglePostFragment extends BaseFragment
                     setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
                 }
                 PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
-                PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position);
+                PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position, numberOfCallback);
                 singlePostAdapter.updateLikeCount(post.getLikeCount());
 
             }
@@ -598,7 +601,8 @@ public class SinglePostFragment extends BaseFragment
             btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
 
             PostHelper.AddComment.startProcess(getContext(), postId, comment, position);
-            PostHelper.AddComment.postCommentCountChanged(position);
+            PostHelper.SinglePostClicked.postCommentCountChanged(position);
+
         }
     }
 

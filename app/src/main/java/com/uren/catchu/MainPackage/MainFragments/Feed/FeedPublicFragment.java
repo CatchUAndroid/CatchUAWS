@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -64,7 +65,6 @@ import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfile;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
@@ -152,6 +152,10 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         return mView;
     }
 
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     private void initListeners() {
 
@@ -304,14 +308,14 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Toast.makeText(getApplicationContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
                     getPosts();
 
                 } else {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                     showPulsatorLayout(false);
                     showNoFeedLayout(true, R.string.needLocationPermission);
                     refresh_layout.setRefreshing(false);

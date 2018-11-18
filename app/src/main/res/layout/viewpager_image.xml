@@ -8,55 +8,55 @@
     android:padding="5dp">
 
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_view"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0.0px"
+        android:elevation="2dp"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardPreventCornerOverlap="false">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@android:color/transparent"
-            android:dividerHeight="0.0px"
-            android:elevation="2dp"
-            card_view:cardCornerRadius="10dp"
-            card_view:cardPreventCornerOverlap="false">
+            android:layout_height="match_parent">
 
-            <RelativeLayout
+            <LinearLayout
+                android:id="@+id/llProgress"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:gravity="center">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:id="@+id/llProgress">
-                    <ProgressBar
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/progressLoading" />
-
-                </LinearLayout>
-
-
-                <ImageView
-                    android:id="@+id/imgFeedItem"
+                <ProgressBar
+                    android:id="@+id/progressLoading"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="wrap_content" />
 
-                <ImageView
-                    android:id="@+id/iconPlay"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@mipmap/icon_play"
-                    android:visibility="gone" />
+            </LinearLayout>
 
 
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/imgFeedItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/iconPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/icon_play"
+                android:visibility="gone" />
 
 
+        </RelativeLayout>
 
-        </android.support.v7.widget.CardView>
+
+    </android.support.v7.widget.CardView>
 
 </RelativeLayout>

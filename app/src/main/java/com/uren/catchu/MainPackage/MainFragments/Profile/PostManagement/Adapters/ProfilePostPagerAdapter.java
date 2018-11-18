@@ -2,13 +2,13 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapter
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostGridViewFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostListViewFragment;
 
 
-public class ProfilePostPagerAdapter extends FragmentPagerAdapter {
+public class ProfilePostPagerAdapter extends FragmentStatePagerAdapter {
 
     private int numOfTabs;
     private String catchType;

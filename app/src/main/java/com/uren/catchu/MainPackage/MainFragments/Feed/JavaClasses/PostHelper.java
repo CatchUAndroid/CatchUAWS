@@ -550,24 +550,86 @@ public class PostHelper {
 
     public static class SinglePostClicked {
 
-        static BaseFragment.FragmentNavigation fragmentNavigation;
-        static String toolbarTitle;
-        static String postId;
-        static PostLikeClickCallback postLikeClickCallback;
-        static int position;
+        /**
+         * Bu fonksiyon çağrılırken sırasıyla
+         * getInstance()
+         * setSinglePostItems()
+         * setPostLikeClickCallback()
+         * setCommentAddCallback()
+         * startSinglePostProcess() fonksiyonları zorunlu olarak çağrılmalıdır.
+         */
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
-                                              String postId, int position) {
+        private static SinglePostClicked instance = null;
+        private static List<PostLikeClickCallback> postLikeClickCallbackList;
+        private static List<CommentAddCallback> commentAddCallbackList;
 
-            fragmentNavigation = fragmNav;
+        private static BaseFragment.FragmentNavigation fragmentNavigation;
+        private static String toolbarTitle;
+        private static String postId;
+        private static int position;
+        private static int numberOfCallback;
+
+        public SinglePostClicked() {
+            postLikeClickCallbackList = new ArrayList<PostLikeClickCallback>();
+            commentAddCallbackList = new ArrayList<CommentAddCallback>();
+            numberOfCallback = -1;
+        }
+
+        public static SinglePostClicked getInstance() {
+            if (instance == null)
+                instance = new SinglePostClicked();
+
+            return instance;
+        }
+
+
+        public void setSinglePostItems(Context context, BaseFragment.FragmentNavigation fragmentNavigation,
+                                              String toolbarTitle,
+                                              String postId,
+                                              int position) {
+
+            SinglePostClicked.fragmentNavigation = fragmentNavigation;
             SinglePostClicked.toolbarTitle = toolbarTitle;
             SinglePostClicked.postId = postId;
             SinglePostClicked.position = position;
 
-            SinglePostClicked singlePostClicked = new SinglePostClicked(context);
+
         }
 
-        private SinglePostClicked(Context context) {
+        public void startSinglePostProcess(){
+            if (fragmentNavigation != null) {
+                fragmentNavigation.pushFragment(SinglePostFragment.newInstance(toolbarTitle, postId, position, numberOfCallback), ANIMATE_RIGHT_TO_LEFT);
+            }
+        }
+
+        public void setPostLikeClickCallback(PostLikeClickCallback postLikeClickCallback) {
+            postLikeClickCallbackList.add(postLikeClickCallback);
+            numberOfCallback++;
+        }
+        public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position, int numberOfCallback) {
+            postLikeClickCallbackList.get(numberOfCallback).onPostLikeClicked(isPostLiked, newLikeCount, position);
+        }
+
+        public void setCommentAddCallback(CommentAddCallback commentAddCallback) {
+            commentAddCallbackList.add(commentAddCallback);
+        }
+        public static void postCommentCountChanged(int position) {
+            commentAddCallbackList.get(numberOfCallback).onCommentAdd(position);
+        }
+
+
+
+
+/*
+        public SinglePostClicked(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
+                                 String postId, int position) {
+
+            this.fragmentNavigation = fragmNav;
+            this.toolbarTitle = toolbarTitle;
+            this.postId = postId;
+            this.position = position;
+
+
             singlePostClickedProcess(context);
         }
 
@@ -577,14 +639,14 @@ public class PostHelper {
             }
         }
 
-        public static void setPostLikeClickCallback(PostLikeClickCallback postLikeClickCallback) {
-            SinglePostClicked.postLikeClickCallback = postLikeClickCallback;
+        public void setPostLikeClickCallback(PostLikeClickCallback postLikeClickCallback) {
+            this.postLikeClickCallback = postLikeClickCallback;
         }
 
-        public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position) {
+        public void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position) {
             postLikeClickCallback.onPostLikeClicked(isPostLiked, newLikeCount, position);
         }
-
+*/
     }
 
     public static class FeedRefresh {
