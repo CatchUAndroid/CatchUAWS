@@ -85,7 +85,7 @@
     <string name="profileUpdateSuccessful">Profile Update is Successful</string>
     <string name="dragForDelete">Drag for Delete</string>
     <string name="finish">Finish</string>
-    <string name="typeToAddText">Type to Add Text...</string>
+    <string name="typeToAddText">Say something...</string>
     <string name="UPDATING">Updating...</string>
     <string name="EXPLORE_PEOPLE">Explore People</string>
     <string name="VIEW_PENDING_REQUEST">View Pending Requests</string>

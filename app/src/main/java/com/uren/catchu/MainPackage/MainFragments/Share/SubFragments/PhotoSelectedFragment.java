@@ -92,10 +92,10 @@ public class PhotoSelectedFragment extends BaseFragment {
     }
 
     private void setShapes() {
-        finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+        finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
         addTextImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
-                0, GradientDrawable.OVAL, 50, 0));
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
     }
 
     private void addListeners() {

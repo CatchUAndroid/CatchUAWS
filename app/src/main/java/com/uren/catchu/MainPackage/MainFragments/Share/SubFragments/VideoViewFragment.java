@@ -47,7 +47,7 @@ public class VideoViewFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.video_view_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_video_view, container, false);
             ButterKnife.bind(this, mView);
             return mView;
         }

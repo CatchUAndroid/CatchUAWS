@@ -255,7 +255,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void initializeItems() {
-        //initUIValues();
         permissionModule = new PermissionModule(getContext());
         ShareItems.setInstance(null);
         getUserInfo();
@@ -264,43 +263,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         setShapes();
         setViewsDefaultValues();
         setAnimations();
-        getViewsPosition();
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         photoSelectUtil = new PhotoSelectUtil();
         checkShareItems = new CheckShareItems(getContext());
-    }
-
-    private void initUIValues() {
-        //shareMsgEditText = view.findViewById(R.id.shareMsgEditText);
-        /*ShareItemsDescTv = view.findViewById(R.id.ShareItemsDescTv);
-        profilePicImgView = view.findViewById(R.id.profilePicImgView);
-        shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-        photoSelectImgv = view.findViewById(R.id.photoSelectImgv);
-        videoSelectImgv = view.findViewById(R.id.videoSelectImgv);
-        textSelectImgv = view.findViewById(R.id.textSelectImgv);
-        showMapImgv = view.findViewById(R.id.showMapImgv);
-        shareMsgEditText = view.findViewById(R.id.shareMsgEditText);
-        publicImgv = view.findViewById(R.id.publicImgv);
-        allFollowersImgv = view.findViewById(R.id.allFollowersImgv);
-        specialImgv = view.findViewById(R.id.specialImgv);
-        groupsImgv = view.findViewById(R.id.groupsImgv);
-        justMeImgv = view.findViewById(R.id.justMeImgv);
-        cancelButton = view.findViewById(R.id.cancelButton);
-        shareButton = view.findViewById(R.id.shareButton);
-        mapLayout = view.findViewById(R.id.mapLayout);
-        shareMainLayout = view.findViewById(R.id.shareMainLayout);
-        buttonsLayout = view.findViewById(R.id.buttonsLayout);
-        publicSelectLayout = view.findViewById(R.id.publicSelectLayout);
-        allFollowersSelectLayout = view.findViewById(R.id.allFollowersSelectLayout);
-        specialSelectLayout = view.findViewById(R.id.specialSelectLayout);
-        groupsSelectLayout = view.findViewById(R.id.groupsSelectLayout);
-        justMeSelectLayout = view.findViewById(R.id.justMeSelectLayout);
-        mapView = view.findViewById(R.id.map);
-        progressBar = view.findViewById(R.id.progressBar);*/
-    }
-
-    private void getViewsPosition() {
-
     }
 
     private void setAnimations() {
@@ -380,6 +345,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
         shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumSeaGreen, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+        showMapImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
+                getResources().getColor(R.color.Red, null), GradientDrawable.OVAL, 20, 3));
     }
 
     public void setViewsDefaultValues() {
@@ -1178,56 +1145,50 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
 
     private void setWhomItemsImgvFilled() {
-        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
+        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
     }
 
     public void setPhotoSelectImgvFilled() {
-        photoSelectImgv.setColorFilter(getContext().getResources().getColor(R.color.MediumSeaGreen, null), PorterDuff.Mode.SRC_IN);
-        photoSelectImgv.setBackground(ShapeUtil.getShape(0, getContext().getResources().getColor(R.color.MediumSeaGreen, null),
-                GradientDrawable.OVAL, 50, 10));
+        //photoSelectImgv.setColorFilter(getContext().getResources().getColor(R.color.LimeGreen, null), PorterDuff.Mode.SRC_IN);
+        photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));
     }
 
     public void setVideoSelectImgvFilled() {
-        videoSelectImgv.setColorFilter(getResources().getColor(R.color.MediumSeaGreen, null), PorterDuff.Mode.SRC_IN);
-        videoSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.MediumSeaGreen, null),
-                GradientDrawable.OVAL, 50, 10));
+        videoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));
     }
 
     public void setTextSelectImgvFilled() {
-        textSelectImgv.setColorFilter(getResources().getColor(R.color.MediumSeaGreen, null), PorterDuff.Mode.SRC_IN);
-        textSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.MediumSeaGreen, null),
-                GradientDrawable.OVAL, 50, 10));
+        textSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));
     }
 
     public void clearPhotoSelectImgvFilled() {
-        photoSelectImgv.setColorFilter(getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-        photoSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.Gray, null),
-                GradientDrawable.OVAL, 50, 10));
+        photoSelectImgv.setBackground(null);
+        /*photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));*/
     }
 
     public void clearVideoSelectImgvFilled() {
-        videoSelectImgv.setColorFilter(getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-        videoSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.Gray, null),
-                GradientDrawable.OVAL, 50, 10));
+        videoSelectImgv.setBackground(null);
+        /*videoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));*/
     }
 
     public void clearTextSelectImgvFilled() {
-        textSelectImgv.setColorFilter(getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-        textSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.Gray, null),
-                GradientDrawable.OVAL, 50, 10));
+        textSelectImgv.setBackground(null);
+        /*textSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));*/
     }
-
-    /*@Nullable
-    @Override
-    public View getView() {
-        return view;
-    }
-
-    public void setView(View view) {
-        this.view = view;
-    }*/
 }
