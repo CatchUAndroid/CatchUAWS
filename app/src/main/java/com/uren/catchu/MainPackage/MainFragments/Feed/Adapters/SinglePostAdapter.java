@@ -589,7 +589,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     }
 
 
-
     public void setPersonListItemClickListener(PersonListItemClickListener personListItemClickListener) {
         SinglePostAdapter.this.personListItemClickListener = personListItemClickListener;
     }
