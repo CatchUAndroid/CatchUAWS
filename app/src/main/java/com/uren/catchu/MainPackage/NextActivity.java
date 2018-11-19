@@ -111,10 +111,6 @@ public class NextActivity extends AppCompatActivity implements
             public void onTabReselected(TabLayout.Tab tab) {
                 mNavController.clearStack();
                 tabSelectionControl(tab);
-                /*fragmentHistory.push(tab.getPosition());
-                switchAndUpdateTabSelection(tab.getPosition());*/
-               /* mNavController.clearStack();
-                switchTab(tab.getPosition());*/
             }
         });
 
