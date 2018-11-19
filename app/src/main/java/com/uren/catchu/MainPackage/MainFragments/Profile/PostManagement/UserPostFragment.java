@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.ProfilePostPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostPagerAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -27,12 +27,12 @@ import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CATCHE
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
 
 
-public class ProfilePostFragment extends BaseFragment
+public class UserPostFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
     String catchType, toolbarTitle;
-    ProfilePostPagerAdapter profilePostPagerAdapter;
+    UserPostPagerAdapter userPostPagerAdapter;
     ImageView imgViewGrid, imgViewList;
     TextView txtViewGrid, txtViewList;
     TabItem tabGridView, tabListView;
@@ -47,10 +47,10 @@ public class ProfilePostFragment extends BaseFragment
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    public static ProfilePostFragment newInstance(String catchType) {
+    public static UserPostFragment newInstance(String catchType) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);
-        ProfilePostFragment fragment = new ProfilePostFragment();
+        UserPostFragment fragment = new UserPostFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -112,8 +112,8 @@ public class ProfilePostFragment extends BaseFragment
 
     private void setUpPager() {
 
-        profilePostPagerAdapter = new ProfilePostPagerAdapter(getFragmentManager(), tabLayout.getTabCount(), catchType);
-        viewPager.setAdapter(profilePostPagerAdapter);
+        userPostPagerAdapter = new UserPostPagerAdapter(getFragmentManager(), tabLayout.getTabCount(), catchType);
+        viewPager.setAdapter(userPostPagerAdapter);
 
         setCustomTab();
         setTabListener();

@@ -8,12 +8,12 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPost
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostListViewFragment;
 
 
-public class ProfilePostPagerAdapter extends FragmentStatePagerAdapter {
+public class UserPostPagerAdapter extends FragmentStatePagerAdapter {
 
     private int numOfTabs;
     private String catchType;
 
-    public ProfilePostPagerAdapter(FragmentManager fm, int numOfTabs, String catchType) {
+    public UserPostPagerAdapter(FragmentManager fm, int numOfTabs, String catchType) {
         super(fm);
         this.numOfTabs = numOfTabs;
         this.catchType = catchType;

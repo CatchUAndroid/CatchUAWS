@@ -7,19 +7,15 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/rlContent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="#11000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="H,1:1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imgPost"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#11000000" />
 
         <!--Progress Loading /-->
         <LinearLayout
@@ -35,14 +31,58 @@
 
         </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/llPostImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imgPost"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <ImageView
+                    android:id="@+id/imgVideoCamera"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_margin="10dp"
+                    android:background="#11000000"
+                    android:src="@mipmap/icon_video_camera"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imgGridMore"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="10dp"
+                    android:background="#11000000"
+                    android:src="@mipmap/icon_grid_more2"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+
         <!--Load Error /-->
         <LinearLayout
             android:id="@+id/llError"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
 
             <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
@@ -62,6 +102,24 @@
 
         </LinearLayout>
 
+        <!--Text view /-->
+        <LinearLayout
+            android:id="@+id/llExplanation"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/txtExplanation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 

@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapter
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +23,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.google.android.gms.vision.text.Line;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -33,6 +36,7 @@ import com.uren.catchu.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import catchu.model.Post;
 
@@ -103,8 +107,13 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
         //View items
         ImageView imgPost;
         ProgressBar progressLoading;
+        RelativeLayout rlContent;
         LinearLayout llProgress, llError;
+        LinearLayout llPostImage;
+        LinearLayout llExplanation;
         ClickableImageView imgRetry;
+        TextView txtExplanation;
+        ImageView imgVideoIcon, imgGridMore;
 
         public MyViewHolder(View view) {
             super(view);
@@ -114,14 +123,20 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             progressLoading = (ProgressBar) view.findViewById(R.id.progressLoading);
             llProgress = (LinearLayout) view.findViewById(R.id.llProgress);
             llError = (LinearLayout) view.findViewById(R.id.llError);
+            llExplanation = (LinearLayout) view.findViewById(R.id.llExplanation);
+            llPostImage = (LinearLayout) view.findViewById(R.id.llPostImage);
             imgRetry = (ClickableImageView) view.findViewById(R.id.imgRetry);
+            txtExplanation = (TextView) view.findViewById(R.id.txtExplanation);
+            rlContent = (RelativeLayout) view.findViewById(R.id.rlContent);
+            imgVideoIcon = (ImageView) view.findViewById(R.id.imgVideoCamera);
+            imgGridMore = (ImageView) view.findViewById(R.id.imgGridMore);
 
             setListeners();
 
         }
 
         private void setListeners() {
-            imgPost.setOnClickListener(new View.OnClickListener() {
+            rlContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -138,8 +153,6 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                     setData(post, position);
                 }
             });
-
-
 
         }
 
@@ -186,54 +199,134 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
 
             this.post = post;
             this.position = position;
-
+            boolean sourceFound = false;
             String loadUrl = "empty";
 
-            for (int i=0; i< post.getAttachments().size(); i++){
-                if(post.getAttachments().get(i).getType().equals(IMAGE_TYPE)){
-                    loadUrl = post.getAttachments().get(i).getUrl();
-                }
+            llProgress.setVisibility(View.VISIBLE);
+            progressLoading.setVisibility(View.VISIBLE);
+
+            llPostImage.setVisibility(View.GONE);
+            llError.setVisibility(View.GONE);
+            llExplanation.setVisibility(View.GONE);
+            imgVideoIcon.setVisibility(View.GONE);
+            imgGridMore.setVisibility(View.GONE);
+
+            if(post.getAttachments().size() > 1){
+                imgGridMore.setVisibility(View.VISIBLE);
             }
 
-            if(loadUrl.equals("empty")){
-                for (int i=0; i< post.getAttachments().size(); i++){
-                    if(post.getAttachments().get(i).getType().equals(VIDEO_TYPE)){
+            //varsa video ThumbNail
+            if (!sourceFound) {
+                for (int i = 0; i < post.getAttachments().size(); i++) {
+                    if (post.getAttachments().get(i).getType().equals(VIDEO_TYPE)) {
                         loadUrl = post.getAttachments().get(i).getThumbnail();
+                        sourceFound = true;
+                        imgVideoIcon.setVisibility(View.VISIBLE);
                     }
                 }
             }
-
-            if(loadUrl.equals("empty")){
-                loadUrl = "https://i.hizliresim.com/zMzaWB.png";
+            //varsa image
+            if (!sourceFound) {
+                for (int i = 0; i < post.getAttachments().size(); i++) {
+                    if (post.getAttachments().get(i).getType().equals(IMAGE_TYPE)) {
+                        loadUrl = post.getAttachments().get(i).getUrl();
+                        sourceFound = true;
+                    }
+                }
             }
+            //varsa post açıklaması
+            if (!sourceFound) {
+                setGridBackgroundColor();
+                if (post.getMessage() != null && !post.getMessage().isEmpty()) {
+                    llExplanation.setVisibility(View.VISIBLE);
+                    llProgress.setVisibility(View.GONE);
+                    progressLoading.setVisibility(View.GONE);
+                    llPostImage.setVisibility(View.GONE);
+                    llError.setVisibility(View.GONE);
 
-            //Load image
-            Glide.with(mContext)
-                    .load(loadUrl)
-                    .listener(new RequestListener<Drawable>() {
-                        @Override
-                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                            llError.setVisibility(View.VISIBLE);
-                            CommonUtils.showToast(mContext, "Retry");
-                            return false;
-                        }
+                    txtExplanation.setText(post.getMessage());
+                }
+            } else {
+                llProgress.setVisibility(View.VISIBLE);
+                progressLoading.setVisibility(View.VISIBLE);
+                llPostImage.setVisibility(View.VISIBLE);
+                llExplanation.setVisibility(View.GONE);
+                llError.setVisibility(View.GONE);
 
-                        @Override
-                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                            progressLoading.setVisibility(View.GONE);
-                            llProgress.setVisibility(View.GONE);
-                            llError.setVisibility(View.GONE);
-                            return false;
-                        }
-                    })
-                    .apply(RequestOptions.centerCropTransform())
-                    .into(imgPost);
+                Glide.with(mContext)
+                        .load(loadUrl)
+                        .listener(new RequestListener<Drawable>() {
+                            @Override
+                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                                llError.setVisibility(View.VISIBLE);
+                                llProgress.setVisibility(View.GONE);
+                                progressLoading.setVisibility(View.GONE);
+                                CommonUtils.showToast(mContext, "Retry");
+                                return false;
+                            }
 
+                            @Override
+                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                                llPostImage.setVisibility(View.VISIBLE);
+                                progressLoading.setVisibility(View.GONE);
+                                llProgress.setVisibility(View.GONE);
+                                return false;
+                            }
+                        })
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(imgPost);
+            }
+        }
 
+        private void setGridBackgroundColor() {
+            int colorCode = getRandomColor();
+            llExplanation.setBackgroundColor(mContext.getResources().getColor(colorCode, null));
         }
 
 
     }
+
+    private int getRandomColor() {
+
+        Resources resources = mContext.getResources();
+
+        int colorList[] = {
+                R.color.green,
+                R.color.green,
+                R.color.PeachPuff,
+                R.color.Gold,
+                R.color.Pink,
+                R.color.LightPink,
+                R.color.Orange,
+                R.color.LightSalmon,
+                R.color.DarkOrange,
+                R.color.Coral,
+                R.color.HotPink,
+                R.color.Tomato,
+                R.color.OrangeRed,
+                R.color.DeepPink,
+                R.color.Fuchsia,
+                R.color.Magenta,
+                R.color.LightCoral,
+                R.color.PaleGoldenrod,
+                R.color.Violet,
+                R.color.DarkSalmon,
+                R.color.Lavender,
+                R.color.Yellow,
+                R.color.LightBlue,
+                R.color.DarkGray,
+                R.color.Brown,
+                R.color.Sienna,
+                R.color.Yellow,
+                R.color.DarkOrchid,
+                R.color.PaleGreen,
+                R.color.DarkViolet
+        };
+
+        Random rand = new Random();
+        return colorList[rand.nextInt(colorList.length)];
+    }
+
 
     @Override
     public int getItemCount() {
