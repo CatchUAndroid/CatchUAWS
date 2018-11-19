@@ -62,10 +62,9 @@ public class PaintView extends View {
     }
 
     public void init(int width,int height , Bitmap bitmap) {
-        Bitmap xx = BitmapConversion.getResizedBitmap(bitmap, width, height);
+        Bitmap tempBitmap = BitmapConversion.getResizedBitmap(bitmap, width, height);
 
-        //Bitmap xx = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Bitmap mutableBitmap = xx.copy(Bitmap.Config.ARGB_8888, true);
+        Bitmap mutableBitmap = tempBitmap.copy(Bitmap.Config.ARGB_8888, true);
         mBitmap = mutableBitmap;
         mCanvas = new Canvas(mBitmap);
 

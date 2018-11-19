@@ -75,7 +75,6 @@
         </provider>
 
         <activity android:name=".LoginPackage.LoginActivity" />
-        <activity android:name=".MainPackage.MainFragments.Profile.SettingsManagement.Models.DrawActivity" />
         <activity android:name=".LoginPackage.RegisterActivity" />
         <activity android:name=".LoginPackage.ForgetPasswordActivity" />
         <!--
