@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -42,7 +41,6 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.UgurDeneme.FirebaseMLActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,7 +48,6 @@ import butterknife.ButterKnife;
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
-import static com.uren.catchu.Permissions.PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE;
 
 @SuppressLint("ValidFragment")
 public class AddGroupFragment extends BaseFragment {
