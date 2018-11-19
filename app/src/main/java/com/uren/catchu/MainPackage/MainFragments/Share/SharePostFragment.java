@@ -81,6 +81,7 @@ import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.math.BigDecimal;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendList;
@@ -226,6 +227,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onStart() {
         NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        if (getContext() != null)
+            CommonUtils.hideKeyBoard(getContext());
         super.onStart();
     }
 
@@ -239,7 +242,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        if(view == null) {
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_share_post, container, false);
             ButterKnife.bind(this, view);
             initializeItems();
@@ -341,10 +344,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void setShapes() {
-        cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Red, null),
+        cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                getResources().getColor(R.color.DarkYellow, null), GradientDrawable.RECTANGLE, 15, 6));
+
+        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DarkYellow, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
-        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumSeaGreen, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+
         showMapImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
                 getResources().getColor(R.color.Red, null), GradientDrawable.OVAL, 20, 3));
     }
@@ -405,6 +410,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     clearTextSelectImgvFilled();
                     ShareItems.getInstance().getPost().setMessage("");
                 }
+            }
+        });
+
+        shareMsgEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                System.out.println("hasFocus:" + hasFocus);
             }
         });
 
@@ -1046,6 +1058,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         startVideoViewFragment();
     }
 
+    public void addVideoShareItemList() {
+        ShareItems.getInstance().clearVideoShareItemBox();
+        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
+        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
+    }
+
     public void startVideoViewFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri()), ANIMATE_RIGHT_TO_LEFT);
@@ -1083,12 +1101,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
         ShareItems.getInstance().clearImageShareItemBox();
         ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
-    }
-
-    public void addVideoShareItemList() {
-        ShareItems.getInstance().clearVideoShareItemBox();
-        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
-        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
 
     private void initLocationTracker() {

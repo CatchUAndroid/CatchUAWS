@@ -92,7 +92,6 @@
 
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.ImageActivity" />
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.VideoActivity" />
-        <activity android:name=".MainPackage.MainFragments.Profile.SettingsManagement.Models.Main2Activity"></activity>
     </application>
 
 </manifest>

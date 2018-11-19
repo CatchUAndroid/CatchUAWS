@@ -272,8 +272,6 @@ public class NotifyProblemFragment extends BaseFragment {
             if (problemNotifyModel.getImageView() == chosenImgv) {
                 if (problemNotifyModel.getPhotoSelectUtil() != null) {
 
-                    //startActivity(new Intent(getContext(), Main2Activity.class));
-
                     if (mFragmentNavigation != null) {
                         mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil(), new ReturnCallback() {
                                     @Override

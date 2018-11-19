@@ -161,7 +161,7 @@
                                 android:id="@+id/textSelectImgv"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_marginLeft="10dp"
+                                android:layout_marginLeft="5dp"
                                 android:padding="10dp"
                                 android:src="@mipmap/icon_share_text" />
 
@@ -392,8 +392,9 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:text="@string/cancel"
-                        android:textColor="@color/White"
-                        android:textSize="10sp" />
+                        android:textColor="@color/DarkYellow"
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
 
                     <Button
                         android:id="@+id/shareButton"
@@ -404,7 +405,8 @@
                         android:layout_weight="1"
                         android:text="@string/share"
                         android:textColor="@color/White"
-                        android:textSize="10sp" />
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
@@ -412,7 +414,7 @@
                 <RelativeLayout
                     android:id="@+id/mapLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="150dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:animateLayoutChanges="true"

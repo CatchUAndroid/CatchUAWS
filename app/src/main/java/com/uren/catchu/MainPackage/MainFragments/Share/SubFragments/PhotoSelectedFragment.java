@@ -43,6 +43,8 @@ public class PhotoSelectedFragment extends BaseFragment {
     ImageView selectedImageView;
     @BindView(R.id.addTextImgv)
     ImageView addTextImgv;
+    @BindView(R.id.brushImgv)
+    ImageView brushImgv;
     @BindView(R.id.textView)
     TextView textView;
     @BindView(R.id.seekbar)
@@ -94,7 +96,9 @@ public class PhotoSelectedFragment extends BaseFragment {
     private void setShapes() {
         finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
-        addTextImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+        addTextImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
+        brushImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
     }
 

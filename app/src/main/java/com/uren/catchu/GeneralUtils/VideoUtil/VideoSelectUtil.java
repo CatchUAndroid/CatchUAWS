@@ -40,17 +40,11 @@ public class VideoSelectUtil {
                 onSelectFromGalleryResult();
                 break;
             default:
-                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.videoSelectTypeUnknown), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                    }
-                });
                 break;
         }
     }
 
     public void onSelectFromCameraResult() {
-        //setBitmapFromUriForVideo();
         try {
             videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
             setBitmapFromUriForVideo();

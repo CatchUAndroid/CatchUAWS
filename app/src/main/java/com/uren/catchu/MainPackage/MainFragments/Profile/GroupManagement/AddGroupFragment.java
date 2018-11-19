@@ -97,7 +97,7 @@ public class AddGroupFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.activity_add_group, container, false);
+        mView = inflater.inflate(R.layout.fragment_add_group, container, false);
         ButterKnife.bind(this, mView);
         return mView;
     }

@@ -38,10 +38,7 @@ public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener
         mRootView.getWindowVisibleDisplayFrame(r);
 
         int heightDiff = mRootView.getRootView().getHeight() - (r.bottom - r.top);
-        System.out.println("r.bottom:" + r.bottom + "       r.top:" +  r.top);
-        System.out.println("heightDiff:" + heightDiff );
         float dp = heightDiff/ mScreenDensity;
-        System.out.println("dp:" + dp );
         boolean isVisible = dp > MAGIC_NUMBER;
 
         if (mCallback != null && (prevValue == null || isVisible != prevValue)) {
