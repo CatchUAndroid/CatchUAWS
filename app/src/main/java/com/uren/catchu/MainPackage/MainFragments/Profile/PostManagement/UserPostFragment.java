@@ -1,57 +1,42 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.PostLikeListProcess;
-import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.ProfilePostPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostPagerAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.User;
-import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
-import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CATCHED;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
 
 
-public class ProfilePostFragment extends BaseFragment
+public class UserPostFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    ProfilePostPagerAdapter profilePostPagerAdapter;
+    String catchType, toolbarTitle;
+    UserPostPagerAdapter userPostPagerAdapter;
     ImageView imgViewGrid, imgViewList;
     TextView txtViewGrid, txtViewList;
     TabItem tabGridView, tabListView;
+
 
     @BindView(R.id.commonToolbarbackImgv)
     ImageView commonToolbarbackImgv;
@@ -62,9 +47,10 @@ public class ProfilePostFragment extends BaseFragment
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    public static ProfilePostFragment newInstance() {
+    public static UserPostFragment newInstance(String catchType) {
         Bundle args = new Bundle();
-        ProfilePostFragment fragment = new ProfilePostFragment();
+        args.putString("catchType", catchType);
+        UserPostFragment fragment = new UserPostFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,19 +69,39 @@ public class ProfilePostFragment extends BaseFragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.profile_post_fragment, container, false);
             ButterKnife.bind(this, mView);
+            getItemsFromBundle();
 
-            initItems();
-            setUpPager();
-            initListeners();
+            if(catchType != null){
+                initItems();
+                initListeners();
+                setUpPager();
+            }
+
         }
 
 
         return mView;
     }
 
+    private void getItemsFromBundle() {
+        Bundle args = getArguments();
+        if (args != null) {
+            catchType = (String) args.getString("catchType");
+
+            if(catchType.equals(PROFILE_POST_TYPE_MY_POSTS)){
+                toolbarTitle = getContext().getResources().getString(R.string.myPosts);
+            }else if(catchType.equals(PROFILE_POST_TYPE_CATCHED)){
+                toolbarTitle = getContext().getResources().getString(R.string.catchedPosts);
+            }else{
+                toolbarTitle = "";
+            }
+
+        }
+    }
+
     private void initItems() {
 
-        toolbarTitleTv.setText("My posts");
+        toolbarTitleTv.setText(toolbarTitle);
         tabGridView = (TabItem) mView.findViewById(R.id.tabGridView);
         tabListView = (TabItem) mView.findViewById(R.id.tabListView);
     }
@@ -106,8 +112,8 @@ public class ProfilePostFragment extends BaseFragment
 
     private void setUpPager() {
 
-        profilePostPagerAdapter = new ProfilePostPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(profilePostPagerAdapter);
+        userPostPagerAdapter = new UserPostPagerAdapter(getFragmentManager(), tabLayout.getTabCount(), catchType);
+        viewPager.setAdapter(userPostPagerAdapter);
 
         setCustomTab();
         setTabListener();
@@ -151,17 +157,6 @@ public class ProfilePostFragment extends BaseFragment
                     txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
                     txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
-                    /*
-                    toolbar.setBackgroundColor(ContextCompat.getColor(getContext(),
-                            R.color.colorAccent));
-                    tabLayout.setBackgroundColor(ContextCompat.getColor(getContext(),
-                            R.color.colorAccent));
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(),
-                                R.color.colorAccent));
-                    }
-                    */
                 } else if (tab.getPosition() == 1) {
                     imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                     imgViewList.setColorFilter(ContextCompat.getColor(getContext(), R.color.Red), android.graphics.PorterDuff.Mode.SRC_IN);

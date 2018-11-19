@@ -254,5 +254,7 @@
     <string name="feedTypeCatched">Catched</string>
     <string name="feedViewTypeGrid">Izgara</string>
     <string name="feedViewTypeList">Liste</string>
+    <string name="myPosts">Paylaşımlarım</string>
+    <string name="catchedPosts">Yakaladığım paylaşımlar</string>
 
 </resources>

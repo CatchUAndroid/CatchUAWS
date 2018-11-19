@@ -34,7 +34,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.ProfilePostFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ExplorePeopleFragment;
@@ -55,6 +55,8 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CATCHED;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
 
 public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
@@ -458,15 +460,15 @@ public class ProfileFragment extends BaseFragment
         }
 
         if (v == llMyPosts) {
-            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_MY_POSTS), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llCatchedPosts) {
-            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CATCHED), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llMyGroups) {
-            mFragmentNavigation.pushFragment(ProfilePostFragment.newInstance(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(""), ANIMATE_RIGHT_TO_LEFT);
         }
 
 

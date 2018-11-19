@@ -50,4 +50,8 @@ public class NumericConstants {
 
     //Share
     public static final int REQUEST_CODE_ENABLE_LOCATION = 3003;
+
+    //User posts gridView pagination
+    public static final int DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT = 1;
+    public static final int DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT =30; // EN AZ 4 OLMALI.
 }
