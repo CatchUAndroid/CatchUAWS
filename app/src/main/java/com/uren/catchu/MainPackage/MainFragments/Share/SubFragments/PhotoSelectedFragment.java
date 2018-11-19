@@ -228,6 +228,8 @@ public class PhotoSelectedFragment extends BaseFragment {
         addPropRelLayout.setVisibility(View.GONE);
         trashLayout = getLayoutInflater().inflate(R.layout.text_drag_layout, addPropRelLayout, false);
         ImageView trashImgv = trashLayout.findViewById(R.id.trashImgv);
+        trashImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3));
         photoRelLayout.addView(trashLayout);
         trashImgv.setOnDragListener(new TrashDragListener(new TrashDragDropCallback() {
             @Override
