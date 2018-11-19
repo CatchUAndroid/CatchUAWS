@@ -179,15 +179,6 @@ public class ShareFragment extends BaseFragment {
                 //VideoFileListForDelete.getInstance().deleteAllFile();
                 /*galleryPickerFrag.checkTextIsAddedOrNot();*/
 
-                if (mFragmentNavigation != null) {
-                    mFragmentNavigation.pushFragment(new ShareDetailFragment(new ReturnCallback() {
-                        @Override
-                        public void onReturn(Object object) {
-                            galleryPickerFrag.updateAfterShare();
-                            getActivity().onBackPressed();
-                        }
-                    }), ANIMATE_RIGHT_TO_LEFT);
-                }
             }
         });
 

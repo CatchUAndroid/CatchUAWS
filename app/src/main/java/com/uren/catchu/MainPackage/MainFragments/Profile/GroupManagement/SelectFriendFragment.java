@@ -33,7 +33,7 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareDetailFragment;
+import com.uren.catchu.SharePackage.SharePostFragment;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;
@@ -277,7 +277,7 @@ public class SelectFriendFragment extends BaseFragment{
         if (pendingName != null) {
             if (pendingName.equals(ViewGroupDetailFragment.class.getName())) {
                 startAddParticipantToGroup();
-            }else if(pendingName.equals(ShareDetailFragment.class.getName())){
+            }else if(pendingName.equals(SharePostFragment.class.getName())){
                 getActivity().onBackPressed();
                 returnCallback.onReturn(null);
             } else if (pendingName.equals(GroupManagementFragment.class.getName())) {

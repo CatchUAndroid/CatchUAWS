@@ -56,7 +56,6 @@ public class SharePostProcess {
     int imageCount = 0;
     int videoCount = 0;
     int totalMediaCount = 0;
-    //int uploadIndex = 0;
     PostRequest postRequest;
 
     public SharePostProcess(Context context, ServiceCompleteCallback serviceCompleteCallback) {
@@ -128,16 +127,16 @@ public class SharePostProcess {
     public void uploadImages(final BucketUpload bucketUpload, final ImageShareItemBox imageShareItemBox) {
         Bitmap photoBitmap = null;
 
-        if(imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null){
-            if(imageShareItemBox.getPhotoSelectUtil().getResizedBitmap() != null)
+        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
+            if (imageShareItemBox.getPhotoSelectUtil().getResizedBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getResizedBitmap();
-            else if(imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
+            else if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap();
-            else if(imageShareItemBox.getPhotoSelectUtil().getBitmap() != null)
+            else if (imageShareItemBox.getPhotoSelectUtil().getBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getBitmap();
         }
 
-        if(photoBitmap == null)
+        if (photoBitmap == null)
             return;
 
         UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
@@ -146,7 +145,7 @@ public class SharePostProcess {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
 
                 try {
-                    if(urlConnection != null) {
+                    if (urlConnection != null) {
                         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                             imageShareItemBox.setUploaded(true);
                             Media media = new Media();
@@ -161,7 +160,7 @@ public class SharePostProcess {
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
                         }
-                    }else {
+                    } else {
                         imageShareItemBox.setUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
                     }
@@ -191,7 +190,7 @@ public class SharePostProcess {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
 
                 try {
-                    if(urlConnection != null) {
+                    if (urlConnection != null) {
                         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                             videoShareItemBox.setVideoUploaded(true);
                             Media media = new Media();
@@ -206,7 +205,7 @@ public class SharePostProcess {
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
                         }
-                    }else {
+                    } else {
                         videoShareItemBox.setVideoUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
                     }
@@ -236,7 +235,7 @@ public class SharePostProcess {
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
                 try {
-                    if(urlConnection != null) {
+                    if (urlConnection != null) {
                         if (urlConnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                             videoShareItemBox.setThumbnailImgUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
@@ -245,7 +244,7 @@ public class SharePostProcess {
                             videoShareItemBox.setThumbnailImgUploaded(true);
                             checkAllItemsUploaded();
                         }
-                    }else {
+                    } else {
                         videoShareItemBox.setThumbnailImgUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
                     }
@@ -293,14 +292,14 @@ public class SharePostProcess {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                checkPrivacyType(token);
+                startSaveShareItemsToNeoJ(token);
             }
         });
     }
 
     private List<User> getParticipantList() {
         List<User> userList = new ArrayList<>();
-        if (ShareItems.getInstance().getSelectedShareType() == CODE_FRIEND_SHARED) {
+        if (ShareItems.getInstance().getSelectedShareType() == SHARE_TYPE_CUSTOM) {
             for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
                 User user = new User();
                 user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
@@ -312,46 +311,21 @@ public class SharePostProcess {
         return userList;
     }
 
-    private void checkPrivacyType(final String token) {
-        if (ShareItems.getInstance().getSelectedShareType() == CODE_PUBLIC_SHARED)
-            saveToNeo(token, SHARE_TYPE_EVERYONE);
-        else if (ShareItems.getInstance().getSelectedShareType() == CODE_FRIEND_SHARED) {
-
-            AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    if (object != null) {
-                        FriendList friendList = (FriendList) object;
-                        if (friendList != null && friendList.getResultArray() != null) {
-                            if (friendList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
-                                saveToNeo(token, SHARE_TYPE_ALL_FOLLOWERS);
-                        } else
-                            saveToNeo(token, SHARE_TYPE_CUSTOM);
-                    }
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-                    serviceCompleteCallback.onFailed(e);
-                }
-            });
-        } else if (ShareItems.getInstance().getSelectedShareType() == CODE_JUSTME_SHARED)
-            saveToNeo(token, SHARE_TYPE_SELF);
-        else if (ShareItems.getInstance().getSelectedShareType() == CODE_GROUP_SHARED)
-            saveToNeo(token, SHARE_TYPE_GROUP);
-    }
-
-    private void saveToNeo(String token, String postPrivacyType) {
+    private void startSaveShareItemsToNeoJ(String token) {
         postRequest = new PostRequest();
-        ShareItems.getInstance().getPost().setPrivacyType(postPrivacyType);
+        ShareItems.getInstance().getPost().setPrivacyType(ShareItems.getInstance().getSelectedShareType());
         ShareItems.getInstance().getPost().setAllowList(getParticipantList());
-        ShareItems.getInstance().getPost().setGroupid(getGroupId());
+        ShareItems.getInstance().getPost().setGroupid(ShareItems.getInstance().getSelectedGroup().getGroupid());
+        setShareItemUser();
         postRequest.setPost(ShareItems.getInstance().getPost());
 
         PostRequestProcess postRequestProcess = new PostRequestProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                serviceCompleteCallback.onSuccess();
+                if (object != null)
+                    serviceCompleteCallback.onSuccess();
+                else
+                    serviceCompleteCallback.onFailed(new Exception(context.getResources().getString(R.string.serverError)));
             }
 
             @Override
@@ -367,10 +341,11 @@ public class SharePostProcess {
         postRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private String getGroupId() {
-        if (SelectedGroupList.getInstance() != null && SelectedGroupList.getInstance().getSize() > 0) {
-            return SelectedGroupList.getInstance().getGroupRequestResult().getResultArray().get(0).getGroupid();
-        } else
-            return "";
+    private void setShareItemUser() {
+        User user = new User();
+        user.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+        user.setUserid(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
+        user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
+        ShareItems.getInstance().getPost().setUser(user);
     }
 }

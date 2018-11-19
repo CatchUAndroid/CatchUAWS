@@ -29,10 +29,11 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.ShareFragment;
 import com.uren.catchu.SharePackage.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
+
+import java.util.Stack;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,7 +46,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
         FragNavController.TransactionListener,
-        FragNavController.RootFragmentListener{
+        FragNavController.RootFragmentListener {
 
     private Context context;
 
@@ -74,6 +75,7 @@ public class NextActivity extends AppCompatActivity implements
     private static FragNavController mNavController;
 
     public static NotifyProblemFragment notifyProblemFragment;
+    public SharePostFragment sharePostFragment;
 
     private FragmentHistory fragmentHistory;
 
@@ -119,11 +121,17 @@ public class NextActivity extends AppCompatActivity implements
         fillAccountHolder();
     }
 
-    public void tabSelectionControl(TabLayout.Tab tab){
-        if(tab.getPosition() != FragNavController.TAB2) {
+    public void tabSelectionControl(TabLayout.Tab tab) {
+        if (tab.getPosition() != FragNavController.TAB2) {
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
-        }else if(!checkShareProceeding()){
+        } else if (!checkShareProceeding()) {
+
+            sharePostFragment = new SharePostFragment();
+            Stack<Fragment> fragmentStack = new Stack<>();
+            fragmentStack.add(sharePostFragment);
+            mNavController.setRootFragment(fragmentStack, FragNavController.TAB2);
+
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
         }
@@ -158,7 +166,7 @@ public class NextActivity extends AppCompatActivity implements
         initTab();
     }
 
-    public void setShapes(){
+    public void setShapes() {
         screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Tomato, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
         screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LightGreen, null),
@@ -365,7 +373,8 @@ public class NextActivity extends AppCompatActivity implements
             case FragNavController.TAB1:
                 return new FeedFragment();
             case FragNavController.TAB2:
-                return new SharePostFragment();
+                sharePostFragment = new SharePostFragment();
+                return sharePostFragment;
             case FragNavController.TAB3:
                 return new ProfileFragment();
 
@@ -387,7 +396,6 @@ public class NextActivity extends AppCompatActivity implements
 
         getSupportActionBar().setTitle(title);
     }
-
 
 
 }

@@ -94,10 +94,10 @@ public class PendingRequestsFragment extends BaseFragment {
             public void onComplete(Object object) {
                 FriendRequestList friendRequestList = (FriendRequestList) object;
 
-                MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
-                        getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
-
                 if(getContext() != null) {
+                    MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
+                            getContext().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+
                     pendingRequestAdapter = new PendingRequestAdapter(getContext(), friendRequestList, new ListItemClickListener() {
                         @Override
                         public void onClick(View view, User user, int clickedPosition) {

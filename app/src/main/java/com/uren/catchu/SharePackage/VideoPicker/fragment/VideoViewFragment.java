@@ -19,6 +19,7 @@ import android.widget.VideoView;
 
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
 import com.uren.catchu.Singleton.Share.ShareItems;
@@ -29,22 +30,20 @@ import catchu.model.Media;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 @SuppressLint("ValidFragment")
-public class VideoViewFragment extends Fragment {
+public class VideoViewFragment extends BaseFragment {
 
     ImageView cancelImageView;
     ImageView playVideoImgv;
     private View mView;
     private Uri videoUri;
     private VideoView videoView;
-    Intent data;
     MediaPlayer mediaPlayer;
     boolean mediaPlayerPlayFinished = false;
     int mediaPlayerTotalLen;
     boolean mediaPlayerIsPlaying = false;
 
-    @SuppressLint("ValidFragment")
-    public VideoViewFragment(Intent data) {
-        this.data = data;
+    public VideoViewFragment(Uri videoUri) {
+        this.videoUri = videoUri;
     }
 
     @Override
@@ -124,8 +123,6 @@ public class VideoViewFragment extends Fragment {
     }
 
     public void manageVideoFromGallery() {
-        videoUri = data.getData();
-        addVideoShareItemList();
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();
@@ -157,12 +154,5 @@ public class VideoViewFragment extends Fragment {
                 });
             }
         });
-    }
-
-    public void addVideoShareItemList(){
-        ShareItems.getInstance().clearVideoShareItemBox();
-        VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), videoUri, null, GALLERY_TEXT);
-        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
-        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
 }

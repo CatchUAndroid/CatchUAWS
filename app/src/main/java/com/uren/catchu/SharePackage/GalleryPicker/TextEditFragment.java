@@ -3,6 +3,7 @@ package com.uren.catchu.SharePackage.GalleryPicker;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.R;
@@ -78,7 +80,7 @@ public class TextEditFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.text_edit_frag_layout, container, false);
+        mView = inflater.inflate(R.layout.fragment_photo_text_edit, container, false);
         ButterKnife.bind(this, mView);
         return mView;
     }
@@ -89,19 +91,31 @@ public class TextEditFragment extends BaseFragment {
         colorPalettePrepare();
         focusEditText();
         addListeners();
+        setShapes();
+    }
+
+    private void setShapes() {
+        finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
     }
 
     public void setSelectedPhoto(){
-        Glide.with(getContext())
-                .load(photoSelectUtil.getMediaUri())
-                .into(selectedImageView);
+        if(photoSelectUtil != null){
+            if(photoSelectUtil.getScreeanShotBitmap() != null)
+                Glide.with(getContext())
+                        .load(photoSelectUtil.getScreeanShotBitmap())
+                        .into(selectedImageView);
+            else if(photoSelectUtil.getMediaUri() != null)
+                Glide.with(getContext())
+                        .load(photoSelectUtil.getMediaUri())
+                        .into(selectedImageView);
+        }
     }
 
     private void addListeners() {
         finishButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //finishButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 textCompleteCallback.textCompleted(editText);
                 getActivity().onBackPressed();
             }

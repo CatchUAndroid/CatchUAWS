@@ -10,7 +10,7 @@ import catchu.model.UserProfileProperties;
 
 public class SelectedGroupList {
 
-    private static SelectedGroupList instance = null;
+    /*private static SelectedGroupList instance = null;
     private static GroupRequestResult groupRequestResult;
 
     public static SelectedGroupList getInstance(){
@@ -42,5 +42,5 @@ public class SelectedGroupList {
 
     public void setGroupRequestResultList(List<GroupRequestResultResultArrayItem> itemList){
         groupRequestResult.setResultArray(itemList);
-    }
+    }*/
 }

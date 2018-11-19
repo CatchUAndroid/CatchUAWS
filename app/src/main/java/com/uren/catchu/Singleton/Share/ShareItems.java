@@ -10,39 +10,42 @@ import java.util.List;
 
 import catchu.model.BucketUploadResponse;
 import catchu.model.Comment;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.User;
 
-public class ShareItems{
+public class ShareItems {
 
     static ShareItems shareItemsInstance = null;
     Post post;
     List<ImageShareItemBox> imageShareItemBoxes;
     List<VideoShareItemBox> videoShareItemBoxes;
     Bitmap textBitmap;
-    int selectedShareType;
+    String selectedShareType;
     int shareTryCount = 0;
     BucketUploadResponse bucketUploadResponse;
+    GroupRequestResultResultArrayItem selectedGroup;
     boolean shareStartedValue;
 
-    public static ShareItems getInstance(){
-        if(shareItemsInstance == null) {
+    public static ShareItems getInstance() {
+        if (shareItemsInstance == null) {
             shareItemsInstance = new ShareItems();
         }
         return shareItemsInstance;
     }
 
-    public ShareItems(){
+    public ShareItems() {
         imageShareItemBoxes = new ArrayList<ImageShareItemBox>();
         videoShareItemBoxes = new ArrayList<VideoShareItemBox>();
+        selectedGroup = new GroupRequestResultResultArrayItem();
         post = new Post();
         post.setAttachments(new ArrayList<Media>());
         post.setAllowList(new ArrayList<User>());
         post.setComments(new ArrayList<Comment>());
     }
 
-    public static void setInstance(ShareItems shareItems){
+    public static void setInstance(ShareItems shareItems) {
         shareItemsInstance = shareItems;
     }
 
@@ -86,32 +89,40 @@ public class ShareItems{
         this.videoShareItemBoxes = videoShareItemBoxes;
     }
 
-    public void addImageShareItemBox(ImageShareItemBox shareItemBox){
+    public void addImageShareItemBox(ImageShareItemBox shareItemBox) {
         imageShareItemBoxes.add(shareItemBox);
     }
 
-    public void clearImageShareItemBox(){
+    public void clearImageShareItemBox() {
         imageShareItemBoxes.clear();
     }
 
-    public void addVideoShareItemBox(VideoShareItemBox videoShareItemBox){
+    public void addVideoShareItemBox(VideoShareItemBox videoShareItemBox) {
         videoShareItemBoxes.add(videoShareItemBox);
     }
 
-    public void clearVideoShareItemBox(){
+    public void clearVideoShareItemBox() {
         videoShareItemBoxes.clear();
     }
 
-    public int getTotalMediaCount(){
+    public int getTotalMediaCount() {
         return videoShareItemBoxes.size() + imageShareItemBoxes.size();
     }
 
-    public int getSelectedShareType() {
+    public String getSelectedShareType() {
         return selectedShareType;
     }
 
-    public void setSelectedShareType(int selectedShareType) {
+    public void setSelectedShareType(String selectedShareType) {
         this.selectedShareType = selectedShareType;
+    }
+
+    public GroupRequestResultResultArrayItem getSelectedGroup() {
+        return selectedGroup;
+    }
+
+    public void setSelectedGroup(GroupRequestResultResultArrayItem selectedGroup) {
+        this.selectedGroup = selectedGroup;
     }
 
     public int getShareTryCount() {

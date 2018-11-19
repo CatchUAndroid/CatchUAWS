@@ -550,11 +550,11 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
                         }
                     });
         } else {
-            VideoViewFragment nextFrag = new VideoViewFragment(data);
+            /*VideoViewFragment nextFrag = new VideoViewFragment(data);
             getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.videoPickerMainLayout, nextFrag, VideoPickerFrag.class.getName())
                     .addToBackStack(null)
-                    .commit();
+                    .commit();*/
         }
     }
 

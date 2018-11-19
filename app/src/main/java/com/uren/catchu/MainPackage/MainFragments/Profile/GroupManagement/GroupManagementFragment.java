@@ -115,7 +115,7 @@ public class GroupManagementFragment extends BaseFragment {
     }
 
     public void initValues(){
-        SelectedGroupList.setInstance(null);
+        //SelectedGroupList.setInstance(null);
         searchToolbarLayout.setVisibility(View.VISIBLE);
         searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
         setFloatButtonVisibility();
@@ -141,11 +141,11 @@ public class GroupManagementFragment extends BaseFragment {
             public void onClick(View v) {
                 nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 if(operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
-                    if (SelectedGroupList.getInstance().getSize() == 0) {
+                    if (selectedGroupItem == null ) {
                         CommonUtils.showToastLong(getContext(), getResources().getString(R.string.selectLeastOneGroup));
                         return;
                     }
-                    returnCallback.onReturn(null);
+                    returnCallback.onReturn(selectedGroupItem);
                     getActivity().onBackPressed();
                 }
             }
@@ -221,17 +221,14 @@ public class GroupManagementFragment extends BaseFragment {
                     public void onComplete(Object object) {
                         groupRequestResult = (GroupRequestResult) object;
 
-                        MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
-                                getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
-
                         if(getContext() != null) {
+                            MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
+                                    getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+
                             userGroupsListAdapter = new UserGroupsListAdapter(getContext(), groupRequestResult, new ReturnCallback() {
                                 @Override
                                 public void onReturn(Object object) {
-                                    GroupRequestResult groupRequestResult1 = (GroupRequestResult) object;
-
-                                    MessageDataUtil.setWarningMessageVisibility(groupRequestResult1, warningMsgTv,
-                                            getActivity().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+                                    selectedGroupItem = (GroupRequestResultResultArrayItem) object;
                                 }
                             }, new ItemClickListener() {
                                 @Override

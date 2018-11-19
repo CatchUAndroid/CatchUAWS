@@ -11,8 +11,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,20 +24,20 @@ import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForReportCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ColorActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.DrawActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.Main2Activity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ProblemNotifyModel;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.ReportProblem.SaveReportProblemProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,15 +81,12 @@ public class NotifyProblemFragment extends BaseFragment {
     ImageView imgDelete4;
 
     List<ProblemNotifyModel> problemListBox;
+    List<PhotoSelectUtil> photoSelectUtilList = new ArrayList<>();
     PermissionModule permissionModule;
 
-    boolean visibleOk = false;
     ImageView chosenImgv = null;
 
-    View screenShotMainLayout = null;
-
     private static final int CODE_GALLERY_REQUEST = 665;
-    private static final int CODE_CAMERA_REQUEST = 832;
 
     public NotifyProblemFragment() {
 
@@ -155,11 +150,12 @@ public class NotifyProblemFragment extends BaseFragment {
         commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(noteTextEditText != null && noteTextEditText.getText() != null &&
-                        noteTextEditText.getText().toString().isEmpty()){
+                if (noteTextEditText != null && noteTextEditText.getText() != null &&
+                        noteTextEditText.getText().toString().isEmpty()) {
                     CommonUtils.showToast(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
                     return;
                 }
+                saveReport();
             }
         });
 
@@ -409,6 +405,40 @@ public class NotifyProblemFragment extends BaseFragment {
                             .apply(RequestOptions.fitCenterTransform())
                             .into(chosenImgv);
                 break;
+            }
+        }
+    }
+
+    public void saveReport() {
+        setFinalReportBox();
+        DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
+                getResources().getString(R.string.SENDING), 2000, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                        getActivity().onBackPressed();
+                        new SaveReportProblemProcess(photoSelectUtilList,
+                                noteTextEditText.getText().toString(),
+                                AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                                new CompleteCallback() {
+                                    @Override
+                                    public void onComplete(Object object) {
+
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception e) {
+
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private void setFinalReportBox() {
+        for (ProblemNotifyModel problemNotifyModel : problemListBox) {
+            if (problemNotifyModel != null && problemNotifyModel.getPhotoSelectUtil() != null &&
+                    problemNotifyModel.getPhotoSelectUtil().getBitmap() != null) {
+                photoSelectUtilList.add(problemNotifyModel.getPhotoSelectUtil());
             }
         }
     }

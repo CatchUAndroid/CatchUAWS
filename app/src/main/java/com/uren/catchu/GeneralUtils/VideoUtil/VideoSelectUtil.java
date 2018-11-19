@@ -50,18 +50,13 @@ public class VideoSelectUtil {
     }
 
     public void onSelectFromCameraResult() {
-        setBitmapFromUriForVideo();
-        /*try {
+        //setBitmapFromUriForVideo();
+        try {
             videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
             setBitmapFromUriForVideo();
         }catch (Exception e){
-            DialogBoxUtil.showErrorDialog(context, e.getMessage(), new InfoDialogBoxCallback() {
-                @Override
-                public void okClick() {
-
-                }
-            });
-        }*/
+            e.printStackTrace();
+        }
     }
 
     public void onSelectFromGalleryResult() {

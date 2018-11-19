@@ -106,6 +106,9 @@ public class StringConstants {
     //Dynamic Link constants
     public static final String DYNAMIC_LINK_DOMAIN = "f2wrp.app.goo.gl";
 
+    //Report problem constants
+    public static final String REPORT_PROBLEM_TYPE_BUG = "bug";
+
     //Character constants
     public static final String CHAR_AMPERSAND = "@";
 

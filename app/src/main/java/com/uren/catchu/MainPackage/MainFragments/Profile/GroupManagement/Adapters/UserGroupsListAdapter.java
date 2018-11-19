@@ -118,18 +118,9 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                         manageSelectedItem();
                     } else if(operationType.equals(GROUP_OP_VIEW_TYPE)){
                         itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
-                        //showGroupDetail();
                     }
                 }
             });
-
-            /*groupSelectMainLinLay.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    showGroupDetail();
-                    return false;
-                }
-            });*/
 
             selectGroupRb.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -149,58 +140,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
             beforeSelectedPosition = position;
 
-            List<GroupRequestResultResultArrayItem> itemList = new ArrayList<>();
-            itemList.add(groupRequestResultResultArrayItem);
-            SelectedGroupList.getInstance().setGroupRequestResultList(itemList);
-        }
-
-        /*private void showGroupDetail() {
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
-            adapter.add(context.getResources().getString(R.string.groupInformation));
-            adapter.add(context.getResources().getString(R.string.exitFromGroup));
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(groupRequestResultResultArrayItem.getName());
-
-            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int item) {
-
-                    if (item == SHOW_GROUP_DETAIL) {
-
-                        itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
-
-                    } else if (item == EXIT_FROM_GROUP) {
-
-                        exitFromGroup();
-
-                    } else {
-                        CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
-                                context.getResources().getString(R.string.technicalError));
-                    }
-                }
-            });
-
-            AlertDialog alert = builder.create();
-            alert.show();
-        }*/
-
-        public void exitFromGroup() {
-
-            UserGroupsProcess.exitFromGroup(AccountHolderInfo.getUserID(), groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    groupRequestResult.getResultArray().remove(groupRequestResultResultArrayItem);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, getItemCount());
-                    returnCallback.onReturn(groupRequestResult);
-                }
-
-                @Override
-                public void onFailed(Exception e) {
-
-                }
-            });
+            returnCallback.onReturn(groupRequestResultResultArrayItem);
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {

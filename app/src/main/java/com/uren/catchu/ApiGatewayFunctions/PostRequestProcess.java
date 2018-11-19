@@ -4,8 +4,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+
 import catchu.model.PostRequest;
 import catchu.model.PostResponse;
+
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
 public class PostRequestProcess extends AsyncTask<Void, Void, PostResponse> {
 
@@ -26,8 +29,13 @@ public class PostRequestProcess extends AsyncTask<Void, Void, PostResponse> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            PostResponse postResponse = (PostResponse) instance.client.postsPostidPost(" ", token, postRequest);
-            return postResponse;
+            PostResponse postResponse = instance.client.postsPostidPost(" ", token, postRequest);
+
+            if (postResponse.getError().getCode().intValue() == RESPONSE_OK) {
+                return postResponse;
+            } else {
+                return null;
+            }
 
         } catch (Exception e) {
             mException = e;

@@ -6,6 +6,9 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseResponse;
 import catchu.model.BucketUploadResponse;
+import catchu.model.Report;
+
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
 public class ReportProblemProcess extends AsyncTask<Void, Void, BaseResponse> {
 
@@ -13,13 +16,15 @@ public class ReportProblemProcess extends AsyncTask<Void, Void, BaseResponse> {
     Exception mException;
     String token;
     String userid;
-    BucketUploadResponse bucketUploadResponse ;
+    Report report;
+    String relatedId;
 
-    public ReportProblemProcess(OnEventListener callback,String userid, String token, BucketUploadResponse bucketUploadResponse) {
+    public ReportProblemProcess(OnEventListener callback, String userid, String token, Report report, String relatedId) {
         this.mCallBack = callback;
         this.token = token;
         this.userid = userid;
-        this.bucketUploadResponse = bucketUploadResponse;
+        this.report = report;
+        this.relatedId = relatedId;
     }
 
     @Override
@@ -27,11 +32,13 @@ public class ReportProblemProcess extends AsyncTask<Void, Void, BaseResponse> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
+            BaseResponse baseResponse = instance.client.commonReportPost(userid, token, report, relatedId);
 
-            //BaseResponse baseResponse = instance.client.dsdssd(userid, token, bucketUploadResponse);
-            //return baseResponse;
-
-            return null;
+            if (baseResponse.getError().getCode().intValue() == RESPONSE_OK) {
+                return baseResponse;
+            } else {
+                return null;
+            }
 
         } catch (Exception e) {
             mException = e;

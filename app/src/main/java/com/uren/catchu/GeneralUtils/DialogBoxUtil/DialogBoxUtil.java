@@ -14,8 +14,11 @@ import com.uren.catchu.R;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_EDIT;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
+import static com.uren.catchu.Constants.NumericConstants.CODE_PLAY_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.CODE_SCREENSHOT_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_VIDEO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
 
 public class DialogBoxUtil {
@@ -26,7 +29,7 @@ public class DialogBoxUtil {
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.openCamera));
 
-        if(photoExist)
+        if (photoExist)
             adapter.add("  " + context.getResources().getString(R.string.REMOVE_PHOTO));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -39,7 +42,7 @@ public class DialogBoxUtil {
                     photoChosenCallback.onGallerySelected();
                 else if (item == CODE_CAMERA_POSITION)
                     photoChosenCallback.onCameraSelected();
-                else if (item == CODE_PHOTO_REMOVE){
+                else if (item == CODE_PHOTO_REMOVE) {
                     photoChosenCallback.onPhotoRemoved();
                 }
             }
@@ -70,7 +73,67 @@ public class DialogBoxUtil {
         alert.show();
     }
 
-    public static void showErrorDialog(Context context, String errMessage, final InfoDialogBoxCallback infoDialogBoxCallback){
+    public static void photoChosenForShareDialogBox(Context context, boolean photoExist, final PhotoChosenForShareCallback callback) {
+        CommonUtils.hideKeyBoard(context);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        adapter.add("  " + context.getResources().getString(R.string.openGallery));
+        adapter.add("  " + context.getResources().getString(R.string.openCamera));
+
+        if (photoExist) {
+            adapter.add("  " + context.getResources().getString(R.string.REMOVE_PHOTO));
+            adapter.add("  " + context.getResources().getString(R.string.EDIT));
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == CODE_GALLERY_POSITION)
+                    callback.onGallerySelected();
+                else if (item == CODE_CAMERA_POSITION)
+                    callback.onCameraSelected();
+                else if (item == CODE_PHOTO_REMOVE) {
+                    callback.onPhotoRemoved();
+                } else if (item == CODE_PHOTO_EDIT) {
+                    callback.onEditted();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void videoChosenForShareDialogBox(Context context, boolean videoExist, final VideoChosenForShareCallback callback) {
+        CommonUtils.hideKeyBoard(context);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        adapter.add("  " + context.getResources().getString(R.string.openGallery));
+        adapter.add("  " + context.getResources().getString(R.string.openCamera));
+
+        if (videoExist) {
+            adapter.add("  " + context.getResources().getString(R.string.REMOVE_VIDEO));
+            adapter.add("  " + context.getResources().getString(R.string.PLAY));
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == CODE_GALLERY_POSITION)
+                    callback.onGallerySelected();
+                else if (item == CODE_CAMERA_POSITION)
+                    callback.onCameraSelected();
+                else if (item == CODE_VIDEO_REMOVE) {
+                    callback.onVideoRemoved();
+                } else if (item == CODE_PLAY_VIDEO) {
+                    callback.onPlayed();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void showErrorDialog(Context context, String errMessage, final InfoDialogBoxCallback infoDialogBoxCallback) {
         CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(context.getResources().getString(R.string.errorUpper));
@@ -89,13 +152,13 @@ public class DialogBoxUtil {
         alert.show();
     }
 
-    public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
+    public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback) {
         CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(context.getResources().getDrawable(R.drawable.info_icon_512, null));
         builder.setMessage(message);
 
-        if(title != null && !title.trim().isEmpty())
+        if (title != null && !title.trim().isEmpty())
             builder.setTitle(title);
 
         builder.setNeutralButton(context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -110,7 +173,7 @@ public class DialogBoxUtil {
         alert.show();
     }
 
-    public static void showSuccessDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback){
+    public static void showSuccessDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback) {
         CommonUtils.hideKeyBoard(context);
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setIcon(R.drawable.success_icon_480);
@@ -159,11 +222,11 @@ public class DialogBoxUtil {
         alert.show();
     }
 
-    public static void showInfoDialogWithLimitedTime(Context context, String title, String message, long timeInMs, final InfoDialogBoxCallback infoDialogBoxCallback){
+    public static void showInfoDialogWithLimitedTime(Context context, String title, String message, long timeInMs, final InfoDialogBoxCallback infoDialogBoxCallback) {
         CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if(title != null && !title.isEmpty())
+        if (title != null && !title.isEmpty())
             builder.setTitle(title);
 
         builder.setIcon(R.drawable.success_icon_480);
@@ -181,7 +244,7 @@ public class DialogBoxUtil {
         }, timeInMs);
     }
 
-    public static void showSettingsAlert(final Activity act){
+    public static void showSettingsAlert(final Activity act) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(act);
         alertDialog.setTitle(act.getResources().getString(R.string.gpsSettings));
         alertDialog.setMessage(act.getResources().getString(R.string.gpsSettingMessage));
@@ -195,7 +258,7 @@ public class DialogBoxUtil {
     }
 
     public static void showDialogWithJustPositiveButton(Context context, String title,
-                                                        String message, String buttonDesc, final InfoDialogBoxCallback infoDialogBoxCallback){
+                                                        String message, String buttonDesc, final InfoDialogBoxCallback infoDialogBoxCallback) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setTitle(title);
         alertDialog.setMessage(message);
@@ -207,7 +270,6 @@ public class DialogBoxUtil {
         });
         alertDialog.show();
     }
-
 
 
 }

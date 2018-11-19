@@ -30,9 +30,13 @@
     <string name="adminText">  Grup Yöneticisi  </string>
     <string name="technicalError">Teknik Hata!</string>
     <string name="selectPicture">Resim Seçin</string>
+    <string name="SELECT_VIDEO">Video Seçin</string>
     <string name="openCamera">Kamerayı Aç</string>
     <string name="openGallery">Galeriden Seç</string>
     <string name="REMOVE_PHOTO">Fotoğrafı kaldır</string>
+    <string name="REMOVE_VIDEO">Videoyu kaldır</string>
+    <string name="EDIT">Düzenle</string>
+    <string name="PLAY">Oynat</string>
     <string name="chooseProfilePhoto">Profil fotoğrafı seçin</string>
     <string name="CHOOSE_GROUP_PHOTO">Grup fotoğrafı seçin</string>
     <string name="groupInformation">Grup Bilgileri</string>
@@ -108,9 +112,10 @@
 
     <!-- Whose for will be shared -->
     <string name="publicShareText">Herkese Açik</string>
-    <string name="friendsShareText">Arkadaşlar</string>
+    <string name="friendsShareText">Özel</string>
     <string name="groupsShareText">Gruplar</string>
     <string name="justMeShareText">Sadece Ben</string>
+    <string name="allFollowersShareText">Tüm Takipçiler</string>
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Ayarları</string>
@@ -223,6 +228,8 @@
     <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Problemi kısaca belirtebilir misiniz?</string>
     <string name="PROBLEM_NOTIFY_DESCRIPTION">Karşılaşmış olduğunuz problemi yada geliştirmemizi istediklerinizi bildirerek bize yardımcı olabilirsiniz.</string>
     <string name="WHO_WILL_YOU_SHARE">Kime paylaşacaksın?</string>
+    <string name="SENDING">Gönderiliyor...</string>
+    <string name="serverError">Teknik Hata !</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

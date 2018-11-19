@@ -3,6 +3,7 @@ package com.uren.catchu.SharePackage.GalleryPicker;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.graphics.Bitmap;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -77,9 +79,11 @@ public class PhotoSelectedFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         if(mView == null) {
             mView = inflater.inflate(R.layout.fragment_photo_selected, container, false);
             ButterKnife.bind(this, mView);
+            initVariables();
             addListeners();
             setSelectedPhoto();
         }
@@ -89,6 +93,17 @@ public class PhotoSelectedFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+    }
+
+    public void initVariables() {
+        setShapes();
+    }
+
+    private void setShapes() {
+        finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+        addTextImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                0, GradientDrawable.OVAL, 50, 0));
     }
 
     private void addListeners() {
@@ -224,11 +239,19 @@ public class PhotoSelectedFragment extends BaseFragment {
         textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15.0f);
     }
 
-    public void setSelectedPhoto(){
+    public void setSelectedPhoto() {
         CommonUtils.setImageScaleType(photoSelectUtil, selectedImageView);
-        Glide.with(getContext())
-                .load(photoSelectUtil.getMediaUri())
-                .into(selectedImageView);
+
+        if(photoSelectUtil != null){
+            if(photoSelectUtil.getScreeanShotBitmap() != null)
+                Glide.with(getContext())
+                        .load(photoSelectUtil.getScreeanShotBitmap())
+                        .into(selectedImageView);
+            else if(photoSelectUtil.getMediaUri() != null)
+                Glide.with(getContext())
+                        .load(photoSelectUtil.getMediaUri())
+                        .into(selectedImageView);
+        }
     }
 
     private void startTextEditFragment() {

@@ -39,7 +39,7 @@ public class FragNavController {
     public static final int TAB2 = 1;
     public static final int TAB3 = 2;
 
-    private static final int MAX_NUM_TABS = 5;
+    private static final int MAX_NUM_TABS = 3;
 
     // Extras used to store savedInstanceState
     private static final String EXTRA_TAG_COUNT = FragNavController.class.getName() + ":EXTRA_TAG_COUNT";
@@ -555,6 +555,10 @@ public class FragNavController {
         }
 
         return fragment;
+    }
+
+    public void setRootFragment(Stack<Fragment> stackFragment, int index){
+        mFragmentStacks.set(TAB2, stackFragment);
     }
 
     /**

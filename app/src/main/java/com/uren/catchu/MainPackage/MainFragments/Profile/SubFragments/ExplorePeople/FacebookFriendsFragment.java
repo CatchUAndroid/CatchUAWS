@@ -121,11 +121,11 @@ public class FacebookFriendsFragment extends BaseFragment {
             public void onComplete(Object object) {
                 UserListResponse userListResponse = (UserListResponse) object;
 
-                MessageDataUtil.setWarningMessageVisibility(userListResponse, warningMsgTv,
-                        getActivity().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
-
                 if (userListResponse != null && userListResponse.getItems() != null &&
                         userListResponse.getItems().size() > 0 && getContext() != null) {
+                    MessageDataUtil.setWarningMessageVisibility(userListResponse, warningMsgTv,
+                            getContext().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
+
                     facebookFriendsAdapter = new FacebookFriendsAdapter(getContext(), userListResponse, new ListItemClickListener() {
                         @Override
                         public void onClick(View view, User user, int clickedPosition) {

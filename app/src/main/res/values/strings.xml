@@ -46,9 +46,13 @@
     <string name="adminText">  Administrator  </string>
     <string name="technicalError">Technical Error!</string>
     <string name="selectPicture">Select Picture</string>
+    <string name="SELECT_VIDEO">Select Video</string>
     <string name="openCamera">Open Camera</string>
     <string name="openGallery">Open Gallery</string>
     <string name="REMOVE_PHOTO">Remove photo</string>
+    <string name="REMOVE_VIDEO">Remove video</string>
+    <string name="EDIT">Edit</string>
+    <string name="PLAY">Play</string>
     <string name="chooseProfilePhoto">Choose a profile photo</string>
     <string name="CHOOSE_GROUP_PHOTO">Choose a group photo</string>
     <string name="groupInformation">Group Information</string>
@@ -139,9 +143,10 @@
 
     <!-- Whose for will be shared -->
     <string name="publicShareText">Public</string>
-    <string name="friendsShareText">Friends</string>
+    <string name="friendsShareText">Special</string>
     <string name="groupsShareText">Groups</string>
     <string name="justMeShareText">Just Me</string>
+    <string name="allFollowersShareText">All Followers</string>
 
     <string name="signOut">Sign Out</string>
     <string name="followers">Followers</string>
@@ -256,7 +261,7 @@
     <string name="PROBLEM_NOTIFY_DESCRIPTION">You can help us by notifying us about the problem you have encountered or whether you want us to improve.</string>
     <string name="REPORT_PROBLEM_OR_COMMENT">Report or comment</string>
     <string name="WHO_WILL_YOU_SHARE">Who will you share?</string>
-
+    <string name="SENDING">Sending...</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

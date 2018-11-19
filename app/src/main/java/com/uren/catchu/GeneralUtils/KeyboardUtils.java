@@ -27,7 +27,7 @@ public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener
 
     public interface SoftKeyboardToggleListener
     {
-        void onToggleSoftKeyboard(boolean isVisible, int heightDiff, float dp);
+        void onToggleSoftKeyboard(boolean isVisible);
     }
 
 
@@ -46,7 +46,7 @@ public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener
 
         if (mCallback != null && (prevValue == null || isVisible != prevValue)) {
             prevValue = isVisible;
-            mCallback.onToggleSoftKeyboard(isVisible, heightDiff, dp);
+            mCallback.onToggleSoftKeyboard(isVisible);
         }
     }
 

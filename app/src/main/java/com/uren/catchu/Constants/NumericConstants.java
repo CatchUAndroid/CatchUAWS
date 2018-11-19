@@ -23,6 +23,9 @@ public class NumericConstants {
     public static final int CODE_CAMERA_POSITION = 1;
     public static final int CODE_SCREENSHOT_POSITION = 1;
     public static final int CODE_PHOTO_REMOVE = 2;
+    public static final int CODE_VIDEO_REMOVE = 2;
+    public static final int CODE_PHOTO_EDIT = 3;
+    public static final int CODE_PLAY_VIDEO = 3;
 
     //Phone num verify duration
     public static final int VERIFY_PHONE_NUM_DURATION = 60;
