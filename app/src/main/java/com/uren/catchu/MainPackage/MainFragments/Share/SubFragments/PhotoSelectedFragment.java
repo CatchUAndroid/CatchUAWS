@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -28,6 +29,7 @@ import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.BrushCompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TextCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TrashDragDropCallback;
@@ -55,14 +57,18 @@ public class PhotoSelectedFragment extends BaseFragment {
     RelativeLayout photoRelLayout;
     @BindView(R.id.addPropRelLayout)
     RelativeLayout addPropRelLayout;
+    @BindView(R.id.seekbarLayout)
+    FrameLayout seekbarLayout;
+    @BindView(R.id.cleanImgv)
+    ImageView cleanImgv;
 
     View mView;
-    PhotoSelectUtil photoSelectUtil;
+    PhotoSelectUtil thisPhotoSelectUtil;
     ReturnCallback returnCallback;
     View trashLayout = null;
 
     public PhotoSelectedFragment(PhotoSelectUtil photoSelectUtil, ReturnCallback returnCallback) {
-        this.photoSelectUtil = photoSelectUtil;
+        this.thisPhotoSelectUtil = photoSelectUtil;
         this.returnCallback = returnCallback;
     }
 
@@ -100,6 +106,10 @@ public class PhotoSelectedFragment extends BaseFragment {
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
         brushImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
+        cleanImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
+        seekbarLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
     }
 
     private void addListeners() {
@@ -107,8 +117,16 @@ public class PhotoSelectedFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 checkTextIsAddedOrNot();
-                returnCallback.onReturn(photoSelectUtil);
+                returnCallback.onReturn(thisPhotoSelectUtil);
                 getActivity().onBackPressed();
+            }
+        });
+
+        cleanImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                thisPhotoSelectUtil.setScreeanShotBitmap(null);
+                setSelectedPhoto();
             }
         });
 
@@ -118,6 +136,14 @@ public class PhotoSelectedFragment extends BaseFragment {
                 addTextImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 setDefaultTextView();
                 startTextEditFragment();
+            }
+        });
+
+        brushImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                brushImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                startPhotoBrushFragment();
             }
         });
 
@@ -210,7 +236,7 @@ public class PhotoSelectedFragment extends BaseFragment {
                 if (trashLayout != null) {
                     photoRelLayout.removeView(trashLayout);
                     setDefaultTextView();
-                    seekbar.setVisibility(View.GONE);
+                    seekbarLayout.setVisibility(View.GONE);
                     trashLayout = null;
                 }
             }
@@ -220,7 +246,7 @@ public class PhotoSelectedFragment extends BaseFragment {
     public void checkTextIsAddedOrNot() {
         if (textView != null && !textView.getText().toString().trim().isEmpty()) {
             Bitmap bitmap = BitmapConversion.getScreenShot(photoRelLayout);
-            photoSelectUtil.setScreeanShotBitmap(bitmap);
+            thisPhotoSelectUtil.setScreeanShotBitmap(bitmap);
         }
     }
 
@@ -236,26 +262,26 @@ public class PhotoSelectedFragment extends BaseFragment {
     }
 
     public void setSelectedPhoto() {
-        CommonUtils.setImageScaleType(photoSelectUtil, selectedImageView);
+        CommonUtils.setImageScaleType(thisPhotoSelectUtil, selectedImageView);
 
-        if(photoSelectUtil != null){
-            if(photoSelectUtil.getScreeanShotBitmap() != null)
+        if(thisPhotoSelectUtil != null){
+            if(thisPhotoSelectUtil.getScreeanShotBitmap() != null)
                 Glide.with(getContext())
-                        .load(photoSelectUtil.getScreeanShotBitmap())
+                        .load(thisPhotoSelectUtil.getScreeanShotBitmap())
                         .into(selectedImageView);
-            else if(photoSelectUtil.getMediaUri() != null)
+            else if(thisPhotoSelectUtil.getMediaUri() != null)
                 Glide.with(getContext())
-                        .load(photoSelectUtil.getMediaUri())
+                        .load(thisPhotoSelectUtil.getMediaUri())
                         .into(selectedImageView);
         }
     }
 
     private void startTextEditFragment() {
-        seekbar.setVisibility(View.GONE);
+        seekbarLayout.setVisibility(View.GONE);
         textView.setVisibility(View.GONE);
 
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new TextEditFragment(textView, photoSelectUtil, new TextCompleteCallback() {
+            mFragmentNavigation.pushFragment(new TextEditFragment(textView, thisPhotoSelectUtil, new TextCompleteCallback() {
                 @Override
                 public void textCompleted(View view) {
                     EditText returnEditText = (EditText) view;
@@ -264,10 +290,26 @@ public class PhotoSelectedFragment extends BaseFragment {
                             textView.setTextColor(returnEditText.getCurrentTextColor());
                             textView.setText(returnEditText.getText().toString());
                             textView.setVisibility(View.VISIBLE);
-                            seekbar.setVisibility(View.VISIBLE);
+                            seekbarLayout.setVisibility(View.VISIBLE);
                         } else
-                            seekbar.setVisibility(View.GONE);
+                            seekbarLayout.setVisibility(View.GONE);
                     }
+                }
+            }));
+        }
+    }
+
+    public void startPhotoBrushFragment(){
+        PhotoSelectUtil tempUtil = thisPhotoSelectUtil;
+        tempUtil.setScreeanShotBitmap(BitmapConversion.getScreenShot(photoRelLayout));
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new PhotoBrushFragment(tempUtil, new BrushCompleteCallback() {
+                @Override
+                public void OnBrushCompleted(PhotoSelectUtil photoSelectUtil) {
+                    thisPhotoSelectUtil = photoSelectUtil;
+                    seekbarLayout.setVisibility(View.GONE);
+                    textView.setVisibility(View.GONE);
+                    setSelectedPhoto();
                 }
             }));
         }
