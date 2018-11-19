@@ -1,25 +1,15 @@
 package com.uren.catchu.Adapters;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 
 
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Permissions.PermissionModule;
-import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
-import com.uren.catchu.Singleton.Share.ShareItems;
-
-import java.math.BigDecimal;
-import java.util.List;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 
 import static android.content.Context.LOCATION_SERVICE;
 

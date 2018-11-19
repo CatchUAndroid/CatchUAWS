@@ -33,7 +33,7 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.SharePostFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;

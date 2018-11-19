@@ -39,7 +39,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimat
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 import com.uren.catchu._Libraries.PulseView.PulsatorLayout;

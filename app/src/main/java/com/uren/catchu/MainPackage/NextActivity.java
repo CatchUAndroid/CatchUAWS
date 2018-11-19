@@ -29,7 +29,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.SharePostFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Share.ShareItems;
 

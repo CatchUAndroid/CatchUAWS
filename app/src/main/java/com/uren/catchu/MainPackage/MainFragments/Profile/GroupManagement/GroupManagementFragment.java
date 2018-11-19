@@ -35,7 +35,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapter
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.SelectedGroupList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -115,7 +114,6 @@ public class GroupManagementFragment extends BaseFragment {
     }
 
     public void initValues(){
-        //SelectedGroupList.setInstance(null);
         searchToolbarLayout.setVisibility(View.VISIBLE);
         searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
         setFloatButtonVisibility();

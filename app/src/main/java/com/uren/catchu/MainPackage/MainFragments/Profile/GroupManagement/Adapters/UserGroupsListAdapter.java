@@ -28,7 +28,6 @@ import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.SelectedGroupList;
 
 import java.util.ArrayList;
 import java.util.List;

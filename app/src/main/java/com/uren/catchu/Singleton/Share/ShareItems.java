@@ -2,8 +2,8 @@ package com.uren.catchu.Singleton.Share;
 
 import android.graphics.Bitmap;
 
-import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
-import com.uren.catchu.SharePackage.Models.VideoShareItemBox;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 
 import java.util.ArrayList;
 import java.util.List;

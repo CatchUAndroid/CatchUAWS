@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Mod
 import android.widget.ImageView;
 
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
 
 public class ProblemNotifyModel {
 

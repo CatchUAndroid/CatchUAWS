@@ -64,10 +64,6 @@
             android:value="@integer/google_play_services_version" /
         -->
 
-        <activity android:name=".SharePackage.VideoPicker.WillDelete.AudioRecorderActivity" />
-        <activity android:name=".SharePackage.VideoPicker.WillDelete.VideoTestActivity" />
-        <activity android:name=".SharePackage.VideoPicker.WillDelete.Camera2Activity" />
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.uren.catchu"
@@ -94,10 +90,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".UgurDeneme.PhotoDenemeActivity" />
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.ImageActivity" />
         <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.VideoActivity" />
-        <activity android:name=".UgurDeneme.PhoneAuthActivity" />
         <activity android:name=".UgurDeneme.FirebaseMLActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.SettingsManagement.Models.Main2Activity"></activity>
     </application>

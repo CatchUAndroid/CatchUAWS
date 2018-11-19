@@ -18,7 +18,6 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -57,7 +56,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;

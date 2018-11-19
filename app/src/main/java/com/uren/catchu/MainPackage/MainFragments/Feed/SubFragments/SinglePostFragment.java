@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -55,7 +54,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoLis
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.GalleryPicker.Interfaces.LocationCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.SendCommentButton.SendCommentButton;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;

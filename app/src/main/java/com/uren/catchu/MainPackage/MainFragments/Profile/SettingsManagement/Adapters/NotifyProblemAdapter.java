@@ -2,43 +2,19 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Ada
 
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
-import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
-import com.uren.catchu.SharePackage.Models.ImageShareItemBox;
-import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 
 import java.util.List;
-
-import catchu.model.FollowInfoListResponse;
-import catchu.model.FriendRequestList;
-import catchu.model.User;
-import catchu.model.UserProfileProperties;
-
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 
 public class NotifyProblemAdapter extends RecyclerView.Adapter<NotifyProblemAdapter.MyViewHolder> {
 
