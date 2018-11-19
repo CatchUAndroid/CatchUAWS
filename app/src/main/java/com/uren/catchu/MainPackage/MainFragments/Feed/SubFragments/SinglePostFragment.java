@@ -12,6 +12,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -50,6 +51,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemC
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -341,7 +343,10 @@ public class SinglePostFragment extends BaseFragment
                 }
                 PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
                 PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position, numberOfCallback);
-                singlePostAdapter.updateLikeCount(post.getLikeCount());
+
+                //singlePostAdapter.updateLikeCount(post.getLikeCount());
+                SinglePostAdapter.PostViewHolder viewHolderForLayoutPosition = (SinglePostAdapter.PostViewHolder) recyclerView.findViewHolderForLayoutPosition(0);
+                viewHolderForLayoutPosition.setPartialData(post, 0);
 
             }
         });
@@ -369,7 +374,8 @@ public class SinglePostFragment extends BaseFragment
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new FeedItemAnimator());
+        recyclerView.setItemAnimator(new SinglePostItemAnimator());
+        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
     }
 
     private void setAdapter() {

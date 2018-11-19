@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
@@ -120,7 +121,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
-
     }
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
@@ -322,6 +322,22 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
         }
 
+        public void setPartialData(Post post, int position) {
+
+            this.position = position;
+            this.post = post;
+            this.isPostLiked = post.getIsLiked();
+            this.likeCount = post.getLikeCount();
+            this.commentCount = post.getCommentCount();
+
+            //Like
+            if (post.getIsLiked()) {
+                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
+            } else {
+                setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
+            }
+        }
+
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
             imgLike.setImageResource(icon);
@@ -347,10 +363,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             if (post.getAttachments().size() > 0) {
                 ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
             }
-
-        }
-
-        public void setLikeCount() {
 
         }
 
@@ -430,7 +442,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
     public void updateLikeCount(int newLikeCount) {
         post.setLikeCount(newLikeCount);
-         notifyItemChanged(0, post);
+        //notifyItemChanged(0, post);
     }
 
     public void updateItems() {

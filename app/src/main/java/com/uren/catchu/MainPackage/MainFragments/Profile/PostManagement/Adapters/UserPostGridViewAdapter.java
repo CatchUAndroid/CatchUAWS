@@ -327,6 +327,10 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
         return colorList[rand.nextInt(colorList.length)];
     }
 
+    public void updateItems() {
+        /**/
+        notifyDataSetChanged();
+    }
 
     @Override
     public int getItemCount() {

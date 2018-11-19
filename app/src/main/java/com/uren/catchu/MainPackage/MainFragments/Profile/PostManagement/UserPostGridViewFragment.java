@@ -32,6 +32,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -140,7 +141,7 @@ public class UserPostGridViewFragment extends BaseFragment {
     private void setLayoutManager() {
         mGridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
         gridRecyclerView.setLayoutManager(mGridLayoutManager);
-        //gridRecyclerView.setItemAnimator(new FeedItemAnimator());
+        gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
         gridRecyclerView.addItemDecoration(addItemDecoration());
 
         mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
