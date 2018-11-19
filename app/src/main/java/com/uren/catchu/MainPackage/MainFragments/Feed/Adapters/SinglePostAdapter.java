@@ -336,6 +336,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
+            //Comment Count
+            txtCommentCount.setText(String.valueOf(commentCount));
+
         }
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
@@ -366,88 +369,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
         }
 
-    }
-
-    @Override
-    public int getItemCount() {
-
-        if (postList != null && commentList != null) {
-            return postList.size() + commentList.size();
-        } else if (postList != null && commentList == null) {
-            return postList.size();
-        } else if (postList == null && commentList != null) {
-            return commentList.size();
-        } else { // postList == null && commentList == null
-            return 0;
-        }
-
-    }
-
-    public void addAll(List<Post> addedPostList, List<Comment> addedCommentList) {
-
-        int totalSize = postList.size() + commentList.size();
-
-        if (addedPostList != null) {
-            postList.addAll(addedPostList);
-            notifyItemRangeInserted(totalSize, totalSize + addedPostList.size());
-            return;
-        }
-
-        if (addedCommentList != null) {
-            commentList.addAll(addedCommentList);
-            notifyItemRangeInserted(totalSize, totalSize + addedCommentList.size());
-            return;
-        }
-    }
-
-    public void addComment(Comment comment) {
-        int totalSize = postList.size() + commentList.size();
-        commentList.add(comment);
-        notifyItemRangeInserted(totalSize, totalSize + 1);
-        notifyItemChanged(0);
-
-
-
-    }
-
-    public void addProgressLoading() {
-        commentList.add(null);
-        notifyItemInserted(postList.size() + commentList.size() - 1);
-    }
-
-    public void removeProgressLoading() {
-        commentList.remove(commentList.size() - 1);
-        notifyItemRemoved(postList.size() + commentList.size());
-    }
-
-    public boolean isShowingProgressLoading() {
-        if (getItemViewType(postList.size() + commentList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
-    }
-
-    public void removeAll() {
-        int initalSize = postList.size() + commentList.size();
-        notifyItemRangeChanged(0, initalSize);
-    }
-
-    public void updatePostListItems(List<Post> newPostList) {
-        final PostDiffCallback diffCallback = new PostDiffCallback(this.postList, newPostList);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        this.postList.addAll(newPostList);
-        diffResult.dispatchUpdatesTo(this);
-    }
-
-    public void updateLikeCount(int newLikeCount) {
-        post.setLikeCount(newLikeCount);
-        //notifyItemChanged(0, post);
-    }
-
-    public void updateItems() {
-        /**/
-        notifyDataSetChanged();
     }
 
     public class CommentViewHolder extends RecyclerView.ViewHolder {
@@ -587,6 +508,87 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
 
     }
+
+    @Override
+    public int getItemCount() {
+
+        if (postList != null && commentList != null) {
+            return postList.size() + commentList.size();
+        } else if (postList != null && commentList == null) {
+            return postList.size();
+        } else if (postList == null && commentList != null) {
+            return commentList.size();
+        } else { // postList == null && commentList == null
+            return 0;
+        }
+
+    }
+
+    public void addAll(List<Post> addedPostList, List<Comment> addedCommentList) {
+
+        int totalSize = postList.size() + commentList.size();
+
+        if (addedPostList != null) {
+            postList.addAll(addedPostList);
+            notifyItemRangeInserted(totalSize, totalSize + addedPostList.size());
+            return;
+        }
+
+        if (addedCommentList != null) {
+            commentList.addAll(addedCommentList);
+            notifyItemRangeInserted(totalSize, totalSize + addedCommentList.size());
+            return;
+        }
+    }
+
+    public void addComment(Comment comment) {
+        int totalSize = postList.size() + commentList.size();
+        commentList.add(comment);
+        notifyItemRangeInserted(totalSize, totalSize + 1);
+        //notifyItemChanged(0);
+    }
+
+    public void addProgressLoading() {
+        commentList.add(null);
+        notifyItemInserted(postList.size() + commentList.size() - 1);
+    }
+
+    public void removeProgressLoading() {
+        commentList.remove(commentList.size() - 1);
+        notifyItemRemoved(postList.size() + commentList.size());
+    }
+
+    public boolean isShowingProgressLoading() {
+        if (getItemViewType(postList.size() + commentList.size() - 1) == VIEW_PROG)
+            return true;
+        else
+            return false;
+    }
+
+    public void removeAll() {
+        int initalSize = postList.size() + commentList.size();
+        notifyItemRangeChanged(0, initalSize);
+    }
+
+    public void updatePostListItems(List<Post> newPostList) {
+        final PostDiffCallback diffCallback = new PostDiffCallback(this.postList, newPostList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.postList.addAll(newPostList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void updateLikeCount(int newLikeCount) {
+        post.setLikeCount(newLikeCount);
+        //notifyItemChanged(0, post);
+    }
+
+    public void updateItems() {
+        /**/
+        notifyDataSetChanged();
+    }
+
+
 
     public void setPersonListItemClickListener(PersonListItemClickListener personListItemClickListener) {
         SinglePostAdapter.this.personListItemClickListener = personListItemClickListener;

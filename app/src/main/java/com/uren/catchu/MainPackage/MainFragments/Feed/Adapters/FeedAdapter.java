@@ -282,8 +282,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
              */
             singlePostClicked.setCommentAddCallback(new CommentAddCallback() {
                 @Override
-                public void onCommentAdd(int position) {
-                    postList.get(position).setCommentCount(postList.get(position).getCommentCount() + 1);
+                public void onCommentAdd(int position, int newCommentCount) {
+                    postList.get(position).setCommentCount(newCommentCount);
                     notifyItemChanged(position);
                 }
             });

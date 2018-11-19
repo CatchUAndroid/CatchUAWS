@@ -537,13 +537,6 @@ public class PostHelper {
             return commentRequest;
         }
 
-        public static final void setCommentAddCallback(CommentAddCallback commentAddCallback) {
-            AddComment.commentAddCallback = commentAddCallback;
-        }
-
-        public static void postCommentCountChanged(int position) {
-            commentAddCallback.onCommentAdd(position);
-        }
 
     }
 
@@ -571,6 +564,7 @@ public class PostHelper {
         public SinglePostClicked() {
             postLikeClickCallbackList = new ArrayList<PostLikeClickCallback>();
             commentAddCallbackList = new ArrayList<CommentAddCallback>();
+            numberOfCallback = -1;
         }
 
         public static SinglePostClicked getInstance() {
@@ -596,10 +590,8 @@ public class PostHelper {
 
         public void startSinglePostProcess() {
             if (fragmentNavigation != null) {
-                int numberOfCallback = postLikeClickCallbackList.size() - 1;
-                if (numberOfCallback >= 0) {
-                    fragmentNavigation.pushFragment(SinglePostFragment.newInstance(toolbarTitle, postId, position, numberOfCallback), ANIMATE_RIGHT_TO_LEFT);
-                }
+                numberOfCallback++;
+                fragmentNavigation.pushFragment(SinglePostFragment.newInstance(toolbarTitle, postId, position, numberOfCallback), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
@@ -607,16 +599,16 @@ public class PostHelper {
             postLikeClickCallbackList.add(postLikeClickCallback);
         }
 
-        public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position, int numberOfCallback) {
-            postLikeClickCallbackList.get(numberOfCallback).onPostLikeClicked(isPostLiked, newLikeCount, position);
+        public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position, int _numberOfCallback) {
+            postLikeClickCallbackList.get(_numberOfCallback).onPostLikeClicked(isPostLiked, newLikeCount, position);
         }
 
         public void setCommentAddCallback(CommentAddCallback commentAddCallback) {
             commentAddCallbackList.add(commentAddCallback);
         }
 
-        public static void postCommentCountChanged(int position) {
-            commentAddCallbackList.get(numberOfCallback).onCommentAdd(position);
+        public static void postCommentCountChanged(int position, int newCommentCount, int _numberOfCallback) {
+            commentAddCallbackList.get(_numberOfCallback).onCommentAdd(position, newCommentCount);
         }
 
 

@@ -374,8 +374,6 @@ public class SinglePostFragment extends BaseFragment
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new SinglePostItemAnimator());
-        ((SimpleItemAnimator) recyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
     }
 
     private void setAdapter() {
@@ -600,13 +598,20 @@ public class SinglePostFragment extends BaseFragment
     public void onSendClickListener(View v) {
         if (validateComment()) {
             Comment comment = createCommentBody();
+            post.setCommentCount(post.getCommentCount() + 1);
             singlePostAdapter.addComment(comment);
+
+            //singlePostAdapter.updateLikeCount(post.getLikeCount());
+            SinglePostAdapter.PostViewHolder viewHolderForLayoutPosition = (SinglePostAdapter.PostViewHolder) recyclerView.findViewHolderForLayoutPosition(0);
+            viewHolderForLayoutPosition.setPartialData(post, 0);
+
+
             recyclerView.smoothScrollToPosition(singlePostAdapter.getItemCount());
             edtAddComment.setText(null);
             btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
 
             PostHelper.AddComment.startProcess(getContext(), postId, comment, position);
-            PostHelper.SinglePostClicked.postCommentCountChanged(position);
+            PostHelper.SinglePostClicked.postCommentCountChanged(position, post.getCommentCount(), numberOfCallback);
 
         }
     }

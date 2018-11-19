@@ -183,7 +183,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
              */
             instance.setCommentAddCallback(new CommentAddCallback() {
                 @Override
-                public void onCommentAdd(int position) {
+                public void onCommentAdd(int position, int newCommentCount) {
                     /*
                     postList.get(position).setCommentCount(postList.get(position).getCommentCount() + 1);
                     notifyItemChanged(position);
