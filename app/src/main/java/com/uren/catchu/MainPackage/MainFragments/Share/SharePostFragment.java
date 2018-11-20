@@ -60,6 +60,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.FileSaveCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -80,7 +81,9 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
+import java.io.File;
 import java.math.BigDecimal;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendList;
@@ -88,6 +91,7 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -226,6 +230,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onStart() {
         NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        if (getContext() != null)
+            CommonUtils.hideKeyBoard(getContext());
         super.onStart();
     }
 
@@ -239,7 +245,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        if(view == null) {
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_share_post, container, false);
             ButterKnife.bind(this, view);
             initializeItems();
@@ -255,7 +261,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void initializeItems() {
-        //initUIValues();
         permissionModule = new PermissionModule(getContext());
         ShareItems.setInstance(null);
         getUserInfo();
@@ -264,43 +269,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         setShapes();
         setViewsDefaultValues();
         setAnimations();
-        getViewsPosition();
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         photoSelectUtil = new PhotoSelectUtil();
         checkShareItems = new CheckShareItems(getContext());
-    }
-
-    private void initUIValues() {
-        //shareMsgEditText = view.findViewById(R.id.shareMsgEditText);
-        /*ShareItemsDescTv = view.findViewById(R.id.ShareItemsDescTv);
-        profilePicImgView = view.findViewById(R.id.profilePicImgView);
-        shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-        photoSelectImgv = view.findViewById(R.id.photoSelectImgv);
-        videoSelectImgv = view.findViewById(R.id.videoSelectImgv);
-        textSelectImgv = view.findViewById(R.id.textSelectImgv);
-        showMapImgv = view.findViewById(R.id.showMapImgv);
-        shareMsgEditText = view.findViewById(R.id.shareMsgEditText);
-        publicImgv = view.findViewById(R.id.publicImgv);
-        allFollowersImgv = view.findViewById(R.id.allFollowersImgv);
-        specialImgv = view.findViewById(R.id.specialImgv);
-        groupsImgv = view.findViewById(R.id.groupsImgv);
-        justMeImgv = view.findViewById(R.id.justMeImgv);
-        cancelButton = view.findViewById(R.id.cancelButton);
-        shareButton = view.findViewById(R.id.shareButton);
-        mapLayout = view.findViewById(R.id.mapLayout);
-        shareMainLayout = view.findViewById(R.id.shareMainLayout);
-        buttonsLayout = view.findViewById(R.id.buttonsLayout);
-        publicSelectLayout = view.findViewById(R.id.publicSelectLayout);
-        allFollowersSelectLayout = view.findViewById(R.id.allFollowersSelectLayout);
-        specialSelectLayout = view.findViewById(R.id.specialSelectLayout);
-        groupsSelectLayout = view.findViewById(R.id.groupsSelectLayout);
-        justMeSelectLayout = view.findViewById(R.id.justMeSelectLayout);
-        mapView = view.findViewById(R.id.map);
-        progressBar = view.findViewById(R.id.progressBar);*/
-    }
-
-    private void getViewsPosition() {
-
     }
 
     private void setAnimations() {
@@ -376,10 +347,14 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void setShapes() {
-        cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Red, null),
+        cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                getResources().getColor(R.color.DarkYellow, null), GradientDrawable.RECTANGLE, 15, 6));
+
+        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DarkYellow, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
-        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumSeaGreen, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+
+        showMapImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
+                getResources().getColor(R.color.Red, null), GradientDrawable.OVAL, 20, 3));
     }
 
     public void setViewsDefaultValues() {
@@ -438,6 +413,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     clearTextSelectImgvFilled();
                     ShareItems.getInstance().getPost().setMessage("");
                 }
+            }
+        });
+
+        shareMsgEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                System.out.println("hasFocus:" + hasFocus);
             }
         });
 
@@ -916,8 +898,15 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);
 
+        /*Intent takeVideoIntent = new Intent("android.media.action.VIDEO_CAPTURE");
+        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        takeVideoIntent.putExtra(android.provider.MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);*/
+
         if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
             startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
+
+
     }
 
     private void getUserInfo() {
@@ -1074,9 +1063,31 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void setVideoFromCameraSelection(Intent data) {
         isVideoSelected = true;
         videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, CAMERA_TEXT);
+
+        /*UriAdapter.savefile(UriAdapter.getRealPathFromURI(data.getData(), getContext()), MEDIA_TYPE_VIDEO, new FileSaveCallback() {
+            @Override
+            public void Saved(String realPath) {
+                File file = new File(videoSelectUtil.getVideoRealPath());
+                file.delete();
+                videoSelectUtil.setVideoUri(Uri.fromFile(new File(realPath)));
+                videoSelectUtil.setVideoRealPath(realPath);
+            }
+
+            @Override
+            public void OnError(Exception e) {
+
+            }
+        });*/
+
         addVideoShareItemList();
         setVideoSelectImgvFilled();
         startVideoViewFragment();
+    }
+
+    public void addVideoShareItemList() {
+        ShareItems.getInstance().clearVideoShareItemBox();
+        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
+        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
 
     public void startVideoViewFragment() {
@@ -1116,12 +1127,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
         ShareItems.getInstance().clearImageShareItemBox();
         ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
-    }
-
-    public void addVideoShareItemList() {
-        ShareItems.getInstance().clearVideoShareItemBox();
-        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
-        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
     }
 
     private void initLocationTracker() {
@@ -1178,56 +1183,50 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
 
     private void setWhomItemsImgvFilled() {
-        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
-        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.DodgerBlue, null), PorterDuff.Mode.SRC_IN);
+        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
     }
 
     public void setPhotoSelectImgvFilled() {
-        photoSelectImgv.setColorFilter(getContext().getResources().getColor(R.color.MediumSeaGreen, null), PorterDuff.Mode.SRC_IN);
-        photoSelectImgv.setBackground(ShapeUtil.getShape(0, getContext().getResources().getColor(R.color.MediumSeaGreen, null),
-                GradientDrawable.OVAL, 50, 10));
+        //photoSelectImgv.setColorFilter(getContext().getResources().getColor(R.color.LimeGreen, null), PorterDuff.Mode.SRC_IN);
+        photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));
     }
 
     public void setVideoSelectImgvFilled() {
-        videoSelectImgv.setColorFilter(getResources().getColor(R.color.MediumSeaGreen, null), PorterDuff.Mode.SRC_IN);
-        videoSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.MediumSeaGreen, null),
-                GradientDrawable.OVAL, 50, 10));
+        videoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));
     }
 
     public void setTextSelectImgvFilled() {
-        textSelectImgv.setColorFilter(getResources().getColor(R.color.MediumSeaGreen, null), PorterDuff.Mode.SRC_IN);
-        textSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.MediumSeaGreen, null),
-                GradientDrawable.OVAL, 50, 10));
+        textSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));
     }
 
     public void clearPhotoSelectImgvFilled() {
-        photoSelectImgv.setColorFilter(getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-        photoSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.Gray, null),
-                GradientDrawable.OVAL, 50, 10));
+        photoSelectImgv.setBackground(null);
+        /*photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));*/
     }
 
     public void clearVideoSelectImgvFilled() {
-        videoSelectImgv.setColorFilter(getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-        videoSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.Gray, null),
-                GradientDrawable.OVAL, 50, 10));
+        videoSelectImgv.setBackground(null);
+        /*videoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));*/
     }
 
     public void clearTextSelectImgvFilled() {
-        textSelectImgv.setColorFilter(getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-        textSelectImgv.setBackground(ShapeUtil.getShape(0, getResources().getColor(R.color.Gray, null),
-                GradientDrawable.OVAL, 50, 10));
+        textSelectImgv.setBackground(null);
+        /*textSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
+                0,
+                GradientDrawable.RECTANGLE, 20, 3));*/
     }
-
-    /*@Nullable
-    @Override
-    public View getView() {
-        return view;
-    }
-
-    public void setView(View view) {
-        this.view = view;
-    }*/
 }

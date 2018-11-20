@@ -16,12 +16,13 @@
         android:textColor="@color/White"/>
 
     <ImageView
+        android:id="@+id/trashImgv"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
-        android:src="@drawable/trash_icon"
-        android:id="@+id/trashImgv"/>
+        android:padding="10dp"
+        android:src="@mipmap/icon_trash" />
 
 </RelativeLayout>

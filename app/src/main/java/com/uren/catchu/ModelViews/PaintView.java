@@ -23,8 +23,8 @@ import java.util.ArrayList;
 
 public class PaintView extends View {
 
-    private static int BRUSH_SIZE = 10;
-    public static final int DEFAULT_COLOR = Color.RED;
+    private int BRUSH_SIZE = 10;
+    public int DEFAULT_COLOR = Color.RED;
     //public static final int DEFAULT_BG_COLOR = Color.WHITE;
     public static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
@@ -62,10 +62,9 @@ public class PaintView extends View {
     }
 
     public void init(int width,int height , Bitmap bitmap) {
-        Bitmap xx = BitmapConversion.getResizedBitmap(bitmap, width, height);
+        Bitmap tempBitmap = BitmapConversion.getResizedBitmap(bitmap, width, height);
 
-        //Bitmap xx = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Bitmap mutableBitmap = xx.copy(Bitmap.Config.ARGB_8888, true);
+        Bitmap mutableBitmap = tempBitmap.copy(Bitmap.Config.ARGB_8888, true);
         mBitmap = mutableBitmap;
         mCanvas = new Canvas(mBitmap);
 
@@ -90,10 +89,28 @@ public class PaintView extends View {
         blur = true;
     }
 
+    public void setmBitmap(int width,int height , Bitmap bitmap){
+        Bitmap tempBitmap = BitmapConversion.getResizedBitmap(bitmap, width, height);
+
+        Bitmap mutableBitmap = tempBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        mBitmap = mutableBitmap;
+        mCanvas = new Canvas(mBitmap);
+
+        mCanvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+    }
+
+    public void setBrushSize(int brushSize){
+        strokeWidth = brushSize;
+    }
+
+    public void setCurrentColor(int currentColor){
+        this.currentColor = currentColor;
+    }
+
     public void clear() {
         //backgroundColor = DEFAULT_BG_COLOR;
         paths.clear();
-        normal();
+        //normal();
         invalidate();
     }
 

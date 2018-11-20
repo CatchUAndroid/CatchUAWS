@@ -213,7 +213,7 @@ public class SharePostProcess {
             public void onTaskContinue() {
 
             }
-        }, bucketUpload.getUploadUrl(), videoShareItemBox.getVideoSelectUtil().getVideoUri());
+        }, bucketUpload.getUploadUrl(), videoShareItemBox.getVideoSelectUtil().getVideoRealPath());
         uploadVideoToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 

@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -86,6 +88,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     CardView deleteGroupCardView;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+    @BindView(R.id.addFriendImgv)
+    ImageView addFriendImgv;
 
     boolean photoExistOnImgv = false;
 
@@ -123,6 +127,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             setGUIVariables();
             getGroupInformation();
             addListeners();
+            setShapes();
         }
         return mView;
     }
@@ -132,6 +137,11 @@ public class ViewGroupDetailFragment extends BaseFragment {
         mProgressDialog = new ProgressDialog(getActivity());
         groupParticipantList = new ArrayList<>();
         progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
+    }
+
+    public void setShapes(){
+        addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0));
     }
 
     private void getGroupInformation() {

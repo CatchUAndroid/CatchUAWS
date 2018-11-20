@@ -41,7 +41,6 @@ import com.uren.catchu.R;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import catchu.model.Post;
 
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
@@ -362,10 +361,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
             } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
                 imgTarget.setImageResource(R.drawable.groups_icon_500);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
-                imgTarget.setImageResource(R.drawable.just_me_icon_500);
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
+            }else if(post.getPrivacyType().equals(SHARE_TYPE_SELF)){
+                imgTarget.setImageResource(R.mipmap.icon_lock);
+            } else if(post.getPrivacyType().equals(SHARE_TYPE_GROUP)){
                 imgTarget.setImageResource(R.drawable.groups_icon_500);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -392,7 +390,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setViewPager(Post post) {
 
-            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
+            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), fragmentNavigation));
             viewPager.setOffscreenPageLimit(post.getAttachments().size());
             if (post.getAttachments().size() > 0) {
                 ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);

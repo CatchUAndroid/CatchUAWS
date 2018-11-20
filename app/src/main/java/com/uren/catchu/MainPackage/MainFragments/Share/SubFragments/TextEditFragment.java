@@ -84,7 +84,7 @@ public class TextEditFragment extends BaseFragment {
     }
 
     private void setShapes() {
-        finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+        finishButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Black, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
     }
 

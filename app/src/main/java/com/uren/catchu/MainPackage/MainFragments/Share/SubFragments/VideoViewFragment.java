@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
@@ -20,16 +21,22 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 @SuppressLint("ValidFragment")
 public class VideoViewFragment extends BaseFragment {
 
-    ImageView cancelImageView;
+    View mView;
+
+    @BindView(R.id.useButton)
+    Button useButton;
+    @BindView(R.id.playVideoImgv)
     ImageView playVideoImgv;
-    private View mView;
-    private Uri videoUri;
-    private VideoView videoView;
+    @BindView(R.id.videoView)
+    VideoView videoView;
+
+    Uri videoUri;
     MediaPlayer mediaPlayer;
     boolean mediaPlayerPlayFinished = false;
     int mediaPlayerTotalLen;
@@ -47,35 +54,28 @@ public class VideoViewFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.video_view_layout, container, false);
+            mView = inflater.inflate(R.layout.fragment_video_view, container, false);
             ButterKnife.bind(this, mView);
             return mView;
         }
         return mView;
     }
 
-    private void initUI() {
-        cancelImageView = mView.findViewById(R.id.cancelImageView);
-        videoView = mView.findViewById(R.id.videoView);
-        playVideoImgv = mView.findViewById(R.id.playVideoImgv);
-        setShapes();
-    }
-
     private void setShapes() {
         GradientDrawable playVideoImgvShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.transparentBlack, null),
                 getActivity().getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3);
         playVideoImgv.setBackground(playVideoImgvShape);
+        useButton.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.Black, null),
+                getActivity().getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 3));
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
-        cancelImageView.setOnClickListener(new View.OnClickListener() {
+        useButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelImageView.setVisibility(View.GONE);
                 videoView.stopPlayback();
                 mediaPlayer = null;
-                ShareItems.getInstance().clearVideoShareItemBox();
                 getActivity().onBackPressed();
             }
         });
@@ -110,7 +110,7 @@ public class VideoViewFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        initUI();
+        setShapes();
         addListeners();
         manageVideoFromGallery();
     }
@@ -126,13 +126,10 @@ public class VideoViewFragment extends BaseFragment {
         videoView.setVideoURI(videoUri);
         videoView.requestFocus();
 
-        Log.i("Info", "VideoViewFragment: videoUri :" + videoUri.toString());
-
         videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             public void onPrepared(MediaPlayer mp) {
                 mediaPlayer = mp;
                 mediaPlayer.start();
-                cancelImageView.setVisibility(View.VISIBLE);
                 playVideoImgv.setVisibility(View.GONE);
                 mediaPlayerIsPlaying = true;
                 mediaPlayerTotalLen = mediaPlayer.getCurrentPosition();

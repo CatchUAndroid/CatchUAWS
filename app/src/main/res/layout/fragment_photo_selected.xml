@@ -37,23 +37,18 @@
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/addTextImgv"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginEnd="17dp"
-            android:layout_marginTop="20dp"
-            android:padding="5dp"
-            android:src="@drawable/aa_icon" />
+
+
+
 
         <FrameLayout
+            android:id="@+id/seekbarLayout"
             android:layout_width="32dp"
             android:layout_height="182dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="20dp">
+            android:layout_marginStart="20dp"
+            android:visibility="gone">
 
             <SeekBar
                 android:id="@+id/seekbar"
@@ -63,21 +58,63 @@
                 android:progressTint="@color/White"
                 android:rotation="270"
                 android:thumbTint="@color/White"
-                android:thumbTintMode="src_in"
-                android:visibility="gone" />
+                android:thumbTintMode="src_in" />
 
         </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/finishButton"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="11dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/cleanImgv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@+id/addTextImgv"
+                android:padding="5dp"
+                android:src="@mipmap/icon_clean" />
+
+            <ImageView
+                android:id="@+id/brushImgv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/addTextImgv"
+                android:layout_marginLeft="15dp"
+                android:padding="5dp"
+                android:src="@mipmap/icon_share_brush" />
+
+            <ImageView
+                android:id="@+id/addTextImgv"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="15dp"
+                android:padding="5dp"
+                android:src="@drawable/aa_icon" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/finishButton"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_alignTop="@+id/addTextImgv"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="15dp"
             android:text="@string/finish"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="normal|bold|italic" />
+
+
 
     </RelativeLayout>
 

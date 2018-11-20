@@ -27,12 +27,12 @@ public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
     private OnEventListener<HttpURLConnection> mCallBack;
     public Exception mException;
     public String uploadUrl;
-    public Uri videoUri;
+    public String realPath;
 
-    public UploadVideoToS3(OnEventListener callback, String uploadUrl, Uri videoUri) {
+    public UploadVideoToS3(OnEventListener callback, String uploadUrl, String realPath) {
         this.mCallBack = callback;
         this.uploadUrl = uploadUrl;
-        this.videoUri = videoUri;
+        this.realPath = realPath;
     }
 
     @Override
@@ -44,7 +44,8 @@ public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
         byte[] buffer;
 
         try {
-            File sourceFile = new File(videoUri.toString());
+            File sourceFile = new File(realPath);
+
             if (!sourceFile.isFile())
                 return null;
 

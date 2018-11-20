@@ -38,6 +38,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapter
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -89,6 +90,12 @@ public class AddGroupFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -97,7 +104,7 @@ public class AddGroupFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.activity_add_group, container, false);
+        mView = inflater.inflate(R.layout.fragment_add_group, container, false);
         ButterKnife.bind(this, mView);
         return mView;
     }

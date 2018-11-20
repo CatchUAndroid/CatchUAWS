@@ -100,9 +100,10 @@
 
 
         <RelativeLayout
+            android:id="@+id/xx"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -131,23 +132,37 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_marginLeft="5dp"
-                                android:padding="15dp"
+                                android:padding="8dp"
                                 android:src="@mipmap/icon_share_photo" />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:alpha="0.1"
+                                android:background="@android:color/black" />
 
                             <ImageView
                                 android:id="@+id/videoSelectImgv"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_marginLeft="10dp"
-                                android:padding="15dp"
+                                android:layout_marginLeft="5dp"
+                                android:padding="8dp"
                                 android:src="@mipmap/icon_share_video" />
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5dp"
+                                android:alpha="0.1"
+                                android:background="@android:color/black" />
 
                             <ImageView
                                 android:id="@+id/textSelectImgv"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_marginLeft="10dp"
-                                android:padding="15dp"
+                                android:layout_marginLeft="5dp"
+                                android:padding="10dp"
                                 android:src="@mipmap/icon_share_text" />
 
                             <ImageView
@@ -155,14 +170,21 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_marginLeft="30dp"
-                                android:padding="5dp"
-                                android:src="@mipmap/icon_location" />
-
+                                android:padding="7dp"
+                                android:src="@mipmap/icon_share_location" />
 
                         </LinearLayout>
 
 
                     </RelativeLayout>
+
+                    <View
+                        android:layout_width="180dp"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="10dp"
+                        android:alpha="0.1"
+                        android:background="@android:color/black" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -178,10 +200,11 @@
                             android:gravity="top"
                             android:hint="@string/typeToAddText"
                             android:inputType="textMultiLine"
-                            android:lines="10"
-                            android:maxLines="10"
+                            android:lines="9"
+                            android:maxLines="8"
+                            android:paddingLeft="5dp"
                             android:scrollbars="vertical"
-                            android:textColor="@color/Gray"
+                            android:textColor="@color/Black"
                             android:textColorHint="@color/transparentBlack"
                             android:textCursorDrawable="@null"
                             android:textSize="16sp" />
@@ -204,10 +227,10 @@
 
                     <LinearLayout
                         android:id="@+id/publicSelectLayout"
-                        android:layout_width="60dp"
-                        android:layout_height="45dp"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/publicImgv"
@@ -224,17 +247,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/publicShareText"
-                            android:textColor="@color/Gray"
-                            android:textSize="8dp" />
+                            android:textColor="@color/Black"
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/allFollowersSelectLayout"
-                        android:layout_width="60dp"
-                        android:layout_height="45dp"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/allFollowersImgv"
@@ -252,19 +275,18 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/allFollowersShareText"
-                            android:textColor="@color/Gray"
-                            android:textSize="8dp"
-                            android:visibility="visible" />
+                            android:textColor="@color/Black"
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
 
                     <LinearLayout
                         android:id="@+id/specialSelectLayout"
-                        android:layout_width="60dp"
-                        android:layout_height="45dp"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/specialImgv"
@@ -281,17 +303,17 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/friendsShareText"
-                            android:textColor="@color/Gray"
-                            android:textSize="8dp" />
+                            android:textColor="@color/Black"
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
                     <LinearLayout
                         android:id="@+id/groupsSelectLayout"
-                        android:layout_width="60dp"
-                        android:layout_height="45dp"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/groupsImgv"
@@ -308,18 +330,18 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/groupsShareText"
-                            android:textColor="@color/Gray"
-                            android:textSize="8dp" />
+                            android:textColor="@color/Black"
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
 
                     <LinearLayout
                         android:id="@+id/justMeSelectLayout"
-                        android:layout_width="60dp"
-                        android:layout_height="45dp"
-                        android:orientation="vertical"
-                        android:animateLayoutChanges="true">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/justMeImgv"
@@ -329,15 +351,16 @@
                             android:layout_alignParentTop="true"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="5dp"
-                            android:src="@drawable/just_me_icon_500" />
+                            android:padding="2dp"
+                            android:src="@mipmap/icon_lock" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:text="@string/justMeShareText"
-                            android:textColor="@color/Gray"
-                            android:textSize="8dp" />
+                            android:textColor="@color/Black"
+                            android:textSize="10sp" />
 
                     </LinearLayout>
 
@@ -345,7 +368,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -371,8 +393,9 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:text="@string/cancel"
-                        android:textColor="@color/White"
-                        android:textSize="10sp" />
+                        android:textColor="@color/DarkYellow"
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
 
                     <Button
                         android:id="@+id/shareButton"
@@ -383,7 +406,8 @@
                         android:layout_weight="1"
                         android:text="@string/share"
                         android:textColor="@color/White"
-                        android:textSize="10sp" />
+                        android:textSize="15sp"
+                        android:textStyle="bold"/>
 
                 </LinearLayout>
 
@@ -391,7 +415,7 @@
                 <RelativeLayout
                     android:id="@+id/mapLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="150dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:animateLayoutChanges="true"
@@ -408,7 +432,6 @@
                 </RelativeLayout>
 
             </LinearLayout>
-
 
         </RelativeLayout>
 
