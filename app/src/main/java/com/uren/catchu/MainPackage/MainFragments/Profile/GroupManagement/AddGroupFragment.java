@@ -38,6 +38,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapter
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -86,6 +87,12 @@ public class AddGroupFragment extends BaseFragment {
 
     public AddGroupFragment(CompleteCallback completeCallback) {
         this.completeCallback = completeCallback;
+    }
+
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
     }
 
     @Override

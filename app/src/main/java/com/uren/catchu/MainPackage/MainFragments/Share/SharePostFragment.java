@@ -60,6 +60,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.FileSaveCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -80,6 +81,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 import com.uren.catchu.Singleton.Share.ShareItems;
 
+import java.io.File;
 import java.math.BigDecimal;
 
 import butterknife.BindView;
@@ -89,6 +91,7 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -895,8 +898,15 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);
 
+        /*Intent takeVideoIntent = new Intent("android.media.action.VIDEO_CAPTURE");
+        takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        takeVideoIntent.putExtra(android.provider.MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);*/
+
         if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
             startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
+
+
     }
 
     private void getUserInfo() {
@@ -1053,6 +1063,22 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void setVideoFromCameraSelection(Intent data) {
         isVideoSelected = true;
         videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, CAMERA_TEXT);
+
+        /*UriAdapter.savefile(UriAdapter.getRealPathFromURI(data.getData(), getContext()), MEDIA_TYPE_VIDEO, new FileSaveCallback() {
+            @Override
+            public void Saved(String realPath) {
+                File file = new File(videoSelectUtil.getVideoRealPath());
+                file.delete();
+                videoSelectUtil.setVideoUri(Uri.fromFile(new File(realPath)));
+                videoSelectUtil.setVideoRealPath(realPath);
+            }
+
+            @Override
+            public void OnError(Exception e) {
+
+            }
+        });*/
+
         addVideoShareItemList();
         setVideoSelectImgvFilled();
         startVideoViewFragment();

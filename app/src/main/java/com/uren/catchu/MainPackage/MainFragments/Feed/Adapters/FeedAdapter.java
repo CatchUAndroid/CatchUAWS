@@ -354,7 +354,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 imgTarget.setImageResource(R.drawable.groups_icon_500);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }else if(post.getPrivacyType().equals(SHARE_TYPE_SELF)){
-                imgTarget.setImageResource(R.drawable.just_me_icon_500);
+                imgTarget.setImageResource(R.mipmap.icon_lock);
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.red), android.graphics.PorterDuff.Mode.SRC_IN);
             }else if(post.getPrivacyType().equals(SHARE_TYPE_GROUP)){
                 imgTarget.setImageResource(R.drawable.groups_icon_500);

@@ -23,9 +23,11 @@ import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FragmentTabHiddenUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
@@ -209,7 +211,7 @@ public class NextActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
         onPausedInd = false;
-        Log.i("onPausedInd", "  >>onStart onPausedInd:" + onPausedInd);
+        Log.i("FragNavController frag", "  >>FragNavController current fraf:" + mNavController.getCurrentFrag().toString());
     }
 
     @Override
@@ -242,6 +244,13 @@ public class NextActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
+
+        if(mNavController != null && mNavController.getCurrentFrag() != null) {
+            if (FragmentTabHiddenUtil.isFragmentInHiddenList(mNavController.getCurrentFrag().getClass().getName()) &&
+                    bottomTabLayout != null)
+                bottomTabLayout.setVisibility(View.VISIBLE);
+        }
+
         if (!mNavController.isRootFragment()) {
             setTransactionOption();
             mNavController.popFragment(transactionOptions);

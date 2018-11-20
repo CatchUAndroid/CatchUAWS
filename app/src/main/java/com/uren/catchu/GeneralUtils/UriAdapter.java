@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
+import com.uren.catchu.Interfaces.FileSaveCallback;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -152,29 +153,32 @@ public class UriAdapter extends AppCompatActivity {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
-    void savefile(Uri sourceuri) {
-        String sourceFilename = sourceuri.getPath();
-        String destinationFilename = Environment.getExternalStorageDirectory().getPath() + File.separatorChar + "abc.mp4";
+    public static void savefile(String realPath, int mediaType, FileSaveCallback fileSaveCallback) {
+        File mediaFile = FileAdapter.getOutputMediaFile(mediaType);
+        String destinationFilename = mediaFile.getAbsolutePath();
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
 
         try {
-            bis = new BufferedInputStream(new FileInputStream(sourceFilename));
+            bis = new BufferedInputStream(new FileInputStream(realPath));
             bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
             byte[] buf = new byte[1024];
             bis.read(buf);
             do {
                 bos.write(buf);
             } while (bis.read(buf) != -1);
+            fileSaveCallback.Saved(destinationFilename);
         } catch (IOException e) {
             e.printStackTrace();
+            fileSaveCallback.OnError(e);
         } finally {
             try {
                 if (bis != null) bis.close();
                 if (bos != null) bos.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                fileSaveCallback.OnError(e);
             }
         }
     }
