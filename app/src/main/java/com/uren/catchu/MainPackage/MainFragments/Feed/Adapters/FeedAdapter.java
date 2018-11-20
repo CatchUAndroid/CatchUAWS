@@ -383,7 +383,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setViewPager(Post post) {
 
-            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments()));
+            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), fragmentNavigation));
             viewPager.setOffscreenPageLimit(post.getAttachments().size());
             if (post.getAttachments().size() > 0) {
                 ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);

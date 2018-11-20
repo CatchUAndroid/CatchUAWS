@@ -50,10 +50,12 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivit
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -216,9 +218,10 @@ public class PostHelper {
     public static class ViewPagerItemClicked {
 
         static Media media;
+        static BaseFragment.FragmentNavigation mfragmentNavigation;
 
-        public static final void startProcess(Activity activity, Context context, Media m) {
-
+        public static final void startProcess(Activity activity, Context context, Media m, BaseFragment.FragmentNavigation fragmentNavigation) {
+            mfragmentNavigation = fragmentNavigation;
             media = m;
             ViewPagerItemClicked viewPagerItemClicked = new ViewPagerItemClicked(activity, context);
         }
@@ -237,8 +240,13 @@ public class PostHelper {
                 Intent intent = new Intent(activity, ImageActivity.class);
                 activity.startActivity(intent);
             } else if (media.getType().equals(VIDEO_TYPE)) {
-                Intent intent = new Intent(activity, VideoActivity.class);
-                activity.startActivity(intent);
+
+                if(mfragmentNavigation != null){
+                    mfragmentNavigation.pushFragment(new PostVideoPlayFragment());
+                }
+
+                /*Intent intent = new Intent(activity, VideoActivity.class);
+                activity.startActivity(intent);*/
             } else {
                 Log.e("info", "unknown media type detected");
             }
