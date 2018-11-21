@@ -58,12 +58,14 @@ import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
 
-public class UserPostListViewFragment extends BaseFragment{
+public class UserPostListViewFragment extends BaseFragment {
 
     View mView;
     String catchType;
     FeedAdapter userPostListViewAdapter;
-    LinearLayoutManager mLinearLayoutManager;
+    static LinearLayoutManager mLinearLayoutManager;
+    static RecyclerView listRecyclerView;
+    static boolean scrollButtonVisible=false;
     private List<Post> postList = new ArrayList<Post>();
 
     private static final int MARGING_GRID = 2;
@@ -86,8 +88,7 @@ public class UserPostListViewFragment extends BaseFragment{
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.listRecyclerView)
-    RecyclerView listRecyclerView;
+
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
     @BindView(R.id.rl_no_feed)
@@ -139,11 +140,16 @@ public class UserPostListViewFragment extends BaseFragment{
     }
 
     private void loadData() {
-        
+
         getItemsFromBundle();
 
+        initItems();
         initRecyclerView();
         checkLocationAndRetrievePosts();
+    }
+
+    private void initItems() {
+        listRecyclerView = (RecyclerView) mView.findViewById(R.id.listRecyclerView);
     }
 
     private void getItemsFromBundle() {
@@ -205,6 +211,7 @@ public class UserPostListViewFragment extends BaseFragment{
                 super.onScrolled(recyclerView, dx, dy);
 
                 //FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
+                setScrollButtonVisibility();
 
                 if (dy > 0) //check for scroll down
                 {
@@ -234,6 +241,20 @@ public class UserPostListViewFragment extends BaseFragment{
             }
         });
 
+    }
+
+    private void setScrollButtonVisibility() {
+        int visibility;
+        int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+        if (firstVisibleItemPosition<3) {
+            visibility = View.GONE;
+            scrollButtonVisible = false;
+        } else {
+            visibility = View.VISIBLE;
+            scrollButtonVisible = true;
+        }
+
+        UserPostFragment.fabScrollUp.setVisibility(visibility);
     }
 
     private void checkLocationAndRetrievePosts() {
@@ -307,7 +328,7 @@ public class UserPostListViewFragment extends BaseFragment{
 
     private void getPosts() {
 
-        if(SingletonPostList.getInstance().getPostList().size() > 0 && !pulledToRefresh && loading){
+        if (SingletonPostList.getInstance().getPostList().size() > 0 && !pulledToRefresh && loading) {
             List<Post> singletonPostList = SingletonPostList.getInstance().getPostList();
             setUpRecyclerView(singletonPostList);
             return;
@@ -329,11 +350,11 @@ public class UserPostListViewFragment extends BaseFragment{
 
     private void startGetPosts(String token) {
 
-        if(catchType.equals(PROFILE_POST_TYPE_MY_POSTS)){
+        if (catchType.equals(PROFILE_POST_TYPE_MY_POSTS)) {
             getMyPosts(token);
-        }else if(catchType.equals(PROFILE_POST_TYPE_CAUGHT)){
+        } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
             getCaughtPosts(token);
-        }else{
+        } else {
             //do nothing
         }
 
@@ -501,7 +522,6 @@ public class UserPostListViewFragment extends BaseFragment{
     }
 
 
-
     /********************************************************************************************/
     private RecyclerView.ItemDecoration addItemDecoration() {
 
@@ -512,19 +532,19 @@ public class UserPostListViewFragment extends BaseFragment{
 
                 int position = parent.getChildLayoutPosition(view);
 
-                if(position % SPAN_COUNT == 0){
+                if (position % SPAN_COUNT == 0) {
                     //outRect.left = MARGING_GRID;
                     outRect.right = MARGING_GRID;
                     outRect.bottom = MARGING_GRID;
                     outRect.top = MARGING_GRID;
                 }
-                if(position % SPAN_COUNT == 1){
-                    outRect.left = MARGING_GRID/2;
-                    outRect.right = MARGING_GRID/2;
-                    outRect.bottom = MARGING_GRID/2;
-                    outRect.top = MARGING_GRID/2;
+                if (position % SPAN_COUNT == 1) {
+                    outRect.left = MARGING_GRID / 2;
+                    outRect.right = MARGING_GRID / 2;
+                    outRect.bottom = MARGING_GRID / 2;
+                    outRect.top = MARGING_GRID / 2;
                 }
-                if(position % SPAN_COUNT == 2){
+                if (position % SPAN_COUNT == 2) {
                     outRect.left = MARGING_GRID;
                     //outRect.right = MARGING_GRID;
                     outRect.bottom = MARGING_GRID;

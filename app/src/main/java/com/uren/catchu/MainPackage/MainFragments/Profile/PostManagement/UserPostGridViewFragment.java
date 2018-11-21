@@ -32,6 +32,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
@@ -60,7 +61,9 @@ public class UserPostGridViewFragment extends BaseFragment {
     View mView;
     String catchType;
     UserPostGridViewAdapter userPostGridViewAdapter;
-    GridLayoutManager mGridLayoutManager;
+    static GridLayoutManager mGridLayoutManager;
+    static RecyclerView gridRecyclerView;
+    static boolean scrollButtonVisible=false;
     private List<Post> postList = new ArrayList<Post>();
 
     private static final int MARGING_GRID = 2;
@@ -83,8 +86,7 @@ public class UserPostGridViewFragment extends BaseFragment {
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-    @BindView(R.id.gridRecyclerView)
-    RecyclerView gridRecyclerView;
+
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
     @BindView(R.id.rl_no_feed)
@@ -117,11 +119,18 @@ public class UserPostGridViewFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
             getItemsFromBundle();
 
+            initItems();
             initRecyclerView();
             checkLocationAndRetrievePosts();
 
         }
         return mView;
+    }
+
+    private void initItems() {
+
+        gridRecyclerView = (RecyclerView) mView.findViewById(R.id.gridRecyclerView);
+
     }
 
     private void getItemsFromBundle() {
@@ -195,10 +204,11 @@ public class UserPostGridViewFragment extends BaseFragment {
 
         gridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 //FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
+                setScrollButtonVisibility();
 
                 if (dy > 0) //check for scroll down
                 {
@@ -225,10 +235,23 @@ public class UserPostGridViewFragment extends BaseFragment {
                     }
                 }
             }
+
         });
 
+    }
 
+    private void setScrollButtonVisibility() {
+        int visibility;
+        int firstVisibleItemPosition = mGridLayoutManager.findFirstVisibleItemPosition();
+        if(firstVisibleItemPosition<15 ){
+            visibility = View.GONE;
+            scrollButtonVisible = false;
+        }else{
+            visibility = View.VISIBLE;
+            scrollButtonVisible = true;
+        }
 
+        UserPostFragment.fabScrollUp.setVisibility(visibility);
     }
 
     private void checkLocationAndRetrievePosts() {

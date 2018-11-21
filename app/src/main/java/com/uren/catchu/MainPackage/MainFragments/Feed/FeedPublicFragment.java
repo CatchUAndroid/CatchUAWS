@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -146,7 +148,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
 
     private void initListeners() {
-
     }
 
     private void initRecyclerView() {
@@ -578,7 +579,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-
 
 
     }

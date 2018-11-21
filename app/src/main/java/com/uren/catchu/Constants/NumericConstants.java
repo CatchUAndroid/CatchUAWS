@@ -34,7 +34,7 @@ public class NumericConstants {
     public static final int DEFAULT_FEED_PAGE_COUNT = 1;
     public static final int DEFAULT_FEED_PERPAGE_COUNT = 5; // EN AZ 4 OLMALI.
     public static final int DEFAULT_FEED_RADIUS = 5000; //metre cinsinden
-    public static  int FILTERED_FEED_RADIUS = 5000; //metre cinsinden
+    public static int FILTERED_FEED_RADIUS = 5000; //metre cinsinden
 
     //Share type values
     public static final int CODE_PUBLIC_SHARED = 0;
@@ -53,5 +53,9 @@ public class NumericConstants {
 
     //User posts gridView pagination
     public static final int DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT = 1;
-    public static final int DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT =30; // EN AZ 4 OLMALI.
+    public static final int DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT = 30; // EN AZ 4 OLMALI.
+
+    //USER POST VIEW TYPE
+    public static final int USER_POST_VIEW_TYPE_GRID = 0;
+    public static final int USER_POST_VIEW_TYPE_LIST = 1;
 }

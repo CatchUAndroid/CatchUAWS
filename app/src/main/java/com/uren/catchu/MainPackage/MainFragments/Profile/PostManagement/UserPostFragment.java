@@ -1,11 +1,16 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +28,8 @@ import com.uren.catchu.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_GRID;
+import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_LIST;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
@@ -37,6 +44,7 @@ public class UserPostFragment extends BaseFragment
     ImageView imgViewGrid, imgViewList;
     TextView txtViewGrid, txtViewList;
     TabItem tabGridView, tabListView;
+    int selectedTabPosition = 0;
 
 
     @BindView(R.id.commonToolbarbackImgv)
@@ -47,6 +55,11 @@ public class UserPostFragment extends BaseFragment
     TabLayout tabLayout;
     @BindView(R.id.viewpager)
     ViewPager viewPager;
+
+    static FloatingActionButton fabScrollUp;
+
+
+
 
     public static UserPostFragment newInstance(String catchType) {
         Bundle args = new Bundle();
@@ -72,7 +85,7 @@ public class UserPostFragment extends BaseFragment
             ButterKnife.bind(this, mView);
             getItemsFromBundle();
 
-            if(catchType != null){
+            if (catchType != null) {
                 initItems();
                 initListeners();
                 setUpPager();
@@ -89,11 +102,11 @@ public class UserPostFragment extends BaseFragment
         if (args != null) {
             catchType = (String) args.getString("catchType");
 
-            if(catchType.equals(PROFILE_POST_TYPE_MY_POSTS)){
+            if (catchType.equals(PROFILE_POST_TYPE_MY_POSTS)) {
                 toolbarTitle = getContext().getResources().getString(R.string.myPosts);
-            }else if(catchType.equals(PROFILE_POST_TYPE_CAUGHT)){
+            } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
                 toolbarTitle = getContext().getResources().getString(R.string.catchedPosts);
-            }else{
+            } else {
                 toolbarTitle = "";
             }
 
@@ -105,12 +118,14 @@ public class UserPostFragment extends BaseFragment
         toolbarTitleTv.setText(toolbarTitle);
         tabGridView = (TabItem) mView.findViewById(R.id.tabGridView);
         tabListView = (TabItem) mView.findViewById(R.id.tabListView);
+        fabScrollUp = (FloatingActionButton) mView.findViewById(R.id.fabScrollUp);
 
         SingletonPostList.reset();
     }
 
     private void initListeners() {
         commonToolbarbackImgv.setOnClickListener(this);
+        fabScrollUp.setOnClickListener(this);
     }
 
     private void setUpPager() {
@@ -160,12 +175,27 @@ public class UserPostFragment extends BaseFragment
                     txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
                     txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
+                    selectedTabPosition = USER_POST_VIEW_TYPE_GRID;
+                    if(UserPostGridViewFragment.scrollButtonVisible){
+                        fabScrollUp.setVisibility(View.VISIBLE);
+                    }else{
+                        fabScrollUp.setVisibility(View.GONE);
+                    }
+
                 } else if (tab.getPosition() == 1) {
                     imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                     imgViewList.setColorFilter(ContextCompat.getColor(getContext(), R.color.Red), android.graphics.PorterDuff.Mode.SRC_IN);
 
                     txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
                     txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
+
+                    selectedTabPosition = USER_POST_VIEW_TYPE_LIST;
+
+                    if(UserPostListViewFragment.scrollButtonVisible){
+                        fabScrollUp.setVisibility(View.VISIBLE);
+                    }else{
+                        fabScrollUp.setVisibility(View.GONE);
+                    }
 
                 } else {
 
@@ -196,5 +226,23 @@ public class UserPostFragment extends BaseFragment
             getActivity().onBackPressed();
         }
 
+        if(view == fabScrollUp){
+
+            if(selectedTabPosition == USER_POST_VIEW_TYPE_GRID){
+                CommonUtils.showToast(getContext(), "grid için tıklandı");
+                UserPostGridViewFragment.mGridLayoutManager.smoothScrollToPosition(UserPostGridViewFragment.gridRecyclerView, null, 0);
+            }
+
+            if(selectedTabPosition == USER_POST_VIEW_TYPE_LIST){
+                CommonUtils.showToast(getContext(), "list için tıklandı");
+                UserPostListViewFragment.mLinearLayoutManager.smoothScrollToPosition(UserPostListViewFragment.listRecyclerView, null, 0);
+
+            }
+
+
+        }
+
+
     }
+
 }

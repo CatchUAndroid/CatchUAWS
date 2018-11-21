@@ -124,6 +124,8 @@ public class StringConstants {
     //PROFILE POST TYPE
     public static final String PROFILE_POST_TYPE_MY_POSTS = "myPosts";
     public static final String PROFILE_POST_TYPE_CAUGHT = "catch";
+    public static final String USER_POST_VIEW_TYPE_GRID= "gridview";
+    public static final String USER_POST_VIEW_TYPE_LIST = "listview";
 
 
 }

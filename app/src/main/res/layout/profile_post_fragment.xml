@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/content"
@@ -44,6 +46,18 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabScrollUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="16dp"
+            android:gravity="center"
+            android:src="@mipmap/icon_up_arrow"
+            android:visibility="gone"
+            />
+
         <android.support.v4.view.ViewPager
             android:id="@+id/viewpager"
             android:layout_width="match_parent"
@@ -52,4 +66,4 @@
 
     </android.support.design.widget.CoordinatorLayout>
 
-</RelativeLayout>
+</FrameLayout>

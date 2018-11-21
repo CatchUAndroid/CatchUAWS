@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <include layout="@layout/pulsator_layout" />
+
     <include layout="@layout/no_feed_layout" />
+
     <include layout="@layout/layout_progress_bar" />
 
     <com.dinuscxj.refresh.RecyclerRefreshLayout
@@ -26,6 +28,7 @@
 
     </com.dinuscxj.refresh.RecyclerRefreshLayout>
 
-</RelativeLayout>
+
+</FrameLayout>
 
 
