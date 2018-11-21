@@ -27,7 +27,7 @@ public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener
 
     public interface SoftKeyboardToggleListener
     {
-        void onToggleSoftKeyboard(boolean isVisible);
+        void onToggleSoftKeyboard(boolean isVisible, int heightDiff, float dp);
     }
 
 
@@ -37,13 +37,21 @@ public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener
         Rect r = new Rect();
         mRootView.getWindowVisibleDisplayFrame(r);
 
+        System.out.println("mRootView.getRootView().getHeight()1:" + mRootView.getRootView().getHeight());
+        System.out.println("r.bottom:" + r.bottom);
+        System.out.println("r.top:" + r.top);
+
         int heightDiff = mRootView.getRootView().getHeight() - (r.bottom - r.top);
         float dp = heightDiff/ mScreenDensity;
         boolean isVisible = dp > MAGIC_NUMBER;
 
+        System.out.println("heightDiff:" + heightDiff);
+        System.out.println("dp        :" + dp);
+        System.out.println("mRootView.getRootView().getHeight()2:" + mRootView.getRootView().getHeight());
+
         if (mCallback != null && (prevValue == null || isVisible != prevValue)) {
             prevValue = isVisible;
-            mCallback.onToggleSoftKeyboard(isVisible);
+            mCallback.onToggleSoftKeyboard(isVisible, heightDiff, dp);
         }
     }
 

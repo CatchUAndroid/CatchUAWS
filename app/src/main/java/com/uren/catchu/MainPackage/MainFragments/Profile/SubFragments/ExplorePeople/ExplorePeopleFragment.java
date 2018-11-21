@@ -51,7 +51,7 @@ public class ExplorePeopleFragment extends BaseFragment {
     ProgressDialogUtil progressDialogUtil;
     SpecialSelectTabAdapter adapter;
     FacebookFriendsFragment facebookFriendsFragment;
-    ContactFriendsFragment contactFriendsFragment;
+    ContactsFragment contactsFragment;
     int selectedProperty;
 
     private static final int TAB_FACEBOOK = 0;
@@ -132,7 +132,7 @@ public class ExplorePeopleFragment extends BaseFragment {
             }
         }, false);
 
-        contactFriendsFragment = new ContactFriendsFragment(new OnLoadedListener() {
+        contactsFragment = new ContactsFragment(new OnLoadedListener() {
             @Override
             public void onLoaded() {
                 contactFragLoaded = true;
@@ -151,7 +151,7 @@ public class ExplorePeopleFragment extends BaseFragment {
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
-        adapter.addFragment(contactFriendsFragment, getResources().getString(R.string.CONTACTS));
+        adapter.addFragment(contactsFragment, getResources().getString(R.string.CONTACTS));
         viewPager.setAdapter(adapter);
     }
 
@@ -182,7 +182,7 @@ public class ExplorePeopleFragment extends BaseFragment {
                         selectedProperty = TAB_CONTACTS;
                         searchTextClear();
                         if (adapter != null && adapter.getItem(TAB_CONTACTS) != null)
-                            ((ContactFriendsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter("");
+                            ((ContactsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter("");
                         break;
 
                     default:
@@ -234,7 +234,7 @@ public class ExplorePeopleFragment extends BaseFragment {
                     if (selectedProperty == TAB_FACEBOOK) {
                         ((FacebookFriendsFragment) adapter.getItem(TAB_FACEBOOK)).updateAdapter(s.toString());
                     } else if (selectedProperty == TAB_CONTACTS) {
-                        ((ContactFriendsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
+                        ((ContactsFragment) adapter.getItem(TAB_CONTACTS)).updateAdapter(s.toString());
                     }
                 }
             }

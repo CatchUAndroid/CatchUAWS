@@ -18,6 +18,7 @@ import android.view.View;
 
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.FingerPath;
+import com.uren.catchu.R;
 
 import java.util.ArrayList;
 
@@ -105,6 +106,10 @@ public class PaintView extends View {
 
     public void setCurrentColor(int currentColor){
         this.currentColor = currentColor;
+    }
+
+    public int getCurrentColor(){
+        return currentColor;
     }
 
     public void clear() {

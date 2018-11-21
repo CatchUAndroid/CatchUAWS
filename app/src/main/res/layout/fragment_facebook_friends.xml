@@ -21,9 +21,9 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/toolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/toolbarLayout"
             android:visibility="gone">
 
             <include layout="@layout/common_toolbar_layout" />
@@ -31,9 +31,9 @@
 
 
         <LinearLayout
+            android:id="@+id/searchToolbarLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/searchToolbarLayout"
             android:visibility="gone">
 
             <include layout="@layout/toolbar_layout" />
@@ -52,14 +52,62 @@
 
     <include layout="@layout/layout_progress_bar" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/nextFab"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:src="@drawable/right_arrow"
-        android:visibility="gone"/>
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:id="@+id/connectFacebookLayout"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:src="@mipmap/facebook" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/FIND_FACEBOOK_FRIENDS"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/Black"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="@string/YOU_CAN_FIND_FACEBOOK_FRIENDS" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+
+            <Button
+                android:id="@+id/connectFacebookButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:text="@string/CONNECT_FACEBOOK"
+                android:textColor="@color/White"/>
+
+        </RelativeLayout>
+
+        <com.facebook.login.widget.LoginButton
+            xmlns:facebook="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/facebookLoginButton"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"
+            facebook:com_facebook_login_text="Log in with Facebook"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

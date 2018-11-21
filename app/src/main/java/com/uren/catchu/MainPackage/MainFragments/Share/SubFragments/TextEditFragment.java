@@ -112,7 +112,7 @@ public class TextEditFragment extends BaseFragment {
     }
 
     public void colorPalettePrepare() {
-        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), R.drawable.img_border, new ColorSelectCallback() {
+        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), new ColorSelectCallback() {
             @Override
             public void onClick(int colorCode) {
                 brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);

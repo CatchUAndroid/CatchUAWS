@@ -3,10 +3,14 @@ package com.uren.catchu.MainPackage.MainFragments.Share;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
+import android.inputmethodservice.Keyboard;
+import android.inputmethodservice.KeyboardView;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.MediaMetadataRetriever;
@@ -19,6 +23,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,6 +31,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -54,7 +60,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.VideoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
-import com.uren.catchu.GeneralUtils.KeyboardUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
@@ -66,6 +71,8 @@ import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -105,8 +112,10 @@ import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
+import static com.uren.catchu.MainPackage.MainFragments.Share.Utils.ResizeAnimation.widthType;
 
-public class SharePostFragment extends BaseFragment implements OnMapReadyCallback {
+public class SharePostFragment extends BaseFragment implements OnMapReadyCallback,
+        KeyboardHeightObserver {
 
     View view;
 
@@ -174,9 +183,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     LocationTrackerAdapter locationTrackObj;
     MapRipple mapRipple;
     LocationManager locationManager;
-
-    ResizeAnimation resizeMapAnimationShow;
-    ResizeAnimation resizeMapAnimationHide;
+    private KeyboardHeightProvider keyboardHeightProvider;
 
     ResizeAnimation publicAnimationShow;
     ResizeAnimation publicAnimationHide;
@@ -197,6 +204,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     boolean isVideoSelected;
     boolean keyboardIsVisible;
     boolean shareWhomOpened;
+    boolean keyboardResized;
 
     private static final int REQUEST_CODE_ENABLE_LOCATION = 407;
 
@@ -209,6 +217,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     private static final int ANIMATION_DURATION_FOR_MAP = 500;
     private static final int ANIMATION_DURATION_FOR_OTHERVIEWS = 300;
 
+    private final static int KEYBOARD_CHECK_VALUE = 200;
+
     PhotoSelectUtil photoSelectUtil;
     VideoSelectUtil videoSelectUtil;
     CheckShareItems checkShareItems;
@@ -216,10 +226,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     String selectedType = "";
     String selectedWhomType = "";
 
-    //boolean viewCreateAgain;
-
     public SharePostFragment() {
-        //this.viewCreateAgain = viewCreateAgain;
+
     }
 
     @Override
@@ -238,12 +246,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onResume() {
         super.onResume();
+        keyboardHeightProvider.setKeyboardHeightObserver(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         if (view == null) {
             view = inflater.inflate(R.layout.fragment_share_post, container, false);
@@ -251,6 +260,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             initializeItems();
             addListeners();
             setMapView();
+            focusEditText();
         }
         return view;
     }
@@ -272,26 +282,29 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         photoSelectUtil = new PhotoSelectUtil();
         checkShareItems = new CheckShareItems(getContext());
+        keyboardHeightProvider = new KeyboardHeightProvider((Activity) getContext());
+
+        view.post(new Runnable() {
+            public void run() {
+                keyboardHeightProvider.start();
+            }
+        });
+    }
+
+    public void focusEditText() {
+        shareMsgEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     private void setAnimations() {
-        mapLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mapLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                resizeMapAnimationShow = new ResizeAnimation(mapLayout, mapLayout.getHeight(), 0);
-                resizeMapAnimationHide = new ResizeAnimation(mapLayout, 0, mapLayout.getHeight());
-                resizeMapAnimationShow.setDuration(ANIMATION_DURATION_FOR_MAP);
-                resizeMapAnimationHide.setDuration(ANIMATION_DURATION_FOR_MAP);
-            }
-        });
 
         publicSelectLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 publicSelectLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                publicAnimationShow = new ResizeAnimation(publicSelectLayout, publicSelectLayout.getHeight(), 0);
-                publicAnimationHide = new ResizeAnimation(publicSelectLayout, 0, publicSelectLayout.getHeight());
+                publicAnimationShow = new ResizeAnimation(publicSelectLayout, publicSelectLayout.getWidth(), 0, widthType);
+                publicAnimationHide = new ResizeAnimation(publicSelectLayout, 0, publicSelectLayout.getWidth(), widthType);
                 publicAnimationShow.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 publicAnimationHide.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
             }
@@ -301,8 +314,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onGlobalLayout() {
                 allFollowersSelectLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                allFollowersAnimationShow = new ResizeAnimation(allFollowersSelectLayout, allFollowersSelectLayout.getHeight(), 0);
-                allFollowersAnimationHide = new ResizeAnimation(allFollowersSelectLayout, 0, allFollowersSelectLayout.getHeight());
+                allFollowersAnimationShow = new ResizeAnimation(allFollowersSelectLayout, allFollowersSelectLayout.getWidth(), 0, widthType);
+                allFollowersAnimationHide = new ResizeAnimation(allFollowersSelectLayout, 0, allFollowersSelectLayout.getWidth(), widthType);
                 allFollowersAnimationShow.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 allFollowersAnimationHide.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 allFollowersSelectLayout.startAnimation(allFollowersAnimationHide);
@@ -313,8 +326,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onGlobalLayout() {
                 specialSelectLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                specialAnimationShow = new ResizeAnimation(specialSelectLayout, specialSelectLayout.getHeight(), 0);
-                specialAnimationHide = new ResizeAnimation(specialSelectLayout, 0, specialSelectLayout.getHeight());
+                specialAnimationShow = new ResizeAnimation(specialSelectLayout, specialSelectLayout.getWidth(), 0, widthType);
+                specialAnimationHide = new ResizeAnimation(specialSelectLayout, 0, specialSelectLayout.getWidth(), widthType);
                 specialAnimationShow.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 specialAnimationHide.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 specialSelectLayout.startAnimation(specialAnimationHide);
@@ -325,8 +338,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onGlobalLayout() {
                 groupsSelectLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                groupAnimationShow = new ResizeAnimation(groupsSelectLayout, groupsSelectLayout.getHeight(), 0);
-                groupAnimationHide = new ResizeAnimation(groupsSelectLayout, 0, groupsSelectLayout.getHeight());
+                groupAnimationShow = new ResizeAnimation(groupsSelectLayout, groupsSelectLayout.getWidth(), 0, widthType);
+                groupAnimationHide = new ResizeAnimation(groupsSelectLayout, 0, groupsSelectLayout.getWidth(), widthType);
                 groupAnimationShow.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 groupAnimationHide.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 groupsSelectLayout.startAnimation(groupAnimationHide);
@@ -337,8 +350,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onGlobalLayout() {
                 justMeSelectLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                justMeAnimationShow = new ResizeAnimation(justMeSelectLayout, justMeSelectLayout.getHeight(), 0);
-                justMeAnimationHide = new ResizeAnimation(justMeSelectLayout, 0, justMeSelectLayout.getHeight());
+                justMeAnimationShow = new ResizeAnimation(justMeSelectLayout, justMeSelectLayout.getWidth(), 0, widthType);
+                justMeAnimationHide = new ResizeAnimation(justMeSelectLayout, 0, justMeSelectLayout.getWidth(), widthType);
                 justMeAnimationShow.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 justMeAnimationHide.setDuration(ANIMATION_DURATION_FOR_OTHERVIEWS);
                 justMeSelectLayout.startAnimation(justMeAnimationHide);
@@ -364,34 +377,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         setWhomItemsImgvFilled();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     private void addListeners() {
-        shareMsgEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        mapLayout.setVisibility(View.GONE);
-                        break;
-                    default:
-                        break;
-                }
-                return false;
-            }
-        });
-
-        KeyboardUtils.addKeyboardToggleListener((Activity) getContext(), new KeyboardUtils.SoftKeyboardToggleListener() {
-            @Override
-            public void onToggleSoftKeyboard(boolean isVisible) {
-                keyboardIsVisible = isVisible;
-                if (!isVisible) {
-                    if (resizeMapAnimationShow != null) {
-                        mapLayout.setVisibility(View.VISIBLE);
-                        mapLayout.startAnimation(resizeMapAnimationShow);
-                    }
-                }
-            }
-        });
 
         shareMsgEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -413,13 +399,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     clearTextSelectImgvFilled();
                     ShareItems.getInstance().getPost().setMessage("");
                 }
-            }
-        });
-
-        shareMsgEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                System.out.println("hasFocus:" + hasFocus);
             }
         });
 
@@ -476,10 +455,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         showMapImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (resizeMapAnimationShow != null && keyboardIsVisible) {
-                    CommonUtils.hideKeyBoard(getContext());
-                    mapLayout.startAnimation(resizeMapAnimationShow);
-                }
+                CommonUtils.hideKeyBoard(getContext());
             }
         });
 
@@ -500,6 +476,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                     @Override
                     public void onVideoRemoved() {
+                        if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null &&
+                                !videoSelectUtil.getVideoRealPath().isEmpty()) {
+                            File file = new File(videoSelectUtil.getVideoRealPath());
+                            file.delete();
+                            updateGalleryAfterFileDelete(file);
+                        }
                         videoSelectUtil = null;
                         isVideoSelected = false;
                         ShareItems.getInstance().clearVideoShareItemBox();
@@ -540,11 +522,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void onClick(View v) {
                 selectedWhomType = SHARE_TYPE_CUSTOM;
 
-                if (resizeMapAnimationShow != null && keyboardIsVisible) {
-                    CommonUtils.hideKeyBoard(getContext());
-                    mapLayout.startAnimation(resizeMapAnimationShow);
-                }
-
                 if (!shareWhomOpened) {
                     setShowAnimations();
                     shareWhomOpened = true;
@@ -557,11 +534,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 selectedWhomType = SHARE_TYPE_GROUP;
-
-                if (resizeMapAnimationShow != null && keyboardIsVisible) {
-                    CommonUtils.hideKeyBoard(getContext());
-                    mapLayout.startAnimation(resizeMapAnimationShow);
-                }
 
                 if (!shareWhomOpened) {
                     setShowAnimations();
@@ -595,6 +567,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         new SharePostProcess(NextActivity.thisActivity, new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
+                deleteSharedVideo();
                 ShareItems.setInstance(null);
             }
 
@@ -612,6 +585,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                                     @Override
                                     public void noClick() {
+                                        deleteSharedVideo();
                                         deleteUploadedItems();
                                     }
                                 });
@@ -619,10 +593,28 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 } else {
                     CommonUtils.showToast(NextActivity.thisActivity,
                             NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
+                    deleteSharedVideo();
                     deleteUploadedItems();
                 }
             }
         });
+    }
+
+    public void deleteSharedVideo() {
+        if (permissionModule.checkWriteExternalStoragePermission()) {
+            if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null &&
+                    !videoSelectUtil.getVideoRealPath().isEmpty()) {
+                File file = new File(videoSelectUtil.getVideoRealPath());
+                file.delete();
+                updateGalleryAfterFileDelete(file);
+            }
+        }
+    }
+
+    public void updateGalleryAfterFileDelete(File file){
+        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        intent.setData(Uri.fromFile(file));
+        getContext().sendBroadcast(intent);
     }
 
     public void deleteUploadedItems() {
@@ -655,10 +647,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void openWhomSelection() {
-        if (resizeMapAnimationShow != null && keyboardIsVisible) {
-            CommonUtils.hideKeyBoard(getContext());
-            mapLayout.startAnimation(resizeMapAnimationShow);
-        }
 
         if (!shareWhomOpened) {
             setShowAnimations();
@@ -764,7 +752,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     private void startGroupManagementFragment() {
         if (mFragmentNavigation != null) {
-            //viewCreateAgain = false;
             mFragmentNavigation.pushFragment(new GroupManagementFragment(GROUP_OP_CHOOSE_TYPE,
                             new ReturnCallback() {
                                 @Override
@@ -788,7 +775,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     private void startSelectFriendFragment() {
         if (mFragmentNavigation != null) {
-            //viewCreateAgain = false;
             mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null,
                     SharePostFragment.class.getName(),
                     new ReturnCallback() {
@@ -897,6 +883,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void startCameraForVideos() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);
+        takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
 
         /*Intent takeVideoIntent = new Intent("android.media.action.VIDEO_CAPTURE");
         takeVideoIntent.putExtra(MediaStore.EXTRA_OUTPUT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -1063,22 +1050,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void setVideoFromCameraSelection(Intent data) {
         isVideoSelected = true;
         videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, CAMERA_TEXT);
-
-        /*UriAdapter.savefile(UriAdapter.getRealPathFromURI(data.getData(), getContext()), MEDIA_TYPE_VIDEO, new FileSaveCallback() {
-            @Override
-            public void Saved(String realPath) {
-                File file = new File(videoSelectUtil.getVideoRealPath());
-                file.delete();
-                videoSelectUtil.setVideoUri(Uri.fromFile(new File(realPath)));
-                videoSelectUtil.setVideoRealPath(realPath);
-            }
-
-            @Override
-            public void OnError(Exception e) {
-
-            }
-        });*/
-
         addVideoShareItemList();
         setVideoSelectImgvFilled();
         startVideoViewFragment();
@@ -1163,6 +1134,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onPause() {
         super.onPause();
+        keyboardHeightProvider.setKeyboardHeightObserver(null);
         if (locationManager != null)
             locationManager.removeUpdates(locationTrackObj);
     }
@@ -1191,7 +1163,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setPhotoSelectImgvFilled() {
-        //photoSelectImgv.setColorFilter(getContext().getResources().getColor(R.color.LimeGreen, null), PorterDuff.Mode.SRC_IN);
         photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
                 0,
                 GradientDrawable.RECTANGLE, 20, 3));
@@ -1211,22 +1182,31 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void clearPhotoSelectImgvFilled() {
         photoSelectImgv.setBackground(null);
-        /*photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
-                0,
-                GradientDrawable.RECTANGLE, 20, 3));*/
     }
 
     public void clearVideoSelectImgvFilled() {
         videoSelectImgv.setBackground(null);
-        /*videoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
-                0,
-                GradientDrawable.RECTANGLE, 20, 3));*/
     }
 
     public void clearTextSelectImgvFilled() {
         textSelectImgv.setBackground(null);
-        /*textSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.Gray, null),
-                0,
-                GradientDrawable.RECTANGLE, 20, 3));*/
+    }
+
+    @Override
+    public void onKeyboardHeightChanged(int height, int orientation) {
+        String or = orientation == Configuration.ORIENTATION_PORTRAIT ? "portrait" : "landscape";
+
+        if(height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
+            params.height = height;
+            mapLayout.setLayoutParams(params);
+            keyboardResized = true;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        keyboardHeightProvider.close();
     }
 }
