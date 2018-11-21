@@ -265,10 +265,10 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     CommonUtils.showToast(mContext, "Card clicked");
-                    SinglePost.getInstance().setPost(post);
+                    SingletonSinglePost.getInstance().setPost(post);
                     String toolbarTitle = post.getUser().getUsername();
                     PostHelper.SinglePostClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
-                    SinglePost.getInstance().setPost(null);
+                    SingletonSinglePost.getInstance().setPost(null);
                 }
             });
 */

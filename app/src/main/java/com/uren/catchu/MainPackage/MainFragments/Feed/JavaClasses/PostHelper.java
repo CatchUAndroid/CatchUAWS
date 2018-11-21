@@ -47,7 +47,6 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallb
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.VideoActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
@@ -55,7 +54,6 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFra
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -234,7 +232,7 @@ public class PostHelper {
 
         private void showItemInFullView(Activity activity, Media media) {
 
-            PostItem.getInstance().setMedia(media);
+            SingletonPostItem.getInstance().setMedia(media);
 
             if (media.getType().equals(IMAGE_TYPE)) {
                 Intent intent = new Intent(activity, ImageActivity.class);

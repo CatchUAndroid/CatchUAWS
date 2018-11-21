@@ -148,4 +148,9 @@ public class ShareItems {
     public void setShareStartedValue(boolean shareStartedValue) {
         this.shareStartedValue = shareStartedValue;
     }
+
+    public static synchronized void reset(){
+        shareItemsInstance = null;
+    }
+
 }

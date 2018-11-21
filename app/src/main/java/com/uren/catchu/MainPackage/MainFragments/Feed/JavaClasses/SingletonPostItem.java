@@ -2,19 +2,19 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
 import catchu.model.Media;
 
-public class PostItem {
+public class SingletonPostItem {
 
-    private static PostItem ourInstance ;
+    private static SingletonPostItem ourInstance ;
     private static Media media;
 
-    public static PostItem getInstance() {
+    public static SingletonPostItem getInstance() {
         if (ourInstance == null) {
-            ourInstance = new PostItem();
+            ourInstance = new SingletonPostItem();
         }
         return ourInstance;
     }
 
-    public PostItem() {
+    public SingletonPostItem() {
         media = new Media();
     }
 
@@ -23,8 +23,11 @@ public class PostItem {
     }
 
     public void setMedia(Media media) {
-        PostItem.media = media;
+        SingletonPostItem.media = media;
     }
 
+    public static synchronized void reset(){
+        ourInstance = null;
+    }
 
 }

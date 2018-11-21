@@ -168,6 +168,10 @@ public class AccountHolderInfo {
         AccountHolderInfo.accountHolderInfoCallback = accountHolderInfoCallback;
     }
 
+    public static synchronized void reset(){
+        accountHolderInfoInstance = null;
+    }
+
 }
 
 

@@ -123,7 +123,7 @@ public class StringConstants {
 
     //PROFILE POST TYPE
     public static final String PROFILE_POST_TYPE_MY_POSTS = "myPosts";
-    public static final String PROFILE_POST_TYPE_CATCHED = "catch";
+    public static final String PROFILE_POST_TYPE_CAUGHT = "catch";
 
 
 }

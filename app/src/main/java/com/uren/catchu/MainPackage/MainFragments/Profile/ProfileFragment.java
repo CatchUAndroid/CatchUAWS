@@ -55,7 +55,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CATCHED;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
 
 public class ProfileFragment extends BaseFragment
@@ -469,7 +469,7 @@ public class ProfileFragment extends BaseFragment
         }
 
         if (v == llCatchedPosts) {
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CATCHED), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llMyGroups) {

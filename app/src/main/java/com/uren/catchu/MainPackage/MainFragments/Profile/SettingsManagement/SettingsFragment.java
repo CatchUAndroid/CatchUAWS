@@ -19,13 +19,20 @@ import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ChangePasswordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactFriendsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.FacebookFriendsFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderContactList;
+import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.SelectedFriendList;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -109,6 +116,7 @@ public class SettingsFragment extends BaseFragment {
         logoutLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearSingletonClasses();
                 signOutClicked();
             }
         });
@@ -161,6 +169,19 @@ public class SettingsFragment extends BaseFragment {
                 return false;
             }
         });
+    }
+
+    private void clearSingletonClasses() {
+
+        AccountHolderInfo.reset();
+        AccountHolderContactList.reset();
+        AccountHolderFacebookFriends.reset();
+        SelectedFriendList.reset();
+        ShareItems.reset();
+
+        SingletonPostItem.reset();
+        SingletonSinglePost.reset();
+        SingletonPostList.reset();
     }
 
     public void startFacebookFriendsFragment() {

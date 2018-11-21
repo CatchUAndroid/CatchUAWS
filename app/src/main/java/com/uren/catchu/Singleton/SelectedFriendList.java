@@ -75,4 +75,9 @@ public class SelectedFriendList {
             selectedFriendList.setResultArray(new ArrayList<UserProfileProperties>());
         }
     }
+
+    public static synchronized void reset(){
+        instance = null;
+    }
+
 }

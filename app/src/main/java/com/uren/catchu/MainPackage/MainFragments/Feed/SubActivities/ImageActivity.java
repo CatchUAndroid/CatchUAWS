@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostItem;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
@@ -45,7 +45,7 @@ public class ImageActivity extends AppCompatActivity {
 
     private void setImage() {
 
-        Media media = PostItem.getInstance().getMedia();
+        Media media = SingletonPostItem.getInstance().getMedia();
 
         Glide.with(this)
                 .load(media.getUrl())

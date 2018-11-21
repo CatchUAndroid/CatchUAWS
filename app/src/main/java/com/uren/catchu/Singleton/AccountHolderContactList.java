@@ -104,4 +104,9 @@ public class AccountHolderContactList {
         }
         phones.close();
     }
+
+    public static synchronized void reset(){
+        accountHolderContactList = null;
+    }
+
 }

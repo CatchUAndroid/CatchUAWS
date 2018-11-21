@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostPagerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -23,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CATCHED;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
 
 
@@ -90,7 +91,7 @@ public class UserPostFragment extends BaseFragment
 
             if(catchType.equals(PROFILE_POST_TYPE_MY_POSTS)){
                 toolbarTitle = getContext().getResources().getString(R.string.myPosts);
-            }else if(catchType.equals(PROFILE_POST_TYPE_CATCHED)){
+            }else if(catchType.equals(PROFILE_POST_TYPE_CAUGHT)){
                 toolbarTitle = getContext().getResources().getString(R.string.catchedPosts);
             }else{
                 toolbarTitle = "";
@@ -104,6 +105,8 @@ public class UserPostFragment extends BaseFragment
         toolbarTitleTv.setText(toolbarTitle);
         tabGridView = (TabItem) mView.findViewById(R.id.tabGridView);
         tabListView = (TabItem) mView.findViewById(R.id.tabListView);
+
+        SingletonPostList.reset();
     }
 
     private void initListeners() {

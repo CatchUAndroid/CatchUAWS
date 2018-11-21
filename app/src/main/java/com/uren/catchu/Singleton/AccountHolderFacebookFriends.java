@@ -134,4 +134,8 @@ public class AccountHolderFacebookFriends {
         });
     }
 
+    public static synchronized void reset(){
+        accountHolderFacebookFriends = null;
+    }
+
 }

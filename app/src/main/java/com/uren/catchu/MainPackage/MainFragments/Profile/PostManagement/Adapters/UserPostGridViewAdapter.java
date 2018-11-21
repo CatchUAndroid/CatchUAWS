@@ -23,7 +23,6 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-import com.google.android.gms.vision.text.Line;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -31,7 +30,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallb
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
@@ -158,7 +157,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
 
         private void setSinglePostFragmentItems() {
 
-            SinglePost.getInstance().setPost(post);
+            SingletonSinglePost.getInstance().setPost(post);
             String toolbarTitle = post.getUser().getUsername();
 
             PostHelper.SinglePostClicked instance = PostHelper.SinglePostClicked.getInstance();

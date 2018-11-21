@@ -12,7 +12,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -48,10 +47,8 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePostItemAnimator;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -161,7 +158,7 @@ public class SinglePostFragment extends BaseFragment
             ButterKnife.bind(this, mView);
 
             //input for the fragment
-            post = SinglePost.getInstance().getPost();
+            post = SingletonSinglePost.getInstance().getPost();
             getItemsFromBundle();
 
             //setting content
@@ -402,7 +399,7 @@ public class SinglePostFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == imgBack) {
-            SinglePost.getInstance().setPost(null);
+            SingletonSinglePost.getInstance().setPost(null);
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }

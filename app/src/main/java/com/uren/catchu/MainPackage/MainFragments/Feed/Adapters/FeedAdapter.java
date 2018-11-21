@@ -4,14 +4,11 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +30,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMen
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePost;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
@@ -258,7 +255,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setSinglePostFragmentItems() {
 
-            SinglePost.getInstance().setPost(post);
+            SingletonSinglePost.getInstance().setPost(post);
             String toolbarTitle = post.getUser().getUsername();
 
             PostHelper.SinglePostClicked singlePostClicked = PostHelper.SinglePostClicked.getInstance();
