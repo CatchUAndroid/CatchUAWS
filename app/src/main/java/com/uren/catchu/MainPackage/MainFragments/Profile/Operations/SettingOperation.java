@@ -9,9 +9,15 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.SelectedFriendList;
+import com.uren.catchu.Singleton.Share.ShareItems;
 
 import catchu.model.UserProfileProperties;
 
@@ -33,7 +39,19 @@ public class SettingOperation {
             TwitterCore.getInstance().getSessionManager().clearActiveSession();
         }
 
-        
+        clearSingletonClasses();
+    }
+
+    static void clearSingletonClasses() {
+
+        AccountHolderInfo.reset();
+        AccountHolderFacebookFriends.reset();
+        SelectedFriendList.reset();
+        ShareItems.reset();
+
+        SingletonPostItem.reset();
+        SingletonSinglePost.reset();
+        SingletonPostList.reset();
     }
 
     public static void changeUserPrivacy(final Context context, final Switch privateAccSwitch) {
