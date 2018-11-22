@@ -98,7 +98,6 @@ public class UserEditFragment extends BaseFragment
     RelativeLayout rlProfilePicture;
     @BindView(R.id.commonToolbarbackImgv)
     ClickableImageView commonToolbarbackImgv;
-
     @BindView(R.id.commonToolbarTickImgv)
     ImageView commonToolbarTickImgv;
     @BindView(R.id.toolbarTitleTv)
@@ -109,7 +108,6 @@ public class UserEditFragment extends BaseFragment
     ImageView addPhotoImgv;
     @BindView(R.id.shortUserNameTv)
     TextView shortUserNameTv;
-    //Fields
     @BindView(R.id.edtName)
     EditText edtName;
     @BindView(R.id.edtUserName)
@@ -133,30 +131,12 @@ public class UserEditFragment extends BaseFragment
     PhotoSelectUtil photoSelectUtil;
 
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    //private UserProfile userProfile;
-    //private UserProfileProperties userProfileProperties;
 
     private String selectedGender;
     private ArrayAdapter<String> genderSpinnerAdapter;
 
     boolean profilPicChanged = false;
-    //Bitmap bitmap;
     boolean photoExist = false;
-
-
-    //todo : NT - request kodları permissionConstanstan çekilmeli
-    // photo select variables
-    private static final int CODE_GALLERY_REQUEST = 0xa0;
-    private static final int CODE_CAMERA_REQUEST = 0xa1;
-    private static final int CODE_RESULT_REQUEST = 0xa2;
-    private static final int CAMERA_PERMISSIONS_REQUEST_CODE = 0x03;
-    private static final int STORAGE_PERMISSIONS_REQUEST_CODE = 0x04;
-    private File fileUri = new File(Environment.getExternalStorageDirectory().getPath() + "/photo.jpg");
-    //private File fileCropUri = new File(Environment.getExternalStorageDirectory().getPath() + "/crop_photo.jpg");
-    private Uri imageUri;
-    //private Uri cropImageUri;
-    private static final int OUTPUT_X = 480;
-    private static final int OUTPUT_Y = 480;
 
     private static final int ACTIVITY_REQUEST_CODE_OPEN_GALLERY = 385;
     private static final int ACTIVITY_REQUEST_CODE_OPEN_CAMERA = 85;
