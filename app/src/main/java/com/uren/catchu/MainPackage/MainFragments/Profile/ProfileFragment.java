@@ -56,7 +56,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
@@ -165,7 +165,6 @@ public class ProfileFragment extends BaseFragment
 
         }
 
-
         return mView;
     }
 
@@ -201,7 +200,6 @@ public class ProfileFragment extends BaseFragment
             }
         });
     }
-
 
     private void checkBundle() {
         Bundle args = getArguments();
@@ -317,6 +315,9 @@ public class ProfileFragment extends BaseFragment
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getName());
                 txtName.setText(user.getUserInfo().getName());
+            }else if(user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()){
+                navViewNameTv.setText(user.getUserInfo().getUsername());
+                txtName.setText(user.getUserInfo().getUsername());
             }
             //Username
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
@@ -324,8 +325,6 @@ public class ProfileFragment extends BaseFragment
                 navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
             }
             //profile picture
-
-
             UserDataUtil.setProfilePicture2(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             imgProfile.setPadding(3, 3, 3, 3);
@@ -465,15 +464,18 @@ public class ProfileFragment extends BaseFragment
         }
 
         if (v == llMyPosts) {
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_MY_POSTS), ANIMATE_RIGHT_TO_LEFT);
+            String targetUid = AccountHolderInfo.getUserID();
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llCatchedPosts) {
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT), ANIMATE_RIGHT_TO_LEFT);
+            String targetUid = AccountHolderInfo.getUserID();
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llMyGroups) {
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(""), ANIMATE_RIGHT_TO_LEFT);
+            String targetUid = AccountHolderInfo.getUserID();
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
 

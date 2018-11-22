@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DynamicLinkUtil.DynamicLinkUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.OnLoadedListener;
@@ -47,7 +48,7 @@ public class SettingsFragment extends BaseFragment {
     Fragment fragment;
 
     @BindView(R.id.commonToolbarbackImgv)
-    ImageView commonToolbarbackImgv;
+    ClickableImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.logoutLayout)

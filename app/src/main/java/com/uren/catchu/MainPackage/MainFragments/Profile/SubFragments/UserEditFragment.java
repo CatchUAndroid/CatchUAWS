@@ -46,6 +46,7 @@ import com.squareup.picasso.Picasso;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.GeneralUtils.CircleTransform;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -106,7 +107,7 @@ public class UserEditFragment extends BaseFragment
     RelativeLayout rlProfilePicture;
 
     @BindView(R.id.commonToolbarbackImgv)
-    ImageView commonToolbarbackImgv;
+    ClickableImageView commonToolbarbackImgv;
 
     @BindView(R.id.commonToolbarTickImgv)
     ImageView commonToolbarTickImgv;

@@ -28,20 +28,19 @@ import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_GRI
 import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_LIST;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 
 public class UserPostFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    String catchType, toolbarTitle;
+    String catchType, targetUid, toolbarTitle;
     UserPostPagerAdapter userPostPagerAdapter;
     ImageView imgViewGrid, imgViewList;
     TextView txtViewGrid, txtViewList;
     TabItem tabGridView, tabListView;
     int selectedTabPosition = 0;
-
 
     @BindView(R.id.commonToolbarbackImgv)
     ImageView commonToolbarbackImgv;
@@ -52,14 +51,15 @@ public class UserPostFragment extends BaseFragment
     @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    static FloatingActionButton fabScrollUp;
+    FloatingActionButton fabScrollUp;
 
 
 
 
-    public static UserPostFragment newInstance(String catchType) {
+    public static UserPostFragment newInstance(String catchType, String targetUid) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);
+        args.putString("targetUid", targetUid);
         UserPostFragment fragment = new UserPostFragment();
         fragment.setArguments(args);
         return fragment;
@@ -97,8 +97,9 @@ public class UserPostFragment extends BaseFragment
         Bundle args = getArguments();
         if (args != null) {
             catchType = (String) args.getString("catchType");
+            targetUid = (String) args.get("targetUid");
 
-            if (catchType.equals(PROFILE_POST_TYPE_MY_POSTS)) {
+            if (catchType.equals(PROFILE_POST_TYPE_SHARED)) {
                 toolbarTitle = getContext().getResources().getString(R.string.myPosts);
             } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
                 toolbarTitle = getContext().getResources().getString(R.string.catchedPosts);
@@ -126,7 +127,9 @@ public class UserPostFragment extends BaseFragment
 
     private void setUpPager() {
 
-        userPostPagerAdapter = new UserPostPagerAdapter(getFragmentManager(), tabLayout.getTabCount(), catchType);
+        SingletonPostList.getInstance().clearPostList(); // clear singleton post list
+
+        userPostPagerAdapter = new UserPostPagerAdapter(getFragmentManager(), tabLayout.getTabCount(), catchType, targetUid);
         viewPager.setAdapter(userPostPagerAdapter);
 
         setCustomTab();
@@ -172,11 +175,6 @@ public class UserPostFragment extends BaseFragment
                     txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
 
                     selectedTabPosition = USER_POST_VIEW_TYPE_GRID;
-                    if(UserPostGridViewFragment.scrollButtonVisible){
-                        fabScrollUp.setVisibility(View.VISIBLE);
-                    }else{
-                        fabScrollUp.setVisibility(View.GONE);
-                    }
 
                 } else if (tab.getPosition() == 1) {
                     imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -186,12 +184,6 @@ public class UserPostFragment extends BaseFragment
                     txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
 
                     selectedTabPosition = USER_POST_VIEW_TYPE_LIST;
-
-                    if(UserPostListViewFragment.scrollButtonVisible){
-                        fabScrollUp.setVisibility(View.VISIBLE);
-                    }else{
-                        fabScrollUp.setVisibility(View.GONE);
-                    }
 
                 } else {
 
@@ -226,14 +218,14 @@ public class UserPostFragment extends BaseFragment
 
             if(selectedTabPosition == USER_POST_VIEW_TYPE_GRID){
                 CommonUtils.showToast(getContext(), "grid için tıklandı");
-                UserPostGridViewFragment.customGridLayoutManager.smoothScrollToPosition(UserPostGridViewFragment.gridRecyclerView, null, 0);
+                //UserPostGridViewFragment.customGridLayoutManager.smoothScrollToPosition(UserPostGridViewFragment.gridRecyclerView, null, 0);
             }
 
             if(selectedTabPosition == USER_POST_VIEW_TYPE_LIST){
                 CommonUtils.showToast(getContext(), "list için tıklandı");
                 //UserPostListViewFragment.customLinearLayoutManager.scrollToPositionWithOffset(0,);
 
-                 UserPostListViewFragment.customLinearLayoutManager.smoothScrollToPosition(UserPostListViewFragment.listRecyclerView, null, 0);
+                //UserPostListViewFragment.customLinearLayoutManager.smoothScrollToPosition(UserPostListViewFragment.listRecyclerView, null, 0);
 
             }
 

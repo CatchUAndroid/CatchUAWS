@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.FragmentControllers.FragNavController;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.OnLoadedListener;
@@ -50,7 +51,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     @BindView(R.id.toolbarLayout)
     LinearLayout toolbarLayout;
     @BindView(R.id.commonToolbarbackImgv)
-    ImageView commonToolbarbackImgv;
+    ClickableImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.progressBar)

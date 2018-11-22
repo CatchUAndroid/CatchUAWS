@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
@@ -48,7 +49,7 @@ public class FollowerFragment extends BaseFragment
     ProgressBar progressBar;
 
     @BindView(R.id.commonToolbarbackImgv)
-    ImageView commonToolbarbackImgv;
+    ClickableImageView commonToolbarbackImgv;
 
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;

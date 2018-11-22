@@ -32,7 +32,6 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
@@ -54,17 +53,16 @@ import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIE
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_MY_POSTS;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 
 public class UserPostGridViewFragment extends BaseFragment {
 
     View mView;
-    String catchType;
-    UserPostGridViewAdapter userPostGridViewAdapter;
-    static CustomGridLayoutManager customGridLayoutManager;
-    static RecyclerView gridRecyclerView;
-    static boolean scrollButtonVisible = false;
+    private String catchType, targetUid;
+    private UserPostGridViewAdapter userPostGridViewAdapter;
+    private CustomGridLayoutManager customGridLayoutManager;
+    private RecyclerView gridRecyclerView;
     private List<Post> postList = new ArrayList<Post>();
 
     private static final int MARGING_GRID = 2;
@@ -95,9 +93,10 @@ public class UserPostGridViewFragment extends BaseFragment {
     @BindView(R.id.txtNoFeedExplanation)
     TextView txtNoFeedExplanation;
 
-    public static UserPostGridViewFragment newInstance(String catchType) {
+    public static UserPostGridViewFragment newInstance(String catchType, String targetUid) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);
+        args.putString("targetUid", targetUid);
         UserPostGridViewFragment fragment = new UserPostGridViewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -136,6 +135,7 @@ public class UserPostGridViewFragment extends BaseFragment {
         Bundle args = getArguments();
         if (args != null) {
             catchType = (String) args.getString("catchType");
+            targetUid = (String) args.getString("targetUid");
         }
     }
 
@@ -208,7 +208,7 @@ public class UserPostGridViewFragment extends BaseFragment {
                 super.onScrolled(recyclerView, dx, dy);
 
                 //FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-                setScrollButtonVisibility();
+                //setScrollButtonVisibility();
 
                 if (dy > 0) //check for scroll down
                 {
@@ -245,13 +245,12 @@ public class UserPostGridViewFragment extends BaseFragment {
         int firstVisibleItemPosition = customGridLayoutManager.findFirstVisibleItemPosition();
         if (firstVisibleItemPosition < 15) {
             visibility = View.GONE;
-            scrollButtonVisible = false;
+
         } else {
             visibility = View.VISIBLE;
-            scrollButtonVisible = true;
         }
 
-        UserPostFragment.fabScrollUp.setVisibility(visibility);
+        //UserPostFragment.fabScrollUp.setVisibility(visibility);
     }
 
     private void checkLocationAndRetrievePosts() {
@@ -340,8 +339,8 @@ public class UserPostGridViewFragment extends BaseFragment {
 
     private void startGetPosts(String token) {
 
-        if (catchType.equals(PROFILE_POST_TYPE_MY_POSTS)) {
-            getMyPosts(token);
+        if (catchType.equals(PROFILE_POST_TYPE_SHARED)) {
+            getSharedPosts(token);
         } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
             getCaughtPosts(token);
         } else {
@@ -351,12 +350,12 @@ public class UserPostGridViewFragment extends BaseFragment {
 
     }
 
-    private void getMyPosts(String token) {
+    private void getSharedPosts(String token) {
 
         setLocationInfo();
 
         String sUserId = AccountHolderInfo.getUserID();
-        String sUid = AccountHolderInfo.getUserID();
+        String sUid = targetUid;
         String sLongitude = longitude;
         String sPerpage = String.valueOf(perPageCnt);
         String sLatitude = latitude;
@@ -425,7 +424,7 @@ public class UserPostGridViewFragment extends BaseFragment {
         setLocationInfo();
 
         String sUserId = AccountHolderInfo.getUserID();
-        String sUid = AccountHolderInfo.getUserID();
+        String sUid = targetUid;
         String sLongitude = longitude;
         String sPerpage = String.valueOf(perPageCnt);
         String sLatitude = latitude;

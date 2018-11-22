@@ -27,6 +27,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -65,7 +66,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
     @BindView(R.id.verifyCodeEt)
     EditText verifyCodeEt;
     @BindView(R.id.commonToolbarbackImgv)
-    ImageView commonToolbarbackImgv;
+    ClickableImageView commonToolbarbackImgv;
     @BindView(R.id.commonToolbarTickImgv)
     ImageView commonToolbarTickImgv;
     @BindView(R.id.toolbarTitleTv)

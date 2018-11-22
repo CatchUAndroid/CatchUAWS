@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
@@ -349,21 +350,29 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setTargetImage() {
 
+            int targetIcon = R.drawable.world_icon_96;
+
             if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
-                imgTarget.setImageResource(R.drawable.world_icon_96);
+                targetIcon = R.drawable.world_icon_96;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
-                imgTarget.setImageResource(R.drawable.friends);
+                targetIcon = R.drawable.friends;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
-                imgTarget.setImageResource(R.drawable.groups_icon_500);
+                targetIcon = R.drawable.groups_icon_500;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
             }else if(post.getPrivacyType().equals(SHARE_TYPE_SELF)){
-                imgTarget.setImageResource(R.mipmap.icon_lock);
+                targetIcon = R.drawable.groups_icon_500;
             } else if(post.getPrivacyType().equals(SHARE_TYPE_GROUP)){
-                imgTarget.setImageResource(R.drawable.groups_icon_500);
+                targetIcon = R.drawable.groups_icon_500;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
             }
+
+            Glide.with(mContext)
+                    .load(targetIcon)
+                    .into(imgTarget);
+
+
         }
 
 

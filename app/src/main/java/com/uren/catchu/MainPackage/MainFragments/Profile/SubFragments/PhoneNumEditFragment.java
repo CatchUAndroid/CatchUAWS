@@ -46,6 +46,7 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 
@@ -81,7 +82,7 @@ public class PhoneNumEditFragment extends BaseFragment {
     View mView;
 
     @BindView(R.id.commonToolbarbackImgv)
-    ImageView commonToolbarbackImgv;
+    ClickableImageView commonToolbarbackImgv;
     @BindView(R.id.commonToolbarNextImgv)
     ImageView commonToolbarNextImgv;
     @BindView(R.id.toolbarTitleTv)

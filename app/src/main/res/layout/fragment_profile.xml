@@ -84,17 +84,17 @@
                         android:id="@+id/backLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:gravity="left"
                         android:visibility="gone">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgBackBtn"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="end"
-                            android:layout_marginLeft="10dp"
-                            android:src="@drawable/back_arrow2" />
+                            android:layout_width="?attr/actionBarSize"
+                            android:layout_height="?attr/actionBarSize"
+                            android:paddingBottom="8dp"
+                            android:paddingRight="20dp"
+                            android:paddingTop="8dp"
+                            android:src="@mipmap/icon_back_white" />
 
                     </RelativeLayout>
 
@@ -334,9 +334,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
+                                        android:text="My Posts -> Click here"
                                         android:textColor="@color/white"
-                                        android:textStyle="bold"
-                                        android:text="My Posts -> Click here"/>
+                                        android:textStyle="bold" />
 
 
                                 </LinearLayout>
@@ -355,9 +355,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
+                                        android:text="Catched Posts -> Click here"
                                         android:textColor="@color/white"
-                                        android:textStyle="bold"
-                                        android:text="Catched Posts -> Click here"/>
+                                        android:textStyle="bold" />
 
                                 </LinearLayout>
 
@@ -375,9 +375,9 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
+                                        android:text="My Groups -> Click here"
                                         android:textColor="@color/white"
-                                        android:textStyle="bold"
-                                        android:text="My Groups -> Click here"/>
+                                        android:textStyle="bold" />
 
                                 </LinearLayout>
 

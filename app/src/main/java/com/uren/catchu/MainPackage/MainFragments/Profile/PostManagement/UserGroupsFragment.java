@@ -31,13 +31,13 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
-import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
-public class UserPostListViewFragment extends BaseFragment {
+public class UserGroupsFragment extends BaseFragment {
 
     View mView;
     private String catchType, targetUid;
@@ -92,16 +92,16 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private boolean hasLoadedOnce = false; // your boolean field
 
-    public static UserPostListViewFragment newInstance(String catchType, String targetUid) {
+    public static UserGroupsFragment newInstance(String catchType, String targetUid) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);
         args.putString("targetUid", targetUid);
-        UserPostListViewFragment fragment = new UserPostListViewFragment();
+        UserGroupsFragment fragment = new UserGroupsFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
-    public UserPostListViewFragment() {
+    public UserGroupsFragment() {
     }
 
     @Override

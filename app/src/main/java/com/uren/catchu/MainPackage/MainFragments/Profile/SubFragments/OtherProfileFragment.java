@@ -1,27 +1,19 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -38,8 +30,8 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.NewsPagerAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -49,10 +41,9 @@ import butterknife.ButterKnife;
 
 import catchu.model.User;
 import catchu.model.UserProfile;
-import catchu.model.UserProfileRelationInfo;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
@@ -60,43 +51,57 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIR
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 public class OtherProfileFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    UserProfile otherProfile;
+    UserProfile otherProfile;  //serverdan getirilen user bilgilerini içerir
+    User selectedUser;       // fragmenta aktarılan user'ın bilgilerini içerir
     UserInfoListItem userInfoListItem;
-    User selectedUser;
+
     String followStatus;
     private int followingCount, followerCount;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.htab_tabs)
-    TabLayout tabs;
-    @BindView(R.id.htab_viewpager)
-    ViewPager vpNews;
-
-    @BindView(R.id.htab_toolbar)
+    //toolbar items
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.toolbar_title)
-    TextView toolbarTitle;
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
+    @BindView(R.id.commonToolbarbackImgv)
+    ClickableImageView commonToolbarbackImgv;
+
+    //profileimage
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
-    @BindView(R.id.txtUserName)
-    TextView txtUserName;
+    @BindView(R.id.txtProfile)
+    TextView txtProfile;
+
+    //profile detail
+    @BindView(R.id.txtName)
+    TextView txtName;
+    @BindView(R.id.txtBio)
+    TextView txtBio;
+
+    //Follow variables
+    @BindView(R.id.btnFollowStatus)
+    Button btnFollowStatus;
     @BindView(R.id.txtFollowerCnt)
     TextView txtFollowerCnt;
     @BindView(R.id.txtFollowingCnt)
     TextView txtFollowingCnt;
 
-    @BindView(R.id.imgBackBtn)
-    ClickableImageView imgBackBtn;
+    //posts
+    @BindView(R.id.llMyPosts)
+    LinearLayout llMyPosts;
 
-    @BindView(R.id.btnFollowStatus)
-    Button btnFollowStatus;
+    //Refresh layout
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
 
     /**
      * @param user i) userId -> ZORUNLU,
@@ -131,79 +136,35 @@ public class OtherProfileFragment extends BaseFragment
                 selectedUser = userInfoListItem.getUser();
             }
 
-            setCollapsingToolbar();
-            setUpPager();
-        }
+            initToolbar();
+            initListeners();
+            updateUI();          //fragmenta aktarılan selectedUser üzerinden datalar set edilir.
+            setPullToRefresh();
 
+        }
 
         return mView;
     }
 
-    private void setCollapsingToolbar() {
-
-        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) mView.findViewById(R.id.htab_collapse_toolbar);
-
-        try {
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.header);
-            Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                @SuppressWarnings("ResourceType")
-                @Override
-                public void onGenerated(Palette palette) {
-
-                    int vibrantColor = palette.getVibrantColor(R.color.primary_500);
-                    int vibrantDarkColor = palette.getDarkVibrantColor(R.color.primary_700);
-                    collapsingToolbarLayout.setContentScrimColor(vibrantColor);
-                    collapsingToolbarLayout.setStatusBarScrimColor(vibrantDarkColor);
-                    //
-                }
-            });
-
-        } catch (Exception e) {
-            // if Bitmap fetch fails, fallback to primary colors
-            Log.e("TAG", "onCreate: failed to create bitmap from background", e.fillInStackTrace());
-            collapsingToolbarLayout.setContentScrimColor(
-                    ContextCompat.getColor(getActivity(), R.color.primary_500)
-            );
-            collapsingToolbarLayout.setStatusBarScrimColor(
-                    ContextCompat.getColor(getActivity(), R.color.primary_700)
-            );
-        }
-
-    }
-
-
-    private void setUpPager() {
-
-        NewsPagerAdapter adp = new NewsPagerAdapter(getFragmentManager());
-        NewsList n1 = new NewsList();
-        NewsList n2 = new NewsList();
-        NewsList n3 = new NewsList();
-        NewsList n4 = new NewsList();
-        NewsList n5 = new NewsList();
-
-        adp.addFrag(n1, "World");
-        adp.addFrag(n2, "Special");
-        adp.addFrag(n3, "International");
-        adp.addFrag(n4, "Technology");
-        adp.addFrag(n5, "Finance");
-
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        vpNews.setAdapter(adp);
-        vpNews.setOffscreenPageLimit(12);
-        tabs.setupWithViewPager(vpNews);
-
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        updateUI();
-        initListeners();
+    private void initToolbar() {
+        commonToolbarbackImgv.setOnClickListener(this);
+        toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
     }
 
     private void initListeners() {
-        imgBackBtn.setOnClickListener(this);
         btnFollowStatus.setOnClickListener(this);
+        llMyPosts.setOnClickListener(this);
+    }
+
+    private void setPullToRefresh() {
+
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                updateUI();
+            }
+        });
     }
 
     private void updateUI() {
@@ -211,48 +172,24 @@ public class OtherProfileFragment extends BaseFragment
         txtFollowerCnt.setClickable(false);
         txtFollowingCnt.setClickable(false);
 
-        //profil fotografi varsa set edilir.
-        UserDataUtil.setProfilePicture(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
-                txtUserName, imgProfile);
-
-        getProfileDetail();
-    }
-
-    private void setProfileDetail() {
-        //toolbarTitle
-        if (isValid(otherProfile.getUserInfo().getName())) {
-            toolbarTitle.setText(otherProfile.getUserInfo().getName());
-        } else {
-            toolbarTitle.setText(R.string.profile);
-        }
         //username
-        if (isValid(otherProfile.getUserInfo().getUsername())) {
-            txtUserName.setText(otherProfile.getUserInfo().getUsername());
+        if (isValid(selectedUser.getUsername())) {
+            toolbarTitleTv.setText(selectedUser.getUsername());
         }
-        //followerCount
-        UserProfileRelationInfo relationInfo = otherProfile.getRelationInfo();
-        String followerCount = relationInfo.getFollowerCount();
 
-        if (isValid(otherProfile.getRelationInfo().getFollowerCount())) {
-            txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
-        }
-        //followingCount
-        if (isValid(otherProfile.getRelationInfo().getFollowingCount())) {
-            txtFollowingCnt.setText(otherProfile.getRelationInfo().getFollowingCount() + "\n" + "following");
-        }
-        //profilPicture
-        UserDataUtil.setProfilePicture(getActivity(), otherProfile.getUserInfo().getProfilePhotoUrl(), otherProfile.getUserInfo().getName(),
-                txtUserName, imgProfile);
-        //FollowStatus
-        UserDataUtil.updateFollowButton2(getActivity(), otherProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
-    }
+        //profil fotografi varsa set edilir.
+        UserDataUtil.setProfilePicture2(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
+                selectedUser.getUsername(), txtProfile, imgProfile);
+        imgProfile.setPadding(3, 3, 3, 3);
 
-    private boolean isValid(String name) {
-        if (name != null && !name.isEmpty()) {
-            return true;
-        } else {
-            return false;
+        //Name
+        if (isValid(selectedUser.getName())) {
+            txtName.setText(selectedUser.getName());
         }
+
+        /* eldeki datalar set edildikten sonra serverdan tüm bilgiler çekilir */
+        getProfileDetail(); //userid ile user serverdan tekrar çekilir
+
     }
 
     private void getProfileDetail() {
@@ -299,24 +236,52 @@ public class OtherProfileFragment extends BaseFragment
         }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
-    @Override
-    public void onClick(View v) {
+    private void setProfileDetail() {
 
-        if (v == imgBackBtn) {
-
-            if (getActivity() instanceof NextActivity)
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-
-            getActivity().onBackPressed();
+        //toolbarTitle
+        if (isValid(otherProfile.getUserInfo().getUsername())) {
+            toolbarTitleTv.setText(otherProfile.getUserInfo().getUsername());
+        } else {
+            toolbarTitleTv.setText(R.string.profile);
         }
 
-        if (v == btnFollowStatus) {
-            btnFollowStatusClicked();
+        //profil fotografi varsa set edilir.
+        UserDataUtil.setProfilePicture2(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
+                selectedUser.getUsername(), txtProfile, imgProfile);
+        imgProfile.setPadding(3, 3, 3, 3);
+        //Name
+        if (isValid(otherProfile.getUserInfo().getName())) {
+            txtName.setText(otherProfile.getUserInfo().getName());
+        }else if(isValid(otherProfile.getUserInfo().getUsername())){
+            txtName.setText(otherProfile.getUserInfo().getUsername());
         }
+        //Biography
+        // todo NT - biography usera beslenmiyor.düzenlenecek
+
+        //FollowStatus
+        UserDataUtil.updateFollowButton2(getActivity(), otherProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
+
+        setUserFollowerAndFollowingCnt(otherProfile);
+        refresh_layout.setRefreshing(false);
+
     }
 
+
+    private void setUserFollowerAndFollowingCnt(UserProfile user) {
+
+        if (user != null && user.getRelationInfo() != null) {
+
+            if (user.getRelationInfo().getFollowerCount() != null && !user.getRelationInfo().getFollowerCount().trim().isEmpty())
+                txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount());
+
+            if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
+                txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount());
+
+        }
+    }
 
     private void btnFollowStatusClicked() {
 
@@ -411,7 +376,7 @@ public class OtherProfileFragment extends BaseFragment
         followerCount = Integer.parseInt(otherProfile.getRelationInfo().getFollowerCount());
         otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount + updateValue));
         otherProfile.getRelationInfo().setFollowStatus(followStatus);
-        txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount() + "\n" + "follower");
+        txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount());
     }
 
     private void updateCurrentUserProfile(int updateValue) {
@@ -419,7 +384,6 @@ public class OtherProfileFragment extends BaseFragment
         followingCount = Integer.parseInt(user.getRelationInfo().getFollowingCount());
         user.getRelationInfo().setFollowingCount(String.valueOf(followingCount + updateValue));
     }
-
 
     private void openDialogBox() {
 
@@ -465,6 +429,37 @@ public class OtherProfileFragment extends BaseFragment
 
 
     }
+
+    private boolean isValid(String name) {
+        if (name != null && !name.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v == commonToolbarbackImgv) {
+
+            if (getActivity() instanceof NextActivity)
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+
+            getActivity().onBackPressed();
+        }
+
+        if (v == btnFollowStatus) {
+            btnFollowStatusClicked();
+        }
+
+        if(v == llMyPosts){
+            String targetUid = selectedUser.getUserid();
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+    }
+
 
 
 }
