@@ -12,7 +12,11 @@ public class NumericConstants {
     public static final int CODE_CHANGE_VALUE = 2;
     public static final int RESPONSE_OK = 1;
 
+    //Share video properties
     public static final int MAX_VIDEO_DURATION = 15;
+    public static final long MAX_VIDEO_SIZE =  209715200L;
+    public static final int SHARE_VIDEO_HEIGHT = 176;
+    public static final int SHARE_VIDEO_WIDHT = 144;
 
     //DialogBox Results
     public static final int UPDATE_RESULT_OK = 1;

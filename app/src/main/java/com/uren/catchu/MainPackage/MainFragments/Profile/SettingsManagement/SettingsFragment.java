@@ -25,15 +25,11 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSingl
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ChangePasswordFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactFriendsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.FacebookFriendsFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderContactList;
-import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,7 +113,6 @@ public class SettingsFragment extends BaseFragment {
         logoutLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearSingletonClasses();
                 signOutClicked();
             }
         });
@@ -172,19 +167,6 @@ public class SettingsFragment extends BaseFragment {
         });
     }
 
-    private void clearSingletonClasses() {
-
-        AccountHolderInfo.reset();
-        AccountHolderContactList.reset();
-        AccountHolderFacebookFriends.reset();
-        SelectedFriendList.reset();
-        ShareItems.reset();
-
-        SingletonPostItem.reset();
-        SingletonSinglePost.reset();
-        SingletonPostList.reset();
-    }
-
     public void startFacebookFriendsFragment() {
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new FacebookFriendsFragment(new OnLoadedListener() {
@@ -203,7 +185,7 @@ public class SettingsFragment extends BaseFragment {
 
     public void startContactFriendsFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ContactFriendsFragment(new OnLoadedListener() {
+            mFragmentNavigation.pushFragment(new ContactsFragment(new OnLoadedListener() {
                 @Override
                 public void onLoaded() {
 
@@ -232,7 +214,6 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void signOutClicked() {
-
         SettingOperation.userSignOut();
         getActivity().finish();
         startActivity(new Intent(getActivity(), MainActivity.class));

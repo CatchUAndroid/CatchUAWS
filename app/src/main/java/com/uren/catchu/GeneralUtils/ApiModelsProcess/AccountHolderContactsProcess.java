@@ -7,7 +7,6 @@ import android.util.Log;
 
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
-import com.uren.catchu.Singleton.AccountHolderContactList;
 
 import java.util.ArrayList;
 import java.util.Collections;

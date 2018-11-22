@@ -71,20 +71,39 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-
-                    <TextView
-                        android:id="@+id/ShareItemsDescTv"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:fontFamily="@font/capriola"
-                        android:textColor="@color/White"
-                        android:textSize="15sp" />
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/toolbarTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/capriola"
+                            android:gravity="left"
+                            android:textColor="@color/White"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/toolbarSubTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/capriola"
+                            android:gravity="left"
+                            android:textColor="@color/White"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
@@ -175,7 +194,6 @@
 
                         </LinearLayout>
 
-
                     </RelativeLayout>
 
                     <View
@@ -197,10 +215,11 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="3dp"
                             android:background="@color/transparent"
+                            android:focusable="true"
                             android:gravity="top"
                             android:hint="@string/typeToAddText"
-                            android:inputType="textMultiLine"
-                            android:lines="9"
+                            android:inputType="textMultiLine|textNoSuggestions"
+                            android:lines="4"
                             android:maxLines="8"
                             android:paddingLeft="5dp"
                             android:scrollbars="vertical"
@@ -209,172 +228,185 @@
                             android:textCursorDrawable="@null"
                             android:textSize="16sp" />
 
-
                     </RelativeLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:id="@+id/publicSelectLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/publicImgv"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"
-                            android:src="@drawable/world_icon_96" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/publicShareText"
-                            android:textColor="@color/Black"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/allFollowersSelectLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/allFollowersImgv"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"
-                            android:src="@mipmap/icon_all_followers"
-                            android:visibility="visible" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/allFollowersShareText"
-                            android:textColor="@color/Black"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/specialSelectLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/specialImgv"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"
-                            android:src="@drawable/friends" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/friendsShareText"
-                            android:textColor="@color/Black"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/groupsSelectLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/groupsImgv"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"
-                            android:src="@drawable/groups_icon_500" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/groupsShareText"
-                            android:textColor="@color/Black"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/justMeSelectLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:animateLayoutChanges="true"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/justMeImgv"
-                            android:layout_width="30dp"
-                            android:layout_height="30dp"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginTop="5dp"
-                            android:padding="2dp"
-                            android:src="@mipmap/icon_lock" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:text="@string/justMeShareText"
-                            android:textColor="@color/Black"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
 
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/yyy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/rrr"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginRight="7dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="right|center"
+                            android:textColor="@color/Black"
+                            android:id="@+id/selectedDescTv"/>
+
+                        <LinearLayout
+                            android:id="@+id/justMeSelectLayout"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/justMeImgv"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:padding="2dp"
+                                android:src="@mipmap/icon_lock" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/justMeShareText"
+                                android:textColor="@color/Black"
+                                android:textSize="8sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/groupsSelectLayout"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/groupsImgv"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:src="@drawable/groups_icon_500" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/groupsShareText"
+                                android:textColor="@color/Black"
+                                android:textSize="8sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/specialSelectLayout"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/specialImgv"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:src="@drawable/friends" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/friendsShareText"
+                                android:textColor="@color/Black"
+                                android:textSize="8sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/allFollowersSelectLayout"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/allFollowersImgv"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:src="@mipmap/icon_all_followers"
+                                android:visibility="visible" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/allFollowersShareText"
+                                android:textColor="@color/Black"
+                                android:textSize="8sp" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/publicSelectLayout"
+                            android:layout_width="55dp"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:id="@+id/publicImgv"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="5dp"
+                                android:src="@drawable/world_icon_96" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/publicShareText"
+                                android:textColor="@color/Black"
+                                android:textSize="8sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+
+
 
                 <LinearLayout
                     android:id="@+id/buttonsLayout"
@@ -395,7 +427,7 @@
                         android:text="@string/cancel"
                         android:textColor="@color/DarkYellow"
                         android:textSize="15sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                     <Button
                         android:id="@+id/shareButton"
@@ -407,7 +439,7 @@
                         android:text="@string/share"
                         android:textColor="@color/White"
                         android:textSize="15sp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -415,7 +447,7 @@
                 <RelativeLayout
                     android:id="@+id/mapLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
+                    android:layout_height="200dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentStart="true"
                     android:animateLayoutChanges="true"

@@ -231,6 +231,12 @@
     <string name="WHO_WILL_YOU_SHARE">Kime paylaşacaksın?</string>
     <string name="SENDING">Gönderiliyor...</string>
     <string name="serverError">Teknik Hata !</string>
+    <string name="FIND_FACEBOOK_FRIENDS">Facebook Arkadaşlarını Bul</string>
+    <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">Catchu kullanan facebook arkadaşlarını bulabilirsin</string>
+    <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">Arkadaşlarınızı görmek için kişilere erişim izni vermelisiniz</string>
+    <string name="SOMETHING_WENT_WRONG">Bir Hata Oluştu!</string>
+
+    <string name="MY_GROUPS_POSTS">Grup Paylaşımlarım</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

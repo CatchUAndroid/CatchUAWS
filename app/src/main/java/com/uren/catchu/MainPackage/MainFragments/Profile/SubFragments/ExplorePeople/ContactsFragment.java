@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,16 +28,15 @@ import com.uren.catchu.ApiGatewayFunctions.ProviderListRequestProcess;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderContactsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.PhoneNumberFormatUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.ContactFriendsAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.InviteContactsAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.ContactsAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Interfaces.ContactFriendSelectCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Models.ContactFriendModel;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -60,22 +58,12 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_PHONE;
 
 @SuppressLint("ValidFragment")
-public class ContactFriendsFragment extends BaseFragment {
+public class ContactsFragment extends BaseFragment {
 
     View mView;
 
-    @BindView(R.id.appUsersRecyclerView)
-    RecyclerView appUsersRecyclerView;
-    @BindView(R.id.inviteRecyclerView)
-    RecyclerView inviteRecyclerView;
-    @BindView(R.id.warningMsgLayout)
-    LinearLayout warningMsgLayout;
-    @BindView(R.id.warningMsgTv)
-    TextView warningMsgTv;
-    @BindView(R.id.inviteWarningMsgLayout)
-    LinearLayout inviteWarningMsgLayout;
-    @BindView(R.id.inviteWarningMsgTv)
-    TextView inviteWarningMsgTv;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
     @BindView(R.id.toolbarLayout)
     LinearLayout toolbarLayout;
     @BindView(R.id.progressBar)
@@ -88,19 +76,23 @@ public class ContactFriendsFragment extends BaseFragment {
     ImageView searchToolbarBackImgv;
     @BindView(R.id.searchToolbarAddItemImgv)
     ImageView searchToolbarAddItemImgv;
+    @BindView(R.id.warningMsgLayout)
+    LinearLayout warningMsgLayout;
+    @BindView(R.id.warningMsgTv)
+    TextView warningMsgTv;
 
     PermissionModule permissionModule;
-    ContactFriendsAdapter contactFriendsAdapter;
-    InviteContactsAdapter inviteContactsAdapter;
+    ContactsAdapter contactsAdapter;
     List<Contact> reformedContactList;
     List<Contact> inviteContactsList;
+    List<ContactFriendModel> contactFriendModelList;
     UserListResponse appUsersList;
     OnLoadedListener onLoadedListener;
 
     boolean showTollbar;
     boolean edittextFocused = false;
 
-    public ContactFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
+    public ContactsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
         this.onLoadedListener = onLoadedListener;
         this.showTollbar = showTollbar;
     }
@@ -113,7 +105,7 @@ public class ContactFriendsFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_contact_friends, container, false);
+            mView = inflater.inflate(R.layout.fragment_contacts, container, false);
             ButterKnife.bind(this, mView);
             initVariables();
             checkToolbarVisibility();
@@ -133,6 +125,7 @@ public class ContactFriendsFragment extends BaseFragment {
         reformedContactList = new ArrayList<>();
         inviteContactsList = new ArrayList<>();
         searchToolbarAddItemImgv.setVisibility(View.GONE);
+        contactFriendModelList = new ArrayList<>();
     }
 
     private void checkToolbarVisibility() {
@@ -147,7 +140,6 @@ public class ContactFriendsFragment extends BaseFragment {
                 if (edittextFocused) {
                     CommonUtils.hideKeyBoard(getContext());
                     searchToolbarBackImgv.setVisibility(View.GONE);
-                    //searchImgv.setVisibility(View.VISIBLE);
                     if (editTextSearch != null)
                         editTextSearch.setText("");
                 } else {
@@ -185,11 +177,9 @@ public class ContactFriendsFragment extends BaseFragment {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
                     searchToolbarBackImgv.setVisibility(View.VISIBLE);
-                    //searchImgv.setVisibility(View.GONE);
                     edittextFocused = true;
                 } else {
                     searchToolbarBackImgv.setVisibility(View.GONE);
-                    //searchImgv.setVisibility(View.VISIBLE);
                     edittextFocused = false;
                 }
             }
@@ -199,7 +189,6 @@ public class ContactFriendsFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 searchToolbarBackImgv.setVisibility(View.VISIBLE);
-                //searchImgv.setVisibility(View.GONE);
             }
         });
 
@@ -211,7 +200,6 @@ public class ContactFriendsFragment extends BaseFragment {
                 imgCancelSearch.setVisibility(View.GONE);
                 CommonUtils.hideKeyBoard(getContext());
                 searchToolbarBackImgv.setVisibility(View.GONE);
-                //searchImgv.setVisibility(View.VISIBLE);
 
             }
         });
@@ -299,21 +287,14 @@ public class ContactFriendsFragment extends BaseFragment {
 
                             if (getContext() != null) {
                                 if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
-                                    contactFriendsAdapter = new ContactFriendsAdapter(getContext(), appUsersList, new ItemClickListener() {
-                                        @Override
-                                        public void onClick(Object object, int clickedItem) {
-                                            displayUserProfile((String) object, clickedItem);
-                                        }
-                                    });
-                                    appUsersRecyclerView.setAdapter(contactFriendsAdapter);
-                                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-                                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                                    appUsersRecyclerView.setLayoutManager(linearLayoutManager);
-                                } else {
-                                    warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_CONTACTFRIEND_WHO_USING_CATCHU));
-                                    warningMsgLayout.setVisibility(View.VISIBLE);
-                                }
 
+                                    for(User user: appUsersList.getItems()){
+                                        ContactFriendModel contactFriendModel = new ContactFriendModel();
+                                        contactFriendModel.setUser(user);
+                                        contactFriendModel.setContact(new Contact());
+                                        contactFriendModelList.add(contactFriendModel);
+                                    }
+                                }
                                 setInviteFriendsAdapter();
                             }
                         }
@@ -341,17 +322,33 @@ public class ContactFriendsFragment extends BaseFragment {
         prepareInviteContactList();
 
         if (inviteContactsList != null && inviteContactsList.size() > 0 && getContext() != null) {
-            inviteContactsAdapter = new InviteContactsAdapter(getContext(), inviteContactsList, new ItemClickListener() {
+            for(Contact contact: inviteContactsList){
+                ContactFriendModel contactFriendModel= new ContactFriendModel();
+                contactFriendModel.setContact(contact);
+                contactFriendModel.setUser(new User());
+                contactFriendModelList.add(contactFriendModel);
+            }
+        }
+
+        if(contactFriendModelList != null && contactFriendModelList.size() == 0){
+            warningMsgLayout.setVisibility(View.VISIBLE);
+            warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
+        }else {
+            contactsAdapter = new ContactsAdapter(getContext(), contactFriendModelList, new ContactFriendSelectCallback() {
                 @Override
-                public void onClick(Object object, int clickedItem) {
-                    Contact contact = (Contact) object;
+                public void contactSelected(Contact contact) {
                     sendSmsToInvite(contact);
                 }
+
+                @Override
+                public void appUserSelected(User user) {
+                    displayUserProfile(user.getUserid());
+                }
             });
-            inviteRecyclerView.setAdapter(inviteContactsAdapter);
+            recyclerView.setAdapter(contactsAdapter);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            inviteRecyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setLayoutManager(linearLayoutManager);
         }
 
         progressBar.setVisibility(View.GONE);
@@ -390,7 +387,7 @@ public class ContactFriendsFragment extends BaseFragment {
         }
     }
 
-    private void displayUserProfile(String userid, int clickedItem) {
+    private void displayUserProfile(String userid) {
 
         if (!userid.equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
             if (mFragmentNavigation != null) {
@@ -409,13 +406,16 @@ public class ContactFriendsFragment extends BaseFragment {
         if (requestCode == permissionModule.PERMISSION_READ_CONTACTS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startGetContactList();
+            }else {
+                warningMsgLayout.setVisibility(View.VISIBLE);
+                warningMsgTv.setText(getActivity().getResources().getString(R.string.GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS));
             }
         }
     }
 
     public void updateAdapter(String searchText) {
-        if (searchText != null && contactFriendsAdapter != null) {
-            contactFriendsAdapter.updateAdapter(searchText, new ReturnCallback() {
+        if (searchText != null && contactsAdapter != null) {
+            contactsAdapter.updateAdapter(searchText, new ReturnCallback() {
                 @Override
                 public void onReturn(Object object) {
                     int itemSize = (int) object;
@@ -425,21 +425,6 @@ public class ContactFriendsFragment extends BaseFragment {
                         warningMsgLayout.setVisibility(View.VISIBLE);
                     } else
                         warningMsgLayout.setVisibility(View.GONE);
-                }
-            });
-        }
-
-        if (searchText != null && inviteContactsAdapter != null) {
-            inviteContactsAdapter.updateAdapter(searchText, new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
-                    int itemSize = (int) object;
-
-                    if (itemSize == 0) {
-                        inviteWarningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
-                        inviteWarningMsgLayout.setVisibility(View.VISIBLE);
-                    } else
-                        inviteWarningMsgLayout.setVisibility(View.GONE);
                 }
             });
         }
