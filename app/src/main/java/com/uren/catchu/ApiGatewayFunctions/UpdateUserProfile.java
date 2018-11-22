@@ -40,7 +40,6 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
 
             BaseResponse rsp = instance.client.usersPost(token, userProfile);
 
-
             if(rsp.getError().getCode().intValue() == RESPONSE_OK){
                 return userProfile;
             }else{

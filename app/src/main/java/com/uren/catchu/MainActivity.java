@@ -157,15 +157,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayUserInfo(User user) {
 
-        Log.i("*******", "currentUser *******");
-        Log.i("-> userId", user.getUserid());
-        Log.i("-> Email", user.getEmail());
-        if (user.getName() != null)
-            Log.i("-> Name", user.getName());
-        if (user.getUsername() != null)
-            Log.i("-> UserName", user.getUsername());
-        if (user.getProfilePhotoUrl() != null)
-            Log.i("-> ProfilePicUrl", user.getProfilePhotoUrl());
+        if(user != null) {
+            Log.i("*******", "currentUser *******");
+            Log.i("-> userId", user.getUserid());
+            Log.i("-> Email", user.getEmail());
+            if (user.getName() != null)
+                Log.i("-> Name", user.getName());
+            if (user.getUsername() != null)
+                Log.i("-> UserName", user.getUsername());
+            if (user.getProfilePhotoUrl() != null)
+                Log.i("-> ProfilePicUrl", user.getProfilePhotoUrl());
+        }
 
     }
 

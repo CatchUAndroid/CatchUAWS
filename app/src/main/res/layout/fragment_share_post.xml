@@ -71,20 +71,39 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_marginLeft="10dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-
-                    <TextView
-                        android:id="@+id/ShareItemsDescTv"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="10dp"
-                        android:fontFamily="@font/capriola"
-                        android:textColor="@color/White"
-                        android:textSize="15sp" />
+                        android:orientation="vertical">
 
+                        <TextView
+                            android:id="@+id/toolbarTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/capriola"
+                            android:gravity="left"
+                            android:textColor="@color/White"
+                            android:textSize="15sp" />
+
+                        <TextView
+                            android:id="@+id/toolbarSubTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:fontFamily="@font/capriola"
+                            android:gravity="left"
+                            android:textColor="@color/White"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
 
                 </RelativeLayout>
 
@@ -237,6 +256,13 @@
                         android:layout_marginRight="7dp"
                         android:layout_weight="1"
                         android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="right|center"
+                            android:textColor="@color/Black"
+                            android:id="@+id/selectedDescTv"/>
 
                         <LinearLayout
                             android:id="@+id/justMeSelectLayout"

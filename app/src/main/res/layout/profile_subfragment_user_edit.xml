@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rlUserEdit"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/White">
 
     <include layout="@layout/layout_progress_bar" />
 
@@ -32,14 +33,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:alpha="0.1"
-                        android:background="@android:color/black"
+                        android:background="@android:color/white"
                         android:fitsSystemWindows="true" />
 
                     <!-- Profile Picture /-->
                     <RelativeLayout
                         android:id="@+id/rlProfilePicture"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="30dp">
@@ -66,6 +67,15 @@
                                 android:textStyle="bold"
                                 android:visibility="gone" />
                         </FrameLayout>
+
+                        <ImageView
+                            android:id="@+id/addPhotoImgv"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentEnd="true"
+                            android:padding="7dp"
+                            android:src="@mipmap/icon_add_white" />
 
                     </RelativeLayout>
 

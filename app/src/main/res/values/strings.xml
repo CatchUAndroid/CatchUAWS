@@ -267,6 +267,9 @@
     <string name="FIND_FACEBOOK_FRIENDS">Find Facebook Friends</string>
     <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">You can find facebook friends who are using Catchu</string>
     <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">You must grant access to your contacts to see your friends</string>
+    <string name="SOMETHING_WENT_WRONG">Something Went Wrong!</string>
+
+    <string name="MY_GROUPS_POSTS">My Groups Posts</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

@@ -274,11 +274,13 @@ public class GroupManagementFragment extends BaseFragment {
                     @Override
                     public void onFailed(Exception e) {
                         progressBar.setVisibility(View.GONE);
-                        DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
-                            }
-                        });
+                        if(getContext() != null) {
+                            DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
+                        }
                     }
                 });
     }
@@ -314,7 +316,8 @@ public class GroupManagementFragment extends BaseFragment {
             public void onComplete(Object object) {
                 if (object != null) {
                     FriendList friendList = (FriendList) object;
-                    if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0)
+                    if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0 &&
+                            getContext() != null)
                         CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
                     else {
                         if (mFragmentNavigation != null) {
@@ -333,11 +336,13 @@ public class GroupManagementFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                    }
-                });
+                if(getContext() != null) {
+                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
+                }
             }
         });
     }

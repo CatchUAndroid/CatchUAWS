@@ -64,6 +64,14 @@ public class VideoSelectUtil {
         videoBitmap = retriever.getFrameAtTime(100);
     }
 
+    public String getSelectType() {
+        return selectType;
+    }
+
+    public void setSelectType(String selectType) {
+        this.selectType = selectType;
+    }
+
     public Uri getVideoUri() {
         return videoUri;
     }
