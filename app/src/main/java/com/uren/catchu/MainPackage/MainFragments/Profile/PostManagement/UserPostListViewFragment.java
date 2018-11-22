@@ -10,15 +10,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,10 +31,9 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostListViewAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
+import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -63,7 +58,7 @@ public class UserPostListViewFragment extends BaseFragment {
     View mView;
     String catchType;
     FeedAdapter userPostListViewAdapter;
-    static LinearLayoutManager mLinearLayoutManager;
+    static CustomLinearLayoutManager customLinearLayoutManager;
     static RecyclerView listRecyclerView;
     static boolean scrollButtonVisible=false;
     private List<Post> postList = new ArrayList<Post>();
@@ -76,7 +71,7 @@ public class UserPostListViewFragment extends BaseFragment {
     private boolean isFirstFetch = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt, pageCnt;
-    private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
+    private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
     //Location
     private LocationTrackerAdapter locationTrackObj;
@@ -171,15 +166,16 @@ public class UserPostListViewFragment extends BaseFragment {
     }
 
     private void setLayoutManager() {
-        mLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        listRecyclerView.setLayoutManager(mLinearLayoutManager);
-        //listRecyclerView.setItemAnimator(new UserPostItemAnimator());
+        customLinearLayoutManager = new CustomLinearLayoutManager(getContext());
+        listRecyclerView.setLayoutManager(customLinearLayoutManager);
+        listRecyclerView.setItemAnimator(new UserPostItemAnimator());
         //listRecyclerView.addItemDecoration(addItemDecoration());
     }
 
     private void setAdapter() {
         userPostListViewAdapter = new FeedAdapter(getActivity(), getContext(), mFragmentNavigation);
         listRecyclerView.setAdapter(userPostListViewAdapter);
+        listRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT) ;
     }
 
     private void setPullToRefresh() {
@@ -215,9 +211,9 @@ public class UserPostListViewFragment extends BaseFragment {
 
                 if (dy > 0) //check for scroll down
                 {
-                    visibleItemCount = mLinearLayoutManager.getChildCount();
-                    totalItemCount = mLinearLayoutManager.getItemCount();
-                    pastVisibleItems = mLinearLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = customLinearLayoutManager.getChildCount();
+                    totalItemCount = customLinearLayoutManager.getItemCount();
+                    pastVisibleItems = customLinearLayoutManager.findFirstVisibleItemPosition();
 
                     Log.i("visibleItemCount", String.valueOf(visibleItemCount));
                     Log.i("totalItemCount", String.valueOf(totalItemCount));
@@ -245,7 +241,7 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void setScrollButtonVisibility() {
         int visibility;
-        int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+        int firstVisibleItemPosition = customLinearLayoutManager.findFirstVisibleItemPosition();
         if (firstVisibleItemPosition<3) {
             visibility = View.GONE;
             scrollButtonVisible = false;

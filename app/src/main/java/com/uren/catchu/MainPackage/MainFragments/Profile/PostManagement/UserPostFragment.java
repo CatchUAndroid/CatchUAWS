@@ -1,16 +1,12 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -230,12 +226,14 @@ public class UserPostFragment extends BaseFragment
 
             if(selectedTabPosition == USER_POST_VIEW_TYPE_GRID){
                 CommonUtils.showToast(getContext(), "grid için tıklandı");
-                UserPostGridViewFragment.mGridLayoutManager.smoothScrollToPosition(UserPostGridViewFragment.gridRecyclerView, null, 0);
+                UserPostGridViewFragment.customGridLayoutManager.smoothScrollToPosition(UserPostGridViewFragment.gridRecyclerView, null, 0);
             }
 
             if(selectedTabPosition == USER_POST_VIEW_TYPE_LIST){
                 CommonUtils.showToast(getContext(), "list için tıklandı");
-                UserPostListViewFragment.mLinearLayoutManager.smoothScrollToPosition(UserPostListViewFragment.listRecyclerView, null, 0);
+                //UserPostListViewFragment.customLinearLayoutManager.scrollToPositionWithOffset(0,);
+
+                 UserPostListViewFragment.customLinearLayoutManager.smoothScrollToPosition(UserPostListViewFragment.listRecyclerView, null, 0);
 
             }
 

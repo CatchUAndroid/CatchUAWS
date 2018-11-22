@@ -40,6 +40,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallba
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,9 +62,9 @@ public class UserPostGridViewFragment extends BaseFragment {
     View mView;
     String catchType;
     UserPostGridViewAdapter userPostGridViewAdapter;
-    static GridLayoutManager mGridLayoutManager;
+    static CustomGridLayoutManager customGridLayoutManager;
     static RecyclerView gridRecyclerView;
-    static boolean scrollButtonVisible=false;
+    static boolean scrollButtonVisible = false;
     private List<Post> postList = new ArrayList<Post>();
 
     private static final int MARGING_GRID = 2;
@@ -74,7 +75,7 @@ public class UserPostGridViewFragment extends BaseFragment {
     private boolean isFirstFetch = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt, pageCnt;
-    private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
+    private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
     //Location
     private LocationTrackerAdapter locationTrackObj;
@@ -128,9 +129,7 @@ public class UserPostGridViewFragment extends BaseFragment {
     }
 
     private void initItems() {
-
         gridRecyclerView = (RecyclerView) mView.findViewById(R.id.gridRecyclerView);
-
     }
 
     private void getItemsFromBundle() {
@@ -152,15 +151,15 @@ public class UserPostGridViewFragment extends BaseFragment {
     }
 
     private void setLayoutManager() {
-        mGridLayoutManager = new GridLayoutManager(getContext(), SPAN_COUNT);
-        gridRecyclerView.setLayoutManager(mGridLayoutManager);
+        customGridLayoutManager = new CustomGridLayoutManager(getContext(), SPAN_COUNT);
+        gridRecyclerView.setLayoutManager(customGridLayoutManager);
         gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
         gridRecyclerView.addItemDecoration(addItemDecoration());
 
-        mGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(userPostGridViewAdapter.getItemViewType(position)){
+                switch (userPostGridViewAdapter.getItemViewType(position)) {
                     case UserPostGridViewAdapter.VIEW_ITEM:
                         return 1;
                     case UserPostGridViewAdapter.VIEW_PROG:
@@ -175,8 +174,9 @@ public class UserPostGridViewFragment extends BaseFragment {
     }
 
     private void setAdapter() {
-        userPostGridViewAdapter = new UserPostGridViewAdapter(getActivity(),  getContext(), mFragmentNavigation);
+        userPostGridViewAdapter = new UserPostGridViewAdapter(getActivity(), getContext(), mFragmentNavigation);
         gridRecyclerView.setAdapter(userPostGridViewAdapter);
+        gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
     }
 
     private void setPullToRefresh() {
@@ -212,9 +212,9 @@ public class UserPostGridViewFragment extends BaseFragment {
 
                 if (dy > 0) //check for scroll down
                 {
-                    visibleItemCount = mGridLayoutManager.getChildCount();
-                    totalItemCount = mGridLayoutManager.getItemCount();
-                    pastVisibleItems = mGridLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = customGridLayoutManager.getChildCount();
+                    totalItemCount = customGridLayoutManager.getItemCount();
+                    pastVisibleItems = customGridLayoutManager.findFirstVisibleItemPosition();
 
                     Log.i("visibleItemCount", String.valueOf(visibleItemCount));
                     Log.i("totalItemCount", String.valueOf(totalItemCount));
@@ -223,7 +223,7 @@ public class UserPostGridViewFragment extends BaseFragment {
 
                     if (loading) {
 
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount ) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             loading = false;
                             Log.v("...", "Last Item Wow !");
                             //Do pagination.. i.e. fetch new data
@@ -242,11 +242,11 @@ public class UserPostGridViewFragment extends BaseFragment {
 
     private void setScrollButtonVisibility() {
         int visibility;
-        int firstVisibleItemPosition = mGridLayoutManager.findFirstVisibleItemPosition();
-        if(firstVisibleItemPosition<15 ){
+        int firstVisibleItemPosition = customGridLayoutManager.findFirstVisibleItemPosition();
+        if (firstVisibleItemPosition < 15) {
             visibility = View.GONE;
             scrollButtonVisible = false;
-        }else{
+        } else {
             visibility = View.VISIBLE;
             scrollButtonVisible = true;
         }
@@ -340,15 +340,13 @@ public class UserPostGridViewFragment extends BaseFragment {
 
     private void startGetPosts(String token) {
 
-        if(catchType.equals(PROFILE_POST_TYPE_MY_POSTS)){
+        if (catchType.equals(PROFILE_POST_TYPE_MY_POSTS)) {
             getMyPosts(token);
-        }else if(catchType.equals(PROFILE_POST_TYPE_CAUGHT)){
+        } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
             getCaughtPosts(token);
-        }else{
+        } else {
             //do nothing
         }
-
-
 
 
     }
@@ -516,9 +514,7 @@ public class UserPostGridViewFragment extends BaseFragment {
         }
 
 
-
     }
-
 
 
     /********************************************************************************************/
@@ -531,19 +527,19 @@ public class UserPostGridViewFragment extends BaseFragment {
 
                 int position = parent.getChildLayoutPosition(view);
 
-                if(position % SPAN_COUNT == 0){
+                if (position % SPAN_COUNT == 0) {
                     //outRect.left = MARGING_GRID;
                     outRect.right = MARGING_GRID;
                     outRect.bottom = MARGING_GRID;
                     outRect.top = MARGING_GRID;
                 }
-                if(position % SPAN_COUNT == 1){
-                    outRect.left = MARGING_GRID/2;
-                    outRect.right = MARGING_GRID/2;
-                    outRect.bottom = MARGING_GRID/2;
-                    outRect.top = MARGING_GRID/2;
+                if (position % SPAN_COUNT == 1) {
+                    outRect.left = MARGING_GRID / 2;
+                    outRect.right = MARGING_GRID / 2;
+                    outRect.bottom = MARGING_GRID / 2;
+                    outRect.top = MARGING_GRID / 2;
                 }
-                if(position % SPAN_COUNT == 2){
+                if (position % SPAN_COUNT == 2) {
                     outRect.left = MARGING_GRID;
                     //outRect.right = MARGING_GRID;
                     outRect.bottom = MARGING_GRID;
