@@ -32,6 +32,8 @@ public class SettingOperation {
         if(TwitterCore.getInstance()!=null){
             TwitterCore.getInstance().getSessionManager().clearActiveSession();
         }
+
+        
     }
 
     public static void changeUserPrivacy(final Context context, final Switch privateAccSwitch) {
