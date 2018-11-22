@@ -26,6 +26,7 @@ import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -34,6 +35,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.GroupPostsManagement.UserGroupsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment;
@@ -475,7 +477,7 @@ public class ProfileFragment extends BaseFragment
 
         if (v == llMyGroups) {
             String targetUid = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(UserGroupsFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
 

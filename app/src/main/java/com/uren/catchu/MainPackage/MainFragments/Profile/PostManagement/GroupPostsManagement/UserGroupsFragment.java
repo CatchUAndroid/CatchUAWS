@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
+package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.GroupPostsManagement;
 
 
 import android.Manifest;
@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,8 +58,8 @@ public class UserGroupsFragment extends BaseFragment {
 
     View mView;
     private String catchType, targetUid;
-    private FeedAdapter userPostListViewAdapter;
-    private CustomLinearLayoutManager customLinearLayoutManager;
+    private UserGroupsFragment userGroupsFragment;
+    private LinearLayoutManager linearLayoutManager;
     private RecyclerView listRecyclerView;
     private List<Post> postList = new ArrayList<Post>();
 
