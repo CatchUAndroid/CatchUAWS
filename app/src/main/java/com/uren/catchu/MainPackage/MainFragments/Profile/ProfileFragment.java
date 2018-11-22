@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -123,6 +124,10 @@ public class ProfileFragment extends BaseFragment
     LinearLayout llCatchedPosts;
     @BindView(R.id.llMyGroups)
     LinearLayout llMyGroups;
+    @BindView(R.id.followersLayout)
+    LinearLayout followersLayout;
+    @BindView(R.id.followingsLayout)
+    LinearLayout followingsLayout;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -160,12 +165,18 @@ public class ProfileFragment extends BaseFragment
             setDrawerListeners();
 
             initListeners();
-            updateUI();
+            //updateUI();
             setPullToRefresh();
 
         }
 
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        updateUI();
     }
 
     private void initListeners() {
@@ -177,6 +188,9 @@ public class ProfileFragment extends BaseFragment
         llMyPosts.setOnClickListener(this);
         llCatchedPosts.setOnClickListener(this);
         llMyGroups.setOnClickListener(this);
+
+        followersLayout.setOnClickListener(this);
+        followingsLayout.setOnClickListener(this);
     }
 
     private void updateUI() {
@@ -214,7 +228,6 @@ public class ProfileFragment extends BaseFragment
             }
         }
     }
-
 
 
     private void setNavViewItems() {
@@ -448,7 +461,7 @@ public class ProfileFragment extends BaseFragment
             userEditClicked();
         }
 
-        if (v == txtFollowerCnt) {
+        /*if (v == txtFollowerCnt) {
             txtFollowerCnt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             followerClicked();
         }
@@ -456,7 +469,7 @@ public class ProfileFragment extends BaseFragment
         if (v == txtFollowingCnt) {
             txtFollowingCnt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             followingClicked();
-        }
+        }*/
 
         if (v == imgBackBtn) {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
@@ -478,8 +491,15 @@ public class ProfileFragment extends BaseFragment
             mFragmentNavigation.pushFragment(UserPostFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
+        if (v == followingsLayout) {
+            followingsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            followingClicked();
+        }
 
-
+        if (v == followersLayout) {
+            followersLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            followerClicked();
+        }
     }
 
     private void userEditClicked() {
@@ -537,7 +557,7 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    public void startNotifyProblemFragment(){
+    public void startNotifyProblemFragment() {
         if (mFragmentNavigation != null) {
             NextActivity.screenShotMainLayout.setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;

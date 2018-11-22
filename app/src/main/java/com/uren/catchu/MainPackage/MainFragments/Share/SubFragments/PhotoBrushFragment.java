@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -76,6 +77,9 @@ public class PhotoBrushFragment extends BaseFragment {
     int bitmapHeigth;
     int bitmapWidth;
 
+    boolean isBlurSelected;
+    boolean isPencilSelected;
+
     public PhotoBrushFragment(PhotoSelectUtil photoSelectUtil, BrushCompleteCallback brushCompleteCallback) {
         this.brushCompleteCallback = brushCompleteCallback;
         this.photoSelectUtil = photoSelectUtil;
@@ -131,6 +135,8 @@ public class PhotoBrushFragment extends BaseFragment {
                     bitmapHeigth = comingBitmap.getHeight();
                     bitmapWidth = comingBitmap.getWidth();
                     paintView.init(bitmapWidth, bitmapHeigth, comingBitmap);
+                    pencilImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
+                    isPencilSelected = true;
                 }
 
                 paintView.normal();
@@ -151,6 +157,10 @@ public class PhotoBrushFragment extends BaseFragment {
         blurImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isPencilSelected = false;
+                isBlurSelected = true;
+                pencilImgv.setColorFilter(getContext().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+                blurImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
                 paintView.blur();
             }
         });
@@ -158,6 +168,10 @@ public class PhotoBrushFragment extends BaseFragment {
         pencilImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                isPencilSelected = true;
+                isBlurSelected = false;
+                pencilImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
+                blurImgv.setColorFilter(getContext().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
                 paintView.normal();
             }
         });
@@ -187,11 +201,16 @@ public class PhotoBrushFragment extends BaseFragment {
     }
 
     public void colorPalettePrepare() {
-        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), R.drawable.img_border, new ColorSelectCallback() {
+        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), new ColorSelectCallback() {
             @Override
             public void onClick(int colorCode) {
                 brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
                 paintView.setCurrentColor(getContext().getResources().getColor(colorCode, null));
+
+                if(isBlurSelected)
+                    blurImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
+                else if(isPencilSelected)
+                    pencilImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         });
         colorViewPager.setAdapter(colorPaletteAdapter);

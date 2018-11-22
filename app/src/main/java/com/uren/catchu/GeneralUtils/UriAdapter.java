@@ -259,7 +259,6 @@ public class UriAdapter extends AppCompatActivity {
             }
             cursor.close();
         }catch (Exception e){
-            Log.i("Info", "getRealPathFromURI e:" + e.getMessage() + "-" + e);
             e.printStackTrace();
         }
         return res;

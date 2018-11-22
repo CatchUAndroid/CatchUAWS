@@ -1,22 +1,40 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.LoggingBehavior;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.uren.catchu.FragmentControllers.FragNavController;
-import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -28,6 +46,13 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,14 +76,21 @@ public class FacebookFriendsFragment extends BaseFragment {
     @BindView(R.id.toolbarLayout)
     LinearLayout toolbarLayout;
     @BindView(R.id.commonToolbarbackImgv)
-    ClickableImageView commonToolbarbackImgv;
+    ImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
+    @BindView(R.id.connectFacebookLayout)
+    LinearLayout connectFacebookLayout;
+    @BindView(R.id.facebookLoginButton)
+    LoginButton loginButton;
+    @BindView(R.id.connectFacebookButton)
+    Button connectFacebookButton;
 
     FacebookFriendsAdapter facebookFriendsAdapter;
     OnLoadedListener onLoadedListener;
+    CallbackManager mCallbackManager;
     boolean showTollbar;
 
     public FacebookFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
@@ -76,30 +108,39 @@ public class FacebookFriendsFragment extends BaseFragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_facebook_friends, container, false);
             ButterKnife.bind(this, mView);
+            FacebookSdk.sdkInitialize(getActivity().getApplicationContext());
+            mCallbackManager = CallbackManager.Factory.create();
         }
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        initVariables();
         checkToolbarVisibility();
         addListeners();
         checkUserLoggedInWithFacebook();
     }
 
-    public void checkUserLoggedInWithFacebook(){
-        if(AccountHolderInfo.getInstance().getUser().getUserInfo().getProvider() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getProvider().getProviderType().equals(PROVIDER_TYPE_FACEBOOK)){
+    private void initVariables() {
+        warningMsgTv.setTypeface(warningMsgTv.getTypeface(), Typeface.BOLD);
+        warningMsgTv.setTextSize(15f);
+        warningMsgTv.setTextColor(getResources().getColor(R.color.DodgerBlue, null));
+        connectFacebookButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.RECTANGLE, 15, 2));
+    }
+
+    public void checkUserLoggedInWithFacebook() {
+        if (AccountHolderInfo.getInstance().getUser().getUserInfo().getProvider() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getProvider().getProviderType().equals(PROVIDER_TYPE_FACEBOOK)) {
             getFacebookFriends();
-        }else {
-            MessageDataUtil.setWarningMessageVisibility(null, warningMsgTv,
-                    getActivity().getResources().getString(R.string.CONNECT_FACEBOOK));
-            onLoadedListener.onLoaded();
+        } else {
+            getUserAccessToken();
         }
     }
 
     private void checkToolbarVisibility() {
-        if(showTollbar) {
+        if (showTollbar) {
             toolbarLayout.setVisibility(View.VISIBLE);
             toolbarTitleTv.setText(getActivity().getResources().getString(R.string.FACEBOOK_FRIENDS));
         }
@@ -111,6 +152,13 @@ public class FacebookFriendsFragment extends BaseFragment {
             public void onClick(View v) {
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
                 getActivity().onBackPressed();
+            }
+        });
+
+        connectFacebookButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connectFacebook();
             }
         });
     }
@@ -167,5 +215,55 @@ public class FacebookFriendsFragment extends BaseFragment {
     public void updateAdapter(String searchText) {
         if (searchText != null && facebookFriendsAdapter != null)
             facebookFriendsAdapter.updateAdapter(searchText);
+    }
+
+    public void getUserAccessToken() {
+        AccessToken accessToken = AccessToken.getCurrentAccessToken();
+        if (accessToken != null) {
+            if (accessToken.isExpired()) {
+                connectFacebookLayout.setVisibility(View.VISIBLE);
+                onLoadedListener.onLoaded();
+            } else {
+                getFacebookFriends();
+            }
+        } else{
+            connectFacebookLayout.setVisibility(View.VISIBLE);
+            onLoadedListener.onLoaded();
+        }
+    }
+
+    public void connectFacebook() {
+        loginButton.setFragment(this);
+        loginButton.setReadPermissions(Arrays.asList(
+                "public_profile",
+                "email",
+                "user_birthday",
+                "user_friends"));
+
+        loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                connectFacebookLayout.setVisibility(View.GONE);
+                getFacebookFriends();
+            }
+
+            @Override
+            public void onCancel() {
+                System.out.println("facebook:onCancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                System.out.println("facebook:onError:" + error.toString());
+            }
+        });
+
+        loginButton.performClick();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

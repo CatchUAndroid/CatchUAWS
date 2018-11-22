@@ -25,7 +25,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSingl
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ChangePasswordFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactFriendsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.FacebookFriendsFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -203,7 +203,7 @@ public class SettingsFragment extends BaseFragment {
 
     public void startContactFriendsFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ContactFriendsFragment(new OnLoadedListener() {
+            mFragmentNavigation.pushFragment(new ContactsFragment(new OnLoadedListener() {
                 @Override
                 public void onLoaded() {
 

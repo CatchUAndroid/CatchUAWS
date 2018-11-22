@@ -78,10 +78,10 @@ public class AccountHolderInfo {
 
             @Override
             public void onSuccess(UserProfile up) {
-                if(up != null){
-                    if(up.getUserInfo() != null){
+                if (up != null) {
+                    if (up.getUserInfo() != null) {
                         userProfile = up;
-                        if(accountHolderInfoCallback!=null){
+                        if (accountHolderInfoCallback != null) {
                             accountHolderInfoCallback.onAccountHolderIfoTaken(up);
                         }
                     }
@@ -129,17 +129,17 @@ public class AccountHolderInfo {
     }
 
     public static void updateAccountHolderFollowCnt(String requestType) {
-        int followingCnt =0, followerCnt = 0;
+        int followingCnt = 0, followerCnt = 0;
         String followingCount, followerCount;
 
         followingCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount();
         followerCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount();
 
-        if(!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)){
+        if (!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)) {
             followingCnt = Integer.parseInt(followingCount);
         }
 
-        if(!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)){
+        if (!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)) {
             followingCnt = Integer.parseInt(followingCount);
         }
 
@@ -164,7 +164,7 @@ public class AccountHolderInfo {
         }
     }
 
-    public static void setAccountHolderInfoCallback(AccountHolderInfoCallback accountHolderInfoCallback){
+    public static void setAccountHolderInfoCallback(AccountHolderInfoCallback accountHolderInfoCallback) {
         AccountHolderInfo.accountHolderInfoCallback = accountHolderInfoCallback;
     }
 

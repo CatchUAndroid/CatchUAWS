@@ -45,8 +45,7 @@ public class UpdateUserProfileProcess {
         progressDialogUtil = new ProgressDialogUtil(context, context.getResources().getString(R.string.UPDATING), false);
         progressDialogUtil.dialogShow();
 
-
-        if(this.profilPicChanged)
+        if(this.profilPicChanged && bitmap != null)
             uploadMediaToS3();
         else
             updateUserProfile();
