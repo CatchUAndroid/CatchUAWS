@@ -105,6 +105,7 @@ public class FacebookFriendsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_facebook_friends, container, false);
             ButterKnife.bind(this, mView);
@@ -150,7 +151,6 @@ public class FacebookFriendsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
                 getActivity().onBackPressed();
             }
         });

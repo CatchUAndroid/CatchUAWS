@@ -104,6 +104,7 @@ public class ContactsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_contacts, container, false);
             ButterKnife.bind(this, mView);
@@ -143,7 +144,6 @@ public class ContactsFragment extends BaseFragment {
                     if (editTextSearch != null)
                         editTextSearch.setText("");
                 } else {
-                    ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
                     getActivity().onBackPressed();
                 }
             }

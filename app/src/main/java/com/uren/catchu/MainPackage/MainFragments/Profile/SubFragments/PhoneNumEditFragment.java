@@ -59,6 +59,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.PhoneVerification;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -75,6 +76,7 @@ import catchu.model.Phone;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 @SuppressLint("ValidFragment")
 public class PhoneNumEditFragment extends BaseFragment {
@@ -109,9 +111,16 @@ public class PhoneNumEditFragment extends BaseFragment {
         this.completeCallback = completeCallback;
     }
 
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_phone_num_edit, container, false);
             ButterKnife.bind(this, mView);

@@ -182,8 +182,8 @@ public class ProfileFragment extends BaseFragment
     private void initListeners() {
 
         imgUserEdit.setOnClickListener(this);
-        txtFollowerCnt.setOnClickListener(this);
-        txtFollowingCnt.setOnClickListener(this);
+        /*txtFollowerCnt.setOnClickListener(this);
+        txtFollowingCnt.setOnClickListener(this);*/
 
         llMyPosts.setOnClickListener(this);
         llCatchedPosts.setOnClickListener(this);
@@ -506,7 +506,7 @@ public class ProfileFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
@@ -535,13 +535,13 @@ public class ProfileFragment extends BaseFragment
 
     private void startPendingRequestFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new PendingRequestsFragment(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new PendingRequestsFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
     private void startExplorePeopleFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ExplorePeopleFragment(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new ExplorePeopleFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 

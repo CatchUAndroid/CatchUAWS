@@ -94,6 +94,12 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
+    }
+
+    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
     }
@@ -121,6 +127,7 @@ public class NotifyProblemFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     private void initVariables() {
@@ -143,7 +150,6 @@ public class NotifyProblemFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -307,8 +313,6 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     private void screenShotStart() {
-
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         getActivity().onBackPressed();
 
         NextActivity.screenShotMainLayout.setVisibility(View.VISIBLE);

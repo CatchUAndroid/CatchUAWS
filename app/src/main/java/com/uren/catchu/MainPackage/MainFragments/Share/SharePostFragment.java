@@ -104,6 +104,7 @@ import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_SIZE;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_VIDEO_HEIGHT;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_VIDEO_WIDHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -260,7 +261,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             initializeItems();
             addListeners();
             setMapView();
-            //focusEditText();
         }
         return view;
     }
@@ -297,12 +297,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         selectedWhomType = SHARE_TYPE_EVERYONE;
         ShareItems.getInstance().setSelectedShareType(selectedWhomType);
     }
-
-    /*public void focusEditText() {
-        shareMsgEditText.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(getContext().INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }*/
 
     private void setAnimations() {
 

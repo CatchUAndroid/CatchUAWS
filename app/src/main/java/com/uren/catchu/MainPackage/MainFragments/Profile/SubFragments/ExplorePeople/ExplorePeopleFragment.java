@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ExplorePeopleFragment extends BaseFragment {
 
@@ -76,6 +77,8 @@ public class ExplorePeopleFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
 
         if (view == null) {
 
@@ -160,7 +163,6 @@ public class ExplorePeopleFragment extends BaseFragment {
         searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
