@@ -61,6 +61,7 @@ public class PendingRequestsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
         ButterKnife.bind(this, mView);
         return mView;
@@ -77,7 +78,6 @@ public class PendingRequestsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });

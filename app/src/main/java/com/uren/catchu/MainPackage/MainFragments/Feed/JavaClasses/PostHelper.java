@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -46,9 +45,9 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageViewFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -235,16 +234,16 @@ public class PostHelper {
             SingletonPostItem.getInstance().setMedia(media);
 
             if (media.getType().equals(IMAGE_TYPE)) {
-                Intent intent = new Intent(activity, ImageActivity.class);
-                activity.startActivity(intent);
+
+                if(mfragmentNavigation != null){
+                    mfragmentNavigation.pushFragment(new PostImageViewFragment());
+                }
+
             } else if (media.getType().equals(VIDEO_TYPE)) {
 
                 if(mfragmentNavigation != null){
                     mfragmentNavigation.pushFragment(new PostVideoPlayFragment());
                 }
-
-                /*Intent intent = new Intent(activity, VideoActivity.class);
-                activity.startActivity(intent);*/
             } else {
                 Log.e("info", "unknown media type detected");
             }

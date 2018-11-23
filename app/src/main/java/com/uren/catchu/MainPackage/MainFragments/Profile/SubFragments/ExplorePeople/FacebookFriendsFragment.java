@@ -89,12 +89,10 @@ public class FacebookFriendsFragment extends BaseFragment {
     Button connectFacebookButton;
 
     FacebookFriendsAdapter facebookFriendsAdapter;
-    OnLoadedListener onLoadedListener;
     CallbackManager mCallbackManager;
     boolean showTollbar;
 
-    public FacebookFriendsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
-        this.onLoadedListener = onLoadedListener;
+    public FacebookFriendsFragment(boolean showTollbar) {
         this.showTollbar = showTollbar;
     }
 
@@ -105,6 +103,7 @@ public class FacebookFriendsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_facebook_friends, container, false);
             ButterKnife.bind(this, mView);
@@ -150,7 +149,6 @@ public class FacebookFriendsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
                 getActivity().onBackPressed();
             }
         });
@@ -187,13 +185,11 @@ public class FacebookFriendsFragment extends BaseFragment {
                     personRecyclerView.setLayoutManager(linearLayoutManager);
                 }
                 progressBar.setVisibility(View.GONE);
-                onLoadedListener.onLoaded();
             }
 
             @Override
             public void onFailed(Exception e) {
                 progressBar.setVisibility(View.GONE);
-                onLoadedListener.onError(e.getMessage());
             }
         });
     }
@@ -222,13 +218,11 @@ public class FacebookFriendsFragment extends BaseFragment {
         if (accessToken != null) {
             if (accessToken.isExpired()) {
                 connectFacebookLayout.setVisibility(View.VISIBLE);
-                onLoadedListener.onLoaded();
             } else {
                 getFacebookFriends();
             }
         } else{
             connectFacebookLayout.setVisibility(View.VISIBLE);
-            onLoadedListener.onLoaded();
         }
     }
 

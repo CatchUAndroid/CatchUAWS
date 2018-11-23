@@ -89,8 +89,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.ImageActivity" />
-        <activity android:name=".MainPackage.MainFragments.Feed.SubActivities.VideoActivity" />
+        <activity android:name=".LoginPackage.AppIntroductionActivity"></activity>
     </application>
 
 </manifest>

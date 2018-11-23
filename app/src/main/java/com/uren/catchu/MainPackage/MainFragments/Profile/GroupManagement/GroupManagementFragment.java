@@ -103,8 +103,8 @@ public class GroupManagementFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        if(mView == null) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_special_select, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
@@ -118,23 +118,22 @@ public class GroupManagementFragment extends BaseFragment {
 
     }
 
-    public void initValues(){
+    public void initValues() {
         searchToolbarLayout.setVisibility(View.VISIBLE);
         searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
         setFloatButtonVisibility();
         getGroups();
     }
 
-    public void setFloatButtonVisibility(){
-        if(operationType.equals(GROUP_OP_CHOOSE_TYPE))
+    public void setFloatButtonVisibility() {
+        if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
             nextFab.setVisibility(View.VISIBLE);
     }
 
-    public void addListeners(){
+    public void addListeners() {
         searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -143,8 +142,8 @@ public class GroupManagementFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if(operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
-                    if (selectedGroupItem == null ) {
+                if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
+                    if (selectedGroupItem == null) {
                         CommonUtils.showToastLong(getContext(), getResources().getString(R.string.selectLeastOneGroup));
                         return;
                     }
@@ -190,7 +189,7 @@ public class GroupManagementFragment extends BaseFragment {
                             public void onReturn(Object object) {
                                 int itemSize = (int) object;
 
-                                if(warningMsgTv.getVisibility() == View.GONE) {
+                                if (warningMsgTv.getVisibility() == View.GONE) {
                                     if (itemSize == 0)
                                         searchResultTv.setVisibility(View.VISIBLE);
                                     else
@@ -224,7 +223,7 @@ public class GroupManagementFragment extends BaseFragment {
                     public void onComplete(Object object) {
                         groupRequestResult = (GroupRequestResult) object;
 
-                        if(getContext() != null) {
+                        if (getContext() != null) {
                             MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
                                     getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
 
@@ -274,7 +273,7 @@ public class GroupManagementFragment extends BaseFragment {
                     @Override
                     public void onFailed(Exception e) {
                         progressBar.setVisibility(View.GONE);
-                        if(getContext() != null) {
+                        if (getContext() != null) {
                             DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
@@ -285,8 +284,8 @@ public class GroupManagementFragment extends BaseFragment {
                 });
     }
 
-    public void localGroupOperation(int opType, GroupRequestResultResultArrayItem arrayItem){
-        if(arrayItem == null) {
+    public void localGroupOperation(int opType, GroupRequestResultResultArrayItem arrayItem) {
+        if (arrayItem == null) {
             int index = 0;
             for (GroupRequestResultResultArrayItem resultArrayItem : groupRequestResult.getResultArray()) {
 
@@ -305,7 +304,7 @@ public class GroupManagementFragment extends BaseFragment {
 
                 index++;
             }
-        }else if(opType == ITEM_INSERTED)
+        } else if (opType == ITEM_INSERTED)
             groupRequestResult.getResultArray().add(arrayItem);
     }
 
@@ -325,7 +324,7 @@ public class GroupManagementFragment extends BaseFragment {
                                     GroupManagementFragment.class.getName(), new ReturnCallback() {
                                 @Override
                                 public void onReturn(Object object) {
-                                    localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem)object);
+                                    localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem) object);
                                     userGroupsListAdapter.notifyDataSetChanged();
                                 }
                             }), ANIMATE_RIGHT_TO_LEFT);
@@ -336,7 +335,7 @@ public class GroupManagementFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                if(getContext() != null) {
+                if (getContext() != null) {
                     DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {

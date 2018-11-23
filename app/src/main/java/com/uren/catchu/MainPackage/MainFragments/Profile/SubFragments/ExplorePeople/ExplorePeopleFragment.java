@@ -30,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ExplorePeopleFragment extends BaseFragment {
 
@@ -48,7 +49,6 @@ public class ExplorePeopleFragment extends BaseFragment {
     @BindView(R.id.searchToolbarAddItemImgv)
     ImageView searchToolbarAddItemImgv;
 
-    ProgressDialogUtil progressDialogUtil;
     SpecialSelectTabAdapter adapter;
     FacebookFriendsFragment facebookFriendsFragment;
     ContactsFragment contactsFragment;
@@ -56,12 +56,6 @@ public class ExplorePeopleFragment extends BaseFragment {
 
     private static final int TAB_FACEBOOK = 0;
     private static final int TAB_CONTACTS = 1;
-
-    boolean facebookFragLoaded = false;
-    boolean contactFragLoaded = false;
-    Handler handler = new Handler();
-
-    private static final int FRAGMENTS_LOADED_DELAY = 500;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +70,8 @@ public class ExplorePeopleFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
 
         if (view == null) {
 
@@ -94,60 +90,15 @@ public class ExplorePeopleFragment extends BaseFragment {
     }
 
     private void initializeItems() {
-        progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
-        progressDialogUtil.dialogShow();
-        handler.postDelayed(runnable, FRAGMENTS_LOADED_DELAY);
         searchToolbarAddItemImgv.setVisibility(View.GONE);
         setupViewPager();
         tabLayout.setupWithViewPager(viewPager);
         selectedProperty = TAB_FACEBOOK;
     }
 
-    public Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            if (facebookFragLoaded && contactFragLoaded) {
-                progressDialogUtil.dialogDismiss();
-                handler.removeCallbacks(runnable);
-            } else
-                handler.postDelayed(this, FRAGMENTS_LOADED_DELAY);
-        }
-    };
-
     private void setupViewPager() {
-        facebookFriendsFragment = new FacebookFriendsFragment(new OnLoadedListener() {
-            @Override
-            public void onLoaded() {
-                facebookFragLoaded = true;
-            }
-
-            @Override
-            public void onError(String message) {
-                progressDialogUtil.dialogDismiss();
-                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + message, new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                    }
-                });
-            }
-        }, false);
-
-        contactsFragment = new ContactsFragment(new OnLoadedListener() {
-            @Override
-            public void onLoaded() {
-                contactFragLoaded = true;
-            }
-
-            @Override
-            public void onError(String message) {
-                progressDialogUtil.dialogDismiss();
-                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + message, new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                    }
-                });
-            }
-        }, false);
+        facebookFriendsFragment = new FacebookFriendsFragment(false);
+        contactsFragment = new ContactsFragment( false);
 
         adapter = new SpecialSelectTabAdapter(getChildFragmentManager());
         adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
@@ -160,7 +111,6 @@ public class ExplorePeopleFragment extends BaseFragment {
         searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -222,11 +172,11 @@ public class ExplorePeopleFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s != null && s.toString() != null) {
+                if (s != null && s.toString() != null) {
                     if (!s.toString().trim().isEmpty()) {
                         imgCancelSearch.setVisibility(View.VISIBLE);
                         searchToolbarBackImgv.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         imgCancelSearch.setVisibility(View.GONE);
                         searchToolbarBackImgv.setVisibility(View.VISIBLE);
                     }

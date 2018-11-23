@@ -16,7 +16,7 @@ import android.support.v4.app.Fragment;
 
 
 public class PhotoSelectUtils {
-    private static final String TAG = "PhotoUtils";
+    /*private static final String TAG = "PhotoUtils";
 
     public static void takePicture(Fragment fragment, Uri imageUri, int requestCode) {
         Intent intentCamera = new Intent();
@@ -114,7 +114,7 @@ public class PhotoSelectUtils {
         return null;
     }
 
-    /**
+    *//**
      * Get the value of the data column for this Uri. This is useful for
      * MediaStore Uris, and other file-based ContentProviders.
      *
@@ -123,7 +123,7 @@ public class PhotoSelectUtils {
      * @param selection     (Optional) Filter used in the query.
      * @param selectionArgs (Optional) Selection arguments used in the query.
      * @return The value of the _data column, which is typically a file path.
-     */
+     *//*
     private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
@@ -146,29 +146,29 @@ public class PhotoSelectUtils {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
-    /**
+    *//**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is DownloadsProvider.
-     */
+     *//*
     private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-    /**
+    *//**
      * @param uri The Uri to check.
      * @return Whether the Uri authority is MediaProvider.
-     */
+     *//*
     private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
-    /**
+    *//**
      * Cihazın mevcut olup olmadığını kontrol et SDCard
      * Araç yöntemi
-     */
+     *//*
     public static boolean hasExternalStorage() {
         String state = Environment.getExternalStorageState();
         return state.equals(Environment.MEDIA_MOUNTED);
-    }
+    }*/
 
 }

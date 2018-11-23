@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.graphics.BitmapCompat;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -35,6 +36,7 @@ public class PhotoSelectUtil {
     Intent data;
     String type;
     boolean portraitMode;
+    float bitmapResizeValue = 0.8f;
 
     public PhotoSelectUtil(){
 
@@ -74,12 +76,15 @@ public class PhotoSelectUtil {
     public Bitmap getResizedBitmap() {
         if (getScreeanShotBitmap() != null)
             resizedBitmap = Bitmap.createScaledBitmap(getScreeanShotBitmap(),
-                    (int) (getScreeanShotBitmap().getWidth() * 0.8),
-                    (int) (getScreeanShotBitmap().getHeight() * 0.8), true);
+                    (int) (getScreeanShotBitmap().getWidth() * bitmapResizeValue),
+                    (int) (getScreeanShotBitmap().getHeight() * bitmapResizeValue), true);
         else if(getBitmap() != null)
             resizedBitmap = Bitmap.createScaledBitmap(getBitmap(),
-                    (int) (getBitmap().getWidth() * 0.8),
-                    (int) (getBitmap().getHeight() * 0.8), true);
+                    (int) (getBitmap().getWidth() * bitmapResizeValue),
+                    (int) (getBitmap().getHeight() * bitmapResizeValue), true);
+
+        System.out.println("BitmapCompat.getAllocationByteCount(bitmap):" + BitmapCompat.getAllocationByteCount(bitmap));
+        System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
         return resizedBitmap;
     }

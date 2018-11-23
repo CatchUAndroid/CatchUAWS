@@ -189,7 +189,8 @@ public class RegisterActivity extends AppCompatActivity
                             Log.i("Info", "CreateUser : Success");
                             progressDialog.dismiss();
                             setUserInfo(userName, userEmail);
-                            startMainPage();
+                            startAppIntroPage();
+                            //startMainPage();
                         } else {
                             progressDialog.dismiss();
                             Log.i("Info", "CreateUser : Fail");
@@ -218,6 +219,13 @@ public class RegisterActivity extends AppCompatActivity
         newLoginUser.setEmail(userEmail);
         newLoginUser.setUserId(mAuth.getCurrentUser().getUid());
 
+    }
+
+    public void startAppIntroPage(){
+        Intent intent = new Intent(RegisterActivity.this, AppIntroductionActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("LoginUser", newLoginUser);
+        startActivity(intent);
     }
 
     public void startMainPage() {

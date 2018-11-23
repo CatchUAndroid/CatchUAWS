@@ -86,6 +86,9 @@ public class AddGroupFragment extends BaseFragment {
 
     CompleteCallback completeCallback;
 
+    private static final int CODE_GALLERY_REQUEST = 665;
+    private static final int CODE_CAMERA_REQUEST = 662;
+
     public AddGroupFragment(CompleteCallback completeCallback) {
         this.completeCallback = completeCallback;
     }
@@ -201,9 +204,12 @@ public class AddGroupFragment extends BaseFragment {
 
     private void startGalleryProcess() {
 
-        // TODO: 13.11.2018 - burada permission sormamisiz bakacagim.
-        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
+        if (permissionModule.checkWriteExternalStoragePermission())
+            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                    getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
+        else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     public void startCameraProcess() {
@@ -213,21 +219,10 @@ public class AddGroupFragment extends BaseFragment {
             return;
         }
 
-        if (!permissionModule.checkWriteExternalStoragePermission())
-            requestPermissions(
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        else
-            checkCameraPermission();
-    }
-
-    public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
-            requestPermissions(
-                    new String[]{Manifest.permission.CAMERA},
-                    permissionModule.PERMISSION_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
         else
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
     }
 
     private void setGroupTextSize() {
@@ -257,7 +252,7 @@ public class AddGroupFragment extends BaseFragment {
         UserGroupsProcess.saveGroup(getContext(), photoSelectUtil, groupNameEditText.getText().toString(), new CompleteCallback() {
             @Override
             public void onComplete(final Object object) {
-                if(object != null) {
+                if (object != null) {
 
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -288,7 +283,7 @@ public class AddGroupFragment extends BaseFragment {
             if (requestCode == permissionModule.PERMISSION_CAMERA) {
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
                 setGroupPhoto(photoSelectUtil.getMediaUri());
-            } else if (requestCode == permissionModule.getImageGalleryPermission()) {
+            } else if (requestCode == CODE_GALLERY_REQUEST) {
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
                 setGroupPhoto(photoSelectUtil.getMediaUri());
             }
@@ -318,12 +313,16 @@ public class AddGroupFragment extends BaseFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                checkCameraPermission();
+                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                        getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
             }
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
-        } else
-            CommonUtils.showToast(getContext(), getResources().getString(R.string.technicalError) + requestCode);
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
+            }
+        }
     }
 }

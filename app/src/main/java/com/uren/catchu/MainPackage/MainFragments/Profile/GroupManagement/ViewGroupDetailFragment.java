@@ -59,6 +59,7 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.EXIT_GROUP;
@@ -277,7 +278,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                                         }
                                     });
                                 }
-                            }), ANIMATE_RIGHT_TO_LEFT);
+                            }), ANIMATE_LEFT_TO_RIGHT);
                 }
             }
         });
