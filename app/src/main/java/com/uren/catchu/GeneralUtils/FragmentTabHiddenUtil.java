@@ -1,5 +1,6 @@
 package com.uren.catchu.GeneralUtils;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageViewFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.AddGroupFragment;
@@ -16,6 +17,7 @@ public class FragmentTabHiddenUtil {
             MarkProblemFragment.class.getName(),
             AddGroupFragment.class.getName(),
             PostVideoPlayFragment.class.getName(),
+            PostImageViewFragment.class.getName(),
             SinglePostFragment.class.getName(),
             UserEditFragment.class.getName(),
             PhoneNumEditFragment.class.getName(),

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -55,12 +56,18 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
+import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
+import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +75,9 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import catchu.model.BaseRequest;
+import catchu.model.BaseResponse;
+import catchu.model.UserProfile;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -455,14 +465,19 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void startMainPage() {
-
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
-
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("LoginUser", loginUser);
         startActivity(intent);
         finish();
+    }
 
+    private void startAppIntroPage() {
+        loginUser.setUserId(mAuth.getCurrentUser().getUid());
+        Intent intent = new Intent(this, AppIntroductionActivity.class);
+        intent.putExtra("LoginUser", loginUser);
+        startActivity(intent);
+        finish();
     }
 
     public void getFacebookuserInfo(final LoginResult loginResult) {
@@ -520,7 +535,7 @@ public class LoginActivity extends AppCompatActivity
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in loginUser's information
                                 Log.i("Info", "  >>signInWithCredential:success");
-                                startMainPage();
+                                checkUserInSystem();
 
                             } else {
                                 // If sign in fails, display a message to the loginUser.
@@ -550,7 +565,7 @@ public class LoginActivity extends AppCompatActivity
 
                             Log.i("Info", "signInWithCredential Twitter:success");
                             getTwitterUserInfo(session);
-                            startMainPage();
+                            checkUserInSystem();
 
                         } else {
                             Log.i("Info", "  >>signInWithCredential:failure:" + task.getException());
@@ -604,6 +619,39 @@ public class LoginActivity extends AppCompatActivity
 
     }
 
+    public void checkUserInSystem(){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+
+                UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
+
+                    @Override
+                    public void onSuccess(UserProfile up) {
+                        Log.i("userDetail", "successful");
+                        if(up != null && up.getUserInfo() != null && up.getUserInfo().getUserid() != null){
+                            startMainPage();
+                        }else
+                            startAppIntroPage();
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        startAppIntroPage();
+                        CommonUtils.showToast(LoginActivity.this, e.toString());
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+
+                    }
+                }, mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getUid(), token);
+
+                loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        });
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

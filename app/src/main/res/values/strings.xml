@@ -268,6 +268,7 @@
     <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">You can find facebook friends who are using Catchu</string>
     <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">You must grant access to your contacts to see your friends</string>
     <string name="SOMETHING_WENT_WRONG">Something Went Wrong!</string>
+    <string name="GOT_IT">GOT IT</string>
 
     <string name="MY_GROUPS_POSTS">My Groups Posts</string>
 
@@ -297,6 +298,18 @@
     <string name="feedViewTypeList">List</string>
     <string name="myPosts">My Posts</string>
     <string name="catchedPosts">Catched Posts</string>
+
+    <!-- App introduction variables-->
+    <string name="SOCIAL_INTERACTION">Social Interaction</string>
+    <string name="DIGITAL_FOOTPRINT">Digital Footprint</string>
+    <string name="TIME_CAPSULE">Time Capsule</string>
+    <string name="IMMORTAL_NODES">Immortal Nodes</string>
+
+    <string name="SOCIAL_INTERACTION_DESC">A more powerful local interaction by combining location and sharing</string>
+    <string name="DIGITAL_FOOTPRINT_DESC">Leave your digital tracks instead of physical tracks and wait for them to be discovered</string>
+    <string name="TIME_CAPSULE_DESC">Leave a message where you want it to come in the future. Maybe tomorrow maybe 20 years.</string>
+    <string name="IMMORTAL_NODES_DESC">Leave notes that won\'t get lost in the location. When you wish, the person you wish, it will appear in that location</string>
+
 
 
 </resources>

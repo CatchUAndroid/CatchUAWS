@@ -235,8 +235,8 @@
     <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">Catchu kullanan facebook arkadaşlarını bulabilirsin</string>
     <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">Arkadaşlarınızı görmek için kişilere erişim izni vermelisiniz</string>
     <string name="SOMETHING_WENT_WRONG">Bir Hata Oluştu!</string>
-
     <string name="MY_GROUPS_POSTS">Grup Paylaşımlarım</string>
+    <string name="GOT_IT">ANLADIM</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
@@ -264,4 +264,14 @@
     <string name="myPosts">Paylaşımlarım</string>
     <string name="catchedPosts">Yakaladığım paylaşımlar</string>
 
+    <!-- App introduction variables-->
+    <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>
+    <string name="DIGITAL_FOOTPRINT">Dijital Ayakizi</string>
+    <string name="TIME_CAPSULE">Zaman Kapsülü</string>
+    <string name="IMMORTAL_NODES">Yaşayan Notlar</string>
+
+    <string name="SOCIAL_INTERACTION_DESC">Lokasyon ve paylaşımı birleştirerek daha güçlü daha yerel etkileşim sağlayın.</string>
+    <string name="DIGITAL_FOOTPRINT_DESC">Fiziksel izler yerine dijital izlerinizi bırakın ve keşfedilmelerini bekleyin.</string>
+    <string name="TIME_CAPSULE_DESC">Gelecekte açılmasını istediğiniz bir mesajı istediğiniz yere bırakın. Belki yarın belki 20 yıl sonra açılsın.</string>
+    <string name="IMMORTAL_NODES_DESC">Lokasyona kaybolmayacak notlar bırakın. Dilediğiniz zaman dilediğiniz kişiye o lokasyonda görünsün.</string>
 </resources>

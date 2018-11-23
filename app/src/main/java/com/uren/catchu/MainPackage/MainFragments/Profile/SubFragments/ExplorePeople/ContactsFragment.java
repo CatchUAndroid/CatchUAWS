@@ -87,13 +87,11 @@ public class ContactsFragment extends BaseFragment {
     List<Contact> inviteContactsList;
     List<ContactFriendModel> contactFriendModelList;
     UserListResponse appUsersList;
-    OnLoadedListener onLoadedListener;
 
     boolean showTollbar;
     boolean edittextFocused = false;
 
-    public ContactsFragment(OnLoadedListener onLoadedListener, boolean showTollbar) {
-        this.onLoadedListener = onLoadedListener;
+    public ContactsFragment(boolean showTollbar) {
         this.showTollbar = showTollbar;
     }
 
@@ -242,7 +240,6 @@ public class ContactsFragment extends BaseFragment {
                     @Override
                     public void onFailed(Exception e) {
                         progressBar.setVisibility(View.GONE);
-                        onLoadedListener.onError(e.getMessage());
                     }
                 });
             }
@@ -250,7 +247,6 @@ public class ContactsFragment extends BaseFragment {
             @Override
             public void onFailed(Exception e) {
                 progressBar.setVisibility(View.GONE);
-                onLoadedListener.onError(e.getMessage());
             }
         });
     }
@@ -303,7 +299,6 @@ public class ContactsFragment extends BaseFragment {
                     @Override
                     public void onFailure(Exception e) {
                         progressBar.setVisibility(View.GONE);
-                        onLoadedListener.onError(e.getMessage());
                     }
 
                     @Override
@@ -352,7 +347,6 @@ public class ContactsFragment extends BaseFragment {
         }
 
         progressBar.setVisibility(View.GONE);
-        onLoadedListener.onLoaded();
     }
 
     public void sendSmsToInvite(Contact contact) {

@@ -169,33 +169,13 @@ public class SettingsFragment extends BaseFragment {
 
     public void startFacebookFriendsFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new FacebookFriendsFragment(new OnLoadedListener() {
-                @Override
-                public void onLoaded() {
-
-                }
-
-                @Override
-                public void onError(String message) {
-
-                }
-            }, true), ANIMATE_LEFT_TO_RIGHT);
+            mFragmentNavigation.pushFragment(new FacebookFriendsFragment(true), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
     public void startContactFriendsFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ContactsFragment(new OnLoadedListener() {
-                @Override
-                public void onLoaded() {
-
-                }
-
-                @Override
-                public void onError(String message) {
-
-                }
-            }, true), ANIMATE_LEFT_TO_RIGHT);
+            mFragmentNavigation.pushFragment(new ContactsFragment(true), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
