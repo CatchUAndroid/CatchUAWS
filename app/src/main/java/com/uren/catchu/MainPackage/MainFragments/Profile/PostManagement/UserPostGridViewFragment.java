@@ -438,6 +438,7 @@ public class UserPostGridViewFragment extends BaseFragment {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserCaughtPostListProcess");
+                    showNoFeedLayout(true, R.string.emptyFeed);
                 } else {
                     CommonUtils.LOG_OK("UserCaughtPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {

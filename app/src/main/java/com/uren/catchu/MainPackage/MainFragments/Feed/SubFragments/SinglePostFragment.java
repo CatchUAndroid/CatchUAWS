@@ -47,9 +47,12 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -72,6 +75,7 @@ import catchu.model.PostListResponse;
 import catchu.model.User;
 
 import static com.facebook.FacebookSdk.getApplicationContext;
+import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
@@ -134,7 +138,8 @@ public class SinglePostFragment extends BaseFragment
     String latitude;
     String radius;
 
-    private boolean pulledToRefresh = false;
+    private boolean pulledToRefreshPost = false;
+    private boolean pulledToRefreshComment = false;
     private List<Post> postList = new ArrayList<Post>();
     private int drawingStartLocation = 0;
 
@@ -377,6 +382,7 @@ public class SinglePostFragment extends BaseFragment
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new SinglePostItemAnimator());
     }
 
     private void setAdapter() {
@@ -391,13 +397,17 @@ public class SinglePostFragment extends BaseFragment
             @Override
             public void onRefresh() {
                 setPaginationValues();
-                refresh_layout.setRefreshing(false);
+                //refresh_layout.setRefreshing(false);
+                checkLocationAndRetrievePosts();
             }
         });
     }
 
     private void setPaginationValues() {
-        pulledToRefresh = true;
+        pulledToRefreshPost = true;
+        pulledToRefreshComment = true;
+        float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
+        radius = String.valueOf(radiusInKm);
     }
 
 
@@ -484,9 +494,12 @@ public class SinglePostFragment extends BaseFragment
                 } else {
                     CommonUtils.LOG_OK("PostListResponseProcess");
                     if (postListResponse.getItems().size() == 0) {
-                        //no such data
+                        //no such data - post bulunamadi
+                        CommonUtils.showToast(getContext(), "post bulunamadi");
+                    }else{
+                        fillContent(postListResponse.getItems().get(0));
                     }
-                    fillContent(postListResponse.getItems().get(0));
+
                 }
 
                 progressBar.setVisibility(View.GONE);
@@ -505,7 +518,7 @@ public class SinglePostFragment extends BaseFragment
             @Override
             public void onTaskContinue() {
 
-                if (!pulledToRefresh) {
+                if (!pulledToRefreshPost) {
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }
@@ -525,9 +538,9 @@ public class SinglePostFragment extends BaseFragment
         postList.clear();
         postList.add(post);
 
-        if (pulledToRefresh) {
-            //feedAdapter.updatePostListItems(postListResponse.getItems());
-            pulledToRefresh = false;
+        if (pulledToRefreshPost) {
+
+            pulledToRefreshPost = false;
         } else {
             singlePostAdapter.addAll(postList, null);
         }
@@ -567,7 +580,7 @@ public class SinglePostFragment extends BaseFragment
                     CommonUtils.LOG_OK_BUT_NULL("PostCommentListProcess");
                 } else {
                     CommonUtils.LOG_OK("PostCommentListProcess");
-                    setComments(commentListResponse);
+                    setRecyclerViewComments(commentListResponse);
                 }
             }
 
@@ -580,7 +593,10 @@ public class SinglePostFragment extends BaseFragment
             @Override
             public void onTaskContinue() {
                 //progressBar.setVisibility(View.VISIBLE);
-                singlePostAdapter.addProgressLoading();
+                if(!pulledToRefreshComment){
+                    singlePostAdapter.addProgressLoading();
+                }
+
             }
         }, userId, postID, commentId, token);
 
@@ -588,9 +604,17 @@ public class SinglePostFragment extends BaseFragment
 
     }
 
-    private void setComments(CommentListResponse commentListResponse) {
-        singlePostAdapter.removeProgressLoading();
-        singlePostAdapter.addAll(null, commentListResponse.getItems());
+    private void setRecyclerViewComments(CommentListResponse commentListResponse) {
+
+
+        if (pulledToRefreshComment) {
+            singlePostAdapter.updatePostListItems(postList);
+            singlePostAdapter.updateCommentListItems(commentListResponse.getItems());
+            pulledToRefreshComment = false;
+        } else {
+            singlePostAdapter.removeProgressLoading(); // pulled to refresh değilse progress eklenip/kaldırılıyor
+            singlePostAdapter.addAll(null, commentListResponse.getItems());
+        }
     }
 
     @Override

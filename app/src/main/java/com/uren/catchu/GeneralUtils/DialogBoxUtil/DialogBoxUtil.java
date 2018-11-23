@@ -12,14 +12,23 @@ import android.widget.ArrayAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.R;
 
+import catchu.model.Post;
+
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_DISABLE_COMMENTS_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_EDIT;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PLAY_VIDEO;
+import static com.uren.catchu.Constants.NumericConstants.CODE_REPORT_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_SCREENSHOT_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_UNFOLLOW_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_VIDEO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 
 public class DialogBoxUtil {
 
@@ -269,6 +278,58 @@ public class DialogBoxUtil {
             }
         });
         alertDialog.show();
+    }
+
+    public static void postSettingsDialogBox(Context context, Post post, final PostSettingsChoosenCallback postSettingsChoosenCallback) {
+
+        String followElement = getFollowElement(context, post);
+
+        CommonUtils.hideKeyBoard(context);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        //Report
+        adapter.add("  " + context.getResources().getString(R.string.report));
+        //Follow
+        //todo NT - follow statüsüne göre buton eklenecek. Su anda posttan user follow statüsü gelmiyor
+        if(!followElement.equals("notValid")){
+            adapter.add("  " + followElement);
+        }
+        //Disable comment
+        adapter.add("  " + context.getResources().getString(R.string.disableComment));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                if (item == CODE_REPORT_POSITION)
+                    postSettingsChoosenCallback.onReportSelected();
+                else if (item == CODE_UNFOLLOW_POSITION)
+                    postSettingsChoosenCallback.onUnFollowSelected();
+                else if (item == CODE_DISABLE_COMMENTS_POSITION) {
+                    postSettingsChoosenCallback.onDisableCommentSelected();
+                }
+            }
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    private static String getFollowElement(Context context, Post post) {
+
+        String followElement = "notValid";
+        String currentFollowStatus = post.getUser().getFollowStatus();
+/*
+        if(currentFollowStatus.equals(FOLLOW_STATUS_FOLLOWING)){
+            followElement = context.getResources().getString(R.string.unfollow);
+        }else if(currentFollowStatus.equals(FOLLOW_STATUS_PENDING)){
+            followElement = "notValid";
+        } else if(currentFollowStatus.equals(FOLLOW_STATUS_OWN)){
+            followElement = "notValid";
+        }else if(currentFollowStatus.equals(FOLLOW_STATUS_NONE)){
+            followElement = context.getResources().getString(R.string.follow);
+        }
+*/
+        return  followElement;
+
     }
 
 

@@ -157,6 +157,8 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
 
         private void setSinglePostFragmentItems() {
 
+            String name = post.getUser().getUsername();
+
             SingletonSinglePost.getInstance().setPost(post);
             String toolbarTitle = post.getUser().getUsername();
 
@@ -259,8 +261,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                                 llError.setVisibility(View.VISIBLE);
                                 llProgress.setVisibility(View.GONE);
-                                progressLoading.setVisibility(View.GONE);
-                                CommonUtils.showToast(mContext, "Retry");
+                                progressLoading.setVisibility(View.GONE);;
                                 return false;
                             }
 

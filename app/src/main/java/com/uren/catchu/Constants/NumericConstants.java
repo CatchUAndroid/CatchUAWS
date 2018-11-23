@@ -36,7 +36,7 @@ public class NumericConstants {
 
     //Feed paignation initial values
     public static final int DEFAULT_FEED_PAGE_COUNT = 1;
-    public static final int DEFAULT_FEED_PERPAGE_COUNT = 5; // EN AZ 4 OLMALI.
+    public static final int DEFAULT_FEED_PERPAGE_COUNT = 15; // EN AZ 4 OLMALI.
     public static final int DEFAULT_FEED_RADIUS = 5000; //metre cinsinden
     public static int FILTERED_FEED_RADIUS = 5000; //metre cinsinden
 
@@ -62,4 +62,11 @@ public class NumericConstants {
     //USER POST VIEW TYPE
     public static final int USER_POST_VIEW_TYPE_GRID = 0;
     public static final int USER_POST_VIEW_TYPE_LIST = 1;
+
+    //Post More Dialog box codes
+    public static final int CODE_UNFOLLOW_POSITION = 0;
+    public static final int CODE_DISABLE_COMMENTS_POSITION = 1;
+    public static final int CODE_REPORT_POSITION = 2;
+
+
 }

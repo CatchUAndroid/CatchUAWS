@@ -123,7 +123,7 @@
 
             </android.support.v7.widget.Toolbar>
 
-            <ScrollView
+            <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/clearWhite">
@@ -364,20 +364,31 @@
                                 <LinearLayout
                                     android:id="@+id/llMyGroups"
                                     android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
+                                    android:layout_height="200dp"
                                     android:layout_marginTop="10dp"
-                                    android:background="@color/Orange"
                                     android:orientation="vertical">
 
                                     <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="@string/MY_GROUPS_POSTS"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold"/>
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="@string/groups"
+                                        android:textSize="17sp"
+                                        android:textStyle="bold"
+                                        android:layout_marginLeft="20dp"/>
+
+                                    <android.support.v7.widget.RecyclerView
+                                        android:id="@+id/groupRecyclerView"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent">
+                                    </android.support.v7.widget.RecyclerView>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="100dp"
+                                    android:orientation="vertical"
+                                    >
 
                                 </LinearLayout>
 
@@ -394,7 +405,7 @@
                 </LinearLayout>
 
 
-            </ScrollView>
+            </android.support.v4.widget.NestedScrollView>
 
 
         </LinearLayout>

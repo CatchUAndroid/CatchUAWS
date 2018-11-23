@@ -375,6 +375,7 @@ public class UserPostListViewFragment extends BaseFragment {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
+                    showNoFeedLayout(true, R.string.emptyFeed);
                 } else {
                     CommonUtils.LOG_OK("UserSharedPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {

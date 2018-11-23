@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,13 +32,20 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
+import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.GroupPostsManagement.UserGroupsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.ViewGroupDetailFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment;
@@ -49,9 +58,14 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
+import catchu.model.GroupRequestResult;
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
@@ -131,6 +145,10 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.followingsLayout)
     LinearLayout followingsLayout;
 
+    //Groups
+    @BindView(R.id.groupRecyclerView)
+    RecyclerView groupRecyclerView;
+
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
         args.putBoolean(ARGS_INSTANCE, comingFromTab);
@@ -167,7 +185,7 @@ public class ProfileFragment extends BaseFragment
             setDrawerListeners();
 
             initListeners();
-            //updateUI();
+            updateUI();
             setPullToRefresh();
 
         }
@@ -178,7 +196,6 @@ public class ProfileFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        updateUI();
     }
 
     private void initListeners() {
@@ -204,7 +221,10 @@ public class ProfileFragment extends BaseFragment
             getProfileDetail(AccountHolderInfo.getUserID());
         }
 
+        getGroups();
+
     }
+
 
     private void setPullToRefresh() {
 
@@ -455,6 +475,59 @@ public class ProfileFragment extends BaseFragment
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
+    private void getGroups() {
+
+        UserGroupsProcess.getGroups(AccountHolderInfo.getUserID(),
+                new CompleteCallback() {
+                    @Override
+                    public void onComplete(Object object) {
+                        GroupRequestResult groupRequestResult = (GroupRequestResult) object;
+                        setGroupRecyclerView(groupRequestResult);
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+
+                        if(getContext() != null) {
+                            DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+
+    }
+
+    private void setGroupRecyclerView(GroupRequestResult groupRequestResult) {
+
+        orderGroupByName(groupRequestResult);
+
+        //layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        groupRecyclerView.setLayoutManager(layoutManager);
+
+        //adapter
+        GroupsListAdapter groupsListAdapter = new GroupsListAdapter(getContext(), mFragmentNavigation, groupRequestResult);
+        groupRecyclerView.setAdapter(groupsListAdapter);
+
+    }
+
+    private void orderGroupByName(GroupRequestResult groupRequestResult) {
+        //order
+        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>()
+        {
+            @Override
+            public int compare(GroupRequestResultResultArrayItem o1, GroupRequestResultResultArrayItem o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
+            }
+
+        });
+    }
+
     @Override
     public void onClick(View v) {
 
@@ -490,7 +563,7 @@ public class ProfileFragment extends BaseFragment
 
         if (v == llMyGroups) {
             String targetUid = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(UserGroupsFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
+            //mFragmentNavigation.pushFragment(UserGroupsFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == followingsLayout) {
@@ -510,6 +583,7 @@ public class ProfileFragment extends BaseFragment
             //mFragmentNavigation.pushFragment(new UserEditFragment());
             mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
+
     }
 
     private void followerClicked() {

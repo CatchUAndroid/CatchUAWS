@@ -22,11 +22,14 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PostSettingsChoosenCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.CommentListDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
@@ -222,26 +225,23 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             imgBtnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, position, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
+                    DialogBoxUtil.postSettingsDialogBox(mContext, post,  new PostSettingsChoosenCallback() {
+
                         @Override
-                        public void onReportClick(int feedItem) {
+                        public void onReportSelected() {
 
                         }
 
                         @Override
-                        public void onSharePhotoClick(int feedItem) {
+                        public void onUnFollowSelected() {
 
                         }
 
                         @Override
-                        public void onCopyShareUrlClick(int feedItem) {
+                        public void onDisableCommentSelected() {
 
                         }
 
-                        @Override
-                        public void onCancelClick(int feedItem) {
-                            FeedContextMenuManager.getInstance().hideContextMenu();
-                        }
                     });
                 }
             });
@@ -574,7 +574,17 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         final PostDiffCallback diffCallback = new PostDiffCallback(this.postList, newPostList);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
+        this.postList.clear();
         this.postList.addAll(newPostList);
+        diffResult.dispatchUpdatesTo(this);
+    }
+
+    public void updateCommentListItems(List<Comment> newCommentList) {
+        final CommentListDiffCallback diffCallback = new CommentListDiffCallback(this.commentList, newCommentList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.commentList.clear();
+        this.commentList.addAll(newCommentList);
         diffResult.dispatchUpdatesTo(this);
     }
 

@@ -73,7 +73,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         holder.itemView.animate()
                 .translationY(0)
                 .setInterpolator(new DecelerateInterpolator(3.f))
-                .setDuration(100)
+                .setDuration(50)
                 .setListener(new AnimatorListenerAdapter() {
                     @Override
                     public void onAnimationEnd(Animator animation) {

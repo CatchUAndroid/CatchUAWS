@@ -361,7 +361,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
                             isFirstFetch = false;
                             setFetchData(postListResponse);
                         }
-                    }, 2500);
+                    }, 1000);
                 } else {
                     setFetchData(postListResponse);
                 }

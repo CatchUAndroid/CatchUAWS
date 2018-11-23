@@ -282,7 +282,7 @@
     <string name="noLikesYet">There is no likes yet!</string>
     <string name="unfollow">Unfollow</string>
     <string name="disableComment">Disable comment</string>
-    <string name="report">Report</string>
+    <string name="report">Report...</string>
     <string name="commentHint">What do you think?</string>
     <string name="like">Like</string>
     <string name="filterSettings">Filter Settings</string>

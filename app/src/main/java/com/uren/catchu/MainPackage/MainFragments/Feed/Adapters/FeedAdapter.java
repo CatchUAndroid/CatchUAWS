@@ -22,6 +22,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.PostSettingsChoosenCallback;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
@@ -196,28 +198,29 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             //More layout
             imgBtnMore.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
-                    FeedContextMenuManager.getInstance().toggleContextMenuFromView(v, position, new FeedContextMenu.OnFeedContextMenuItemClickListener() {
+
+                    DialogBoxUtil.postSettingsDialogBox(mContext, post, new PostSettingsChoosenCallback() {
+
                         @Override
-                        public void onReportClick(int feedItem) {
+                        public void onReportSelected() {
 
                         }
 
                         @Override
-                        public void onSharePhotoClick(int feedItem) {
+                        public void onUnFollowSelected() {
+
+
 
                         }
 
                         @Override
-                        public void onCopyShareUrlClick(int feedItem) {
+                        public void onDisableCommentSelected() {
 
                         }
 
-                        @Override
-                        public void onCancelClick(int feedItem) {
-                            FeedContextMenuManager.getInstance().hideContextMenu();
-                        }
                     });
                 }
             });
