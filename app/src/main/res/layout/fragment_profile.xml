@@ -312,12 +312,13 @@
 
                             </LinearLayout>
 
-
-                            <LinearLayout
+                            <!-- Post layout -->
+                            <!--LinearLayout
                                 android:id="@+id/llPosts"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:orientation="vertical">
+                                android:orientation="vertical"
+                                android:visibility="gone">
 
 
                                 <LinearLayout
@@ -392,6 +393,105 @@
 
                                 </LinearLayout>
 
+
+                            </LinearLayout-->
+
+                            <LinearLayout
+                                android:id="@+id/llPosts"
+                                android:layout_width="match_parent"
+                                android:layout_height="100dp"
+                                android:orientation="horizontal"
+                                android:layout_marginTop="10dp"
+                                android:weightSum="3">
+
+
+                                <RelativeLayout
+                                    android:id="@+id/llMyPosts"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@color/red"
+                                    android:orientation="vertical">
+
+
+                                    <ImageView
+                                        android:id="@+id/imgMyPosts"
+                                        android:layout_width="50dp"
+                                        android:layout_height="50dp"
+                                        android:layout_centerHorizontal="true"
+                                        android:src="@mipmap/icon_myposts" />
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:layout_below="@+id/imgMyPosts"
+                                        android:gravity="center"
+                                        android:text="My Posts"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+
+                                </RelativeLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/llCatchedPosts"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@color/green"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:text="Catched Posts -> Click here"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:id="@+id/llMyGroups"
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:background="@color/Orange"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:text="My Groups -> Click here"
+                                        android:textColor="@color/white"
+                                        android:textStyle="bold" />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/llMyGroups3"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp"
+                                android:layout_marginTop="10dp"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:text="@string/groups"
+                                    android:textSize="17sp"
+                                    android:textStyle="bold" />
+
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/groupRecyclerView"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
                             </LinearLayout>
 

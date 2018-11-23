@@ -32,6 +32,7 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -135,7 +136,7 @@ public class ProfileFragment extends BaseFragment
 
     //posts
     @BindView(R.id.llMyPosts)
-    LinearLayout llMyPosts;
+    RelativeLayout llMyPosts;
     @BindView(R.id.llCatchedPosts)
     LinearLayout llCatchedPosts;
     @BindView(R.id.llMyGroups)
@@ -148,6 +149,9 @@ public class ProfileFragment extends BaseFragment
     //Groups
     @BindView(R.id.groupRecyclerView)
     RecyclerView groupRecyclerView;
+
+    @BindView(R.id.llMyGroups3)
+    LinearLayout llMyGroups3;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -210,6 +214,7 @@ public class ProfileFragment extends BaseFragment
 
         followersLayout.setOnClickListener(this);
         followingsLayout.setOnClickListener(this);
+
     }
 
     private void updateUI() {
@@ -575,6 +580,19 @@ public class ProfileFragment extends BaseFragment
             followersLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             followerClicked();
         }
+
+
+        if (v == llMyGroups) {
+            CommonUtils.showToast(getContext(), "clicked");
+            int visibility = llMyGroups3.getVisibility();
+            if(visibility == View.VISIBLE){
+                llMyGroups3.setVisibility(View.GONE);
+            }else{
+                llMyGroups3.setVisibility(View.VISIBLE);
+            }
+
+        }
+
     }
 
     private void userEditClicked() {
