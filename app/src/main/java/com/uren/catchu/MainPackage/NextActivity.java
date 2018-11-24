@@ -56,14 +56,14 @@ public class NextActivity extends AppCompatActivity implements
     private boolean onPausedInd = false;
     public static Activity thisActivity;
 
-    @BindView(R.id.content_frame)
-    FrameLayout contentFrame;
+    public static FrameLayout contentFrame;
     public static LinearLayout profilePageMainLayout;
     public static RelativeLayout screenShotMainLayout;
     public static Button screenShotCancelBtn;
     public static Button screenShotApproveBtn;
 
     public String ANIMATION_TAG;
+
     public FragNavTransactionOptions transactionOptions;
 
     private int[] mTabIconsSelected = {
@@ -157,6 +157,7 @@ public class NextActivity extends AppCompatActivity implements
         screenShotMainLayout = findViewById(R.id.screenShotMainLayout);
         screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
         screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
+        contentFrame = findViewById(R.id.content_frame);
         TABS = getResources().getStringArray(R.array.tab_name);
         setShapes();
 
@@ -165,10 +166,10 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public void setShapes() {
-        screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Tomato, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
-        screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LightGreen, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+        screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Red, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 4));
+        screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumSeaGreen, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 4));
     }
 
     private void setStatusBarTransparent() {
@@ -402,6 +403,4 @@ public class NextActivity extends AppCompatActivity implements
 
         getSupportActionBar().setTitle(title);
     }
-
-
 }

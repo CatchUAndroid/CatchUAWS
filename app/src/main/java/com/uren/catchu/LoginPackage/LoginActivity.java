@@ -87,7 +87,7 @@ import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_TWITTER;
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener {
 
-    RelativeLayout backgroundLayout;
+    public static RelativeLayout backgroundLayout;
     EditText emailET;
     EditText passwordET;
     TextView registerText;
@@ -112,6 +112,7 @@ public class LoginActivity extends AppCompatActivity
     public LoginUser loginUser;
     private InputStream profileImageStream;
     private Bitmap photo = null;
+    public static Activity thisActivity;
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -130,6 +131,7 @@ public class LoginActivity extends AppCompatActivity
         initTwitterLogin();
 
         setContentView(R.layout.activity_login);
+        thisActivity = this;
         initVariables();
 
     }

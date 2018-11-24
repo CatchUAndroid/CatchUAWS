@@ -76,12 +76,12 @@ public class PhotoSelectUtil {
     public Bitmap getResizedBitmap() {
         if (getScreeanShotBitmap() != null)
             resizedBitmap = Bitmap.createScaledBitmap(getScreeanShotBitmap(),
-                    (int) (getScreeanShotBitmap().getWidth() * bitmapResizeValue),
-                    (int) (getScreeanShotBitmap().getHeight() * bitmapResizeValue), true);
+                    (int) (getScreeanShotBitmap().getWidth() * 0.8),
+                    (int) (getScreeanShotBitmap().getHeight() * 0.8), true);
         else if(getBitmap() != null)
             resizedBitmap = Bitmap.createScaledBitmap(getBitmap(),
-                    (int) (getBitmap().getWidth() * bitmapResizeValue),
-                    (int) (getBitmap().getHeight() * bitmapResizeValue), true);
+                    (int) (getBitmap().getWidth() * 0.8),
+                    (int) (getBitmap().getHeight() * 0.8), true);
 
         System.out.println("BitmapCompat.getAllocationByteCount(bitmap):" + BitmapCompat.getAllocationByteCount(bitmap));
         System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));

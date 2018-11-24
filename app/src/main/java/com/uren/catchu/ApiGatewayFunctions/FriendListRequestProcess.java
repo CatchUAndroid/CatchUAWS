@@ -12,6 +12,8 @@ import catchu.model.FriendRequestList;
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
 public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> {
 
     private OnEventListener<FriendList> mCallBack;
@@ -32,7 +34,12 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
 
         try {
             FriendList friendList = instance.client.friendsGet(userid, token);
-            return friendList;
+
+            if (friendList.getError().getCode().intValue() == RESPONSE_OK) {
+                return friendList;
+            } else {
+                return null;
+            }
 
         } catch (Exception e) {
             mException = e;

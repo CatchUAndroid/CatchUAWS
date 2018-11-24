@@ -14,6 +14,7 @@ public class ImageZoomListener implements View.OnTouchListener {
     private static final float MIN_ZOOM = 1f, MAX_ZOOM = 1f;
 
     // These matrices will be used to scale points of the image
+    Matrix initMatrix;
     Matrix matrix = new Matrix();
     Matrix savedMatrix = new Matrix();
 
@@ -28,8 +29,8 @@ public class ImageZoomListener implements View.OnTouchListener {
     PointF mid = new PointF();
     float oldDist = 1f;
 
-    public ImageZoomListener() {
-
+    public ImageZoomListener(Matrix initMatrix) {
+        this.initMatrix = initMatrix;
     }
 
     @Override
@@ -78,6 +79,7 @@ public class ImageZoomListener implements View.OnTouchListener {
                     if (newDist > 5f) {
                         matrix.set(savedMatrix);
                         scale = newDist / oldDist; // setting the scaling of the
+
                         // matrix...if scale > 1 means
                         // zoom in...if scale < 1 means
                         // zoom out

@@ -2,17 +2,56 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainActLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:background="@color/Silver">
+    tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/appIconImgv"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_centerInParent="true"
-        android:src="@mipmap/icon_catch" />
+    <com.dinuscxj.refresh.RecyclerRefreshLayout
+        android:id="@+id/refresh_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:background="@color/clearWhite"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/Silver">
+
+            <ImageView
+                android:id="@+id/appIconImgv"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/icon_catch" />
+
+            <TextView
+                android:id="@+id/networkTryDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/appIconImgv"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="@string/TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/tryAgainButton"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/networkTryDesc"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:text="@string/TRY_AGAIN"
+                android:textColor="@color/White"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+
+    </com.dinuscxj.refresh.RecyclerRefreshLayout>
 
 </RelativeLayout>

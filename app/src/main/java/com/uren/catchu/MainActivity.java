@@ -1,13 +1,20 @@
 package com.uren.catchu;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,6 +27,7 @@ import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.AppIntroductionActivity;
 import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -34,7 +42,11 @@ import catchu.model.UserProfile;
 
 public class MainActivity extends AppCompatActivity {
 
+    RelativeLayout mainActLayout;
     ImageView appIconImgv;
+    RecyclerRefreshLayout refresh_layout;
+    Button tryAgainButton;
+    TextView networkTryDesc;
 
     private FirebaseAuth firebaseAuth;
     User user;
@@ -59,8 +71,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initVariables() {
+        mainActLayout = findViewById(R.id.mainActLayout);
+        refresh_layout = findViewById(R.id.refresh_layout);
         appIconImgv = findViewById(R.id.appIconImgv);
+        tryAgainButton = findViewById(R.id.tryAgainButton);
+        networkTryDesc = findViewById(R.id.networkTryDesc);
         AnimationUtil.blink(MainActivity.this, appIconImgv);
+        tryAgainButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
+        setPullToRefresh();
+        addListeners();
+    }
+
+    private void addListeners() {
+        tryAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tryAgainButton.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.image_click));
+                loginProcess();
+            }
+        });
+    }
+
+    private void setPullToRefresh() {
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loginProcess();
+            }
+        });
     }
 
     private void initFacebookLogin() {
@@ -83,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkUser() {
         fillUserInfo();
         displayUserInfo(user);
-        startLoginProcess();
+        loginProcess();
     }
 
     public void fillUserInfo(){
@@ -124,6 +163,18 @@ public class MainActivity extends AppCompatActivity {
             provider.setProviderid("");
             provider.setProviderType("");
             user.setProvider(provider);
+        }
+    }
+
+    public void loginProcess(){
+        if(!CommonUtils.isNetworkConnected(MainActivity.this)){
+            tryAgainButton.setVisibility(View.VISIBLE);
+            networkTryDesc.setVisibility(View.VISIBLE);
+            CommonUtils.connectionErrSnackbarShow(mainActLayout, MainActivity.this);
+        }else {
+            tryAgainButton.setVisibility(View.GONE);
+            networkTryDesc.setVisibility(View.GONE);
+            startLoginProcess();
         }
     }
 

@@ -237,6 +237,9 @@
     <string name="SOMETHING_WENT_WRONG">Bir Hata Oluştu!</string>
     <string name="MY_GROUPS_POSTS">Grup Paylaşımlarım</string>
     <string name="GOT_IT">ANLADIM</string>
+    <string name="CHECK_YOUR_INTERNET_CONNECTION">Lütfen internet bağlantınızı kontrol ediniz!</string>
+    <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Internet baglantınızı kontrol ettikten sonra tekrar deneyiniz.</string>
+    <string name="TRY_AGAIN">Tekrar Deneyin</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

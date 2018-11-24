@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
 import android.app.Activity;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,6 +47,8 @@ public class PostImageViewFragment extends BaseFragment {
     @BindView(R.id.llProgress)
     LinearLayout llProgress;
 
+    Matrix initMatrix;
+
     public PostImageViewFragment() {
 
     }
@@ -66,13 +69,19 @@ public class PostImageViewFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_post_image_view, container, false);
         ButterKnife.bind(this, mView);
+        initVariables();
         setImage();
         return mView;
     }
 
+    private void initVariables() {
+        initMatrix = new Matrix();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        imgFeedItem.setOnTouchListener(new ImageZoomListener());
+        imgFeedItem.getImageMatrix();
+        imgFeedItem.setOnTouchListener(new ImageZoomListener(initMatrix));
     }
 
     private void setImage() {

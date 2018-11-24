@@ -2,14 +2,19 @@ package com.uren.catchu.ApiGatewayFunctions;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
+
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
 public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult> {
 
@@ -32,7 +37,11 @@ public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult
         try {
 
             GroupRequestResult groupRequestResult = instance.client.groupsPost(token, groupRequest);
-            return groupRequestResult;
+
+            if (groupRequestResult.getError().getCode().intValue() == RESPONSE_OK)
+                return groupRequestResult;
+            else
+                return null;
 
         } catch (Exception e) {
             mException = e;

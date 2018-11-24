@@ -12,6 +12,8 @@ import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
 import catchu.model.UserProfile;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
 public class FriendRequestProcess extends AsyncTask<Void, Void, FriendRequestList> {
 
     private OnEventListener<FriendRequestList> mCallBack;
@@ -40,7 +42,12 @@ public class FriendRequestProcess extends AsyncTask<Void, Void, FriendRequestLis
             friendRequest.setRequesterUserid(requesterUserid);
             friendRequest.setRequestedUserid(requestedUserid);
             FriendRequestList friendRequestList = instance.client.followRequestPost(token, friendRequest);
-            return friendRequestList;
+
+            if (friendRequestList.getError().getCode().intValue() == RESPONSE_OK) {
+                return friendRequestList;
+            } else {
+                return null;
+            }
 
         } catch (Exception e) {
             mException = e;

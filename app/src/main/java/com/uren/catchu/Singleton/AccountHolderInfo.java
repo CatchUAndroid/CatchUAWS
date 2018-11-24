@@ -1,10 +1,14 @@
 package com.uren.catchu.Singleton;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -15,6 +19,10 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.LoginPackage.LoginActivity;
+import com.uren.catchu.MainActivity;
+import com.uren.catchu.MainPackage.NextActivity;
+import com.uren.catchu.R;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import catchu.model.UserProfile;
@@ -114,6 +122,19 @@ public class AccountHolderInfo {
     }
 
     public static void getToken(final TokenCallback tokenCallback) {
+
+        if (NextActivity.thisActivity != null) {
+            if (!CommonUtils.isNetworkConnected(NextActivity.thisActivity)) {
+                CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
+                return;
+            }
+        }else if(LoginActivity.thisActivity != null){
+            if (!CommonUtils.isNetworkConnected(LoginActivity.thisActivity)) {
+                CommonUtils.connectionErrSnackbarShow(LoginActivity.backgroundLayout, LoginActivity.thisActivity);
+                return;
+            }
+        }
+
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
         tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
@@ -168,7 +189,7 @@ public class AccountHolderInfo {
         AccountHolderInfo.accountHolderInfoCallback = accountHolderInfoCallback;
     }
 
-    public static synchronized void reset(){
+    public static synchronized void reset() {
         accountHolderInfoInstance = null;
     }
 

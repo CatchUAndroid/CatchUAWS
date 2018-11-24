@@ -40,11 +40,10 @@ public class LoginProcess extends AsyncTask<Void, Void, BaseResponse> {
 
             BaseResponse rsp = instance.client.loginPost(userId, token, baseRequest);
 
-            if(rsp.getError().getCode().intValue() == RESPONSE_OK){
+            if (rsp.getError().getCode().intValue() == RESPONSE_OK)
                 return rsp;
-            }else{
+            else
                 return null;
-            }
 
         } catch (Exception e) {
             mException = e;

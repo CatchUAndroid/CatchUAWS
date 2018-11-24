@@ -7,6 +7,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BucketUploadResponse;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.MP4_TYPE;
 
@@ -35,7 +36,11 @@ public class SignedUrlGetProcess extends AsyncTask<Void, Void, BucketUploadRespo
 
         try {
             BucketUploadResponse commonS3BucketResult = instance.client.commonSignedurlGet(token, imageCount, videoCount, videoExtensionType, imageExtensionType);
-            return commonS3BucketResult;
+
+            if (commonS3BucketResult.getError().getCode().intValue() == RESPONSE_OK)
+                return commonS3BucketResult;
+            else
+                return null;
 
         } catch (Exception e) {
             mException = e;

@@ -14,8 +14,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.util.Log;
@@ -30,6 +33,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import java.text.DateFormat;
@@ -63,7 +67,7 @@ public class CommonUtils {
                 Settings.Secure.ANDROID_ID);
     }
 
-    public static int getPaddingInPixels(Context context, float dpSize){
+    public static int getPaddingInPixels(Context context, float dpSize) {
         final float scale = context.getResources().getDisplayMetrics().density;
         int paddingInPx = (int) (dpSize * scale + 0.5f);
         return paddingInPx;
@@ -82,7 +86,7 @@ public class CommonUtils {
 
     }
 
-    public static void setEnableOrDisableAllItemsOfLinearLayout(LinearLayout layout, boolean enableType){
+    public static void setEnableOrDisableAllItemsOfLinearLayout(LinearLayout layout, boolean enableType) {
         for (int i = 0; i < layout.getChildCount(); i++) {
             View child = layout.getChildAt(i);
             child.setEnabled(enableType);
@@ -116,7 +120,7 @@ public class CommonUtils {
         Drawable state_pressed = ContextCompat.getDrawable(context, selected);
 
 
-        Bitmap state_normal_bitmap = ((BitmapDrawable)state_normal).getBitmap();
+        Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
 
         // Setting alpha directly just didn't work, so we draw a new bitmap!
         Bitmap disabledBitmap = Bitmap.createBitmap(
@@ -129,8 +133,6 @@ public class CommonUtils {
         canvas.drawBitmap(state_normal_bitmap, 0, 0, paint);
 
         BitmapDrawable state_normal_drawable = new BitmapDrawable(context.getResources(), disabledBitmap);
-
-
 
 
         StateListDrawable drawable = new StateListDrawable();
@@ -232,29 +234,29 @@ public class CommonUtils {
         }
     }
 
-    public static void LOG_OK(String proccessName){
-        if(proccessName.length()> 21){
+    public static void LOG_OK(String proccessName) {
+        if (proccessName.length() > 21) {
             proccessName = proccessName.substring(0, 21);
         }
-        Log.i(serverPrefix + proccessName, "OK" );
+        Log.i(serverPrefix + proccessName, "OK");
     }
 
-    public static void LOG_OK_BUT_NULL(String proccessName){
-        if(proccessName.length()> 21){
+    public static void LOG_OK_BUT_NULL(String proccessName) {
+        if (proccessName.length() > 21) {
             proccessName = proccessName.substring(0, 21);
         }
-        Log.i(serverPrefix + proccessName, "SERVER:OK BUT DATA:NULL" );
+        Log.i(serverPrefix + proccessName, "SERVER:OK BUT DATA:NULL");
     }
 
-    public static void LOG_FAIL(String proccessName, String failDetail){
-        if(proccessName.length()> 21){
+    public static void LOG_FAIL(String proccessName, String failDetail) {
+        if (proccessName.length() > 21) {
             proccessName = proccessName.substring(0, 21);
         }
-        Log.i(serverPrefix + proccessName, "FAIL - " + failDetail );
+        Log.i(serverPrefix + proccessName, "FAIL - " + failDetail);
     }
 
-    public static void LOG_NEREDEYIZ(String konum){
-        if(konum.length()> 21){
+    public static void LOG_NEREDEYIZ(String konum) {
+        if (konum.length() > 21) {
             konum = konum.substring(0, 21);
         }
         Log.i(infoPrefix + neredeyiz, konum);
@@ -268,7 +270,7 @@ public class CommonUtils {
         }
     }
 
-    public static String getGooglePlayAppLink(Context context){
+    public static String getGooglePlayAppLink(Context context) {
         return APP_GOOGLE_PLAY_DEFAULT_LINK + context.getPackageName();
     }
 
@@ -288,25 +290,25 @@ public class CommonUtils {
 
             long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
             long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
-            long hour   = TimeUnit.MILLISECONDS.toHours(dateDiff);
-            long day  = TimeUnit.MILLISECONDS.toDays(dateDiff);
+            long hour = TimeUnit.MILLISECONDS.toHours(dateDiff);
+            long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
 
             if (second < 60) {
-                convTime = second+" " + resources.getString(R.string.seconds) +" "+suffix;
+                convTime = second + " " + resources.getString(R.string.seconds) + " " + suffix;
             } else if (minute < 60) {
-                convTime = minute+" " + resources.getString(R.string.minutes) +" "+suffix;
+                convTime = minute + " " + resources.getString(R.string.minutes) + " " + suffix;
             } else if (hour < 24) {
-                convTime = hour+" " + resources.getString(R.string.hours) +" "+suffix;
+                convTime = hour + " " + resources.getString(R.string.hours) + " " + suffix;
             } else if (day >= 7) {
                 if (day > 30) {
-                    convTime = (day / 30)+" " + resources.getString(R.string.months) +" "+suffix;
+                    convTime = (day / 30) + " " + resources.getString(R.string.months) + " " + suffix;
                 } else if (day > 360) {
-                    convTime = (day / 360)+" " + resources.getString(R.string.years) +" "+suffix;
+                    convTime = (day / 360) + " " + resources.getString(R.string.years) + " " + suffix;
                 } else {
-                    convTime = (day / 7) + " " + resources.getString(R.string.weeks) +" "+suffix;
+                    convTime = (day / 7) + " " + resources.getString(R.string.weeks) + " " + suffix;
                 }
             } else if (day < 7) {
-                convTime = day+" " + resources.getString(R.string.days) +" "+suffix;
+                convTime = day + " " + resources.getString(R.string.days) + " " + suffix;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -324,17 +326,38 @@ public class CommonUtils {
         try {
             return df.parse(dateStr);
         } catch (ParseException e) {
-            Log.e("dateError","Date Parse error");
+            Log.e("dateError", "Date Parse error");
             e.printStackTrace();
         }
 
         return null;
     }
 
-    public static void setImageScaleType(PhotoSelectUtil photoSelectUtil, ImageView imageView){
+    public static void setImageScaleType(PhotoSelectUtil photoSelectUtil, ImageView imageView) {
         if (photoSelectUtil.isPortraitMode())
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         else
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+    }
+
+    public static boolean isNetworkConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void connectionErrSnackbarShow(View view, Context context){
+        Snackbar snackbar = Snackbar.make(view,
+                context.getResources().getString(R.string.CHECK_YOUR_INTERNET_CONNECTION),
+                Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
+        TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(context.getResources().getColor(R.color.White, null));
+        snackbar.show();
     }
 }

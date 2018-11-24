@@ -33,7 +33,7 @@ public class UpdateUserProfileProcess {
     UserProfileProperties userProfileProperties;
     Bitmap bitmap;
     ProgressDialogUtil progressDialogUtil;
-    //ProgressDialog mProgressDialog;
+    boolean dialogShowed;
 
     public UpdateUserProfileProcess(Context context, ServiceCompleteCallback serviceCompleteCallback, boolean profilPicChanged,
                                     UserProfileProperties userProfileProperties, Bitmap bitmap){
@@ -43,7 +43,6 @@ public class UpdateUserProfileProcess {
         this.userProfileProperties = userProfileProperties;
         this.bitmap = bitmap;
         progressDialogUtil = new ProgressDialogUtil(context, context.getResources().getString(R.string.UPDATING), false);
-        progressDialogUtil.dialogShow();
 
         if(this.profilPicChanged && bitmap != null)
             uploadMediaToS3();
@@ -56,6 +55,10 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
+                if(!dialogShowed){
+                    progressDialogUtil.dialogShow();
+                    dialogShowed = true;
+                }
                 startUploadMediaToS3(token);
             }
         });
@@ -123,6 +126,10 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
+                if(!dialogShowed){
+                    progressDialogUtil.dialogShow();
+                    dialogShowed = true;
+                }
                 startUpdateUserProfile(token);
             }
         });
