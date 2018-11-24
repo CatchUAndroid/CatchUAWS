@@ -128,11 +128,6 @@ public class AccountHolderInfo {
                 CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
                 return;
             }
-        }else if(LoginActivity.thisActivity != null){
-            if (!CommonUtils.isNetworkConnected(LoginActivity.thisActivity)) {
-                CommonUtils.connectionErrSnackbarShow(LoginActivity.backgroundLayout, LoginActivity.thisActivity);
-                return;
-            }
         }
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();

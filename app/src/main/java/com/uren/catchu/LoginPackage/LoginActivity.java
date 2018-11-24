@@ -87,7 +87,7 @@ import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_TWITTER;
 public class LoginActivity extends AppCompatActivity
         implements View.OnClickListener {
 
-    public static RelativeLayout backgroundLayout;
+    RelativeLayout backgroundLayout;
     EditText emailET;
     EditText passwordET;
     TextView registerText;
@@ -243,18 +243,27 @@ public class LoginActivity extends AppCompatActivity
         } else if (view == passwordET) {
 
         } else if (view == imgFacebook) {
-            Toast.makeText(LoginActivity.this, "click!", Toast.LENGTH_SHORT).show();
-            imgFacebookClicked();
+            if (checkNetworkConnection())
+                imgFacebookClicked();
         } else if (view == imgTwitter) {
-            imgTwitterClicked();
+            if (checkNetworkConnection())
+                imgTwitterClicked();
         } else if (view == btnLogin) {
-            loginBtnClicked();
+            if (checkNetworkConnection())
+                loginBtnClicked();
         } else if (view == rememberMeCheckBox) {
             saveLoginInformation();
         } else {
 
         }
+    }
 
+    public boolean checkNetworkConnection() {
+        if (!CommonUtils.isNetworkConnected(LoginActivity.this)) {
+            CommonUtils.connectionErrSnackbarShow(backgroundLayout, LoginActivity.this);
+            return false;
+        } else
+            return true;
     }
 
     @Override
@@ -621,7 +630,7 @@ public class LoginActivity extends AppCompatActivity
 
     }
 
-    public void checkUserInSystem(){
+    public void checkUserInSystem() {
 
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
@@ -632,9 +641,9 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onSuccess(UserProfile up) {
                         Log.i("userDetail", "successful");
-                        if(up != null && up.getUserInfo() != null && up.getUserInfo().getUserid() != null){
+                        if (up != null && up.getUserInfo() != null && up.getUserInfo().getUserid() != null) {
                             startMainPage();
-                        }else
+                        } else
                             startAppIntroPage();
                     }
 
@@ -677,7 +686,6 @@ public class LoginActivity extends AppCompatActivity
             Log.i("Info", "onActivityResult error:" + e.toString());
         }
     }
-
 
 
 }

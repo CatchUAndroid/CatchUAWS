@@ -47,6 +47,7 @@ import com.uren.catchu.ApiGatewayFunctions.CountryListProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 
@@ -87,6 +88,8 @@ public class PhoneNumEditFragment extends BaseFragment {
     ClickableImageView commonToolbarbackImgv;
     @BindView(R.id.commonToolbarNextImgv)
     ImageView commonToolbarNextImgv;
+    @BindView(R.id.commonToolbarTickImgv)
+    ImageView commonToolbarTickImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.countryCodeTv)
@@ -156,7 +159,15 @@ public class PhoneNumEditFragment extends BaseFragment {
         commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                preControlBeforeVerification();
+                sendVerificationCode();
+            }
+        });
+
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtils.hideKeyBoard(getContext());
+                clearUserPhoneNum();
             }
         });
 
@@ -189,6 +200,8 @@ public class PhoneNumEditFragment extends BaseFragment {
             public void afterTextChanged(Editable s) {
 
                 if (s != null && !s.toString().isEmpty()) {
+                    commonToolbarTickImgv.setVisibility(View.GONE);
+
                     if (phone != null && phone.getPhoneNumber() != null) {
                         if (s.toString().trim().equals(phone.getPhoneNumber().toString()))
                             commonToolbarNextImgv.setVisibility(View.GONE);
@@ -196,8 +209,10 @@ public class PhoneNumEditFragment extends BaseFragment {
                             commonToolbarNextImgv.setVisibility(View.VISIBLE);
                     } else
                         commonToolbarNextImgv.setVisibility(View.VISIBLE);
-                } else
-                    commonToolbarNextImgv.setVisibility(View.VISIBLE);
+                } else if (s != null && s.toString().isEmpty()) {
+                    commonToolbarTickImgv.setVisibility(View.VISIBLE);
+                    commonToolbarNextImgv.setVisibility(View.GONE);
+                }
             }
         });
     }
@@ -294,13 +309,6 @@ public class PhoneNumEditFragment extends BaseFragment {
         countryCodeTv.setText(country.getCode());
         selectedPhone.setCountryCode(country.getCode());
         selectedPhone.setDialCode(country.getDialCode());
-    }
-
-    public void preControlBeforeVerification() {
-        if (phoneNumEt != null && phoneNumEt.getText() != null && phoneNumEt.getText().toString().isEmpty()) {
-            clearUserPhoneNum();
-        } else
-            sendVerificationCode();
     }
 
     public void clearUserPhoneNum() {

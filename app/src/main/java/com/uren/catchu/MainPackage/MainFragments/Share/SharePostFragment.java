@@ -902,7 +902,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo() != null)
             setToolbarInfo(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
-                    AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
         else {
             AccountHolderInfo.getToken(new TokenCallback() {
                 @Override
@@ -922,7 +923,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 progressBar.setVisibility(View.GONE);
                 if (up != null) {
                     setToolbarInfo(up.getUserInfo().getProfilePhotoUrl(),
-                            up.getUserInfo().getName());
+                            up.getUserInfo().getName(),
+                            up.getUserInfo().getUsername());
                 }
             }
 
@@ -940,8 +942,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    public void setToolbarInfo(String url, String name) {
-        UserDataUtil.setProfilePicture(getContext(), url, name, shortUserNameTv, profilePicImgView);
+    public void setToolbarInfo(String url, String name, String username) {
+        UserDataUtil.setProfilePicture2(getContext(), url, name, username,  shortUserNameTv, profilePicImgView);
 
         if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&

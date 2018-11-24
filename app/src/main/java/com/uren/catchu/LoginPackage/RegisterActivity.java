@@ -22,6 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
@@ -31,9 +34,7 @@ import com.uren.catchu.R;
 public class RegisterActivity extends AppCompatActivity
         implements View.OnClickListener {
 
-    //XML
-    Toolbar mToolBar;
-    RelativeLayout backgroundLayout;
+    RelativeLayout registerLayout;
     EditText usernameET;
     EditText emailET;
     EditText passwordET;
@@ -61,13 +62,13 @@ public class RegisterActivity extends AppCompatActivity
     }
 
     private void init() {
-        backgroundLayout = (RelativeLayout) findViewById(R.id.registerLayout);
+        registerLayout = (RelativeLayout) findViewById(R.id.registerLayout);
         usernameET = (EditText) findViewById(R.id.input_username);
         emailET = (EditText) findViewById(R.id.input_email);
         passwordET = (EditText) findViewById(R.id.input_password);
         btnRegister = (Button) findViewById(R.id.btnRegister);
 
-        backgroundLayout.setOnClickListener(this);
+        registerLayout.setOnClickListener(this);
         usernameET.setOnClickListener(this);
         emailET.setOnClickListener(this);
         passwordET.setOnClickListener(this);
@@ -81,23 +82,18 @@ public class RegisterActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
 
-        if (v == backgroundLayout) {
-        }
-
-        if (v == usernameET) {
-        }
-
-        if (v == emailET) {
-        }
-
-        if (v == passwordET) {
-        }
-
         if (v == btnRegister) {
-            btnRegisterClicked();
+            if (checkNetworkConnection())
+                btnRegisterClicked();
         }
+    }
 
-
+    public boolean checkNetworkConnection() {
+        if (!CommonUtils.isNetworkConnected(RegisterActivity.this)) {
+            CommonUtils.connectionErrSnackbarShow(registerLayout, RegisterActivity.this);
+            return false;
+        } else
+            return true;
     }
 
     @Override
@@ -141,17 +137,28 @@ public class RegisterActivity extends AppCompatActivity
 
         //username validation
         if (!Validation.getInstance().isValidUserName(this, name)) {
-            //Toast.makeText(this, Validation.getInstance().getErrorMessage() , Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
-            openDialog(Validation.getInstance().getErrorMessage());
+            DialogBoxUtil.showInfoDialogBox(RegisterActivity.this,
+                    Validation.getInstance().getErrorMessage(), null, new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+
             return false;
         }
 
         //email validation
         if (!Validation.getInstance().isValidEmail(this, email)) {
-            //Toast.makeText(this, Validation.getInstance().getErrorMessage() , Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
-            openDialog(Validation.getInstance().getErrorMessage());
+            DialogBoxUtil.showInfoDialogBox(RegisterActivity.this,
+                    Validation.getInstance().getErrorMessage(), null, new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
             return false;
         }
 
@@ -159,19 +166,19 @@ public class RegisterActivity extends AppCompatActivity
         if (!Validation.getInstance().isValidPassword(this, password)) {
             //Toast.makeText(this, Validation.getInstance().getErrorMessage() , Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
-            openDialog(Validation.getInstance().getErrorMessage());
+
+            DialogBoxUtil.showInfoDialogBox(RegisterActivity.this,
+                    Validation.getInstance().getErrorMessage(), null, new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+
+                        }
+                    });
+
             return false;
         }
 
         return true;
-    }
-
-    public void openDialog(String message) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("OOPS!!");
-        alert.setMessage(message);
-        alert.setPositiveButton("OK", null);
-        alert.show();
     }
 
     private void createUser(final String userName, final String userEmail, final String userPassword) {
@@ -197,21 +204,29 @@ public class RegisterActivity extends AppCompatActivity
                             try {
                                 throw task.getException();
                             } catch (FirebaseAuthUserCollisionException e) {
-                                Log.i("error register", e.toString());
-                                openDialog(context.getString(R.string.COLLISION_EXCEPTION));
+                                DialogBoxUtil.showInfoDialogBox(RegisterActivity.this,
+                                        context.getString(R.string.COLLISION_EXCEPTION), null, new InfoDialogBoxCallback() {
+                                            @Override
+                                            public void okClick() {
+
+                                            }
+                                        });
+
                             } catch (Exception e) {
-                                Log.i("error register ", e.toString());
-                                openDialog(context.getString(R.string.UNKNOWN_ERROR) + "(" + e.toString() + ")");
+                                DialogBoxUtil.showInfoDialogBox(RegisterActivity.this,
+                                        context.getString(R.string.UNKNOWN_ERROR) + "(" + e.toString() + ")", null, new InfoDialogBoxCallback() {
+                                            @Override
+                                            public void okClick() {
+
+                                            }
+                                        });
                             }
                         }
-
-
                     }
                 });
-
     }
 
-    private void setUserInfo(String userName, String userEmail){
+    private void setUserInfo(String userName, String userEmail) {
 
         newLoginUser = new LoginUser();
 
@@ -221,21 +236,10 @@ public class RegisterActivity extends AppCompatActivity
 
     }
 
-    public void startAppIntroPage(){
+    public void startAppIntroPage() {
         Intent intent = new Intent(RegisterActivity.this, AppIntroductionActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("LoginUser", newLoginUser);
         startActivity(intent);
     }
-
-    public void startMainPage() {
-
-        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra("LoginUser", newLoginUser);
-        startActivity(intent);
-
-    }
-
-
 }
