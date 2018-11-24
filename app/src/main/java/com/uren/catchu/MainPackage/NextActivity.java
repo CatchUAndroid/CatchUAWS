@@ -67,9 +67,9 @@ public class NextActivity extends AppCompatActivity implements
     public FragNavTransactionOptions transactionOptions;
 
     private int[] mTabIconsSelected = {
-            R.drawable.tab_home,
-            R.drawable.tab_share,
-            R.drawable.tab_profile};
+            R.mipmap.icon_tab_home,
+            R.mipmap.icon_tab_share,
+            R.mipmap.icon_tab_profile};
 
     public static String[] TABS;
     public static TabLayout bottomTabLayout;
@@ -195,8 +195,10 @@ public class NextActivity extends AppCompatActivity implements
             for (int i = 0; i < TABS.length; i++) {
                 bottomTabLayout.addTab(bottomTabLayout.newTab());
                 TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
-                if (tab != null)
+                if (tab != null) {
                     tab.setCustomView(getTabView(i));
+                    tab.setText(TABS[i]);
+                }
             }
         }
     }
@@ -211,7 +213,6 @@ public class NextActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
         onPausedInd = false;
-        Log.i("FragNavController frag", "  >>FragNavController current fraf:" + mNavController.getCurrentFrag().toString());
     }
 
     @Override

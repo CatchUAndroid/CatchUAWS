@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
@@ -17,6 +18,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.LoginPackage.AppIntroductionActivity;
 import com.uren.catchu.LoginPackage.LoginActivity;
@@ -32,6 +34,8 @@ import catchu.model.UserProfile;
 
 public class MainActivity extends AppCompatActivity {
 
+    ImageView appIconImgv;
+
     private FirebaseAuth firebaseAuth;
     User user;
 
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initVariables();
 
         CommonUtils.LOG_NEREDEYIZ("MainActivity");
 
@@ -51,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else
             checkUser();
+    }
+
+    private void initVariables() {
+        appIconImgv = findViewById(R.id.appIconImgv);
+        AnimationUtil.blink(MainActivity.this, appIconImgv);
     }
 
     private void initFacebookLogin() {

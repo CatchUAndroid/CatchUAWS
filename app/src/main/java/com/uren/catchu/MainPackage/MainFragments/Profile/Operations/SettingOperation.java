@@ -47,7 +47,7 @@ public class SettingOperation {
         AccountHolderInfo.reset();
         AccountHolderFacebookFriends.reset();
         SelectedFriendList.reset();
-        ShareItems.reset();
+        //ShareItems.reset();
 
         SingletonPostItem.reset();
         SingletonSinglePost.reset();
