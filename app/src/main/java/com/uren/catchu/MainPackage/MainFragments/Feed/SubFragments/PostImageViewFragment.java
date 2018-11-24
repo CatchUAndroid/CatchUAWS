@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +23,7 @@ import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.ImageZoomListener;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
@@ -42,7 +45,6 @@ public class PostImageViewFragment extends BaseFragment {
 
     @BindView(R.id.llProgress)
     LinearLayout llProgress;
-
 
     public PostImageViewFragment() {
 
@@ -70,7 +72,7 @@ public class PostImageViewFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-
+        imgFeedItem.setOnTouchListener(new ImageZoomListener());
     }
 
     private void setImage() {

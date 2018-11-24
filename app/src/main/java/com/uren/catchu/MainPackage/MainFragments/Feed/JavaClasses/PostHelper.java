@@ -38,6 +38,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -343,14 +344,13 @@ public class PostHelper {
                         LatLng latLng = new LatLng(post.getLocation().getLatitude().doubleValue(),
                                 post.getLocation().getLongitude().doubleValue());
 
-                        Marker marker;
                         MarkerOptions options = new MarkerOptions().position(latLng);
-                        Bitmap bitmap = createUserBitmap(context);
+                        Bitmap bitmap = BitmapConversion.createUserMapBitmap(context, imgProfilePic);
                         if (bitmap != null) {
                             options.title(post.getUser().getName());
                             options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
                             options.anchor(0.5f, 0.907f);
-                            marker = mMap.addMarker(options);
+                            mMap.addMarker(options);
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
                             if (post.getDistance().intValue() > 10) {
@@ -411,65 +411,7 @@ public class PostHelper {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mapRipple = new MapRipple(mMap, latLng, mAct);
             }
-
         }
-
-        private Bitmap createUserBitmap(Context context) {
-            Bitmap result = null;
-            try {
-                result = Bitmap.createBitmap(dp(62, context), dp(76, context), Bitmap.Config.ARGB_8888);
-                result.eraseColor(Color.TRANSPARENT);
-                Canvas canvas = new Canvas(result);
-                Drawable drawable = context.getResources().getDrawable(R.mipmap.livepin);
-                drawable.setBounds(0, 0, dp(62, context), dp(76, context));
-                drawable.draw(canvas);
-
-                Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                RectF bitmapRect = new RectF();
-                canvas.save();
-
-                Bitmap bitmap;
-                //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*generate bitmap here if your image comes from any url*/
-                if (imgProfilePic.getDrawable() != null) {
-                    bitmap = ((BitmapDrawable) imgProfilePic.getDrawable()).getBitmap();
-                } else {
-                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon);
-                }
-
-                if (bitmap != null) {
-                    BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-                    Matrix matrix = new Matrix();
-                    float scale = dp(52, context) / (float) bitmap.getWidth();
-                    matrix.postTranslate(dp(5, context), dp(5, context));
-                    matrix.postScale(scale, scale);
-                    roundPaint.setShader(shader);
-                    shader.setLocalMatrix(matrix);
-                    bitmapRect.set(dp(5, context), dp(5, context), dp(52 + 5, context), dp(52 + 5, context));
-                    canvas.drawRoundRect(bitmapRect, dp(26, context), dp(26, context), roundPaint);
-                }
-                canvas.restore();
-                try {
-                    canvas.setBitmap(null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (
-                    Throwable t)
-
-            {
-                t.printStackTrace();
-            }
-            return result;
-        }
-
-        public int dp(float value, Context context) {
-            if (value == 0) {
-                return 0;
-            }
-            return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
-        }
-
-
     }
 
     public static class AddComment {

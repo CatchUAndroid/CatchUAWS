@@ -55,6 +55,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -942,12 +943,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void setToolbarInfo(String url, String name) {
         UserDataUtil.setProfilePicture(getContext(), url, name, shortUserNameTv, profilePicImgView);
 
-        if(AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null){
-            if(AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()){
+        if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
                 toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-            }else if(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()){
+            } else if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
                 toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
             }
         }
@@ -1054,7 +1055,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 setVideoSelectImgvFilled();
                 startVideoViewFragment();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             CommonUtils.showToast(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
         }
     }
@@ -1092,7 +1093,19 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (location != null) {
                 setShareItemsLocation(location);
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                mapRipple = new MapRipple(mMap, latLng, getContext());
+
+                MarkerOptions options = new MarkerOptions().position(latLng);
+                Bitmap bitmap = BitmapConversion.createUserMapBitmap(getContext(), profilePicImgView);
+
+                if (bitmap != null) {
+                    options.title(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    options.anchor(0.5f, 0.907f);
+                    mMap.addMarker(options);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                } else
+                    mapRipple = new MapRipple(mMap, latLng, getContext());
+
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
                         LatLng(location.getLatitude(),
                         location.getLongitude()), 12));
