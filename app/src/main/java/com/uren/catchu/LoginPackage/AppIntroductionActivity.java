@@ -62,11 +62,6 @@ public class AppIntroductionActivity extends AppCompatActivity {
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-            /*getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-                            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-                            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-                            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
         }
 
         setContentView(R.layout.activity_app_introduction);
@@ -76,9 +71,6 @@ public class AppIntroductionActivity extends AppCompatActivity {
         btnSkip = (Button) findViewById(R.id.btn_skip);
         btnNext = (Button) findViewById(R.id.btn_next);
 
-
-        // layouts of all welcome sliders
-        // add few more layouts if you want
         layouts = new int[]{
                 R.layout.welcome_slide1,
                 R.layout.welcome_slide2,
@@ -105,15 +97,11 @@ public class AppIntroductionActivity extends AppCompatActivity {
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // checking for last page
-                // if last page home screen will be launched
                 int current = getItem(+1);
-                if (current < layouts.length) {
-                    // move to next screen
+                if (current < layouts.length)
                     viewPager.setCurrentItem(current);
-                } else {
+                else
                     launchHomeScreen();
-                }
             }
         });
     }

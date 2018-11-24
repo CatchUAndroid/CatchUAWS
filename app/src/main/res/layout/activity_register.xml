@@ -2,120 +2,98 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.uren.catchu.LoginPackage.RegisterActivity"
-    android:id="@+id/registerLayout">
-
-    <!--ImageView
-        android:id="@+id/background_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@mipmap/stars" /-->
-
+    tools:context="com.uren.catchu.LoginPackage.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_top"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@null"
-            android:gravity="center"
-            android:minHeight="?attr/actionBarSize">
 
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/pacifico"
-                android:text="@string/register"
-                android:textColor="@color/titleColor"
-                android:textSize="30sp" />
-        </android.support.v7.widget.Toolbar>
-
-        <LinearLayout
-            android:id="@+id/inputLabel"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp">
-
-            <LinearLayout
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/appName"
-                android:layout_weight="1"
-                android:alpha="10"
-                android:descendantFocusability="beforeDescendants"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="10dip"
-                android:theme="@style/EditTextTheme">
-
-                <!--  Username Label -->
-                <EditText
-                    android:id="@+id/input_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/user"
-                    android:drawablePadding="20dp"
-                    android:hint="@string/username"
-                    android:inputType="text"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/loginPackageTextColor"
-                    android:textColorHint="@color/tintColor" />
+            android:layout_marginTop="50dp"
+            android:text="@string/register"
+            android:textColor="@color/White"
+            android:textSize="45sp" />
 
 
-                <!--  Email Label -->
-                <EditText
-                    android:id="@+id/input_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/mail"
-                    android:drawablePadding="20dp"
-                    android:hint="@string/email"
-                    android:inputType="textEmailAddress"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/loginPackageTextColor"
-                    android:textColorHint="@color/tintColor" />
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appName"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:alpha="10"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:theme="@style/EditTextTheme">
+
+            <!--  Username Label -->
+            <EditText
+                android:id="@+id/input_username"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/user"
+                android:drawablePadding="20dp"
+                android:hint="@string/username"
+                android:inputType="text"
+                android:paddingLeft="8dp"
+                android:textColor="@color/White"
+                android:textColorHint="@color/White" />
 
 
-                <EditText
-                    android:id="@+id/input_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@mipmap/key"
-                    android:drawablePadding="20dp"
-                    android:hint="@string/password"
-                    android:inputType="textPassword"
-                    android:paddingBottom="15dp"
-                    android:paddingLeft="8dp"
-                    android:textColor="@color/loginPackageTextColor"
-                    android:textColorHint="@color/tintColor" />
+            <!--  Email Label -->
+            <EditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/mail"
+                android:drawablePadding="20dp"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="8dp"
+                android:textColor="@color/White"
+                android:textColorHint="@color/White" />
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:text="@string/createAccount"
-                    android:textColor="@color/clearRed"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp"
-                    android:id="@+id/btnRegister"/>
 
-            </LinearLayout>
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/transparent"
+                android:drawableLeft="@mipmap/key"
+                android:drawablePadding="20dp"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingLeft="8dp"
+                android:textColor="@color/White"
+                android:textColorHint="@color/White" />
 
+            <Button
+                android:id="@+id/btnRegister"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="30dp"
+                android:text="@string/createAccount"
+                android:textColor="@color/White" />
 
         </LinearLayout>
 
+
     </LinearLayout>
+
 
 </RelativeLayout>

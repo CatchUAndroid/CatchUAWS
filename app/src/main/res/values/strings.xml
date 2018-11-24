@@ -273,6 +273,7 @@
     <string name="CHECK_YOUR_INTERNET_CONNECTION">Please check your network connection!</string>
     <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Try again after checking your internet connection.</string>
     <string name="TRY_AGAIN">Try Again</string>
+    <string name="SKIP">SKIP</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

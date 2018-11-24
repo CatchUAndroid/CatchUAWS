@@ -240,6 +240,7 @@
     <string name="CHECK_YOUR_INTERNET_CONNECTION">Lütfen internet bağlantınızı kontrol ediniz!</string>
     <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Internet baglantınızı kontrol ettikten sonra tekrar deneyiniz.</string>
     <string name="TRY_AGAIN">Tekrar Deneyin</string>
+    <string name="SKIP">GEÇ</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
