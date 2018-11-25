@@ -805,32 +805,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     new ReturnCallback() {
                         @Override
                         public void onReturn(Object object) {
-
-                            AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
-                                @Override
-                                public void onComplete(Object object) {
-                                    if (object != null) {
-                                        FriendList friendList = (FriendList) object;
-                                        if (friendList != null && friendList.getResultArray() != null) {
-                                            if (friendList.getResultArray().size() == SelectedFriendList.getInstance().getSize()) {
-                                                selectedWhomType = SHARE_TYPE_ALL_FOLLOWERS;
-                                                ShareItems.getInstance().setSelectedShareType(selectedWhomType);
-                                                selectedDescTv.setText(getResources().getString(R.string.allFollowersShareText));
-                                                setHideAnimations();
-                                            } else {
-                                                selectedWhomType = SHARE_TYPE_CUSTOM;
-                                                ShareItems.getInstance().setSelectedShareType(selectedWhomType);
-                                                selectedDescTv.setText(getSelectedFriendsText());
-                                                setHideAnimations();
-                                            }
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailed(Exception e) {
-                                }
-                            });
+                            selectedWhomType = SHARE_TYPE_CUSTOM;
+                            ShareItems.getInstance().setSelectedShareType(selectedWhomType);
+                            selectedDescTv.setText(getSelectedFriendsText());
+                            setHideAnimations();
                         }
                     }), ANIMATE_RIGHT_TO_LEFT);
         }
