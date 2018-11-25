@@ -77,14 +77,14 @@ public class RegisterActivity extends AppCompatActivity
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
         passwordET.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
-        btnRegister.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+        btnRegister.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.colorPrimary, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
     }
 
     public void setBlurBitmap(){
         Bitmap bitmap = BitmapFactory.decodeResource(RegisterActivity.this.getResources(),
                 R.drawable.register_bg);
-        Bitmap blurBitmap = BlurBuilder.blur(RegisterActivity.this, bitmap);
+        Bitmap blurBitmap = BlurBuilder.blur(RegisterActivity.this, bitmap, 0.2f, 20.5f);
         Drawable dr = new BitmapDrawable(RegisterActivity.this.getResources(), blurBitmap);
         registerLayout.setBackground(dr);
     }

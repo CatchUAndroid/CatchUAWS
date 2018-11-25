@@ -18,7 +18,7 @@
     <string name="addPersonToGroup">Katılımcı Ekle</string>
     <string name="selectLeastOneFriend">En az 1 kişi seçmelisiniz!</string>
     <string name="selectLeastOneGroup">En az 1 grup seçmelisiniz!</string>
-    <string name="addFriendFirst">Grup oluşturmak için önce arkadaş eklemelisiniz!</string>
+    <string name="addFriendFirst">Grup oluşturmak için önce takipçi edinmelisiniz!</string>
     <string name="addGroupName">Grup adı ekle</string>
     <string name="pleaseWriteGroupName">Grup adı boş olamaz!</string>
     <string name="deviceHasNoCamera">Cihazın kamerası yok!</string>
@@ -241,6 +241,9 @@
     <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Internet baglantınızı kontrol ettikten sonra tekrar deneyiniz.</string>
     <string name="TRY_AGAIN">Tekrar Deneyin</string>
     <string name="SKIP">GEÇ</string>
+    <string name="FORGOT_YOUR_PASSWORD">Şifreni mi unuttun?</string>
+    <string name="COMMENTS">Yorumlar</string>
+    <string name="ADVANCED_SETTINGS">Gelişmiş Seçenekler</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

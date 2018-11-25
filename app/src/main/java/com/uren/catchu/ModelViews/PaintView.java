@@ -3,7 +3,6 @@ package com.uren.catchu.ModelViews;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,13 +11,11 @@ import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.FingerPath;
-import com.uren.catchu.R;
 
 import java.util.ArrayList;
 

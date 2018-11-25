@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
@@ -75,7 +76,9 @@ import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -99,6 +102,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendList;
 import catchu.model.GroupRequestResultResultArrayItem;
+import catchu.model.Post;
 import catchu.model.UserProfile;
 
 import static android.content.Context.LOCATION_SERVICE;
@@ -146,6 +150,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     ImageView textSelectImgv;
     @BindView(R.id.showMapImgv)
     ImageView showMapImgv;
+    @BindView(R.id.moreSettingsImgv)
+    ImageView moreSettingsImgv;
 
     @BindView(R.id.shareMsgEditText)
     EditText shareMsgEditText;
@@ -228,6 +234,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     VideoSelectUtil videoSelectUtil;
     CheckShareItems checkShareItems;
 
+    View advancedSettingsView;
+
     String selectedType = "";
     String selectedWhomType = "";
 
@@ -257,14 +265,17 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-        if (view == null) {
-            view = inflater.inflate(R.layout.fragment_share_post, container, false);
-            ButterKnife.bind(this, view);
-            initializeItems();
-            addListeners();
-            setMapView();
+        try {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            if (view == null) {
+                view = inflater.inflate(R.layout.fragment_share_post, container, false);
+                ButterKnife.bind(this, view);
+                initializeItems();
+                addListeners();
+                setMapView();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
         return view;
     }
@@ -300,6 +311,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         selectedDescTv.setText(getResources().getString(R.string.publicShareText));
         selectedWhomType = SHARE_TYPE_EVERYONE;
         ShareItems.getInstance().setSelectedShareType(selectedWhomType);
+        ShareItems.getInstance().getPost().setIsCommentAllowed(true);
     }
 
     private void setAnimations() {
@@ -383,6 +395,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void addListeners() {
+
+        moreSettingsImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startAdvancedSettingsFragment();
+            }
+        });
 
         shareMsgEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -600,6 +619,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         });
     }
 
+
     public void deleteSharedVideo() {
         if (permissionModule.checkWriteExternalStoragePermission()) {
             if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null && !videoSelectUtil.getVideoRealPath().isEmpty()) {
@@ -813,6 +833,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                             });
                         }
                     }), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
+
+    public void startAdvancedSettingsFragment(){
+        CommonUtils.hideKeyBoard(getContext());
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new ShareAdvanceSettingsFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 

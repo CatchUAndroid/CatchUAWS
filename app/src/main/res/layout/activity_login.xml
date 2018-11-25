@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     android:id="@+id/loginLayout">
 
-    <!--ImageView
-        android:id="@+id/background_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:src="@mipmap/stars"/-->
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +18,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="bottom">
 
             <TextView
@@ -34,9 +27,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
                 android:text="CatchU"
-                android:textColor="@color/titleColor"
-                android:textSize="50sp"
-                app:fontFamily="@font/pacifico" />
+                android:textColor="@color/White"
+                android:textSize="50sp" />
 
 
         </LinearLayout>
@@ -46,7 +38,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/appName"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:alpha="10"
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
@@ -58,44 +50,49 @@
             <EditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/loginPackageTextColor"
+                android:layout_margin="3dp"
+                android:background="@color/transparent"
                 android:ems="15"
                 android:hint="Email"
+                android:importantForAutofill="noExcludeDescendants"
                 android:inputType="textEmailAddress"
-                android:layout_margin="3dp"
-                android:importantForAutofill="noExcludeDescendants"/>
+                android:paddingLeft="7dp"
+                android:textColor="@color/White" />
 
 
             <EditText
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:textColor="@color/loginPackageTextColor"
+                android:layout_margin="3dp"
+                android:background="@color/transparent"
                 android:ems="15"
                 android:hint="Password"
+                android:importantForAutofill="noExcludeDescendants"
                 android:inputType="textPassword"
-                android:layout_margin="3dp"
-                android:importantForAutofill="noExcludeDescendants"/>
+                android:paddingLeft="7dp"
+                android:textColor="@color/White" />
 
             <CheckBox
                 android:id="@+id/rememberMeCb"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:text="@string/rememberMe"/>
+                android:text="@string/rememberMe"
+                android:textColor="@color/White"
+                android:textSize="12sp" />
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
                 android:layout_marginTop="15dp"
                 android:text="@string/login"
-                android:textColor="@color/clearRed"
-                android:id="@+id/btnLogin"/>
+                android:textColor="@color/White" />
 
 
         </LinearLayout>
@@ -110,8 +107,9 @@
 
             <com.uren.catchu.LoginPackage.Utils.ClickableImageView
                 android:id="@+id/clickImageTwitter"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="5dp"
                 android:src="@mipmap/twitter"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -139,9 +137,10 @@
 
             <com.uren.catchu.LoginPackage.Utils.ClickableImageView
                 android:id="@+id/clickImageFB"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_marginLeft="30dp"
+                android:padding="5dp"
                 android:src="@mipmap/facebook"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -154,26 +153,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="top|center_horizontal"
-            android:layout_weight="1.5"
             android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnForgetPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/White"
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/btnForgetPassword"
-                android:textSize="15sp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="|"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
+                android:text="|"
                 android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/btnRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/White"
                 android:textSize="15sp" />
 
 

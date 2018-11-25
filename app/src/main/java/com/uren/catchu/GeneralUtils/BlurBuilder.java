@@ -10,16 +10,14 @@ import android.renderscript.ScriptIntrinsicBlur;
 import android.view.View;
 
 public class BlurBuilder {
-    private static final float BITMAP_SCALE = 0.2f;
-    private static final float BLUR_RADIUS = 20.5f;
 
-    public static Bitmap blur(View v) {
-        return blur(v.getContext(), getScreenshot(v));
+    public static Bitmap blur(View v, float bitmapScale, float blurRadius) {
+        return blur(v.getContext(), getScreenshot(v), bitmapScale, blurRadius);
     }
 
-    public static Bitmap blur(Context ctx, Bitmap image) {
-        int width = Math.round(image.getWidth() * BITMAP_SCALE);
-        int height = Math.round(image.getHeight() * BITMAP_SCALE);
+    public static Bitmap blur(Context ctx, Bitmap image, float bitmapScale, float blurRadius) {
+        int width = Math.round(image.getWidth() * bitmapScale);
+        int height = Math.round(image.getHeight() * bitmapScale);
 
         Bitmap inputBitmap = Bitmap.createScaledBitmap(image, width, height, false);
         Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
@@ -28,7 +26,7 @@ public class BlurBuilder {
         ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
         Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
         Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
-        theIntrinsic.setRadius(BLUR_RADIUS);
+        theIntrinsic.setRadius(blurRadius);
         theIntrinsic.setInput(tmpIn);
         theIntrinsic.forEach(tmpOut);
         tmpOut.copyTo(outputBitmap);

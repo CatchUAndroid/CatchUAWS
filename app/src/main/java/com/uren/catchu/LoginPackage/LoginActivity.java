@@ -7,7 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -60,7 +64,9 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
@@ -112,7 +118,6 @@ public class LoginActivity extends AppCompatActivity
     public LoginUser loginUser;
     private InputStream profileImageStream;
     private Bitmap photo = null;
-    public static Activity thisActivity;
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -131,9 +136,31 @@ public class LoginActivity extends AppCompatActivity
         initTwitterLogin();
 
         setContentView(R.layout.activity_login);
-        thisActivity = this;
-        initVariables();
 
+        initVariables();
+        setShapes();
+        setBlurBitmap();
+    }
+
+    public void setShapes() {
+        emailET.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
+        passwordET.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
+        imgFacebook.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3));
+        imgTwitter.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3));
+        btnLogin.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.colorPrimary, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
+    }
+
+    public void setBlurBitmap() {
+        Bitmap bitmap = BitmapFactory.decodeResource(LoginActivity.this.getResources(),
+                R.drawable.login_background);
+        Bitmap blurBitmap = BlurBuilder.blur(LoginActivity.this, bitmap, 0.3f, 15f);
+        Drawable dr = new BitmapDrawable(LoginActivity.this.getResources(), blurBitmap);
+        backgroundLayout.setBackground(dr);
     }
 
 
@@ -227,8 +254,8 @@ public class LoginActivity extends AppCompatActivity
         forgetPasText.setMovementMethod(LinkMovementMethod.getInstance());
         registerText.setHighlightColor(Color.TRANSPARENT);
         forgetPasText.setHighlightColor(Color.TRANSPARENT);
-        registerText.setLinkTextColor(Color.BLUE);
-        forgetPasText.setLinkTextColor(Color.BLUE);
+        registerText.setLinkTextColor(getResources().getColor(R.color.White, null));
+        forgetPasText.setLinkTextColor(getResources().getColor(R.color.White, null));
 
     }
 
