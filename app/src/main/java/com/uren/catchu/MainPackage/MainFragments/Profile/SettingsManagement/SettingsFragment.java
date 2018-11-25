@@ -94,7 +94,7 @@ public class SettingsFragment extends BaseFragment {
 
         if (AccountHolderInfo.getInstance().getUser() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount().booleanValue())
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount())
             privateAccSwitch.setChecked(true);
         else
             privateAccSwitch.setChecked(false);

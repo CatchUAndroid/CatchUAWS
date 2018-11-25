@@ -133,7 +133,6 @@ public class UpdateUserProfileProcess {
                 startUpdateUserProfile(token);
             }
         });
-
     }
 
     private void startUpdateUserProfile(String token) {
@@ -167,7 +166,9 @@ public class UpdateUserProfileProcess {
     }
 
     private void updateAccountHolderInfo(UserProfile up) {
-        AccountHolderInfo.getInstance().getUser().getUserInfo().setName(up.getUserInfo().getName());
+        AccountHolderInfo.getInstance().getUser().setUserInfo(up.getUserInfo());
+
+        /*AccountHolderInfo.getInstance().getUser().getUserInfo().setName(up.getUserInfo().getName());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setUsername(up.getUserInfo().getUsername());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setWebsite(up.getUserInfo().getWebsite());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setBirthday(up.getUserInfo().getBirthday());
@@ -175,6 +176,6 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setGender(up.getUserInfo().getGender());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setProfilePhotoUrl(up.getUserInfo().getProfilePhotoUrl());
-        AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());
+        AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());*/
     }
 }

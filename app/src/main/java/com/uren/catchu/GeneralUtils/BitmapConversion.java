@@ -63,7 +63,7 @@ public class BitmapConversion extends AppCompatActivity {
             if (imageView.getDrawable() != null) {
                 bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
             } else {
-                bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon);
+                bitmap = BitmapFactory.decodeResource(context.getResources(), R.mipmap.icon_user_profile);
             }
 
             if (bitmap != null) {

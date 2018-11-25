@@ -24,6 +24,7 @@ import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -101,6 +102,8 @@ public class LoginActivity extends AppCompatActivity
     ClickableImageView imgFacebook;
     ClickableImageView imgTwitter;
     Button btnLogin;
+    Button forgetPasswordBtn;
+    Button createAccBtn;
     private TwitterLoginButton mLoginButton;
     private CallbackManager mCallbackManager;
     private CheckBox rememberMeCheckBox;
@@ -126,6 +129,7 @@ public class LoginActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         // Making notification bar transparent
         if (Build.VERSION.SDK_INT >= 21) {
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
@@ -152,6 +156,10 @@ public class LoginActivity extends AppCompatActivity
         imgTwitter.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3));
         btnLogin.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.colorPrimary, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
+        forgetPasswordBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
+        createAccBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
     }
 

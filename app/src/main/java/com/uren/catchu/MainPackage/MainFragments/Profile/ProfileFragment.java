@@ -236,8 +236,13 @@ public class ProfileFragment extends BaseFragment
         refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                updateUI();
+                AccountHolderInfo.getToken(new TokenCallback() {
+                    @Override
+                    public void onTokenTaken(String token) {
+                        startGetProfileDetail(AccountHolderInfo.getUserID(), token);
+                    }
+                });
+                getGroups();
             }
         });
     }
@@ -355,7 +360,7 @@ public class ProfileFragment extends BaseFragment
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getName());
                 txtName.setText(user.getUserInfo().getName());
-            }else if(user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()){
+            } else if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getUsername());
                 txtName.setText(user.getUserInfo().getUsername());
             }
@@ -493,7 +498,7 @@ public class ProfileFragment extends BaseFragment
                     @Override
                     public void onFailed(Exception e) {
 
-                        if(getContext() != null) {
+                        if (getContext() != null) {
                             DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
@@ -502,7 +507,6 @@ public class ProfileFragment extends BaseFragment
                         }
                     }
                 });
-
 
 
     }
@@ -523,8 +527,7 @@ public class ProfileFragment extends BaseFragment
 
     private void orderGroupByName(GroupRequestResult groupRequestResult) {
         //order
-        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>()
-        {
+        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>() {
             @Override
             public int compare(GroupRequestResultResultArrayItem o1, GroupRequestResultResultArrayItem o2) {
                 return o1.getName().compareToIgnoreCase(o2.getName());
@@ -585,9 +588,9 @@ public class ProfileFragment extends BaseFragment
         if (v == llMyGroups) {
             CommonUtils.showToast(getContext(), "clicked");
             int visibility = llMyGroups3.getVisibility();
-            if(visibility == View.VISIBLE){
+            if (visibility == View.VISIBLE) {
                 llMyGroups3.setVisibility(View.GONE);
-            }else{
+            } else {
                 llMyGroups3.setVisibility(View.VISIBLE);
             }
 

@@ -235,13 +235,15 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         if (selectType == CODE_SELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
             SelectedFriendList.getInstance().setSelectedFriendList(orginalFriendList);
-            horRecyclerView.setVisibility(View.VISIBLE);
+            if (horRecyclerView != null)
+                horRecyclerView.setVisibility(View.VISIBLE);
             if (selectedItemAdapter != null)
                 selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();
         } else if (selectType == CODE_UNSELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
-            horRecyclerView.setVisibility(View.GONE);
+            if (horRecyclerView != null)
+                horRecyclerView.setVisibility(View.GONE);
             if (selectedItemAdapter != null)
                 selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();

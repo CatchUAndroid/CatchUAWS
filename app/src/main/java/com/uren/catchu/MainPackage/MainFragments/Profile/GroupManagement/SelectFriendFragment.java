@@ -52,7 +52,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 @SuppressLint("ValidFragment")
-public class SelectFriendFragment extends BaseFragment{
+public class SelectFriendFragment extends BaseFragment {
 
     View mView;
 
@@ -101,7 +101,7 @@ public class SelectFriendFragment extends BaseFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        if(mView == null) {
+        if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_select_friend, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
@@ -121,7 +121,7 @@ public class SelectFriendFragment extends BaseFragment{
 
     }
 
-    public void addListeners(){
+    public void addListeners() {
         searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -177,16 +177,17 @@ public class SelectFriendFragment extends BaseFragment{
         selectAllCb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if (selectAllCb.isChecked())
-                    adapter.updateAdapterForSelectAll(CODE_SELECT_ALL);
-                else
-                    adapter.updateAdapterForSelectAll(CODE_UNSELECT_ALL);
+                if (adapter != null) {
+                    if (selectAllCb.isChecked())
+                        adapter.updateAdapterForSelectAll(CODE_SELECT_ALL);
+                    else
+                        adapter.updateAdapterForSelectAll(CODE_UNSELECT_ALL);
+                }
             }
         });
     }
 
-    public void initFollowerList(){
+    public void initFollowerList() {
         followerList = new FriendList();
         followerList.setResultArray(new ArrayList<UserProfileProperties>());
         followerList.setError(new Error());
@@ -203,7 +204,7 @@ public class SelectFriendFragment extends BaseFragment{
         AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                if(object != null) {
+                if (object != null) {
                     followerList = getUserFollowers((FriendList) object);
                     setAdapter();
                 }
@@ -228,7 +229,7 @@ public class SelectFriendFragment extends BaseFragment{
         adapter = new SelectFriendAdapter(getContext(), followerList, new ReturnCallback() {
             @Override
             public void onReturn(Object object) {
-                if(followerList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
+                if (followerList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
                     selectAllCb.setChecked(true);
                 else
                     selectAllCb.setChecked(false);
@@ -243,7 +244,7 @@ public class SelectFriendFragment extends BaseFragment{
 
     public FriendList getUserFollowers(FriendList tempFriendList) {
 
-        if(groupParticipantList == null)
+        if (groupParticipantList == null)
             return tempFriendList;
         else
             return extractGroupParticipants(tempFriendList);
@@ -277,7 +278,7 @@ public class SelectFriendFragment extends BaseFragment{
         if (pendingName != null) {
             if (pendingName.equals(ViewGroupDetailFragment.class.getName())) {
                 startAddParticipantToGroup();
-            }else if(pendingName.equals(SharePostFragment.class.getName())){
+            } else if (pendingName.equals(SharePostFragment.class.getName())) {
                 getActivity().onBackPressed();
                 returnCallback.onReturn(null);
             } else if (pendingName.equals(GroupManagementFragment.class.getName())) {

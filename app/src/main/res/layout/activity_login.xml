@@ -18,7 +18,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="1.5"
             android:gravity="bottom">
 
             <TextView
@@ -101,7 +101,7 @@
         <LinearLayout
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.8"
             android:gravity="center_horizontal|top"
             android:orientation="horizontal">
 
@@ -123,17 +123,16 @@
                 android:layout_height="match_parent"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
-            <com.facebook.login.widget.LoginButton
-                xmlns:facebook="http://schemas.android.com/apk/res-auto"
+            <com.facebook.login.widget.LoginButton xmlns:facebook="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/facebookLoginButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingBottom="15dp"
                 android:paddingTop="15dp"
-                facebook:com_facebook_login_text="Log in with Facebook"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                facebook:com_facebook_login_text="Log in with Facebook" />
 
             <com.uren.catchu.LoginPackage.Utils.ClickableImageView
                 android:id="@+id/clickImageFB"
@@ -153,16 +152,37 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="top|center_horizontal"
             android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/forgetPasswordBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/forgetPassword"
+                android:textSize="12sp"
+                android:textColor="@color/White"/>
+
+            <Button
+                android:id="@+id/createAccBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/createAccount"
+                android:textSize="12sp"
+                android:textColor="@color/White"/>
 
             <TextView
                 android:id="@+id/btnForgetPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/White"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -170,14 +190,16 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="|"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/btnRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/White"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:visibility="gone"/>
 
 
         </LinearLayout>

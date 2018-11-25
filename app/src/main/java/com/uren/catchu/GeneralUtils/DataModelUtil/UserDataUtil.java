@@ -69,7 +69,7 @@ public class UserDataUtil {
             } else {
                 shortNameTv.setVisibility(View.GONE);
                 Glide.with(context)
-                        .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
+                        .load(context.getResources().getIdentifier("icon_user_profile", "mipmap", context.getPackageName()))
                         .apply(RequestOptions.circleCropTransform())
                         .into(profilePicImgView);
             }
@@ -103,7 +103,7 @@ public class UserDataUtil {
             } else {
                 shortNameTv.setVisibility(View.GONE);
                 Glide.with(context)
-                        .load(context.getResources().getIdentifier("user_icon", "drawable", context.getPackageName()))
+                        .load(context.getResources().getIdentifier("icon_user_profile", "mipmap", context.getPackageName()))
                         .apply(RequestOptions.circleCropTransform())
                         .into(profilePicImgView);
             }
