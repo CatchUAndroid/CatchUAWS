@@ -24,55 +24,75 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="11dp">
 
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginTop="5dp"
-                    android:id="@+id/frameLayout">
+                    android:orientation="horizontal">
 
-                    <ImageView
-                        android:id="@+id/profile_image"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="center"
-                        android:scaleType="fitXY"/>
-
-                    <TextView
-                        android:id="@+id/shortUserNameTv"
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:id="@+id/frameLayout"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/White"
-                        android:textStyle="bold"
-                        android:visibility="gone" />
-                </FrameLayout>
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_weight="1.5">
 
-                <TextView
-                    android:id="@+id/profile_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_toRightOf="@id/frameLayout"
-                    android:textSize="15sp" />
+                        <ImageView
+                            android:id="@+id/profile_image"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
+                            android:scaleType="fitXY" />
 
-                <Button
-                    android:id="@+id/btnFollowStatus"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="10dp"
-                    android:text="@string/follow"
-                    android:textSize="10sp"
-                    android:textAllCaps="false" />
+                        <TextView
+                            android:id="@+id/shortUserNameTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/White"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </FrameLayout>
 
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="5">
+
+                        <TextView
+                            android:id="@+id/profile_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="5dp"
+                            android:textSize="15sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3">
+
+                        <Button
+                            android:id="@+id/btnFollowStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:text="@string/follow"
+                            android:textAllCaps="false"
+                            android:textSize="10sp" />
+
+                    </RelativeLayout>
+
+
+
+                </LinearLayout>
 
             </RelativeLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"

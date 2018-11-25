@@ -244,6 +244,7 @@
     <string name="FORGOT_YOUR_PASSWORD">Şifreni mi unuttun?</string>
     <string name="COMMENTS">Yorumlar</string>
     <string name="ADVANCED_SETTINGS">Gelişmiş Seçenekler</string>
+    <string name="SEND">Gönder</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

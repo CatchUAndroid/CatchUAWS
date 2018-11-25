@@ -26,6 +26,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import catchu.model.FollowInfoListResponse;
 import catchu.model.User;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
@@ -121,16 +122,19 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
         }
 
         public void setData(User user, int position) {
-
             this.user = user;
             this.position = position;
-            UserDataUtil.setName(user.getName(), profileName);
-            UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
-                    user.getName(), shortUserNameTv, profileImage);
-
+            setProfileName();
+            UserDataUtil.setProfilePicture2(mContext, user.getProfilePhotoUrl(),
+                    user.getName(), user.getUsername(),  shortUserNameTv, profileImage);
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
+        }
 
-
+        public void setProfileName(){
+            if(user.getName() != null && !user.getName().isEmpty())
+                UserDataUtil.setName(user.getName(), profileName);
+            else if(user.getUsername() != null && !user.getUsername().isEmpty())
+                UserDataUtil.setName(CHAR_AMPERSAND + user.getUsername(), profileName);
         }
 
         private void openDialogBox() {

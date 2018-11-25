@@ -156,7 +156,7 @@ public class AccountHolderInfo {
         }
 
         if (!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)) {
-            followingCnt = Integer.parseInt(followingCount);
+            followerCnt = Integer.parseInt(followerCount);
         }
 
         switch (requestType) {

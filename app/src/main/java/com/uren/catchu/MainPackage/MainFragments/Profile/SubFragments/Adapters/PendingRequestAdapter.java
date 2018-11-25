@@ -30,6 +30,7 @@ import catchu.model.FriendRequestList;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
@@ -161,12 +162,20 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         }
 
         public void setData(UserProfileProperties userProfileProperties, int position) {
-            this.profileName.setText(userProfileProperties.getName());
             this.userProfileProperties = userProfileProperties;
             this.position = position;
-            UserDataUtil.setProfilePicture(context, userProfileProperties.getProfilePhotoUrl(),
-                    userProfileProperties.getName(), shortUserNameTv, profileImage);
+            setProfileName();
+            UserDataUtil.setProfilePicture2(context, userProfileProperties.getProfilePhotoUrl(),
+                    userProfileProperties.getName(),
+                    userProfileProperties.getUsername(), shortUserNameTv, profileImage);
             UserDataUtil.updatePendingButton(context, btnFollowStatus);
+        }
+
+        public void setProfileName(){
+            if(userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
+                UserDataUtil.setName(userProfileProperties.getName(), profileName);
+            else if(userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
+                UserDataUtil.setName(CHAR_AMPERSAND + userProfileProperties.getUsername(), profileName);
         }
     }
 

@@ -277,6 +277,7 @@
     <string name="FORGOT_YOUR_PASSWORD">Forgot Your Password?</string>
     <string name="COMMENTS">Comments</string>
     <string name="ADVANCED_SETTINGS">Advanced Settings</string>
+    <string name="SEND">Send</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
