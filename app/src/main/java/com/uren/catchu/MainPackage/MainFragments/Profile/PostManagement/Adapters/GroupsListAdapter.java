@@ -27,6 +27,7 @@ import catchu.model.Post;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
 
 
 public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.MyViewHolder> {
@@ -76,7 +77,8 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.My
                 @Override
                 public void onClick(View v) {
                     String targetUid = group.getGroupid();
-                    fragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid), ANIMATE_RIGHT_TO_LEFT);
+                    String toolbarTitle = group.getName();
+                    fragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_GROUP, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
                 }
             });
 

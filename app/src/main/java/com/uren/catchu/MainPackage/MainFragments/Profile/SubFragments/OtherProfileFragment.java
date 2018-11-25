@@ -455,7 +455,8 @@ public class OtherProfileFragment extends BaseFragment
 
         if(v == llMyPosts){
             String targetUid = selectedUser.getUserid();
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid), ANIMATE_RIGHT_TO_LEFT);
+            String toolbarTitle = selectedUser.getUsername();
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
     }

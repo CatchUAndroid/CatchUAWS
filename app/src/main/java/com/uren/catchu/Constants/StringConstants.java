@@ -124,6 +124,7 @@ public class StringConstants {
     //PROFILE POST TYPE
     public static final String PROFILE_POST_TYPE_SHARED = "shared";
     public static final String PROFILE_POST_TYPE_CAUGHT = "caught";
+    public static final String PROFILE_POST_TYPE_GROUP = "group";
     public static final String USER_POST_VIEW_TYPE_GRID= "gridview";
     public static final String USER_POST_VIEW_TYPE_LIST = "listview";
 

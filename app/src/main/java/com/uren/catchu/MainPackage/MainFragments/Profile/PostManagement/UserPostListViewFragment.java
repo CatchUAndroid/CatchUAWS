@@ -25,6 +25,7 @@ import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserCaughtPostListProcess;
+import com.uren.catchu.ApiGatewayFunctions.UserGroupCaughtPostListProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -51,6 +52,7 @@ import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIE
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 public class UserPostListViewFragment extends BaseFragment {
@@ -176,7 +178,7 @@ public class UserPostListViewFragment extends BaseFragment {
     private void setAdapter() {
         userPostListViewAdapter = new FeedAdapter(getActivity(), getContext(), mFragmentNavigation);
         listRecyclerView.setAdapter(userPostListViewAdapter);
-        listRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT) ;
+        listRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
     }
 
     private void setPullToRefresh() {
@@ -243,7 +245,7 @@ public class UserPostListViewFragment extends BaseFragment {
     private void setScrollButtonVisibility() {
         int visibility;
         int firstVisibleItemPosition = customLinearLayoutManager.findFirstVisibleItemPosition();
-        if (firstVisibleItemPosition<3) {
+        if (firstVisibleItemPosition < 3) {
             visibility = View.GONE;
 
         } else {
@@ -350,6 +352,8 @@ public class UserPostListViewFragment extends BaseFragment {
             getSharedPosts(token);
         } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
             getCaughtPosts(token);
+        } else if (catchType.equals(PROFILE_POST_TYPE_GROUP)) {
+            getGroupCaughtPosts(token);
         } else {
             //do nothing
         }
@@ -495,6 +499,74 @@ public class UserPostListViewFragment extends BaseFragment {
 
     }
 
+    private void getGroupCaughtPosts(String token) {
+
+        setLocationInfo();
+
+        String sUserId = AccountHolderInfo.getUserID();
+        String sGroupId = targetUid;
+        String sLongitude = longitude;
+        String sPerpage = String.valueOf(perPageCnt);
+        String sLatitude = latitude;
+        String sRadius = radius;
+        String sPage = String.valueOf(pageCnt);
+
+
+        UserGroupCaughtPostListProcess userGroupCaughtPostListProcess = new UserGroupCaughtPostListProcess(getContext(), new OnEventListener<PostListResponse>() {
+            @Override
+            public void onSuccess(final PostListResponse postListResponse) {
+
+                if (postListResponse == null) {
+                    CommonUtils.LOG_OK_BUT_NULL("UserGroupCaughtPostListProcess");
+                } else {
+                    CommonUtils.LOG_OK("UserGroupCaughtPostListProcess");
+                    if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
+                        showNoFeedLayout(true, R.string.emptyFeed);
+                    } else {
+                        showNoFeedLayout(false, 0);
+                    }
+                    setUpRecyclerView(postListResponse.getItems());
+                }
+
+                progressBar.setVisibility(View.GONE);
+                refresh_layout.setRefreshing(false);
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                CommonUtils.LOG_FAIL("UserGroupCaughtPostListProcess", e.toString());
+                progressBar.setVisibility(View.GONE);
+                refresh_layout.setRefreshing(false);
+
+                if (postList.size() > 0) {
+                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
+                    showNoFeedLayout(false, 0);
+                    if (userPostListViewAdapter.isShowingProgressLoading()) {
+                        userPostListViewAdapter.removeProgressLoading();
+                    }
+
+                } else {
+                    showNoFeedLayout(true, R.string.serverError);
+                }
+            }
+
+            @Override
+            public void onTaskContinue() {
+
+                if (pageCnt == 1 && !pulledToRefresh) {
+                    progressBar.setVisibility(View.VISIBLE);
+                }
+            }
+        }, sUserId, sGroupId, sLongitude, sPerpage, sLatitude, sRadius, sPage, token);
+
+        userGroupCaughtPostListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+    }
 
     private void setLocationInfo() {
         longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());

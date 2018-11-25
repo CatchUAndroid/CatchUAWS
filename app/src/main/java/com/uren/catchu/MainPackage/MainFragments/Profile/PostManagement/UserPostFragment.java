@@ -28,6 +28,7 @@ import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_GRI
 import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_LIST;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 
@@ -56,10 +57,11 @@ public class UserPostFragment extends BaseFragment
 
 
 
-    public static UserPostFragment newInstance(String catchType, String targetUid) {
+    public static UserPostFragment newInstance(String catchType, String targetUid, String toolbarTitle) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);
         args.putString("targetUid", targetUid);
+        args.putString("toolbarTitle",toolbarTitle);
         UserPostFragment fragment = new UserPostFragment();
         fragment.setArguments(args);
         return fragment;
@@ -97,16 +99,19 @@ public class UserPostFragment extends BaseFragment
         Bundle args = getArguments();
         if (args != null) {
             catchType = (String) args.getString("catchType");
-            targetUid = (String) args.get("targetUid");
-
+            targetUid = (String) args.getString("targetUid");
+            toolbarTitle = (String) args.getString("toolbarTitle");
+/*
             if (catchType.equals(PROFILE_POST_TYPE_SHARED)) {
                 toolbarTitle = getContext().getResources().getString(R.string.myPosts);
             } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
                 toolbarTitle = getContext().getResources().getString(R.string.catchedPosts);
+            }else if (catchType.equals(PROFILE_POST_TYPE_GROUP)) {
+                toolbarTitle = getContext().getResources().getString(R.string.catchedPosts);
             } else {
                 toolbarTitle = "";
             }
-
+*/
         }
     }
 

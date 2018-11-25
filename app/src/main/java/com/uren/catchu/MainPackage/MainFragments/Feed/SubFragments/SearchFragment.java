@@ -75,6 +75,9 @@ public class SearchFragment extends BaseFragment
             //getPersonList();
         }
 
+        edtSearch.requestFocus();
+        showKeyboard(true);
+
         return mView;
     }
 
@@ -87,8 +90,6 @@ public class SearchFragment extends BaseFragment
     private void initListeners() {
 
         imgCancel.setOnClickListener(this);
-        edtSearch.requestFocus();
-        showKeyboard(true);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -215,6 +216,7 @@ public class SearchFragment extends BaseFragment
 
     @Override
     public void onClick(View view, User user, int clickedPosition) {
+        showKeyboard(false);
         UserInfoListItem userInfoListItem = new UserInfoListItem(user);
         userInfoListItem.setAdapter(searchResultAdapter);
         userInfoListItem.setClickedPosition(clickedPosition);

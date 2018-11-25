@@ -236,8 +236,8 @@ public class ProfileFragment extends BaseFragment
         refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-
-                updateUI();
+                getProfileDetail(AccountHolderInfo.getUserID());
+                getGroups();
             }
         });
     }
@@ -558,12 +558,14 @@ public class ProfileFragment extends BaseFragment
 
         if (v == llMyPosts) {
             String targetUid = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid), ANIMATE_RIGHT_TO_LEFT);
+            String toolbarTitle = getContext().getResources().getString(R.string.myPosts);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llCatchedPosts) {
             String targetUid = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid), ANIMATE_RIGHT_TO_LEFT);
+            String toolbarTitle = getContext().getResources().getString(R.string.caughtPosts);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llMyGroups) {
