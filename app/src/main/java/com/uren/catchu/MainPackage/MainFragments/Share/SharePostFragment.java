@@ -68,6 +68,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectF
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -560,48 +561,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void sharePost() {
         getActivity().onBackPressed();
-        startToShare();
+        ShareUtil shareUtil = new ShareUtil(getContext(), shareItems, permissionModule);
+        shareUtil.startToShare();
     }
-
-    public void startToShare() {
-        int tryCount = shareItems.getShareTryCount();
-        shareItems.setShareTryCount(tryCount + 1);
-
-        new SharePostProcess(NextActivity.thisActivity, shareItems, new ServiceCompleteCallback() {
-            @Override
-            public void onSuccess() {
-                deleteSharedVideo();
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                if (shareItems.getShareTryCount() <= SHARE_TRY_COUNT) {
-                    if (NextActivity.thisActivity != null && shareItems != null) {
-                        DialogBoxUtil.showYesNoDialog(NextActivity.thisActivity, null,
-                                NextActivity.thisActivity.getResources().getString(R.string.DEFAULT_POST_ERROR_MESSAGE)
-                                , new YesNoDialogBoxCallback() {
-                                    @Override
-                                    public void yesClick() {
-                                        startToShare();
-                                    }
-
-                                    @Override
-                                    public void noClick() {
-                                        deleteSharedVideo();
-                                        deleteUploadedItems();
-                                    }
-                                });
-                    }
-                } else {
-                    CommonUtils.showToast(NextActivity.thisActivity,
-                            NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
-                    deleteSharedVideo();
-                    deleteUploadedItems();
-                }
-            }
-        });
-    }
-
 
     public void deleteSharedVideo() {
         if (permissionModule.checkWriteExternalStoragePermission()) {
@@ -619,33 +581,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         intent.setData(Uri.fromFile(file));
         getContext().sendBroadcast(intent);
-    }
-
-    public void deleteUploadedItems() {
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                if (shareItems != null && shareItems.getBucketUploadResponse() != null) {
-                    SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
-                        @Override
-                        public void onSuccess(Object object) {
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-                        }
-
-                        @Override
-                        public void onTaskContinue() {
-
-                        }
-                    }, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
-                            token,
-                            shareItems.getBucketUploadResponse());
-                    signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            }
-        });
     }
 
     public void openWhomSelection() {
