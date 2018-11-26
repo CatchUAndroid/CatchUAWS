@@ -97,7 +97,7 @@ public class InviteContactsAdapter extends RecyclerView.Adapter<InviteContactsAd
             this.contact = contact;
             setPhoneNum();
             UserDataUtil.setName(contact.getName(), nameTextView);
-            UserDataUtil.setProfilePicture(context, null, null, shortenTextView, profilePicImgView);
+            UserDataUtil.setProfilePicture(context, null, null, null, shortenTextView, profilePicImgView);
             UserDataUtil.updateInviteButton(context, statuDisplayBtn, false);
         }
 

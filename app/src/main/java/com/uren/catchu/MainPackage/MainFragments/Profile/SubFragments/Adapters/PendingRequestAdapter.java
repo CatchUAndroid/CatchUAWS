@@ -165,7 +165,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
             this.userProfileProperties = userProfileProperties;
             this.position = position;
             setProfileName();
-            UserDataUtil.setProfilePicture2(context, userProfileProperties.getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(context, userProfileProperties.getProfilePhotoUrl(),
                     userProfileProperties.getName(),
                     userProfileProperties.getUsername(), shortUserNameTv, profileImage);
             UserDataUtil.updatePendingButton(context, btnFollowStatus);

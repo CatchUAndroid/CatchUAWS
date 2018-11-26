@@ -53,37 +53,7 @@ public class UserDataUtil {
         return returnValue;
     }
 
-    public static void setProfilePicture(Context context, String url, String name, TextView shortNameTv, ImageView profilePicImgView) {
-        if (url != null && !url.trim().isEmpty()) {
-            shortNameTv.setVisibility(View.GONE);
-            Glide.with(context)
-                    .load(url)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(profilePicImgView);
-            profilePicImgView.setPadding(1,1,1,1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
-        } else {
-            if (name != null && !name.trim().isEmpty()) {
-                shortNameTv.setVisibility(View.VISIBLE);
-                shortNameTv.setText(UserDataUtil.getShortenUserName(name));
-                profilePicImgView.setImageDrawable(null);
-            } else {
-                shortNameTv.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(context.getResources().getIdentifier("icon_user_profile", "mipmap", context.getPackageName()))
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(profilePicImgView);
-            }
-        }
-
-        GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                context.getResources().getColor(R.color.White, null),
-                GradientDrawable.OVAL, 50, 3);
-        profilePicImgView.setBackground(imageShape);
-
-
-    }
-
-    public static void setProfilePicture2(Context context, String url, String name, String username, TextView shortNameTv, ImageView profilePicImgView) {
+    public static void setProfilePicture(Context context, String url, String name, String username, TextView shortNameTv, ImageView profilePicImgView) {
         if (url != null && !url.trim().isEmpty()) {
             shortNameTv.setVisibility(View.GONE);
             Glide.with(context)

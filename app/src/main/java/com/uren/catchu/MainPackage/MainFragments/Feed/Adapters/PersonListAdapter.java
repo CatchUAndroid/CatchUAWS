@@ -126,7 +126,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
             this.person = person;
             this.position = position;
             UserDataUtil.setProfilePicture(context, person.getProfilePhotoUrl(),
-                    person.getName(), shortUserNameTv, profileImage);
+                    person.getName(), person.getUsername(), shortUserNameTv, profileImage);
 
             UserDataUtil.updateFollowButton2(context, person.getFollowStatus(), btnFollowStatus, true);
         }

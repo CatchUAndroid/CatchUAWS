@@ -144,7 +144,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
             this.likeCount = comment.getLikeCount();
 
             //profile picture
-            UserDataUtil.setProfilePicture2(mContext, comment.getUser().getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
                     comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {

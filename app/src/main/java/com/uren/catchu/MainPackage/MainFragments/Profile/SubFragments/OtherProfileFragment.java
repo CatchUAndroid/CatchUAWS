@@ -179,7 +179,7 @@ public class OtherProfileFragment extends BaseFragment
         }
 
         //profil fotografi varsa set edilir.
-        UserDataUtil.setProfilePicture2(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
+        UserDataUtil.setProfilePicture(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
                 selectedUser.getUsername(), txtProfile, imgProfile);
         imgProfile.setPadding(3, 3, 3, 3);
 
@@ -250,7 +250,7 @@ public class OtherProfileFragment extends BaseFragment
         }
 
         //profil fotografi varsa set edilir.
-        UserDataUtil.setProfilePicture2(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
+        UserDataUtil.setProfilePicture(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
                 selectedUser.getUsername(), txtProfile, imgProfile);
         imgProfile.setPadding(3, 3, 3, 3);
         //Name

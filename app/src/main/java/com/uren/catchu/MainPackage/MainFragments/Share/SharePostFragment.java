@@ -45,7 +45,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -54,14 +53,12 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.VideoChosenForShareCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
@@ -78,7 +75,6 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.CheckShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ResizeAnimation;
-import com.uren.catchu.MainPackage.MainFragments.Share.Utils.SharePostProcess;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoViewFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -95,7 +91,6 @@ import catchu.model.UserProfile;
 import static android.content.Context.LOCATION_SERVICE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_SIZE;
-import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_VIDEO_HEIGHT;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_VIDEO_WIDHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
@@ -869,7 +864,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setToolbarInfo(String url, String name, String username) {
-        UserDataUtil.setProfilePicture2(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
+        UserDataUtil.setProfilePicture(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
 
         if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&

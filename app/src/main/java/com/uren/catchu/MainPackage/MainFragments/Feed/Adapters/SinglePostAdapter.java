@@ -4,7 +4,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
@@ -27,11 +26,8 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PostSettingsChoosenCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.CommentListDiffCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
@@ -283,7 +279,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             this.commentCount = post.getCommentCount();
 
             //profile picture
-            UserDataUtil.setProfilePicture2(mContext, post.getUser().getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
                     post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
@@ -461,7 +457,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //profile picture
             UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(), txtProfilePic, imgProfilePic);
+                    comment.getUser().getName(),comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
                 this.txtUsername.setText(comment.getUser().getUsername());

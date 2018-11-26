@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
@@ -23,7 +22,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Interfaces.ContactFriendSelectCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Models.ContactFriendModel;
@@ -35,8 +33,6 @@ import java.util.List;
 
 import catchu.model.FriendRequestList;
 import catchu.model.RelationProperties;
-import catchu.model.User;
-import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
@@ -230,10 +226,10 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.MyView
                 if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
                         !contactFriendModel.getUser().getUserid().isEmpty()) {
                     UserDataUtil.setName(contactFriendModel.getUser().getName(), nameTextView);
-                    UserDataUtil.setProfilePicture(context, contactFriendModel.getUser().getProfilePhotoUrl(), contactFriendModel.getUser().getName(), shortenTextView, profilePicImgView);
+                    UserDataUtil.setProfilePicture(context, contactFriendModel.getUser().getProfilePhotoUrl(), contactFriendModel.getUser().getName(), contactFriendModel.getUser().getUsername(), shortenTextView, profilePicImgView);
                 } else if (contactFriendModel.getContact() != null) {
                     UserDataUtil.setName(contactFriendModel.getContact().getName(), nameTextView);
-                    UserDataUtil.setProfilePicture(context, null, contactFriendModel.getContact().getName(), shortenTextView, profilePicImgView);
+                    UserDataUtil.setProfilePicture(context, null, contactFriendModel.getContact().getName(), contactFriendModel.getContact().getName(), shortenTextView, profilePicImgView);
                 }
             }
         }

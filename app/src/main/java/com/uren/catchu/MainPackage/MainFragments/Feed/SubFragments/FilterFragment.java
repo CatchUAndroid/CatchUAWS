@@ -1,20 +1,11 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -96,7 +87,7 @@ public class FilterFragment extends BaseFragment
         //profile picture
         UserProfileProperties user = AccountHolderInfo.getInstance().getUser().getUserInfo();
         UserDataUtil.setProfilePicture(getContext(), user.getProfilePhotoUrl(),
-                user.getName(), txtProfilePic, imgProfilePic);
+                user.getName(), user.getUsername(), txtProfilePic, imgProfilePic);
     }
 
 

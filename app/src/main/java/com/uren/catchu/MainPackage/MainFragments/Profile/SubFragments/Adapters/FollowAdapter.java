@@ -125,7 +125,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
             this.user = user;
             this.position = position;
             setProfileName();
-            UserDataUtil.setProfilePicture2(mContext, user.getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
                     user.getName(), user.getUsername(),  shortUserNameTv, profileImage);
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
         }

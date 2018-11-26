@@ -168,7 +168,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             setName();
             setUserName();
             setGroupAdmin();
-            UserDataUtil.setProfilePicture2(context, userProfile.getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(context, userProfile.getProfilePhotoUrl(),
                     userProfile.getName(), userProfile.getUsername(), shortUsernameTv, specialProfileImgView);
         }
 

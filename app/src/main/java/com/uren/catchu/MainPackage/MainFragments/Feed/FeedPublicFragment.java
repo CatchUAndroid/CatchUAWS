@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
-import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -11,8 +10,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,7 +36,6 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCall
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.SpeedyLinearLayoutManager;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -64,7 +60,6 @@ import catchu.model.UserProfile;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.FEED_TYPE_PUBLIC;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
@@ -433,12 +428,12 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         if (isShowPulsator) {
             UserProfile user = AccountHolderInfo.getInstance().getUser();
             UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), txtProfile, imgProfile);
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                 @Override
                 public void onAccountHolderIfoTaken(UserProfile userProfile) {
                     UserDataUtil.setProfilePicture(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
-                            userProfile.getUserInfo().getName(), txtProfile, imgProfile);
+                            userProfile.getUserInfo().getName(), userProfile.getUserInfo().getUsername(), txtProfile, imgProfile);
                 }
             });
 

@@ -47,12 +47,10 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -269,7 +267,7 @@ public class SinglePostFragment extends BaseFragment
     private void setPostDetailOnToolbar() {
 
         //profile picture
-        UserDataUtil.setProfilePicture2(getContext(), post.getUser().getProfilePhotoUrl(),
+        UserDataUtil.setProfilePicture(getContext(), post.getUser().getProfilePhotoUrl(),
                 post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
 
         //Username

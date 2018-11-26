@@ -32,7 +32,6 @@ import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_SELECT_ALL;
 import static com.uren.catchu.Constants.NumericConstants.CODE_UNSELECT_ALL;
-import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 
 public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapter.MyViewHolder> implements Filterable {
 
@@ -161,7 +160,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             this.selectedFriend = selectedFriend;
             setProfileName();
             setUserName();
-            UserDataUtil.setProfilePicture2(context, selectedFriend.getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                     selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView);
             updateRadioButtonValue();
         }

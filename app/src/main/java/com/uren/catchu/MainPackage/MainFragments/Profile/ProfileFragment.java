@@ -32,20 +32,14 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.UserGroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.ViewGroupDetailFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -381,12 +375,12 @@ public class ProfileFragment extends BaseFragment
                 navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
             }
             //profile picture
-            UserDataUtil.setProfilePicture2(getContext(), user.getUserInfo().getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             imgProfile.setPadding(3, 3, 3, 3);
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), navViewShortenTextView, navImgProfile);
             //Biography
             // todo NT - biography usera beslenmiyor.düzenlenecek
 

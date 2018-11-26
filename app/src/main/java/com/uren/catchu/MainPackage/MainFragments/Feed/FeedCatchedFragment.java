@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -37,7 +36,6 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCall
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.SpeedyLinearLayoutManager;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -445,12 +443,12 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     private void showPulsatorLayout(boolean isShowPulsator) {
         if (isShowPulsator) {
             UserProfile user = AccountHolderInfo.getInstance().getUser();
-            UserDataUtil.setProfilePicture2(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                 @Override
                 public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                    UserDataUtil.setProfilePicture2(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
+                    UserDataUtil.setProfilePicture(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
                             userProfile.getUserInfo().getName() ,userProfile.getUserInfo().getUsername(), txtProfile, imgProfile);
                 }
             });

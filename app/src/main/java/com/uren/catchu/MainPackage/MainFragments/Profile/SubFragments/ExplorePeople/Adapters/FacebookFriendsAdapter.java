@@ -190,7 +190,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             this.requestedUserid = user.getUserid();
             setUserName();
             UserDataUtil.setName(user.getName(), nameTextView);
-            UserDataUtil.setProfilePicture(context, user.getProfilePhotoUrl(), user.getName(), shortenTextView, profilePicImgView);
+            UserDataUtil.setProfilePicture(context, user.getProfilePhotoUrl(), user.getName(), user.getUsername(), shortenTextView, profilePicImgView);
 
             if (user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
                 statuDisplayBtn.setVisibility(View.GONE);

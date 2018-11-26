@@ -28,8 +28,6 @@ import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenu;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
@@ -304,7 +302,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             this.commentCount = post.getCommentCount();
 
             //profile picture
-            UserDataUtil.setProfilePicture2(mContext, post.getUser().getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
                     post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {

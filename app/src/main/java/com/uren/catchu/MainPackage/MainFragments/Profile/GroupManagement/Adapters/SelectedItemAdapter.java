@@ -107,7 +107,7 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
             this.position = position;
             this.selectedFriend = selectedFriend;
             setProfileName();
-            UserDataUtil.setProfilePicture2(context, selectedFriend.getProfilePhotoUrl(),
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                     selectedFriend.getName(), selectedFriend.getUsername(), shortenTextView, specialPictureImgView);
         }
 
