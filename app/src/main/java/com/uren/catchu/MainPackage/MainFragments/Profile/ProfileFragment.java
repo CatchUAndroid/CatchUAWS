@@ -25,8 +25,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -101,7 +99,7 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
 
-    @BindView(R.id.imgProfile2)
+    @BindView(R.id.imgProfile)
     ImageView imgProfile;
     @BindView(R.id.txtProfile)
     TextView txtProfile;
@@ -382,20 +380,9 @@ public class ProfileFragment extends BaseFragment
                 navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
             }
             //profile picture
-
-            if(user.getUserInfo().getProfilePhotoUrl() != null && !user.getUserInfo().getProfilePhotoUrl().isEmpty()){
-                imgProfile.setPadding(0, 0, 0, 0);
-                Glide.with(getContext())
-                        .load(user.getUserInfo().getProfilePhotoUrl())
-                        .apply(RequestOptions.centerInsideTransform())
-                        .into(imgProfile);
-            }
-
-            /*
             UserDataUtil.setProfilePicture2(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             imgProfile.setPadding(3, 3, 3, 3);
-            */
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
@@ -467,12 +454,19 @@ public class ProfileFragment extends BaseFragment
 
     private void getProfileDetail(final String userID) {
 
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startGetProfileDetail(userID, token);
-            }
-        });
+        if (myProfile == null) {
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startGetProfileDetail(userID, token);
+                }
+            });
+
+        } else {
+            setProfileDetail(myProfile);
+        }
+
     }
 
     private void startGetProfileDetail(final String userID, String token) {
@@ -603,8 +597,6 @@ public class ProfileFragment extends BaseFragment
             followersLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             followerClicked();
         }
-
-
 
     }
 
