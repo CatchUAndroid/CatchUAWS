@@ -171,6 +171,7 @@ public class MainActivity extends AppCompatActivity {
             tryAgainButton.setVisibility(View.VISIBLE);
             networkTryDesc.setVisibility(View.VISIBLE);
             CommonUtils.connectionErrSnackbarShow(mainActLayout, MainActivity.this);
+            refresh_layout.setRefreshing(false);
         }else {
             tryAgainButton.setVisibility(View.GONE);
             networkTryDesc.setVisibility(View.GONE);
@@ -191,6 +192,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(BaseResponse baseResponse) {
 
+                        refresh_layout.setRefreshing(false);
                         if (baseResponse == null) {
                             CommonUtils.LOG_OK_BUT_NULL("LoginProcess");
                         } else {
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Exception e) {
+                        refresh_layout.setRefreshing(false);
                         CommonUtils.LOG_FAIL("LoginProcess", e.toString());
                     }
 
