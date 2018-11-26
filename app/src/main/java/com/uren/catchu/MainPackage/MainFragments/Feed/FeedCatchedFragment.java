@@ -43,6 +43,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
+import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
 
@@ -71,7 +72,7 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
 
     View mView;
     FeedAdapter feedAdapter;
-    LinearLayoutManager mLayoutManager;
+    CustomLinearLayoutManager mLayoutManager;
 
     @BindView(R.id.rv_feed)
     CustomRecyclerView recyclerView;
@@ -196,7 +197,7 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void setLayoutManager() {
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mLayoutManager = new CustomLinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new FeedItemAnimator());
     }
@@ -594,8 +595,7 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void scrollRecViewInitPosition(){
-        SpeedyLinearLayoutManager linearLayoutManager = (SpeedyLinearLayoutManager) recyclerView.getLayoutManager();
-        linearLayoutManager.smoothScrollToPosition(recyclerView, null,0);
+        mLayoutManager.smoothScrollToPosition(recyclerView, null,0);
     }
 
     @Override

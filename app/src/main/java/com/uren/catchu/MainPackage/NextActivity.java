@@ -129,15 +129,19 @@ public class NextActivity extends AppCompatActivity implements
             Fragment fragment = feedFragment.getFragmentManager().getFragments().
                     get(feedFragment.getSelectedTabPosition());
 
-            for (int i = 0; i < fragments.size(); i++) {
-                if (fragments.get(i) instanceof FeedPublicFragment && selectedTabPosition == 0) {
-                    ((FeedPublicFragment) fragments.get(i)).scrollRecViewInitPosition();
+            if(selectedTabPosition == 0){
+                for (int i = 0; i < fragments.size(); i++){
+                    if(fragments.get(i) instanceof FeedPublicFragment){
+                        ((FeedPublicFragment) fragments.get(i)).scrollRecViewInitPosition();
+                    }
                 }
-                if (fragments.get(i) instanceof FeedCatchedFragment && selectedTabPosition == 1) {
-                    ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
-                }
-                if (fragments.get(i) instanceof FeedPublicFragment && selectedTabPosition == 1) {
-                    ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
+            }
+
+            if(selectedTabPosition == 1){
+                for (int i = 0; i < fragments.size(); i++){
+                    if(fragments.get(i) instanceof FeedCatchedFragment){
+                        ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
+                    }
                 }
             }
 
