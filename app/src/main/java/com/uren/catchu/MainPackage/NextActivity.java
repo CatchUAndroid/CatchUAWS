@@ -126,9 +126,7 @@ public class NextActivity extends AppCompatActivity implements
 
             int selectedTabPosition = feedFragment.getSelectedTabPosition();
             List<Fragment> fragments = feedFragment.getFragmentManager().getFragments();
-            Fragment fragment = feedFragment.getFragmentManager().getFragments().
-                    get(feedFragment.getSelectedTabPosition());
-
+            
             if(selectedTabPosition == 0){
                 for (int i = 0; i < fragments.size(); i++){
                     if(fragments.get(i) instanceof FeedPublicFragment){
