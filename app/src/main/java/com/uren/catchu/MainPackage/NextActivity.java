@@ -123,7 +123,7 @@ public class NextActivity extends AppCompatActivity implements
         if (tab.getPosition() != FragNavController.TAB2) {
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
-        } else if (!checkShareProceeding()) {
+        } else{
 
             sharePostFragment = new SharePostFragment();
             Stack<Fragment> fragmentStack = new Stack<>();
@@ -133,14 +133,6 @@ public class NextActivity extends AppCompatActivity implements
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
         }
-    }
-
-    public boolean checkShareProceeding() {
-        if (ShareItems.getShareItemsInstance() != null && ShareItems.getShareItemsInstance().isShareStartedValue()) {
-            CommonUtils.showToast(NextActivity.this, getResources().getString(R.string.BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG));
-            return true;
-        }
-        return false;
     }
 
     public void fillAccountHolder() {

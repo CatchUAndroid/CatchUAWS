@@ -233,8 +233,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     PhotoSelectUtil photoSelectUtil;
     VideoSelectUtil videoSelectUtil;
     CheckShareItems checkShareItems;
-
-    View advancedSettingsView;
+    ShareItems shareItems;
 
     String selectedType = "";
     String selectedWhomType = "";
@@ -274,7 +273,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 addListeners();
                 setMapView();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return view;
@@ -287,7 +286,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     private void initializeItems() {
         permissionModule = new PermissionModule(getContext());
-        ShareItems.setInstance(null);
+        shareItems = new ShareItems();
         setSelectedWhomType();
         getUserInfo();
         initLocationTracker();
@@ -297,7 +296,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         setAnimations();
         locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         photoSelectUtil = new PhotoSelectUtil();
-        checkShareItems = new CheckShareItems(getContext());
         keyboardHeightProvider = new KeyboardHeightProvider((Activity) getContext());
 
         view.post(new Runnable() {
@@ -310,8 +308,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     private void setSelectedWhomType() {
         selectedDescTv.setText(getResources().getString(R.string.publicShareText));
         selectedWhomType = SHARE_TYPE_EVERYONE;
-        ShareItems.getInstance().setSelectedShareType(selectedWhomType);
-        ShareItems.getInstance().getPost().setIsCommentAllowed(true);
+        shareItems.setSelectedShareType(selectedWhomType);
+        shareItems.getPost().setIsCommentAllowed(true);
     }
 
     private void setAnimations() {
@@ -418,10 +416,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void afterTextChanged(Editable s) {
                 if (s != null && s.toString() != null && !s.toString().isEmpty()) {
                     setTextSelectImgvFilled();
-                    ShareItems.getInstance().getPost().setMessage(s.toString());
+                    shareItems.getPost().setMessage(s.toString());
                 } else {
                     clearTextSelectImgvFilled();
-                    ShareItems.getInstance().getPost().setMessage("");
+                    shareItems.getPost().setMessage("");
                 }
             }
         });
@@ -445,7 +443,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     public void onPhotoRemoved() {
                         photoSelectUtil = null;
                         isPhotoSelected = false;
-                        ShareItems.getInstance().clearImageShareItemBox();
+                        shareItems.clearImageShareItemBox();
                         clearPhotoSelectImgvFilled();
                     }
 
@@ -467,7 +465,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                checkShareItems = new CheckShareItems(getContext(), shareItems);
                 shareButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+
                 if (!checkShareItems.shareIsPossible()) {
                     CommonUtils.showToast(getContext(), checkShareItems.getErrMessage());
                     return;
@@ -503,7 +503,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         deleteSharedVideo();
                         videoSelectUtil = null;
                         isVideoSelected = false;
-                        ShareItems.getInstance().clearVideoShareItemBox();
+                        shareItems.clearVideoShareItemBox();
                         clearVideoSelectImgvFilled();
                     }
 
@@ -521,7 +521,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void onClick(View v) {
                 selectedWhomType = SHARE_TYPE_EVERYONE;
                 openWhomSelection();
-                ShareItems.getInstance().setSelectedShareType(selectedWhomType);
+                shareItems.setSelectedShareType(selectedWhomType);
                 selectedDescTv.setText(getResources().getString(R.string.publicShareText));
             }
         });
@@ -531,7 +531,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void onClick(View v) {
                 selectedWhomType = SHARE_TYPE_ALL_FOLLOWERS;
                 openWhomSelection();
-                ShareItems.getInstance().setSelectedShareType(selectedWhomType);
+                shareItems.setSelectedShareType(selectedWhomType);
                 selectedDescTv.setText(getResources().getString(R.string.allFollowersShareText));
             }
         });
@@ -567,33 +567,33 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void onClick(View v) {
                 selectedWhomType = SHARE_TYPE_SELF;
                 openWhomSelection();
-                ShareItems.getInstance().setSelectedShareType(selectedWhomType);
+                shareItems.setSelectedShareType(selectedWhomType);
                 selectedDescTv.setText(getResources().getString(R.string.justMeShareText));
             }
         });
     }
 
     public void sharePost() {
-        ShareItems.getShareItemsInstance().setShareStartedValue(true);
+        //ShareItems.getShareItemsInstance().setShareStartedValue(true);
         getActivity().onBackPressed();
         startToShare();
     }
 
     public void startToShare() {
-        int tryCount = ShareItems.getInstance().getShareTryCount();
-        ShareItems.getInstance().setShareTryCount(tryCount + 1);
+        int tryCount = shareItems.getShareTryCount();
+        shareItems.setShareTryCount(tryCount + 1);
 
-        new SharePostProcess(NextActivity.thisActivity, new ServiceCompleteCallback() {
+        new SharePostProcess(NextActivity.thisActivity, shareItems, new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
                 deleteSharedVideo();
-                ShareItems.setInstance(null);
+                //ShareItems.setInstance(null);
             }
 
             @Override
             public void onFailed(Exception e) {
-                if (ShareItems.getInstance().getShareTryCount() <= SHARE_TRY_COUNT) {
-                    if (NextActivity.thisActivity != null && ShareItems.getInstance() != null) {
+                if (shareItems.getShareTryCount() <= SHARE_TRY_COUNT) {
+                    if (NextActivity.thisActivity != null && shareItems != null) {
                         DialogBoxUtil.showYesNoDialog(NextActivity.thisActivity, null,
                                 NextActivity.thisActivity.getResources().getString(R.string.DEFAULT_POST_ERROR_MESSAGE)
                                 , new YesNoDialogBoxCallback() {
@@ -642,16 +642,16 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                if (ShareItems.getInstance() != null && ShareItems.getInstance().getBucketUploadResponse() != null) {
+                if (shareItems != null && shareItems.getBucketUploadResponse() != null) {
                     SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
                         @Override
                         public void onSuccess(Object object) {
-                            ShareItems.setInstance(null);
+                            //ShareItems.setInstance(null);
                         }
 
                         @Override
                         public void onFailure(Exception e) {
-                            ShareItems.setInstance(null);
+                            //ShareItems.setInstance(null);
                         }
 
                         @Override
@@ -660,7 +660,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         }
                     }, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
                             token,
-                            ShareItems.getInstance().getBucketUploadResponse());
+                            shareItems.getBucketUploadResponse());
                     signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             }
@@ -784,8 +784,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                                     if (selectedGroup != null) {
                                         selectedWhomType = SHARE_TYPE_GROUP;
-                                        ShareItems.getInstance().setSelectedShareType(selectedWhomType);
-                                        ShareItems.getInstance().setSelectedGroup(selectedGroup);
+                                        shareItems.setSelectedShareType(selectedWhomType);
+                                        shareItems.setSelectedGroup(selectedGroup);
                                         selectedDescTv.setText(selectedGroup.getName());
                                         setHideAnimations();
                                     }
@@ -806,7 +806,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         @Override
                         public void onReturn(Object object) {
                             selectedWhomType = SHARE_TYPE_CUSTOM;
-                            ShareItems.getInstance().setSelectedShareType(selectedWhomType);
+                            shareItems.setSelectedShareType(selectedWhomType);
                             selectedDescTv.setText(getSelectedFriendsText());
                             setHideAnimations();
                         }
@@ -814,10 +814,15 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    public void startAdvancedSettingsFragment(){
+    public void startAdvancedSettingsFragment() {
         CommonUtils.hideKeyBoard(getContext());
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ShareAdvanceSettingsFragment(), ANIMATE_LEFT_TO_RIGHT);
+            mFragmentNavigation.pushFragment(new ShareAdvanceSettingsFragment(shareItems, new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    shareItems = (ShareItems) object;
+                }
+            }), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
@@ -948,7 +953,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setToolbarInfo(String url, String name, String username) {
-        UserDataUtil.setProfilePicture2(getContext(), url, name, username,  shortUserNameTv, profilePicImgView);
+        UserDataUtil.setProfilePicture2(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
 
         if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
@@ -1077,9 +1082,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void addVideoShareItemList() {
-        ShareItems.getInstance().clearVideoShareItemBox();
+        shareItems.clearVideoShareItemBox();
         VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
-        ShareItems.getInstance().addVideoShareItemBox(videoShareItemBox);
+        shareItems.addVideoShareItemBox(videoShareItemBox);
     }
 
     public void startVideoViewFragment() {
@@ -1124,13 +1129,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         catchu.model.Location tempLoc = new catchu.model.Location();
         tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
         tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-        ShareItems.getInstance().getPost().setLocation(tempLoc);
+        shareItems.getPost().setLocation(tempLoc);
     }
 
     public void fillImageShareItemBox() {
         ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
-        ShareItems.getInstance().clearImageShareItemBox();
-        ShareItems.getInstance().addImageShareItemBox(imageShareItemBox);
+        shareItems.clearImageShareItemBox();
+        shareItems.addImageShareItemBox(imageShareItemBox);
     }
 
     private void initLocationTracker() {
@@ -1140,7 +1145,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 catchu.model.Location locationModel = new catchu.model.Location();
                 locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
                 locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-                ShareItems.getInstance().getPost().setLocation(locationModel);
+                shareItems.getPost().setLocation(locationModel);
             }
         });
     }

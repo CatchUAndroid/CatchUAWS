@@ -9,32 +9,31 @@ public class CheckShareItems {
 
     Context context;
     String errorMessage = "";
+    ShareItems shareItems;
 
-    public CheckShareItems(Context context) {
+    public CheckShareItems(Context context, ShareItems shareItems) {
         this.context = context;
+        this.shareItems = shareItems;
     }
 
     public boolean shareIsPossible() {
-        if (ShareItems.getInstance().getImageShareItemBoxes() != null && ShareItems.getInstance().getImageShareItemBoxes().size() > 0)
+        if (shareItems.getPost() != null && shareItems.getPost().getLocation() == null) {
+            errorMessage = context.getResources().getString(R.string.locationIsEmpty);
+            return false;
+        }
+
+        if (shareItems.getImageShareItemBoxes() != null && shareItems.getImageShareItemBoxes().size() > 0)
             return true;
 
-        if (ShareItems.getInstance().getVideoShareItemBoxes() != null && ShareItems.getInstance().getVideoShareItemBoxes().size() > 0)
+        if (shareItems.getVideoShareItemBoxes() != null && shareItems.getVideoShareItemBoxes().size() > 0)
             return true;
 
-        if (ShareItems.getInstance().getPost() != null && ShareItems.getInstance().getPost().getMessage() != null &&
-                !ShareItems.getInstance().getPost().getMessage().trim().isEmpty())
+        if (shareItems.getPost() != null && shareItems.getPost().getMessage() != null &&
+                !shareItems.getPost().getMessage().trim().isEmpty())
             return true;
 
         errorMessage = context.getResources().getString(R.string.pleaseAddShareItem);
         return false;
-    }
-
-    public boolean isLocationLoaded() {
-        if (ShareItems.getInstance().getPost() != null && ShareItems.getInstance().getPost().getLocation() == null) {
-            errorMessage = context.getResources().getString(R.string.locationIsEmpty);
-            return false;
-        }
-        return true;
     }
 
     public String getErrMessage() {

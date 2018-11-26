@@ -12,6 +12,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
+@SuppressLint("ValidFragment")
 public class ShareAdvanceSettingsFragment extends BaseFragment {
 
     View mView;
@@ -33,8 +35,12 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
     @BindView(R.id.commonToolbarbackImgv)
     ClickableImageView commonToolbarbackImgv;
 
-    public ShareAdvanceSettingsFragment() {
+    ShareItems shareItems;
+    ReturnCallback returnCallback;
 
+    public ShareAdvanceSettingsFragment(ShareItems shareItems, ReturnCallback returnCallback) {
+        this.shareItems = shareItems;
+        this.returnCallback = returnCallback;
     }
 
     @Override
@@ -59,7 +65,7 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
 
     private void initVariables() {
         toolbarTitleTv.setText(getResources().getString(R.string.ADVANCED_SETTINGS));
-        if(ShareItems.getInstance().getPost().getIsCommentAllowed())
+        if(shareItems.getPost().getIsCommentAllowed())
             closeCommentsSwitch.setChecked(true);
         else
             closeCommentsSwitch.setChecked(false);
@@ -91,11 +97,10 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
 
     public void setAllowedValue(){
         if(closeCommentsSwitch.isChecked()){
-            ShareItems.getInstance().getPost().setIsCommentAllowed(false);
+            shareItems.getPost().setIsCommentAllowed(false);
         }else {
-            ShareItems.getInstance().getPost().setIsCommentAllowed(true);
+            shareItems.getPost().setIsCommentAllowed(true);
         }
+        returnCallback.onReturn(shareItems);
     }
-
-
 }
