@@ -32,6 +32,7 @@ import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_SELECT_ALL;
 import static com.uren.catchu.Constants.NumericConstants.CODE_UNSELECT_ALL;
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 
 public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapter.MyViewHolder> implements Filterable {
 
@@ -156,14 +157,12 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {
-            this.nameTextView.setText(selectedFriend.getName());
-            this.usernameTextView.setText(selectedFriend.getUsername());
             this.position = position;
             this.selectedFriend = selectedFriend;
+            setProfileName();
             setUserName();
-            UserDataUtil.setName(selectedFriend.getName(), nameTextView);
-            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                    selectedFriend.getName(), shortUserNameTv, profilePicImgView);
+            UserDataUtil.setProfilePicture2(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView);
             updateRadioButtonValue();
         }
 
@@ -177,6 +176,11 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 selectRadioBtn.setChecked(true);
             else
                 selectRadioBtn.setChecked(false);
+        }
+
+        public void setProfileName(){
+            if(selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
+                UserDataUtil.setName(selectedFriend.getName(), nameTextView);
         }
 
         public void checkHorizontalAdapter() {
@@ -235,13 +239,15 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         if (selectType == CODE_SELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
             SelectedFriendList.getInstance().setSelectedFriendList(orginalFriendList);
-            horRecyclerView.setVisibility(View.VISIBLE);
+            if (horRecyclerView != null)
+                horRecyclerView.setVisibility(View.VISIBLE);
             if (selectedItemAdapter != null)
                 selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();
         } else if (selectType == CODE_UNSELECT_ALL) {
             SelectedFriendList.getInstance().clearFriendList();
-            horRecyclerView.setVisibility(View.GONE);
+            if (horRecyclerView != null)
+                horRecyclerView.setVisibility(View.GONE);
             if (selectedItemAdapter != null)
                 selectedItemAdapter.notifyDataSetChanged();
             notifyDataSetChanged();

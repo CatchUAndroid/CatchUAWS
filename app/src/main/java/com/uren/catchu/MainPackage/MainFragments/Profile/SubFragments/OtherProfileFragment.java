@@ -119,6 +119,7 @@ public class OtherProfileFragment extends BaseFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
         super.onCreate(savedInstanceState);
     }
 

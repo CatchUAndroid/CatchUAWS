@@ -9,6 +9,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import catchu.model.BaseResponse;
 import catchu.model.BucketUploadResponse;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
 import static com.uren.catchu.Constants.StringConstants.MP4_TYPE;
 
@@ -33,7 +34,11 @@ public class SignedUrlDeleteProcess extends AsyncTask<Void, Void, BaseResponse> 
 
         try {
             BaseResponse baseResponse = instance.client.commonSignedurlDelete(userid, token, bucketUploadResponse);
-            return baseResponse;
+
+            if (baseResponse.getError().getCode().intValue() == RESPONSE_OK)
+                return baseResponse;
+            else
+                return null;
 
         } catch (Exception e) {
             mException = e;

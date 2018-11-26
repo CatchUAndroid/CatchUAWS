@@ -54,7 +54,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
-import com.uren.catchu.GeneralUtils.PhotoSelectUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 
@@ -144,9 +143,16 @@ public class UserEditFragment extends BaseFragment
     public UserEditFragment() {
     }
 
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mView = inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
         ButterKnife.bind(this, mView);
@@ -207,7 +213,6 @@ public class UserEditFragment extends BaseFragment
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
     }
 
     @Override
@@ -286,7 +291,7 @@ public class UserEditFragment extends BaseFragment
             photoExist = false;
             shortUserNameTv.setVisibility(View.GONE);
             Glide.with(getActivity())
-                    .load(getActivity().getResources().getIdentifier("user_icon", "drawable", getActivity().getPackageName()))
+                    .load(getActivity().getResources().getIdentifier("icon_user_profile", "mipmap", getActivity().getPackageName()))
                     .apply(RequestOptions.circleCropTransform())
                     .into(imgProfile);
         }
@@ -354,7 +359,6 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void editProfileCancelClicked() {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         getActivity().onBackPressed();
     }
 
@@ -481,32 +485,6 @@ public class UserEditFragment extends BaseFragment
                     permissionModule.PERMISSION_CAMERA);
     }
 
-    /*private void getCameraPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat
-                    .checkSelfPermission(getActivity(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
-                    || ContextCompat
-                    .checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.CAMERA)) {
-                    CommonUtils.showToast(getContext(), "Bir kere reddettin/Ayarlardan açınız");
-                }
-                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE}, CAMERA_PERMISSIONS_REQUEST_CODE);
-            } else {//Fotoğraf çekmek için sistem kamerasını doğrudan arama izni var
-                if (PhotoSelectUtils.hasExternalStorage()) {
-                    imageUri = Uri.fromFile(fileUri);
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        imageUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", fileUri);
-                    }
-                    PhotoSelectUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-                } else {
-                    CommonUtils.showToast(getContext(), "Cihazda bir SD kart yok");
-                }
-            }
-        }
-    }*/
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
@@ -520,37 +498,6 @@ public class UserEditFragment extends BaseFragment
                 startActivityForResult(IntentSelectUtil.getCameraIntent(), ACTIVITY_REQUEST_CODE_OPEN_CAMERA);
             }
         }
-
-
-        /*switch (requestCode) {
-
-         *//*Fotoğraf iznini geri aramak için sistem kamerasını çağırın.*//*
-            case CAMERA_PERMISSIONS_REQUEST_CODE: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if (PhotoSelectUtils.hasExternalStorage()) {
-                        imageUri = Uri.fromFile(fileUri);
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            imageUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", fileUri);
-                        }
-                        PhotoSelectUtils.takePicture(this, imageUri, CODE_CAMERA_REQUEST);
-                    } else {
-                        CommonUtils.showToast(getContext(), "Cihazda bir SD kart yok");
-                    }
-                } else {
-                    CommonUtils.showToast(getContext(), "Lütfen kameranın açılmasına izin verin!!");
-                }
-                break;
-            }
-            //Sistem fotoğraf albümü uygulamasını çağırın -Sdcard - İzin geri araması
-            case STORAGE_PERMISSIONS_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    PhotoSelectUtils.openPic(this, CODE_GALLERY_REQUEST);
-                } else {
-                    CommonUtils.showToast(getContext(), "Lütfen işleme izin verin storage-izni!!");
-                }
-                break;
-            default:
-        }*/
     }
 
     @Override
@@ -567,52 +514,5 @@ public class UserEditFragment extends BaseFragment
                 profilPicChanged = true;
             }
         }
-
-
-
-       /* if (resultCode != RESULT_OK) {
-            Log.e(TAG, "onActivityResult: resultCode!=RESULT_OK");
-            return;
-        }
-        switch (requestCode) {
-            //Kamera dönüş
-            case CODE_CAMERA_REQUEST:
-                cropImageUri = Uri.fromFile(FileAdapter.getCropMediaFile());
-                PhotoSelectUtils.cropImageUri(this, imageUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                break;
-            //Albüm dönüşü
-            case CODE_GALLERY_REQUEST:
-
-                if (PhotoSelectUtils.hasExternalStorage()) {
-                    cropImageUri = Uri.fromFile(FileAdapter.getCropMediaFile());
-                    Uri newUri = Uri.parse(PhotoSelectUtils.getPath(getActivity(), data.getData()));
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        newUri = FileProvider.getUriForFile(getActivity(), "com.uren.catchu", new File(newUri.getPath()));
-                    }
-                    PhotoSelectUtils.cropImageUri(this, newUri, cropImageUri, 1, 1, OUTPUT_X, OUTPUT_Y, CODE_RESULT_REQUEST);
-                } else {
-                    CommonUtils.showToast(getContext(), "External storage bulunamadı");
-                }
-                break;
-            //result
-            case CODE_RESULT_REQUEST:
-                bitmap = PhotoSelectUtils.getBitmapFromUri(cropImageUri, getActivity());
-                showImages(bitmap);
-                break;
-
-            default:
-        }*/
     }
-
-    /*private void showImages(Bitmap bitmap) {
-        if (bitmap != null) {
-            photoExist = true;
-            profilPicChanged = true;
-            shortUserNameTv.setVisibility(View.GONE);
-            Glide.with(getActivity())
-                    .load(bitmap)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imgProfile);
-        }
-    }*/
 }

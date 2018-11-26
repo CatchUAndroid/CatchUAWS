@@ -26,18 +26,17 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FragmentTabHiddenUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.util.Stack;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
@@ -56,20 +55,20 @@ public class NextActivity extends AppCompatActivity implements
     private boolean onPausedInd = false;
     public static Activity thisActivity;
 
-    @BindView(R.id.content_frame)
-    FrameLayout contentFrame;
+    public static FrameLayout contentFrame;
     public static LinearLayout profilePageMainLayout;
     public static RelativeLayout screenShotMainLayout;
     public static Button screenShotCancelBtn;
     public static Button screenShotApproveBtn;
 
     public String ANIMATION_TAG;
+
     public FragNavTransactionOptions transactionOptions;
 
     private int[] mTabIconsSelected = {
-            R.drawable.tab_home,
-            R.drawable.tab_share,
-            R.drawable.tab_profile};
+            R.mipmap.icon_tab_home,
+            R.mipmap.icon_tab_share,
+            R.mipmap.icon_tab_profile};
 
     public static String[] TABS;
     public static TabLayout bottomTabLayout;
@@ -78,6 +77,7 @@ public class NextActivity extends AppCompatActivity implements
 
     public static NotifyProblemFragment notifyProblemFragment;
     public SharePostFragment sharePostFragment;
+    public FeedFragment feedFragment;
 
     private FragmentHistory fragmentHistory;
 
@@ -113,17 +113,32 @@ public class NextActivity extends AppCompatActivity implements
             public void onTabReselected(TabLayout.Tab tab) {
                 mNavController.clearStack();
                 tabSelectionControl(tab);
+                checkFeedFragmentReselected(tab);
             }
         });
 
         fillAccountHolder();
     }
 
+    public void checkFeedFragmentReselected(TabLayout.Tab tab){
+        if(tab.getPosition() == FragNavController.TAB1 && feedFragment != null){
+
+            Fragment fragment = feedFragment.getFragmentManager().getFragments().
+                    get(feedFragment.getSelectedTabPosition());
+
+            if(fragment instanceof FeedPublicFragment)
+                ((FeedPublicFragment) fragment).scrollRecViewInitPosition();
+            else if(fragment instanceof FeedCatchedFragment){
+                ((FeedCatchedFragment) fragment).scrollRecViewInitPosition();
+            }
+        }
+    }
+
     public void tabSelectionControl(TabLayout.Tab tab) {
         if (tab.getPosition() != FragNavController.TAB2) {
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
-        } else if (!checkShareProceeding()) {
+        } else{
 
             sharePostFragment = new SharePostFragment();
             Stack<Fragment> fragmentStack = new Stack<>();
@@ -133,14 +148,6 @@ public class NextActivity extends AppCompatActivity implements
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
         }
-    }
-
-    public boolean checkShareProceeding() {
-        if (ShareItems.getShareItemsInstance() != null && ShareItems.getShareItemsInstance().isShareStartedValue()) {
-            CommonUtils.showToast(NextActivity.this, getResources().getString(R.string.BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG));
-            return true;
-        }
-        return false;
     }
 
     public void fillAccountHolder() {
@@ -157,6 +164,7 @@ public class NextActivity extends AppCompatActivity implements
         screenShotMainLayout = findViewById(R.id.screenShotMainLayout);
         screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
         screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
+        contentFrame = findViewById(R.id.content_frame);
         TABS = getResources().getStringArray(R.array.tab_name);
         setShapes();
 
@@ -165,10 +173,10 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public void setShapes() {
-        screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Tomato, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
-        screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LightGreen, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+        screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Red, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 4));
+        screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumSeaGreen, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 4));
     }
 
     private void setStatusBarTransparent() {
@@ -195,8 +203,10 @@ public class NextActivity extends AppCompatActivity implements
             for (int i = 0; i < TABS.length; i++) {
                 bottomTabLayout.addTab(bottomTabLayout.newTab());
                 TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
-                if (tab != null)
+                if (tab != null) {
                     tab.setCustomView(getTabView(i));
+                    tab.setText(TABS[i]);
+                }
             }
         }
     }
@@ -211,7 +221,6 @@ public class NextActivity extends AppCompatActivity implements
     public void onStart() {
         super.onStart();
         onPausedInd = false;
-        Log.i("FragNavController frag", "  >>FragNavController current fraf:" + mNavController.getCurrentFrag().toString());
     }
 
     @Override
@@ -376,7 +385,8 @@ public class NextActivity extends AppCompatActivity implements
         switch (index) {
 
             case FragNavController.TAB1:
-                return new FeedFragment();
+                feedFragment = new FeedFragment();
+                return feedFragment;
             case FragNavController.TAB2:
                 sharePostFragment = new SharePostFragment();
                 return sharePostFragment;
@@ -401,6 +411,4 @@ public class NextActivity extends AppCompatActivity implements
 
         getSupportActionBar().setTitle(title);
     }
-
-
 }

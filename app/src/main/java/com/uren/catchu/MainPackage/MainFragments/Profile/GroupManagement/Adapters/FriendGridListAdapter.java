@@ -19,13 +19,13 @@ import com.uren.catchu.Singleton.SelectedFriendList;
 import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+
 public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAdapter.MyViewHolder> {
     FriendList friendList;
     View view;
     LayoutInflater layoutInflater;
     Context context;
-    //TextView participantCntTv;
-    //Activity activity;
     GradientDrawable imageShape;
     GradientDrawable deleteShape;
     ReturnCallback returnCallback;
@@ -35,7 +35,6 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         this.friendList = friendList;
         this.context = context;
         this.returnCallback = returnCallback;
-        //activity = (Activity) context;
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
         deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
@@ -93,18 +92,16 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         public void setData(UserProfileProperties selectedFriend, int position) {
             this.position = position;
             this.selectedFriend = selectedFriend;
-            setUserName();
-            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                    selectedFriend.getName(), shortUserNameTv, specialProfileImgView);
+            setProfileName();
+            UserDataUtil.setProfilePicture2(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, specialProfileImgView);
         }
 
-        private void setUserName() {
-            String username = selectedFriend.getName();
-
-            if (username.trim().length() > 16) {
-                username = username.trim().substring(0, 13) + "...";
-            }
-            this.userNameSurname.setText(username);
+        public void setProfileName(){
+            if(selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
+                UserDataUtil.setName(selectedFriend.getName(), userNameSurname);
+            else if(selectedFriend.getUsername() != null && !selectedFriend.getUsername().isEmpty())
+                UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), userNameSurname);
         }
     }
 

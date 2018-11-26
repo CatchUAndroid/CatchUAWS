@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
@@ -39,6 +38,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -46,9 +46,9 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubActivities.ImageActivity;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageViewFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -235,16 +235,16 @@ public class PostHelper {
             SingletonPostItem.getInstance().setMedia(media);
 
             if (media.getType().equals(IMAGE_TYPE)) {
-                Intent intent = new Intent(activity, ImageActivity.class);
-                activity.startActivity(intent);
+
+                if(mfragmentNavigation != null){
+                    mfragmentNavigation.pushFragment(new PostImageViewFragment());
+                }
+
             } else if (media.getType().equals(VIDEO_TYPE)) {
 
                 if(mfragmentNavigation != null){
                     mfragmentNavigation.pushFragment(new PostVideoPlayFragment());
                 }
-
-                /*Intent intent = new Intent(activity, VideoActivity.class);
-                activity.startActivity(intent);*/
             } else {
                 Log.e("info", "unknown media type detected");
             }
@@ -344,14 +344,13 @@ public class PostHelper {
                         LatLng latLng = new LatLng(post.getLocation().getLatitude().doubleValue(),
                                 post.getLocation().getLongitude().doubleValue());
 
-                        Marker marker;
                         MarkerOptions options = new MarkerOptions().position(latLng);
-                        Bitmap bitmap = createUserBitmap(context);
+                        Bitmap bitmap = BitmapConversion.createUserMapBitmap(context, imgProfilePic);
                         if (bitmap != null) {
                             options.title(post.getUser().getName());
                             options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
                             options.anchor(0.5f, 0.907f);
-                            marker = mMap.addMarker(options);
+                            mMap.addMarker(options);
                             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
                             if (post.getDistance().intValue() > 10) {
@@ -412,65 +411,7 @@ public class PostHelper {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 mapRipple = new MapRipple(mMap, latLng, mAct);
             }
-
         }
-
-        private Bitmap createUserBitmap(Context context) {
-            Bitmap result = null;
-            try {
-                result = Bitmap.createBitmap(dp(62, context), dp(76, context), Bitmap.Config.ARGB_8888);
-                result.eraseColor(Color.TRANSPARENT);
-                Canvas canvas = new Canvas(result);
-                Drawable drawable = context.getResources().getDrawable(R.mipmap.livepin);
-                drawable.setBounds(0, 0, dp(62, context), dp(76, context));
-                drawable.draw(canvas);
-
-                Paint roundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                RectF bitmapRect = new RectF();
-                canvas.save();
-
-                Bitmap bitmap;
-                //Bitmap bitmap = BitmapFactory.decodeFile(path.toString()); /*generate bitmap here if your image comes from any url*/
-                if (imgProfilePic.getDrawable() != null) {
-                    bitmap = ((BitmapDrawable) imgProfilePic.getDrawable()).getBitmap();
-                } else {
-                    bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.user_icon);
-                }
-
-                if (bitmap != null) {
-                    BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-                    Matrix matrix = new Matrix();
-                    float scale = dp(52, context) / (float) bitmap.getWidth();
-                    matrix.postTranslate(dp(5, context), dp(5, context));
-                    matrix.postScale(scale, scale);
-                    roundPaint.setShader(shader);
-                    shader.setLocalMatrix(matrix);
-                    bitmapRect.set(dp(5, context), dp(5, context), dp(52 + 5, context), dp(52 + 5, context));
-                    canvas.drawRoundRect(bitmapRect, dp(26, context), dp(26, context), roundPaint);
-                }
-                canvas.restore();
-                try {
-                    canvas.setBitmap(null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (
-                    Throwable t)
-
-            {
-                t.printStackTrace();
-            }
-            return result;
-        }
-
-        public int dp(float value, Context context) {
-            if (value == 0) {
-                return 0;
-            }
-            return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
-        }
-
-
     }
 
     public static class AddComment {

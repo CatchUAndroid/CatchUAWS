@@ -35,6 +35,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 
 public class SettingsFragment extends BaseFragment {
@@ -68,9 +69,9 @@ public class SettingsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
         ButterKnife.bind(this, mView);
-
         init();
         setDefaultUIValues();
         addListeners();
@@ -93,7 +94,7 @@ public class SettingsFragment extends BaseFragment {
 
         if (AccountHolderInfo.getInstance().getUser() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount().booleanValue())
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount())
             privateAccSwitch.setChecked(true);
         else
             privateAccSwitch.setChecked(false);
@@ -105,7 +106,6 @@ public class SettingsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -169,33 +169,13 @@ public class SettingsFragment extends BaseFragment {
 
     public void startFacebookFriendsFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new FacebookFriendsFragment(new OnLoadedListener() {
-                @Override
-                public void onLoaded() {
-
-                }
-
-                @Override
-                public void onError(String message) {
-
-                }
-            }, true), ANIMATE_LEFT_TO_RIGHT);
+            mFragmentNavigation.pushFragment(new FacebookFriendsFragment(true), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
     public void startContactFriendsFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ContactsFragment(new OnLoadedListener() {
-                @Override
-                public void onLoaded() {
-
-                }
-
-                @Override
-                public void onError(String message) {
-
-                }
-            }, true), ANIMATE_LEFT_TO_RIGHT);
+            mFragmentNavigation.pushFragment(new ContactsFragment(true), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 

@@ -7,6 +7,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import catchu.model.ProviderList;
 import catchu.model.UserListResponse;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
 public class ProviderListRequestProcess extends AsyncTask<Void, Void, UserListResponse> {
 
     private OnEventListener<UserListResponse> mCallBack;
@@ -29,7 +31,11 @@ public class ProviderListRequestProcess extends AsyncTask<Void, Void, UserListRe
 
         try {
             UserListResponse userListResponse = (UserListResponse) instance.client.usersProvidersPost(userid, token, providerList);
-            return userListResponse;
+
+            if (userListResponse.getError().getCode().intValue() == RESPONSE_OK)
+                return userListResponse;
+            else
+                return null;
 
         } catch (Exception e) {
             mException = e;

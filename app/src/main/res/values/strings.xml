@@ -34,7 +34,7 @@
     <string name="addPersonToGroup">Add Friend to Group</string>
     <string name="selectLeastOneFriend">You must choose at least 1 person!</string>
     <string name="selectLeastOneGroup">You must choose at least 1 group!</string>
-    <string name="addFriendFirst">To create a group, you must first add a friend!</string>
+    <string name="addFriendFirst">To create a group, you must have at least one follower!</string>
     <string name="addGroupName">Add group name</string>
     <string name="pleaseWriteGroupName">The group name cannot be empty!</string>
     <string name="deviceHasNoCamera">Device has no camera!</string>
@@ -268,8 +268,18 @@
     <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">You can find facebook friends who are using Catchu</string>
     <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">You must grant access to your contacts to see your friends</string>
     <string name="SOMETHING_WENT_WRONG">Something Went Wrong!</string>
-
+    <string name="GOT_IT">GOT IT</string>
     <string name="MY_GROUPS_POSTS">My Groups Posts</string>
+    <string name="CHECK_YOUR_INTERNET_CONNECTION">Please check your network connection!</string>
+    <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Try again after checking your internet connection.</string>
+    <string name="TRY_AGAIN">Try Again</string>
+    <string name="SKIP">SKIP</string>
+    <string name="FORGOT_YOUR_PASSWORD">Forgot Your Password?</string>
+    <string name="COMMENTS">Comments</string>
+    <string name="ADVANCED_SETTINGS">Advanced Settings</string>
+    <string name="SEND">Send</string>
+    <string name="LET_POST_COMMENT">Allow comment</string>
+    <string name="THANKS_FOR_FEEDBACK">Thank you for your feedback. We will try to take action as soon as possible.</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
@@ -297,6 +307,17 @@
     <string name="feedViewTypeList">List</string>
     <string name="myPosts">My Posts</string>
     <string name="caughtPosts">Caught Posts</string>
+
+    <!-- App introduction variables-->
+    <string name="SOCIAL_INTERACTION">Social Interaction</string>
+    <string name="DIGITAL_FOOTPRINT">Digital Footprint</string>
+    <string name="TIME_CAPSULE">Time Capsule</string>
+    <string name="IMMORTAL_NODES">Immortal Nodes</string>
+
+    <string name="SOCIAL_INTERACTION_DESC">A more powerful local interaction by combining location and sharing</string>
+    <string name="DIGITAL_FOOTPRINT_DESC">Leave your digital tracks instead of physical tracks and wait for them to be discovered</string>
+    <string name="TIME_CAPSULE_DESC">Leave a message where you want it to come in the future. Maybe tomorrow maybe 20 years.</string>
+    <string name="IMMORTAL_NODES_DESC">Leave notes that won\'t get lost in the location. When you wish, the person you wish, it will appear in that location</string>
 
 
 </resources>

@@ -592,6 +592,9 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
         latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
     }
 
+    public void scrollRecViewInitPosition(){
+        recyclerView.smoothScrollToPosition(0);
+    }
 
     @Override
     public void onClick(View view) {

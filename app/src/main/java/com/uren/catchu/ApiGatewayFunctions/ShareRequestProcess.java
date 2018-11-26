@@ -7,6 +7,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import catchu.model.PostRequest;
 import catchu.model.PostResponse;
 
+import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
 public class ShareRequestProcess extends AsyncTask<Void, Void, PostResponse> {
 
     private OnEventListener<PostResponse> mCallBack;
@@ -27,7 +29,11 @@ public class ShareRequestProcess extends AsyncTask<Void, Void, PostResponse> {
 
         try {
             PostResponse postResponse = (PostResponse) instance.client.postsPostidPost(" ", token, postRequest);
-            return postResponse;
+
+            if (postResponse.getError().getCode().intValue() == RESPONSE_OK)
+                return postResponse;
+            else
+                return null;
 
         } catch (Exception e) {
             mException = e;

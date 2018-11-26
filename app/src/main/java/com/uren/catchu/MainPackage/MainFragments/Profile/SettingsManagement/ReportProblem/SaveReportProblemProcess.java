@@ -1,26 +1,20 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.ReportProblem;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Models.ProblemNotifyModel;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,15 +24,9 @@ import java.util.List;
 
 import catchu.model.BaseResponse;
 import catchu.model.BucketUploadResponse;
-import catchu.model.GroupRequest;
-import catchu.model.GroupRequestGroupParticipantArrayItem;
-import catchu.model.GroupRequestResult;
-import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.Media;
 import catchu.model.Report;
-import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.CREATE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_BUG;
 
@@ -55,6 +43,7 @@ public class SaveReportProblemProcess {
     int imageCount = 0;
     int bucketIndex = 0;
     UploadImageToS3 uploadImageToS3 = null;
+    SignedUrlGetProcess signedUrlGetProcess = null;
 
     public SaveReportProblemProcess(List<PhotoSelectUtil> photoSelectUtilList,
                                     String message, String userid, CompleteCallback completeCallback) {
@@ -83,7 +72,7 @@ public class SaveReportProblemProcess {
 
     private void startSaveReportImagesToS3(String token) {
 
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+        signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 commonS3BucketResult = (BucketUploadResponse) object;
@@ -93,6 +82,7 @@ public class SaveReportProblemProcess {
             @Override
             public void onFailure(Exception e) {
                 completeCallback.onFailed(e);
+                signedUrlGetProcess.cancel(true);
             }
 
             @Override

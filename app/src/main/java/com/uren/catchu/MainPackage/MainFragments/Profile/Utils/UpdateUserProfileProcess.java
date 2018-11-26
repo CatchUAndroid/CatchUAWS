@@ -33,7 +33,7 @@ public class UpdateUserProfileProcess {
     UserProfileProperties userProfileProperties;
     Bitmap bitmap;
     ProgressDialogUtil progressDialogUtil;
-    //ProgressDialog mProgressDialog;
+    boolean dialogShowed;
 
     public UpdateUserProfileProcess(Context context, ServiceCompleteCallback serviceCompleteCallback, boolean profilPicChanged,
                                     UserProfileProperties userProfileProperties, Bitmap bitmap){
@@ -43,7 +43,6 @@ public class UpdateUserProfileProcess {
         this.userProfileProperties = userProfileProperties;
         this.bitmap = bitmap;
         progressDialogUtil = new ProgressDialogUtil(context, context.getResources().getString(R.string.UPDATING), false);
-        progressDialogUtil.dialogShow();
 
         if(this.profilPicChanged && bitmap != null)
             uploadMediaToS3();
@@ -56,6 +55,10 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
+                if(!dialogShowed){
+                    progressDialogUtil.dialogShow();
+                    dialogShowed = true;
+                }
                 startUploadMediaToS3(token);
             }
         });
@@ -123,10 +126,13 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
+                if(!dialogShowed){
+                    progressDialogUtil.dialogShow();
+                    dialogShowed = true;
+                }
                 startUpdateUserProfile(token);
             }
         });
-
     }
 
     private void startUpdateUserProfile(String token) {
@@ -160,7 +166,8 @@ public class UpdateUserProfileProcess {
     }
 
     private void updateAccountHolderInfo(UserProfile up) {
-        AccountHolderInfo.getInstance().getUser().getUserInfo().setName(up.getUserInfo().getName());
+        AccountHolderInfo.getInstance().getUser().setUserInfo(up.getUserInfo());
+        /*AccountHolderInfo.getInstance().getUser().getUserInfo().setName(up.getUserInfo().getName());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setUsername(up.getUserInfo().getUsername());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setWebsite(up.getUserInfo().getWebsite());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setBirthday(up.getUserInfo().getBirthday());
@@ -168,6 +175,6 @@ public class UpdateUserProfileProcess {
         AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setGender(up.getUserInfo().getGender());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setProfilePhotoUrl(up.getUserInfo().getProfilePhotoUrl());
-        AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());
+        AccountHolderInfo.getInstance().getUser().getUserInfo().setPhone(up.getUserInfo().getPhone());*/
     }
 }

@@ -166,6 +166,7 @@ public class ProfileFragment extends BaseFragment
 
     @Override
     public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
         super.onStart();
     }
 
@@ -370,7 +371,7 @@ public class ProfileFragment extends BaseFragment
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getName());
                 txtName.setText(user.getUserInfo().getName());
-            }else if(user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()){
+            } else if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getUsername());
                 txtName.setText(user.getUserInfo().getUsername());
             }
@@ -508,7 +509,7 @@ public class ProfileFragment extends BaseFragment
                     @Override
                     public void onFailed(Exception e) {
 
-                        if(getContext() != null) {
+                        if (getContext() != null) {
                             DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
@@ -517,7 +518,6 @@ public class ProfileFragment extends BaseFragment
                         }
                     }
                 });
-
 
 
     }
@@ -538,8 +538,7 @@ public class ProfileFragment extends BaseFragment
 
     private void orderGroupByName(GroupRequestResult groupRequestResult) {
         //order
-        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>()
-        {
+        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>() {
             @Override
             public int compare(GroupRequestResultResultArrayItem o1, GroupRequestResultResultArrayItem o2) {
                 return o1.getName().compareToIgnoreCase(o2.getName());
@@ -604,7 +603,7 @@ public class ProfileFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
             //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
 
     }
@@ -634,13 +633,13 @@ public class ProfileFragment extends BaseFragment
 
     private void startPendingRequestFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new PendingRequestsFragment(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new PendingRequestsFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 
     private void startExplorePeopleFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ExplorePeopleFragment(), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new ExplorePeopleFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 

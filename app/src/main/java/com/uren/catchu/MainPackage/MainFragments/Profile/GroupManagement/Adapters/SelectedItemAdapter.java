@@ -20,6 +20,8 @@ import com.uren.catchu.Singleton.SelectedFriendList;
 
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+
 public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapter.MyViewHolder> {
 
     View view;
@@ -104,9 +106,16 @@ public class SelectedItemAdapter extends RecyclerView.Adapter<SelectedItemAdapte
         public void setData(UserProfileProperties selectedFriend, int position) {
             this.position = position;
             this.selectedFriend = selectedFriend;
-            UserDataUtil.setName(selectedFriend.getName(), specialNameTextView);
-            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                    selectedFriend.getName(), shortenTextView, specialPictureImgView);
+            setProfileName();
+            UserDataUtil.setProfilePicture2(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), selectedFriend.getUsername(), shortenTextView, specialPictureImgView);
+        }
+
+        public void setProfileName(){
+            if(selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
+                UserDataUtil.setName(selectedFriend.getName(), specialNameTextView);
+            else if(selectedFriend.getUsername() != null && !selectedFriend.getUsername().isEmpty())
+                UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), specialNameTextView);
         }
     }
 

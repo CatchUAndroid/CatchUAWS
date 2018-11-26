@@ -7,6 +7,7 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
@@ -17,7 +18,6 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import catchu.model.UserProfileProperties;
 
@@ -47,7 +47,6 @@ public class SettingOperation {
         AccountHolderInfo.reset();
         AccountHolderFacebookFriends.reset();
         SelectedFriendList.reset();
-        ShareItems.reset();
 
         SingletonPostItem.reset();
         SingletonSinglePost.reset();
@@ -61,7 +60,6 @@ public class SettingOperation {
                 @Override
                 public void yesClick() {
                     updateUserPrivacy(false, context, privateAccSwitch);
-                    privateAccSwitch.setChecked(false);
                 }
 
                 @Override
@@ -74,7 +72,6 @@ public class SettingOperation {
                 @Override
                 public void yesClick() {
                     updateUserPrivacy(true, context, privateAccSwitch);
-                    privateAccSwitch.setChecked(true);
                 }
 
                 @Override
@@ -85,7 +82,7 @@ public class SettingOperation {
         }
     }
 
-    public static void updateUserPrivacy(boolean privacyValue, Context context, final Switch privateAccSwitch) {
+    public static void updateUserPrivacy(final boolean privacyValue, final Context context, final Switch privateAccSwitch) {
         UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
         userProfileProperties.setIsPrivateAccount(privacyValue);
 
@@ -93,11 +90,18 @@ public class SettingOperation {
             @Override
             public void onSuccess() {
                 privateAccSwitch.setEnabled(true);
+                privateAccSwitch.setChecked(privacyValue);
             }
 
             @Override
             public void onFailed(Exception e) {
                 privateAccSwitch.setEnabled(true);
+                DialogBoxUtil.showInfoDialogBox(context, context.getResources().getString(R.string.SOMETHING_WENT_WRONG), null, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+
+                    }
+                });
             }
         }, false, userProfileProperties, null);
     }

@@ -39,6 +39,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCall
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.SpeedyLinearLayoutManager;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -73,7 +74,8 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     View mView;
     FeedAdapter feedAdapter;
-    LinearLayoutManager mLayoutManager;
+    //LinearLayoutManager mLayoutManager;
+    SpeedyLinearLayoutManager speedyLinearLayoutManager;
 
     @BindView(R.id.rv_feed)
     CustomRecyclerView recyclerView;
@@ -179,8 +181,11 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setLayoutManager() {
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
+        speedyLinearLayoutManager = new SpeedyLinearLayoutManager(getActivity(), SpeedyLinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(speedyLinearLayoutManager);
+
+        //mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        //recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new FeedItemAnimator());
     }
 
@@ -223,9 +228,9 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
                 if (dy > 0) //check for scroll down
                 {
-                    visibleItemCount = mLayoutManager.getChildCount();
-                    totalItemCount = mLayoutManager.getItemCount();
-                    pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = speedyLinearLayoutManager.getChildCount();
+                    totalItemCount = speedyLinearLayoutManager.getItemCount();
+                    pastVisibleItems = speedyLinearLayoutManager.findFirstVisibleItemPosition();
 
                     Log.i("visibleItemCount", String.valueOf(visibleItemCount));
                     Log.i("totalItemCount", String.valueOf(totalItemCount));
@@ -576,6 +581,12 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
     }
 
+    public void scrollRecViewInitPosition() {
+        SpeedyLinearLayoutManager linearLayoutManager = (SpeedyLinearLayoutManager) recyclerView.getLayoutManager();
+        linearLayoutManager.smoothScrollToPosition(recyclerView, new RecyclerView.State(),0);
+
+        //recyclerView.smoothScrollToPosition(0);
+    }
 
     @Override
     public void onClick(View view) {

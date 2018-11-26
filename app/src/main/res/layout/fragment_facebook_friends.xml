@@ -89,12 +89,14 @@
 
             <Button
                 android:id="@+id/connectFacebookButton"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp"
                 android:text="@string/CONNECT_FACEBOOK"
-                android:textColor="@color/White"/>
+                android:textColor="@color/White"
+                android:textSize="12sp" />
 
         </RelativeLayout>
 

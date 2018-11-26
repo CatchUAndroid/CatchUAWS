@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
@@ -31,6 +33,7 @@ import butterknife.ButterKnife;
 import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 @SuppressLint("ValidFragment")
 public class EditGroupNameFragment extends BaseFragment{
@@ -80,6 +83,12 @@ public class EditGroupNameFragment extends BaseFragment{
             setButtonShapes();
         }
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     private void setGroupVariables() {

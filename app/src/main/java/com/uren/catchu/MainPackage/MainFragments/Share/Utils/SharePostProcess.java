@@ -18,7 +18,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.Share.ShareItems;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,9 +45,15 @@ public class SharePostProcess {
     int videoCount = 0;
     int totalMediaCount = 0;
     PostRequest postRequest;
+    ShareItems shareItems;
+    SignedUrlGetProcess signedUrlGetProcess = null;
+    UploadImageToS3 uploadImageToS3 = null;
+    UploadVideoToS3 uploadVideoToS3 = null;
+    UploadImageToS3 uploadThumbnailToS3 = null;
 
-    public SharePostProcess(Context context, ServiceCompleteCallback serviceCompleteCallback) {
+    public SharePostProcess(Context context, ShareItems shareItems,ServiceCompleteCallback serviceCompleteCallback) {
         this.context = context;
+        this.shareItems = shareItems;
         this.serviceCompleteCallback = serviceCompleteCallback;
         getImageAndVideoCount();
 
@@ -58,8 +64,8 @@ public class SharePostProcess {
     }
 
     private void getImageAndVideoCount() {
-        videoCount = ShareItems.getInstance().getVideoShareItemBoxes().size();
-        imageCount = ShareItems.getInstance().getImageShareItemBoxes().size();
+        videoCount = shareItems.getVideoShareItemBoxes().size();
+        imageCount = shareItems.getImageShareItemBoxes().size();
         totalMediaCount = imageCount + videoCount;
     }
 
@@ -73,21 +79,21 @@ public class SharePostProcess {
     }
 
     private void startUploadMediaToS3(String token) {
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+        signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
-                ShareItems.getInstance().setBucketUploadResponse(commonS3BucketResult);
+                shareItems.setBucketUploadResponse(commonS3BucketResult);
 
                 int counter = 0;
-                for (final ImageShareItemBox imageShareItemBox : ShareItems.getInstance().getImageShareItemBoxes()) {
+                for (final ImageShareItemBox imageShareItemBox : shareItems.getImageShareItemBoxes()) {
                     BucketUpload bucketUpload = commonS3BucketResult.getImages().get(counter);
                     uploadImages(bucketUpload, imageShareItemBox);
                     counter++;
                 }
 
                 counter = 0;
-                for (final VideoShareItemBox videoShareItemBox : ShareItems.getInstance().getVideoShareItemBoxes()) {
+                for (final VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
                     BucketUpload bucketUpload = commonS3BucketResult.getVideos().get(counter);
                     uploadVideos(bucketUpload, videoShareItemBox);
                     uploadThumbnailImage(bucketUpload, videoShareItemBox);
@@ -101,6 +107,7 @@ public class SharePostProcess {
                 Log.i("Info", "Paylasim Exception yedi2:" + e.getMessage());
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
                 serviceCompleteCallback.onFailed(e);
+                signedUrlGetProcess.cancel(true);
             }
 
             @Override
@@ -127,7 +134,7 @@ public class SharePostProcess {
         if (photoBitmap == null)
             return;
 
-        UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+        uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
@@ -141,20 +148,23 @@ public class SharePostProcess {
                             media.setType(IMAGE_TYPE);
                             media.setThumbnail(bucketUpload.getThumbnailUrl());
                             media.setUrl(bucketUpload.getDownloadUrl());
-                            ShareItems.getInstance().getPost().getAttachments().add(media);
+                            shareItems.getPost().getAttachments().add(media);
                             checkAllItemsUploaded();
                         } else {
                             imageShareItemBox.setUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
+                            uploadImageToS3.cancel(true);
                         }
                     } else {
                         imageShareItemBox.setUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
+                        uploadImageToS3.cancel(true);
                     }
                 } catch (IOException e) {
                     imageShareItemBox.setUploaded(false);
                     serviceCompleteCallback.onFailed(e);
+                    uploadImageToS3.cancel(true);
                 }
             }
 
@@ -162,6 +172,7 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 imageShareItemBox.setUploaded(false);
                 serviceCompleteCallback.onFailed(e);
+                uploadImageToS3.cancel(true);
             }
 
             @Override
@@ -172,7 +183,7 @@ public class SharePostProcess {
     }
 
     private void uploadVideos(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
-        UploadVideoToS3 uploadVideoToS3 = new UploadVideoToS3(new OnEventListener() {
+        uploadVideoToS3 = new UploadVideoToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
@@ -186,20 +197,23 @@ public class SharePostProcess {
                             media.setType(VIDEO_TYPE);
                             media.setThumbnail(bucketUpload.getThumbnailUrl());
                             media.setUrl(bucketUpload.getDownloadUrl());
-                            ShareItems.getInstance().getPost().getAttachments().add(media);
+                            shareItems.getPost().getAttachments().add(media);
                             checkAllItemsUploaded();
                         } else {
                             videoShareItemBox.setVideoUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
+                            uploadVideoToS3.cancel(true);
                         }
                     } else {
                         videoShareItemBox.setVideoUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
+                        uploadVideoToS3.cancel(true);
                     }
                 } catch (IOException e) {
                     videoShareItemBox.setVideoUploaded(false);
                     serviceCompleteCallback.onFailed(e);
+                    uploadVideoToS3.cancel(true);
                 }
             }
 
@@ -207,6 +221,7 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 videoShareItemBox.setVideoUploaded(false);
                 serviceCompleteCallback.onFailed(e);
+                uploadVideoToS3.cancel(true);
             }
 
             @Override
@@ -218,7 +233,7 @@ public class SharePostProcess {
     }
 
     public void uploadThumbnailImage(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
-        UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+        uploadThumbnailToS3 = new UploadImageToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
@@ -228,6 +243,7 @@ public class SharePostProcess {
                             videoShareItemBox.setThumbnailImgUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
+                            uploadThumbnailToS3.cancel(true);
                         } else {
                             videoShareItemBox.setThumbnailImgUploaded(true);
                             checkAllItemsUploaded();
@@ -235,10 +251,12 @@ public class SharePostProcess {
                     } else {
                         videoShareItemBox.setThumbnailImgUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
+                        uploadThumbnailToS3.cancel(true);
                     }
                 } catch (IOException e) {
                     videoShareItemBox.setThumbnailImgUploaded(false);
                     serviceCompleteCallback.onFailed(e);
+                    uploadThumbnailToS3.cancel(true);
                 }
             }
 
@@ -246,25 +264,26 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 videoShareItemBox.setThumbnailImgUploaded(false);
                 serviceCompleteCallback.onFailed(e);
+                uploadThumbnailToS3.cancel(true);
             }
 
             @Override
             public void onTaskContinue() {
             }
         }, videoShareItemBox.getVideoSelectUtil().getVideoBitmap(), bucketUpload.getThumbnailUploadUrl());
-        uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        uploadThumbnailToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void checkAllItemsUploaded() {
-        if (ShareItems.getInstance() != null && ShareItems.getInstance().getImageShareItemBoxes() != null && ShareItems.getInstance().getImageShareItemBoxes().size() > 0) {
-            for (ImageShareItemBox imageShareItemBox : ShareItems.getInstance().getImageShareItemBoxes()) {
+        if (shareItems != null && shareItems.getImageShareItemBoxes() != null && shareItems.getImageShareItemBoxes().size() > 0) {
+            for (ImageShareItemBox imageShareItemBox : shareItems.getImageShareItemBoxes()) {
                 if (!imageShareItemBox.isUploaded())
                     return;
             }
         }
 
-        if (ShareItems.getInstance() != null && ShareItems.getInstance().getVideoShareItemBoxes() != null && ShareItems.getInstance().getVideoShareItemBoxes().size() > 0) {
-            for (VideoShareItemBox videoShareItemBox : ShareItems.getInstance().getVideoShareItemBoxes()) {
+        if (shareItems != null && shareItems.getVideoShareItemBoxes() != null && shareItems.getVideoShareItemBoxes().size() > 0) {
+            for (VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
 
                 if (!videoShareItemBox.isVideoUploaded())
                     return;
@@ -287,7 +306,7 @@ public class SharePostProcess {
 
     private List<User> getParticipantList() {
         List<User> userList = new ArrayList<>();
-        if (ShareItems.getInstance().getSelectedShareType() == SHARE_TYPE_CUSTOM) {
+        if (shareItems.getSelectedShareType() == SHARE_TYPE_CUSTOM) {
             for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
                 User user = new User();
                 user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
@@ -301,11 +320,11 @@ public class SharePostProcess {
 
     private void startSaveShareItemsToNeoJ(String token) {
         postRequest = new PostRequest();
-        ShareItems.getInstance().getPost().setPrivacyType(ShareItems.getInstance().getSelectedShareType());
-        ShareItems.getInstance().getPost().setAllowList(getParticipantList());
-        ShareItems.getInstance().getPost().setGroupid(ShareItems.getInstance().getSelectedGroup().getGroupid());
+        shareItems.getPost().setPrivacyType(shareItems.getSelectedShareType());
+        shareItems.getPost().setAllowList(getParticipantList());
+        shareItems.getPost().setGroupid(shareItems.getSelectedGroup().getGroupid());
         setShareItemUser();
-        postRequest.setPost(ShareItems.getInstance().getPost());
+        postRequest.setPost(shareItems.getPost());
 
         PostRequestProcess postRequestProcess = new PostRequestProcess(new OnEventListener() {
             @Override
@@ -334,6 +353,6 @@ public class SharePostProcess {
         user.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
         user.setUserid(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid());
         user.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
-        ShareItems.getInstance().getPost().setUser(user);
+        shareItems.getPost().setUser(user);
     }
 }

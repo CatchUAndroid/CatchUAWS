@@ -86,7 +86,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:padding="17dp"
                 android:src="@mipmap/icon_tick_white"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </RelativeLayout>
 
