@@ -583,7 +583,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     public void scrollRecViewInitPosition() {
         SpeedyLinearLayoutManager linearLayoutManager = (SpeedyLinearLayoutManager) recyclerView.getLayoutManager();
-        linearLayoutManager.smoothScrollToPosition(recyclerView, new RecyclerView.State(),0);
+        linearLayoutManager.smoothScrollToPosition(recyclerView, null,0);
 
         //recyclerView.smoothScrollToPosition(0);
     }

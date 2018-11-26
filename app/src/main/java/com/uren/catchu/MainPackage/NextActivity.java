@@ -35,6 +35,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.List;
 import java.util.Stack;
 
 import butterknife.ButterKnife;
@@ -120,17 +121,26 @@ public class NextActivity extends AppCompatActivity implements
         fillAccountHolder();
     }
 
-    public void checkFeedFragmentReselected(TabLayout.Tab tab){
-        if(tab.getPosition() == FragNavController.TAB1 && feedFragment != null){
+    public void checkFeedFragmentReselected(TabLayout.Tab tab) {
+        if (tab.getPosition() == FragNavController.TAB1 && feedFragment != null) {
 
+            int selectedTabPosition = feedFragment.getSelectedTabPosition();
+            List<Fragment> fragments = feedFragment.getFragmentManager().getFragments();
             Fragment fragment = feedFragment.getFragmentManager().getFragments().
                     get(feedFragment.getSelectedTabPosition());
 
-            if(fragment instanceof FeedPublicFragment)
-                ((FeedPublicFragment) fragment).scrollRecViewInitPosition();
-            else if(fragment instanceof FeedCatchedFragment){
-                ((FeedCatchedFragment) fragment).scrollRecViewInitPosition();
+            for (int i = 0; i < fragments.size(); i++) {
+                if (fragments.get(i) instanceof FeedPublicFragment && selectedTabPosition == 0) {
+                    ((FeedPublicFragment) fragments.get(i)).scrollRecViewInitPosition();
+                }
+                if (fragments.get(i) instanceof FeedCatchedFragment && selectedTabPosition == 1) {
+                    ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
+                }
+                if (fragments.get(i) instanceof FeedPublicFragment && selectedTabPosition == 1) {
+                    ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
+                }
             }
+
         }
     }
 
@@ -138,7 +148,7 @@ public class NextActivity extends AppCompatActivity implements
         if (tab.getPosition() != FragNavController.TAB2) {
             fragmentHistory.push(tab.getPosition());
             switchAndUpdateTabSelection(tab.getPosition());
-        } else{
+        } else {
 
             sharePostFragment = new SharePostFragment();
             Stack<Fragment> fragmentStack = new Stack<>();
@@ -254,7 +264,7 @@ public class NextActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
 
-        if(mNavController != null && mNavController.getCurrentFrag() != null) {
+        if (mNavController != null && mNavController.getCurrentFrag() != null) {
             if (FragmentTabHiddenUtil.isFragmentInHiddenList(mNavController.getCurrentFrag().getClass().getName()) &&
                     bottomTabLayout != null)
                 bottomTabLayout.setVisibility(View.VISIBLE);

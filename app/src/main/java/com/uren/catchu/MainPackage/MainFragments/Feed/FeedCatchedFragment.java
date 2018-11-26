@@ -37,6 +37,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCall
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.SpeedyLinearLayoutManager;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -593,7 +594,8 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
     }
 
     public void scrollRecViewInitPosition(){
-        recyclerView.smoothScrollToPosition(0);
+        SpeedyLinearLayoutManager linearLayoutManager = (SpeedyLinearLayoutManager) recyclerView.getLayoutManager();
+        linearLayoutManager.smoothScrollToPosition(recyclerView, null,0);
     }
 
     @Override
