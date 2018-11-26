@@ -21,494 +21,340 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/htab_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="top"
-                android:background="?attr/colorPrimary"
-                android:minHeight="?attr/actionBarSize"
-                app:elevation="@dimen/default_elevation"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-                <TextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center|top"
-                    android:fontFamily="@font/alike_angular"
-                    android:gravity="top"
-                    android:text="@string/profile"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-
-                <RelativeLayout
-                    android:id="@+id/notification"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:clickable="true"
-                    android:gravity="center">
-
-                    <RelativeLayout
-                        android:id="@+id/menuLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                            android:id="@+id/menuImgv"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:layout_gravity="end"
-                            android:layout_marginLeft="10dp"
-                            android:src="@drawable/menu_white_18dp" />
-
-                        <TextView
-                            android:id="@+id/pendReqCntTv"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentTop="true"
-                            android:background="@drawable/circle_text_bg"
-                            android:gravity="center"
-                            android:textColor="@color/white"
-                            android:textSize="9dp"
-                            android:textStyle="bold"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/backLayout"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="left"
-                        android:visibility="gone">
-
-                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                            android:id="@+id/imgBackBtn"
-                            android:layout_width="?attr/actionBarSize"
-                            android:layout_height="?attr/actionBarSize"
-                            android:paddingBottom="8dp"
-                            android:paddingRight="20dp"
-                            android:paddingTop="8dp"
-                            android:src="@mipmap/icon_back_white" />
-
-                    </RelativeLayout>
-
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/notification2"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:clickable="true"
-                    android:gravity="center">
-
-                    <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                        android:id="@+id/imgUserEdit"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="10dp"
-                        android:src="@mipmap/user_edit" />
-
-                </RelativeLayout>
-
-            </android.support.v7.widget.Toolbar>
-
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/clearWhite">
 
                 <LinearLayout
-                    android:id="@+id/llContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/llProfile"
+                    <RelativeLayout
+                        android:id="@+id/llContent2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="?attr/colorPrimary"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:orientation="vertical"
-                        android:paddingBottom="24dp"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="24dp"
-                        android:paddingTop="24dp"
-                        app:layout_collapseMode="parallax">
+                        android:layout_height="350dp">
 
-                        <LinearLayout
-                            android:id="@+id/llUserInfo"
+                        <ImageView
+                            android:id="@+id/imgProfile2"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clipChildren="false">
+                            android:layout_height="match_parent"
+                            android:fitsSystemWindows="false"
+                            android:background="@drawable/gradient_profile"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/default_profile_image" />
 
 
-                            <RelativeLayout
-                                android:layout_width="88dp"
-                                android:layout_height="88dp"
-                                android:layout_marginRight="16dp">
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/gradient_profile"/>
 
-                                <ImageView
-                                    android:id="@+id/imgProfile"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent" />
 
-                                <TextView
-                                    android:id="@+id/txtProfile"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/White"
-                                    android:textSize="30sp"
-                                    android:textStyle="bold"
-                                    android:visibility="gone" />
+                        <android.support.v7.widget.Toolbar
+                            android:id="@+id/htab_toolbar"
+                            android:layout_width="match_parent"
+                            android:layout_height="?attr/actionBarSize"
+                            android:layout_gravity="top"
+                            android:minHeight="?attr/actionBarSize"
+                            app:elevation="@dimen/default_elevation"
+                            app:layout_collapseMode="pin"
+                            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
-                            </RelativeLayout>
-
-                            <LinearLayout
-                                android:id="@+id/llUserDetail"
+                            <TextView
+                                android:id="@+id/toolbar_title"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
+                                android:layout_gravity="center|top"
+                                android:fontFamily="@font/alike_angular"
+                                android:gravity="top"
+                                android:text="@string/profile"
+                                android:textColor="@android:color/white"
+                                android:textSize="20sp" />
 
-                                <TextView
-                                    android:id="@+id/txtName"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="#ffffff"
-                                    android:textSize="24sp" />
-
-                                <TextView
-                                    android:id="@+id/txtBio"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:text="Spor yapmayı severim, en sevdiğim spor Yüzme"
-                                    android:textColor="#ffffff"
-                                    android:textSize="15sp" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp">
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/llData"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:alpha="0"
-                            android:background="@color/black" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-
-                            <LinearLayout
-                                android:id="@+id/llFollowInfo"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="40dp"
-                                android:layout_marginRight="40dp"
-                                android:layout_marginTop="16dp"
-                                android:orientation="vertical">
-
-                                <LinearLayout
-
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center">
-
-                                    <LinearLayout
-                                        android:id="@+id/followersLayout"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/txtFollowerCnt"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="?attr/colorPrimary"
-                                            android:textSize="20sp" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/followers"
-                                            android:textColor="@color/gray"
-                                            android:textSize="15sp" />
-                                    </LinearLayout>
-
-                                    <View
-                                        android:layout_width="1dp"
-                                        android:layout_height="match_parent"
-                                        android:alpha="0.5"
-                                        android:background="@color/black" />
-
-
-                                    <LinearLayout
-                                        android:id="@+id/followingsLayout"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/txtFollowingCnt"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="?attr/colorPrimary"
-                                            android:textSize="20sp" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/followings"
-                                            android:textColor="@color/gray"
-                                            android:textSize="15sp" />
-                                    </LinearLayout>
-
-
-                                </LinearLayout>
-
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
-
-                                    android:layout_marginTop="30dp"
-                                    android:alpha="0.5"
-                                    android:background="@color/black" />
-
-                            </LinearLayout>
-
-                            <!-- Post layout -->
-                            <!--LinearLayout
-                                android:id="@+id/llPosts"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:orientation="vertical"
-                                android:visibility="gone">
-
-
-                                <LinearLayout
-                                    android:id="@+id/llMyPosts"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:layout_marginTop="20dp"
-                                    android:background="@color/red"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="My Posts -> Click here"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold" />
-
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llCatchedPosts"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:layout_marginTop="10dp"
-                                    android:background="@color/green"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="Catched Posts -> Click here"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold" />
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llMyGroups"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="200dp"
-                                    android:layout_marginTop="10dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="@string/groups"
-                                        android:textSize="17sp"
-                                        android:textStyle="bold"
-                                        android:layout_marginLeft="20dp"/>
-
-                                    <android.support.v7.widget.RecyclerView
-                                        android:id="@+id/groupRecyclerView"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent">
-                                    </android.support.v7.widget.RecyclerView>
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="100dp"
-                                    android:orientation="vertical"
-                                    >
-
-                                </LinearLayout>
-
-
-                            </LinearLayout-->
-
-                            <LinearLayout
-                                android:id="@+id/llPosts"
-                                android:layout_width="match_parent"
-                                android:layout_height="100dp"
-                                android:orientation="horizontal"
-                                android:layout_marginTop="10dp"
-                                android:weightSum="3">
-
+                            <RelativeLayout
+                                android:id="@+id/notification"
+                                android:layout_width="50dp"
+                                android:layout_height="40dp"
+                                android:clickable="true"
+                                android:gravity="center">
 
                                 <RelativeLayout
-                                    android:id="@+id/llMyPosts"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/red"
-                                    android:orientation="vertical">
+                                    android:id="@+id/menuLayout"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
 
-
-                                    <ImageView
-                                        android:id="@+id/imgMyPosts"
-                                        android:layout_width="50dp"
-                                        android:layout_height="50dp"
+                                    <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                                        android:id="@+id/menuImgv"
+                                        android:layout_width="25dp"
+                                        android:layout_height="25dp"
                                         android:layout_centerHorizontal="true"
-                                        android:src="@mipmap/icon_myposts" />
+                                        android:layout_centerVertical="true"
+                                        android:layout_gravity="end"
+                                        android:layout_marginLeft="10dp"
+                                        android:src="@drawable/menu_white_18dp" />
 
                                     <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_below="@+id/imgMyPosts"
+                                        android:id="@+id/pendReqCntTv"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentTop="true"
+                                        android:background="@drawable/circle_text_bg"
                                         android:gravity="center"
-                                        android:text="My Posts"
                                         android:textColor="@color/white"
-                                        android:textStyle="bold" />
-
+                                        android:textSize="9dp"
+                                        android:textStyle="bold"
+                                        android:visibility="gone" />
 
                                 </RelativeLayout>
 
-                                <LinearLayout
-                                    android:id="@+id/llCatchedPosts"
-                                    android:layout_width="0dp"
+                                <RelativeLayout
+                                    android:id="@+id/backLayout"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/green"
-                                    android:orientation="vertical">
+                                    android:gravity="left"
+                                    android:visibility="gone">
 
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="Catched Posts -> Click here"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold" />
+                                    <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                                        android:id="@+id/imgBackBtn"
+                                        android:layout_width="?attr/actionBarSize"
+                                        android:layout_height="?attr/actionBarSize"
+                                        android:paddingBottom="8dp"
+                                        android:paddingRight="20dp"
+                                        android:paddingTop="8dp"
+                                        android:src="@mipmap/icon_back_white" />
 
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llMyGroups"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="@color/Orange"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="My Groups -> Click here"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold" />
+                                </RelativeLayout>
 
 
-                                </LinearLayout>
+                            </RelativeLayout>
 
-                            </LinearLayout>
+                            <RelativeLayout
+                                android:id="@+id/notification2"
+                                android:layout_width="50dp"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="end"
+                                android:clickable="true"
+                                android:gravity="center">
 
-                            <LinearLayout
-                                android:id="@+id/llMyGroups3"
-                                android:layout_width="match_parent"
-                                android:layout_height="200dp"
-                                android:layout_marginTop="10dp"
-                                android:orientation="vertical"
-                                android:visibility="gone">
+                                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                                    android:id="@+id/imgUserEdit"
+                                    android:layout_width="25dp"
+                                    android:layout_height="25dp"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="right"
+                                    android:layout_marginRight="10dp"
+                                    android:src="@mipmap/user_edit" />
 
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="20dp"
-                                    android:text="@string/groups"
-                                    android:textSize="17sp"
-                                    android:textStyle="bold" />
+                            </RelativeLayout>
 
-                                <android.support.v7.widget.RecyclerView
-                                    android:id="@+id/groupRecyclerView"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
-
-                            </LinearLayout>
-
-
-                        </LinearLayout>
+                        </android.support.v7.widget.Toolbar>
 
 
                     </RelativeLayout>
 
+                    <LinearLayout
+                        android:id="@+id/llUserDetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/black"
+                            android:textSize="24sp" />
+
+                        <TextView
+                            android:id="@+id/txtBio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:text="Spor yapmayı severim, en sevdiğim spor Yüzme"
+                            android:textColor="@color/black"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llFollowInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="40dp"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center">
+
+                            <LinearLayout
+                                android:id="@+id/followersLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtFollowerCnt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?attr/colorPrimary"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/followers"
+                                    android:textColor="@color/gray"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="1dp"
+                                android:layout_height="match_parent"
+                                android:alpha="0.5"
+                                android:background="@color/black" />
+
+
+                            <LinearLayout
+                                android:id="@+id/followingsLayout"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/txtFollowingCnt"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="?attr/colorPrimary"
+                                    android:textSize="20sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/followings"
+                                    android:textColor="@color/gray"
+                                    android:textSize="15sp" />
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+
+                            android:layout_marginTop="30dp"
+                            android:alpha="0.5"
+                            android:background="@color/black" />
+
+                    </LinearLayout>
+
+                    <!-- Post layout -->
+                    <LinearLayout
+                        android:id="@+id/llPosts"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/llMyPosts"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@color/red"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="My Posts -> Click here"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llCatchedPosts"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="20dp"
+                            android:layout_marginTop="10dp"
+                            android:background="@color/green"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:text="Catched Posts -> Click here"
+                                android:textColor="@color/white"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llMyGroups"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/groups"
+                                android:textSize="17sp"
+                                android:textStyle="bold"
+                                android:layout_marginLeft="20dp"/>
+
+                            <android.support.v7.widget.RecyclerView
+                                android:id="@+id/groupRecyclerView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent">
+                            </android.support.v7.widget.RecyclerView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:orientation="vertical"
+                            >
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
 
                 </LinearLayout>
 
-
             </android.support.v4.widget.NestedScrollView>
 
-
         </LinearLayout>
+        
 
     </com.dinuscxj.refresh.RecyclerRefreshLayout>
 

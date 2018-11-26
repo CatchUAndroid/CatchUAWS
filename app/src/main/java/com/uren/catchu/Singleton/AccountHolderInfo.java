@@ -29,7 +29,7 @@ public class AccountHolderInfo {
 
     private static AccountHolderInfo accountHolderInfoInstance;
     private static UserProfile userProfile;
-    private static AccountHolderInfoCallback accountHolderInfoCallback;
+    private AccountHolderInfoCallback accountHolderInfoCallback;
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
@@ -165,7 +165,7 @@ public class AccountHolderInfo {
     }
 
     public static void setAccountHolderInfoCallback(AccountHolderInfoCallback accountHolderInfoCallback) {
-        AccountHolderInfo.accountHolderInfoCallback = accountHolderInfoCallback;
+        accountHolderInfoInstance.accountHolderInfoCallback = accountHolderInfoCallback;
     }
 
     public static synchronized void reset(){

@@ -25,6 +25,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -58,6 +60,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFr
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -98,7 +101,7 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
 
-    @BindView(R.id.imgProfile)
+    @BindView(R.id.imgProfile2)
     ImageView imgProfile;
     @BindView(R.id.txtProfile)
     TextView txtProfile;
@@ -136,7 +139,7 @@ public class ProfileFragment extends BaseFragment
 
     //posts
     @BindView(R.id.llMyPosts)
-    RelativeLayout llMyPosts;
+    LinearLayout llMyPosts;
     @BindView(R.id.llCatchedPosts)
     LinearLayout llCatchedPosts;
     @BindView(R.id.llMyGroups)
@@ -150,8 +153,6 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.groupRecyclerView)
     RecyclerView groupRecyclerView;
 
-    @BindView(R.id.llMyGroups3)
-    LinearLayout llMyGroups3;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -219,9 +220,20 @@ public class ProfileFragment extends BaseFragment
 
     private void updateUI() {
 
-        if (AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-            myProfile = AccountHolderInfo.getInstance().getUser();
-            setProfileDetail(myProfile);
+        AccountHolderInfo instance = AccountHolderInfo.getInstance();
+
+        if (instance != null) {
+            myProfile = instance.getUser();
+            if(myProfile.getUserInfo().getUsername() == null){
+                AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
+                    @Override
+                    public void onAccountHolderIfoTaken(UserProfile userProfile) {
+                        setProfileDetail(userProfile);
+                    }
+                });
+            }else{
+                setProfileDetail(myProfile);
+            }
         } else {
             getProfileDetail(AccountHolderInfo.getUserID());
         }
@@ -370,9 +382,20 @@ public class ProfileFragment extends BaseFragment
                 navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
             }
             //profile picture
+
+            if(user.getUserInfo().getProfilePhotoUrl() != null && !user.getUserInfo().getProfilePhotoUrl().isEmpty()){
+                imgProfile.setPadding(0, 0, 0, 0);
+                Glide.with(getContext())
+                        .load(user.getUserInfo().getProfilePhotoUrl())
+                        .apply(RequestOptions.centerInsideTransform())
+                        .into(imgProfile);
+            }
+
+            /*
             UserDataUtil.setProfilePicture2(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
             imgProfile.setPadding(3, 3, 3, 3);
+            */
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), navViewShortenTextView, navImgProfile);
@@ -444,19 +467,12 @@ public class ProfileFragment extends BaseFragment
 
     private void getProfileDetail(final String userID) {
 
-        if (myProfile == null) {
-
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    startGetProfileDetail(userID, token);
-                }
-            });
-
-        } else {
-            setProfileDetail(myProfile);
-        }
-
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetProfileDetail(userID, token);
+            }
+        });
     }
 
     private void startGetProfileDetail(final String userID, String token) {
@@ -589,16 +605,6 @@ public class ProfileFragment extends BaseFragment
         }
 
 
-        if (v == llMyGroups) {
-            CommonUtils.showToast(getContext(), "clicked");
-            int visibility = llMyGroups3.getVisibility();
-            if(visibility == View.VISIBLE){
-                llMyGroups3.setVisibility(View.GONE);
-            }else{
-                llMyGroups3.setVisibility(View.VISIBLE);
-            }
-
-        }
 
     }
 
