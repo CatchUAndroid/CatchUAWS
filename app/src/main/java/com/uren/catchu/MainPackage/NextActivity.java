@@ -27,17 +27,14 @@ import com.uren.catchu.GeneralUtils.FragmentTabHiddenUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import java.util.Stack;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;

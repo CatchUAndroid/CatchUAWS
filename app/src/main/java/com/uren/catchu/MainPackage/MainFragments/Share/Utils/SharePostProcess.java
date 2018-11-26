@@ -18,7 +18,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.Share.ShareItems;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 
 import java.io.IOException;
 import java.io.InputStream;

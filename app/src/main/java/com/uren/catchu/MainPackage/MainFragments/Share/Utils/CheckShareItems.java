@@ -3,7 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 import android.content.Context;
 
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.Share.ShareItems;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 
 public class CheckShareItems {
 

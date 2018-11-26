@@ -9,7 +9,6 @@ import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
-import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
@@ -19,7 +18,6 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.Singleton.Share.ShareItems;
 
 import catchu.model.UserProfileProperties;
 

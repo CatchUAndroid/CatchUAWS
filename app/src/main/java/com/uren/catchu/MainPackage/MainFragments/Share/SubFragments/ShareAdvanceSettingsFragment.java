@@ -16,7 +16,7 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.Share.ShareItems;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
