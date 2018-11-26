@@ -26,7 +26,9 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FragmentTabHiddenUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
@@ -75,6 +77,7 @@ public class NextActivity extends AppCompatActivity implements
 
     public static NotifyProblemFragment notifyProblemFragment;
     public SharePostFragment sharePostFragment;
+    public FeedFragment feedFragment;
 
     private FragmentHistory fragmentHistory;
 
@@ -110,10 +113,25 @@ public class NextActivity extends AppCompatActivity implements
             public void onTabReselected(TabLayout.Tab tab) {
                 mNavController.clearStack();
                 tabSelectionControl(tab);
+                checkFeedFragmentReselected(tab);
             }
         });
 
         fillAccountHolder();
+    }
+
+    public void checkFeedFragmentReselected(TabLayout.Tab tab){
+        if(tab.getPosition() == FragNavController.TAB1 && feedFragment != null){
+
+            Fragment fragment = feedFragment.getFragmentManager().getFragments().
+                    get(feedFragment.getSelectedTabPosition());
+
+            if(fragment instanceof FeedPublicFragment)
+                ((FeedPublicFragment) fragment).scrollRecViewInitPosition();
+            else if(fragment instanceof FeedCatchedFragment){
+                ((FeedCatchedFragment) fragment).scrollRecViewInitPosition();
+            }
+        }
     }
 
     public void tabSelectionControl(TabLayout.Tab tab) {
@@ -367,7 +385,8 @@ public class NextActivity extends AppCompatActivity implements
         switch (index) {
 
             case FragNavController.TAB1:
-                return new FeedFragment();
+                feedFragment = new FeedFragment();
+                return feedFragment;
             case FragNavController.TAB2:
                 sharePostFragment = new SharePostFragment();
                 return sharePostFragment;

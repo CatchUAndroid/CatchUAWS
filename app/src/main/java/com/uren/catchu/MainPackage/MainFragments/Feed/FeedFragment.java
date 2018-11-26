@@ -58,6 +58,10 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.htab_viewpager)
     ViewPager viewPager;
 
+    private static final int TAB_PUBLIC = 0;
+    private static final int TAB_CATCHED = 1;
+
+    int selectedTabPosition = TAB_PUBLIC;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -133,7 +137,9 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
-                if (tab.getPosition() == 0) {
+                selectedTabPosition = tab.getPosition();
+
+                if (tab.getPosition() == TAB_PUBLIC) {
                     imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
                     imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
 
@@ -151,7 +157,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
                                 R.color.colorAccent));
                     }
                     */
-                } else if (tab.getPosition() == 1) {
+                } else if (tab.getPosition() == TAB_CATCHED) {
                     imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
                     //imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.DarkOrange), android.graphics.PorterDuff.Mode.SRC_IN);
                     imgFeedCatched.clearColorFilter();
@@ -176,9 +182,15 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         });
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-
     }
 
+    public int getSelectedTabPosition() {
+        return selectedTabPosition;
+    }
+
+    public void setSelectedTabPosition(int selectedTabPosition) {
+        this.selectedTabPosition = selectedTabPosition;
+    }
 
     @Override
     public void onClick(View view) {
