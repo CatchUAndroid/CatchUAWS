@@ -17,7 +17,6 @@ import catchu.model.User;
 
 public class ShareItems {
 
-    //static ShareItems shareItemsInstance = null;
     Post post;
     List<ImageShareItemBox> imageShareItemBoxes;
     List<VideoShareItemBox> videoShareItemBoxes;
@@ -26,14 +25,6 @@ public class ShareItems {
     int shareTryCount = 0;
     BucketUploadResponse bucketUploadResponse;
     GroupRequestResultResultArrayItem selectedGroup;
-    /*boolean shareStartedValue;*/
-
-    /*public static ShareItems getInstance() {
-        if (shareItemsInstance == null) {
-            shareItemsInstance = new ShareItems();
-        }
-        return shareItemsInstance;
-    }*/
 
     public ShareItems() {
         imageShareItemBoxes = new ArrayList<ImageShareItemBox>();
@@ -44,18 +35,6 @@ public class ShareItems {
         post.setAllowList(new ArrayList<User>());
         post.setComments(new ArrayList<Comment>());
     }
-
-    /*public static void setInstance(ShareItems shareItems) {
-        shareItemsInstance = shareItems;
-    }
-
-    public static ShareItems getShareItemsInstance() {
-        return shareItemsInstance;
-    }
-
-    public void setShareItemsInstance(ShareItems shareItemsInstance) {
-        this.shareItemsInstance = shareItemsInstance;
-    }*/
 
     public Post getPost() {
         return post;
@@ -140,17 +119,4 @@ public class ShareItems {
     public void setBucketUploadResponse(BucketUploadResponse bucketUploadResponse) {
         this.bucketUploadResponse = bucketUploadResponse;
     }
-
-   /* public boolean isShareStartedValue() {
-        return shareStartedValue;
-    }
-
-    public void setShareStartedValue(boolean shareStartedValue) {
-        this.shareStartedValue = shareStartedValue;
-    }
-
-    public static synchronized void reset(){
-        shareItemsInstance = null;
-    }*/
-
 }
