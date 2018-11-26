@@ -559,7 +559,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void sharePost() {
-        //ShareItems.getShareItemsInstance().setShareStartedValue(true);
         getActivity().onBackPressed();
         startToShare();
     }
@@ -572,7 +571,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onSuccess() {
                 deleteSharedVideo();
-                //ShareItems.setInstance(null);
             }
 
             @Override
@@ -631,12 +629,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
                         @Override
                         public void onSuccess(Object object) {
-                            //ShareItems.setInstance(null);
                         }
 
                         @Override
                         public void onFailure(Exception e) {
-                            //ShareItems.setInstance(null);
                         }
 
                         @Override
