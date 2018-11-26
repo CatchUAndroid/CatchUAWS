@@ -3,6 +3,9 @@ package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,10 +27,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.BrushCompleteCallback;
 import com.uren.catchu.R;
@@ -275,7 +280,16 @@ public class PhotoSelectedFragment extends BaseFragment {
                 Glide.with(getContext())
                         .load(thisPhotoSelectUtil.getMediaUri())
                         .into(selectedImageView);
+
+            if(thisPhotoSelectUtil.getBitmap() != null)
+                setBlurBitmap();
         }
+    }
+
+    public void setBlurBitmap(){
+        Bitmap blurBitmap = BlurBuilder.blur(getContext(), thisPhotoSelectUtil.getBitmap(), 0.2f, 20.5f);
+        Drawable dr = new BitmapDrawable(getContext().getResources(), blurBitmap);
+        photoRelLayout.setBackground(dr);
     }
 
     private void startTextEditFragment() {

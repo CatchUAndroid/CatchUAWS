@@ -246,6 +246,7 @@
     <string name="ADVANCED_SETTINGS">Gelişmiş Seçenekler</string>
     <string name="SEND">Gönder</string>
     <string name="LET_POST_COMMENT">Yorum yapılmasına izin ver</string>
+    <string name="THANKS_FOR_FEEDBACK">Geri bildiriminiz için teşekkür ederiz. En kısa sürede aksiyon almaya çalışacağız.</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

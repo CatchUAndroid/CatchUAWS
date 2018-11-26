@@ -415,7 +415,7 @@ public class NotifyProblemFragment extends BaseFragment {
     public void saveReport() {
         setFinalReportBox();
         DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
-                getResources().getString(R.string.SENDING), 2000, new InfoDialogBoxCallback() {
+                getResources().getString(R.string.THANKS_FOR_FEEDBACK), 3000, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                         getActivity().onBackPressed();

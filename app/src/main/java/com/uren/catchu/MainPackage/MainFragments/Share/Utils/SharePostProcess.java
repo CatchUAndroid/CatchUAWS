@@ -45,6 +45,10 @@ public class SharePostProcess {
     int videoCount = 0;
     int totalMediaCount = 0;
     PostRequest postRequest;
+    SignedUrlGetProcess signedUrlGetProcess = null;
+    UploadImageToS3 uploadImageToS3 = null;
+    UploadVideoToS3 uploadVideoToS3 = null;
+    UploadImageToS3 uploadThumbnailToS3 = null;
 
     public SharePostProcess(Context context, ServiceCompleteCallback serviceCompleteCallback) {
         this.context = context;
@@ -73,7 +77,7 @@ public class SharePostProcess {
     }
 
     private void startUploadMediaToS3(String token) {
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+        signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
@@ -101,6 +105,7 @@ public class SharePostProcess {
                 Log.i("Info", "Paylasim Exception yedi2:" + e.getMessage());
                 CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
                 serviceCompleteCallback.onFailed(e);
+                signedUrlGetProcess.cancel(true);
             }
 
             @Override
@@ -127,7 +132,7 @@ public class SharePostProcess {
         if (photoBitmap == null)
             return;
 
-        UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+        uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
@@ -147,14 +152,17 @@ public class SharePostProcess {
                             imageShareItemBox.setUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
+                            uploadImageToS3.cancel(true);
                         }
                     } else {
                         imageShareItemBox.setUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
+                        uploadImageToS3.cancel(true);
                     }
                 } catch (IOException e) {
                     imageShareItemBox.setUploaded(false);
                     serviceCompleteCallback.onFailed(e);
+                    uploadImageToS3.cancel(true);
                 }
             }
 
@@ -162,6 +170,7 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 imageShareItemBox.setUploaded(false);
                 serviceCompleteCallback.onFailed(e);
+                uploadImageToS3.cancel(true);
             }
 
             @Override
@@ -172,7 +181,7 @@ public class SharePostProcess {
     }
 
     private void uploadVideos(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
-        UploadVideoToS3 uploadVideoToS3 = new UploadVideoToS3(new OnEventListener() {
+        uploadVideoToS3 = new UploadVideoToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
@@ -192,14 +201,17 @@ public class SharePostProcess {
                             videoShareItemBox.setVideoUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
+                            uploadVideoToS3.cancel(true);
                         }
                     } else {
                         videoShareItemBox.setVideoUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
+                        uploadVideoToS3.cancel(true);
                     }
                 } catch (IOException e) {
                     videoShareItemBox.setVideoUploaded(false);
                     serviceCompleteCallback.onFailed(e);
+                    uploadVideoToS3.cancel(true);
                 }
             }
 
@@ -207,6 +219,7 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 videoShareItemBox.setVideoUploaded(false);
                 serviceCompleteCallback.onFailed(e);
+                uploadVideoToS3.cancel(true);
             }
 
             @Override
@@ -218,7 +231,7 @@ public class SharePostProcess {
     }
 
     public void uploadThumbnailImage(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
-        UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+        uploadThumbnailToS3 = new UploadImageToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 HttpURLConnection urlConnection = (HttpURLConnection) object;
@@ -228,6 +241,7 @@ public class SharePostProcess {
                             videoShareItemBox.setThumbnailImgUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
+                            uploadThumbnailToS3.cancel(true);
                         } else {
                             videoShareItemBox.setThumbnailImgUploaded(true);
                             checkAllItemsUploaded();
@@ -235,10 +249,12 @@ public class SharePostProcess {
                     } else {
                         videoShareItemBox.setThumbnailImgUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
+                        uploadThumbnailToS3.cancel(true);
                     }
                 } catch (IOException e) {
                     videoShareItemBox.setThumbnailImgUploaded(false);
                     serviceCompleteCallback.onFailed(e);
+                    uploadThumbnailToS3.cancel(true);
                 }
             }
 
@@ -246,13 +262,14 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 videoShareItemBox.setThumbnailImgUploaded(false);
                 serviceCompleteCallback.onFailed(e);
+                uploadThumbnailToS3.cancel(true);
             }
 
             @Override
             public void onTaskContinue() {
             }
         }, videoShareItemBox.getVideoSelectUtil().getVideoBitmap(), bucketUpload.getThumbnailUploadUrl());
-        uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        uploadThumbnailToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     public void checkAllItemsUploaded() {

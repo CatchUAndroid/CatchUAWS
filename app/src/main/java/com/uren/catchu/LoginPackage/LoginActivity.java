@@ -201,6 +201,8 @@ public class LoginActivity extends AppCompatActivity
         imgTwitter = (ClickableImageView) findViewById(R.id.clickImageTwitter);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         rememberMeCheckBox = findViewById(R.id.rememberMeCb);
+        forgetPasswordBtn = findViewById(R.id.forgetPasswordBtn);
+        createAccBtn = findViewById(R.id.createAccBtn);
         setClickableTexts(this);
 
         backgroundLayout.setOnClickListener(this);

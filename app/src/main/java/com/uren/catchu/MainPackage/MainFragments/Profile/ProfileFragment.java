@@ -167,6 +167,7 @@ public class ProfileFragment extends BaseFragment
 
     @Override
     public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
         super.onStart();
     }
 

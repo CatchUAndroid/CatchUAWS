@@ -55,6 +55,7 @@ public class SaveReportProblemProcess {
     int imageCount = 0;
     int bucketIndex = 0;
     UploadImageToS3 uploadImageToS3 = null;
+    SignedUrlGetProcess signedUrlGetProcess = null;
 
     public SaveReportProblemProcess(List<PhotoSelectUtil> photoSelectUtilList,
                                     String message, String userid, CompleteCallback completeCallback) {
@@ -83,7 +84,7 @@ public class SaveReportProblemProcess {
 
     private void startSaveReportImagesToS3(String token) {
 
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+        signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
                 commonS3BucketResult = (BucketUploadResponse) object;
@@ -93,6 +94,7 @@ public class SaveReportProblemProcess {
             @Override
             public void onFailure(Exception e) {
                 completeCallback.onFailed(e);
+                signedUrlGetProcess.cancel(true);
             }
 
             @Override

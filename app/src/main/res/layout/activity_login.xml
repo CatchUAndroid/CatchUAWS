@@ -165,7 +165,8 @@
                 android:layout_weight="1"
                 android:text="@string/forgetPassword"
                 android:textSize="12sp"
-                android:textColor="@color/White"/>
+                android:textColor="@color/White"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/createAccBtn"
@@ -174,15 +175,15 @@
                 android:layout_weight="1"
                 android:text="@string/createAccount"
                 android:textSize="12sp"
-                android:textColor="@color/White"/>
+                android:textColor="@color/White"
+                android:visibility="gone"/>
 
             <TextView
                 android:id="@+id/btnForgetPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/White"
-                android:textSize="15sp"
-                android:visibility="gone"/>
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -190,16 +191,14 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="|"
-                android:textStyle="bold"
-                android:visibility="gone"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/btnRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/White"
-                android:textSize="15sp"
-                android:visibility="gone"/>
+                android:textSize="15sp" />
 
 
         </LinearLayout>

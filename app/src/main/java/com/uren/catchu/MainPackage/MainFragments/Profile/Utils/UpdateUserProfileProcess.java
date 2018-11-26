@@ -167,7 +167,6 @@ public class UpdateUserProfileProcess {
 
     private void updateAccountHolderInfo(UserProfile up) {
         AccountHolderInfo.getInstance().getUser().setUserInfo(up.getUserInfo());
-
         /*AccountHolderInfo.getInstance().getUser().getUserInfo().setName(up.getUserInfo().getName());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setUsername(up.getUserInfo().getUsername());
         AccountHolderInfo.getInstance().getUser().getUserInfo().setWebsite(up.getUserInfo().getWebsite());
