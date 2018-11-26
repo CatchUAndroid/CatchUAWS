@@ -236,7 +236,12 @@ public class ProfileFragment extends BaseFragment
         refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getProfileDetail(AccountHolderInfo.getUserID());
+                AccountHolderInfo.getToken(new TokenCallback() {
+                    @Override
+                    public void onTokenTaken(String token) {
+                        startGetProfileDetail(AccountHolderInfo.getUserID(), token);
+                    }
+                });
                 getGroups();
             }
         });
