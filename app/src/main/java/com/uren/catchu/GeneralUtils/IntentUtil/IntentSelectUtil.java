@@ -1,16 +1,18 @@
 package com.uren.catchu.GeneralUtils.IntentUtil;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
+
+import com.uren.catchu.GeneralUtils.FileAdapter;
+
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
 
 public class IntentSelectUtil {
 
     public static Intent getCameraIntent(){
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         return intent;
     }
 

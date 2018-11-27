@@ -99,6 +99,13 @@ public class NextActivity extends AppCompatActivity implements
 
         switchTab(0);
 
+        bottomTabLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

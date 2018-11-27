@@ -3,6 +3,7 @@ package com.uren.catchu.GeneralUtils.PhotoUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -21,6 +22,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -38,7 +40,7 @@ public class PhotoSelectUtil {
     boolean portraitMode;
     float bitmapResizeValue = 0.8f;
 
-    public PhotoSelectUtil(){
+    public PhotoSelectUtil() {
 
     }
 
@@ -74,16 +76,57 @@ public class PhotoSelectUtil {
     }
 
     public Bitmap getResizedBitmap() {
-        if (getScreeanShotBitmap() != null)
-            resizedBitmap = Bitmap.createScaledBitmap(getScreeanShotBitmap(),
-                    (int) (getScreeanShotBitmap().getWidth() * 0.8),
-                    (int) (getScreeanShotBitmap().getHeight() * 0.8), true);
-        else if(getBitmap() != null)
-            resizedBitmap = Bitmap.createScaledBitmap(getBitmap(),
-                    (int) (getBitmap().getWidth() * 0.8),
-                    (int) (getBitmap().getHeight() * 0.8), true);
+        Bitmap mBitmap = null;
 
-        System.out.println("BitmapCompat.getAllocationByteCount(bitmap):" + BitmapCompat.getAllocationByteCount(bitmap));
+        try {
+            if (getScreeanShotBitmap() != null) {
+                mBitmap = getScreeanShotBitmap();
+                System.out.println("BitmapCompat.getAllocationByteCount(getScreeanShotBitmap):" + BitmapCompat.getAllocationByteCount(getScreeanShotBitmap()));
+            } else if (getBitmap() != null) {
+                mBitmap = getBitmap();
+                System.out.println("BitmapCompat.getAllocationByteCount(getBitmap):" + BitmapCompat.getAllocationByteCount(getBitmap()));
+            }
+
+            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE) {
+
+                for (float i = 0.9f; i > 0; i = i - 0.1f ){
+                    System.out.println("i_1:" + i);
+                    resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
+                            (int) (mBitmap.getWidth() * i),
+                            (int) (mBitmap.getHeight() * i), true);
+
+                    System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
+
+                    if(BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE){
+                        break;
+                    }
+                }
+            }else {
+                if(!type.equals(GALLERY_TEXT)) {
+                    for (float i = 1.2f; i < 20f; i = i + 1.2f) {
+                        System.out.println("i_2:" + i);
+                        resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
+                                (int) (mBitmap.getWidth() * i),
+                                (int) (mBitmap.getHeight() * i), true);
+
+                        System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
+
+                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > MAX_IMAGE_SIZE) {
+                            break;
+                        }
+                    }
+                }else
+                    resizedBitmap = mBitmap;
+            }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-getResizedBitmap", e.toString());
+            if (getScreeanShotBitmap() != null) {
+                resizedBitmap = getScreeanShotBitmap();
+            } else if (getBitmap() != null) {
+                resizedBitmap = getBitmap();
+            }
+        }
+
         System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
         return resizedBitmap;
@@ -92,13 +135,12 @@ public class PhotoSelectUtil {
     private void onSelectFromFileResult() {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+            imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
         } catch (IOException e) {
-            CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) +
-                    e.getMessage());
+            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-onSelectFromFileResult", e.toString());
             e.printStackTrace();
         }
-        imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-        bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
     public void onSelectFromGalleryResult() {
@@ -113,29 +155,42 @@ public class PhotoSelectUtil {
                     e.printStackTrace();
                 }
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-onSelectFromGalleryResult", e.toString());
             e.printStackTrace();
         }
     }
 
     public void onSelectFromCameraResult() {
-        bitmap = (Bitmap) data.getExtras().get("data");
-        mediaUri = data.getData();
-        imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-        bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+        try {
+            bitmap = (Bitmap) data.getExtras().get("data");
+            mediaUri = data.getData();
+            imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+        }catch (Exception e){
+            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-onSelectFromCameraResult", e.toString());
+            e.printStackTrace();
+        }
+
     }
 
     public void setPortraitMode() {
-        if (bitmap == null)
-            return;
+        try {
+            if (bitmap == null)
+                return;
 
-        int width = bitmap.getWidth();
-        int heigth = bitmap.getHeight();
+            int width = bitmap.getWidth();
+            int heigth = bitmap.getHeight();
 
-        if (heigth > width)
-            portraitMode = true;
-        else
-            portraitMode = false;
+            if (heigth > width)
+                portraitMode = true;
+            else
+                portraitMode = false;
+        }catch (Exception e){
+            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-setPortraitMode", e.toString());
+            e.printStackTrace();
+        }
+
     }
 
     public Bitmap getBitmap() {

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -53,6 +54,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.VideoChosenForShareCallback;
+import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -89,6 +91,8 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 
 import static android.content.Context.LOCATION_SERVICE;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_SIZE;
 import static com.uren.catchu.Constants.NumericConstants.SHARE_VIDEO_HEIGHT;
@@ -96,6 +100,7 @@ import static com.uren.catchu.Constants.NumericConstants.SHARE_VIDEO_WIDHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
@@ -215,6 +220,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     VideoSelectUtil videoSelectUtil;
     CheckShareItems checkShareItems;
     ShareItems shareItems;
+    Uri photoUri;
 
     String selectedType = "";
     String selectedWhomType = "";
@@ -561,14 +567,19 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void deleteSharedVideo() {
-        if (permissionModule.checkWriteExternalStoragePermission()) {
-            if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null && !videoSelectUtil.getVideoRealPath().isEmpty()) {
-                if (videoSelectUtil.getSelectType() != null && videoSelectUtil.getSelectType().equals(CAMERA_TEXT)) {
-                    File file = new File(videoSelectUtil.getVideoRealPath());
-                    file.delete();
-                    updateGalleryAfterFileDelete(file);
+        try {
+            if (permissionModule.checkWriteExternalStoragePermission()) {
+                if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null && !videoSelectUtil.getVideoRealPath().isEmpty()) {
+                    if (videoSelectUtil.getSelectType() != null && videoSelectUtil.getSelectType().equals(CAMERA_TEXT)) {
+                        File file = new File(videoSelectUtil.getVideoRealPath());
+                        file.delete();
+                        updateGalleryAfterFileDelete(file);
+                    }
                 }
             }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-deleteSharedVideo", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -739,99 +750,142 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public String getSelectedFriendsText() {
         String returnText = "";
-        if (SelectedFriendList.getInstance().getSize() > 1) {
+        try {
+            if (SelectedFriendList.getInstance().getSize() > 1) {
 
-            if (SelectedFriendList.getInstance().getFriend(0) != null) {
+                if (SelectedFriendList.getInstance().getFriend(0) != null) {
 
-                if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
-                        !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
-                    returnText = SelectedFriendList.getInstance().getFriend(0).getName() + " +" +
-                            Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
-                } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
-                        !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
-                    returnText = SelectedFriendList.getInstance().getFriend(0).getUsername() + " +" +
-                            Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
+                    if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
+                            !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
+                        returnText = SelectedFriendList.getInstance().getFriend(0).getName() + " +" +
+                                Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
+                    } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
+                            !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
+                        returnText = SelectedFriendList.getInstance().getFriend(0).getUsername() + " +" +
+                                Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
+                    }
+                }
+            } else {
+                if (SelectedFriendList.getInstance().getFriend(0) != null) {
+
+                    if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
+                            !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
+                        returnText = SelectedFriendList.getInstance().getFriend(0).getName();
+                    } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
+                            !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
+                        returnText = SelectedFriendList.getInstance().getFriend(0).getUsername();
+                    }
                 }
             }
-        } else {
-            if (SelectedFriendList.getInstance().getFriend(0) != null) {
-
-                if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
-                        !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
-                    returnText = SelectedFriendList.getInstance().getFriend(0).getName();
-                } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
-                        !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
-                    returnText = SelectedFriendList.getInstance().getFriend(0).getUsername();
-                }
-            }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-getSelectedFriendsText", e.toString());
+            e.printStackTrace();
         }
 
         return returnText;
     }
 
     private void checkGalleryProcess() {
-        if (permissionModule.checkWriteExternalStoragePermission()) {
-            if (selectedType.equals(IMAGE_TYPE))
-                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                        getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
-            else if (selectedType.equals(VIDEO_TYPE))
-                startGalleryForVideos();
-        } else
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+        try {
+            if (permissionModule.checkWriteExternalStoragePermission()) {
+                if (selectedType.equals(IMAGE_TYPE))
+                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                            getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
+                else if (selectedType.equals(VIDEO_TYPE))
+                    startGalleryForVideos();
+            } else
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+        } catch (Resources.NotFoundException e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-checkGalleryProcess", e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void checkCameraProcess() {
-        if (!CommonUtils.checkCameraHardware(getContext())) {
-            CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
-            return;
-        }
-
-        if (permissionModule.checkCameraPermission()) {
-            if (selectedType.equals(IMAGE_TYPE))
-                startActivityForResult(IntentSelectUtil.getCameraIntent(), REQUEST_CODE_PHOTO_CAMERA_SELECT);
-            else if (selectedType.equals(VIDEO_TYPE)) {
-                startCameraForVideos();
+        try {
+            if (!CommonUtils.checkCameraHardware(getContext())) {
+                CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
+                return;
             }
-        } else
-            requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.PERMISSION_CAMERA);
+
+            if (permissionModule.checkCameraPermission()) {
+                if (selectedType.equals(IMAGE_TYPE))
+                    openCameraForPhotoSelect();
+                else if (selectedType.equals(VIDEO_TYPE)) {
+                    startCameraForVideos();
+                }
+            } else
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        permissionModule.PERMISSION_CAMERA);
+        } catch (Resources.NotFoundException e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-checkCameraProcess", e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public void openCameraForPhotoSelect() {
+        try {
+            photoUri = Uri.fromFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_IMAGE_SIZE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-openCameraForPhotoSelect", e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void startGalleryForVideos() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("video/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent,
-                getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
+        try {
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("video/*");
+            intent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent,
+                    getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
+        } catch (Resources.NotFoundException e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-startGalleryForVideos", e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void startCameraForVideos() {
-        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);
-        takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-        takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_VIDEO_SIZE);
-        takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.HEIGHT, SHARE_VIDEO_HEIGHT);
-        takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.WIDTH, SHARE_VIDEO_WIDHT);
+        try {
+            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+            takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_VIDEO_SIZE);
+            takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.HEIGHT, SHARE_VIDEO_HEIGHT);
+            takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.WIDTH, SHARE_VIDEO_WIDHT);
 
-        if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
-            startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
+            if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
+                startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-startCameraForVideos", e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void getUserInfo() {
 
-        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo() != null)
-            setToolbarInfo(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
-                    AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
-                    AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
-        else {
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    getProfileDetail(token);
-                }
-            });
+        try {
+            if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
+                    AccountHolderInfo.getInstance().getUser().getUserInfo() != null)
+                setToolbarInfo(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
+                        AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
+                        AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+            else {
+                AccountHolderInfo.getToken(new TokenCallback() {
+                    @Override
+                    public void onTokenTaken(String token) {
+                        getProfileDetail(token);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-getUserInfo", e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -864,40 +918,55 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setToolbarInfo(String url, String name, String username) {
-        UserDataUtil.setProfilePicture(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
+        try {
+            UserDataUtil.setProfilePicture(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
 
-        if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
-                toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-            } else if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
-                toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+            if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
+                    toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+                } else if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
+                    toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+                }
             }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setToolbarInfo", e.toString());
+            e.printStackTrace();
         }
     }
 
     public void setMapView() {
-        if (mapView != null) {
-            mapView.onCreate(null);
-            mapView.onResume();
-            mapView.getMapAsync(this);
+        try {
+            if (mapView != null) {
+                mapView.onCreate(null);
+                mapView.onResume();
+                mapView.getMapAsync(this);
+            }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setMapView", e.toString());
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        try {
+            mMap = googleMap;
 
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (permissionModule.checkAccessFineLocationPermission())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (permissionModule.checkAccessFineLocationPermission())
+                    initializeMap(mMap);
+                else
+                    requestPermissions(
+                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
+            } else
                 initializeMap(mMap);
-            else
-                requestPermissions(
-                        new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                        permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
-        } else
-            initializeMap(mMap);
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-onMapReady", e.toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -921,7 +990,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 if (selectedType.equals(IMAGE_TYPE))
-                    startActivityForResult(IntentSelectUtil.getCameraIntent(), REQUEST_CODE_PHOTO_CAMERA_SELECT);
+                    openCameraForPhotoSelect();
                 else if (selectedType.equals(VIDEO_TYPE)) {
                     startCameraForVideos();
                 }
@@ -937,7 +1006,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA_SELECT) {
-                photoSelectUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
+                photoSelectUtil = new PhotoSelectUtil(getContext(), photoUri, FROM_FILE_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_VIDEO_GALLERY_SELECT) {
                 checkVideoDuration(data);
@@ -984,18 +1053,28 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setVideoFromCameraSelection(Intent data) {
-        if (data == null) return;
-        isVideoSelected = true;
-        videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, CAMERA_TEXT);
-        addVideoShareItemList();
-        setVideoSelectImgvFilled();
-        startVideoViewFragment();
+        try {
+            if (data == null) return;
+            isVideoSelected = true;
+            videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, CAMERA_TEXT);
+            addVideoShareItemList();
+            setVideoSelectImgvFilled();
+            startVideoViewFragment();
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setVideoFromCameraSelection", e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void addVideoShareItemList() {
-        shareItems.clearVideoShareItemBox();
-        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
-        shareItems.addVideoShareItemBox(videoShareItemBox);
+        try {
+            shareItems.clearVideoShareItemBox();
+            VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
+            shareItems.addVideoShareItemBox(videoShareItemBox);
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-addVideoShareItemList", e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void startVideoViewFragment() {
@@ -1005,60 +1084,80 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void initializeMap(final GoogleMap mMap) {
-        if (mMap != null) {
-            mMap.getUiSettings().setScrollGesturesEnabled(true);
-            mMap.getUiSettings().setAllGesturesEnabled(true);
+        try {
+            if (mMap != null) {
+                mMap.getUiSettings().setScrollGesturesEnabled(true);
+                mMap.getUiSettings().setAllGesturesEnabled(true);
 
-            if (permissionModule.checkAccessFineLocationPermission())
-                mMap.setMyLocationEnabled(true);
+                if (permissionModule.checkAccessFineLocationPermission())
+                    mMap.setMyLocationEnabled(true);
 
-            Location location = locationTrackObj.getLocation();
-            if (location != null) {
-                setShareItemsLocation(location);
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                Location location = locationTrackObj.getLocation();
+                if (location != null) {
+                    setShareItemsLocation(location);
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                MarkerOptions options = new MarkerOptions().position(latLng);
-                Bitmap bitmap = BitmapConversion.createUserMapBitmap(getContext(), profilePicImgView);
+                    MarkerOptions options = new MarkerOptions().position(latLng);
+                    Bitmap bitmap = BitmapConversion.createUserMapBitmap(getContext(), profilePicImgView);
 
-                if (bitmap != null) {
-                    options.title(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                    options.anchor(0.5f, 0.907f);
-                    mMap.addMarker(options);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                } else
-                    mapRipple = new MapRipple(mMap, latLng, getContext());
+                    if (bitmap != null) {
+                        options.title(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+                        options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                        options.anchor(0.5f, 0.907f);
+                        mMap.addMarker(options);
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                    } else
+                        mapRipple = new MapRipple(mMap, latLng, getContext());
 
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
-                        LatLng(location.getLatitude(),
-                        location.getLongitude()), 12));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
+                            LatLng(location.getLatitude(),
+                            location.getLongitude()), 12));
+                }
             }
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-initializeMap", e.toString());
+            e.printStackTrace();
         }
     }
 
     public void setShareItemsLocation(Location location) {
-        catchu.model.Location tempLoc = new catchu.model.Location();
-        tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-        tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-        shareItems.getPost().setLocation(tempLoc);
+        try {
+            catchu.model.Location tempLoc = new catchu.model.Location();
+            tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+            tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+            shareItems.getPost().setLocation(tempLoc);
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setShareItemsLocation", e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void fillImageShareItemBox() {
-        ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
-        shareItems.clearImageShareItemBox();
-        shareItems.addImageShareItemBox(imageShareItemBox);
+        try {
+            ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
+            shareItems.clearImageShareItemBox();
+            shareItems.addImageShareItemBox(imageShareItemBox);
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-fillImageShareItemBox", e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void initLocationTracker() {
-        locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
-            @Override
-            public void onLocationChanged(Location location) {
-                catchu.model.Location locationModel = new catchu.model.Location();
-                locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-                locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-                shareItems.getPost().setLocation(locationModel);
-            }
-        });
+        try {
+            locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    catchu.model.Location locationModel = new catchu.model.Location();
+                    locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+                    locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+                    shareItems.getPost().setLocation(locationModel);
+                }
+            });
+        } catch (Exception e) {
+            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-initLocationTracker", e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void checkCanGetLocation() {

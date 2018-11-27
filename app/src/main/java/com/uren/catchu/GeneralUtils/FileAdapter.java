@@ -20,24 +20,61 @@ public class FileAdapter {
 
         String directoryChild = null;
 
-        switch (type) {
-            case MEDIA_TYPE_IMAGE:
-                directoryChild = Environment.DIRECTORY_PICTURES;
-                break;
+        try {
+            switch (type) {
+                case MEDIA_TYPE_IMAGE:
+                    directoryChild = Environment.DIRECTORY_PICTURES;
+                    break;
 
-            case MEDIA_TYPE_VIDEO:
-                directoryChild = Environment.DIRECTORY_MOVIES;
-                break;
-            case MEDIA_TYPE_AUDIO:
-                directoryChild = Environment.DIRECTORY_DOCUMENTS;
-                break;
-            default:
-                break;
+                case MEDIA_TYPE_VIDEO:
+                    directoryChild = Environment.DIRECTORY_MOVIES;
+                    break;
+                case MEDIA_TYPE_AUDIO:
+                    directoryChild = Environment.DIRECTORY_DOCUMENTS;
+                    break;
+                default:
+                    break;
+            }
+
+            if (directoryChild != null && !directoryChild.isEmpty()) {
+
+                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(APP_NAME), directoryChild);
+
+                if (!mediaStorageDir.exists()) {
+                    if (!mediaStorageDir.mkdirs()) {
+                        Log.d(APP_NAME, "failed to create directory");
+                        return null;
+                    }
+                }
+
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                File mediaFile;
+                if (type == MEDIA_TYPE_IMAGE) {
+                    mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                            "IMG_" + timeStamp + ".jpg");
+                    return mediaFile;
+                } else if (type == MEDIA_TYPE_VIDEO) {
+                    mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                            "VID_" + timeStamp + ".mp4");
+                    return mediaFile;
+                } else if (type == MEDIA_TYPE_AUDIO) {
+                    mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+                            "AUD_" + timeStamp + ".mp3");
+                    return mediaFile;
+                }
+            }
+        }catch (Exception e){
+            CommonUtils.LOG_EXCEPTION_ERR("FileAdapter-getOutputMediaFile", e.toString());
+            e.printStackTrace();
         }
 
-        if (directoryChild != null && !directoryChild.isEmpty()) {
+        return null;
+    }
 
-            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(APP_NAME), directoryChild);
+    public static File getCropMediaFile() {
+        File mediaFile = null;
+        try {
+            File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(APP_NAME), Environment.DIRECTORY_PICTURES);
 
             if (!mediaStorageDir.exists()) {
                 if (!mediaStorageDir.mkdirs()) {
@@ -45,37 +82,13 @@ public class FileAdapter {
                     return null;
                 }
             }
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_CROP.jpg");
 
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            File mediaFile;
-            if (type == MEDIA_TYPE_IMAGE) {
-                mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                        "IMG_" + timeStamp + ".jpg");
-                return mediaFile;
-            } else if (type == MEDIA_TYPE_VIDEO) {
-                mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                        "VID_" + timeStamp + ".mp4");
-                return mediaFile;
-            } else if (type == MEDIA_TYPE_AUDIO) {
-                mediaFile = new File(mediaStorageDir.getPath() + File.separator +
-                        "AUD_" + timeStamp + ".mp3");
-                return mediaFile;
-            }
+        }catch (Exception e){
+            CommonUtils.LOG_EXCEPTION_ERR("FileAdapter-getCropMediaFile", e.toString());
+            e.printStackTrace();
         }
 
-        return null;
-    }
-
-    public static File getCropMediaFile() {
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(APP_NAME), Environment.DIRECTORY_PICTURES);
-
-        if (!mediaStorageDir.exists()) {
-            if (!mediaStorageDir.mkdirs()) {
-                Log.d(APP_NAME, "failed to create directory");
-                return null;
-            }
-        }
-        File mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_CROP.jpg");
         return mediaFile;
     }
 }

@@ -379,7 +379,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             Glide.with(mContext)
                     .load(icon)
-                    .into(imgTarget);
+                    .into(imgLike);
 
             if (isClientOperation) {
                 if (isPostLiked) {

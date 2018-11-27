@@ -63,7 +63,6 @@ import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -72,10 +71,8 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.UgurDeneme.Main2Activity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,8 +80,6 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import catchu.model.BaseRequest;
-import catchu.model.BaseResponse;
 import catchu.model.UserProfile;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;

@@ -90,7 +90,6 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".LoginPackage.AppIntroductionActivity" />
-        <activity android:name=".UgurDeneme.Main2Activity"></activity>
     </application>
 
 </manifest>

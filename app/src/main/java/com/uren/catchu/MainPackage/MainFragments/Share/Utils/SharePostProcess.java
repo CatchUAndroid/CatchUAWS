@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.support.v4.graphics.BitmapCompat;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -51,7 +52,7 @@ public class SharePostProcess {
     UploadVideoToS3 uploadVideoToS3 = null;
     UploadImageToS3 uploadThumbnailToS3 = null;
 
-    public SharePostProcess(Context context, ShareItems shareItems,ServiceCompleteCallback serviceCompleteCallback) {
+    public SharePostProcess(Context context, ShareItems shareItems, ServiceCompleteCallback serviceCompleteCallback) {
         this.context = context;
         this.shareItems = shareItems;
         this.serviceCompleteCallback = serviceCompleteCallback;
@@ -133,6 +134,8 @@ public class SharePostProcess {
 
         if (photoBitmap == null)
             return;
+
+        System.out.println("photoBitmap.getAllocationByteCount(bitmap):" + BitmapCompat.getAllocationByteCount(photoBitmap));
 
         uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
             @Override

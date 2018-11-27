@@ -51,6 +51,7 @@ public class CommonUtils {
     public static String serverPrefix = "**";
     public static String infoPrefix = "++";
     public static String neredeyiz = "NEREDEYIZ";
+    public static String exceptionErrPrefix = "--------->";
 
 
     public static final void showToast(Context context, String message) {
@@ -254,6 +255,10 @@ public class CommonUtils {
             proccessName = proccessName.substring(0, 21);
         }
         Log.i(serverPrefix + proccessName, "FAIL - " + failDetail);
+    }
+
+    public static void LOG_EXCEPTION_ERR(String proccessName, String failDetail) {
+        Log.i(exceptionErrPrefix + proccessName, "FAIL - " + failDetail);
     }
 
     public static void LOG_NEREDEYIZ(String konum) {

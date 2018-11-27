@@ -18,6 +18,8 @@ public class NumericConstants {
     public static final int SHARE_VIDEO_HEIGHT = 176;
     public static final int SHARE_VIDEO_WIDHT = 144;
 
+    public static final long MAX_IMAGE_SIZE =  10485760L;
+
     //DialogBox Results
     public static final int UPDATE_RESULT_OK = 1;
     public static final int UPDATE_RESULT_FAIL = 0;
