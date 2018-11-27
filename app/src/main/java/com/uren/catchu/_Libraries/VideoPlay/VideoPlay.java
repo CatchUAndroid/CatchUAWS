@@ -5,6 +5,10 @@ import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.R;
 import java.util.concurrent.Callable;
 import butterknife.ButterKnife;
@@ -59,10 +63,10 @@ public class VideoPlay {
             public void onClick(View v) {
                 if (isMuted) {
                     unmuteVideo();
-                    img_vol.setImageResource(R.drawable.ic_unmute);
+                    Glide.with(act).load(R.drawable.ic_unmute).into(img_vol);
                 } else {
                     muteVideo();
-                    img_vol.setImageResource(R.drawable.ic_mute);
+                    Glide.with(act).load(R.drawable.ic_mute).into(img_vol);
                 }
                 isMuted = !isMuted;
             }
@@ -100,14 +104,14 @@ public class VideoPlay {
         this.aah_vi.getCustomVideoView().setPaused(false);
         this.aah_vi.getCustomVideoView().startVideo();
 
+        Glide.with(act).load(R.drawable.ic_pause).into(img_playback);
 
-        img_playback.setImageResource(R.drawable.ic_pause);
         if (isMuted) {
             muteVideo();
-            img_vol.setImageResource(R.drawable.ic_mute);
+            Glide.with(act).load(R.drawable.ic_mute).into(img_vol);
         } else {
             unmuteVideo();
-            img_vol.setImageResource(R.drawable.ic_unmute);
+            Glide.with(act).load(R.drawable.ic_unmute).into(img_vol);
         }
 
 
@@ -129,8 +133,7 @@ public class VideoPlay {
     public void pauseVideo() {
         this.aah_vi.getCustomVideoView().pauseVideo();
         this.aah_vi.getCustomVideoView().setPaused(true);
-
-        img_playback.setImageResource(R.drawable.ic_play);
+        Glide.with(act).load(R.drawable.ic_play).into(img_playback);
     }
 
     public void muteVideo() {

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -169,7 +170,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
-            imgLike.setImageResource(icon);
+            Glide.with(mContext).load(icon).into(imgLike);
 
             if (isClientOperation) {
                 if (isCommentLiked) {

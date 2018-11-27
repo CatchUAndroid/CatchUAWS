@@ -372,14 +372,14 @@ public class FeedAdapter extends RecyclerView.Adapter {
             Glide.with(mContext)
                     .load(targetIcon)
                     .into(imgTarget);
-
-
         }
-
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
-            imgLike.setImageResource(icon);
+
+            Glide.with(mContext)
+                    .load(icon)
+                    .into(imgTarget);
 
             if (isClientOperation) {
                 if (isPostLiked) {

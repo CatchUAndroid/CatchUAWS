@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -221,7 +223,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             imgBtnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogBoxUtil.postSettingsDialogBox(mContext, post,  new PostSettingsChoosenCallback() {
+                    DialogBoxUtil.postSettingsDialogBox(mContext, post, new PostSettingsChoosenCallback() {
 
                         @Override
                         public void onReportSelected() {
@@ -339,7 +341,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
-            imgLike.setImageResource(icon);
+
+            Glide.with(mContext).load(icon).into(imgLike);
 
             if (isClientOperation) {
                 if (isPostLiked) {
@@ -457,7 +460,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //profile picture
             UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(),comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
+                    comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
                 this.txtUsername.setText(comment.getUser().getUsername());
@@ -468,9 +471,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             }
             //Date
             if (comment.getCreateAt() != null) {
-                if(comment.getCreateAt().equals(CREATE_AT_NOW)){
+                if (comment.getCreateAt().equals(CREATE_AT_NOW)) {
                     txtCreateAt.setText(mContext.getResources().getString(R.string.now));
-                }else{
+                } else {
                     txtCreateAt.setText(CommonUtils.timeAgo(mContext, comment.getCreateAt()));
                 }
             }
@@ -485,7 +488,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
             imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
-            imgLike.setImageResource(icon);
+
+            Glide.with(mContext).load(icon).into(imgLike);
 
             if (isClientOperation) {
                 if (isCommentLiked) {

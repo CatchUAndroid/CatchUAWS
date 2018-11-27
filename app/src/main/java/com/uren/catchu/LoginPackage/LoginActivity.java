@@ -75,6 +75,7 @@ import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.UgurDeneme.Main2Activity;
 
 import org.json.JSONException;
 import org.json.JSONObject;

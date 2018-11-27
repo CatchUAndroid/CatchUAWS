@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -361,7 +362,7 @@ public class SinglePostFragment extends BaseFragment
 
     private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
         imgLike.setColorFilter(ContextCompat.getColor(getContext(), color), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgLike.setImageResource(icon);
+        Glide.with(getContext()).load(icon).into(imgLike);
 
         if (isClientOperation) {
             if (isPostLiked) {
