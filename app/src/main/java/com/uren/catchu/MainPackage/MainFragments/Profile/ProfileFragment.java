@@ -32,6 +32,7 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -52,8 +53,11 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFr
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.GroupListHolder;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
+import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -140,6 +144,10 @@ public class ProfileFragment extends BaseFragment
     LinearLayout followersLayout;
     @BindView(R.id.followingsLayout)
     LinearLayout followingsLayout;
+    @BindView(R.id.sharedPostCount)
+    TextView sharedPostCount;
+    @BindView(R.id.caughtPostCount)
+    TextView caughtPostCount;
 
     //Groups
     @BindView(R.id.groupRecyclerView)
@@ -231,7 +239,7 @@ public class ProfileFragment extends BaseFragment
             getProfileDetail(AccountHolderInfo.getUserID());
         }
 
-        getGroups();
+        getGroupsFromSingleton();
 
     }
 
@@ -247,7 +255,7 @@ public class ProfileFragment extends BaseFragment
                         startGetProfileDetail(AccountHolderInfo.getUserID(), token);
                     }
                 });
-                getGroups();
+                getGroupsHere();
             }
         });
     }
@@ -390,7 +398,21 @@ public class ProfileFragment extends BaseFragment
         }
 
         setUserFollowerAndFollowingCnt(user);
+        setPostCounts(user);
         refresh_layout.setRefreshing(false);
+    }
+
+    private void setPostCounts(UserProfile user) {
+
+        if (user != null && user.getRelationInfo() != null) {
+
+            if (user.getRelationInfo().getPostCount() != null && !user.getRelationInfo().getPostCount().toString().trim().isEmpty())
+                sharedPostCount.setText(String.valueOf(user.getRelationInfo().getPostCount()));
+
+            if (user.getRelationInfo().getCatchCount() != null && !user.getRelationInfo().getCatchCount().toString().trim().isEmpty())
+                caughtPostCount.setText(String.valueOf(user.getRelationInfo().getFollowingCount()));
+        }
+
     }
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
@@ -403,7 +425,6 @@ public class ProfileFragment extends BaseFragment
 
             if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
                 txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount());
-
 
         }
     }
@@ -490,12 +511,37 @@ public class ProfileFragment extends BaseFragment
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void getGroups() {
+    private void getGroupsFromSingleton() {
+
+        GroupListHolder groupListHolderInstance = GroupListHolder.getInstance();
+
+        if(groupListHolderInstance != null){
+            GroupRequestResult groupRequestResult = groupListHolderInstance.getGroupList();
+            if(groupRequestResult.getResultArray().size() > 0){
+                CommonUtils.showToast(getContext(), "grupları singletondan hemen aldım");
+                setGroupRecyclerView(groupRequestResult);
+            }else{
+                GroupListHolder.setGroupListHolderCallback(new GroupListHolderCallback() {
+                    @Override
+                    public void onGroupListInfoTaken(GroupRequestResult groupRequestResult) {
+                        CommonUtils.showToast(getContext(), "grupları singletondan Callback ile aldım");
+                        setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
+                    }
+                });
+            }
+        }else{
+            getGroupsHere();
+        }
+
+    }
+
+    private void getGroupsHere() {
 
         UserGroupsProcess.getGroups(AccountHolderInfo.getUserID(),
                 new CompleteCallback() {
                     @Override
                     public void onComplete(Object object) {
+                        CommonUtils.showToast(getContext(), "grupları bu sayfadan aldım- Not singleton");
                         GroupRequestResult groupRequestResult = (GroupRequestResult) object;
                         setGroupRecyclerView(groupRequestResult);
                     }
@@ -512,8 +558,6 @@ public class ProfileFragment extends BaseFragment
                         }
                     }
                 });
-
-
     }
 
     private void setGroupRecyclerView(GroupRequestResult groupRequestResult) {
@@ -523,6 +567,7 @@ public class ProfileFragment extends BaseFragment
         //layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         groupRecyclerView.setLayoutManager(layoutManager);
+        groupRecyclerView.setItemViewCacheSize(25);
 
         //adapter
         GroupsListAdapter groupsListAdapter = new GroupsListAdapter(getContext(), mFragmentNavigation, groupRequestResult);
@@ -548,16 +593,6 @@ public class ProfileFragment extends BaseFragment
             imgUserEdit.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             userEditClicked();
         }
-
-        /*if (v == txtFollowerCnt) {
-            txtFollowerCnt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-            followerClicked();
-        }
-
-        if (v == txtFollowingCnt) {
-            txtFollowingCnt.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-            followingClicked();
-        }*/
 
         if (v == imgBackBtn) {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;

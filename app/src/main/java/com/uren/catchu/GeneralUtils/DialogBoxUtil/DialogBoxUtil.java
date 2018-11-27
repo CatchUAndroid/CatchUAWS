@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.Post;
 
@@ -290,11 +291,18 @@ public class DialogBoxUtil {
         adapter.add("  " + context.getResources().getString(R.string.report));
         //Follow
         //todo NT - follow statüsüne göre buton eklenecek. Su anda posttan user follow statüsü gelmiyor
-        if(!followElement.equals("notValid")){
+        if (!followElement.equals("notValid")) {
             adapter.add("  " + followElement);
         }
-        //Disable comment
-        adapter.add("  " + context.getResources().getString(R.string.disableComment));
+        //Disable comment - if post is mine
+        if (post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+            if(post.getIsCommentAllowed()){
+                adapter.add("  " + context.getResources().getString(R.string.disableComment));
+            }else{
+                adapter.add("  " + context.getResources().getString(R.string.enableComment));
+            }
+
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
@@ -328,7 +336,7 @@ public class DialogBoxUtil {
             followElement = context.getResources().getString(R.string.follow);
         }
 */
-        return  followElement;
+        return followElement;
 
     }
 

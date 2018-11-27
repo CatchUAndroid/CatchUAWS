@@ -34,6 +34,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Noti
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.GroupListHolder;
 
 import java.util.List;
 import java.util.Stack;
@@ -119,6 +120,7 @@ public class NextActivity extends AppCompatActivity implements
         });
 
         fillAccountHolder();
+        fillGroupListHolder();
     }
 
     public void checkFeedFragmentReselected(TabLayout.Tab tab) {
@@ -165,6 +167,11 @@ public class NextActivity extends AppCompatActivity implements
     public void fillAccountHolder() {
         AccountHolderInfo.setInstance(null);
         AccountHolderInfo.getInstance();
+    }
+
+    public void fillGroupListHolder(){
+        GroupListHolder.setInstance(null);
+        GroupListHolder.getInstance();
     }
 
     private void initValues() {

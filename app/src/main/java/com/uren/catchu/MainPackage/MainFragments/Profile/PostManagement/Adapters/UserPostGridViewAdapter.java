@@ -26,8 +26,7 @@ import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
@@ -162,37 +161,26 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             SingletonSinglePost.getInstance().setPost(post);
             String toolbarTitle = post.getUser().getUsername();
 
-            PostHelper.SinglePostClicked instance = PostHelper.SinglePostClicked.getInstance();
-            instance.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), position);
-
-            /**
-             * Like Callback
-             */
-            instance.setPostLikeClickCallback(new PostLikeClickCallback() {
+            PostHelper.SinglePostClicked singlePostClickedInstance = PostHelper.SinglePostClicked.getInstance();
+            singlePostClickedInstance.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), position);
+            singlePostClickedInstance.setPostFeaturesCallback(new PostFeaturesCallback() {
                 @Override
                 public void onPostLikeClicked(boolean isPostLiked, int newLikeCount, int position) {
-                    /*
-                    postList.get(position).setLikeCount(newLikeCount);
-                    postList.get(position).setIsLiked(isPostLiked);
-                    notifyItemChanged(position);
-                    */
-                }
-            });
 
-            /**
-             * Comment Callback
-             */
-            instance.setCommentAddCallback(new CommentAddCallback() {
+                }
+
                 @Override
                 public void onCommentAdd(int position, int newCommentCount) {
-                    /*
-                    postList.get(position).setCommentCount(postList.get(position).getCommentCount() + 1);
-                    notifyItemChanged(position);
-                    */
+
+                }
+
+                @Override
+                public void onCommentAllowedStatusChanged(int position, boolean commentAllowed) {
+
                 }
             });
 
-            instance.startSinglePostProcess();
+            singlePostClickedInstance.startSinglePostProcess();
 
         }
 

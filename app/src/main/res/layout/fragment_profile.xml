@@ -330,13 +330,32 @@
                                     android:background="@color/red"
                                     android:orientation="vertical">
 
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="My Posts -> Click here"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold" />
+                                        android:orientation="horizontal"
+                                        android:weightSum="5">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="3"
+                                            android:gravity="center"
+                                            android:text="My Posts"
+                                            android:textColor="@color/white"
+                                            android:textStyle="bold" />
+
+                                        <TextView
+                                            android:id="@+id/sharedPostCount"
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="2"
+                                            android:gravity="center"
+                                            android:text="0"
+                                            android:textSize="17sp" />
+
+
+                                    </LinearLayout>
 
 
                                 </LinearLayout>
@@ -351,13 +370,32 @@
                                     android:background="@color/green"
                                     android:orientation="vertical">
 
-                                    <TextView
+                                    <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:text="Catched Posts -> Click here"
-                                        android:textColor="@color/white"
-                                        android:textStyle="bold" />
+                                        android:orientation="horizontal"
+                                        android:weightSum="5">
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:gravity="center"
+                                            android:text="Caught Posts"
+                                            android:textColor="@color/white"
+                                            android:textStyle="bold"
+                                            android:layout_weight="3"/>
+
+                                        <TextView
+                                            android:id="@+id/caughtPostCount"
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="2"
+                                            android:gravity="center"
+                                            android:text="0"
+                                            android:textSize="17sp" />
+
+                                    </LinearLayout>
+
 
                                 </LinearLayout>
 
@@ -371,24 +409,22 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginLeft="20dp"
                                         android:text="@string/groups"
                                         android:textSize="17sp"
-                                        android:textStyle="bold"
-                                        android:layout_marginLeft="20dp"/>
+                                        android:textStyle="bold" />
 
                                     <android.support.v7.widget.RecyclerView
                                         android:id="@+id/groupRecyclerView"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent">
-                                    </android.support.v7.widget.RecyclerView>
+                                        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
                                 </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="100dp"
-                                    android:orientation="vertical"
-                                    >
+                                    android:orientation="vertical">
 
                                 </LinearLayout>
 

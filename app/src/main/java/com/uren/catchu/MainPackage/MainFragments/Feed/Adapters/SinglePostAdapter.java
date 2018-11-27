@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -33,6 +34,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,17 +56,24 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     private Comment comment;
     private List<Post> postList;
     private List<Comment> commentList;
+    private List<Comment> tempCommentList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
     GradientDrawable imageShape;
     private PersonListItemClickListener personListItemClickListener;
+    private int numberOfCallback; // callback number for feed adapter
+    private int feedPosition;
 
     public SinglePostAdapter(Activity activity, Context context,
-                             BaseFragment.FragmentNavigation fragmentNavigation) {
+                             BaseFragment.FragmentNavigation fragmentNavigation, int feedPosition,
+                             int numberOfCallback) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.postList = new ArrayList<Post>();
         this.commentList = new ArrayList<Comment>();
+        this.tempCommentList = new ArrayList<Comment>();
+        this.numberOfCallback = numberOfCallback;
+        this.feedPosition= feedPosition;
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -140,6 +149,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         int likeCount;
         int commentCount;
         ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
+        ImageView imgCommentNotAllowed;
         LinearLayout profileMainLayout;
         TextView txtLocationDistance;
 
@@ -163,6 +173,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
             imgBtnLike = (ImageButton) view.findViewById(R.id.imgBtnLike);
             imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
+            imgCommentNotAllowed = (ImageView) view.findViewById(R.id.imgCommentNotAllowed);
             imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
             imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
             likeCount = 0;
@@ -173,6 +184,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         }
 
         private void setListeners() {
+
+            //init Variables
+            imgCommentNotAllowed.setVisibility(View.GONE);
 
             //imgLike
             imgLike.setOnClickListener(new View.OnClickListener() {
@@ -235,6 +249,18 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onDisableCommentSelected() {
+
+                            if(post.getIsCommentAllowed()){
+                                post.setIsCommentAllowed(!post.getIsCommentAllowed());
+                                showComments(false, null);
+                            }else{
+                                post.setIsCommentAllowed(!post.getIsCommentAllowed());
+                                showComments(true, tempCommentList);
+                            }
+
+                            setCommentStatus();
+                            PostHelper.PostCommentPermission.startProcess(mContext, AccountHolderInfo.getUserID(), post);
+                            PostHelper.SinglePostClicked.postCommentAllowedStatusChanged(feedPosition, post.getIsCommentAllowed(), numberOfCallback);
 
                         }
 
@@ -309,8 +335,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
-            //Comment Count
-            txtCommentCount.setText(String.valueOf(commentCount));
+            //Comment
+            setCommentStatus();
             //Location distance
             if (post.getDistance() != null) {
                 txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
@@ -335,6 +361,16 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             //Comment Count
             txtCommentCount.setText(String.valueOf(commentCount));
 
+        }
+
+        private void setCommentStatus() {
+            if(!post.getIsCommentAllowed()){
+                imgCommentNotAllowed.setVisibility(View.VISIBLE);
+                txtCommentCount.setText(String.valueOf(0));
+            }else{
+                imgCommentNotAllowed.setVisibility(View.GONE);
+                txtCommentCount.setText(String.valueOf(commentCount));
+            }
         }
 
         private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
@@ -531,9 +567,30 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         }
 
         if (addedCommentList != null) {
+            if(postList.get(0).getIsCommentAllowed()){
+                showComments(true, addedCommentList);
+            }else{
+                showComments(false,addedCommentList);
+            }
+            return;
+        }
+    }
+
+    private void showComments(Boolean showComment, List<Comment> addedCommentList){
+        if(showComment){
+            int totalSize = postList.size() + commentList.size();
             commentList.addAll(addedCommentList);
             notifyItemRangeInserted(totalSize, totalSize + addedCommentList.size());
-            return;
+        }else{
+            if(addedCommentList != null){
+                tempCommentList.addAll(addedCommentList);
+            }else{
+                tempCommentList.clear();
+                tempCommentList.addAll(commentList);
+                commentList.clear();
+                notifyItemRangeRemoved(postList.size(), tempCommentList.size());
+            }
+
         }
     }
 

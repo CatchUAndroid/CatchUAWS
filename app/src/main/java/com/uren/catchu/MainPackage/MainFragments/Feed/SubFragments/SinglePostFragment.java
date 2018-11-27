@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -77,6 +78,11 @@ import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_GROUP;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 
 public class SinglePostFragment extends BaseFragment
@@ -92,7 +98,7 @@ public class SinglePostFragment extends BaseFragment
     LinearLayoutManager mLayoutManager;
 
     //toolbar
-    ImageView imgProfilePic;
+    ImageView imgProfilePic, imgTarget;
     TextView txtProfilePic;
     TextView txtUserName;
     TextView txtCreateAt;
@@ -289,7 +295,36 @@ public class SinglePostFragment extends BaseFragment
             String text = CommonUtils.timeAgo(getContext(), post.getCreateAt());
             txtCreateAt.setText(text);
         }
+        //target
+        if (post.getPrivacyType() != null) {
+            setTargetImage();
+        }
 
+    }
+
+    private void setTargetImage() {
+
+        int targetIcon = R.drawable.world_icon_96;
+
+        if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
+            targetIcon = R.drawable.world_icon_96;
+            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
+            targetIcon = R.drawable.friends;
+            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
+            targetIcon = R.drawable.groups_icon_500;
+            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+        } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
+            targetIcon = R.drawable.groups_icon_500;
+        } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
+            targetIcon = R.drawable.groups_icon_500;
+            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
+        }
+
+        Glide.with(getContext())
+                .load(targetIcon)
+                .into(imgTarget);
 
     }
 
@@ -303,11 +338,15 @@ public class SinglePostFragment extends BaseFragment
         txtProfilePic = (TextView) mView.findViewById(R.id.txtProfilePic);
         txtUserName = (TextView) mView.findViewById(R.id.txtUserName);
         txtCreateAt = (TextView) mView.findViewById(R.id.txtCreateAt);
+        imgTarget = (ImageView) mView.findViewById(R.id.imgTarget);
         imgLike = (ImageView) mView.findViewById(R.id.imgLike);
 
         //imgBack
         imgBack.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
         imgBack.setOnClickListener(this);
+
+        //Comment Allowed
+        llAddComment.setVisibility(View.GONE);
 
     }
 
@@ -357,6 +396,13 @@ public class SinglePostFragment extends BaseFragment
             }
         });
 
+        //Comment Allowed
+        if (!post.getIsCommentAllowed()) {
+            llAddComment.setVisibility(View.GONE);
+        } else {
+            llAddComment.setVisibility(View.VISIBLE);
+        }
+
     }
 
     private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
@@ -384,7 +430,7 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void setAdapter() {
-        singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation);
+        singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation, position, numberOfCallback);
         singlePostAdapter.setPersonListItemClickListener(this);
         recyclerView.setAdapter(singlePostAdapter);
 
@@ -494,7 +540,7 @@ public class SinglePostFragment extends BaseFragment
                     if (postListResponse.getItems().size() == 0) {
                         //no such data - post bulunamadi
                         CommonUtils.showToast(getContext(), "post bulunamadi");
-                    }else{
+                    } else {
                         fillContent(postListResponse.getItems().get(0));
                     }
 
@@ -556,12 +602,16 @@ public class SinglePostFragment extends BaseFragment
 
 
     private void getCommentList() {
+
+
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
                 startGetCommentList(token);
             }
         });
+
+
     }
 
     private void startGetCommentList(String token) {
@@ -591,7 +641,7 @@ public class SinglePostFragment extends BaseFragment
             @Override
             public void onTaskContinue() {
                 //progressBar.setVisibility(View.VISIBLE);
-                if(!pulledToRefreshComment){
+                if (!pulledToRefreshComment) {
                     singlePostAdapter.addProgressLoading();
                 }
 
@@ -625,7 +675,6 @@ public class SinglePostFragment extends BaseFragment
             //singlePostAdapter.updateLikeCount(post.getLikeCount());
             SinglePostAdapter.PostViewHolder viewHolderForLayoutPosition = (SinglePostAdapter.PostViewHolder) recyclerView.findViewHolderForLayoutPosition(0);
             viewHolderForLayoutPosition.setPartialData(post, 0);
-
 
             recyclerView.smoothScrollToPosition(singlePostAdapter.getItemCount());
             edtAddComment.setText(null);

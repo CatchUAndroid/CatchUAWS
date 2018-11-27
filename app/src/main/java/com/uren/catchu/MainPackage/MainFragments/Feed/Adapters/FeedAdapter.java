@@ -26,8 +26,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PostSettingsChoosenCallback;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
@@ -35,6 +34,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSingl
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,6 +122,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
         int likeCount;
         int commentCount;
         ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
+        ImageView imgCommentNotAllowed;
         LinearLayout profileMainLayout;
         TextView txtLocationDistance;
         TextView txtCreateAt;
@@ -147,6 +148,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
             imgBtnLike = (ImageButton) view.findViewById(R.id.imgBtnLike);
             imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
+            imgCommentNotAllowed = (ImageView) view.findViewById(R.id.imgCommentNotAllowed);
             imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
             imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
             txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
@@ -159,6 +161,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
         }
 
         private void setListeners() {
+
+            //init Variables
+            imgCommentNotAllowed.setVisibility(View.GONE);
 
             //imgLike
             imgLike.setOnClickListener(new View.OnClickListener() {
@@ -193,7 +198,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 }
             });
 
-
             //More layout
             imgBtnMore.setOnClickListener(new View.OnClickListener() {
 
@@ -204,19 +208,17 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onReportSelected() {
-
                         }
 
                         @Override
                         public void onUnFollowSelected() {
-
-
-
                         }
 
                         @Override
                         public void onDisableCommentSelected() {
-
+                            post.setIsCommentAllowed(!post.getIsCommentAllowed());
+                            setCommentStatus();
+                            PostHelper.PostCommentPermission.startProcess(mContext, AccountHolderInfo.getUserID(), post);
                         }
 
                     });
@@ -260,33 +262,31 @@ public class FeedAdapter extends RecyclerView.Adapter {
             SingletonSinglePost.getInstance().setPost(post);
             String toolbarTitle = post.getUser().getUsername();
 
-            PostHelper.SinglePostClicked singlePostClicked = PostHelper.SinglePostClicked.getInstance();
-            singlePostClicked.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), postPositionHashMap.get(post.getPostid()));
-
-            /**
-             * Like Callback
-             */
-            singlePostClicked.setPostLikeClickCallback(new PostLikeClickCallback() {
+            PostHelper.SinglePostClicked singlePostClickedInstance = PostHelper.SinglePostClicked.getInstance();
+            Integer pstn = postPositionHashMap.get(post.getPostid());
+            singlePostClickedInstance.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), postPositionHashMap.get(post.getPostid()));
+            singlePostClickedInstance.setPostFeaturesCallback(new PostFeaturesCallback() {
                 @Override
                 public void onPostLikeClicked(boolean isPostLiked, int newLikeCount, int position) {
                     postList.get(position).setLikeCount(newLikeCount);
                     postList.get(position).setIsLiked(isPostLiked);
                     notifyItemChanged(position);
                 }
-            });
 
-            /**
-             * Comment Callback
-             */
-            singlePostClicked.setCommentAddCallback(new CommentAddCallback() {
                 @Override
                 public void onCommentAdd(int position, int newCommentCount) {
                     postList.get(position).setCommentCount(newCommentCount);
                     notifyItemChanged(position);
                 }
+
+                @Override
+                public void onCommentAllowedStatusChanged(int position, boolean commentAllowed) {
+                    postList.get(position).setIsCommentAllowed(commentAllowed);
+                    notifyItemChanged(position);
+                }
             });
 
-            singlePostClicked.startSinglePostProcess();
+            singlePostClickedInstance.startSinglePostProcess();
 
         }
 
@@ -332,8 +332,10 @@ public class FeedAdapter extends RecyclerView.Adapter {
             } else {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
-            //Comment Count
-            txtCommentCount.setText(String.valueOf(commentCount));
+            //Comment
+            if(post.getIsCommentAllowed() != null){
+                setCommentStatus();
+            }
             //Location distance
             if (post.getDistance() != null) {
                 txtLocationDistance.setText(String.valueOf(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue())));
@@ -347,6 +349,16 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 setTargetImage();
             }
 
+        }
+
+        private void setCommentStatus() {
+            if(!post.getIsCommentAllowed()){
+                imgCommentNotAllowed.setVisibility(View.VISIBLE);
+                txtCommentCount.setText(String.valueOf(0));
+            }else{
+                imgCommentNotAllowed.setVisibility(View.GONE);
+                txtCommentCount.setText(String.valueOf(commentCount));
+            }
         }
 
         private void setTargetImage() {
