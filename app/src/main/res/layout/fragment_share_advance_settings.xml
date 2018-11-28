@@ -12,43 +12,102 @@
         android:layout_margin="10dp"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/COMMENTS"
-            android:textColor="@color/Black"
-            android:textStyle="bold" />
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="6dp"
-                android:text="@string/LET_POST_COMMENT"
-                android:textColor="@color/Black" />
+                android:text="@string/COMMENT_SETTINGS"
+                android:textColor="@color/Black"
+                android:textStyle="bold" />
 
-            <Switch
-                android:id="@+id/closeCommentsSwitch"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/LET_POST_COMMENT"
+                    android:textColor="@color/Black" />
+
+                <Switch
+                    android:id="@+id/closeCommentsSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/img_border"
+                    android:checked="true"
+                    android:gravity="right" />
+
+            </RelativeLayout>
+
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/img_border"
-                android:gravity="right"
-                android:checked="true"/>
+                android:layout_height="wrap_content"
+                android:text="@string/COMMENT_SETTINGS_DESC"
+                android:textColor="@color/tintColor" />
 
-        </RelativeLayout>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/MAP_SETTINGS"
+                android:textColor="@color/Black"
+                android:textStyle="bold" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/LOCATION_WILL_SEEN_ON_POST"
+                    android:textColor="@color/Black" />
+
+                <Switch
+                    android:id="@+id/closeLocationSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/img_border"
+                    android:checked="true"
+                    android:gravity="right" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/LOCATION_SETTINGS_DESC"
+                android:textColor="@color/tintColor" />
+
+        </LinearLayout>
 
     </LinearLayout>
-
 
 
 </LinearLayout>
