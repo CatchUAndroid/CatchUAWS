@@ -9,21 +9,16 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.DynamicLinkUtil.DynamicLinkUtil;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.DynamicLinkUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
-import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ChangePasswordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.ContactsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.FacebookFriendsFragment;
@@ -35,7 +30,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 
 public class SettingsFragment extends BaseFragment {

@@ -445,6 +445,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cancelButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 getActivity().onBackPressed();
             }
         });

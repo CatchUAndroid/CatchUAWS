@@ -1,4 +1,4 @@
-package com.uren.catchu.GeneralUtils.DynamicLinkUtil;
+package com.uren.catchu.GeneralUtils.FirebaseHelperModel;
 
 import android.app.Fragment;
 import android.content.Context;
