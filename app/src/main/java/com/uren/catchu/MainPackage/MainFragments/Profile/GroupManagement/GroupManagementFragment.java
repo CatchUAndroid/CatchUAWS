@@ -105,7 +105,7 @@ public class GroupManagementFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_special_select, container, false);
+            mView = inflater.inflate(R.layout.fragment_group_management, container, false);
             ButterKnife.bind(this, mView);
             addListeners();
             initValues();

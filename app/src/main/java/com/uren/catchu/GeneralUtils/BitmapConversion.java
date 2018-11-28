@@ -83,10 +83,7 @@ public class BitmapConversion extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (
-                Throwable t)
-
-        {
+        } catch (Throwable t) {
             t.printStackTrace();
         }
         return result;
