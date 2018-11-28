@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -81,6 +82,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 
 import catchu.model.UserProfile;
+import io.fabric.sdk.android.Fabric;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -136,6 +138,7 @@ public class LoginActivity extends AppCompatActivity
         initTwitterLogin();
 
         setContentView(R.layout.activity_login);
+        Fabric.with(this, new Crashlytics());
 
         initVariables();
         setShapes();

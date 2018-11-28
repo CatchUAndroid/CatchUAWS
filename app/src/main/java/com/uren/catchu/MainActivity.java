@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,6 +40,7 @@ import catchu.model.BaseResponse;
 import catchu.model.Provider;
 import catchu.model.User;
 import catchu.model.UserProfile;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Fabric.with(this, new Crashlytics());
         initVariables();
 
         CommonUtils.LOG_NEREDEYIZ("MainActivity");

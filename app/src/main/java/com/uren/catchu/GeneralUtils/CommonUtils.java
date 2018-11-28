@@ -13,6 +13,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -22,6 +23,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -44,6 +47,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.APP_GOOGLE_PLAY_DEFAULT_LINK;
 
 public class CommonUtils {
@@ -62,6 +66,25 @@ public class CommonUtils {
     public static final void showToastLong(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+    }
+
+    public static final void showCustomToast(Context context, String message, int toastLen){
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
+        View view = inflater.inflate( R.layout.layout_custom_toast, null );
+        View layout = (LinearLayout) view.findViewById( R.id.custom_toast_container );
+
+        layout.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.CornflowerBlue, null),
+                context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 3));
+
+        TextView text = (TextView) layout.findViewById(R.id.text);
+        text.setText(message);
+        text.setTextColor(context.getResources().getColor(R.color.White, null));
+
+        Toast toast = new Toast(getApplicationContext());
+        toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.BOTTOM, 0, 150);
+        toast.setDuration(toastLen);
+        toast.setView(layout);
+        toast.show();
     }
 
     public static final String getDeviceID(Context context) {

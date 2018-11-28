@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -179,7 +180,7 @@ public class ChangePasswordFragment extends BaseFragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.PASSWORD_IS_CHANGED));
+                                        CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.PASSWORD_IS_CHANGED), Toast.LENGTH_SHORT);
                                         thread.start();
                                     } else {
                                         DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + task.getException().getMessage(), new InfoDialogBoxCallback() {

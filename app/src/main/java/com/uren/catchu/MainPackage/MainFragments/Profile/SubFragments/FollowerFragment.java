@@ -145,7 +145,6 @@ public class FollowerFragment extends BaseFragment
         ListItemClickListener listItemClickListener = new ListItemClickListener() {
             @Override
             public void onClick(View view, User user, int clickedPosition) {
-                CommonUtils.showToast(getContext(), "Clicked : " + user.getName());
                 startFollowerInfoProcess(user, clickedPosition);
             }
         };

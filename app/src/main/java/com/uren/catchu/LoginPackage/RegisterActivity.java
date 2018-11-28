@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -37,6 +38,8 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.R;
+
+import io.fabric.sdk.android.Fabric;
 
 
 public class RegisterActivity extends AppCompatActivity
@@ -62,7 +65,7 @@ public class RegisterActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
+        Fabric.with(this, new Crashlytics());
         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 
         init();

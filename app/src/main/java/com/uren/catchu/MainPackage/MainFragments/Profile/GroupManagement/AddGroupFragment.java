@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,12 +27,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.CrashlyticsHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -291,21 +295,27 @@ public class AddGroupFragment extends BaseFragment {
     }
 
     public void setGroupPhoto(Uri groupPhotoUri) {
-        if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
-            groupPhotoExist = true;
-            groupPictureImgv.setPadding(0, 0, 0, 0);
-            Glide.with(getContext())
-                    .load(groupPhotoUri)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(groupPictureImgv);
-        } else {
-            groupPhotoExist = false;
-            photoSelectUtil = null;
-            int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
-            groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
-            Glide.with(this)
-                    .load(getResources().getIdentifier("photo_camera", "drawable", getContext().getPackageName()))
-                    .into(groupPictureImgv);
+        try {
+            if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
+                groupPhotoExist = true;
+                groupPictureImgv.setPadding(0, 0, 0, 0);
+                Glide.with(getContext())
+                        .load(groupPhotoUri)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(groupPictureImgv);
+            } else {
+                groupPhotoExist = false;
+                photoSelectUtil = null;
+                int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
+                groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+                Glide.with(this)
+                        .load(getResources().getIdentifier("photo_camera", "drawable", getContext().getPackageName()))
+                        .into(groupPictureImgv);
+            }
+        } catch (Exception e) {
+            /*CrashlyticsHelper.reportCrash(null, AddGroupFragment.class.getSimpleName(),
+                    new Object(){}.getClass().getEnclosingMethod().getName(), null, e);*/
+            e.printStackTrace();
         }
     }
 

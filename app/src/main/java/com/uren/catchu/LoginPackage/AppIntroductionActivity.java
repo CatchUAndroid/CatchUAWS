@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.LoginPackage.Adapters.AppIntroductionAdapter;
 import com.uren.catchu.LoginPackage.Models.AppIntroSession;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -22,6 +23,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import catchu.model.Provider;
+import io.fabric.sdk.android.Fabric;
 
 public class AppIntroductionActivity extends AppCompatActivity {
 
@@ -65,6 +67,7 @@ public class AppIntroductionActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_app_introduction);
+        Fabric.with(this, new Crashlytics());
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);

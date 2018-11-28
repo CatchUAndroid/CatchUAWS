@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -451,7 +452,7 @@ public class UserEditFragment extends BaseFragment
 
     private void checkCameraProcess() {
         if (!CommonUtils.checkCameraHardware(getContext())) {
-            CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
+            CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera), Toast.LENGTH_SHORT);
             return;
         }
 

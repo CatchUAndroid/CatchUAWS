@@ -34,6 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -457,7 +458,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 shareButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
 
                 if (!checkShareItems.shareIsPossible()) {
-                    CommonUtils.showToast(getContext(), checkShareItems.getErrMessage());
+                    //CommonUtils.showToast(getContext(), checkShareItems.getErrMessage());
+                    CommonUtils.showCustomToast(getContext(), checkShareItems.getErrMessage(), Toast.LENGTH_SHORT);
                     return;
                 }
                 sharePost();
@@ -925,10 +927,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
                 if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
                         !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
-                    toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-                } else if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
+                    UserDataUtil.setName(AccountHolderInfo.getInstance().getUser().getUserInfo().getName(), toolbarTitle);
+                }
+
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
                         !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
-                    toolbarTitle.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+                    UserDataUtil.setName(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
                 }
             }
         } catch (Exception e) {

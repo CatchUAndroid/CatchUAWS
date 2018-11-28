@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
@@ -39,6 +40,7 @@ import java.util.List;
 import java.util.Stack;
 
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
@@ -86,6 +88,7 @@ public class NextActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_next);
+        Fabric.with(this, new Crashlytics());
         thisActivity = this;
 
         initValues();
