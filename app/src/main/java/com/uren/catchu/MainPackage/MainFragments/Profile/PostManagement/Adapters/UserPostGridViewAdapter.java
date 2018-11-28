@@ -156,8 +156,6 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
 
         private void setSinglePostFragmentItems() {
 
-            String name = post.getUser().getUsername();
-
             SingletonSinglePost.getInstance().setPost(post);
             String toolbarTitle = post.getUser().getUsername();
 
@@ -166,17 +164,21 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             singlePostClickedInstance.setPostFeaturesCallback(new PostFeaturesCallback() {
                 @Override
                 public void onPostLikeClicked(boolean isPostLiked, int newLikeCount, int position) {
-
+                    postList.get(position).setLikeCount(newLikeCount);
+                    postList.get(position).setIsLiked(isPostLiked);
+                    notifyItemChanged(position);
                 }
 
                 @Override
                 public void onCommentAdd(int position, int newCommentCount) {
-
+                    postList.get(position).setCommentCount(newCommentCount);
+                    notifyItemChanged(position);
                 }
 
                 @Override
                 public void onCommentAllowedStatusChanged(int position, boolean commentAllowed) {
-
+                    postList.get(position).setIsCommentAllowed(commentAllowed);
+                    notifyItemChanged(position);
                 }
             });
 

@@ -244,7 +244,10 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgBtnComment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    setSinglePostFragmentItems();
+                    //PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, post.getPostid(),postPositionHashMap.get(post.getPostid()) );
+                    if(post.getIsCommentAllowed()){
+                        setSinglePostFragmentItems();
+                    }
                 }
             });
             //CardView

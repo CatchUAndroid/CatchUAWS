@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.util.DiffUtil;
@@ -27,6 +28,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.PostSettingsChoosenCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAllowedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.CommentListDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
@@ -60,6 +62,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     private BaseFragment.FragmentNavigation fragmentNavigation;
     GradientDrawable imageShape;
     private PersonListItemClickListener personListItemClickListener;
+    private CommentAllowedCallback commentAllowedCallback;
+    public static String PARTIAL_DATA_LOADING = "PARTIAL_DATA_LOADING";
     private int numberOfCallback; // callback number for feed adapter
     private int feedPosition;
 
@@ -73,7 +77,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         this.commentList = new ArrayList<Comment>();
         this.tempCommentList = new ArrayList<Comment>();
         this.numberOfCallback = numberOfCallback;
-        this.feedPosition= feedPosition;
+        this.feedPosition = feedPosition;
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -116,6 +120,33 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     }
 
     @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position, @NonNull List payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+
+        if (payloads.isEmpty()) {
+            // Perform a full update
+            onBindViewHolder(holder, position);
+        } else {
+            // Perform a partial update
+            for (Object payload : payloads) {
+                if (payload instanceof String) {
+
+                    String loadType = (String) payload.toString();
+                    if (loadType.equals(PARTIAL_DATA_LOADING)) {
+                        if (holder instanceof PostViewHolder) {
+                            post = postList.get(position);
+                            ((PostViewHolder) holder).setPartialData(post, position);
+                        }
+                    }
+
+                }
+
+            }
+        }
+
+    }
+
+    @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if (holder instanceof PostViewHolder) {
@@ -124,8 +155,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         } else if (holder instanceof CommentViewHolder) {
             comment = commentList.get(position - postList.size());
             ((CommentViewHolder) holder).setData(comment, position);
-
-
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -133,25 +162,20 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgProfilePic;
-        TextView txtProfilePic;
-        TextView txtName;
-        TextView txtUserName;
+        Post post;
+        CardView cardView;
         TextView txtDetail;
         ViewPager viewPager;
-        CardView cardView;
-        ImageView imgLike;
-        private int position;
-        boolean isPostLiked = false;
-        Post post;
         TextView txtLikeCount;
         TextView txtCommentCount;
-        int likeCount;
-        int commentCount;
         ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
         ImageView imgCommentNotAllowed;
-        LinearLayout profileMainLayout;
         TextView txtLocationDistance;
+
+        int position;
+        boolean isPostLiked = false;
+        int likeCount;
+        int commentCount;
 
         View mView;
 
@@ -160,16 +184,10 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             mView = view;
             cardView = (CardView) view.findViewById(R.id.card_view);
-            imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
-            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
-            txtName = (TextView) view.findViewById(R.id.txtName);
-            txtUserName = (TextView) view.findViewById(R.id.txtUserName);
             txtDetail = (TextView) view.findViewById(R.id.txtDetail);
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-            imgLike = (ImageView) view.findViewById(R.id.imgLike);
             txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
             txtCommentCount = (TextView) view.findViewById(R.id.txtCommentCount);
-            profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
             txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
             imgBtnLike = (ImageButton) view.findViewById(R.id.imgBtnLike);
             imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
@@ -187,32 +205,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //init Variables
             imgCommentNotAllowed.setVisibility(View.GONE);
-
-            //imgLike
-            imgLike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
-                    int tempLikeCount = post.getLikeCount();
-                    if (isPostLiked) {
-                        isPostLiked = false;
-                        post.setIsLiked(false);
-                        tempLikeCount--;
-                        post.setLikeCount(tempLikeCount);
-                        setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
-                    } else {
-                        isPostLiked = true;
-                        post.setIsLiked(true);
-                        tempLikeCount++;
-                        post.setLikeCount(tempLikeCount);
-                        setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
-                    }
-
-                }
-            });
 
             //Like layout
             imgBtnLike.setOnClickListener(new View.OnClickListener() {
@@ -235,7 +227,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             imgBtnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogBoxUtil.postSettingsDialogBox(mContext, post,  new PostSettingsChoosenCallback() {
+                    DialogBoxUtil.postSettingsDialogBox(mContext, post, new PostSettingsChoosenCallback() {
 
                         @Override
                         public void onReportSelected() {
@@ -250,14 +242,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onDisableCommentSelected() {
 
-                            if(post.getIsCommentAllowed()){
-                                post.setIsCommentAllowed(!post.getIsCommentAllowed());
-                                showComments(false, null);
-                            }else{
-                                post.setIsCommentAllowed(!post.getIsCommentAllowed());
-                                showComments(true, tempCommentList);
-                            }
-
+                            post.setIsCommentAllowed(!post.getIsCommentAllowed());
+                            commentAllowedCallback.onCommentAllowedStatusChanged(post.getIsCommentAllowed());
                             setCommentStatus();
                             PostHelper.PostCommentPermission.startProcess(mContext, AccountHolderInfo.getUserID(), post);
                             PostHelper.SinglePostClicked.postCommentAllowedStatusChanged(feedPosition, post.getIsCommentAllowed(), numberOfCallback);
@@ -267,33 +253,17 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                     });
                 }
             });
-            //Profile layout
-            profileMainLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    UserInfoListItem userInfoListItem = new UserInfoListItem(post.getUser());
-                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, userInfoListItem);
-                }
-            });
+
             //Location Detail Layout
+            /* TODO : NT - profil imajı yüklenmeli..
             imgBtnLocationDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, txtProfilePic, imgProfilePic);
                 }
             });
-/*
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CommonUtils.showToast(mContext, "Card clicked");
-                    SingletonSinglePost.getInstance().setPost(post);
-                    String toolbarTitle = post.getUser().getUsername();
-                    PostHelper.SinglePostClicked.startProcess(mContext, fragmentNavigation, toolbarTitle, post.getPostid());
-                    SingletonSinglePost.getInstance().setPost(null);
-                }
-            });
-*/
+            */
+
         }
 
         public void setData(Post post, int position) {
@@ -304,17 +274,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             this.likeCount = post.getLikeCount();
             this.commentCount = post.getCommentCount();
 
-            //profile picture
-            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
-                    post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
-            //Name
-            if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
-                this.txtName.setText(post.getUser().getName());
-            }
-            //Username
-            if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
-                this.txtUserName.setText(post.getUser().getUsername());
-            }
             //Text
             if (post.getMessage() != null && !post.getMessage().isEmpty()) {
                 this.txtDetail.setText(post.getMessage());
@@ -329,12 +288,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             } else {
                 viewPager.setVisibility(View.GONE);
             }
-            //Like
-            if (post.getIsLiked()) {
-                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
-            } else {
-                setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
-            }
+            //Like count
+            txtLikeCount.setText(String.valueOf(likeCount));
             //Comment
             setCommentStatus();
             //Location distance
@@ -348,47 +303,24 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             this.position = position;
             this.post = post;
-            this.isPostLiked = post.getIsLiked();
             this.likeCount = post.getLikeCount();
             this.commentCount = post.getCommentCount();
 
-            //Like
-            if (post.getIsLiked()) {
-                setLikeIconUI(R.color.oceanBlue, R.mipmap.icon_like_filled, false);
-            } else {
-                setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
-            }
+            //Like count
+            txtLikeCount.setText(String.valueOf(likeCount));
             //Comment Count
             txtCommentCount.setText(String.valueOf(commentCount));
 
         }
 
         private void setCommentStatus() {
-            if(!post.getIsCommentAllowed()){
+            if (!post.getIsCommentAllowed()) {
                 imgCommentNotAllowed.setVisibility(View.VISIBLE);
                 txtCommentCount.setText(String.valueOf(0));
-            }else{
+            } else {
                 imgCommentNotAllowed.setVisibility(View.GONE);
                 txtCommentCount.setText(String.valueOf(commentCount));
             }
-        }
-
-        private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
-            imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
-            imgLike.setImageResource(icon);
-
-            if (isClientOperation) {
-                if (isPostLiked) {
-                    likeCount++;
-                    post.setLikeCount(likeCount);
-                } else {
-                    likeCount--;
-                    post.setLikeCount(likeCount);
-                }
-            }
-
-            txtLikeCount.setText(String.valueOf(likeCount));
-
         }
 
         private void setViewPager(Post post) {
@@ -447,24 +379,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             txtLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                    imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
-                    int tempLikeCount = comment.getLikeCount();
-                    if (isCommentLiked) {
-                        isCommentLiked = false;
-                        comment.setIsLiked(false);
-                        tempLikeCount--;
-                        comment.setLikeCount(tempLikeCount);
-                        setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), comment.getCommentid(), isCommentLiked);
-                    } else {
-                        isCommentLiked = true;
-                        comment.setIsLiked(true);
-                        tempLikeCount++;
-                        comment.setLikeCount(tempLikeCount);
-                        setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
-                        PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), comment.getCommentid(), isCommentLiked);
-                    }
+                    commentLikeClicked();
                 }
             });
             //Profile layout
@@ -481,7 +396,23 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                 }
             });
 
+        }
 
+        private void commentLikeClicked() {
+            imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+            if (isCommentLiked) {
+                isCommentLiked = false;
+                comment.setIsLiked(isCommentLiked);
+                comment.setLikeCount(comment.getLikeCount() - 1);
+                setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
+            } else {
+                isCommentLiked = true;
+                comment.setIsLiked(isCommentLiked);
+                comment.setLikeCount(comment.getLikeCount() + 1);
+                setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
+            }
+            //server process
+            PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), comment.getCommentid(), isCommentLiked);
         }
 
         public void setData(Comment comment, int position) {
@@ -493,7 +424,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //profile picture
             UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(),comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
+                    comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
                 this.txtUsername.setText(comment.getUser().getUsername());
@@ -504,9 +435,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             }
             //Date
             if (comment.getCreateAt() != null) {
-                if(comment.getCreateAt().equals(CREATE_AT_NOW)){
+                if (comment.getCreateAt().equals(CREATE_AT_NOW)) {
                     txtCreateAt.setText(mContext.getResources().getString(R.string.now));
-                }else{
+                } else {
                     txtCreateAt.setText(CommonUtils.timeAgo(mContext, comment.getCreateAt()));
                 }
             }
@@ -530,15 +461,10 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                 } else {
                     likeCount--;
                     comment.setLikeCount(likeCount);
-
                 }
             }
-
             txtLikeCount.setText(String.valueOf(likeCount));
-
         }
-
-
     }
 
     @Override
@@ -567,30 +493,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         }
 
         if (addedCommentList != null) {
-            if(postList.get(0).getIsCommentAllowed()){
-                showComments(true, addedCommentList);
-            }else{
-                showComments(false,addedCommentList);
-            }
-            return;
-        }
-    }
-
-    private void showComments(Boolean showComment, List<Comment> addedCommentList){
-        if(showComment){
-            int totalSize = postList.size() + commentList.size();
             commentList.addAll(addedCommentList);
             notifyItemRangeInserted(totalSize, totalSize + addedCommentList.size());
-        }else{
-            if(addedCommentList != null){
-                tempCommentList.addAll(addedCommentList);
-            }else{
-                tempCommentList.clear();
-                tempCommentList.addAll(commentList);
-                commentList.clear();
-                notifyItemRangeRemoved(postList.size(), tempCommentList.size());
-            }
-
+            return;
         }
     }
 
@@ -618,32 +523,52 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             return false;
     }
 
-    public void removeAll() {
-        int initalSize = postList.size() + commentList.size();
-        notifyItemRangeChanged(0, initalSize);
-    }
-
     public void updatePostListItems(List<Post> newPostList) {
+
+        this.postList.clear();
+        this.postList.addAll(newPostList);
+        notifyDataSetChanged();
+        //notifyItemRangeChanged(0, postList.size());
+
+        /*
         final PostDiffCallback diffCallback = new PostDiffCallback(this.postList, newPostList);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.postList.clear();
         this.postList.addAll(newPostList);
         diffResult.dispatchUpdatesTo(this);
+        */
     }
 
     public void updateCommentListItems(List<Comment> newCommentList) {
+
+        this.commentList.clear();
+        this.commentList.addAll(newCommentList);
+        notifyItemRangeChanged(postList.size(), commentList.size());
+
+        /*
         final CommentListDiffCallback diffCallback = new CommentListDiffCallback(this.commentList, newCommentList);
         final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
         this.commentList.clear();
         this.commentList.addAll(newCommentList);
         diffResult.dispatchUpdatesTo(this);
+        */
+
     }
 
     public void updateLikeCount(int newLikeCount) {
-        post.setLikeCount(newLikeCount);
-        //notifyItemChanged(0, post);
+        postList.get(0).setLikeCount(newLikeCount);
+        notifyItemRangeChanged(0, postList.size(), PARTIAL_DATA_LOADING);
+    }
+
+    public void updateCommentCount(int newCommentCount) {
+        postList.get(0).setCommentCount(newCommentCount);
+        notifyItemRangeChanged(0, postList.size(), PARTIAL_DATA_LOADING);
+    }
+
+    public void removeAllComments(){
+        commentList.clear();
     }
 
     public void updateItems() {
@@ -655,6 +580,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     public void setPersonListItemClickListener(PersonListItemClickListener personListItemClickListener) {
         SinglePostAdapter.this.personListItemClickListener = personListItemClickListener;
     }
+
+    public void setCommentAllowedCallback(CommentAllowedCallback commentAllowedCallback) {
+        SinglePostAdapter.this.commentAllowedCallback = commentAllowedCallback;
+    }
+
 
     public class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;

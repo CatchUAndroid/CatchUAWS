@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -46,6 +47,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAllowedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
@@ -86,7 +88,7 @@ import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 
 public class SinglePostFragment extends BaseFragment
-        implements View.OnClickListener, SendCommentButton.OnSendClickListener, PersonListItemClickListener {
+        implements View.OnClickListener, SendCommentButton.OnSendClickListener, PersonListItemClickListener, CommentAllowedCallback {
 
     View mView;
     String toolbarTitle;
@@ -145,6 +147,7 @@ public class SinglePostFragment extends BaseFragment
     private boolean pulledToRefreshPost = false;
     private boolean pulledToRefreshComment = false;
     private List<Post> postList = new ArrayList<Post>();
+    private List<Comment> commentList = new ArrayList<Comment>();
     private int drawingStartLocation = 0;
 
     public static SinglePostFragment newInstance(String toolbarTitle, String postId, int position, int numberOfCallback) {
@@ -377,22 +380,19 @@ public class SinglePostFragment extends BaseFragment
 
                 if (isPostLiked) {
                     isPostLiked = false;
-                    post.setIsLiked(false);
+                    post.setIsLiked(isPostLiked);
                     post.setLikeCount(post.getLikeCount() - 1);
                     setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
                 } else {
                     isPostLiked = true;
-                    post.setIsLiked(true);
+                    post.setIsLiked(isPostLiked);
                     post.setLikeCount(post.getLikeCount() + 1);
                     setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
                 }
                 PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
                 PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position, numberOfCallback);
 
-                //singlePostAdapter.updateLikeCount(post.getLikeCount());
-                SinglePostAdapter.PostViewHolder viewHolderForLayoutPosition = (SinglePostAdapter.PostViewHolder) recyclerView.findViewHolderForLayoutPosition(0);
-                viewHolderForLayoutPosition.setPartialData(post, 0);
-
+                singlePostAdapter.updateLikeCount(post.getLikeCount());
             }
         });
 
@@ -419,8 +419,6 @@ public class SinglePostFragment extends BaseFragment
             }
         }
 
-        //txtLikeCount.setText(String.valueOf(likeCount));
-
     }
 
     private void setLayoutManager() {
@@ -432,6 +430,7 @@ public class SinglePostFragment extends BaseFragment
     private void setAdapter() {
         singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation, position, numberOfCallback);
         singlePostAdapter.setPersonListItemClickListener(this);
+        singlePostAdapter.setCommentAllowedCallback(this);
         recyclerView.setAdapter(singlePostAdapter);
 
     }
@@ -441,7 +440,6 @@ public class SinglePostFragment extends BaseFragment
             @Override
             public void onRefresh() {
                 setPaginationValues();
-                //refresh_layout.setRefreshing(false);
                 checkLocationAndRetrievePosts();
             }
         });
@@ -499,8 +497,8 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void getPost() {
-        //get post detail...
 
+        //get post detail...
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(final String token) {
@@ -541,9 +539,9 @@ public class SinglePostFragment extends BaseFragment
                         //no such data - post bulunamadi
                         CommonUtils.showToast(getContext(), "post bulunamadi");
                     } else {
+                        post = postListResponse.getItems().get(0);
                         fillContent(postListResponse.getItems().get(0));
                     }
-
                 }
 
                 progressBar.setVisibility(View.GONE);
@@ -583,34 +581,26 @@ public class SinglePostFragment extends BaseFragment
         postList.add(post);
 
         if (pulledToRefreshPost) {
-
+            singlePostAdapter.updatePostListItems(postList);
             pulledToRefreshPost = false;
         } else {
             singlePostAdapter.addAll(postList, null);
         }
 
-
     }
-
-    private void animateContent() {
-        singlePostAdapter.updateItems();
-        llAddComment.animate().translationY(0)
-                .setInterpolator(new DecelerateInterpolator())
-                .setDuration(200)
-                .start();
-    }
-
 
     private void getCommentList() {
 
-
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startGetCommentList(token);
-            }
-        });
-
+        if (post.getIsCommentAllowed()) {
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startGetCommentList(token);
+                }
+            });
+        } else {
+            commentDisabled();
+        }
 
     }
 
@@ -654,15 +644,26 @@ public class SinglePostFragment extends BaseFragment
 
     private void setRecyclerViewComments(CommentListResponse commentListResponse) {
 
+        commentList.clear();
+        commentList = reverseList(commentListResponse.getItems());
 
         if (pulledToRefreshComment) {
-            singlePostAdapter.updatePostListItems(postList);
-            singlePostAdapter.updateCommentListItems(commentListResponse.getItems());
+            singlePostAdapter.updateCommentListItems(commentList);
             pulledToRefreshComment = false;
         } else {
             singlePostAdapter.removeProgressLoading(); // pulled to refresh değilse progress eklenip/kaldırılıyor
-            singlePostAdapter.addAll(null, commentListResponse.getItems());
+            singlePostAdapter.addAll(null, commentList);
         }
+    }
+
+    private List<Comment> reverseList(List<Comment> items) {
+
+        List<Comment> reverseList = new ArrayList<Comment>();
+        for (int i = items.size(); i > 0; i--) {
+            reverseList.add(items.get(i - 1));
+        }
+        return reverseList;
+
     }
 
     @Override
@@ -671,10 +672,7 @@ public class SinglePostFragment extends BaseFragment
             Comment comment = createCommentBody();
             post.setCommentCount(post.getCommentCount() + 1);
             singlePostAdapter.addComment(comment);
-
-            //singlePostAdapter.updateLikeCount(post.getLikeCount());
-            SinglePostAdapter.PostViewHolder viewHolderForLayoutPosition = (SinglePostAdapter.PostViewHolder) recyclerView.findViewHolderForLayoutPosition(0);
-            viewHolderForLayoutPosition.setPartialData(post, 0);
+            singlePostAdapter.updateCommentCount(post.getCommentCount());
 
             recyclerView.smoothScrollToPosition(singlePostAdapter.getItemCount());
             edtAddComment.setText(null);
@@ -720,6 +718,32 @@ public class SinglePostFragment extends BaseFragment
         comment.setCreateAt(CREATE_AT_NOW);
         comment.setUser(user);
         return comment;
+    }
+
+
+    @Override
+    public void onCommentAllowedStatusChanged(boolean isCommentAllowed) {
+
+        post.setIsCommentAllowed(isCommentAllowed);
+
+        if (isCommentAllowed) {
+            getCommentList();
+            llAddComment.setVisibility(View.VISIBLE);
+        } else {
+            commentDisabled();
+        }
+
+    }
+
+    private void commentDisabled() {
+        pulledToRefreshComment = true;
+        CommentListResponse commentListResponse = new CommentListResponse();
+        List<Comment> items = new ArrayList<Comment>();
+        commentListResponse.setItems(items);
+        singlePostAdapter.removeAllComments();
+
+        setRecyclerViewComments(commentListResponse);
+        llAddComment.setVisibility(View.GONE);
     }
 
 
