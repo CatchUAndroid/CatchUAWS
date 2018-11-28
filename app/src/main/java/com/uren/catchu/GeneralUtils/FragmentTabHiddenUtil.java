@@ -4,6 +4,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageView
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.AddGroupFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.EditGroupNameFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.MarkProblemFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ChangePasswordFragment;
@@ -23,7 +24,8 @@ public class FragmentTabHiddenUtil {
             PhoneNumEditFragment.class.getName(),
             VerifyPhoneNumberFragment.class.getName(),
             NotifyProblemFragment.class.getName(),
-            ChangePasswordFragment.class.getName()
+            ChangePasswordFragment.class.getName(),
+            EditGroupNameFragment.class.getName()
     };
 
     public static boolean isFragmentInHiddenList(String fragName) {

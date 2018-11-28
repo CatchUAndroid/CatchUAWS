@@ -322,7 +322,7 @@ public class PostHelper {
                 dialog.setCanceledOnTouchOutside(false);
 
                 MapView mMapView = (MapView) dialog.findViewById(R.id.mapView);
-                ClickableImageView btnCloseMap = (ClickableImageView) dialog.findViewById(R.id.btnCloseMap);
+                ImageView btnCloseMap = (ImageView) dialog.findViewById(R.id.btnCloseMap);
                 btnCloseMap.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

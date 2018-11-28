@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
@@ -20,6 +21,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
@@ -197,6 +199,8 @@ public class ViewPagerAdapter extends PagerAdapter {
             ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
             ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
             iconPlay.setVisibility(View.VISIBLE);
+            iconPlay.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.transparentBlack, null),
+                    0, GradientDrawable.OVAL, 50, 0));
             final LinearLayout llProgress = (LinearLayout) itemView.findViewById(R.id.llProgress);
             final ProgressBar progressLoading = (ProgressBar) itemView.findViewById(R.id.progressLoading);
 

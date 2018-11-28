@@ -627,14 +627,12 @@ public class SinglePostFragment extends BaseFragment
             SinglePostAdapter.PostViewHolder viewHolderForLayoutPosition = (SinglePostAdapter.PostViewHolder) recyclerView.findViewHolderForLayoutPosition(0);
             viewHolderForLayoutPosition.setPartialData(post, 0);
 
-
             recyclerView.smoothScrollToPosition(singlePostAdapter.getItemCount());
             edtAddComment.setText(null);
             btnSendComment.setCurrentState(SendCommentButton.STATE_DONE);
 
             PostHelper.AddComment.startProcess(getContext(), postId, comment, position);
             PostHelper.SinglePostClicked.postCommentCountChanged(position, post.getCommentCount(), numberOfCallback);
-
         }
     }
 
