@@ -258,6 +258,7 @@
     <string name="noLikesYet">Henüz beğeni yok!</string>
     <string name="unfollow">Takibi bırak</string>
     <string name="disableComment">Yorum yapmayı kapat</string>
+    <string name="enableComment">Yorum yapılmasına izin ver</string>
     <string name="report">Şikayet et...</string>
     <string name="commentHint">Ne düşünüyorsunuz?</string>
     <string name="like">Beğen</string>

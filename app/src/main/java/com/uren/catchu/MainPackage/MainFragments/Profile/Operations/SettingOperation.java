@@ -17,6 +17,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfile
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.GroupListHolder;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import catchu.model.UserProfileProperties;
@@ -47,6 +48,7 @@ public class SettingOperation {
         AccountHolderInfo.reset();
         AccountHolderFacebookFriends.reset();
         SelectedFriendList.reset();
+        GroupListHolder.reset();
 
         SingletonPostItem.reset();
         SingletonSinglePost.reset();

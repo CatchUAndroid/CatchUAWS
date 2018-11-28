@@ -4,16 +4,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,21 +21,21 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
+import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAddCallback;
+
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostLikeClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageViewFragment;
@@ -69,6 +59,7 @@ import catchu.model.CommentRequest;
 import catchu.model.CommentResponse;
 import catchu.model.Media;
 import catchu.model.Post;
+import catchu.model.PostRequest;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -419,7 +410,6 @@ public class PostHelper {
         static String postId;
         static Comment comment;
         static int position;
-        static CommentAddCallback commentAddCallback;
 
         public static final void startProcess(Context context, String postId, Comment comment, int position) {
 
@@ -462,7 +452,6 @@ public class PostHelper {
 
                 }
 
-
                 @Override
                 public void onFailure(Exception e) {
                     CommonUtils.LOG_FAIL("PostCommentProcess", e.toString());
@@ -484,6 +473,72 @@ public class PostHelper {
             return commentRequest;
         }
 
+    }
+
+    public static class PostCommentPermission {
+
+        static Post post;
+        static String userId;
+
+        public static final void startProcess(Context context, String userId, Post post) {
+
+            PostCommentPermission.userId = userId;
+            PostCommentPermission.post = post;
+
+            PostCommentPermission addComment = new PostCommentPermission(context);
+        }
+
+        private PostCommentPermission(Context context) {
+            postCommentPermissionProcess(context);
+        }
+
+        private void postCommentPermissionProcess(final Context context) {
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startPostCommentPermissionProcess(context, token);
+                }
+            });
+        }
+
+        private void startPostCommentPermissionProcess(Context context, String token) {
+
+            String userId = PostCommentPermission.userId;
+            String postId = PostCommentPermission.post.getPostid();
+            PostRequest postRequest = getPostRequest();
+
+            PostPatchProcess postPatchProcess = new PostPatchProcess(context, new OnEventListener<BaseResponse>() {
+
+                @Override
+                public void onSuccess(BaseResponse baseResponse) {
+                    if (baseResponse == null) {
+                        CommonUtils.LOG_OK_BUT_NULL("PostPatchProcess");
+                    } else {
+                        CommonUtils.LOG_OK("PostPatchProcess");
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    CommonUtils.LOG_FAIL("PostPatchProcess", e.toString());
+                }
+
+                @Override
+                public void onTaskContinue() {
+
+                }
+            }, userId, postId,postRequest, token);
+
+            postPatchProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
+
+        private PostRequest getPostRequest() {
+            PostRequest postRequest = new PostRequest();
+            postRequest.setPost(post);
+            return postRequest;
+        }
 
     }
 
@@ -493,14 +548,12 @@ public class PostHelper {
          * Bu fonksiyon çağrılırken sırasıyla
          * getInstance()
          * setSinglePostItems()
-         * setPostLikeClickCallback()
-         * setCommentAddCallback()
+         * setPostFeaturesCallback
          * startSinglePostProcess() fonksiyonları zorunlu olarak çağrılmalıdır.
          */
 
         private static SinglePostClicked instance = null;
-        private static List<PostLikeClickCallback> postLikeClickCallbackList;
-        private static List<CommentAddCallback> commentAddCallbackList;
+        private static List<PostFeaturesCallback> postFeaturesCallbackList;
 
         private static BaseFragment.FragmentNavigation fragmentNavigation;
         private static String toolbarTitle;
@@ -509,8 +562,7 @@ public class PostHelper {
         private static int numberOfCallback;
 
         public SinglePostClicked() {
-            postLikeClickCallbackList = new ArrayList<PostLikeClickCallback>();
-            commentAddCallbackList = new ArrayList<CommentAddCallback>();
+            postFeaturesCallbackList = new ArrayList<PostFeaturesCallback>();
             numberOfCallback = -1;
         }
 
@@ -532,7 +584,6 @@ public class PostHelper {
             SinglePostClicked.postId = postId;
             SinglePostClicked.position = position;
 
-
         }
 
         public void startSinglePostProcess() {
@@ -542,52 +593,19 @@ public class PostHelper {
             }
         }
 
-        public void setPostLikeClickCallback(PostLikeClickCallback postLikeClickCallback) {
-            postLikeClickCallbackList.add(postLikeClickCallback);
+        public void setPostFeaturesCallback(PostFeaturesCallback postFeaturesCallback) {
+            postFeaturesCallbackList.add(postFeaturesCallback);
         }
-
         public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position, int _numberOfCallback) {
-            postLikeClickCallbackList.get(_numberOfCallback).onPostLikeClicked(isPostLiked, newLikeCount, position);
+            postFeaturesCallbackList.get(_numberOfCallback).onPostLikeClicked(isPostLiked, newLikeCount, position);
         }
-
-        public void setCommentAddCallback(CommentAddCallback commentAddCallback) {
-            commentAddCallbackList.add(commentAddCallback);
-        }
-
         public static void postCommentCountChanged(int position, int newCommentCount, int _numberOfCallback) {
-            commentAddCallbackList.get(_numberOfCallback).onCommentAdd(position, newCommentCount);
+            postFeaturesCallbackList.get(_numberOfCallback).onCommentAdd(position, newCommentCount);
+        }
+        public static void postCommentAllowedStatusChanged(int position, boolean newCommentAllowed, int _numberOfCallback) {
+            postFeaturesCallbackList.get(_numberOfCallback).onCommentAllowedStatusChanged(position, newCommentAllowed);
         }
 
-
-
-
-/*
-        public SinglePostClicked(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
-                                 String postId, int position) {
-
-            this.fragmentNavigation = fragmNav;
-            this.toolbarTitle = toolbarTitle;
-            this.postId = postId;
-            this.position = position;
-
-
-            singlePostClickedProcess(context);
-        }
-
-        private void singlePostClickedProcess(Context context) {
-            if (fragmentNavigation != null) {
-                fragmentNavigation.pushFragment(SinglePostFragment.newInstance(toolbarTitle, postId, position), ANIMATE_RIGHT_TO_LEFT);
-            }
-        }
-
-        public void setPostLikeClickCallback(PostLikeClickCallback postLikeClickCallback) {
-            this.postLikeClickCallback = postLikeClickCallback;
-        }
-
-        public void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position) {
-            postLikeClickCallback.onPostLikeClicked(isPostLiked, newLikeCount, position);
-        }
-*/
     }
 
     public static class FeedRefresh {
