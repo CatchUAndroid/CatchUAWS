@@ -299,6 +299,7 @@
     <string name="disableComment">Disable comment</string>
     <string name="enableComment">Enable comment</string>
     <string name="report">Report...</string>
+    <string name="delete">Delete</string>
     <string name="commentHint">What do you think?</string>
     <string name="like">Like</string>
     <string name="filterSettings">Filter Settings</string>
@@ -313,6 +314,7 @@
     <string name="feedViewTypeList">List</string>
     <string name="myPosts">My Posts</string>
     <string name="caughtPosts">Caught Posts</string>
+    <string name="deleteThisPost">Delete this Post?</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Social Interaction</string>

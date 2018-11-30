@@ -50,6 +50,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAllowedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostDeletedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
@@ -87,7 +88,11 @@ import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 
 public class SinglePostFragment extends BaseFragment
-        implements View.OnClickListener, SendCommentButton.OnSendClickListener, PersonListItemClickListener, CommentAllowedCallback {
+        implements View.OnClickListener,
+        SendCommentButton.OnSendClickListener,
+        PersonListItemClickListener,
+        CommentAllowedCallback,
+        PostDeletedCallback{
 
     View mView;
     String toolbarTitle;
@@ -430,6 +435,7 @@ public class SinglePostFragment extends BaseFragment
         singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation, position, numberOfCallback);
         singlePostAdapter.setPersonListItemClickListener(this);
         singlePostAdapter.setCommentAllowedCallback(this);
+        singlePostAdapter.setPostDeletedCallback(this);
         recyclerView.setAdapter(singlePostAdapter);
 
     }
@@ -745,4 +751,10 @@ public class SinglePostFragment extends BaseFragment
     }
 
 
+    @Override
+    public void onPostDeleted() {
+
+        imgBack.callOnClick();
+
+    }
 }

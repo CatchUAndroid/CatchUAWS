@@ -32,6 +32,7 @@ import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAllowedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostDeletedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.CommentListDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
@@ -65,6 +66,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     GradientDrawable imageShape;
     private PersonListItemClickListener personListItemClickListener;
     private CommentAllowedCallback commentAllowedCallback;
+    private PostDeletedCallback postDeletedCallback;
     public static String PARTIAL_DATA_LOADING = "PARTIAL_DATA_LOADING";
     private int numberOfCallback; // callback number for feed adapter
     private int feedPosition;
@@ -229,7 +231,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             imgBtnMore.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogBoxUtil.postSettingsDialogBox(mContext, post, new PostSettingsChoosenCallback() {
+                    DialogBoxUtil.postSettingsDialogBox(mActivity, mContext, post, new PostSettingsChoosenCallback() {
 
                         @Override
                         public void onReportSelected() {
@@ -250,6 +252,15 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                             PostHelper.PostCommentPermission.startProcess(mContext, AccountHolderInfo.getUserID(), post);
                             PostHelper.SinglePostClicked.postCommentAllowedStatusChanged(feedPosition, post.getIsCommentAllowed(), numberOfCallback);
 
+                        }
+
+                        @Override
+                        public void onDeletePostSelected() {
+                            if(postDeletedCallback !=  null){
+                                postDeletedCallback.onPostDeleted();
+                                PostHelper.SinglePostClicked.postDeleted(feedPosition, numberOfCallback);
+
+                            }
                         }
 
                     });
@@ -588,6 +599,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         SinglePostAdapter.this.commentAllowedCallback = commentAllowedCallback;
     }
 
+    public void setPostDeletedCallback(PostDeletedCallback postDeletedCallback) {
+        SinglePostAdapter.this.postDeletedCallback = postDeletedCallback;
+    }
 
     public class ProgressViewHolder extends RecyclerView.ViewHolder {
         public ProgressBar progressBar;

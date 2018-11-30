@@ -69,6 +69,7 @@ public class NumericConstants {
     public static final int CODE_UNFOLLOW_POSITION = 0;
     public static final int CODE_DISABLE_COMMENTS_POSITION = 1;
     public static final int CODE_REPORT_POSITION = 2;
+    public static final int CODE_DELETE_POST = 3;
 
 
 }

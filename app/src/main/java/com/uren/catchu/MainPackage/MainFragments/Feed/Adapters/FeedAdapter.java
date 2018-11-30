@@ -39,6 +39,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
 import catchu.model.Post;
 
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
@@ -204,7 +205,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
 
-                    DialogBoxUtil.postSettingsDialogBox(mContext, post, new PostSettingsChoosenCallback() {
+                    DialogBoxUtil.postSettingsDialogBox(mActivity, mContext, post, new PostSettingsChoosenCallback() {
 
                         @Override
                         public void onReportSelected() {
@@ -219,6 +220,14 @@ public class FeedAdapter extends RecyclerView.Adapter {
                             post.setIsCommentAllowed(!post.getIsCommentAllowed());
                             setCommentStatus();
                             PostHelper.PostCommentPermission.startProcess(mContext, AccountHolderInfo.getUserID(), post);
+                        }
+
+                        @Override
+                        public void onDeletePostSelected() {
+                            postList.remove(position);
+                            notifyItemRemoved(position);
+                            notifyDataSetChanged();
+                            PostHelper.DeletePost.startProcess(mContext, AccountHolderInfo.getUserID(), post.getPostid());
                         }
 
                     });
@@ -236,7 +245,11 @@ public class FeedAdapter extends RecyclerView.Adapter {
             imgBtnLocationDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, txtProfilePic, imgProfilePic);
+                    if (!post.getIsShowOnMap()) {
+                        //not allowed to see on map
+                    } else {
+                        PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, txtProfilePic, imgProfilePic);
+                    }
                 }
             });
 
@@ -245,7 +258,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     //PostHelper.CommentListClicked.startProcess(mContext, fragmentNavigation, post.getPostid(),postPositionHashMap.get(post.getPostid()) );
-                    if(post.getIsCommentAllowed()){
+                    if (post.getIsCommentAllowed()) {
                         setSinglePostFragmentItems();
                     }
                 }
@@ -286,6 +299,16 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 public void onCommentAllowedStatusChanged(int position, boolean commentAllowed) {
                     postList.get(position).setIsCommentAllowed(commentAllowed);
                     notifyItemChanged(position);
+                }
+
+                @Override
+                public void onPostDeleted(int position) {
+                    Post deletedPost = postList.get(position);
+                    postList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyDataSetChanged();
+                    PostHelper.DeletePost.startProcess(mContext, AccountHolderInfo.getUserID(), deletedPost.getPostid());
+
                 }
             });
 
@@ -336,12 +359,18 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
             }
             //Comment
-            if(post.getIsCommentAllowed() != null){
+            if (post.getIsCommentAllowed() != null) {
                 setCommentStatus();
             }
             //Location distance
             if (post.getDistance() != null) {
                 txtLocationDistance.setText(String.valueOf(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue())));
+            }
+            //Location show on map
+            if (!post.getIsShowOnMap()) {
+                imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
             }
             //Create at
             if (post.getCreateAt() != null) {
@@ -355,10 +384,10 @@ public class FeedAdapter extends RecyclerView.Adapter {
         }
 
         private void setCommentStatus() {
-            if(!post.getIsCommentAllowed()){
+            if (!post.getIsCommentAllowed()) {
                 imgCommentNotAllowed.setVisibility(View.VISIBLE);
                 txtCommentCount.setText(String.valueOf(0));
-            }else{
+            } else {
                 imgCommentNotAllowed.setVisibility(View.GONE);
                 txtCommentCount.setText(String.valueOf(commentCount));
             }
@@ -377,9 +406,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
             } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
                 targetIcon = R.drawable.groups_icon_500;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            }else if(post.getPrivacyType().equals(SHARE_TYPE_SELF)){
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
                 targetIcon = R.drawable.groups_icon_500;
-            } else if(post.getPrivacyType().equals(SHARE_TYPE_GROUP)){
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
                 targetIcon = R.drawable.groups_icon_500;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
             }

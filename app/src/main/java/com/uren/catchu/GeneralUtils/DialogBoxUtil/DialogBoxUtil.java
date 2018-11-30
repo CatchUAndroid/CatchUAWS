@@ -5,17 +5,28 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.uren.catchu.Adapters.CustomListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import catchu.model.Post;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
+import static com.uren.catchu.Constants.NumericConstants.CODE_DELETE_POST;
 import static com.uren.catchu.Constants.NumericConstants.CODE_DISABLE_COMMENTS_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_EDIT;
@@ -281,61 +292,109 @@ public class DialogBoxUtil {
         alertDialog.show();
     }
 
-    public static void postSettingsDialogBox(Context context, Post post, final PostSettingsChoosenCallback postSettingsChoosenCallback) {
-
-        String followElement = getFollowElement(context, post);
+    public static void postSettingsDialogBox(final Activity activity, final Context context, Post post, final PostSettingsChoosenCallback postSettingsChoosenCallback) {
 
         CommonUtils.hideKeyBoard(context);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
-        //Report
-        adapter.add("  " + context.getResources().getString(R.string.report));
-        //Follow
-        //todo NT - follow statüsüne göre buton eklenecek. Su anda posttan user follow statüsü gelmiyor
-        if (!followElement.equals("notValid")) {
-            adapter.add("  " + followElement);
-        }
-        //Disable comment - if post is mine
-        if (post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-            if(post.getIsCommentAllowed()){
-                adapter.add("  " + context.getResources().getString(R.string.disableComment));
-            }else{
-                adapter.add("  " + context.getResources().getString(R.string.enableComment));
-            }
+        final ArrayList<String> myList = getItemList(context, post);
 
-        }
+        LayoutInflater inflater = activity.getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.post_settings_list_items, null);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setView(convertView);
 
-        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                if (item == CODE_REPORT_POSITION)
+        ListView listView = (ListView) convertView.findViewById(R.id.mylistview);
+
+        final AlertDialog alert = alertDialog.create();
+        final CustomListAdapter myadapter = new CustomListAdapter(context, R.layout.list_view_item, myList);
+
+        listView.setAdapter(myadapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+                Resources resources = context.getResources();
+                String selectedItem = myList.get(position);
+
+                if (selectedItem.equals(resources.getString(R.string.report))) {
                     postSettingsChoosenCallback.onReportSelected();
-                else if (item == CODE_UNFOLLOW_POSITION)
+                } else if (selectedItem.equals(resources.getString(R.string.unfollow))) {
                     postSettingsChoosenCallback.onUnFollowSelected();
-                else if (item == CODE_DISABLE_COMMENTS_POSITION) {
+                } else if (selectedItem.equals(resources.getString(R.string.disableComment)) ||
+                        selectedItem.equals(resources.getString(R.string.enableComment))) {
                     postSettingsChoosenCallback.onDisableCommentSelected();
+                } else if (selectedItem.equals(resources.getString(R.string.delete))) {
+                    String message = context.getResources().getString(R.string.deleteThisPost);
+                    DialogBoxUtil.showYesNoDialog(context, null,message, new YesNoDialogBoxCallback() {
+                        @Override
+                        public void yesClick() {
+                            postSettingsChoosenCallback.onDeletePostSelected();
+                        }
+                        @Override
+                        public void noClick() {
+                        }
+                    });
+
                 }
+
+                alert.cancel();
             }
         });
-        AlertDialog alert = builder.create();
+
+        // show dialog
         alert.show();
+
+    }
+
+    private static ArrayList<String> getItemList(Context context, Post post) {
+
+        ArrayList<String> myList = new ArrayList<String>();
+
+        /**Report*/
+        if (!post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+            myList.add(context.getResources().getString(R.string.report));
+        }
+
+        /**Follow*/
+        //todo NT - follow statüsüne göre buton eklenecek. Su anda posttan user follow statüsü gelmiyor
+        String followElement = getFollowElement(context, post);
+        if (!followElement.equals("notValid")) {
+            myList.add(followElement);
+        }
+
+        /**Disable comment - if post is mine**/
+        if (post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+            if (post.getIsCommentAllowed()) {
+                myList.add(context.getResources().getString(R.string.disableComment));
+            } else {
+                myList.add(context.getResources().getString(R.string.enableComment));
+            }
+        }
+
+        /**Delete*/
+        if (post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+            myList.add(context.getResources().getString(R.string.delete));
+        }
+
+        return myList;
     }
 
     private static String getFollowElement(Context context, Post post) {
 
         String followElement = "notValid";
         String currentFollowStatus = post.getUser().getFollowStatus();
-/*
-        if(currentFollowStatus.equals(FOLLOW_STATUS_FOLLOWING)){
-            followElement = context.getResources().getString(R.string.unfollow);
-        }else if(currentFollowStatus.equals(FOLLOW_STATUS_PENDING)){
-            followElement = "notValid";
-        } else if(currentFollowStatus.equals(FOLLOW_STATUS_OWN)){
-            followElement = "notValid";
-        }else if(currentFollowStatus.equals(FOLLOW_STATUS_NONE)){
-            followElement = context.getResources().getString(R.string.follow);
-        }
-*/
+ /*
+ if(currentFollowStatus.equals(FOLLOW_STATUS_FOLLOWING)){
+ followElement = context.getResources().getString(R.string.unfollow);
+ }else if(currentFollowStatus.equals(FOLLOW_STATUS_PENDING)){
+ followElement = "notValid";
+ } else if(currentFollowStatus.equals(FOLLOW_STATUS_OWN)){
+ followElement = "notValid";
+ }else if(currentFollowStatus.equals(FOLLOW_STATUS_NONE)){
+ followElement = context.getResources().getString(R.string.follow);
+ }
+ */
         return followElement;
 
     }
