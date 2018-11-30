@@ -281,6 +281,7 @@
     <string name="myPosts">Paylaşımlarım</string>
     <string name="caughtPosts">Yakaladığım paylaşımlar</string>
     <string name="deleteThisPost">Bu paylaşımı sil?</string>
+    <string name="reportPostMessage">Bu paylaşımı şikayet etmek istiyor musunuz? Ekibimiz değerlendirip, uygunsuzsa kaldıracaklardır.</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>

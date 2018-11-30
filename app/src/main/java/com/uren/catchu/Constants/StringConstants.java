@@ -108,6 +108,10 @@ public class StringConstants {
 
     //Report problem constants
     public static final String REPORT_PROBLEM_TYPE_BUG = "bug";
+    public static final String REPORT_PROBLEM_TYPE_INAPPROPIATE = "inappropiate ";
+    public static final String REPORT_PROBLEM_TYPE_SPAM = "spam ";
+    public static final String REPORT_PROBLEM_TYPE_FEEDBACK = "feedback ";
+
 
     //Character constants
     public static final String CHAR_AMPERSAND = "@";

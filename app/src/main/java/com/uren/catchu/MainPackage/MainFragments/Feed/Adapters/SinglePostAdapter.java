@@ -46,8 +46,10 @@ import java.util.List;
 
 import catchu.model.Comment;
 import catchu.model.Post;
+import catchu.model.Report;
 
 import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
+import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_INAPPROPIATE;
 
 public class SinglePostAdapter extends RecyclerView.Adapter {
 
@@ -235,7 +237,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onReportSelected() {
-
+                            Report report = new Report();
+                            report.setType(REPORT_PROBLEM_TYPE_INAPPROPIATE);
+                            PostHelper.ReportPost.startProcess(mContext, AccountHolderInfo.getUserID(), post.getPostid(), report);
                         }
 
                         @Override
@@ -245,13 +249,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onDisableCommentSelected() {
-
                             post.setIsCommentAllowed(!post.getIsCommentAllowed());
                             commentAllowedCallback.onCommentAllowedStatusChanged(post.getIsCommentAllowed());
                             setCommentStatus();
                             PostHelper.PostCommentPermission.startProcess(mContext, AccountHolderInfo.getUserID(), post);
                             PostHelper.SinglePostClicked.postCommentAllowedStatusChanged(feedPosition, post.getIsCommentAllowed(), numberOfCallback);
-
                         }
 
                         @Override
@@ -259,7 +261,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                             if(postDeletedCallback !=  null){
                                 postDeletedCallback.onPostDeleted();
                                 PostHelper.SinglePostClicked.postDeleted(feedPosition, numberOfCallback);
-
                             }
                         }
 
