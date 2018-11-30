@@ -1,4 +1,4 @@
-package com.uren.catchu.GeneralUtils.GifDialogBoxUtil;
+package com.uren.catchu.GeneralUtils.WillDelete;
 
 public interface GifDialogListener {
     void OnClick();

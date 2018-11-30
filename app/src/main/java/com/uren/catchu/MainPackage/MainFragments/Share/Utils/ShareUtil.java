@@ -1,9 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 
@@ -12,12 +9,9 @@ import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
-import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.GifDialogBoxUtil.GifDialogBox;
-import com.uren.catchu.GeneralUtils.GifDialogBoxUtil.GifDialogListener;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;

@@ -1,8 +1,7 @@
-package com.uren.catchu.GeneralUtils.GifDialogBoxUtil;
+package com.uren.catchu.GeneralUtils.WillDelete;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
