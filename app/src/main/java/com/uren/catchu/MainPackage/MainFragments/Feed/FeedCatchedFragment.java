@@ -56,7 +56,6 @@ import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfile;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
@@ -154,7 +153,7 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
 
     private void loadData() {
 
-        CommonUtils.showToast(getContext(), "load started");
+        CommonUtils.showCustomToast(getContext(), "load started");
         CommonUtils.LOG_NEREDEYIZ("FeedFragment");
         initListeners();
         initRecyclerView();
@@ -185,7 +184,7 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
         PostHelper.FeedRefresh.getInstance().setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
             public void onFeedRefresh() {
-                CommonUtils.showToast(getContext(), "Feed - Catched refreshing..");
+                CommonUtils.showCustomToast(getContext(), "Feed - Catched refreshing..");
                 pulledToRefresh = true;
                 Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 setPaginationValues();
@@ -313,14 +312,14 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Toast.makeText(getApplicationContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
                     getPosts();
 
                 } else {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                     showPulsatorLayout(false);
                     showNoFeedLayout(true, R.string.needLocationPermission);
                     refresh_layout.setRefreshing(false);

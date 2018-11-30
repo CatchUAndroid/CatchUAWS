@@ -452,7 +452,7 @@ public class UserEditFragment extends BaseFragment
 
     private void checkCameraProcess() {
         if (!CommonUtils.checkCameraHardware(getContext())) {
-            CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera), Toast.LENGTH_SHORT);
+            CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
             return;
         }
 

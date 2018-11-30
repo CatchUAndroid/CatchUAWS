@@ -517,14 +517,15 @@ public class ProfileFragment extends BaseFragment
 
         if(groupListHolderInstance != null){
             GroupRequestResult groupRequestResult = groupListHolderInstance.getGroupList();
-            if(groupRequestResult.getResultArray().size() > 0){
-                CommonUtils.showToast(getContext(), "grupları singletondan hemen aldım");
+            if(groupRequestResult != null && groupRequestResult.getResultArray() != null &&
+                    groupRequestResult.getResultArray().size() > 0){
+                CommonUtils.showCustomToast(getContext(), "grupları singletondan hemen aldım");
                 setGroupRecyclerView(groupRequestResult);
             }else{
                 GroupListHolder.setGroupListHolderCallback(new GroupListHolderCallback() {
                     @Override
                     public void onGroupListInfoTaken(GroupRequestResult groupRequestResult) {
-                        CommonUtils.showToast(getContext(), "grupları singletondan Callback ile aldım");
+                        CommonUtils.showCustomToast(getContext(), "grupları singletondan Callback ile aldım");
                         setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
                     }
                 });
@@ -541,7 +542,7 @@ public class ProfileFragment extends BaseFragment
                 new CompleteCallback() {
                     @Override
                     public void onComplete(Object object) {
-                        CommonUtils.showToast(getContext(), "grupları bu sayfadan aldım- Not singleton");
+                        CommonUtils.showCustomToast(getContext(), "grupları bu sayfadan aldım- Not singleton");
                         GroupRequestResult groupRequestResult = (GroupRequestResult) object;
                         setGroupRecyclerView(groupRequestResult);
                     }

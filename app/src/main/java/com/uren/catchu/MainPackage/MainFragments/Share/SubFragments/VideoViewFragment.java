@@ -1,10 +1,14 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,12 +19,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
+import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.PermissionCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 @SuppressLint("ValidFragment")
 public class VideoViewFragment extends BaseFragment {
@@ -40,8 +50,12 @@ public class VideoViewFragment extends BaseFragment {
     int mediaPlayerTotalLen;
     boolean mediaPlayerIsPlaying = false;
 
-    public VideoViewFragment(Uri videoUri) {
+    PermissionModule permissionModule;
+    PermissionCallback permissionCallback;
+
+    public VideoViewFragment(Uri videoUri, PermissionCallback permissionCallback) {
         this.videoUri = videoUri;
+        this.permissionCallback = permissionCallback;
     }
 
     @Override
@@ -57,6 +71,15 @@ public class VideoViewFragment extends BaseFragment {
             return mView;
         }
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        initValues();
+        setShapes();
+        addListeners();
+        manageVideoFromGallery();
     }
 
     private void setShapes() {
@@ -81,7 +104,7 @@ public class VideoViewFragment extends BaseFragment {
         videoView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(mediaPlayer != null) {
+                if (mediaPlayer != null) {
                     if (mediaPlayerPlayFinished) {
                         playVideoImgv.setVisibility(View.GONE);
                         mediaPlayer.seekTo(mediaPlayerTotalLen);
@@ -105,15 +128,35 @@ public class VideoViewFragment extends BaseFragment {
         });
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
-        setShapes();
-        addListeners();
-        manageVideoFromGallery();
+
+    public void initValues() {
+        permissionModule = new PermissionModule(getContext());
     }
 
     public void manageVideoFromGallery() {
+        if (permissionModule.checkWriteExternalStoragePermission()) {
+            permissionCallback.OnPermGranted();
+            playVideo();
+        }else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                permissionCallback.OnPermGranted();
+                playVideo();
+            }else {
+                getActivity().onBackPressed();
+                permissionCallback.OnPermNotAllowed();
+            }
+        }
+    }
+
+    public void playVideo() {
         DisplayMetrics metrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();

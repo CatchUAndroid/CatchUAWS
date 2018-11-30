@@ -30,6 +30,8 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
 
     @BindView(R.id.closeCommentsSwitch)
     Switch closeCommentsSwitch;
+    @BindView(R.id.closeLocationSwitch)
+    Switch closeLocationSwitch;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
     @BindView(R.id.commonToolbarbackImgv)
@@ -69,6 +71,11 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
             closeCommentsSwitch.setChecked(true);
         else
             closeCommentsSwitch.setChecked(false);
+
+        if(shareItems.getPost().getIsShowOnMap())
+            closeLocationSwitch.setChecked(true);
+        else
+            closeLocationSwitch.setChecked(false);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -93,6 +100,20 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
                 return false;
             }
         });
+
+        closeLocationSwitch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        setLocationSeenValue();
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     public void setAllowedValue(){
@@ -100,6 +121,15 @@ public class ShareAdvanceSettingsFragment extends BaseFragment {
             shareItems.getPost().setIsCommentAllowed(false);
         }else {
             shareItems.getPost().setIsCommentAllowed(true);
+        }
+        returnCallback.onReturn(shareItems);
+    }
+
+    public void setLocationSeenValue(){
+        if(closeLocationSwitch.isChecked()){
+            shareItems.getPost().setIsShowOnMap(false);
+        }else {
+            shareItems.getPost().setIsShowOnMap(true);
         }
         returnCallback.onReturn(shareItems);
     }

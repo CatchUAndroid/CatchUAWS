@@ -67,7 +67,7 @@ public class ShareUtil {
                                 });
                     }
                 } else {
-                    CommonUtils.showToast(NextActivity.thisActivity,
+                    CommonUtils.showCustomToast(NextActivity.thisActivity,
                             NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
                     deleteSharedVideo();
                     deleteUploadedItems();

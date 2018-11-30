@@ -61,6 +61,7 @@ import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
+import com.uren.catchu.Interfaces.PermissionCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
@@ -298,6 +299,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         selectedWhomType = SHARE_TYPE_EVERYONE;
         shareItems.setSelectedShareType(selectedWhomType);
         shareItems.getPost().setIsCommentAllowed(true);
+        shareItems.getPost().setIsShowOnMap(true);
     }
 
     private void setAnimations() {
@@ -459,7 +461,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                 if (!checkShareItems.shareIsPossible()) {
                     //CommonUtils.showToast(getContext(), checkShareItems.getErrMessage());
-                    CommonUtils.showCustomToast(getContext(), checkShareItems.getErrMessage(), Toast.LENGTH_SHORT);
+                    CommonUtils.showCustomToast(getContext(), checkShareItems.getErrMessage());
                     return;
                 }
                 sharePost();
@@ -808,7 +810,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     private void checkCameraProcess() {
         try {
             if (!CommonUtils.checkCameraHardware(getContext())) {
-                CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
+                CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
                 return;
             }
 
@@ -1053,7 +1055,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 startVideoViewFragment();
             }
         } catch (Exception e) {
-            CommonUtils.showToast(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
+            CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
         }
     }
 
@@ -1084,7 +1086,22 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void startVideoViewFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri()), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri(),
+                    new PermissionCallback() {
+                        @Override
+                        public void OnPermGranted() {
+
+                        }
+
+                        @Override
+                        public void OnPermNotAllowed() {
+                            deleteSharedVideo();
+                            videoSelectUtil = null;
+                            isVideoSelected = false;
+                            shareItems.clearVideoShareItemBox();
+                            clearVideoSelectImgvFilled();
+                        }
+                    }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

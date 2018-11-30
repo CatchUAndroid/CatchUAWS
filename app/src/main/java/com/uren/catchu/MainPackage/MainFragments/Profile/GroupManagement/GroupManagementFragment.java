@@ -144,7 +144,7 @@ public class GroupManagementFragment extends BaseFragment {
                 nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
                     if (selectedGroupItem == null) {
-                        CommonUtils.showToastLong(getContext(), getResources().getString(R.string.selectLeastOneGroup));
+                        CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.selectLeastOneGroup));
                         return;
                     }
                     returnCallback.onReturn(selectedGroupItem);
@@ -317,7 +317,7 @@ public class GroupManagementFragment extends BaseFragment {
                     FriendList friendList = (FriendList) object;
                     if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0 &&
                             getContext() != null)
-                        CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
+                        CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
                     else {
                         if (mFragmentNavigation != null) {
                             mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null,

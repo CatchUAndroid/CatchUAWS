@@ -215,8 +215,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
                 @Override
                 public void onFailed(Exception e) {
-                    CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
-                            e.getMessage());
+                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) +
+                            context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
                 }
             });
         }
@@ -236,8 +236,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
                         @Override
                         public void onFailed(Exception e) {
-                            CommonUtils.showToast(context, context.getResources().getString(R.string.error) +
-                                    e.getMessage());
+                            CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) +
+                                    context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
                         }
                     });
         }

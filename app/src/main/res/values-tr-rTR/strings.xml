@@ -247,6 +247,11 @@
     <string name="SEND">Gönder</string>
     <string name="LET_POST_COMMENT">Yorum yapılmasına izin ver</string>
     <string name="THANKS_FOR_FEEDBACK">Geri bildiriminiz için teşekkür ederiz. En kısa sürede aksiyon almaya çalışacağız.</string>
+    <string name="COMMENT_SETTINGS">Yorum Ayarları</string>
+    <string name="MAP_SETTINGS">Harita Ayarları</string>
+    <string name="LOCATION_WILL_SEEN_ON_POST">Lokasyon görünsün</string>
+    <string name="COMMENT_SETTINGS_DESC">Bu özelliği paylaşım yapıldıktan sonra gönderi ayarlarından güncelleyebilirsin</string>
+    <string name="LOCATION_SETTINGS_DESC">Bu özellik paylaşım yapıldıktan sonra güncellenemez</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

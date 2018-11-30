@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -159,7 +160,7 @@ public class NotifyProblemFragment extends BaseFragment {
             public void onClick(View v) {
                 if (noteTextEditText != null && noteTextEditText.getText() != null &&
                         noteTextEditText.getText().toString().isEmpty()) {
-                    CommonUtils.showToast(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
+                    CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
                     return;
                 }
                 saveReport();

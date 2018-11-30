@@ -312,7 +312,8 @@ public class SelectFriendFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                CommonUtils.showToast(getContext(), getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.error) +
+                        getResources().getString(R.string.SOMETHING_WENT_WRONG));
             }
         });
     }

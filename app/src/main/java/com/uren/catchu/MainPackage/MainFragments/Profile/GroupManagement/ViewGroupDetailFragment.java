@@ -172,7 +172,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
             @Override
             public void onFailed(Exception e) {
                 progressDialogUtil.dialogDismiss();
-                CommonUtils.showToast(getActivity(), getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.error) +
+                        getResources().getString(R.string.SOMETHING_WENT_WRONG));
             }
         });
     }
@@ -366,7 +367,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
     public void startCameraProcess() {
 
         if (!CommonUtils.checkCameraHardware(getActivity())) {
-            CommonUtils.showToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
+            CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
             return;
         }
 
@@ -412,8 +413,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             }
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
-        } else
-            CommonUtils.showToast(getActivity(), getResources().getString(R.string.technicalError) + requestCode);
+        }
     }
 
     public void updateGroup() {

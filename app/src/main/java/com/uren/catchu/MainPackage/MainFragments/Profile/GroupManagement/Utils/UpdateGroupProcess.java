@@ -85,18 +85,18 @@ public class UpdateGroupProcess {
                                 updateGroupToNeoJ();
                             } else {
                                 InputStream is = urlConnection.getErrorStream();
-                                CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + is.toString());
+                                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + is.toString());
                                 updateGroupCallback.onFailed(new Exception(is.toString()));
                             }
                         } catch (IOException e) {
-                            CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                            CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                             updateGroupCallback.onFailed(e);
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                        CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                         updateGroupCallback.onFailed(e);
                     }
 
@@ -112,7 +112,7 @@ public class UpdateGroupProcess {
             @Override
             public void onFailure(Exception e) {
                 dialogDismiss();
-                CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                 updateGroupCallback.onFailed(e);
             }
 
@@ -153,7 +153,7 @@ public class UpdateGroupProcess {
             @Override
             public void onFailure(Exception e) {
                 dialogDismiss();
-                CommonUtils.showToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                 updateGroupCallback.onFailed(e);
             }
 
