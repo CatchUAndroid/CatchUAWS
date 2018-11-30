@@ -34,7 +34,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -460,7 +459,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 shareButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
 
                 if (!checkShareItems.shareIsPossible()) {
-                    //CommonUtils.showToast(getContext(), checkShareItems.getErrMessage());
                     CommonUtils.showCustomToast(getContext(), checkShareItems.getErrMessage());
                     return;
                 }
@@ -567,7 +565,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void sharePost() {
         getActivity().onBackPressed();
-        ShareUtil shareUtil = new ShareUtil(getContext(), shareItems, permissionModule);
+        ShareUtil shareUtil = new ShareUtil(shareItems, mFragmentNavigation);
         shareUtil.startToShare();
     }
 

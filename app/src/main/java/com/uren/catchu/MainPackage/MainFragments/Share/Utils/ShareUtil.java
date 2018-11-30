@@ -1,10 +1,11 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
+import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
@@ -13,6 +14,8 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -23,18 +26,20 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.io.File;
 
 import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 public class ShareUtil {
 
-    Context context;
     ShareItems shareItems;
     PermissionModule permissionModule;
+    BaseFragment.FragmentNavigation mFragmentNavigation;
 
-    public ShareUtil(Context context, ShareItems shareItems, PermissionModule permissionModule) {
-        this.context = context;
+    public ShareUtil(ShareItems shareItems, BaseFragment.FragmentNavigation mFragmentNavigation) {
         this.shareItems = shareItems;
-        this.permissionModule = permissionModule;
+        this.permissionModule = new PermissionModule(NextActivity.thisActivity);
+        this.mFragmentNavigation = mFragmentNavigation;
     }
 
     public void startToShare() {
@@ -44,6 +49,7 @@ public class ShareUtil {
         new SharePostProcess(NextActivity.thisActivity, shareItems, new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
+                showShareSuccessView();
                 deleteSharedVideo();
             }
 
@@ -93,10 +99,42 @@ public class ShareUtil {
         }
     }
 
+    public void showShareSuccessView() {
+        if (NextActivity.thisActivity != null) {
+            try {
+                new FancyGifDialog.Builder(NextActivity.thisActivity)
+                        .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
+                        .setPositiveBtnBackground("#FF4081")
+                        .setNegativeBtnBackground("#808080")
+                        .setNegativeBtnText(NextActivity.thisActivity.getResources().getString(R.string.no))
+                        .setPositiveBtnText(NextActivity.thisActivity.getResources().getString(R.string.yes))
+                        .setGifResource(R.drawable.gif16)
+                        .isCancellable(true)
+                        .OnPositiveClicked(new FancyGifDialogListener() {
+                            @Override
+                            public void OnClick() {
+                                String targetUid = AccountHolderInfo.getUserID();
+                                String toolbarTitle = NextActivity.thisActivity.getResources().getString(R.string.myPosts);
+                                mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+                            }
+                        })
+                        .OnNegativeClicked(new FancyGifDialogListener() {
+                            @Override
+                            public void OnClick() {
+
+                            }
+                        })
+                        .build();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void updateGalleryAfterFileDelete(File file) {
         Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         intent.setData(Uri.fromFile(file));
-        context.sendBroadcast(intent);
+        NextActivity.thisActivity.sendBroadcast(intent);
     }
 
     public void deleteUploadedItems() {
