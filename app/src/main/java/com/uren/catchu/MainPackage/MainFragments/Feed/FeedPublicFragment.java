@@ -584,7 +584,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     @Override
     public void onClick(View view) {
 
-
     }
 
 
