@@ -16,6 +16,8 @@ import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.GifDialogBoxUtil.GifDialogBox;
+import com.uren.catchu.GeneralUtils.GifDialogBoxUtil.GifDialogListener;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -109,7 +111,7 @@ public class ShareUtil {
                 new FancyGifDialog.Builder(NextActivity.thisActivity)
                         .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
                         .setPositiveBtnBackground("#FF4081")
-                        .setNegativeBtnBackground("#FFA9A7A8")
+                        .setNegativeBtnBackground("#808080")
                         .setNegativeBtnText(NextActivity.thisActivity.getResources().getString(R.string.no))
                         .setPositiveBtnText(NextActivity.thisActivity.getResources().getString(R.string.yes))
                         .setGifResource(R.drawable.gif16)
@@ -129,7 +131,7 @@ public class ShareUtil {
                             }
                         })
                         .build();
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
