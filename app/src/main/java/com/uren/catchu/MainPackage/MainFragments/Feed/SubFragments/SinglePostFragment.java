@@ -75,7 +75,6 @@ import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
@@ -476,14 +475,14 @@ public class SinglePostFragment extends BaseFragment
 
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
-                    Toast.makeText(getApplicationContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
                     getPost();
                 } else {
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
-                    CommonUtils.showToast(getContext(), getContext().getResources().getString(R.string.needLocationPermission));
+                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                    CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.needLocationPermission));
                     refresh_layout.setRefreshing(false);
                 }
 
@@ -537,7 +536,7 @@ public class SinglePostFragment extends BaseFragment
                     CommonUtils.LOG_OK("PostListResponseProcess");
                     if (postListResponse.getItems().size() == 0) {
                         //no such data - post bulunamadi
-                        CommonUtils.showToast(getContext(), "post bulunamadi");
+                        CommonUtils.showCustomToast(getContext(), "post bulunamadi");
                     } else {
                         post = postListResponse.getItems().get(0);
                         fillContent(postListResponse.getItems().get(0));

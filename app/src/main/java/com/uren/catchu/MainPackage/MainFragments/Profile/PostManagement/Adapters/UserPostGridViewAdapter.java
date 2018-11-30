@@ -141,7 +141,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                     setSinglePostFragmentItems();
 
                     Log.i("clickedPostId ", postList.get(position).getPostid());
-                    CommonUtils.showToast(mContext, postList.get(position).getPostid());
+                    CommonUtils.showCustomToast(mContext, postList.get(position).getPostid());
                 }
             });
 

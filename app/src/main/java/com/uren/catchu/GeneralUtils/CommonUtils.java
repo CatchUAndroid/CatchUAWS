@@ -47,7 +47,6 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.uren.catchu.Constants.StringConstants.APP_GOOGLE_PLAY_DEFAULT_LINK;
 
 public class CommonUtils {
@@ -58,7 +57,7 @@ public class CommonUtils {
     public static String exceptionErrPrefix = "--------->";
 
 
-    public static final void showToast(Context context, String message) {
+    /*public static final void showToast(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -66,9 +65,9 @@ public class CommonUtils {
     public static final void showToastLong(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-    }
+    }*/
 
-    public static final void showCustomToast(Context context, String message, int toastLen){
+    public static final void showCustomToast(Context context, String message){
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View view = inflater.inflate( R.layout.layout_custom_toast, null );
         View layout = (LinearLayout) view.findViewById( R.id.custom_toast_container );
@@ -80,9 +79,9 @@ public class CommonUtils {
         text.setText(message);
         text.setTextColor(context.getResources().getColor(R.color.White, null));
 
-        Toast toast = new Toast(getApplicationContext());
-        toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.BOTTOM, 0, 150);
-        toast.setDuration(toastLen);
+        Toast toast = new Toast(context);
+        toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.BOTTOM, 0, 200);
+        toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
     }
@@ -139,11 +138,8 @@ public class CommonUtils {
 
     public static Drawable setDrawableSelector(Context context, int normal, int selected) {
 
-
         Drawable state_normal = ContextCompat.getDrawable(context, normal);
-
         Drawable state_pressed = ContextCompat.getDrawable(context, selected);
-
 
         Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
 
@@ -159,7 +155,6 @@ public class CommonUtils {
 
         BitmapDrawable state_normal_drawable = new BitmapDrawable(context.getResources(), disabledBitmap);
 
-
         StateListDrawable drawable = new StateListDrawable();
 
         drawable.addState(new int[]{android.R.attr.state_selected},
@@ -169,7 +164,6 @@ public class CommonUtils {
 
         return drawable;
     }
-
 
     public static StateListDrawable selectorRadioImage(Context context, Drawable normal, Drawable pressed) {
         StateListDrawable states = new StateListDrawable();

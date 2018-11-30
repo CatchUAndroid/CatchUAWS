@@ -91,12 +91,12 @@ public class SaveGroupProcess {
                                 processSaveGroup(commonS3BucketResult.getImages().get(0).getDownloadUrl());
                             } else {
                                 InputStream is = urlConnection.getErrorStream();
-                                CommonUtils.showToast(context, is.toString());
+                                CommonUtils.showCustomToast(context, is.toString());
                                 completeCallback.onFailed(new Exception(is.toString()));
                             }
                         } catch (IOException e) {
                             dialogDismiss();
-                            CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                            CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                             completeCallback.onFailed(e);
                         }
                     }
@@ -104,7 +104,7 @@ public class SaveGroupProcess {
                     @Override
                     public void onFailure(Exception e) {
                         dialogDismiss();
-                        CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                        CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                         completeCallback.onFailed(e);
                     }
 
@@ -120,7 +120,7 @@ public class SaveGroupProcess {
             @Override
             public void onFailure(Exception e) {
                 dialogDismiss();
-                CommonUtils.showToastLong(context, context.getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                 completeCallback.onFailed(e);
             }
 
@@ -184,7 +184,7 @@ public class SaveGroupProcess {
             @Override
             public void onFailure(Exception e) {
                 dialogDismiss();
-                CommonUtils.showToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                 completeCallback.onFailed(e);
             }
 
