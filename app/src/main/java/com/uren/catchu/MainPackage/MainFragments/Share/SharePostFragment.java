@@ -567,7 +567,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void sharePost() {
         getActivity().onBackPressed();
-        ShareUtil shareUtil = new ShareUtil(getContext(), shareItems, permissionModule);
+        ShareUtil shareUtil = new ShareUtil(shareItems, mFragmentNavigation);
         shareUtil.startToShare();
     }
 

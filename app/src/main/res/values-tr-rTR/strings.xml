@@ -213,7 +213,7 @@
     <string name="PLEASE_WAIT">"Lütfen bekleyiniz.."</string>
     <string name="PASSWORD_LINK_SEND_SUCCESS">Şifre sıfırlama linki e-mail adresinize gönderildi.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
-    <string name="SHARE_IS_SUCCESSFUL">Paylaşım Başarılı</string>
+    <string name="SHARE_IS_SUCCESSFUL">Biraz önce yapmış olduğunuz paylaşım başarılı sonuçlandı :) Paylaşımınızı görüntülemek ister misiniz?</string>
     <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Doğrulama Başarılı</string>
     <string name="PASSWORD_IS_CHANGED">Şifre değiştirildi</string>
     <string name="CURRENT_PASSWORD_INCORRECT">Mevcut şifre hatalı</string>

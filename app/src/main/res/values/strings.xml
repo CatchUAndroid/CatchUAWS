@@ -246,7 +246,7 @@
     <string name="PLEASE_WAIT">"Please wait.."</string>
     <string name="PASSWORD_LINK_SEND_SUCCESS">Renew password link has sent to your email address.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
-    <string name="SHARE_IS_SUCCESSFUL">Share is Successful</string>
+    <string name="SHARE_IS_SUCCESSFUL">The share you just made was successful :) Would you like to see your share?</string>
     <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Verification is Successful</string>
     <string name="PASSWORD_IS_CHANGED">Password is changed</string>
     <string name="CURRENT_PASSWORD_INCORRECT">Current password is incorrect</string>
