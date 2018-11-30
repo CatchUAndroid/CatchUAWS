@@ -26,6 +26,7 @@ import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentProcess;
+import com.uren.catchu.ApiGatewayFunctions.PostDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
@@ -542,6 +543,66 @@ public class PostHelper {
 
     }
 
+    public static class DeletePost {
+
+        static String userId;
+        static String postId;
+
+        public static final void startProcess(Context context, String userId, String postId) {
+
+            DeletePost.userId = userId;
+            DeletePost.postId = postId;
+
+            DeletePost deletePost = new DeletePost(context);
+        }
+
+        private DeletePost(Context context) {
+            deletePostProcess(context);
+        }
+
+        private void deletePostProcess(final Context context) {
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startDeletePostProcess(context, token);
+                }
+            });
+        }
+
+        private void startDeletePostProcess(Context context, String token) {
+
+            String userId = DeletePost.userId;
+            String postId = DeletePost.postId;
+
+            PostDeleteProcess postDeleteProcess = new PostDeleteProcess(context, new OnEventListener<BaseResponse>() {
+
+                @Override
+                public void onSuccess(BaseResponse baseResponse) {
+                    if (baseResponse == null) {
+                        CommonUtils.LOG_OK_BUT_NULL("PostDeleteProcess");
+                    } else {
+                        CommonUtils.LOG_OK("PostDeleteProcess");
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    CommonUtils.LOG_FAIL("PostDeleteProcess", e.toString());
+                }
+
+                @Override
+                public void onTaskContinue() {
+
+                }
+            }, userId, postId, token);
+
+            postDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
+
+    }
+
     public static class SinglePostClicked {
 
         /**
@@ -604,6 +665,9 @@ public class PostHelper {
         }
         public static void postCommentAllowedStatusChanged(int position, boolean newCommentAllowed, int _numberOfCallback) {
             postFeaturesCallbackList.get(_numberOfCallback).onCommentAllowedStatusChanged(position, newCommentAllowed);
+        }
+        public static void postDeleted(int position, int _numberOfCallback) {
+            postFeaturesCallbackList.get(_numberOfCallback).onPostDeleted(position);
         }
 
     }

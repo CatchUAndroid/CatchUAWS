@@ -260,6 +260,7 @@
     <string name="disableComment">Yorum yapmayı kapat</string>
     <string name="enableComment">Yorum yapılmasına izin ver</string>
     <string name="report">Şikayet et...</string>
+    <string name="delete">Sil</string>
     <string name="commentHint">Ne düşünüyorsunuz?</string>
     <string name="like">Beğen</string>
     <string name="filterSettings">Filtre Ayarları</string>
@@ -274,6 +275,7 @@
     <string name="feedViewTypeList">Liste</string>
     <string name="myPosts">Paylaşımlarım</string>
     <string name="caughtPosts">Yakaladığım paylaşımlar</string>
+    <string name="deleteThisPost">Bu paylaşımı sil?</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>

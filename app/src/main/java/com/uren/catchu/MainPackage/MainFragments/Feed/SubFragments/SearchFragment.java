@@ -99,6 +99,12 @@ public class SearchFragment extends BaseFragment
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
                 tempSearchText = edtSearch.getText().toString();
 
                 if (tempSearchText.matches("")) {
@@ -110,12 +116,6 @@ public class SearchFragment extends BaseFragment
                     searchText = tempSearchText;
                     getSearchResult();
                 }
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
             }
         });
 

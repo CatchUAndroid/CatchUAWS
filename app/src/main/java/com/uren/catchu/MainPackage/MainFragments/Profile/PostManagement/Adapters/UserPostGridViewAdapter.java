@@ -31,6 +31,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallba
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,6 +181,15 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                     postList.get(position).setIsCommentAllowed(commentAllowed);
                     notifyItemChanged(position);
                 }
+
+                @Override
+                public void onPostDeleted(int position) {
+                    Post deletedPost = postList.get(position);
+                    postList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyDataSetChanged();
+                    PostHelper.DeletePost.startProcess(mContext, AccountHolderInfo.getUserID(), deletedPost.getPostid());
+                }
             });
 
             singlePostClickedInstance.startSinglePostProcess();
@@ -202,7 +212,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             imgVideoIcon.setVisibility(View.GONE);
             imgGridMore.setVisibility(View.GONE);
 
-            if(post.getAttachments().size() > 1){
+            if (post.getAttachments().size() > 1) {
                 imgGridMore.setVisibility(View.VISIBLE);
             }
 
@@ -251,7 +261,8 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                             public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
                                 llError.setVisibility(View.VISIBLE);
                                 llProgress.setVisibility(View.GONE);
-                                progressLoading.setVisibility(View.GONE);;
+                                progressLoading.setVisibility(View.GONE);
+                                ;
                                 return false;
                             }
 

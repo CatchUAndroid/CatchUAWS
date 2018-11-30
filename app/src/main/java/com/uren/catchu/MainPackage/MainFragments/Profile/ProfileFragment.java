@@ -515,7 +515,7 @@ public class ProfileFragment extends BaseFragment
 
         GroupListHolder groupListHolderInstance = GroupListHolder.getInstance();
 
-        if(groupListHolderInstance != null){
+        if(groupListHolderInstance != null && groupListHolderInstance.getGroupList() != null){
             GroupRequestResult groupRequestResult = groupListHolderInstance.getGroupList();
             if(groupRequestResult.getResultArray().size() > 0){
                 CommonUtils.showToast(getContext(), "grupları singletondan hemen aldım");

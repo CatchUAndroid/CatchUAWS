@@ -29,6 +29,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SearchFragment;
 
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
@@ -85,6 +86,12 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
 
         return mView;
+    }
+
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        super.onStart();
     }
 
     private void initItems() {
