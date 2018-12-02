@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -564,9 +565,22 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void sharePost() {
-        getActivity().onBackPressed();
-        ShareUtil shareUtil = new ShareUtil(shareItems, mFragmentNavigation);
-        shareUtil.startToShare();
+        DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
+                getContext().getResources().getString(R.string.shareIsProcessing), 1000, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                        getActivity().onBackPressed();
+
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ShareUtil shareUtil = new ShareUtil(shareItems, mFragmentNavigation);
+                                shareUtil.startToShare();
+                            }
+                        }, 300);
+                    }
+                });
     }
 
     public void deleteSharedVideo() {

@@ -14,6 +14,7 @@ import com.uren.catchu.R;
 
 import pl.droidsonroids.gif.GifImageView;
 
+
 public class GifDialogBox {
     private String title;
     private String message;
@@ -22,6 +23,7 @@ public class GifDialogBox {
     private int pBtnColor;
     private int nBtnColor;
     private int nBtnVisibleType;
+    private int titleVisibleType;
     private Activity activity;
     private GifDialogListener pListener;
     private GifDialogListener nListener;
@@ -37,6 +39,7 @@ public class GifDialogBox {
         this.pBtnColor = builder.pBtnColor;
         this.nBtnColor = builder.nBtnColor;
         this. nBtnVisibleType = builder.nBtnVisibleType;
+        this.titleVisibleType = builder.titleVisibleType;
         this.positiveBtnText = builder.positiveBtnText;
         this.negativeBtnText = builder.negativeBtnText;
         this.gifImageResource = builder.gifImageResource;
@@ -51,6 +54,7 @@ public class GifDialogBox {
         private int pBtnColor;
         private int nBtnColor;
         private int nBtnVisibleType;
+        private int titleVisibleType;
         private Activity activity;
         private GifDialogListener pListener;
         private GifDialogListener nListener;
@@ -96,6 +100,11 @@ public class GifDialogBox {
             return this;
         }
 
+        public GifDialogBox.Builder setTitleVisibility(int visibleType) {
+            this.titleVisibleType = visibleType;
+            return this;
+        }
+
         public GifDialogBox.Builder OnPositiveClicked(GifDialogListener pListener) {
             this.pListener = pListener;
             return this;
@@ -122,14 +131,14 @@ public class GifDialogBox {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             dialog.setCancelable(this.cancel);
             dialog.setContentView(R.layout.layout_gif_dialog_box);
-            TextView title1 = (TextView)dialog.findViewById(R.id.titleTv);
-            TextView message1 = (TextView)dialog.findViewById(R.id.messageTv);
-            Button nBtn = (Button)dialog.findViewById(R.id.cancelBtn);
-            Button pBtn = (Button)dialog.findViewById(R.id.okBtn);
-            GifImageView gifImageView = (GifImageView)dialog.findViewById(R.id.gifImgv);
-            RelativeLayout mainLayout = (RelativeLayout) dialog.findViewById(R.id.mainLayout);
-            mainLayout.setBackground(ShapeUtil.getShape(this.activity.getResources().getColor(R.color.White, null),
-                    0, GradientDrawable.RECTANGLE, 20, 0));
+            TextView title1 = (TextView)dialog.findViewById(R.id.title);
+            TextView message1 = (TextView)dialog.findViewById(R.id.message);
+            Button nBtn = (Button)dialog.findViewById(R.id.negativeBtn);
+            Button pBtn = (Button)dialog.findViewById(R.id.positiveBtn);
+            GifImageView gifImageView = (GifImageView)dialog.findViewById(R.id.gifImageView);
+            //RelativeLayout mainLayout = (RelativeLayout) dialog.findViewById(R.id.mainLayout);
+            //mainLayout.setBackground(ShapeUtil.getShape(this.activity.getResources().getColor(R.color.White, null),
+            //        0, GradientDrawable.RECTANGLE, 20, 0));
             gifImageView.setImageResource(this.gifImageResource);
             nBtn.setVisibility(nBtnVisibleType);
             title1.setText(this.title);
@@ -143,13 +152,13 @@ public class GifDialogBox {
                 nBtn.setText(this.negativeBtnText);
             }
 
-            if (this.pBtnColor != 0) {
+            /*if (this.pBtnColor != 0) {
                 pBtn.setBackground(ShapeUtil.getShape(pBtnColor, 0, GradientDrawable.RECTANGLE, 20, 0));
             }
 
             if (this.nBtnColor != 0) {
                 nBtn.setBackground(ShapeUtil.getShape(nBtnColor, 0, GradientDrawable.RECTANGLE, 20, 0));
-            }
+            }*/
 
             if (this.pListener != null) {
                 pBtn.setOnClickListener(new View.OnClickListener() {

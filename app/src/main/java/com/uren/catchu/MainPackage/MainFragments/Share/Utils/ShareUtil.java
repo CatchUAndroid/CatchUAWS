@@ -3,9 +3,8 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.view.View;
 
-import com.shashank.sony.fancygifdialoglib.FancyGifDialog;
-import com.shashank.sony.fancygifdialoglib.FancyGifDialogListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
@@ -13,6 +12,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
+import com.uren.catchu.GeneralUtils.WillDelete.GifDialogBox;
+import com.uren.catchu.GeneralUtils.WillDelete.GifDialogListener;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
@@ -102,7 +103,24 @@ public class ShareUtil {
     public void showShareSuccessView() {
         if (NextActivity.thisActivity != null) {
             try {
-                new FancyGifDialog.Builder(NextActivity.thisActivity)
+                new GifDialogBox.Builder(NextActivity.thisActivity)
+                        .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
+                        .setPositiveBtnBackground(NextActivity.thisActivity.getResources().getColor(R.color.colorAccent, null))
+                        .setPositiveBtnText(NextActivity.thisActivity.getResources().getString(R.string.ok))
+                        .setGifResource(R.drawable.gif16)
+                        .setNegativeBtnVisibility(View.GONE)
+                        .setTitleVisibility(View.GONE)
+                        .isCancellable(true)
+                        .OnPositiveClicked(new GifDialogListener() {
+                            @Override
+                            public void OnClick() {
+
+                            }
+                        })
+                        .build();
+
+
+                /*new FancyGifDialog.Builder(NextActivity.thisActivity)
                         .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
                         .setPositiveBtnBackground("#FF4081")
                         .setNegativeBtnBackground("#808080")
@@ -124,7 +142,7 @@ public class ShareUtil {
 
                             }
                         })
-                        .build();
+                        .build();*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
