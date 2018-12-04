@@ -119,30 +119,6 @@ public class ShareUtil {
                         })
                         .build();
 
-
-                /*new FancyGifDialog.Builder(NextActivity.thisActivity)
-                        .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
-                        .setPositiveBtnBackground("#FF4081")
-                        .setNegativeBtnBackground("#808080")
-                        .setNegativeBtnText(NextActivity.thisActivity.getResources().getString(R.string.no))
-                        .setPositiveBtnText(NextActivity.thisActivity.getResources().getString(R.string.yes))
-                        .setGifResource(R.drawable.gif16)
-                        .isCancellable(true)
-                        .OnPositiveClicked(new FancyGifDialogListener() {
-                            @Override
-                            public void OnClick() {
-                                String targetUid = AccountHolderInfo.getUserID();
-                                String toolbarTitle = NextActivity.thisActivity.getResources().getString(R.string.myPosts);
-                                mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
-                            }
-                        })
-                        .OnNegativeClicked(new FancyGifDialogListener() {
-                            @Override
-                            public void OnClick() {
-
-                            }
-                        })
-                        .build();*/
             } catch (Exception e) {
                 e.printStackTrace();
             }
