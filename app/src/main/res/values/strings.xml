@@ -73,7 +73,7 @@
     <string name="pleaseAddShareItem">You must add video, picture or text to share!</string>
     <string name="selectGroup">Select Group</string>
     <string name="selectAll">Select All</string>
-    <string name="share">SHARE</string>
+    <string name="share">Share</string>
     <string name="locationIsEmpty">Location information is required to share</string>
     <string name="shareIsProcessing">Sharing...</string>
     <string name="videoDurationWarning">Maximum duration for video :</string>
@@ -149,6 +149,10 @@
     <string name="groupsShareText">Groups</string>
     <string name="justMeShareText">Just Me</string>
     <string name="allFollowersShareText">All Followers</string>
+
+    <string name="PUBLIC_SHARE_DESC">You share everyone</string>
+    <string name="ALL_FOLLOWERS_SHARE_DESC">You share all followers</string>
+    <string name="JUSTME_SHARE_DESC">You share just yourself</string>
 
     <string name="signOut">Sign Out</string>
     <string name="followers">Followers</string>

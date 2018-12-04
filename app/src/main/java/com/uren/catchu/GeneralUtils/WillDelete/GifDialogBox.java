@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -22,6 +23,7 @@ public class GifDialogBox {
     private String negativeBtnText;
     private int pBtnColor;
     private int nBtnColor;
+    private int pBtnVisibleType;
     private int nBtnVisibleType;
     private int titleVisibleType;
     private Activity activity;
@@ -29,6 +31,7 @@ public class GifDialogBox {
     private GifDialogListener nListener;
     private boolean cancel;
     int gifImageResource;
+    private long durationTime;
 
     private GifDialogBox(GifDialogBox.Builder builder) {
         this.title = builder.title;
@@ -38,12 +41,14 @@ public class GifDialogBox {
         this.nListener = builder.nListener;
         this.pBtnColor = builder.pBtnColor;
         this.nBtnColor = builder.nBtnColor;
-        this. nBtnVisibleType = builder.nBtnVisibleType;
+        this.pBtnVisibleType = builder.pBtnVisibleType;
+        this.nBtnVisibleType = builder.nBtnVisibleType;
         this.titleVisibleType = builder.titleVisibleType;
         this.positiveBtnText = builder.positiveBtnText;
         this.negativeBtnText = builder.negativeBtnText;
         this.gifImageResource = builder.gifImageResource;
         this.cancel = builder.cancel;
+        this.durationTime = builder.durationTime;
     }
 
     public static class Builder {
@@ -53,6 +58,7 @@ public class GifDialogBox {
         private String negativeBtnText;
         private int pBtnColor;
         private int nBtnColor;
+        private int pBtnVisibleType;
         private int nBtnVisibleType;
         private int titleVisibleType;
         private Activity activity;
@@ -60,6 +66,7 @@ public class GifDialogBox {
         private GifDialogListener nListener;
         private boolean cancel;
         int gifImageResource;
+        private long durationTime;
 
         public Builder(Activity activity) {
             this.activity = activity;
@@ -95,6 +102,11 @@ public class GifDialogBox {
             return this;
         }
 
+        public GifDialogBox.Builder setPositiveBtnVisibility(int visibleType) {
+            this.pBtnVisibleType = visibleType;
+            return this;
+        }
+
         public GifDialogBox.Builder setNegativeBtnVisibility(int visibleType) {
             this.nBtnVisibleType = visibleType;
             return this;
@@ -102,6 +114,11 @@ public class GifDialogBox {
 
         public GifDialogBox.Builder setTitleVisibility(int visibleType) {
             this.titleVisibleType = visibleType;
+            return this;
+        }
+
+        public GifDialogBox.Builder setDurationTime(long durationTime) {
+            this.durationTime = durationTime;
             return this;
         }
 
@@ -131,16 +148,15 @@ public class GifDialogBox {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             dialog.setCancelable(this.cancel);
             dialog.setContentView(R.layout.layout_gif_dialog_box);
-            TextView title1 = (TextView)dialog.findViewById(R.id.title);
-            TextView message1 = (TextView)dialog.findViewById(R.id.message);
-            Button nBtn = (Button)dialog.findViewById(R.id.negativeBtn);
-            Button pBtn = (Button)dialog.findViewById(R.id.positiveBtn);
-            GifImageView gifImageView = (GifImageView)dialog.findViewById(R.id.gifImageView);
-            //RelativeLayout mainLayout = (RelativeLayout) dialog.findViewById(R.id.mainLayout);
-            //mainLayout.setBackground(ShapeUtil.getShape(this.activity.getResources().getColor(R.color.White, null),
-            //        0, GradientDrawable.RECTANGLE, 20, 0));
+            TextView title1 = (TextView) dialog.findViewById(R.id.title);
+            TextView message1 = (TextView) dialog.findViewById(R.id.message);
+            Button nBtn = (Button) dialog.findViewById(R.id.negativeBtn);
+            Button pBtn = (Button) dialog.findViewById(R.id.positiveBtn);
+            GifImageView gifImageView = (GifImageView) dialog.findViewById(R.id.gifImageView);
+
             gifImageView.setImageResource(this.gifImageResource);
             nBtn.setVisibility(nBtnVisibleType);
+            pBtn.setVisibility(pBtnVisibleType);
             title1.setText(this.title);
             message1.setText(this.message);
 
@@ -151,14 +167,6 @@ public class GifDialogBox {
             if (this.negativeBtnText != null) {
                 nBtn.setText(this.negativeBtnText);
             }
-
-            /*if (this.pBtnColor != 0) {
-                pBtn.setBackground(ShapeUtil.getShape(pBtnColor, 0, GradientDrawable.RECTANGLE, 20, 0));
-            }
-
-            if (this.nBtnColor != 0) {
-                nBtn.setBackground(ShapeUtil.getShape(nBtnColor, 0, GradientDrawable.RECTANGLE, 20, 0));
-            }*/
 
             if (this.pListener != null) {
                 pBtn.setOnClickListener(new View.OnClickListener() {
@@ -186,6 +194,16 @@ public class GifDialogBox {
             }
 
             dialog.show();
+
+            if (this.durationTime > 0) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog.isShowing())
+                            dialog.dismiss();
+                    }
+                }, this.durationTime);
+            }
             return new GifDialogBox(this);
         }
     }

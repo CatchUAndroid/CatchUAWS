@@ -125,7 +125,6 @@
             </RelativeLayout>
 
 
-
         </android.support.v7.widget.Toolbar>
 
         <!--<ScrollView
@@ -152,9 +151,9 @@
                     android:orientation="vertical">
 
                     <RelativeLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp">
+                        android:layout_marginTop="7dp">
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -162,53 +161,99 @@
                             android:layout_margin="3dp"
                             android:orientation="horizontal">
 
-                            <ImageView
-                                android:id="@+id/photoSelectImgv"
+                            <RelativeLayout
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_marginLeft="5dp"
-                                android:padding="8dp"
-                                android:src="@mipmap/icon_share_photo" />
+                                android:layout_marginLeft="7dp">
+
+                                <ImageView
+                                    android:id="@+id/photoSelectImgv"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:padding="8dp"
+                                    android:src="@mipmap/icon_share_photo" />
+
+                                <ImageView
+                                    android:id="@+id/photoCheckedImgv"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentTop="true"
+                                    android:src="@mipmap/icon_green_checked" />
+
+                            </RelativeLayout>
+
 
                             <View
                                 android:layout_width="1dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="7dp"
                                 android:alpha="0.1"
                                 android:background="@android:color/black" />
 
-                            <ImageView
-                                android:id="@+id/videoSelectImgv"
+                            <RelativeLayout
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_marginLeft="5dp"
-                                android:padding="8dp"
-                                android:src="@mipmap/icon_share_video" />
+                                android:layout_marginLeft="7dp">
+
+                                <ImageView
+                                    android:id="@+id/videoSelectImgv"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:padding="8dp"
+                                    android:src="@mipmap/icon_share_video" />
+
+                                <ImageView
+                                    android:id="@+id/videoCheckedImgv"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentTop="true"
+                                    android:src="@mipmap/icon_green_checked" />
+
+                            </RelativeLayout>
 
                             <View
                                 android:layout_width="1dp"
                                 android:layout_height="match_parent"
-                                android:layout_marginLeft="5dp"
+                                android:layout_marginLeft="7dp"
                                 android:alpha="0.1"
                                 android:background="@android:color/black" />
 
-                            <ImageView
-                                android:id="@+id/textSelectImgv"
+                            <RelativeLayout
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:layout_marginLeft="5dp"
-                                android:padding="10dp"
-                                android:src="@mipmap/icon_share_text" />
+                                android:layout_marginLeft="7dp">
 
-                            <ImageView
-                                android:id="@+id/showMapImgv"
-                                android:layout_width="50dp"
-                                android:layout_height="50dp"
-                                android:layout_marginLeft="30dp"
-                                android:padding="7dp"
-                                android:src="@mipmap/icon_share_location" />
+                                <ImageView
+                                    android:id="@+id/textSelectImgv"
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:padding="8dp"
+                                    android:src="@mipmap/icon_share_text" />
+
+                                <ImageView
+                                    android:id="@+id/textCheckedImgv"
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_alignParentTop="true"
+                                    android:src="@mipmap/icon_green_checked" />
+
+                            </RelativeLayout>
 
                         </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/showMapImgv"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="3dp"
+                            android:padding="4dp"
+                            android:src="@mipmap/icon_share_location" />
 
                     </RelativeLayout>
 
@@ -276,11 +321,11 @@
                         android:orientation="horizontal">
 
                         <TextView
+                            android:id="@+id/selectedDescTv"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="right|center"
-                            android:textColor="@color/Black"
-                            android:id="@+id/selectedDescTv"/>
+                            android:textColor="@color/RoyalBlue" />
 
                         <LinearLayout
                             android:id="@+id/justMeSelectLayout"
@@ -305,8 +350,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/justMeShareText"
-                                android:textColor="@color/Black"
-                                android:textSize="8sp" />
+                                android:textColor="@color/RoyalBlue"
+                                android:textSize="8sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -332,8 +378,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/groupsShareText"
-                                android:textColor="@color/Black"
-                                android:textSize="8sp" />
+                                android:textColor="@color/RoyalBlue"
+                                android:textSize="8sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -359,8 +406,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/friendsShareText"
-                                android:textColor="@color/Black"
-                                android:textSize="8sp" />
+                                android:textColor="@color/RoyalBlue"
+                                android:textSize="8sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -387,8 +435,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/allFollowersShareText"
-                                android:textColor="@color/Black"
-                                android:textSize="8sp" />
+                                android:textColor="@color/RoyalBlue"
+                                android:textSize="8sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -414,16 +463,15 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/publicShareText"
-                                android:textColor="@color/Black"
-                                android:textSize="8sp" />
+                                android:textColor="@color/RoyalBlue"
+                                android:textSize="8sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
                     </LinearLayout>
 
                 </RelativeLayout>
-
-
 
 
                 <LinearLayout
@@ -443,7 +491,8 @@
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:text="@string/cancel"
-                        android:textColor="@color/DarkYellow"
+                        android:textAllCaps="false"
+                        android:textColor="@color/Red"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -456,6 +505,7 @@
                         android:layout_weight="1"
                         android:text="@string/share"
                         android:textColor="@color/White"
+                        android:textAllCaps="false"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 

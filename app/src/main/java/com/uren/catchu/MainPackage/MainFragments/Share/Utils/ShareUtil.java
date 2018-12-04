@@ -35,12 +35,10 @@ public class ShareUtil {
 
     ShareItems shareItems;
     PermissionModule permissionModule;
-    BaseFragment.FragmentNavigation mFragmentNavigation;
 
-    public ShareUtil(ShareItems shareItems, BaseFragment.FragmentNavigation mFragmentNavigation) {
+    public ShareUtil(ShareItems shareItems) {
         this.shareItems = shareItems;
         this.permissionModule = new PermissionModule(NextActivity.thisActivity);
-        this.mFragmentNavigation = mFragmentNavigation;
     }
 
     public void startToShare() {
@@ -105,18 +103,12 @@ public class ShareUtil {
             try {
                 new GifDialogBox.Builder(NextActivity.thisActivity)
                         .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
-                        .setPositiveBtnBackground(NextActivity.thisActivity.getResources().getColor(R.color.colorAccent, null))
-                        .setPositiveBtnText(NextActivity.thisActivity.getResources().getString(R.string.ok))
                         .setGifResource(R.drawable.gif16)
                         .setNegativeBtnVisibility(View.GONE)
+                        .setPositiveBtnVisibility(View.GONE)
                         .setTitleVisibility(View.GONE)
+                        .setDurationTime(3000)
                         .isCancellable(true)
-                        .OnPositiveClicked(new GifDialogListener() {
-                            @Override
-                            public void OnClick() {
-
-                            }
-                        })
                         .build();
 
             } catch (Exception e) {

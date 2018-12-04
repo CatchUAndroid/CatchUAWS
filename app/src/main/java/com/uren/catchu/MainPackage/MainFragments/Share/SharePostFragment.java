@@ -155,6 +155,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @BindView(R.id.justMeImgv)
     ImageView justMeImgv;
 
+    @BindView(R.id.photoCheckedImgv)
+    ImageView photoCheckedImgv;
+    @BindView(R.id.videoCheckedImgv)
+    ImageView videoCheckedImgv;
+    @BindView(R.id.textCheckedImgv)
+    ImageView textCheckedImgv;
+
     @BindView(R.id.cancelButton)
     Button cancelButton;
     @BindView(R.id.shareButton)
@@ -295,7 +302,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void setSelectedWhomType() {
-        selectedDescTv.setText(getResources().getString(R.string.publicShareText));
+        selectedDescTv.setText(getResources().getString(R.string.PUBLIC_SHARE_DESC));
         selectedWhomType = SHARE_TYPE_EVERYONE;
         shareItems.setSelectedShareType(selectedWhomType);
         shareItems.getPost().setIsCommentAllowed(true);
@@ -364,15 +371,16 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         });
     }
 
+
     private void setShapes() {
         cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
-                getResources().getColor(R.color.DarkYellow, null), GradientDrawable.RECTANGLE, 15, 6));
+                getResources().getColor(R.color.Red, null), GradientDrawable.RECTANGLE, 60, 3));
 
-        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DarkYellow, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2));
+        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.RoyalBlue, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 60, 0));
 
-        showMapImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
-                getResources().getColor(R.color.Red, null), GradientDrawable.OVAL, 20, 3));
+        //showMapImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
+        //        getResources().getColor(R.color.Red, null), GradientDrawable.OVAL, 20, 3));
     }
 
     public void setViewsDefaultValues() {
@@ -513,7 +521,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 selectedWhomType = SHARE_TYPE_EVERYONE;
                 openWhomSelection();
                 shareItems.setSelectedShareType(selectedWhomType);
-                selectedDescTv.setText(getResources().getString(R.string.publicShareText));
+                selectedDescTv.setText(getResources().getString(R.string.PUBLIC_SHARE_DESC));
             }
         });
 
@@ -523,7 +531,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 selectedWhomType = SHARE_TYPE_ALL_FOLLOWERS;
                 openWhomSelection();
                 shareItems.setSelectedShareType(selectedWhomType);
-                selectedDescTv.setText(getResources().getString(R.string.allFollowersShareText));
+                selectedDescTv.setText(getResources().getString(R.string.ALL_FOLLOWERS_SHARE_DESC));
             }
         });
 
@@ -559,28 +567,23 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 selectedWhomType = SHARE_TYPE_SELF;
                 openWhomSelection();
                 shareItems.setSelectedShareType(selectedWhomType);
-                selectedDescTv.setText(getResources().getString(R.string.justMeShareText));
+                selectedDescTv.setText(getResources().getString(R.string.JUSTME_SHARE_DESC));
             }
         });
     }
 
     public void sharePost() {
-        DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
-                getContext().getResources().getString(R.string.shareIsProcessing), 1000, new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                        getActivity().onBackPressed();
 
-                        final Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ShareUtil shareUtil = new ShareUtil(shareItems, mFragmentNavigation);
-                                shareUtil.startToShare();
-                            }
-                        }, 300);
-                    }
-                });
+        getActivity().onBackPressed();
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ShareUtil shareUtil = new ShareUtil(shareItems);
+                shareUtil.startToShare();
+            }
+        }, 300);
     }
 
     public void deleteSharedVideo() {
@@ -1237,41 +1240,47 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
 
     private void setWhomItemsImgvFilled() {
-        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
-        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
-        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
-        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
-        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.DarkYellow, null), PorterDuff.Mode.SRC_IN);
+        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
     }
 
     public void setPhotoSelectImgvFilled() {
-        photoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
-                0,
-                GradientDrawable.RECTANGLE, 20, 3));
+        photoSelectImgv.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                GradientDrawable.OVAL, 50, 3));
+        photoCheckedImgv.setVisibility(View.VISIBLE);
     }
 
     public void setVideoSelectImgvFilled() {
-        videoSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
-                0,
-                GradientDrawable.RECTANGLE, 20, 3));
+        videoSelectImgv.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                GradientDrawable.OVAL, 50, 3));
+        videoCheckedImgv.setVisibility(View.VISIBLE);
     }
 
     public void setTextSelectImgvFilled() {
-        textSelectImgv.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.MediumSeaGreen, null),
-                0,
-                GradientDrawable.RECTANGLE, 20, 3));
+        textSelectImgv.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                GradientDrawable.OVAL, 50, 3));
+        textCheckedImgv.setVisibility(View.VISIBLE);
     }
 
     public void clearPhotoSelectImgvFilled() {
         photoSelectImgv.setBackground(null);
+        photoCheckedImgv.setVisibility(View.GONE);
     }
 
     public void clearVideoSelectImgvFilled() {
         videoSelectImgv.setBackground(null);
+        videoCheckedImgv.setVisibility(View.GONE);
     }
 
     public void clearTextSelectImgvFilled() {
         textSelectImgv.setBackground(null);
+        textCheckedImgv.setVisibility(View.GONE);
     }
 
     @Override

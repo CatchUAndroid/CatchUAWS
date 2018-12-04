@@ -57,7 +57,7 @@
     <string name="pleaseAddShareItem">Paylaşım yapabilmek için video, resim yada not eklemelisiniz!</string>
     <string name="selectGroup">Grup Seç</string>
     <string name="selectAll">Hepsini Seç</string>
-    <string name="share">PAYLAŞ</string>
+    <string name="share">Paylaş</string>
     <string name="locationIsEmpty">Paylaşım için lokasyon bilgisi zorunludur</string>
     <string name="shareIsProcessing">Paylaşılıyor...</string>
     <string name="videoDurationWarning">Video için max geçerli süre :</string>
@@ -117,6 +117,10 @@
     <string name="groupsShareText">Gruplar</string>
     <string name="justMeShareText">Sadece Ben</string>
     <string name="allFollowersShareText">Tüm Takipçiler</string>
+
+    <string name="PUBLIC_SHARE_DESC">Herkese paylaşacaksın</string>
+    <string name="ALL_FOLLOWERS_SHARE_DESC">Tüm takipçilere paylaşacaksın</string>
+    <string name="JUSTME_SHARE_DESC">Sadece kendine paylaşacaksın</string>
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Ayarları</string>
