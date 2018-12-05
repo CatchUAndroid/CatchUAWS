@@ -68,6 +68,8 @@ public class CommonUtils {
     }*/
 
     public static final void showCustomToast(Context context, String message){
+
+        if(context == null) return;
         LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
         View view = inflater.inflate( R.layout.layout_custom_toast, null );
         View layout = (LinearLayout) view.findViewById( R.id.custom_toast_container );
