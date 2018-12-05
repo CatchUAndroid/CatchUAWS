@@ -67,7 +67,7 @@ public class CommonUtils {
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }*/
 
-    
+
     public static final void showCustomToast(Context context, String message){
 
         if(context == null) return;
