@@ -280,53 +280,14 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
         }
 
         private void setGridBackgroundColor() {
-            int colorCode = getRandomColor();
+            int colorCode = CommonUtils.getRandomColor(mContext);
             llExplanation.setBackgroundColor(mContext.getResources().getColor(colorCode, null));
         }
 
 
     }
 
-    private int getRandomColor() {
 
-        Resources resources = mContext.getResources();
-
-        int colorList[] = {
-                R.color.green,
-                R.color.green,
-                R.color.PeachPuff,
-                R.color.Gold,
-                R.color.Pink,
-                R.color.LightPink,
-                R.color.Orange,
-                R.color.LightSalmon,
-                R.color.DarkOrange,
-                R.color.Coral,
-                R.color.HotPink,
-                R.color.Tomato,
-                R.color.OrangeRed,
-                R.color.DeepPink,
-                R.color.Fuchsia,
-                R.color.Magenta,
-                R.color.LightCoral,
-                R.color.PaleGoldenrod,
-                R.color.Violet,
-                R.color.DarkSalmon,
-                R.color.Lavender,
-                R.color.Yellow,
-                R.color.LightBlue,
-                R.color.DarkGray,
-                R.color.Brown,
-                R.color.Sienna,
-                R.color.Yellow,
-                R.color.DarkOrchid,
-                R.color.PaleGreen,
-                R.color.DarkViolet
-        };
-
-        Random rand = new Random();
-        return colorList[rand.nextInt(colorList.length)];
-    }
 
     public void updateItems() {
         /**/

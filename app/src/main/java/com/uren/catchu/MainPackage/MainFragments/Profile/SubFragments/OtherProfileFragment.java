@@ -1,19 +1,36 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.graphics.Rect;
+import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import com.uren.catchu.Adapters.LocationTrackerAdapter;
+import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -27,21 +44,40 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.DenemeAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.ExpandableHeightGridView;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.ExpandableHeightListView;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.MainPackage.NextActivity;
+import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
+import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import catchu.model.Post;
+import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfile;
 
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
@@ -51,21 +87,28 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIR
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
+import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 public class OtherProfileFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    UserProfile otherProfile;  //serverdan getirilen user bilgilerini içerir
-    User selectedUser;       // fragmenta aktarılan user'ın bilgilerini içerir
     UserInfoListItem userInfoListItem;
+    User selectedUser;
+    UserProfile fetchedUser;
 
-    String followStatus;
-    private int followingCount, followerCount;
+    private DenemeAdapter denemeAdapter;
+    private CustomGridLayoutManager customGridLayoutManager;
+    private List<Object> objectList = new ArrayList<Object>();
 
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
+    //Refresh layout
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
+
+    @BindView(R.id.gridRecyclerView)
+    RecyclerView gridRecyclerView;
 
     //toolbar items
     @BindView(R.id.toolbar)
@@ -75,33 +118,23 @@ public class OtherProfileFragment extends BaseFragment
     @BindView(R.id.commonToolbarbackImgv)
     ClickableImageView commonToolbarbackImgv;
 
-    //profileimage
-    @BindView(R.id.imgProfile)
-    ImageView imgProfile;
-    @BindView(R.id.txtProfile)
-    TextView txtProfile;
+    private static final int MARGING_GRID = 2;
+    private static final int SPAN_COUNT = 3;
 
-    //profile detail
-    @BindView(R.id.txtName)
-    TextView txtName;
-    @BindView(R.id.txtBio)
-    TextView txtBio;
+    private boolean loading = true;
+    private boolean pulledToRefreshHeader = false;
+    private boolean pulledToRefreshPost = false;
+    private boolean isFirstFetch = false;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private int perPageCnt, pageCnt;
+    private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
-    //Follow variables
-    @BindView(R.id.btnFollowStatus)
-    Button btnFollowStatus;
-    @BindView(R.id.txtFollowerCnt)
-    TextView txtFollowerCnt;
-    @BindView(R.id.txtFollowingCnt)
-    TextView txtFollowingCnt;
-
-    //posts
-    @BindView(R.id.llMyPosts)
-    LinearLayout llMyPosts;
-
-    //Refresh layout
-    @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    //Location
+    private LocationTrackerAdapter locationTrackObj;
+    private PermissionModule permissionModule;
+    private String longitude;
+    private String latitude;
+    private String radius;
 
     /**
      * @param user i) userId -> ZORUNLU,
@@ -137,24 +170,70 @@ public class OtherProfileFragment extends BaseFragment
                 selectedUser = userInfoListItem.getUser();
             }
 
-            initToolbar();
-            initListeners();
-            updateUI();          //fragmenta aktarılan selectedUser üzerinden datalar set edilir.
+            setInitialValues();
+            initRecyclerView();
             setPullToRefresh();
-
+            getData();
         }
 
         return mView;
     }
 
-    private void initToolbar() {
+    private void setInitialValues() {
+
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
+
+        //toolbar Title
+        if(selectedUser!=null){
+            if(isValid(selectedUser.getUsername())){
+                toolbarTitleTv.setText(selectedUser.getUsername());
+            }
+        }
+
     }
 
-    private void initListeners() {
-        btnFollowStatus.setOnClickListener(this);
-        llMyPosts.setOnClickListener(this);
+    private void initRecyclerView() {
+
+        isFirstFetch = true;
+        setLayoutManager();
+        setAdapter();
+        setPullToRefresh();
+        setRecyclerViewScroll();
+        setPaginationValues();
+
+    }
+
+    private void setLayoutManager() {
+        customGridLayoutManager = new CustomGridLayoutManager(getContext(), SPAN_COUNT);
+        gridRecyclerView.setLayoutManager(customGridLayoutManager);
+        //gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
+        gridRecyclerView.addItemDecoration(addItemDecoration());
+
+        customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch (denemeAdapter.getItemViewType(position)) {
+                    case DenemeAdapter.VIEW_HEADER:
+                        return SPAN_COUNT; //number of columns of the grid
+                    case DenemeAdapter.VIEW_ITEM:
+                        return 1;
+                    case DenemeAdapter.VIEW_PROG:
+                        return SPAN_COUNT; //number of columns of the grid
+                    default:
+                        return -1;
+                }
+            }
+        });
+
+    }
+
+    private void setAdapter() {
+        denemeAdapter = new DenemeAdapter(getActivity(), getContext(), mFragmentNavigation);
+        gridRecyclerView.setAdapter(denemeAdapter);
+        gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
+
+        denemeAdapter.addHeader(userInfoListItem);
     }
 
     private void setPullToRefresh() {
@@ -162,48 +241,75 @@ public class OtherProfileFragment extends BaseFragment
         refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                pulledToRefreshHeader = true;
+                pulledToRefreshPost = true;
+                setPaginationValues();
 
-                updateUI();
+                /*
+                checkLocationAndRetrievePosts();
+                */
             }
         });
-    }
-
-    private void updateUI() {
-
-        txtFollowerCnt.setClickable(false);
-        txtFollowingCnt.setClickable(false);
-
-        //username
-        if (isValid(selectedUser.getUsername())) {
-            toolbarTitleTv.setText(selectedUser.getUsername());
-        }
-
-        //profil fotografi varsa set edilir.
-        UserDataUtil.setProfilePicture(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
-                selectedUser.getUsername(), txtProfile, imgProfile);
-        imgProfile.setPadding(3, 3, 3, 3);
-
-        //Name
-        if (isValid(selectedUser.getName())) {
-            txtName.setText(selectedUser.getName());
-        }
-
-        /* eldeki datalar set edildikten sonra serverdan tüm bilgiler çekilir */
-        getProfileDetail(); //userid ile user serverdan tekrar çekilir
 
     }
 
-    private void getProfileDetail() {
+    private void setPaginationValues() {
+        perPageCnt = DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
+        pageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
+        float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
+        radius = String.valueOf(radiusInKm);
+    }
 
+
+    private void setRecyclerViewScroll() {
+
+        gridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) //check for scroll down
+                {
+                    visibleItemCount = customGridLayoutManager.getChildCount();
+                    totalItemCount = customGridLayoutManager.getItemCount();
+                    pastVisibleItems = customGridLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading) {
+
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = false;
+                            Log.v("...", "Last Item Wow !");
+                            //Do pagination.. i.e. fetch new data
+                            pageCnt++;
+                            //denemeAdapter.addProgressLoading();
+                            //getPosts();
+
+                        }
+                    }
+                }
+            }
+
+        });
+
+    }
+
+
+
+    private void getData() {
+        getUserInfo();
+        checkLocationAndRetrievePosts();
+    }
+
+    private void getUserInfo() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startGetProfileDetail(token);
+                startGetUserInfo(token);
             }
         });
     }
 
-    private void startGetProfileDetail(String token) {
+    private void startGetUserInfo(String token) {
 
         UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
 
@@ -215,24 +321,18 @@ public class OtherProfileFragment extends BaseFragment
 
                 } else {
                     CommonUtils.LOG_OK("UserDetail");
-                    otherProfile = userProfile;
-                    setProfileDetail();
+                    fetchedUser = userProfile;
+                    setHeaderInRecyclerView(fetchedUser);
                 }
-
-                progressBar.setVisibility(View.GONE);
-
             }
 
             @Override
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("UserDetail", e.toString());
-                progressBar.setVisibility(View.GONE);
-
             }
 
             @Override
             public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
             }
         }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), token);
 
@@ -240,204 +340,196 @@ public class OtherProfileFragment extends BaseFragment
 
     }
 
-    private void setProfileDetail() {
-
-        //toolbarTitle
-        if (isValid(otherProfile.getUserInfo().getUsername())) {
-            toolbarTitleTv.setText(otherProfile.getUserInfo().getUsername());
-        } else {
-            toolbarTitleTv.setText(R.string.profile);
-        }
-
-        //profil fotografi varsa set edilir.
-        UserDataUtil.setProfilePicture(getActivity(), selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
-                selectedUser.getUsername(), txtProfile, imgProfile);
-        imgProfile.setPadding(3, 3, 3, 3);
-        //Name
-        if (isValid(otherProfile.getUserInfo().getName())) {
-            txtName.setText(otherProfile.getUserInfo().getName());
-        }else if(isValid(otherProfile.getUserInfo().getUsername())){
-            txtName.setText(otherProfile.getUserInfo().getUsername());
-        }
-        //Biography
-        // todo NT - biography usera beslenmiyor.düzenlenecek
-
-        //FollowStatus
-        UserDataUtil.updateFollowButton2(getActivity(), otherProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
-
-        setUserFollowerAndFollowingCnt(otherProfile);
-        refresh_layout.setRefreshing(false);
-
+    private void setHeaderInRecyclerView(UserProfile userProfile) {
+        denemeAdapter.updateHeader(userProfile);
     }
 
-
-    private void setUserFollowerAndFollowingCnt(UserProfile user) {
-
-        if (user != null && user.getRelationInfo() != null) {
-
-            if (user.getRelationInfo().getFollowerCount() != null && !user.getRelationInfo().getFollowerCount().trim().isEmpty())
-                txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount());
-
-            if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
-                txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount());
-
-        }
+    private void checkLocationAndRetrievePosts() {
+        permissionModule = new PermissionModule(getContext());
+        initLocationTracker();
+        checkCanGetLocation();
     }
 
-    private void btnFollowStatusClicked() {
-
-        //takip ediliyor ise
-        if (otherProfile.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
-            if (otherProfile.getUserInfo().getIsPrivateAccount() != null && otherProfile.getUserInfo().getIsPrivateAccount()) {
-                openDialogBox();
-            } else {
-                updateFollowStatus(FRIEND_DELETE_FOLLOW);
-            }
-        } else if (otherProfile.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
-            //istek gonderilmis ise
-            updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-        } else if (otherProfile.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
-            //takip istegi yok ise
-            if (otherProfile.getUserInfo().getIsPrivateAccount() != null && otherProfile.getUserInfo().getIsPrivateAccount()) {
-                updateFollowStatus(FRIEND_FOLLOW_REQUEST);
-            } else {
-                updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
-            }
-        } else {
-            //do nothing
-        }
-
-    }
-
-    private void updateFollowStatus(final String requestType) {
-
-        AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()
-                , selectedUser.getUserid(), new CompleteCallback() {
-                    @Override
-                    public void onComplete(Object object) {
-                        updateFollowUI(requestType);
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
-                            }
-                        });
-                        btnFollowStatus.setEnabled(true);
-                    }
-                });
-    }
-
-    private void updateFollowUI(String requestType) {
-
-
-        switch (requestType) {
-            case FRIEND_DELETE_FOLLOW:
-                followStatus = FOLLOW_STATUS_NONE;
-                updateSelectedUserProfile();               //gelinen yerdeki kişinin follow statüsü(UI)
-                updateOtherUserProfile(-1);     //other profildeki kişinin follow statüsü(UI)
-                updateCurrentUserProfile(-1);  //current userın follow count degerleri (UI)
-
-                break;
-
-            case FRIEND_DELETE_PENDING_FOLLOW_REQUEST:
-                followStatus = FOLLOW_STATUS_NONE;
-                updateSelectedUserProfile();
-                otherProfile.getRelationInfo().setFollowStatus(followStatus);
-                break;
-
-            case FRIEND_FOLLOW_REQUEST:
-                followStatus = FOLLOW_STATUS_PENDING;
-                updateSelectedUserProfile();
-                otherProfile.getRelationInfo().setFollowStatus(followStatus);
-                break;
-
-            case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                followStatus = FOLLOW_STATUS_FOLLOWING;
-                updateSelectedUserProfile();
-                updateOtherUserProfile(1);
-                updateCurrentUserProfile(1);
-                break;
-
-            default:
-                break;
-        }
-
-        updateAdapters();
-        UserDataUtil.updateFollowButton2(getActivity(), otherProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
-    }
-
-    private void updateSelectedUserProfile() {
-        selectedUser.setFollowStatus(followStatus);
-    }
-
-    private void updateOtherUserProfile(int updateValue) {
-        followerCount = Integer.parseInt(otherProfile.getRelationInfo().getFollowerCount());
-        otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount + updateValue));
-        otherProfile.getRelationInfo().setFollowStatus(followStatus);
-        txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount());
-    }
-
-    private void updateCurrentUserProfile(int updateValue) {
-        UserProfile user = AccountHolderInfo.getInstance().getUser();
-        followingCount = Integer.parseInt(user.getRelationInfo().getFollowingCount());
-        user.getRelationInfo().setFollowingCount(String.valueOf(followingCount + updateValue));
-    }
-
-    private void openDialogBox() {
-
-        YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
+    private void initLocationTracker() {
+        locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
             @Override
-            public void yesClick() {
-                updateFollowStatus(FRIEND_DELETE_FOLLOW);
+            public void onLocationChanged(Location location) {
+            }
+        });
+    }
+
+    private void checkCanGetLocation() {
+
+        if (!locationTrackObj.canGetLocation())
+            //gps ve network provider olup olmadığı kontrol edilir
+            //todo NT - gps kapatıldığında case'i handle et
+            DialogBoxUtil.showSettingsAlert(getActivity());
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+                if (permissionModule.checkAccessFineLocationPermission()) {
+                    getPosts();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                            PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
+                }
+            } else {
+                getPosts();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(getContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
+                    getPosts();
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                    //showNoFeedLayout(true, R.string.needLocationPermission);
+                    refresh_layout.setRefreshing(false);
+
+                }
+
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+
+        }
+
+    }
+
+    private void getPosts() {
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(final String token) {
+                Location location = locationTrackObj.getLocation();
+                if (location != null) {
+                    startGetPosts(token);
+                } else {
+                    //showNoFeedLayout(true, R.string.locationError);
+                    refresh_layout.setRefreshing(false);
+                }
+            }
+        });
+    }
+
+    private void startGetPosts(String token) {
+
+        setLocationInfo();
+
+        String sUserId = AccountHolderInfo.getUserID();
+        String sUid = selectedUser.getUserid();
+        String sLongitude = longitude;
+        String sPerpage = String.valueOf(perPageCnt);
+        String sLatitude = latitude;
+        String sRadius = radius;
+        String sPage = String.valueOf(pageCnt);
+        String sPrivacyType = "";
+
+        UserSharedPostListProcess userSharedPostListProcess = new UserSharedPostListProcess(getContext(), new OnEventListener<PostListResponse>() {
+            @Override
+            public void onSuccess(final PostListResponse postListResponse) {
+
+                if(denemeAdapter.isShowingProgressLoading()){
+                    denemeAdapter.removeProgressLoading();
+                }
+
+                if (postListResponse == null) {
+                    CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
+                } else {
+                    CommonUtils.LOG_OK("UserSharedPostListProcess");
+                    if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
+                        //showNoFeedLayout(true, R.string.emptyFeed);
+                    } else {
+                        //showNoFeedLayout(false, 0);
+                    }
+                    setPostsInRecyclerView(postListResponse);
+                }
+
+                refresh_layout.setRefreshing(false);
+
             }
 
             @Override
-            public void noClick() {
+            public void onFailure(Exception e) {
+                CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
 
+                if(denemeAdapter.isShowingProgressLoading()){
+                    denemeAdapter.removeProgressLoading();
+                }
+
+                refresh_layout.setRefreshing(false);
+/*
+                if (postList.size() > 0) {
+                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
+                    showNoFeedLayout(false, 0);
+                    if (userPostGridViewAdapter.isShowingProgressLoading()) {
+                        userPostGridViewAdapter.removeProgressLoading();
+                    }
+
+
+                } else {
+                    //showNoFeedLayout(true, R.string.serverError);
+                }
+                */
             }
-        };
 
-        DialogBoxUtil.showYesNoDialog(getContext(), "", getContext().getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            @Override
+            public void onTaskContinue() {
+
+                if (pageCnt == 1 && !pulledToRefreshPost) {
+                    denemeAdapter.addProgressLoading();
+                }
+            }
+        }, sUserId, sUid, sLongitude, sPerpage, sLatitude, sRadius, sPage, sPrivacyType, token);
+
+        userSharedPostListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
 
     }
 
-    private void updateAdapters() {
+    private void setPostsInRecyclerView(PostListResponse postListResponse) {
 
-        if (userInfoListItem.getAdapter() != null) {
-            if (userInfoListItem.getAdapter() instanceof FollowAdapter) {
-                ((FollowAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
-                // else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
-                //((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
-            } else if (userInfoListItem.getAdapter() instanceof PersonListAdapter) {
-                if (followStatus != null && !followStatus.isEmpty()) {
-                    PersonListAdapter adapter = (PersonListAdapter) userInfoListItem.getAdapter();
-                    User user = adapter.getPersonList().getItems().get(userInfoListItem.getClickedPosition());
-                    user.setFollowStatus(followStatus);
-                }
-                ((PersonListAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
-            } else if (userInfoListItem.getAdapter() instanceof SearchResultAdapter) {
-                if (followStatus != null && !followStatus.isEmpty()) {
-                    SearchResultAdapter adapter = (SearchResultAdapter) userInfoListItem.getAdapter();
-                    User user = adapter.getPersonList().get(userInfoListItem.getClickedPosition());
-                    user.setFollowStatus(followStatus);
-                }
-                ((SearchResultAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
-            }
+        loading = true;
+        objectList.addAll(postListResponse.getItems());
+/*
+        if (pageCnt != 1 && denemeAdapter.isShowingProgressLoading()) {
+            denemeAdapter.removeProgressLoading();
         }
-
-
-    }
-
-    private boolean isValid(String name) {
-        if (name != null && !name.isEmpty()) {
-            return true;
+*/
+        if (pulledToRefreshPost) {
+            denemeAdapter.updatePosts(postListResponse.getItems());
+            pulledToRefreshPost = false;
         } else {
-            return false;
+            denemeAdapter.addPosts(postListResponse.getItems());
         }
+
     }
+
+    private void setLocationInfo() {
+        longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
+        latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -450,17 +542,63 @@ public class OtherProfileFragment extends BaseFragment
             getActivity().onBackPressed();
         }
 
-        if (v == btnFollowStatus) {
-            btnFollowStatusClicked();
-        }
-
-        if(v == llMyPosts){
-            String targetUid = selectedUser.getUserid();
-            String toolbarTitle = selectedUser.getUsername();
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
-        }
 
     }
+
+    /*****************************************************************************/
+
+    private boolean isValid(String name) {
+        if (name != null && !name.isEmpty()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private RecyclerView.ItemDecoration addItemDecoration() {
+
+        RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+
+                int position = parent.getChildLayoutPosition(view);
+
+                if(position != 0){
+                    if (position % SPAN_COUNT == 0) {
+                        //outRect.left = MARGING_GRID;
+                        outRect.right = MARGING_GRID;
+                        outRect.bottom = MARGING_GRID;
+                        outRect.top = MARGING_GRID;
+                    }
+                    if (position % SPAN_COUNT == 1) {
+                        outRect.left = MARGING_GRID / 2;
+                        outRect.right = MARGING_GRID / 2;
+                        outRect.bottom = MARGING_GRID / 2;
+                        outRect.top = MARGING_GRID / 2;
+                    }
+                    if (position % SPAN_COUNT == 2) {
+                        outRect.left = MARGING_GRID;
+                        //outRect.right = MARGING_GRID;
+                        outRect.bottom = MARGING_GRID;
+                        outRect.top = MARGING_GRID;
+                    }
+
+               /*
+                outRect.left = MARGING_GRID;
+                outRect.right = MARGING_GRID;
+                outRect.bottom = MARGING_GRID;
+                if (parent.getChildLayoutPosition(view) >= 0 && parent.getChildLayoutPosition(view) <= SPAN_COUNT) {
+                    outRect.top = MARGING_GRID;
+                }
+                */
+                }
+            }
+        };
+
+        return itemDecoration;
+    }
+
 
 
 
