@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -37,7 +36,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
+import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,15 +62,15 @@ public class OtherProfileFragment extends BaseFragment
     UserProfile fetchedUser;
 
     private DenemeAdapter denemeAdapter;
-    private CustomGridLayoutManager customGridLayoutManager;
+    private CustomLinearLayoutManager customLinearLayoutManager;
     private List<Object> objectList = new ArrayList<Object>();
 
     //Refresh layout
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
 
-    @BindView(R.id.gridRecyclerView)
-    RecyclerView gridRecyclerView;
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
 
     //toolbar items
     @BindView(R.id.toolbar)
@@ -135,7 +134,6 @@ public class OtherProfileFragment extends BaseFragment
 
             setInitialValues();
             initRecyclerView();
-            setPullToRefresh();
             getData();
         }
 
@@ -148,8 +146,8 @@ public class OtherProfileFragment extends BaseFragment
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
 
         //toolbar Title
-        if(selectedUser!=null){
-            if(isValid(selectedUser.getUsername())){
+        if (selectedUser != null) {
+            if (isValid(selectedUser.getUsername())) {
                 toolbarTitleTv.setText(selectedUser.getUsername());
             }
         }
@@ -168,33 +166,15 @@ public class OtherProfileFragment extends BaseFragment
     }
 
     private void setLayoutManager() {
-        customGridLayoutManager = new CustomGridLayoutManager(getContext(), SPAN_COUNT);
-        gridRecyclerView.setLayoutManager(customGridLayoutManager);
+        customLinearLayoutManager = new CustomLinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(customLinearLayoutManager);
         //gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
-        gridRecyclerView.addItemDecoration(addItemDecoration());
-
-        customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                switch (denemeAdapter.getItemViewType(position)) {
-                    case DenemeAdapter.VIEW_HEADER:
-                        return SPAN_COUNT; //number of columns of the grid
-                    case DenemeAdapter.VIEW_ITEM:
-                        return 1;
-                    case DenemeAdapter.VIEW_PROG:
-                        return SPAN_COUNT; //number of columns of the grid
-                    default:
-                        return -1;
-                }
-            }
-        });
-
     }
 
     private void setAdapter() {
         denemeAdapter = new DenemeAdapter(getActivity(), getContext(), mFragmentNavigation);
-        gridRecyclerView.setAdapter(denemeAdapter);
-        gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
+        recyclerView.setAdapter(denemeAdapter);
+        recyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
         denemeAdapter.addHeader(userInfoListItem);
     }
@@ -208,9 +188,7 @@ public class OtherProfileFragment extends BaseFragment
                 pulledToRefreshPost = true;
                 setPaginationValues();
 
-                /*
-                checkLocationAndRetrievePosts();
-                */
+                getData();
             }
         });
 
@@ -226,16 +204,16 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setRecyclerViewScroll() {
 
-        gridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
                 if (dy > 0) //check for scroll down
                 {
-                    visibleItemCount = customGridLayoutManager.getChildCount();
-                    totalItemCount = customGridLayoutManager.getItemCount();
-                    pastVisibleItems = customGridLayoutManager.findFirstVisibleItemPosition();
+                    visibleItemCount = customLinearLayoutManager.getChildCount();
+                    totalItemCount = customLinearLayoutManager.getItemCount();
+                    pastVisibleItems = customLinearLayoutManager.findFirstVisibleItemPosition();
 
                     if (loading) {
 
@@ -255,7 +233,6 @@ public class OtherProfileFragment extends BaseFragment
         });
 
     }
-
 
 
     private void getData() {
@@ -352,25 +329,18 @@ public class OtherProfileFragment extends BaseFragment
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Toast.makeText(getContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
+                    // permission was granted, yay!
                     getPosts();
 
                 } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                    // permission denied, boo!
                     //showNoFeedLayout(true, R.string.needLocationPermission);
                     refresh_layout.setRefreshing(false);
 
                 }
 
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
 
         }
 
@@ -416,11 +386,11 @@ public class OtherProfileFragment extends BaseFragment
                     CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
                 } else {
                     CommonUtils.LOG_OK("UserSharedPostListProcess");
-                    if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
+                 /*   if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                         //showNoFeedLayout(true, R.string.emptyFeed);
                     } else {
                         //showNoFeedLayout(false, 0);
-                    }
+                    }*/
                     setPostsInRecyclerView(postListResponse);
                 }
 
@@ -448,8 +418,6 @@ public class OtherProfileFragment extends BaseFragment
                     if (userPostGridViewAdapter.isShowingProgressLoading()) {
                         userPostGridViewAdapter.removeProgressLoading();
                     }
-
-
                 } else {
                     //showNoFeedLayout(true, R.string.serverError);
                 }
@@ -462,6 +430,7 @@ public class OtherProfileFragment extends BaseFragment
                 if (pageCnt == 1 && !pulledToRefreshPost) {
                     denemeAdapter.addProgressLoading();
                 }
+
             }
         }, sUserId, sUid, sLongitude, sPerpage, sLatitude, sRadius, sPage, sPrivacyType, token);
 
@@ -474,11 +443,11 @@ public class OtherProfileFragment extends BaseFragment
 
         loading = true;
         objectList.addAll(postListResponse.getItems());
-/*
+
         if (pageCnt != 1 && denemeAdapter.isShowingProgressLoading()) {
             denemeAdapter.removeProgressLoading();
         }
-*/
+
         if (pulledToRefreshPost) {
             denemeAdapter.updatePosts(postListResponse.getItems());
             pulledToRefreshPost = false;
@@ -505,7 +474,6 @@ public class OtherProfileFragment extends BaseFragment
             getActivity().onBackPressed();
         }
 
-
     }
 
     /*****************************************************************************/
@@ -527,7 +495,7 @@ public class OtherProfileFragment extends BaseFragment
 
                 int position = parent.getChildLayoutPosition(view);
 
-                if(position != 0){
+                if (position != 0) {
                     if (position % SPAN_COUNT == 0) {
                         //outRect.left = MARGING_GRID;
                         outRect.right = MARGING_GRID;
@@ -561,8 +529,6 @@ public class OtherProfileFragment extends BaseFragment
 
         return itemDecoration;
     }
-
-
 
 
 }

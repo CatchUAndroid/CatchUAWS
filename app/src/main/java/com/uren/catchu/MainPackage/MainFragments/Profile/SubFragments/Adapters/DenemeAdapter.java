@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -10,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +53,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoLis
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,6 +87,7 @@ public class DenemeAdapter extends RecyclerView.Adapter {
     private Activity mActivity;
     public Context mContext;
     private List<Object> objectList;
+    private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
 
     public DenemeAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
@@ -91,6 +95,7 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.objectList = new ArrayList<Object>();
+        this.postList = new ArrayList<Post>();
     }
 
     @Override
@@ -123,7 +128,7 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             viewHolder = new DenemeAdapter.ProfileHeaderViewHolder(itemView);
         } else if (viewType == VIEW_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.user_media_grid_item, parent, false);
+                    .inflate(R.layout.profile_shared_post_view, parent, false);
 
             viewHolder = new DenemeAdapter.MyViewHolder(itemView);
         } else {
@@ -147,14 +152,18 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             // Perform a partial update
             for (Object payload : payloads) {
                 if (payload instanceof UserProfile) {
-
                     if (holder instanceof ProfileHeaderViewHolder) {
                         UserProfile userProfile = (UserProfile) payload;
                         ((ProfileHeaderViewHolder) holder).updateUserProfile(userProfile, position);
                     }
-
-
                 }
+
+                if(payload instanceof Post){
+                    if(holder instanceof MyViewHolder){
+                        ((MyViewHolder) holder).updatePostList(position);
+                    }
+                }
+
 
             }
         }
@@ -414,193 +423,112 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         private int position;
 
         //View items
-        ImageView imgPost;
-        ProgressBar progressLoading;
-        RelativeLayout rlContent;
-        LinearLayout llProgress, llError;
-        LinearLayout llPostImage;
-        LinearLayout llExplanation;
-        ClickableImageView imgRetry;
-        TextView txtExplanation;
-        ImageView imgVideoIcon, imgGridMore;
+        RecyclerView gridRecyclerView;
+        private Deneme2Adapter deneme2Adapter;
+        private CustomGridLayoutManager customGridLayoutManager;
+
+        private static final int MARGING_GRID = 2;
+        private static final int SPAN_COUNT = 3;
+        private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
         public MyViewHolder(View view) {
             super(view);
 
             mView = view;
-            imgPost = (ImageView) view.findViewById(R.id.imgPost);
-            progressLoading = (ProgressBar) view.findViewById(R.id.progressLoading);
-            llProgress = (LinearLayout) view.findViewById(R.id.llProgress);
-            llError = (LinearLayout) view.findViewById(R.id.llError);
-            llExplanation = (LinearLayout) view.findViewById(R.id.llExplanation);
-            llPostImage = (LinearLayout) view.findViewById(R.id.llPostImage);
-            imgRetry = (ClickableImageView) view.findViewById(R.id.imgRetry);
-            txtExplanation = (TextView) view.findViewById(R.id.txtExplanation);
-            rlContent = (RelativeLayout) view.findViewById(R.id.rlContent);
-            imgVideoIcon = (ImageView) view.findViewById(R.id.imgVideoCamera);
-            imgGridMore = (ImageView) view.findViewById(R.id.imgGridMore);
+            gridRecyclerView = (RecyclerView) view.findViewById(R.id.gridRecyclerView);
 
             setListeners();
+            setLayoutManager();
+            setAdapter();
 
         }
 
         private void setListeners() {
-            rlContent.setOnClickListener(new View.OnClickListener() {
+        }
+
+        private void setLayoutManager() {
+            customGridLayoutManager = new CustomGridLayoutManager(mContext, 3);
+            gridRecyclerView.setLayoutManager(customGridLayoutManager);
+            //gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
+            gridRecyclerView.addItemDecoration(addItemDecoration());
+
+            customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
-                public void onClick(View v) {
-
-                    setSinglePostFragmentItems();
-
-                    Post post = (Post) objectList.get(position);
-
-                    Log.i("clickedPostId ", post.getPostid());
-                    CommonUtils.showCustomToast(mContext, post.getPostid());
-                }
-            });
-
-            imgRetry.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setData(post, position);
+                public int getSpanSize(int position) {
+                    switch (deneme2Adapter.getItemViewType(position)) {
+                        case Deneme2Adapter.VIEW_ITEM:
+                            return 1;
+                        case Deneme2Adapter.VIEW_PROG:
+                            return SPAN_COUNT; //number of columns of the grid
+                        default:
+                            return -1;
+                    }
                 }
             });
 
         }
 
-        private void setSinglePostFragmentItems() {
+        private void setAdapter() {
+            deneme2Adapter = new Deneme2Adapter(mActivity, mContext, fragmentNavigation);
+            gridRecyclerView.setAdapter(deneme2Adapter);
+            gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
-            SingletonSinglePost.getInstance().setPost(post);
-            String toolbarTitle = post.getUser().getUsername();
-
-            PostHelper.SinglePostClicked singlePostClickedInstance = PostHelper.SinglePostClicked.getInstance();
-            singlePostClickedInstance.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), position);
-            singlePostClickedInstance.setPostFeaturesCallback(new PostFeaturesCallback() {
-                @Override
-                public void onPostLikeClicked(boolean isPostLiked, int newLikeCount, int position) {
-                    Post post = (Post) objectList.get(position);
-                    post.setLikeCount(newLikeCount);
-                    post.setIsLiked(isPostLiked);
-                    notifyItemChanged(position);
-                }
-
-                @Override
-                public void onCommentAdd(int position, int newCommentCount) {
-                    Post post = (Post) objectList.get(position);
-                    post.setCommentCount(newCommentCount);
-                    notifyItemChanged(position);
-                }
-
-                @Override
-                public void onCommentAllowedStatusChanged(int position, boolean commentAllowed) {
-                    Post post = (Post) objectList.get(position);
-                    post.setIsCommentAllowed(commentAllowed);
-                    notifyItemChanged(position);
-                }
-
-                @Override
-                public void onPostDeleted(int position) {
-                    Post deletedPost = (Post) objectList.get(position);
-                    objectList.remove(position);
-                    notifyItemRemoved(position);
-                    notifyDataSetChanged();
-                    PostHelper.DeletePost.startProcess(mContext, AccountHolderInfo.getUserID(), deletedPost.getPostid());
-                }
-            });
-
-            singlePostClickedInstance.startSinglePostProcess();
-
+            deneme2Adapter.addAll(postList);
         }
 
         public void setData(Post post, int position) {
 
-            this.post = post;
-            this.position = position;
-            boolean sourceFound = false;
-            String loadUrl = "empty";
-
-            llProgress.setVisibility(View.VISIBLE);
-            progressLoading.setVisibility(View.VISIBLE);
-
-            llPostImage.setVisibility(View.GONE);
-            llError.setVisibility(View.GONE);
-            llExplanation.setVisibility(View.GONE);
-            imgVideoIcon.setVisibility(View.GONE);
-            imgGridMore.setVisibility(View.GONE);
-
-            if (post.getAttachments().size() > 1) {
-                imgGridMore.setVisibility(View.VISIBLE);
-            }
-
-            //varsa video ThumbNail
-            if (!sourceFound) {
-                for (int i = 0; i < post.getAttachments().size(); i++) {
-                    if (post.getAttachments().get(i).getType().equals(VIDEO_TYPE)) {
-                        loadUrl = post.getAttachments().get(i).getThumbnail();
-                        sourceFound = true;
-                        imgVideoIcon.setVisibility(View.VISIBLE);
-                    }
-                }
-            }
-            //varsa image
-            if (!sourceFound) {
-                for (int i = 0; i < post.getAttachments().size(); i++) {
-                    if (post.getAttachments().get(i).getType().equals(IMAGE_TYPE)) {
-                        loadUrl = post.getAttachments().get(i).getUrl();
-                        sourceFound = true;
-                    }
-                }
-            }
-            //varsa post açıklaması
-            if (!sourceFound) {
-                setGridBackgroundColor();
-                if (post.getMessage() != null && !post.getMessage().isEmpty()) {
-                    llExplanation.setVisibility(View.VISIBLE);
-                    llProgress.setVisibility(View.GONE);
-                    progressLoading.setVisibility(View.GONE);
-                    llPostImage.setVisibility(View.GONE);
-                    llError.setVisibility(View.GONE);
-
-                    txtExplanation.setText(post.getMessage());
-                }
-            } else {
-                llProgress.setVisibility(View.VISIBLE);
-                progressLoading.setVisibility(View.VISIBLE);
-                llPostImage.setVisibility(View.VISIBLE);
-                llExplanation.setVisibility(View.GONE);
-                llError.setVisibility(View.GONE);
-
-                Glide.with(mContext)
-                        .load(loadUrl)
-                        .listener(new RequestListener<Drawable>() {
-                            @Override
-                            public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                llError.setVisibility(View.VISIBLE);
-                                llProgress.setVisibility(View.GONE);
-                                progressLoading.setVisibility(View.GONE);
-                                ;
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                llPostImage.setVisibility(View.VISIBLE);
-                                progressLoading.setVisibility(View.GONE);
-                                llProgress.setVisibility(View.GONE);
-                                return false;
-                            }
-                        })
-                        .apply(RequestOptions.centerCropTransform())
-                        .into(imgPost);
-            }
-
-
         }
 
-        private void setGridBackgroundColor() {
-            int colorCode = CommonUtils.getRandomColor(mContext);
-            llExplanation.setBackgroundColor(mContext.getResources().getColor(colorCode, null));
+        public void updatePostList(int position) {
+
+            deneme2Adapter.updatePostListItems(postList);
         }
 
+
+
+        private RecyclerView.ItemDecoration addItemDecoration() {
+
+            RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
+                @Override
+                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+
+                    int position = parent.getChildLayoutPosition(view);
+
+                    if (position % SPAN_COUNT == 0) {
+                        //outRect.left = MARGING_GRID;
+                        outRect.right = MARGING_GRID;
+                        outRect.bottom = MARGING_GRID;
+                        outRect.top = MARGING_GRID;
+                    }
+                    if (position % SPAN_COUNT == 1) {
+                        outRect.left = MARGING_GRID / 2;
+                        outRect.right = MARGING_GRID / 2;
+                        outRect.bottom = MARGING_GRID / 2;
+                        outRect.top = MARGING_GRID / 2;
+                    }
+                    if (position % SPAN_COUNT == 2) {
+                        outRect.left = MARGING_GRID;
+                        //outRect.right = MARGING_GRID;
+                        outRect.bottom = MARGING_GRID;
+                        outRect.top = MARGING_GRID;
+                    }
+
+               /*
+                outRect.left = MARGING_GRID;
+                outRect.right = MARGING_GRID;
+                outRect.bottom = MARGING_GRID;
+                if (parent.getChildLayoutPosition(view) >= 0 && parent.getChildLayoutPosition(view) <= SPAN_COUNT) {
+                    outRect.top = MARGING_GRID;
+                }
+                */
+                }
+
+            };
+
+            return itemDecoration;
+        }
 
     }
 
@@ -637,14 +565,23 @@ public class DenemeAdapter extends RecyclerView.Adapter {
     }
 
     public void addPosts(List<Post> addedPostList) {
+
+
         if (addedPostList != null) {
-            objectList.addAll(addedPostList);
-            notifyItemRangeInserted(1, addedPostList.size());
+            postList.addAll(addedPostList);
+            Post post = addedPostList.get(0);
+            objectList.add(post);
+            //objectList.addAll(addedPostList);
+            notifyItemRangeInserted(1, 1);
         }
+
     }
 
     public void updatePosts(List<Post> addedPostList) {
-
+        this.postList.clear();
+        this.postList.addAll(addedPostList);
+        Post post = addedPostList.get(0);
+        notifyItemRangeChanged(1,1, post);
     }
 
     public void addProgressLoading() {

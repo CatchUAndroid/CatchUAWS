@@ -246,34 +246,6 @@
 
         </RelativeLayout>
 
-        <com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.ExpandableHeightListView
-            android:id="@+id/expandableListView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-        </com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.ExpandableHeightListView>
-
-        <com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.ExpandableHeightGridView
-            android:id="@+id/expandableHeightGridView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:horizontalSpacing="2dp"
-            android:isScrollContainer="false"
-            android:numColumns="3"
-            android:stretchMode="columnWidth"
-            android:verticalSpacing="20dp"
-            android:visibility="gone"/>
-
-        <android.support.v7.widget.RecyclerView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerView">
-
-        </android.support.v7.widget.RecyclerView>
-
-
     </LinearLayout>
 
 

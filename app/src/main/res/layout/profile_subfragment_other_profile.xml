@@ -24,9 +24,9 @@
             <include layout="@layout/common_toolbar_layout" />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/gridRecyclerView"
+                android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
