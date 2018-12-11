@@ -28,17 +28,18 @@
     <group
         android:id="@+id/menu_bottom"
         android:checkableBehavior="none">
-        <item
-            android:id="@+id/settingsItem"
-            android:checkable="true"
-            android:icon="@mipmap/settings"
-            android:title="@string/settings" />
 
         <item
             android:id="@+id/reportProblemItem"
             android:checkable="true"
             android:icon="@mipmap/icon_report_problem"
             android:title="@string/REPORT_PROBLEM" />
+
+        <item
+            android:id="@+id/settingsItem"
+            android:checkable="true"
+            android:icon="@mipmap/settings"
+            android:title="@string/settings" />
     </group>
 
 </menu>

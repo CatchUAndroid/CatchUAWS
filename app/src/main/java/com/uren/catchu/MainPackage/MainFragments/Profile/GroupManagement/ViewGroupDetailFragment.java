@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.SubtitleCollapsingToolbarLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,6 +45,8 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithGroupFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -91,6 +94,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.addFriendImgv)
     ImageView addFriendImgv;
+    @BindView(R.id.sendMessageBtn)
+    FloatingActionButton sendMessageBtn;
 
     boolean photoExistOnImgv = false;
 
@@ -220,6 +225,13 @@ public class ViewGroupDetailFragment extends BaseFragment {
     }
 
     public void addListeners() {
+
+        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mFragmentNavigation.pushFragment(new MessageWithGroupFragment(groupRequestResultResultArrayItem), ANIMATE_LEFT_TO_RIGHT);
+            }
+        });
 
         addFriendCardView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -256,6 +256,7 @@
     <string name="LOCATION_WILL_SEEN_ON_POST">Lokasyon görünsün</string>
     <string name="COMMENT_SETTINGS_DESC">Bu özelliği paylaşım yapıldıktan sonra gönderi ayarlarından güncelleyebilirsin</string>
     <string name="LOCATION_SETTINGS_DESC">Bu özellik paylaşım yapıldıktan sonra güncellenemez</string>
+    <string name="SEND_MESSAGE">Mesaj Gönder</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
@@ -296,4 +297,19 @@
     <string name="DIGITAL_FOOTPRINT_DESC">Fiziksel izler yerine dijital izlerinizi bırakın ve keşfedilmelerini bekleyin.</string>
     <string name="TIME_CAPSULE_DESC">Gelecekte açılmasını istediğiniz bir mesajı istediğiniz yere bırakın. Belki yarın belki 20 yıl sonra açılsın.</string>
     <string name="IMMORTAL_NODES_DESC">Lokasyona kaybolmayacak notlar bırakın. Dilediğiniz zaman dilediğiniz kişiye o lokasyonda görünsün.</string>
+
+    <array name="months">
+        <item>Ocak</item>
+        <item>Şubat</item>
+        <item>Mart</item>
+        <item>Nisan</item>
+        <item>Mayıs</item>
+        <item>Haziran</item>
+        <item>Temmuz</item>
+        <item>Ağustos</item>
+        <item>Eylül</item>
+        <item>Ekim</item>
+        <item>Kasım</item>
+        <item>Aralık</item>
+    </array>
 </resources>

@@ -156,6 +156,7 @@ public class GroupManagementFragment extends BaseFragment {
         searchToolbarAddItemImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                searchToolbarAddItemImgv.setEnabled(false);
                 searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 addNewGroup();
             }
@@ -331,10 +332,12 @@ public class GroupManagementFragment extends BaseFragment {
                         }
                     }
                 }
+                searchToolbarAddItemImgv.setEnabled(true);
             }
 
             @Override
             public void onFailed(Exception e) {
+                searchToolbarAddItemImgv.setEnabled(true);
                 if (getContext() != null) {
                     DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                         @Override

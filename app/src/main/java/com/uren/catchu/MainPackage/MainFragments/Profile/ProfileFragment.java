@@ -83,7 +83,7 @@ public class ProfileFragment extends BaseFragment
     boolean mDrawerState;
 
     TextView navViewNameTv;
-    TextView navViewUsernameTv;
+    TextView navViewEmailTv;
     ImageView navImgProfile;
     TextView navViewShortenTextView;
     RelativeLayout profileNavViewLayout;
@@ -278,7 +278,7 @@ public class ProfileFragment extends BaseFragment
     private void setNavViewItems() {
         View v = navViewLayout.getHeaderView(0);
         navViewNameTv = v.findViewById(R.id.navViewNameTv);
-        navViewUsernameTv = v.findViewById(R.id.navViewUsernameTv);
+        navViewEmailTv = v.findViewById(R.id.navViewEmailTv);
         navImgProfile = v.findViewById(R.id.navImgProfile);
         navViewShortenTextView = v.findViewById(R.id.navViewShortenTextView);
         profileNavViewLayout = v.findViewById(R.id.profileNavViewLayout);
@@ -380,7 +380,7 @@ public class ProfileFragment extends BaseFragment
             //Username
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 toolbarTitle.setText(user.getUserInfo().getUsername());
-                navViewUsernameTv.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername().trim());
+                navViewEmailTv.setText(user.getUserInfo().getEmail().trim());
             }
             //profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),

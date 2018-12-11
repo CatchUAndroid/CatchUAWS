@@ -128,5 +128,17 @@ public class StringConstants {
     public static final String USER_POST_VIEW_TYPE_GRID= "gridview";
     public static final String USER_POST_VIEW_TYPE_LIST = "listview";
 
+    //FIrebase messaging constants
+    public static final String FB_CHILD_MESSAGES = "Messages";
+    public static final String FB_CHILD_WITH_PERSON = "WithPerson";
+    public static final String FB_CHILD_WITH_GROUP = "WithGroup";
+    public static final String FB_CHILD_DATE = "Date";
+    public static final String FB_CHILD_MESSAGE = "Message";
+    public static final String FB_CHILD_SENDER = "Sender";
+    public static final String FB_CHILD_RECEIPT = "Receipt";
+    public static final String FB_CHILD_NAME = "Name";
+    public static final String FB_CHILD_USERID = "UserId";
+
+
 
 }

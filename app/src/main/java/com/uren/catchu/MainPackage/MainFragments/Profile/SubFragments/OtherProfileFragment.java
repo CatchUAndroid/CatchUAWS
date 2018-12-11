@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -30,6 +32,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -103,6 +106,9 @@ public class OtherProfileFragment extends BaseFragment
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
 
+    @BindView(R.id.sendMessageBtn)
+    Button sendMessageBtn;
+
     /**
      * @param user i) userId -> ZORUNLU,
      *             ii) profilePicUrl ve username -> nice to have.
@@ -115,6 +121,12 @@ public class OtherProfileFragment extends BaseFragment
         OtherProfileFragment fragment = new OtherProfileFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        super.onStart();
     }
 
     @Override
@@ -136,7 +148,7 @@ public class OtherProfileFragment extends BaseFragment
                 userInfoListItem = (UserInfoListItem) args.getSerializable(ARGS_INSTANCE);
                 selectedUser = userInfoListItem.getUser();
             }
-
+            initVariables();
             initToolbar();
             initListeners();
             updateUI();          //fragmenta aktarılan selectedUser üzerinden datalar set edilir.
@@ -147,6 +159,11 @@ public class OtherProfileFragment extends BaseFragment
         return mView;
     }
 
+    private void initVariables() {
+        sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
+    }
+
     private void initToolbar() {
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
@@ -155,6 +172,7 @@ public class OtherProfileFragment extends BaseFragment
     private void initListeners() {
         btnFollowStatus.setOnClickListener(this);
         llMyPosts.setOnClickListener(this);
+        sendMessageBtn.setOnClickListener(this);
     }
 
     private void setPullToRefresh() {
@@ -458,6 +476,10 @@ public class OtherProfileFragment extends BaseFragment
             String targetUid = selectedUser.getUserid();
             String toolbarTitle = selectedUser.getUsername();
             mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if(v == sendMessageBtn){
+            mFragmentNavigation.pushFragment(new MessageWithPersonFragment(selectedUser), ANIMATE_LEFT_TO_RIGHT);
         }
 
     }

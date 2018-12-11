@@ -51,7 +51,7 @@
                 android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/navViewUsernameTv"
+                android:id="@+id/navViewEmailTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif"

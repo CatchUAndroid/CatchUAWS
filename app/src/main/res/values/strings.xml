@@ -289,6 +289,7 @@
     <string name="LOCATION_WILL_SEEN_ON_POST">Let the location appear</string>
     <string name="COMMENT_SETTINGS_DESC">You can update this feature from the post settings after sharing</string>
     <string name="LOCATION_SETTINGS_DESC">This feature cannot be updated after sharing</string>
+    <string name="SEND_MESSAGE">Send Message</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
@@ -331,5 +332,19 @@
     <string name="TIME_CAPSULE_DESC">Leave a message where you want it to come in the future. Maybe tomorrow maybe 20 years.</string>
     <string name="IMMORTAL_NODES_DESC">Leave notes that won\'t get lost in the location. When you wish, the person you wish, it will appear in that location</string>
 
+    <array name="months">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </array>
 
 </resources>
