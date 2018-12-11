@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.CrashlyticsHelper;
+import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.R;
 
 public class BitmapConversion extends AppCompatActivity {
@@ -33,6 +34,24 @@ public class BitmapConversion extends AppCompatActivity {
             e.printStackTrace();
         }
         return bitmap;
+    }
+
+    public static void setBlurBitmap(Context context, View view, int drawableItem, float bitmapScale,
+                              float blurRadius, Bitmap mBitmap) {
+        Bitmap bitmap;
+        try {
+            if (mBitmap != null)
+                bitmap = mBitmap;
+            else if (drawableItem != 0)
+                bitmap = BitmapFactory.decodeResource(context.getResources(), drawableItem);
+            else return;
+
+            Bitmap blurBitmap = BlurBuilder.blur(context, bitmap, bitmapScale, blurRadius);
+            Drawable dr = new BitmapDrawable(context.getResources(), blurBitmap);
+            view.setBackground(dr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
@@ -103,7 +122,8 @@ public class BitmapConversion extends AppCompatActivity {
             }
         } catch (Exception e) {
             CrashlyticsHelper.reportCrash(null, BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), null, e);
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), null, e);
             e.printStackTrace();
         }
         return result;

@@ -29,6 +29,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -70,7 +71,8 @@ public class RegisterActivity extends AppCompatActivity
 
         init();
         setShapes();
-        setBlurBitmap();
+        BitmapConversion.setBlurBitmap(RegisterActivity.this, registerLayout,
+                R.drawable.register_bg, 0.2f, 20.5f, null);
     }
 
     public void setShapes(){
@@ -82,14 +84,6 @@ public class RegisterActivity extends AppCompatActivity
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
         btnRegister.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.colorPrimary, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
-    }
-
-    public void setBlurBitmap(){
-        Bitmap bitmap = BitmapFactory.decodeResource(RegisterActivity.this.getResources(),
-                R.drawable.register_bg);
-        Bitmap blurBitmap = BlurBuilder.blur(RegisterActivity.this, bitmap, 0.2f, 20.5f);
-        Drawable dr = new BitmapDrawable(RegisterActivity.this.getResources(), blurBitmap);
-        registerLayout.setBackground(dr);
     }
 
     private void init() {

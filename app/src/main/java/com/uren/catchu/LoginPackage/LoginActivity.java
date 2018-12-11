@@ -65,6 +65,7 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -142,7 +143,8 @@ public class LoginActivity extends AppCompatActivity
 
         initVariables();
         setShapes();
-        setBlurBitmap();
+        BitmapConversion.setBlurBitmap(LoginActivity.this, backgroundLayout,
+                R.drawable.login_background, 0.3f, 15f, null);
     }
 
     public void setShapes() {
@@ -161,15 +163,6 @@ public class LoginActivity extends AppCompatActivity
         createAccBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparent, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 4));
     }
-
-    public void setBlurBitmap() {
-        Bitmap bitmap = BitmapFactory.decodeResource(LoginActivity.this.getResources(),
-                R.drawable.login_background);
-        Bitmap blurBitmap = BlurBuilder.blur(LoginActivity.this, bitmap, 0.3f, 15f);
-        Drawable dr = new BitmapDrawable(LoginActivity.this.getResources(), blurBitmap);
-        backgroundLayout.setBackground(dr);
-    }
-
 
     private void initFacebookLogin() {
         FacebookSdk.sdkInitialize(getApplicationContext());

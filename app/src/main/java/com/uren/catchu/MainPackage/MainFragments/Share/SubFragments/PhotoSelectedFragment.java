@@ -32,6 +32,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.BrushCompleteCallback;
@@ -85,7 +86,7 @@ public class PhotoSelectedFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if(mView == null) {
+        if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_photo_selected, container, false);
             ButterKnife.bind(this, mView);
             initVariables();
@@ -271,25 +272,20 @@ public class PhotoSelectedFragment extends BaseFragment {
     public void setSelectedPhoto() {
         CommonUtils.setImageScaleType(thisPhotoSelectUtil, selectedImageView);
 
-        if(thisPhotoSelectUtil != null){
-            if(thisPhotoSelectUtil.getScreeanShotBitmap() != null)
+        if (thisPhotoSelectUtil != null) {
+            if (thisPhotoSelectUtil.getScreeanShotBitmap() != null)
                 Glide.with(getContext())
                         .load(thisPhotoSelectUtil.getScreeanShotBitmap())
                         .into(selectedImageView);
-            else if(thisPhotoSelectUtil.getMediaUri() != null)
+            else if (thisPhotoSelectUtil.getMediaUri() != null)
                 Glide.with(getContext())
                         .load(thisPhotoSelectUtil.getMediaUri())
                         .into(selectedImageView);
 
-            if(thisPhotoSelectUtil.getBitmap() != null)
-                setBlurBitmap();
+            if (thisPhotoSelectUtil.getBitmap() != null)
+                BitmapConversion.setBlurBitmap(getContext(), photoRelLayout,
+                        0, 0.2f, 20.5f, thisPhotoSelectUtil.getBitmap());
         }
-    }
-
-    public void setBlurBitmap(){
-        Bitmap blurBitmap = BlurBuilder.blur(getContext(), thisPhotoSelectUtil.getBitmap(), 0.2f, 20.5f);
-        Drawable dr = new BitmapDrawable(getContext().getResources(), blurBitmap);
-        photoRelLayout.setBackground(dr);
     }
 
     private void startTextEditFragment() {
@@ -315,7 +311,7 @@ public class PhotoSelectedFragment extends BaseFragment {
         }
     }
 
-    public void startPhotoBrushFragment(){
+    public void startPhotoBrushFragment() {
         PhotoSelectUtil tempUtil = thisPhotoSelectUtil;
         tempUtil.setScreeanShotBitmap(BitmapConversion.getScreenShot(photoRelLayout));
         if (mFragmentNavigation != null) {
