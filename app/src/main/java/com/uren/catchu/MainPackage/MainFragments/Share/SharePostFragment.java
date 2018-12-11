@@ -56,6 +56,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.VideoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -598,7 +599,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-deleteSharedVideo", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -798,7 +801,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-getSelectedFriendsText", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 
@@ -817,7 +822,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         } catch (Resources.NotFoundException e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-checkGalleryProcess", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -839,7 +846,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.CAMERA},
                         permissionModule.PERMISSION_CAMERA);
         } catch (Resources.NotFoundException e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-checkCameraProcess", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -852,7 +861,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-openCameraForPhotoSelect", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -865,7 +876,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             startActivityForResult(Intent.createChooser(intent,
                     getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
         } catch (Resources.NotFoundException e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-startGalleryForVideos", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -882,7 +895,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
                 startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-startCameraForVideos", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -904,7 +919,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 });
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-getUserInfo", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -953,7 +970,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setToolbarInfo", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -966,7 +985,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 mapView.getMapAsync(this);
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setMapView", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -986,7 +1007,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             } else
                 initializeMap(mMap);
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-onMapReady", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1070,6 +1093,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 startVideoViewFragment();
             }
         } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
         }
     }
@@ -1083,7 +1109,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             setVideoSelectImgvFilled();
             startVideoViewFragment();
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setVideoFromCameraSelection", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1094,29 +1122,38 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
             shareItems.addVideoShareItemBox(videoShareItemBox);
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-addVideoShareItemList", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void startVideoViewFragment() {
-        if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri(),
-                    new PermissionCallback() {
-                        @Override
-                        public void OnPermGranted() {
+        try {
+            if (mFragmentNavigation != null) {
+                mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri(),
+                        new PermissionCallback() {
+                            @Override
+                            public void OnPermGranted() {
 
-                        }
+                            }
 
-                        @Override
-                        public void OnPermNotAllowed() {
-                            deleteSharedVideo();
-                            videoSelectUtil = null;
-                            isVideoSelected = false;
-                            shareItems.clearVideoShareItemBox();
-                            clearVideoSelectImgvFilled();
-                        }
-                    }), ANIMATE_RIGHT_TO_LEFT);
+                            @Override
+                            public void OnPermNotAllowed() {
+                                deleteSharedVideo();
+                                videoSelectUtil = null;
+                                isVideoSelected = false;
+                                shareItems.clearVideoShareItemBox();
+                                clearVideoSelectImgvFilled();
+                            }
+                        }), ANIMATE_RIGHT_TO_LEFT);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -1152,7 +1189,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-initializeMap", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1164,7 +1203,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
             shareItems.getPost().setLocation(tempLoc);
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-setShareItemsLocation", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1175,7 +1216,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             shareItems.clearImageShareItemBox();
             shareItems.addImageShareItemBox(imageShareItemBox);
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-fillImageShareItemBox", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -1192,112 +1235,205 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             });
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("SharePostFragment-initLocationTracker", e.toString());
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
 
     private void checkCanGetLocation() {
-        if (locationTrackObj != null && !locationTrackObj.canGetLocation())
-            DialogBoxUtil.showDialogWithJustPositiveButton(getContext(), getResources().getString(R.string.gpsSettings),
-                    getResources().getString(R.string.gpsSettingMessage),
-                    getResources().getString(R.string.settings), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                            startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
-                        }
-                    });
+        try {
+            if (locationTrackObj != null && !locationTrackObj.canGetLocation())
+                DialogBoxUtil.showDialogWithJustPositiveButton(getContext(), getResources().getString(R.string.gpsSettings),
+                        getResources().getString(R.string.gpsSettingMessage),
+                        getResources().getString(R.string.settings), new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
+                                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
+                            }
+                        });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);
+        try {
+            if (locationManager != null)
+                locationManager.removeUpdates(locationTrackObj);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        keyboardHeightProvider.setKeyboardHeightObserver(null);
-        if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);
+        try {
+            keyboardHeightProvider.setKeyboardHeightObserver(null);
+            if (locationManager != null)
+                locationManager.removeUpdates(locationTrackObj);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void startPhotoSelectedFragment() {
-        if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new PhotoSelectedFragment(photoSelectUtil, new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
-                    photoSelectUtil = (PhotoSelectUtil) object;
-                    isPhotoSelected = true;
-                    setPhotoSelectImgvFilled();
-                    fillImageShareItemBox();
-                }
-            }));
+        try {
+            if (mFragmentNavigation != null) {
+                mFragmentNavigation.pushFragment(new PhotoSelectedFragment(photoSelectUtil, new ReturnCallback() {
+                    @Override
+                    public void onReturn(Object object) {
+                        photoSelectUtil = (PhotoSelectUtil) object;
+                        isPhotoSelected = true;
+                        setPhotoSelectImgvFilled();
+                        fillImageShareItemBox();
+                    }
+                }));
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
 
     private void setWhomItemsImgvFilled() {
-        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        try {
+            publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void setPhotoSelectImgvFilled() {
-        photoSelectImgv.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.RoyalBlue, null),
-                GradientDrawable.OVAL, 50, 3));
-        photoCheckedImgv.setVisibility(View.VISIBLE);
+        try {
+            photoSelectImgv.setBackground(ShapeUtil.getShape(0,
+                    getContext().getResources().getColor(R.color.RoyalBlue, null),
+                    GradientDrawable.OVAL, 50, 3));
+            photoCheckedImgv.setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void setVideoSelectImgvFilled() {
-        videoSelectImgv.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.RoyalBlue, null),
-                GradientDrawable.OVAL, 50, 3));
-        videoCheckedImgv.setVisibility(View.VISIBLE);
+        try {
+            videoSelectImgv.setBackground(ShapeUtil.getShape(0,
+                    getContext().getResources().getColor(R.color.RoyalBlue, null),
+                    GradientDrawable.OVAL, 50, 3));
+            videoCheckedImgv.setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void setTextSelectImgvFilled() {
-        textSelectImgv.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.RoyalBlue, null),
-                GradientDrawable.OVAL, 50, 3));
-        textCheckedImgv.setVisibility(View.VISIBLE);
+        try {
+            textSelectImgv.setBackground(ShapeUtil.getShape(0,
+                    getContext().getResources().getColor(R.color.RoyalBlue, null),
+                    GradientDrawable.OVAL, 50, 3));
+            textCheckedImgv.setVisibility(View.VISIBLE);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void clearPhotoSelectImgvFilled() {
-        photoSelectImgv.setBackground(null);
-        photoCheckedImgv.setVisibility(View.GONE);
+        try {
+            photoSelectImgv.setBackground(null);
+            photoCheckedImgv.setVisibility(View.GONE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void clearVideoSelectImgvFilled() {
-        videoSelectImgv.setBackground(null);
-        videoCheckedImgv.setVisibility(View.GONE);
+        try {
+            videoSelectImgv.setBackground(null);
+            videoCheckedImgv.setVisibility(View.GONE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void clearTextSelectImgvFilled() {
-        textSelectImgv.setBackground(null);
-        textCheckedImgv.setVisibility(View.GONE);
+        try {
+            textSelectImgv.setBackground(null);
+            textCheckedImgv.setVisibility(View.GONE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onKeyboardHeightChanged(int height, int orientation) {
-        String or = orientation == Configuration.ORIENTATION_PORTRAIT ? "portrait" : "landscape";
+        try {
+            String or = orientation == Configuration.ORIENTATION_PORTRAIT ? "portrait" : "landscape";
 
-        if (height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
-            params.height = height;
-            mapLayout.setLayoutParams(params);
-            keyboardResized = true;
+            if (height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
+                params.height = height;
+                mapLayout.setLayoutParams(params);
+                keyboardResized = true;
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        keyboardHeightProvider.close();
+        try {
+            keyboardHeightProvider.close();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

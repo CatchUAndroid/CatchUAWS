@@ -30,15 +30,16 @@ public class BitmapConversion extends AppCompatActivity {
             bitmap = Bitmap.createBitmap(view.getDrawingCache());
             view.setDrawingCacheEnabled(false);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return bitmap;
     }
 
     public static void setBlurBitmap(Context context, View view, int drawableItem, float bitmapScale,
-                              float blurRadius, Bitmap mBitmap) {
+                                     float blurRadius, Bitmap mBitmap) {
         Bitmap bitmap;
         try {
             if (mBitmap != null)
@@ -51,8 +52,9 @@ public class BitmapConversion extends AppCompatActivity {
             Drawable dr = new BitmapDrawable(context.getResources(), blurBitmap);
             view.setBackground(dr);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -75,8 +77,9 @@ public class BitmapConversion extends AppCompatActivity {
                     bm, 0, 0, width, height, matrix, false);
             //bm.recycle();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return resizedBitmap;
@@ -119,30 +122,34 @@ public class BitmapConversion extends AppCompatActivity {
             try {
                 canvas.setBitmap(null);
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
-                        new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return result;
     }
 
     public static int dp(float value, Context context) {
+        int dpValue = 0;
         try {
             if (value == 0) {
                 return 0;
             }
-            return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
+            dpValue = (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 
-        return 0;
+        return dpValue;
     }
 }

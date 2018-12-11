@@ -4,6 +4,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -64,7 +65,9 @@ public class FileAdapter {
                 }
             }
         }catch (Exception e){
-            CommonUtils.LOG_EXCEPTION_ERR("FileAdapter-getOutputMediaFile", e.toString());
+            ErrorSaveHelper.writeErrorToDB(null, FileAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 
@@ -85,7 +88,9 @@ public class FileAdapter {
             mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_CROP.jpg");
 
         }catch (Exception e){
-            CommonUtils.LOG_EXCEPTION_ERR("FileAdapter-getCropMediaFile", e.toString());
+            ErrorSaveHelper.writeErrorToDB(null, FileAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 

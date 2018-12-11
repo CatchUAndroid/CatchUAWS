@@ -3,23 +3,14 @@ package com.uren.catchu.GeneralUtils.PhotoUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.graphics.BitmapCompat;
 
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ExifUtil;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
-import com.uren.catchu.R;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
@@ -89,7 +80,7 @@ public class PhotoSelectUtil {
 
             if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE) {
 
-                for (float i = 0.9f; i > 0; i = i - 0.1f ){
+                for (float i = 0.9f; i > 0; i = i - 0.1f) {
                     System.out.println("i_1:" + i);
                     resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
                             (int) (mBitmap.getWidth() * i),
@@ -97,12 +88,12 @@ public class PhotoSelectUtil {
 
                     System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
-                    if(BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE){
+                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE) {
                         break;
                     }
                 }
-            }else {
-                if(!type.equals(GALLERY_TEXT)) {
+            } else {
+                if (!type.equals(GALLERY_TEXT)) {
                     for (float i = 1.2f; i < 20f; i = i + 1.2f) {
                         System.out.println("i_2:" + i);
                         resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
@@ -115,11 +106,13 @@ public class PhotoSelectUtil {
                             break;
                         }
                     }
-                }else
+                } else
                     resizedBitmap = mBitmap;
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-getResizedBitmap", e.toString());
+            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             if (getScreeanShotBitmap() != null) {
                 resizedBitmap = getScreeanShotBitmap();
             } else if (getBitmap() != null) {
@@ -138,7 +131,9 @@ public class PhotoSelectUtil {
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
             bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
         } catch (IOException e) {
-            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-onSelectFromFileResult", e.toString());
+            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -156,7 +151,9 @@ public class PhotoSelectUtil {
                 }
             }
         } catch (Exception e) {
-            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-onSelectFromGalleryResult", e.toString());
+            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -167,8 +164,10 @@ public class PhotoSelectUtil {
             mediaUri = data.getData();
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
             bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-        }catch (Exception e){
-            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-onSelectFromCameraResult", e.toString());
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 
@@ -186,11 +185,12 @@ public class PhotoSelectUtil {
                 portraitMode = true;
             else
                 portraitMode = false;
-        }catch (Exception e){
-            CommonUtils.LOG_EXCEPTION_ERR("PhotoSelectUtil-setPortraitMode", e.toString());
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     public Bitmap getBitmap() {

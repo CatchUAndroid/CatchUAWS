@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.uren.catchu.GeneralUtils.ClickableImage.EffectTouchListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
@@ -149,7 +150,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             addListeners();
             getUsersMessaging();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -170,7 +171,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                     0, GradientDrawable.RECTANGLE, 15, 0));
             setChattedPersonInfo();
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -187,7 +188,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             if (chattedUser != null && chattedUser.getUsername() != null && !chattedUser.getUsername().isEmpty())
                 toolbarSubTitle.setText(CHAR_AMPERSAND + chattedUser.getUsername());
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -283,11 +284,11 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -301,7 +302,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             messageWithPersonAdapter.setDeleteActivated(false);
             deleteMsgCntTv.setText("");
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -314,7 +315,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             }
             messageWithPersonAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -388,7 +389,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -406,7 +407,7 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             System.out.println("messageKey:" + messageKey);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -441,7 +442,7 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             messageBoxList.add(messageBox);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -478,7 +479,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -505,7 +506,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             recyclerView.setLayoutManager(linearLayoutManager);
             setAdapterVal = true;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -542,7 +543,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
@@ -554,7 +555,7 @@ public class MessageWithPersonFragment extends BaseFragment {
         try {
             databaseReference.removeEventListener(valueEventListener);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }

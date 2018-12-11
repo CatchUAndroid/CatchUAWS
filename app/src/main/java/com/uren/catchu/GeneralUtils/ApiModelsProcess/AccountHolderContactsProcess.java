@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.util.Log;
 
+import com.uren.catchu.Adapters.LocationTrackerAdapter;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 
@@ -16,35 +18,42 @@ import java.util.List;
 public class AccountHolderContactsProcess {
 
     public static void getContactList(Context context, CompleteCallback completeCallback) {
-        List<Contact> contactList = new ArrayList<>();
-        String previousPhoneNum = "";
+        try {
+            List<Contact> contactList = new ArrayList<>();
+            String previousPhoneNum = "";
 
-        Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-        while (phones.moveToNext()) {
+            Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+            while (phones.moveToNext()) {
 
-            Contact contact = new Contact();
+                Contact contact = new Contact();
 
-            String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-            String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                String name = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                String phoneNumber = phones.getString(phones.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-            if(!phoneNumber.equals(previousPhoneNum)) {
-                String clearPhoneNum = "";
+                if(!phoneNumber.equals(previousPhoneNum)) {
+                    String clearPhoneNum = "";
 
-                for (int i = 0; i < phoneNumber.length(); i++) {
-                    char ch = phoneNumber.charAt(i);
-                    if (Character.isDigit(ch)) {
-                        clearPhoneNum += ch;
+                    for (int i = 0; i < phoneNumber.length(); i++) {
+                        char ch = phoneNumber.charAt(i);
+                        if (Character.isDigit(ch)) {
+                            clearPhoneNum += ch;
+                        }
                     }
+                    contact.setName(name);
+                    contact.setPhoneNumber(clearPhoneNum);
+                    contactList.add(contact);
                 }
-                contact.setName(name);
-                contact.setPhoneNumber(clearPhoneNum);
-                contactList.add(contact);
+                previousPhoneNum = phoneNumber;
             }
-            previousPhoneNum = phoneNumber;
+            phones.close();
+            Collections.sort(contactList, new CustomComparator());
+            completeCallback.onComplete(contactList);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, AccountHolderContactsProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-        phones.close();
-        Collections.sort(contactList, new CustomComparator());
-        completeCallback.onComplete(contactList);
     }
 
     public static class CustomComparator implements Comparator<Contact> {

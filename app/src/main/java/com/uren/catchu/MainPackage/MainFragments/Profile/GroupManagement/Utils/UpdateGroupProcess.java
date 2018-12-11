@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
@@ -10,6 +11,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.R;
@@ -37,25 +39,32 @@ public class UpdateGroupProcess {
     // TODO: 5.10.2018 - grup fotosu silindiginde S3 den silme akisi yok...
 
     public UpdateGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, GroupRequestResultResultArrayItem groupItem, UpdateGroupCallback updateGroupCallback) {
-        this.context = context;
-        this.photoSelectUtil = photoSelectUtil;
-        this.groupItem = groupItem;
-        this.updateGroupCallback = updateGroupCallback;
-        mProgressDialog = new ProgressDialog(context);
+        try {
+            this.context = context;
+            this.photoSelectUtil = photoSelectUtil;
+            this.groupItem = groupItem;
+            this.updateGroupCallback = updateGroupCallback;
+            mProgressDialog = new ProgressDialog(context);
 
-        if (photoSelectUtil != null && photoSelectUtil.getMediaUri() != null) {
-            mProgressDialog.setMessage(context.getResources().getString(R.string.groupPhotoChanging));
-            dialogShow();
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    startUpdateGroup(token);
-                }
-            });
-        } else {
-            mProgressDialog.setMessage(context.getResources().getString(R.string.UPDATING));
-            dialogShow();
-            updateGroupToNeoJ();
+            if (photoSelectUtil != null && photoSelectUtil.getMediaUri() != null) {
+                mProgressDialog.setMessage(context.getResources().getString(R.string.groupPhotoChanging));
+                dialogShow();
+                AccountHolderInfo.getToken(new TokenCallback() {
+                    @Override
+                    public void onTokenTaken(String token) {
+                        startUpdateGroup(token);
+                    }
+                });
+            } else {
+                mProgressDialog.setMessage(context.getResources().getString(R.string.UPDATING));
+                dialogShow();
+                updateGroupToNeoJ();
+            }
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -69,60 +78,79 @@ public class UpdateGroupProcess {
 
     private void startUpdateGroup(String token) {
 
-        SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
+        try {
+            SignedUrlGetProcess signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
 
-                UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
-                    @Override
-                    public void onSuccess(Object object) {
-                        HttpURLConnection urlConnection = (HttpURLConnection) object;
+                    UploadImageToS3 uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                            HttpURLConnection urlConnection = (HttpURLConnection) object;
 
-                        try {
-                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                                groupItem.setGroupPhotoUrl(commonS3BucketResult.getImages().get(0).getDownloadUrl());
-                                updateGroupToNeoJ();
-                            } else {
-                                InputStream is = urlConnection.getErrorStream();
-                                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + is.toString());
-                                updateGroupCallback.onFailed(new Exception(is.toString()));
+                            try {
+                                if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                                    groupItem.setGroupPhotoUrl(commonS3BucketResult.getImages().get(0).getDownloadUrl());
+                                    updateGroupToNeoJ();
+                                } else {
+                                    InputStream is = urlConnection.getErrorStream();
+                                    ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                                            new Object() {
+                                            }.getClass().getEnclosingMethod().getName(), is.toString());
+                                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + is.toString());
+                                    updateGroupCallback.onFailed(new Exception(is.toString()));
+                                }
+                            } catch (IOException e) {
+                                ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                                        new Object() {
+                                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                                updateGroupCallback.onFailed(e);
                             }
-                        } catch (IOException e) {
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                                    new Object() {
+                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
                             CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
                             updateGroupCallback.onFailed(e);
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Exception e) {
-                        CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
-                        updateGroupCallback.onFailed(e);
-                    }
+                        @Override
+                        public void onTaskContinue() {
 
-                    @Override
-                    public void onTaskContinue() {
+                        }
+                    }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
 
-                    }
-                }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                    uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
 
-                uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
+                @Override
+                public void onFailure(Exception e) {
+                    dialogDismiss();
+                    ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                    updateGroupCallback.onFailed(e);
+                }
 
-            @Override
-            public void onFailure(Exception e) {
-                dialogDismiss();
-                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
-                updateGroupCallback.onFailed(e);
-            }
+                @Override
+                public void onTaskContinue() {
 
-            @Override
-            public void onTaskContinue() {
+                }
+            }, 1, 0, token);
 
-            }
-        }, 1, 0, token);
-
-        signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void updateGroupToNeoJ() {
@@ -135,34 +163,44 @@ public class UpdateGroupProcess {
     }
 
     public void startUpdateGroupToNeoJ(String token){
-        final GroupRequest groupRequest = new GroupRequest();
+        try {
+            final GroupRequest groupRequest = new GroupRequest();
 
-        groupRequest.setRequestType(UPDATE_GROUP_INFO);
-        groupRequest.setGroupid(groupItem.getGroupid());
-        groupRequest.setGroupName(groupItem.getName());
-        groupRequest.setUserid(AccountHolderInfo.getUserID());
-        groupRequest.setGroupPhotoUrl(groupItem.getGroupPhotoUrl());
+            groupRequest.setRequestType(UPDATE_GROUP_INFO);
+            groupRequest.setGroupid(groupItem.getGroupid());
+            groupRequest.setGroupName(groupItem.getName());
+            groupRequest.setUserid(AccountHolderInfo.getUserID());
+            groupRequest.setGroupPhotoUrl(groupItem.getGroupPhotoUrl());
 
-        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                dialogDismiss();
-                updateGroupCallback.onSuccess(groupItem);
-            }
+            GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    dialogDismiss();
+                    updateGroupCallback.onSuccess(groupItem);
+                }
 
-            @Override
-            public void onFailure(Exception e) {
-                dialogDismiss();
-                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
-                updateGroupCallback.onFailed(e);
-            }
+                @Override
+                public void onFailure(Exception e) {
+                    dialogDismiss();
+                    ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                    updateGroupCallback.onFailed(e);
+                }
 
-            @Override
-            public void onTaskContinue() {
+                @Override
+                public void onTaskContinue() {
 
-            }
-        }, groupRequest, token);
+                }
+            }, groupRequest, token);
 
-        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

@@ -1,12 +1,14 @@
 package com.uren.catchu.GeneralUtils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.R;
 
 public class AnimationUtil {
@@ -25,7 +27,14 @@ public class AnimationUtil {
     }
 
     public static void blink(Context context, View view) {
-        Animation animation = AnimationUtils.loadAnimation(context, R.anim.blink);
-        view.startAnimation(animation);
+        try {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.blink);
+            view.startAnimation(animation);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, AnimationUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

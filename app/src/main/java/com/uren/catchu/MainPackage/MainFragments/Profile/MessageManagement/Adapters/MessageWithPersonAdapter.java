@@ -65,7 +65,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             this.messageDeleteCallback = messageDeleteCallback;
             this.deleteMsgCntTv = deleteMsgCntTv;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -124,7 +124,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     }
                 });
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
@@ -139,7 +139,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                 setCardViewPosition();
                 setSelectedDeleteValues();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
@@ -162,7 +162,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     }
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
@@ -189,45 +189,45 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
             }
         }
 
-        public void setSelectedDeleteValues(){
+        public void setSelectedDeleteValues() {
             try {
-                if(messageBox.isSelectedForDelete())
+                if (messageBox.isSelectedForDelete())
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
             }
         }
 
-        public void checkDeletedMessages(){
+        public void checkDeletedMessages() {
             try {
                 int deleteCount = 0;
-                for(MessageBox messageBox : messageBoxArrayList){
-                    if(messageBox.isSelectedForDelete()){
-                        deleteCount ++;
+                for (MessageBox messageBox : messageBoxArrayList) {
+                    if (messageBox.isSelectedForDelete()) {
+                        deleteCount++;
                     }
                 }
 
-                if(deleteCount == 0) {
+                if (deleteCount == 0) {
                     deleteActivated = false;
                     messageDeleteCallback.OnDeleteActivated(deleteActivated);
                     deleteMsgCntTv.setText("");
-                }else {
+                } else {
                     deleteMsgCntTv.setText(Integer.toString(deleteCount));
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
@@ -235,7 +235,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         }
     }
 
-    public void setDeleteActivated(boolean value){
+    public void setDeleteActivated(boolean value) {
         deleteActivated = value;
     }
 
@@ -245,7 +245,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             MessageBox messageBox = messageBoxArrayList.get(position);
             holder.setData(messageBox, position);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -257,9 +257,9 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         int listSize = 0;
         try {
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
-                listSize =  messageBoxArrayList.size();
+                listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

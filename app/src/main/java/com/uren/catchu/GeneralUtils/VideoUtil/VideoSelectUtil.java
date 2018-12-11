@@ -1,17 +1,12 @@
 package com.uren.catchu.GeneralUtils.VideoUtil;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.util.Log;
 
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
-import com.uren.catchu.R;
 
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -48,20 +43,37 @@ public class VideoSelectUtil {
         try {
             videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
             setBitmapFromUriForVideo();
-        }catch (Exception e){
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void onSelectFromGalleryResult() {
-        videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
-        setBitmapFromUriForVideo();
+        try {
+            videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
+            setBitmapFromUriForVideo();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void setBitmapFromUriForVideo() {
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(videoRealPath);
-        videoBitmap = retriever.getFrameAtTime(100);
+        try {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(videoRealPath);
+            videoBitmap = retriever.getFrameAtTime(100);
+        } catch (IllegalArgumentException e) {
+            ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public String getSelectType() {

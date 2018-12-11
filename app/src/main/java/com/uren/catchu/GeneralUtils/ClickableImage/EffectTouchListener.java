@@ -7,6 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
+
 /**
  * Created by ASUS on 29.5.2018.
  */
@@ -21,25 +24,32 @@ public class EffectTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        if (view instanceof ImageView) {
-            ImageView imageView = (ImageView) view;
+        try {
+            if (view instanceof ImageView) {
+                ImageView imageView = (ImageView) view;
 
-            switch (event.getAction()) {
-                case MotionEvent.ACTION_DOWN: {
-                    rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
-                    imageView.setColorFilter(FILTERED_GREY, PorterDuff.Mode.SRC_ATOP);
-                    view.invalidate();
-                    break;
-                }
-                case MotionEvent.ACTION_MOVE:
-                    // if move inside button do nothing, otherwise clear filter
-                    if(rect.contains(view.getLeft() + (int) event.getX(), view.getTop() + (int) event.getY()))
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN: {
+                        rect = new Rect(view.getLeft(), view.getTop(), view.getRight(), view.getBottom());
+                        imageView.setColorFilter(FILTERED_GREY, PorterDuff.Mode.SRC_ATOP);
+                        view.invalidate();
                         break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL: // Action call when button is inside scrollable view
-                    imageView.clearColorFilter();
-                    view.invalidate();
+                    }
+                    case MotionEvent.ACTION_MOVE:
+                        // if move inside button do nothing, otherwise clear filter
+                        if(rect.contains(view.getLeft() + (int) event.getX(), view.getTop() + (int) event.getY()))
+                            break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL: // Action call when button is inside scrollable view
+                        imageView.clearColorFilter();
+                        view.invalidate();
+                }
             }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, EffectTouchListener.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
         return false;
     }
