@@ -32,6 +32,7 @@ import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.GridViewUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
@@ -156,7 +157,7 @@ public class UserPostGridViewFragment extends BaseFragment {
         customGridLayoutManager = new CustomGridLayoutManager(getContext(), SPAN_COUNT);
         gridRecyclerView.setLayoutManager(customGridLayoutManager);
         gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
-        gridRecyclerView.addItemDecoration(addItemDecoration());
+        gridRecyclerView.addItemDecoration(GridViewUtil.addItemDecoration(SPAN_COUNT, MARGING_GRID));
 
         customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -592,48 +593,6 @@ public class UserPostGridViewFragment extends BaseFragment {
 
 
     /********************************************************************************************/
-    private RecyclerView.ItemDecoration addItemDecoration() {
-
-        RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
-
-                int position = parent.getChildLayoutPosition(view);
-
-                if (position % SPAN_COUNT == 0) {
-                    //outRect.left = MARGING_GRID;
-                    outRect.right = MARGING_GRID;
-                    outRect.bottom = MARGING_GRID;
-                    outRect.top = MARGING_GRID;
-                }
-                if (position % SPAN_COUNT == 1) {
-                    outRect.left = MARGING_GRID / 2;
-                    outRect.right = MARGING_GRID / 2;
-                    outRect.bottom = MARGING_GRID / 2;
-                    outRect.top = MARGING_GRID / 2;
-                }
-                if (position % SPAN_COUNT == 2) {
-                    outRect.left = MARGING_GRID;
-                    //outRect.right = MARGING_GRID;
-                    outRect.bottom = MARGING_GRID;
-                    outRect.top = MARGING_GRID;
-                }
-
-               /*
-                outRect.left = MARGING_GRID;
-                outRect.right = MARGING_GRID;
-                outRect.bottom = MARGING_GRID;
-                if (parent.getChildLayoutPosition(view) >= 0 && parent.getChildLayoutPosition(view) <= SPAN_COUNT) {
-                    outRect.top = MARGING_GRID;
-                }
-                */
-            }
-        };
-
-        return itemDecoration;
-    }
-
     private void showNoFeedLayout(boolean setVisible, int textDetail) {
         if (setVisible) {
             rl_no_feed.setVisibility(View.VISIBLE);

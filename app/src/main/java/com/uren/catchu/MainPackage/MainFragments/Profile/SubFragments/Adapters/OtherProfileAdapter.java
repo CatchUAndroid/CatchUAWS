@@ -2,70 +2,39 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.GeneralUtils.GridViewUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
-import catchu.model.FollowInfoListResponse;
 import catchu.model.Post;
-import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfile;
 
-import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
@@ -73,24 +42,21 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIR
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
-public class DenemeAdapter extends RecyclerView.Adapter {
+public class OtherProfileAdapter extends RecyclerView.Adapter {
 
     public static final int VIEW_HEADER = 0;
     public static final int VIEW_ITEM = 1;
     public static final int VIEW_PROG = 2;
 
-    public static String PARTIAL_DATA_LOADING = "PARTIAL_DATA_LOADING";
-
     private Activity mActivity;
-    public Context mContext;
+    private Context mContext;
     private List<Object> objectList;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
+    private FollowClickCallback followClickCallback;
 
-    public DenemeAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
+    public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
@@ -125,17 +91,17 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.profile_header_view, parent, false);
 
-            viewHolder = new DenemeAdapter.ProfileHeaderViewHolder(itemView);
+            viewHolder = new OtherProfileAdapter.ProfileHeaderViewHolder(itemView);
         } else if (viewType == VIEW_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.profile_shared_post_view, parent, false);
 
-            viewHolder = new DenemeAdapter.MyViewHolder(itemView);
+            viewHolder = new OtherProfileAdapter.PostViewHolder(itemView);
         } else {
-            View v = LayoutInflater.from(parent.getContext()).inflate(
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.progressbar_item, parent, false);
 
-            viewHolder = new DenemeAdapter.ProgressViewHolder(v);
+            viewHolder = new OtherProfileAdapter.ProgressViewHolder(itemView);
         }
         return viewHolder;
 
@@ -158,30 +124,28 @@ public class DenemeAdapter extends RecyclerView.Adapter {
                     }
                 }
 
-                if(payload instanceof Post){
-                    if(holder instanceof MyViewHolder){
-                        ((MyViewHolder) holder).updatePostList(position);
+                if (payload instanceof Post) {
+                    if (holder instanceof PostViewHolder) {
+                        ((PostViewHolder) holder).updatePostList(position);
                     }
                 }
-
 
             }
         }
 
     }
 
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if (holder instanceof DenemeAdapter.ProfileHeaderViewHolder) {
+        if (holder instanceof OtherProfileAdapter.ProfileHeaderViewHolder) {
             UserInfoListItem userInfoListItem = (UserInfoListItem) objectList.get(position);
-            ((DenemeAdapter.ProfileHeaderViewHolder) holder).setData(userInfoListItem, position);
-        } else if (holder instanceof DenemeAdapter.MyViewHolder) {
+            ((OtherProfileAdapter.ProfileHeaderViewHolder) holder).setData(userInfoListItem, position);
+        } else if (holder instanceof OtherProfileAdapter.PostViewHolder) {
             Post post = (Post) objectList.get(position);
-            ((DenemeAdapter.MyViewHolder) holder).setData(post, position);
+            ((OtherProfileAdapter.PostViewHolder) holder).setData(post, position);
         } else {
-            ((DenemeAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            ((OtherProfileAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
     }
@@ -197,13 +161,10 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
 
-        ProgressBar progressBar;
-
         User selectedUser;
-
+        UserProfile fetchedUser;
         String followStatus;
-        private int followingCount, followerCount;
-
+        int followingCount, followerCount;
 
         public ProfileHeaderViewHolder(View view) {
             super(view);
@@ -217,23 +178,26 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             txtFollowerCnt = (TextView) view.findViewById(R.id.txtFollowerCnt);
             txtFollowingCnt = (TextView) view.findViewById(R.id.txtFollowingCnt);
 
-            progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
+            txtFollowerCnt.setClickable(false);
+            txtFollowingCnt.setClickable(false);
 
+            setListeners();
+
+        }
+
+        private void setListeners() {
+            //Button follow status
+            btnFollowStatus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    btnFollowStatusClicked();
+                }
+            });
         }
 
         public void setData(UserInfoListItem userInfoListItem, int position) {
 
             selectedUser = userInfoListItem.getUser();
-
-            txtFollowerCnt.setClickable(false);
-            txtFollowingCnt.setClickable(false);
-
-            //username
-            /*
-            if (isValid(selectedUser.getUsername())) {
-                toolbarTitleTv.setText(selectedUser.getUsername());
-            }
-            */
 
             //profil fotografi varsa set edilir.
             UserDataUtil.setProfilePicture(mContext, selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
@@ -248,6 +212,8 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         }
 
         public void updateUserProfile(UserProfile userProfile, int position) {
+
+            fetchedUser = userProfile;
 
             //profil fotografi varsa set edilir.
             UserDataUtil.setProfilePicture(mContext, userProfile.getUserInfo().getProfilePhotoUrl(), userProfile.getUserInfo().getName(),
@@ -291,20 +257,20 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         }
 
         private void btnFollowStatusClicked() {
-/*
+
             //takip ediliyor ise
-            if (otherProfile.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
-                if (otherProfile.getUserInfo().getIsPrivateAccount() != null && otherProfile.getUserInfo().getIsPrivateAccount()) {
+            if (fetchedUser.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+                if (fetchedUser.getUserInfo().getIsPrivateAccount() != null && fetchedUser.getUserInfo().getIsPrivateAccount()) {
                     openDialogBox();
                 } else {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
                 }
-            } else if (otherProfile.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
+            } else if (fetchedUser.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
                 //istek gonderilmis ise
                 updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-            } else if (otherProfile.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
+            } else if (fetchedUser.getRelationInfo().getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
                 //takip istegi yok ise
-                if (otherProfile.getUserInfo().getIsPrivateAccount() != null && otherProfile.getUserInfo().getIsPrivateAccount()) {
+                if (fetchedUser.getUserInfo().getIsPrivateAccount() != null && fetchedUser.getUserInfo().getIsPrivateAccount()) {
                     updateFollowStatus(FRIEND_FOLLOW_REQUEST);
                 } else {
                     updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
@@ -312,7 +278,7 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             } else {
                 //do nothing
             }
-*/
+
         }
 
         private void updateFollowStatus(final String requestType) {
@@ -338,7 +304,6 @@ public class DenemeAdapter extends RecyclerView.Adapter {
 
         private void updateFollowUI(String requestType) {
 
-/*
             switch (requestType) {
                 case FRIEND_DELETE_FOLLOW:
                     followStatus = FOLLOW_STATUS_NONE;
@@ -351,13 +316,13 @@ public class DenemeAdapter extends RecyclerView.Adapter {
                 case FRIEND_DELETE_PENDING_FOLLOW_REQUEST:
                     followStatus = FOLLOW_STATUS_NONE;
                     updateSelectedUserProfile();
-                    otherProfile.getRelationInfo().setFollowStatus(followStatus);
+                    fetchedUser.getRelationInfo().setFollowStatus(followStatus);
                     break;
 
                 case FRIEND_FOLLOW_REQUEST:
                     followStatus = FOLLOW_STATUS_PENDING;
                     updateSelectedUserProfile();
-                    otherProfile.getRelationInfo().setFollowStatus(followStatus);
+                    fetchedUser.getRelationInfo().setFollowStatus(followStatus);
                     break;
 
                 case FRIEND_CREATE_FOLLOW_DIRECTLY:
@@ -371,9 +336,9 @@ public class DenemeAdapter extends RecyclerView.Adapter {
                     break;
             }
 
-            //updateAdapters();
-            UserDataUtil.updateFollowButton2(mContext, otherProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
-  */
+            informFragmentFollowStatusChanged();
+            UserDataUtil.updateFollowButton2(mContext, fetchedUser.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
+
         }
 
         private void updateSelectedUserProfile() {
@@ -381,12 +346,10 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         }
 
         private void updateOtherUserProfile(int updateValue) {
-            /*
-            followerCount = Integer.parseInt(otherProfile.getRelationInfo().getFollowerCount());
-            otherProfile.getRelationInfo().setFollowerCount(String.valueOf(followerCount + updateValue));
-            otherProfile.getRelationInfo().setFollowStatus(followStatus);
-            txtFollowerCnt.setText(otherProfile.getRelationInfo().getFollowerCount());
-            */
+            followerCount = Integer.parseInt(fetchedUser.getRelationInfo().getFollowerCount());
+            fetchedUser.getRelationInfo().setFollowerCount(String.valueOf(followerCount + updateValue));
+            fetchedUser.getRelationInfo().setFollowStatus(followStatus);
+            txtFollowerCnt.setText(fetchedUser.getRelationInfo().getFollowerCount());
         }
 
         private void updateCurrentUserProfile(int updateValue) {
@@ -396,27 +359,25 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         }
 
         private void openDialogBox() {
-
             YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
                 @Override
                 public void yesClick() {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
                 }
-
                 @Override
                 public void noClick() {
-
                 }
             };
-
             DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
-
         }
 
+        private void informFragmentFollowStatusChanged() {
+            followClickCallback.onFollowStatusChanged(followStatus);
+        }
 
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class PostViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
         private Post post;
@@ -424,14 +385,14 @@ public class DenemeAdapter extends RecyclerView.Adapter {
 
         //View items
         RecyclerView gridRecyclerView;
-        private Deneme2Adapter deneme2Adapter;
+        private OtherProfilePostAdapter otherProfilePostAdapter;
         private CustomGridLayoutManager customGridLayoutManager;
 
         private static final int MARGING_GRID = 2;
         private static final int SPAN_COUNT = 3;
         private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
-        public MyViewHolder(View view) {
+        public PostViewHolder(View view) {
             super(view);
 
             mView = view;
@@ -450,15 +411,15 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             customGridLayoutManager = new CustomGridLayoutManager(mContext, 3);
             gridRecyclerView.setLayoutManager(customGridLayoutManager);
             //gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
-            gridRecyclerView.addItemDecoration(addItemDecoration());
+            gridRecyclerView.addItemDecoration(GridViewUtil.addItemDecoration(SPAN_COUNT, MARGING_GRID));
 
             customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    switch (deneme2Adapter.getItemViewType(position)) {
-                        case Deneme2Adapter.VIEW_ITEM:
+                    switch (otherProfilePostAdapter.getItemViewType(position)) {
+                        case OtherProfilePostAdapter.VIEW_ITEM:
                             return 1;
-                        case Deneme2Adapter.VIEW_PROG:
+                        case OtherProfilePostAdapter.VIEW_PROG:
                             return SPAN_COUNT; //number of columns of the grid
                         default:
                             return -1;
@@ -469,11 +430,11 @@ public class DenemeAdapter extends RecyclerView.Adapter {
         }
 
         private void setAdapter() {
-            deneme2Adapter = new Deneme2Adapter(mActivity, mContext, fragmentNavigation);
-            gridRecyclerView.setAdapter(deneme2Adapter);
+            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation);
+            gridRecyclerView.setAdapter(otherProfilePostAdapter);
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
-            deneme2Adapter.addAll(postList);
+            otherProfilePostAdapter.addAll(postList);
         }
 
         public void setData(Post post, int position) {
@@ -482,53 +443,9 @@ public class DenemeAdapter extends RecyclerView.Adapter {
 
         public void updatePostList(int position) {
 
-            deneme2Adapter.updatePostListItems(postList);
+            otherProfilePostAdapter.updatePostListItems(postList);
         }
 
-
-
-        private RecyclerView.ItemDecoration addItemDecoration() {
-
-            RecyclerView.ItemDecoration itemDecoration = new RecyclerView.ItemDecoration() {
-                @Override
-                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
-
-                    int position = parent.getChildLayoutPosition(view);
-
-                    if (position % SPAN_COUNT == 0) {
-                        //outRect.left = MARGING_GRID;
-                        outRect.right = MARGING_GRID;
-                        outRect.bottom = MARGING_GRID;
-                        outRect.top = MARGING_GRID;
-                    }
-                    if (position % SPAN_COUNT == 1) {
-                        outRect.left = MARGING_GRID / 2;
-                        outRect.right = MARGING_GRID / 2;
-                        outRect.bottom = MARGING_GRID / 2;
-                        outRect.top = MARGING_GRID / 2;
-                    }
-                    if (position % SPAN_COUNT == 2) {
-                        outRect.left = MARGING_GRID;
-                        //outRect.right = MARGING_GRID;
-                        outRect.bottom = MARGING_GRID;
-                        outRect.top = MARGING_GRID;
-                    }
-
-               /*
-                outRect.left = MARGING_GRID;
-                outRect.right = MARGING_GRID;
-                outRect.bottom = MARGING_GRID;
-                if (parent.getChildLayoutPosition(view) >= 0 && parent.getChildLayoutPosition(view) <= SPAN_COUNT) {
-                    outRect.top = MARGING_GRID;
-                }
-                */
-                }
-
-            };
-
-            return itemDecoration;
-        }
 
     }
 
@@ -565,23 +482,19 @@ public class DenemeAdapter extends RecyclerView.Adapter {
     }
 
     public void addPosts(List<Post> addedPostList) {
-
-
         if (addedPostList != null) {
-            postList.addAll(addedPostList);
-            Post post = addedPostList.get(0);
+            Post post = new Post();
             objectList.add(post);
-            //objectList.addAll(addedPostList);
+            postList.addAll(addedPostList);
             notifyItemRangeInserted(1, 1);
         }
-
     }
 
     public void updatePosts(List<Post> addedPostList) {
         this.postList.clear();
         this.postList.addAll(addedPostList);
-        Post post = addedPostList.get(0);
-        notifyItemRangeChanged(1,1, post);
+        Post post = new Post(); //just to recognize the 'instance of'
+        notifyItemRangeChanged(1, 1, post);
     }
 
     public void addProgressLoading() {
@@ -602,6 +515,9 @@ public class DenemeAdapter extends RecyclerView.Adapter {
             return false;
     }
 
+    public void setFollowClickCallback(FollowClickCallback followClickCallback) {
+        this.followClickCallback = followClickCallback;
+    }
 
 }
 
