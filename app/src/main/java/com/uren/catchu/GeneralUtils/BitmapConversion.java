@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.CrashlyticsHelper;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.R;
 
@@ -29,8 +30,8 @@ public class BitmapConversion extends AppCompatActivity {
             bitmap = Bitmap.createBitmap(view.getDrawingCache());
             view.setDrawingCacheEnabled(false);
         } catch (Exception e) {
-           /* CrashlyticsHelper.reportCrash(null, BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), null, e);*/
+            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return bitmap;
@@ -50,6 +51,8 @@ public class BitmapConversion extends AppCompatActivity {
             Drawable dr = new BitmapDrawable(context.getResources(), blurBitmap);
             view.setBackground(dr);
         } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -72,8 +75,8 @@ public class BitmapConversion extends AppCompatActivity {
                     bm, 0, 0, width, height, matrix, false);
             //bm.recycle();
         } catch (Exception e) {
-            /*CrashlyticsHelper.reportCrash(null, BitmapConversion.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), null, e);*/
+            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return resizedBitmap;
@@ -116,23 +119,30 @@ public class BitmapConversion extends AppCompatActivity {
             try {
                 canvas.setBitmap(null);
             } catch (Exception e) {
-                /*CrashlyticsHelper.reportCrash(null, BitmapConversion.class.getSimpleName(),
-                        new Object(){}.getClass().getEnclosingMethod().getName(), null, e);*/
+                ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
+                        new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            CrashlyticsHelper.reportCrash(null, BitmapConversion.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), null, e);
+            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return result;
     }
 
     public static int dp(float value, Context context) {
-        if (value == 0) {
-            return 0;
+        try {
+            if (value == 0) {
+                return 0;
+            }
+            return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(BitmapConversion.class.getSimpleName(),
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-        return (int) Math.ceil(context.getResources().getDisplayMetrics().density * value);
+
+        return 0;
     }
 }

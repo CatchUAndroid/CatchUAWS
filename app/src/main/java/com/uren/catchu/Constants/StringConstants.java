@@ -139,6 +139,9 @@ public class StringConstants {
     public static final String FB_CHILD_NAME = "Name";
     public static final String FB_CHILD_USERID = "UserId";
 
+    public static final String FB_CHILD_ERRORS = "Errors";
+    public static final String FB_CHILD_ANDROID = "Android";
+
 
 
 }
