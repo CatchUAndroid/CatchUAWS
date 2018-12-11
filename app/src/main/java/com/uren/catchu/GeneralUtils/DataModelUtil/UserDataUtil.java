@@ -54,6 +54,8 @@ public class UserDataUtil {
     }
 
     public static void setProfilePicture(Context context, String url, String name, String username, TextView shortNameTv, ImageView profilePicImgView) {
+        if (context == null) return;
+
         if (url != null && !url.trim().isEmpty()) {
             shortNameTv.setVisibility(View.GONE);
             Glide.with(context)
