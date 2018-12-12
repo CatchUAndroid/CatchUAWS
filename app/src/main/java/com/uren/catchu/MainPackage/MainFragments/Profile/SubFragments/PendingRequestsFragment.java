@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,6 +18,7 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.Interfaces.ReturnCallback;
@@ -61,26 +63,47 @@ public class PendingRequestsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
-        mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
-        ButterKnife.bind(this, mView);
+        try {
+            ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+            mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
+            ButterKnife.bind(this, mView);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
         return mView;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
-        addListeners();
-        getData();
+        try {
+            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
+            addListeners();
+            getData();
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void addListeners() {
-        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        try {
+            commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -89,67 +112,86 @@ public class PendingRequestsFragment extends BaseFragment {
     }
 
     public void getData() {
-        progressBar.setVisibility(View.VISIBLE);
-        AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
-            @Override
-            public void onComplete(Object object) {
-                FriendRequestList friendRequestList = (FriendRequestList) object;
+        try {
+            progressBar.setVisibility(View.VISIBLE);
+            AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    FriendRequestList friendRequestList = (FriendRequestList) object;
 
-                if(getContext() != null) {
-                    MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
-                            getContext().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                    if(getContext() != null) {
+                        MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
+                                getContext().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
 
-                    pendingRequestAdapter = new PendingRequestAdapter(getContext(), friendRequestList, new ListItemClickListener() {
+                        pendingRequestAdapter = new PendingRequestAdapter(getContext(), friendRequestList, new ListItemClickListener() {
+                            @Override
+                            public void onClick(View view, User user, int clickedPosition) {
+                                startFollowingInfoProcess(user, clickedPosition);
+                            }
+                        }, new ReturnCallback() {
+                            @Override
+                            public void onReturn(Object object1) {
+                                AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
+                                    @Override
+                                    public void onComplete(Object object) {
+                                        FriendRequestList friendRequestList = (FriendRequestList) object;
+                                        MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
+                                                getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception e) {
+                                        ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                                                new Object() {
+                                                }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                                    }
+                                });
+                            }
+                        });
+                        following_recyclerView.setAdapter(pendingRequestAdapter);
+                        linearLayoutManager = new LinearLayoutManager(getContext());
+                        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                        following_recyclerView.setLayoutManager(linearLayoutManager);
+                    }
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    progressBar.setVisibility(View.GONE);
+                    ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                         @Override
-                        public void onClick(View view, User user, int clickedPosition) {
-                            startFollowingInfoProcess(user, clickedPosition);
-                        }
-                    }, new ReturnCallback() {
-                        @Override
-                        public void onReturn(Object object1) {
-                            AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
-                                @Override
-                                public void onComplete(Object object) {
-                                    FriendRequestList friendRequestList = (FriendRequestList) object;
-                                    MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
-                                            getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
-                                }
+                        public void okClick() {
 
-                                @Override
-                                public void onFailed(Exception e) {
-
-                                }
-                            });
                         }
                     });
-                    following_recyclerView.setAdapter(pendingRequestAdapter);
-                    linearLayoutManager = new LinearLayoutManager(getContext());
-                    linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                    following_recyclerView.setLayoutManager(linearLayoutManager);
                 }
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                progressBar.setVisibility(View.GONE);
-                DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-
-                    }
-                });
-            }
-        });
+            });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void startFollowingInfoProcess(User user, int clickedPosition) {
 
-        if (mFragmentNavigation != null) {
-            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-            userInfoListItem.setAdapter(pendingRequestAdapter);
-            userInfoListItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+        try {
+            if (mFragmentNavigation != null) {
+                UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                userInfoListItem.setAdapter(pendingRequestAdapter);
+                userInfoListItem.setClickedPosition(clickedPosition);
+                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 }
