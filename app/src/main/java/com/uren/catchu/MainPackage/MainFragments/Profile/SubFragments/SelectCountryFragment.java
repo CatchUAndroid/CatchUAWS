@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.R;
@@ -77,9 +79,16 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_select_country, container, false);
-            ButterKnife.bind(this, mView);
+        try {
+            if (mView == null) {
+                mView = inflater.inflate(R.layout.fragment_select_country, container, false);
+                ButterKnife.bind(this, mView);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
 
         return mView;
@@ -87,10 +96,17 @@ public class SelectCountryFragment extends Fragment implements Filterable {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        init();
-        addListeners();
-        getCountryList();
+        try {
+            super.onViewCreated(view, savedInstanceState);
+            init();
+            addListeners();
+            getCountryList();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void init() {
@@ -98,54 +114,75 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     }
 
     private void setShapes() {
-        GradientDrawable shape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.White, null),
-                0, GradientDrawable.RECTANGLE, 15, 0);
-        mainLinearLayout.setBackground(shape);
+        try {
+            GradientDrawable shape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.White, null),
+                    0, GradientDrawable.RECTANGLE, 15, 0);
+            mainLinearLayout.setBackground(shape);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void addListeners() {
-        selectCountryEt.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        try {
+            selectCountryEt.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+                }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                countryAdapter.getFilter().filter(s.toString().trim());
-            }
-        });
+                @Override
+                public void afterTextChanged(Editable s) {
+                    countryAdapter.getFilter().filter(s.toString().trim());
+                }
+            });
 
-        countryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedCountry = (String) countryListView.getItemAtPosition(position);
-                parseSelectedCountry(selectedCountry);
-                getActivity().onBackPressed();
-            }
-        });
+            countryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String selectedCountry = (String) countryListView.getItemAtPosition(position);
+                    parseSelectedCountry(selectedCountry);
+                    getActivity().onBackPressed();
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void parseSelectedCountry(String selectedCountry) {
-        String[] parts = selectedCountry.split("\\(");
+        try {
+            String[] parts = selectedCountry.split("\\(");
 
-        String[] parts2 = parts[1].split("\\)");
-        String countryDialCode = parts2[0];
+            String[] parts2 = parts[1].split("\\)");
+            String countryDialCode = parts2[0];
 
-        for(Country country : countryListResponse.getItems()){
-            if(country != null && country.getDialCode() != null && !country.getDialCode().trim().isEmpty()){
-                if(countryDialCode.trim().equals(country.getDialCode())){
-                    myCountry = country;
-                    break;
+            for(Country country : countryListResponse.getItems()){
+                if(country != null && country.getDialCode() != null && !country.getDialCode().trim().isEmpty()){
+                    if(countryDialCode.trim().equals(country.getDialCode())){
+                        myCountry = country;
+                        break;
+                    }
                 }
             }
+            listener.onClick(myCountry, 0);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-        listener.onClick(myCountry, 0);
     }
 
     public void getCountryList() {
@@ -162,6 +199,9 @@ public class SelectCountryFragment extends Fragment implements Filterable {
 
                     @Override
                     public void onFailure(Exception e) {
+                        ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                                new Object() {
+                                }.getClass().getEnclosingMethod().getName(), e.getMessage());
                         DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                             @Override
                             public void okClick() {
@@ -181,25 +221,32 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     }
 
     public void fillCountryList(Object object) {
-        countryListResponse = (CountryListResponse) object;
-        orgCountryList = new ArrayList<String>();
+        try {
+            countryListResponse = (CountryListResponse) object;
+            orgCountryList = new ArrayList<String>();
 
-        for (Country country : countryListResponse.getItems()) {
-            String countryItem = "";
+            for (Country country : countryListResponse.getItems()) {
+                String countryItem = "";
 
-            if (country.getName() != null && !country.getName().trim().isEmpty() &&
-                    country.getDialCode() != null && !country.getDialCode().trim().isEmpty()) {
-                countryItem = country.getName() + "(" + country.getDialCode() + ")";
-                orgCountryList.add(countryItem);
+                if (country.getName() != null && !country.getName().trim().isEmpty() &&
+                        country.getDialCode() != null && !country.getDialCode().trim().isEmpty()) {
+                    countryItem = country.getName() + "(" + country.getDialCode() + ")";
+                    orgCountryList.add(countryItem);
+                }
             }
+
+            countryAdapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    android.R.layout.simple_list_item_1,
+                    orgCountryList);
+
+            countryListView.setAdapter(countryAdapter);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-
-        countryAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                orgCountryList);
-
-        countryListView.setAdapter(countryAdapter);
     }
 
     @Override
