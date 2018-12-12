@@ -6,6 +6,9 @@ import android.media.ExifInterface;
 import android.os.Build;
 import android.util.Log;
 
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
+
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -16,46 +19,61 @@ import static com.facebook.GraphRequest.TAG;
 
 public class ExifUtil {
 
-    public static Bitmap rotateImageIfRequired(String photoPath, Bitmap bitmap){
+    public static Bitmap rotateImageIfRequired(String photoPath, Bitmap bitmap) {
 
         ExifInterface ei = null;
+        Bitmap rotatedBitmap = null;
+
         try {
             ei = new ExifInterface(photoPath);
+
+
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            rotatedBitmap = null;
+            switch (orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotatedBitmap = rotateImage(bitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotatedBitmap = rotateImage(bitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotatedBitmap = rotateImage(bitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotatedBitmap = bitmap;
+            }
         } catch (IOException e) {
+            ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
-        }
-
-        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED);
-
-        Bitmap rotatedBitmap = null;
-        switch(orientation) {
-
-            case ExifInterface.ORIENTATION_ROTATE_90:
-                rotatedBitmap = rotateImage(bitmap, 90);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_180:
-                rotatedBitmap = rotateImage(bitmap, 180);
-                break;
-
-            case ExifInterface.ORIENTATION_ROTATE_270:
-                rotatedBitmap = rotateImage(bitmap, 270);
-                break;
-
-            case ExifInterface.ORIENTATION_NORMAL:
-            default:
-                rotatedBitmap = bitmap;
         }
 
         return rotatedBitmap;
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
-                matrix, true);
+        Bitmap bitmap = null;
+        try {
+            Matrix matrix = new Matrix();
+            matrix.postRotate(angle);
+            bitmap =  Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                    matrix, true);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+        return bitmap;
     }
 
     public static Bitmap rotateBitmap(String src, Bitmap bitmap) {
@@ -101,10 +119,16 @@ public class ExifUtil {
                 bitmap.recycle();
                 return oriented;
             } catch (OutOfMemoryError e) {
+                ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
                 return bitmap;
             }
         } catch (IOException e) {
+            ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 
@@ -122,28 +146,17 @@ public class ExifUtil {
              */
             if (Build.VERSION.SDK_INT >= 5) {
                 Class<?> exifClass = Class.forName("android.media.ExifInterface");
-                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[] { String.class });
-                Object exifInstance = exifConstructor.newInstance(new Object[] { src });
-                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[] { String.class, int.class });
+                Constructor<?> exifConstructor = exifClass.getConstructor(new Class[]{String.class});
+                Object exifInstance = exifConstructor.newInstance(new Object[]{src});
+                Method getAttributeInt = exifClass.getMethod("getAttributeInt", new Class[]{String.class, int.class});
                 Field tagOrientationField = exifClass.getField("TAG_ORIENTATION");
                 String tagOrientation = (String) tagOrientationField.get(null);
-                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[] { tagOrientation, 1});
+                orientation = (Integer) getAttributeInt.invoke(exifInstance, new Object[]{tagOrientation, 1});
             }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
 

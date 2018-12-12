@@ -14,6 +14,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -137,6 +140,9 @@ public class CustomRecyclerView extends RecyclerView {
                                 }
                             }
                         } catch (Exception e) {
+                            ErrorSaveHelper.writeErrorToDB(null, CustomRecyclerView.class.getSimpleName(),
+                                    new Object() {
+                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
                         }
                     }
                 } else {
@@ -179,7 +185,9 @@ public class CustomRecyclerView extends RecyclerView {
                                 }
                             }
                         } catch (Exception e) {
-
+                            ErrorSaveHelper.writeErrorToDB(null, CustomRecyclerView.class.getSimpleName(),
+                                    new Object() {
+                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
                         }
 
                     }

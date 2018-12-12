@@ -11,6 +11,8 @@ import com.uren.catchu.ApiGatewayFunctions.FollowInfoProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.ProviderListRequestProcess;
+import com.uren.catchu.FragmentControllers.FragNavController;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 
 import org.json.JSONArray;
@@ -91,6 +93,9 @@ public class AccountHolderFacebookFriends {
                                 providerListProcess(providerList);
 
                             } catch (JSONException e) {
+                                ErrorSaveHelper.writeErrorToDB(null, AccountHolderFacebookFriends.class.getSimpleName(),
+                                        new Object() {
+                                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
                                 e.printStackTrace();
                                 mCompleteCallback.onFailed(e);
                             }

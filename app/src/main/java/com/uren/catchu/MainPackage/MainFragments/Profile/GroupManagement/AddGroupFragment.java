@@ -36,6 +36,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.CrashlyticsHelper;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -46,6 +47,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import butterknife.BindView;
@@ -270,6 +272,9 @@ public class AddGroupFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
+                ErrorSaveHelper.writeErrorToDB(null, AddGroupFragment.class.getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 DialogBoxUtil.showErrorDialog(getContext(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
@@ -313,8 +318,9 @@ public class AddGroupFragment extends BaseFragment {
                         .into(groupPictureImgv);
             }
         } catch (Exception e) {
-            /*CrashlyticsHelper.reportCrash(null, AddGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), null, e);*/
+            ErrorSaveHelper.writeErrorToDB(null, AddGroupFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
