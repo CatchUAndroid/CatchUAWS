@@ -35,6 +35,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.OtherProfileAdapter;
@@ -68,7 +69,9 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FO
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
 public class OtherProfileFragment extends BaseFragment
-        implements View.OnClickListener, FollowClickCallback {
+        implements View.OnClickListener,
+        FollowClickCallback,
+        RecyclerScrollListener{
 
     View mView;
     UserInfoListItem userInfoListItem;
@@ -102,7 +105,7 @@ public class OtherProfileFragment extends BaseFragment
     private boolean pulledToRefreshPost = false;
     private boolean isFirstFetch = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
-    private int perPageCnt, pageCnt;
+    private int perPageCnt, pageCnt, innerRecyclerPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
     //Location
@@ -191,6 +194,7 @@ public class OtherProfileFragment extends BaseFragment
 
         otherProfileAdapter.addHeader(userInfoListItem);
         otherProfileAdapter.setFollowClickCallback(this);
+        otherProfileAdapter.setInnerRecyclerScrollListener(this);
     }
 
     private void setPullToRefresh() {
@@ -211,6 +215,7 @@ public class OtherProfileFragment extends BaseFragment
     private void setPaginationValues() {
         perPageCnt = DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
         pageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
+        innerRecyclerPageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
         float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
         radius = String.valueOf(radiusInKm);
     }
@@ -223,6 +228,27 @@ public class OtherProfileFragment extends BaseFragment
             public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                if(innerRecyclerPageCnt != 1){
+
+                }
+
+
+                if (!recyclerView.canScrollVertically(1) ) {
+                    innerRecyclerPageCnt++;
+                    if(innerRecyclerPageCnt == 1){
+                        CommonUtils.showCustomToast(getContext(),  "end");
+                        //loading = false;
+
+                        //getPosts();
+                        otherProfileAdapter.addProgressLoading();
+                    }
+
+                }
+
+
+
+
+/*
                 if (dy > 0) //check for scroll down
                 {
                     visibleItemCount = customLinearLayoutManager.getChildCount();
@@ -242,6 +268,8 @@ public class OtherProfileFragment extends BaseFragment
                         }
                     }
                 }
+                */
+
             }
 
         });
@@ -382,10 +410,10 @@ public class OtherProfileFragment extends BaseFragment
         String sUserId = AccountHolderInfo.getUserID();
         String sUid = selectedUser.getUserid();
         String sLongitude = longitude;
-        String sPerpage = String.valueOf(perPageCnt);
+        String sPerpage = String.valueOf(9);
         String sLatitude = latitude;
         String sRadius = radius;
-        String sPage = String.valueOf(pageCnt);
+        String sPage = String.valueOf(innerRecyclerPageCnt);
         String sPrivacyType = "";
 
         UserSharedPostListProcess userSharedPostListProcess = new UserSharedPostListProcess(getContext(), new OnEventListener<PostListResponse>() {
@@ -458,7 +486,7 @@ public class OtherProfileFragment extends BaseFragment
         loading = true;
         objectList.addAll(postListResponse.getItems());
 
-        if (pageCnt != 1 && otherProfileAdapter.isShowingProgressLoading()) {
+        if (innerRecyclerPageCnt != 1 && otherProfileAdapter.isShowingProgressLoading()) {
             otherProfileAdapter.removeProgressLoading();
         }
 
@@ -466,7 +494,11 @@ public class OtherProfileFragment extends BaseFragment
             otherProfileAdapter.updatePosts(postListResponse.getItems());
             pulledToRefreshPost = false;
         } else {
-            otherProfileAdapter.addPosts(postListResponse.getItems());
+            if(innerRecyclerPageCnt == 1){
+                otherProfileAdapter.addPosts(postListResponse.getItems());
+            }else{
+                otherProfileAdapter.loadMorePost(postListResponse.getItems());
+            }
         }
 
     }
@@ -515,6 +547,12 @@ public class OtherProfileFragment extends BaseFragment
             }
         }
 
+    }
+
+    @Override
+    public void onLoadMore() {
+        this.innerRecyclerPageCnt++;
+        getPosts();
     }
 
 

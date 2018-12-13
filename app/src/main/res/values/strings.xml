@@ -17,6 +17,11 @@
         <item>Unspecified</item>
     </array>
 
+    <array name="genderForServer">
+        <item>man</item>
+        <item>woman</item>
+        <item>unspecified</item>
+    </array>
 
     <string name="exitItem">Log Out</string>
     <string name="search">Search</string>
@@ -327,6 +332,5 @@
     <string name="DIGITAL_FOOTPRINT_DESC">Leave your digital tracks instead of physical tracks and wait for them to be discovered</string>
     <string name="TIME_CAPSULE_DESC">Leave a message where you want it to come in the future. Maybe tomorrow maybe 20 years.</string>
     <string name="IMMORTAL_NODES_DESC">Leave notes that won\'t get lost in the location. When you wish, the person you wish, it will appear in that location</string>
-
 
 </resources>

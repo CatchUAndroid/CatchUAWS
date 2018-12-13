@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -23,6 +24,7 @@ import com.uren.catchu.GeneralUtils.GridViewUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -53,8 +55,14 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private List<Object> objectList;
     private List<Post> postList;
+    private List<Post> addedPostList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
     private FollowClickCallback followClickCallback;
+    private RecyclerScrollListener recyclerScrollListener;
+
+    private int operationType = -1;
+    private static final int OPERATION_TYPE_LOAD_MORE = 0;
+
 
     public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
@@ -62,6 +70,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         this.fragmentNavigation = fragmentNavigation;
         this.objectList = new ArrayList<Object>();
         this.postList = new ArrayList<Post>();
+        this.addedPostList = new ArrayList<Post>();
     }
 
     @Override
@@ -126,7 +135,11 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
                 if (payload instanceof Post) {
                     if (holder instanceof PostViewHolder) {
-                        ((PostViewHolder) holder).updatePostList(position);
+                        if(operationType == OPERATION_TYPE_LOAD_MORE){
+                            ((PostViewHolder) holder).loadMorePost();
+                        }else{
+                            ((PostViewHolder) holder).updatePostList(position);
+                        }
                     }
                 }
 
@@ -385,12 +398,16 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         //View items
         RecyclerView gridRecyclerView;
-        private OtherProfilePostAdapter otherProfilePostAdapter;
-        private CustomGridLayoutManager customGridLayoutManager;
+        OtherProfilePostAdapter otherProfilePostAdapter;
+        CustomGridLayoutManager customGridLayoutManager;
 
         private static final int MARGING_GRID = 2;
         private static final int SPAN_COUNT = 3;
         private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
+
+        private boolean loading = true;
+        private boolean isFirstFetch = false;
+        private int pastVisibleItems, visibleItemCount, totalItemCount;
 
         public PostViewHolder(View view) {
             super(view);
@@ -401,6 +418,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             setListeners();
             setLayoutManager();
             setAdapter();
+            //setRecyclerViewScroll();
 
         }
 
@@ -408,9 +426,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private void setLayoutManager() {
-            customGridLayoutManager = new CustomGridLayoutManager(mContext, 3);
+            customGridLayoutManager = new CustomGridLayoutManager(mContext, SPAN_COUNT);
             gridRecyclerView.setLayoutManager(customGridLayoutManager);
-            //gridRecyclerView.setItemAnimator(new UserPostItemAnimator());
             gridRecyclerView.addItemDecoration(GridViewUtil.addItemDecoration(SPAN_COUNT, MARGING_GRID));
 
             customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -435,18 +452,57 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
             otherProfilePostAdapter.addAll(postList);
+
         }
 
-        public void setData(Post post, int position) {
+        private void setRecyclerViewScroll() {
 
+            gridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                    if (!recyclerView.canScrollVertically(1) ) {
+                        CommonUtils.showCustomToast(mContext,  "end");
+                    }
+
+
+                    /*
+                    if (dy > 0) //check for scroll down
+                    {
+                        visibleItemCount = customGridLayoutManager.getChildCount();
+                        totalItemCount = customGridLayoutManager.getItemCount();
+                        pastVisibleItems = customGridLayoutManager.findFirstVisibleItemPosition();
+
+                        if (loading) {
+
+                            if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                                loading = false;
+                                //Do pagination.. i.e. fetch new data
+                                recyclerScrollListener.onLoadMore();
+
+
+                            }
+                        }
+                    }
+                    */
+                }
+
+            });
+
+        }
+
+
+        public void setData(Post post, int position) {
         }
 
         public void updatePostList(int position) {
-
             otherProfilePostAdapter.updatePostListItems(postList);
         }
 
-
+        public void loadMorePost(){
+            otherProfilePostAdapter.addAll(addedPostList);
+        }
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
@@ -497,15 +553,30 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         notifyItemRangeChanged(1, 1, post);
     }
 
+    public void loadMorePost(List<Post> addedPostList) {
+        if (addedPostList != null) {
+            this.addedPostList.clear();
+            this.addedPostList.addAll(addedPostList);
+            this.postList.addAll(addedPostList);
+            Post post = new Post(); //just to recognize the 'instance of'
+            operationType = OPERATION_TYPE_LOAD_MORE;
+            notifyItemRangeChanged(1, 1, post);
+        }
+    }
+
     public void addProgressLoading() {
-        ProgressBar progressBar = new ProgressBar(mContext);
-        objectList.add(progressBar);
-        notifyItemInserted(objectList.size() - 1);
+        if(getItemViewType(objectList.size() - 1) != VIEW_PROG){
+            ProgressBar progressBar = new ProgressBar(mContext);
+            objectList.add(progressBar);
+            notifyItemInserted(objectList.size() - 1);
+        }
     }
 
     public void removeProgressLoading() {
-        objectList.remove(objectList.size() - 1);
-        notifyItemRemoved(objectList.size());
+        if(getItemViewType(objectList.size() - 1) != VIEW_PROG){
+            objectList.remove(objectList.size() - 1);
+            notifyItemRemoved(objectList.size());
+        }
     }
 
     public boolean isShowingProgressLoading() {
@@ -515,8 +586,13 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             return false;
     }
 
+
     public void setFollowClickCallback(FollowClickCallback followClickCallback) {
         this.followClickCallback = followClickCallback;
+    }
+
+    public void setInnerRecyclerScrollListener(RecyclerScrollListener recyclerScrollListener) {
+        this.recyclerScrollListener = recyclerScrollListener;
     }
 
 }

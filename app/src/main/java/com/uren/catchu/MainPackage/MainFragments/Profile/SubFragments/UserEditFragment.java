@@ -103,6 +103,9 @@ public class UserEditFragment extends BaseFragment
     Spinner genderSpinner;
     @BindArray(R.array.gender)
     String[] GENDERS;
+    @BindArray(R.array.genderForServer)
+    String[] GENDERS_FOR_SERVER;
+
 
     PermissionModule permissionModule;
     PhotoSelectUtil photoSelectUtil;
@@ -184,7 +187,7 @@ public class UserEditFragment extends BaseFragment
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGender = genderSpinner.getSelectedItem().toString();
+                selectedGender = GENDERS[position];
             }
 
             @Override
@@ -236,8 +239,12 @@ public class UserEditFragment extends BaseFragment
             }
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getGender() != null &&
                     !AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().isEmpty()) {
-                genderSpinner.setSelection(genderSpinnerAdapter.getPosition(AccountHolderInfo.getInstance().getUser().getUserInfo().getGender()));
-                selectedGender = AccountHolderInfo.getInstance().getUser().getUserInfo().getGender();
+                for(int i=0; i<GENDERS_FOR_SERVER.length; i++){
+                    if(AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().equals(GENDERS_FOR_SERVER[i])){
+                        selectedGender = GENDERS[i];
+                    }
+                }
+                genderSpinner.setSelection(genderSpinnerAdapter.getPosition(selectedGender));
             }
 
             if(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl() != null &&
@@ -383,9 +390,14 @@ public class UserEditFragment extends BaseFragment
         userProfileProperties.setPhone(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone());
 
         if (selectedGender.isEmpty()) {
-            userProfileProperties.setGender("");
+            userProfileProperties.setGender(GENDERS_FOR_SERVER[GENDERS_FOR_SERVER.length -1]);
         } else {
-            userProfileProperties.setGender(selectedGender);
+
+            for(int i=0; i<GENDERS.length; i++){
+                if(selectedGender.equals(GENDERS[i])){
+                    userProfileProperties.setGender(GENDERS_FOR_SERVER[i]);
+                }
+            }
         }
 
         updateOperation(userProfileProperties);
