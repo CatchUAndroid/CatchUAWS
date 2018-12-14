@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,11 +22,13 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.GridViewUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
@@ -37,6 +40,7 @@ import catchu.model.Post;
 import catchu.model.User;
 import catchu.model.UserProfile;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
@@ -184,6 +188,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         String followStatus;
         int followingCount, followerCount;
 
+        Button sendMessageBtn;
+
         public ProfileHeaderViewHolder(View view) {
             super(view);
 
@@ -195,6 +201,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
             txtFollowerCnt = (TextView) view.findViewById(R.id.txtFollowerCnt);
             txtFollowingCnt = (TextView) view.findViewById(R.id.txtFollowingCnt);
+            sendMessageBtn = (Button) view.findViewById(R.id.sendMessageBtn);
 
             txtFollowerCnt.setClickable(false);
             txtFollowingCnt.setClickable(false);
@@ -209,6 +216,13 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     btnFollowStatusClicked();
+                }
+            });
+
+            sendMessageBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fragmentNavigation.pushFragment(new MessageWithPersonFragment(selectedUser), ANIMATE_LEFT_TO_RIGHT);
                 }
             });
         }
@@ -226,6 +240,10 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             if (isValid(selectedUser.getName())) {
                 txtName.setText(selectedUser.getName());
             }
+
+            //send msg button
+            sendMessageBtn.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.White, null),
+                    mContext.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
 
         }
 
