@@ -60,9 +60,10 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private FollowClickCallback followClickCallback;
     private RecyclerScrollListener recyclerScrollListener;
 
-    private int operationType = -1;
+    private static final int OPERATION_TYPE_NONE = -1;
     private static final int OPERATION_TYPE_LOAD_MORE = 0;
-
+    private static final int OPERATION_TYPE_UPDATE_POST = 1;
+    private int operationType = OPERATION_TYPE_NONE;
 
     public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
@@ -135,11 +136,15 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
                 if (payload instanceof Post) {
                     if (holder instanceof PostViewHolder) {
-                        if(operationType == OPERATION_TYPE_LOAD_MORE){
-                            ((PostViewHolder) holder).loadMorePost();
-                        }else{
+
+                        if(operationType == OPERATION_TYPE_UPDATE_POST){
                             ((PostViewHolder) holder).updatePostList(position);
+                        }else if(operationType == OPERATION_TYPE_LOAD_MORE){
+                            ((PostViewHolder) holder).loadMorePost();
                         }
+
+                        operationType = OPERATION_TYPE_NONE;
+
                     }
                 }
 
@@ -549,6 +554,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     public void updatePosts(List<Post> addedPostList) {
         this.postList.clear();
         this.postList.addAll(addedPostList);
+        operationType = OPERATION_TYPE_UPDATE_POST;
         Post post = new Post(); //just to recognize the 'instance of'
         notifyItemRangeChanged(1, 1, post);
     }
@@ -573,7 +579,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     }
 
     public void removeProgressLoading() {
-        if(getItemViewType(objectList.size() - 1) != VIEW_PROG){
+        if(getItemViewType(objectList.size() - 1) == VIEW_PROG){
             objectList.remove(objectList.size() - 1);
             notifyItemRemoved(objectList.size());
         }

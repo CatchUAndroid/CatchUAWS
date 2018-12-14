@@ -104,6 +104,7 @@ public class OtherProfileFragment extends BaseFragment
     private boolean pulledToRefreshHeader = false;
     private boolean pulledToRefreshPost = false;
     private boolean isFirstFetch = false;
+    private boolean isPostsFetchedOnce = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt, pageCnt, innerRecyclerPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
@@ -174,6 +175,7 @@ public class OtherProfileFragment extends BaseFragment
     private void initRecyclerView() {
 
         isFirstFetch = true;
+        isFirstFetch = false;
         setLayoutManager();
         setAdapter();
         setPullToRefresh();
@@ -228,21 +230,14 @@ public class OtherProfileFragment extends BaseFragment
             public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if(innerRecyclerPageCnt != 1){
-
-                }
-
-
                 if (!recyclerView.canScrollVertically(1) ) {
-                    innerRecyclerPageCnt++;
-                    if(innerRecyclerPageCnt == 1){
-                        CommonUtils.showCustomToast(getContext(),  "end");
-                        //loading = false;
-
-                        //getPosts();
-                        otherProfileAdapter.addProgressLoading();
+                    if(isPostsFetchedOnce){
+                        if(!otherProfileAdapter.isShowingProgressLoading()){
+                            otherProfileAdapter.addProgressLoading();
+                            innerRecyclerPageCnt++;
+                            getPosts();
+                        }
                     }
-
                 }
 
 
@@ -435,7 +430,7 @@ public class OtherProfileFragment extends BaseFragment
                     }*/
                     setPostsInRecyclerView(postListResponse);
                 }
-
+                isPostsFetchedOnce=true;
                 refresh_layout.setRefreshing(false);
 
             }
