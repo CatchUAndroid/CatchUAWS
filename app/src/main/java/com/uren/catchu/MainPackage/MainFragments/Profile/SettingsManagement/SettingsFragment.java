@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.DynamicLinkUtil;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -63,12 +65,19 @@ public class SettingsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-        mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
-        ButterKnife.bind(this, mView);
-        init();
-        setDefaultUIValues();
-        addListeners();
+        try {
+            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
+            ButterKnife.bind(this, mView);
+            init();
+            setDefaultUIValues();
+            addListeners();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
         return mView;
     }
 
@@ -84,81 +93,95 @@ public class SettingsFragment extends BaseFragment {
     }
 
     public void setDefaultUIValues() {
-        toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
+        try {
+            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
 
-        if (AccountHolderInfo.getInstance().getUser() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount())
-            privateAccSwitch.setChecked(true);
-        else
-            privateAccSwitch.setChecked(false);
+            if (AccountHolderInfo.getInstance().getUser() != null &&
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount())
+                privateAccSwitch.setChecked(true);
+            else
+                privateAccSwitch.setChecked(false);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     public void addListeners() {
 
-        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
-
-        logoutLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signOutClicked();
-            }
-        });
-
-        addFromFacebookLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startFacebookFriendsFragment();
-            }
-        });
-
-        addFromContactLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startContactFriendsFragment();
-            }
-        });
-
-        inviteForInstallLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DynamicLinkUtil.shareShortDynamicLink(getContext(), fragment);
-            }
-        });
-
-        changePasswordLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startChangePasswordFragment();
-            }
-        });
-
-        problemInformLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startNotifyProblemFragment();
-            }
-        });
-
-        privateAccSwitch.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        SettingOperation.changeUserPrivacy(getContext(), privateAccSwitch);
-                        break;
-                    default:
-                        break;
+        try {
+            commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
                 }
-                return false;
-            }
-        });
+            });
+
+            logoutLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    signOutClicked();
+                }
+            });
+
+            addFromFacebookLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startFacebookFriendsFragment();
+                }
+            });
+
+            addFromContactLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startContactFriendsFragment();
+                }
+            });
+
+            inviteForInstallLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DynamicLinkUtil.shareShortDynamicLink(getContext(), fragment);
+                }
+            });
+
+            changePasswordLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startChangePasswordFragment();
+                }
+            });
+
+            problemInformLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startNotifyProblemFragment();
+                }
+            });
+
+            privateAccSwitch.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            SettingOperation.changeUserPrivacy(getContext(), privateAccSwitch);
+                            break;
+                        default:
+                            break;
+                    }
+                    return false;
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void startFacebookFriendsFragment() {
@@ -188,8 +211,15 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void signOutClicked() {
-        SettingOperation.userSignOut();
-        getActivity().finish();
-        startActivity(new Intent(getActivity(), MainActivity.class));
+        try {
+            SettingOperation.userSignOut();
+            getActivity().finish();
+            startActivity(new Intent(getActivity(), MainActivity.class));
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

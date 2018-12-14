@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Rep
 
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -10,6 +11,7 @@ import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -72,123 +74,158 @@ public class SaveReportProblemProcess {
 
     private void startSaveReportImagesToS3(String token) {
 
-        signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                commonS3BucketResult = (BucketUploadResponse) object;
-                saveImages();
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                completeCallback.onFailed(e);
-                signedUrlGetProcess.cancel(true);
-            }
-
-            @Override
-            public void onTaskContinue() {
-
-            }
-        }, imageCount, 0, token);
-
-        signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
-
-    public void saveImages() {
-        if (bucketIndex < imageCount) {
-            uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+        try {
+            signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
-
-                    HttpURLConnection urlConnection = (HttpURLConnection) object;
-
-                    try {
-                        if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                            Media media = new Media();
-                            media.setExtension(commonS3BucketResult.getImages().get(bucketIndex).getExtension());
-                            media.setType(IMAGE_TYPE);
-                            media.setThumbnail(commonS3BucketResult.getImages().get(bucketIndex).getThumbnailUrl());
-                            media.setUrl(commonS3BucketResult.getImages().get(bucketIndex).getDownloadUrl());
-                            mediaList.add(media);
-                            checkTaskCompleted();
-                            bucketIndex++;
-                            saveImages();
-                        } else {
-                            InputStream is = urlConnection.getErrorStream();
-                            completeCallback.onFailed(new Exception(is.toString()));
-                            deleteUploadedItems();
-                            uploadImageToS3.cancel(true);
-                        }
-                    } catch (IOException e) {
-                        completeCallback.onFailed(e);
-                        deleteUploadedItems();
-                        uploadImageToS3.cancel(true);
-                    }
+                    commonS3BucketResult = (BucketUploadResponse) object;
+                    saveImages();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     completeCallback.onFailed(e);
-                    deleteUploadedItems();
-                    uploadImageToS3.cancel(true);
+                    signedUrlGetProcess.cancel(true);
                 }
 
                 @Override
                 public void onTaskContinue() {
 
                 }
-            }, photoSelectUtilList.get(bucketIndex).getBitmap(),
-                    commonS3BucketResult.getImages().get(bucketIndex).getUploadUrl());
-            uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }, imageCount, 0, token);
+
+            signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void saveImages() {
+        try {
+            if (bucketIndex < imageCount) {
+                uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
+
+                        HttpURLConnection urlConnection = (HttpURLConnection) object;
+
+                        try {
+                            if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                                Media media = new Media();
+                                media.setExtension(commonS3BucketResult.getImages().get(bucketIndex).getExtension());
+                                media.setType(IMAGE_TYPE);
+                                media.setThumbnail(commonS3BucketResult.getImages().get(bucketIndex).getThumbnailUrl());
+                                media.setUrl(commonS3BucketResult.getImages().get(bucketIndex).getDownloadUrl());
+                                mediaList.add(media);
+                                checkTaskCompleted();
+                                bucketIndex++;
+                                saveImages();
+                            } else {
+                                InputStream is = urlConnection.getErrorStream();
+                                completeCallback.onFailed(new Exception(is.toString()));
+                                deleteUploadedItems();
+                                uploadImageToS3.cancel(true);
+                            }
+                        } catch (IOException e) {
+                            completeCallback.onFailed(e);
+                            deleteUploadedItems();
+                            uploadImageToS3.cancel(true);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        completeCallback.onFailed(e);
+                        deleteUploadedItems();
+                        uploadImageToS3.cancel(true);
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+
+                    }
+                }, photoSelectUtilList.get(bucketIndex).getBitmap(),
+                        commonS3BucketResult.getImages().get(bucketIndex).getUploadUrl());
+                uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
     public void checkTaskCompleted() {
-        if ((bucketIndex + 1) == imageCount)
-            saveReportProblem();
+        try {
+            if ((bucketIndex + 1) == imageCount)
+                saveReportProblem();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void saveReportProblem() {
-        report.setType(REPORT_PROBLEM_TYPE_BUG);
-        report.setMessage(message);
-        if (mediaList != null && mediaList.size() > 0)
-            report.setAttachments(mediaList);
-        report.setIsFixed(false);
+        try {
+            report.setType(REPORT_PROBLEM_TYPE_BUG);
+            report.setMessage(message);
+            if (mediaList != null && mediaList.size() > 0)
+                report.setAttachments(mediaList);
+            report.setIsFixed(false);
 
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startSaveReportProblem(token);
-            }
-        });
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startSaveReportProblem(token);
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void startSaveReportProblem(String token) {
 
-        ReportProblemProcess reportProblemProcess = new ReportProblemProcess(new OnEventListener() {
-            @Override
-            public void onSuccess(Object object) {
-                BaseResponse baseResponse = (BaseResponse) object;
+        try {
+            ReportProblemProcess reportProblemProcess = new ReportProblemProcess(new OnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    BaseResponse baseResponse = (BaseResponse) object;
 
-                if (baseResponse == null) {
-                    completeCallback.onFailed(new Exception(context.getResources().getString(R.string.serverError)));
+                    if (baseResponse == null) {
+                        completeCallback.onFailed(new Exception(context.getResources().getString(R.string.serverError)));
+                        deleteUploadedItems();
+                    } else
+                        completeCallback.onComplete(null);
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    completeCallback.onFailed(e);
                     deleteUploadedItems();
-                } else
-                    completeCallback.onComplete(null);
-            }
+                }
 
-            @Override
-            public void onFailure(Exception e) {
-                completeCallback.onFailed(e);
-                deleteUploadedItems();
-            }
+                @Override
+                public void onTaskContinue() {
 
-            @Override
-            public void onTaskContinue() {
-
-            }
-        }, userid, token, report, "");
-        reportProblemProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                }
+            }, userid, token, report, "");
+            reportProblemProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void deleteUploadedItems() {
@@ -201,24 +238,31 @@ public class SaveReportProblemProcess {
     }
 
     public void startDeleteUploadedItems(String token) {
-        if (commonS3BucketResult != null) {
-            SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
+        try {
+            if (commonS3BucketResult != null) {
+                SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
+                    @Override
+                    public void onSuccess(Object object) {
 
-                }
+                    }
 
-                @Override
-                public void onFailure(Exception e) {
+                    @Override
+                    public void onFailure(Exception e) {
 
-                }
+                    }
 
-                @Override
-                public void onTaskContinue() {
+                    @Override
+                    public void onTaskContinue() {
 
-                }
-            }, userid, token, commonS3BucketResult);
-            signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                }, userid, token, commonS3BucketResult);
+                signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 }
