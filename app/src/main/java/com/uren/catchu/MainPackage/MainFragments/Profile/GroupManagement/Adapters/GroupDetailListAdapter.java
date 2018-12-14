@@ -159,6 +159,9 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             user.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());
             user.setUserid(userProfile.getUserid());
             user.setIsPrivateAccount(userProfile.getIsPrivateAccount());
+            user.setName(userProfile.getName());
+            user.setUsername(userProfile.getUsername());
+            user.setProvider(userProfile.getProvider());
             return user;
         }
 

@@ -1,7 +1,11 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,13 +13,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -27,27 +32,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.uren.catchu.GeneralUtils.ClickableImage.EffectTouchListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
-import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.UserGroupsListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.ViewGroupDetailFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.ModelViews.PaintView;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -56,10 +52,9 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.User;
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
@@ -81,7 +76,7 @@ public class MessageWithPersonFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.messageEdittext)
-    EditText messageEdittext;
+    hani.momanii.supernova_emoji_library.Helper.EmojiconEditText messageEdittext;
     @BindView(R.id.sendMessageBtn)
     Button sendMessageBtn;
     @BindView(R.id.dateLayout)
@@ -111,6 +106,12 @@ public class MessageWithPersonFragment extends BaseFragment {
     ImageView deleteMsgImgv;
     @BindView(R.id.deleteMsgCntTv)
     TextView deleteMsgCntTv;
+    @BindView(R.id.edittextRelLayout)
+    RelativeLayout edittextRelLayout;
+    @BindView(R.id.smileyImgv)
+    ImageView smileyImgv;
+    @BindView(R.id.mainLinearLayout)
+    View mainLinearLayout;
 
     User chattedUser;
     DatabaseReference databaseReference;
@@ -123,6 +124,7 @@ public class MessageWithPersonFragment extends BaseFragment {
     boolean itemAdded = false;
     boolean adapterLoaded = false;
     MessageBox lastAddedMessage;
+
 
     public MessageWithPersonFragment(User chattedUser) {
         this.chattedUser = chattedUser;
@@ -149,9 +151,14 @@ public class MessageWithPersonFragment extends BaseFragment {
             initVariables();
             addListeners();
             getUsersMessaging();
+            EmojIconActions emojIcon = new EmojIconActions(getContext(), mainLinearLayout, messageEdittext, smileyImgv);
+            emojIcon.ShowEmojIcon();
+            //emojIcon.setUseSystemEmoji(true);
+            //messageEdittext.setUseSystemDefault(true);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return mView;
@@ -170,9 +177,15 @@ public class MessageWithPersonFragment extends BaseFragment {
             dateLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 15, 0));
             setChattedPersonInfo();
+            smileyImgv.setColorFilter(getContext().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
+            edittextRelLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                    getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
+            sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.RECTANGLE, 25, 0));
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -188,14 +201,16 @@ public class MessageWithPersonFragment extends BaseFragment {
             if (chattedUser != null && chattedUser.getUsername() != null && !chattedUser.getUsername().isEmpty())
                 toolbarSubTitle.setText(CHAR_AMPERSAND + chattedUser.getUsername());
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
 
     public void addListeners() {
         try {
+
             deleteMsgImgv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -284,12 +299,14 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -302,8 +319,9 @@ public class MessageWithPersonFragment extends BaseFragment {
             messageWithPersonAdapter.setDeleteActivated(false);
             deleteMsgCntTv.setText("");
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -315,8 +333,9 @@ public class MessageWithPersonFragment extends BaseFragment {
             }
             messageWithPersonAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -389,8 +408,9 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -407,8 +427,9 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             System.out.println("messageKey:" + messageKey);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return messageKey;
@@ -442,8 +463,9 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             messageBoxList.add(messageBox);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -479,8 +501,9 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -506,8 +529,9 @@ public class MessageWithPersonFragment extends BaseFragment {
             recyclerView.setLayoutManager(linearLayoutManager);
             setAdapterVal = true;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -543,8 +567,9 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -555,10 +580,29 @@ public class MessageWithPersonFragment extends BaseFragment {
         try {
             databaseReference.removeEventListener(valueEventListener);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithPersonFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
+
+    /*@Override
+    public void onEmojiconBackspaceClicked(View v) {
+        EmojiconsFragment.backspace(messageEdittext);
+    }
+
+    @Override
+    public void onEmojiconClicked(Emojicon emojicon) {
+        EmojiconsFragment.input(messageEdittext, emojicon);
+    }
+
+    private void setEmojiconFragment(boolean useSystemDefault) {
+
+        getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.emojicons, EmojiconsFragment.newInstance(useSystemDefault))
+                .commit();
+    }*/
 }
 

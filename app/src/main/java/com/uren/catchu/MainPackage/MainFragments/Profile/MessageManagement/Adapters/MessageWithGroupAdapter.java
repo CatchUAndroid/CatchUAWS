@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGroupAdapter.MyViewHolder> {
 
     private Context context;
@@ -58,7 +60,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView messageTv;
+        EmojiconTextView messageTv;
         TextView createAtTv;
         TextView senderNameTv;
         CardView messageCardview;

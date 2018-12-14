@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -53,6 +54,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.User;
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
@@ -76,7 +78,7 @@ public class MessageWithGroupFragment extends BaseFragment {
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.messageEdittext)
-    EditText messageEdittext;
+    hani.momanii.supernova_emoji_library.Helper.EmojiconEditText messageEdittext;
     @BindView(R.id.sendMessageBtn)
     Button sendMessageBtn;
     @BindView(R.id.dateLayout)
@@ -104,6 +106,12 @@ public class MessageWithGroupFragment extends BaseFragment {
     ImageView deleteMsgImgv;
     @BindView(R.id.deleteMsgCntTv)
     TextView deleteMsgCntTv;
+    @BindView(R.id.edittextRelLayout)
+    RelativeLayout edittextRelLayout;
+    @BindView(R.id.smileyImgv)
+    ImageView smileyImgv;
+    @BindView(R.id.mainLinearLayout)
+    View mainLinearLayout;
 
     GroupRequestResultResultArrayItem chattedGroup;
     DatabaseReference databaseReference;
@@ -142,6 +150,10 @@ public class MessageWithGroupFragment extends BaseFragment {
             initVariables();
             addListeners();
             getGroupMessaging();
+            EmojIconActions emojIcon = new EmojIconActions(getContext(), mainLinearLayout, messageEdittext, smileyImgv);
+            emojIcon.ShowEmojIcon();
+            //emojIcon.setUseSystemEmoji(true);
+            //messageEdittext.setUseSystemDefault(true);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -163,6 +175,11 @@ public class MessageWithGroupFragment extends BaseFragment {
             dateLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 15, 0));
             setChattedGroupInfo();
+            smileyImgv.setColorFilter(getContext().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
+            edittextRelLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                    getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
+            sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.RECTANGLE, 25, 0));
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());

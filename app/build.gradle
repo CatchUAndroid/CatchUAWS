@@ -43,6 +43,7 @@ dependencies {
     //implementation 'com.github.florent37:bubbletab:1.0.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.16'
+    implementation 'com.github.hani-momanii:SuperNova-Emoji:1.1'
     //implementation 'com.github.Shashank02051997:FancyGifDialog-Android:1.1'
     //**************** MY DEPENDENCIES *******************//
     /*=======UTILS=========*/

@@ -43,6 +43,7 @@ import catchu.model.FollowInfoListResponse;
 import catchu.model.FriendRequestList;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
@@ -81,7 +82,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        TextView messageTv;
+        EmojiconTextView messageTv;
         TextView createAtTv;
         CardView messageCardview;
         RelativeLayout mainRelLayout;

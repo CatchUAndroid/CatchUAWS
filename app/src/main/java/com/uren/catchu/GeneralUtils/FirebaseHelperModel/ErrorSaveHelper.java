@@ -50,9 +50,10 @@ public class ErrorSaveHelper {
 
         mFirebaseAnalytics.logEvent(eventName, bundle);
 
+        // TODO: 14.12.2018 - DB ye yazma adimlari silinecek
 
 
-        /*DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_ERRORS).child(FB_CHILD_ANDROID)
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_ERRORS).child(FB_CHILD_ANDROID)
                 .child(className).child(methodName);
 
         Map<String, String> errorVal = new HashMap<>();
@@ -63,6 +64,6 @@ public class ErrorSaveHelper {
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
 
             }
-        });*/
+        });
     }
 }
