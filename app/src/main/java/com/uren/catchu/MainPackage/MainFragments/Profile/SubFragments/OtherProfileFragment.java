@@ -9,10 +9,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -71,7 +73,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 public class OtherProfileFragment extends BaseFragment
         implements View.OnClickListener,
         FollowClickCallback,
-        RecyclerScrollListener{
+        RecyclerScrollListener {
 
     View mView;
     UserInfoListItem userInfoListItem;
@@ -105,6 +107,7 @@ public class OtherProfileFragment extends BaseFragment
     private boolean pulledToRefreshPost = false;
     private boolean isFirstFetch = false;
     private boolean isPostsFetchedOnce = false;
+    private boolean isMoreItemAvailable = true;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt, pageCnt, innerRecyclerPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
@@ -197,6 +200,11 @@ public class OtherProfileFragment extends BaseFragment
         otherProfileAdapter.addHeader(userInfoListItem);
         otherProfileAdapter.setFollowClickCallback(this);
         otherProfileAdapter.setInnerRecyclerScrollListener(this);
+
+        //recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setHasFixedSize(true);
+
+
     }
 
     private void setPullToRefresh() {
@@ -225,12 +233,27 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setRecyclerViewScroll() {
 
+
+
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (!recyclerView.canScrollVertically(1) ) {
+
+                int x = customLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                if(x == 2 && isMoreItemAvailable){
+                    CommonUtils.showCustomToast(getContext(), "sondayız");
+                    otherProfileAdapter.addProgressLoading();
+                    innerRecyclerPageCnt++;
+                    getPosts();
+                }
+
+
+
+                /*
+                if(x==1){
                     if(isPostsFetchedOnce){
                         if(!otherProfileAdapter.isShowingProgressLoading()){
                             otherProfileAdapter.addProgressLoading();
@@ -239,35 +262,12 @@ public class OtherProfileFragment extends BaseFragment
                         }
                     }
                 }
-
-
-
-
-/*
-                if (dy > 0) //check for scroll down
-                {
-                    visibleItemCount = customLinearLayoutManager.getChildCount();
-                    totalItemCount = customLinearLayoutManager.getItemCount();
-                    pastVisibleItems = customLinearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (loading) {
-
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            loading = false;
-                            Log.v("...", "Last Item Wow !");
-                            //Do pagination.. i.e. fetch new data
-                            pageCnt++;
-                            //otherProfileAdapter.addProgressLoading();
-                            //getPosts();
-
-                        }
-                    }
-                }
                 */
 
             }
 
         });
+
 
     }
 
@@ -415,7 +415,7 @@ public class OtherProfileFragment extends BaseFragment
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
 
-                if(otherProfileAdapter.isShowingProgressLoading()){
+                if (otherProfileAdapter.isShowingProgressLoading()) {
                     otherProfileAdapter.removeProgressLoading();
                 }
 
@@ -428,9 +428,15 @@ public class OtherProfileFragment extends BaseFragment
                     } else {
                         //showNoFeedLayout(false, 0);
                     }*/
-                    setPostsInRecyclerView(postListResponse);
+                 if(postListResponse.getItems().size() != 0){
+                     setPostsInRecyclerView(postListResponse);
+                     isMoreItemAvailable=true;
+                 }else{
+                     isMoreItemAvailable=false;
+                 }
+
                 }
-                isPostsFetchedOnce=true;
+                isPostsFetchedOnce = true;
                 refresh_layout.setRefreshing(false);
 
             }
@@ -439,7 +445,7 @@ public class OtherProfileFragment extends BaseFragment
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
 
-                if(otherProfileAdapter.isShowingProgressLoading()){
+                if (otherProfileAdapter.isShowingProgressLoading()) {
                     otherProfileAdapter.removeProgressLoading();
                 }
 
@@ -489,9 +495,10 @@ public class OtherProfileFragment extends BaseFragment
             otherProfileAdapter.updatePosts(postListResponse.getItems());
             pulledToRefreshPost = false;
         } else {
-            if(innerRecyclerPageCnt == 1){
+            if (innerRecyclerPageCnt == 1) {
                 otherProfileAdapter.addPosts(postListResponse.getItems());
-            }else{
+                otherProfileAdapter.addLastItem();
+            } else {
                 otherProfileAdapter.loadMorePost(postListResponse.getItems());
             }
         }
@@ -560,7 +567,6 @@ public class OtherProfileFragment extends BaseFragment
             return false;
         }
     }
-
 
 
 }

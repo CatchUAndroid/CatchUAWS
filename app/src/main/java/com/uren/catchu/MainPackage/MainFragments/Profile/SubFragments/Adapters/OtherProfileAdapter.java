@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
@@ -8,10 +9,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -29,9 +32,12 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickC
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +60,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     public static final int VIEW_HEADER = 0;
     public static final int VIEW_ITEM = 1;
     public static final int VIEW_PROG = 2;
+    public static final int VIEW_LAST_ITEM = 3;
 
     private Activity mActivity;
     private Context mContext;
@@ -87,6 +94,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             return VIEW_ITEM;
         } else if (objectList.get(position) instanceof ProgressBar) {
             return VIEW_PROG;
+        } else if (objectList.get(position) instanceof String) {
+            return VIEW_LAST_ITEM;
         } else {
             return VIEW_PROG;
         }
@@ -111,6 +120,11 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                     .inflate(R.layout.profile_shared_post_view, parent, false);
 
             viewHolder = new OtherProfileAdapter.PostViewHolder(itemView);
+        } else if (viewType == VIEW_LAST_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.recycler_row, parent, false);
+
+            viewHolder = new OtherProfileAdapter.LastItemViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.progressbar_item, parent, false);
@@ -141,9 +155,9 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 if (payload instanceof Post) {
                     if (holder instanceof PostViewHolder) {
 
-                        if(operationType == OPERATION_TYPE_UPDATE_POST){
+                        if (operationType == OPERATION_TYPE_UPDATE_POST) {
                             ((PostViewHolder) holder).updatePostList(position);
-                        }else if(operationType == OPERATION_TYPE_LOAD_MORE){
+                        } else if (operationType == OPERATION_TYPE_LOAD_MORE) {
                             ((PostViewHolder) holder).loadMorePost();
                         }
 
@@ -166,6 +180,9 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         } else if (holder instanceof OtherProfileAdapter.PostViewHolder) {
             Post post = (Post) objectList.get(position);
             ((OtherProfileAdapter.PostViewHolder) holder).setData(post, position);
+        } else if (holder instanceof OtherProfileAdapter.LastItemViewHolder) {
+            String s = (String) objectList.get(position);
+            ((OtherProfileAdapter.LastItemViewHolder) holder).setData(s, position);
         } else {
             ((OtherProfileAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
@@ -400,6 +417,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 public void yesClick() {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
                 }
+
                 @Override
                 public void noClick() {
                 }
@@ -469,25 +487,26 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         }
 
+        @SuppressLint("ClickableViewAccessibility")
         private void setAdapter() {
             otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation);
             gridRecyclerView.setAdapter(otherProfilePostAdapter);
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
             otherProfilePostAdapter.addAll(postList);
+            //gridRecyclerView.setNestedScrollingEnabled(false);
 
         }
 
         private void setRecyclerViewScroll() {
 
             gridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
                 @Override
                 public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                     super.onScrolled(recyclerView, dx, dy);
 
-                    if (!recyclerView.canScrollVertically(1) ) {
-                        CommonUtils.showCustomToast(mContext,  "end");
-                    }
+                    CommonUtils.showCustomToast(mContext, "Scrolling inner RV");
 
 
                     /*
@@ -523,7 +542,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             otherProfilePostAdapter.updatePostListItems(postList);
         }
 
-        public void loadMorePost(){
+        public void loadMorePost() {
             otherProfilePostAdapter.addAll(addedPostList);
         }
     }
@@ -534,6 +553,19 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         public ProgressViewHolder(View v) {
             super(v);
             progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+        }
+    }
+
+    public static class LastItemViewHolder extends RecyclerView.ViewHolder {
+        public TextView textView;
+
+        public LastItemViewHolder(View v) {
+            super(v);
+            textView = (TextView) v.findViewById(R.id.tvRv);
+        }
+
+        public void setData(String s, int position) {
+            textView.setText(s);
         }
     }
 
@@ -589,15 +621,21 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     }
 
     public void addProgressLoading() {
-        if(getItemViewType(objectList.size() - 1) != VIEW_PROG){
+        if (getItemViewType(objectList.size() - 1) != VIEW_PROG) {
             ProgressBar progressBar = new ProgressBar(mContext);
             objectList.add(progressBar);
             notifyItemInserted(objectList.size() - 1);
         }
     }
 
+    public void addLastItem() {
+        String s = "SON";
+        objectList.add(s);
+        notifyItemRangeInserted(2, 1);
+    }
+
     public void removeProgressLoading() {
-        if(getItemViewType(objectList.size() - 1) == VIEW_PROG){
+        if (getItemViewType(objectList.size() - 1) == VIEW_PROG) {
             objectList.remove(objectList.size() - 1);
             notifyItemRemoved(objectList.size());
         }
