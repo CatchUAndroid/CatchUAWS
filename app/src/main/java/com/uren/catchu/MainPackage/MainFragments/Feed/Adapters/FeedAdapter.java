@@ -41,7 +41,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import catchu.model.Post;
+import catchu.model.Report;
 
+import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_INAPPROPIATE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
@@ -209,10 +211,14 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onReportSelected() {
+                            Report report = new Report();
+                            report.setType(REPORT_PROBLEM_TYPE_INAPPROPIATE);
+                            PostHelper.ReportPost.startProcess(mContext, AccountHolderInfo.getUserID(), post.getPostid(), report);
                         }
 
                         @Override
                         public void onUnFollowSelected() {
+                            // todo NT -
                         }
 
                         @Override

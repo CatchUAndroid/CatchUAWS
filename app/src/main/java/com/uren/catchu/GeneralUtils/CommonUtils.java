@@ -44,6 +44,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -386,5 +387,46 @@ public class CommonUtils {
         TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(context.getResources().getColor(R.color.White, null));
         snackbar.show();
+    }
+
+    public static int getRandomColor(Context context) {
+
+        Resources resources = context.getResources();
+
+        int colorList[] = {
+                R.color.green,
+                R.color.green,
+                R.color.PeachPuff,
+                R.color.Gold,
+                R.color.Pink,
+                R.color.LightPink,
+                R.color.Orange,
+                R.color.LightSalmon,
+                R.color.DarkOrange,
+                R.color.Coral,
+                R.color.HotPink,
+                R.color.Tomato,
+                R.color.OrangeRed,
+                R.color.DeepPink,
+                R.color.Fuchsia,
+                R.color.Magenta,
+                R.color.LightCoral,
+                R.color.PaleGoldenrod,
+                R.color.Violet,
+                R.color.DarkSalmon,
+                R.color.Lavender,
+                R.color.Yellow,
+                R.color.LightBlue,
+                R.color.DarkGray,
+                R.color.Brown,
+                R.color.Sienna,
+                R.color.Yellow,
+                R.color.DarkOrchid,
+                R.color.PaleGreen,
+                R.color.DarkViolet
+        };
+
+        Random rand = new Random();
+        return colorList[rand.nextInt(colorList.length)];
     }
 }

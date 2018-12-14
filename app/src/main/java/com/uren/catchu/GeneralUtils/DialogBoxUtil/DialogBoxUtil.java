@@ -397,25 +397,34 @@ public class DialogBoxUtil {
                     Resources resources = context.getResources();
                     String selectedItem = myList.get(position);
 
-                    if (selectedItem.equals(resources.getString(R.string.report))) {
-                        postSettingsChoosenCallback.onReportSelected();
-                    } else if (selectedItem.equals(resources.getString(R.string.unfollow))) {
-                        postSettingsChoosenCallback.onUnFollowSelected();
-                    } else if (selectedItem.equals(resources.getString(R.string.disableComment)) ||
-                            selectedItem.equals(resources.getString(R.string.enableComment))) {
-                        postSettingsChoosenCallback.onDisableCommentSelected();
-                    } else if (selectedItem.equals(resources.getString(R.string.delete))) {
-                        String message = context.getResources().getString(R.string.deleteThisPost);
-                        DialogBoxUtil.showYesNoDialog(context, null, message, new YesNoDialogBoxCallback() {
-                            @Override
-                            public void yesClick() {
-                                postSettingsChoosenCallback.onDeletePostSelected();
-                            }
-
-                            @Override
-                            public void noClick() {
-                            }
-                        });
+                if (selectedItem.equals(resources.getString(R.string.report))) {
+                    String message = context.getResources().getString(R.string.reportPostMessage);
+                    DialogBoxUtil.showYesNoDialog(context, null,message, new YesNoDialogBoxCallback() {
+                        @Override
+                        public void yesClick() {
+                            postSettingsChoosenCallback.onReportSelected();
+                        }
+                        @Override
+                        public void noClick() {
+                        }
+                    });
+                } else if (selectedItem.equals(resources.getString(R.string.unfollow)) ||
+                        selectedItem.equals(resources.getString(R.string.follow))) {
+                    postSettingsChoosenCallback.onUnFollowSelected();
+                } else if (selectedItem.equals(resources.getString(R.string.disableComment)) ||
+                        selectedItem.equals(resources.getString(R.string.enableComment))) {
+                    postSettingsChoosenCallback.onDisableCommentSelected();
+                } else if (selectedItem.equals(resources.getString(R.string.delete))) {
+                    String message = context.getResources().getString(R.string.deleteThisPost);
+                    DialogBoxUtil.showYesNoDialog(context, null,message, new YesNoDialogBoxCallback() {
+                        @Override
+                        public void yesClick() {
+                            postSettingsChoosenCallback.onDeletePostSelected();
+                        }
+                        @Override
+                        public void noClick() {
+                        }
+                    });
 
                     }
 

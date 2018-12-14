@@ -29,6 +29,7 @@ import com.uren.catchu.ApiGatewayFunctions.PostCommentProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
+import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -61,6 +62,7 @@ import catchu.model.CommentResponse;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostRequest;
+import catchu.model.Report;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -602,6 +604,69 @@ public class PostHelper {
         }
 
     }
+
+    public static class ReportPost {
+
+        static String userId;
+        static String postId;
+        static Report report;
+
+        public static final void startProcess(Context context, String userId, String postId, Report report) {
+
+            ReportPost.userId = userId;
+            ReportPost.postId = postId;
+            ReportPost.report = report;
+
+            ReportPost reportPost = new ReportPost(context);
+        }
+
+        private ReportPost(Context context) {
+            reportPostProcess(context);
+        }
+
+        private void reportPostProcess(final Context context) {
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startDeletePostProcess(context, token);
+                }
+            });
+        }
+
+        private void startDeletePostProcess(Context context, String token) {
+
+            String userId = ReportPost.userId;
+            String postId = ReportPost.postId;
+            Report report = new Report();
+
+            ReportProblemProcess reportProblemProcess = new ReportProblemProcess(new OnEventListener() {
+                @Override
+                public void onSuccess(Object object) {
+                    if (object == null) {
+                        CommonUtils.LOG_OK_BUT_NULL("ReportProblemProcess");
+                    } else {
+                        CommonUtils.LOG_OK("ReportProblemProcess");
+                    }
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+                    CommonUtils.LOG_FAIL("ReportProblemProcess", e.toString());
+                }
+
+                @Override
+                public void onTaskContinue() {
+
+                }
+            }, userId, token,report, postId);
+
+            reportProblemProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+        }
+
+    }
+
 
     public static class SinglePostClicked {
 

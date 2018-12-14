@@ -17,6 +17,11 @@
         <item>Unspecified</item>
     </array>
 
+    <array name="genderForServer">
+        <item>man</item>
+        <item>woman</item>
+        <item>unspecified</item>
+    </array>
 
     <string name="exitItem">Log Out</string>
     <string name="search">Search</string>
@@ -320,6 +325,7 @@
     <string name="myPosts">My Posts</string>
     <string name="caughtPosts">Caught Posts</string>
     <string name="deleteThisPost">Delete this Post?</string>
+    <string name="reportPostMessage">Do you want to report this post? We will check and take an action immediately.</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Social Interaction</string>

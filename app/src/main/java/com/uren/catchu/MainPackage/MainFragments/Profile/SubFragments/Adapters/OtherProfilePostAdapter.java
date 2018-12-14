@@ -1,8 +1,7 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
@@ -35,30 +34,29 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import catchu.model.Post;
 
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
-
-public class UserPostGridViewAdapter extends RecyclerView.Adapter {
+public class OtherProfilePostAdapter extends RecyclerView.Adapter {
 
     public static final int VIEW_ITEM = 1;
-    public static final int VIEW_PROG = 0;
+    public static final int VIEW_PROG = 2;
+
+    public static String PARTIAL_DATA_LOADING = "PARTIAL_DATA_LOADING";
 
     private Activity mActivity;
-    private Context mContext;
+    public Context mContext;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
 
-    public UserPostGridViewAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
+    public OtherProfilePostAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.postList = new ArrayList<Post>();
-
     }
 
     @Override
@@ -74,12 +72,12 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.user_media_grid_item, parent, false);
 
-            viewHolder = new MyViewHolder(itemView);
+            viewHolder = new OtherProfilePostAdapter.MyViewHolder(itemView);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.progressbar_item, parent, false);
 
-            viewHolder = new ProgressViewHolder(v);
+            viewHolder = new OtherProfilePostAdapter.ProgressViewHolder(v);
         }
         return viewHolder;
 
@@ -88,11 +86,11 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if (holder instanceof MyViewHolder) {
+        if (holder instanceof OtherProfilePostAdapter.MyViewHolder) {
             Post post = postList.get(position);
-            ((MyViewHolder) holder).setData(post, position);
+            ((OtherProfilePostAdapter.MyViewHolder) holder).setData(post, position);
         } else {
-            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            ((OtherProfilePostAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
     }
