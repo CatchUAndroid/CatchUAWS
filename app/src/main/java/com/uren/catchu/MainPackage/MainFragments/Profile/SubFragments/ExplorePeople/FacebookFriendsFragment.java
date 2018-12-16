@@ -201,7 +201,7 @@ public class FacebookFriendsFragment extends BaseFragment {
                 UserInfoListItem userInfoListItem = new UserInfoListItem(user);
                 userInfoListItem.setAdapter(facebookFriendsAdapter);
                 userInfoListItem.setClickedPosition(clickedPosition);
-                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {
             NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);

@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
@@ -68,6 +69,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
+@SuppressLint("ValidFragment")
 public class OtherProfileFragment extends BaseFragment
         implements View.OnClickListener,
         FollowClickCallback,
@@ -122,12 +124,9 @@ public class OtherProfileFragment extends BaseFragment
      *             iii) eger adaptor beslenecek ise onFollowStatusChanged fonksiyonu icerisinde ilgili
      *             adaptor icin kosul eklenmeli..
      */
-    public static OtherProfileFragment newInstance(UserInfoListItem user) {
-        Bundle args = new Bundle();
-        args.putSerializable(ARGS_INSTANCE, user);
-        OtherProfileFragment fragment = new OtherProfileFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public OtherProfileFragment (UserInfoListItem user) {
+        this.userInfoListItem = user;
+        this.selectedUser = user.getUser();
     }
 
     @Override
@@ -144,11 +143,11 @@ public class OtherProfileFragment extends BaseFragment
             mView = inflater.inflate(R.layout.profile_subfragment_other_profile, container, false);
             ButterKnife.bind(this, mView);
 
-            Bundle args = getArguments();
+            /*Bundle args = getArguments();
             if (args != null) {
                 userInfoListItem = (UserInfoListItem) args.getSerializable(ARGS_INSTANCE);
                 selectedUser = userInfoListItem.getUser();
-            }
+            }*/
 
             setInitialValues();
             initRecyclerView();

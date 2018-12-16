@@ -203,15 +203,38 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/sendMessageBtn"
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="10dp"
-        android:src="@mipmap/icon_email"
-        app:layout_anchor="@+id/nestedScrollViewContent"
-        app:layout_anchorGravity="right|bottom" />
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/pendReqCntTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/sendMessageImgv"
+            android:layout_alignTop="@+id/sendMessageImgv"
+            android:background="@drawable/circle_text_bg"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="9dp"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/sendMessageImgv"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="10dp"
+            android:padding="12dp"
+            android:src="@mipmap/icon_email"
+            app:layout_anchor="@+id/nestedScrollViewContent"
+            app:layout_anchorGravity="right|bottom"
+            tools:ignore="NotSibling" />
+
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

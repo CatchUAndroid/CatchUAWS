@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 import catchu.model.User;
 
-public class UserInfoListItem implements Serializable {
+public class UserInfoListItem {
 
     User user;
     int clickedPosition;

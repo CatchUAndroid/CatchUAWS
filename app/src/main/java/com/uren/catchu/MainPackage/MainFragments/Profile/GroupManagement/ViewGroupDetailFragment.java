@@ -315,7 +315,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                         UserInfoListItem userInfoListItem = new UserInfoListItem(user);
                         userInfoListItem.setAdapter(adapter);
                         userInfoListItem.setClickedPosition(clickedItem);
-                        mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                        mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
                     }
                 } else if (clickedItem == CODE_REMOVE_FROM_GROUP) {
                     List<UserProfileProperties> groupParticipantList1 = (List<UserProfileProperties>) object;

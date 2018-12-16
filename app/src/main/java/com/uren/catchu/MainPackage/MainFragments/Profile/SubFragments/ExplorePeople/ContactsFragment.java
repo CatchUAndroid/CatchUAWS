@@ -388,7 +388,7 @@ public class ContactsFragment extends BaseFragment {
                 User user = new User();
                 user.setUserid(userid);
                 UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-                mFragmentNavigation.pushFragment(OtherProfileFragment.newInstance(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } else {
             NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
