@@ -138,11 +138,8 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             rlContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     setSinglePostFragmentItems();
-
                     Log.i("clickedPostId ", postList.get(position).getPostid());
-                    CommonUtils.showCustomToast(mContext, postList.get(position).getPostid());
                 }
             });
 

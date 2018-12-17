@@ -290,6 +290,7 @@
     <string name="posts">Paylaşımlar</string>
     <string name="postsInfo">Kişinin civarda ve herkese açık yaptığı paylaşımlar burada gösterilir. Paylaşım detayı için paylaşıma tıklayabilirsiniz. </string>
     <string name="emptyFeed2">Herhangi bir paylaşım yakalanamadı.</string>
+    <string name="notFound">Bulunamadı</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>

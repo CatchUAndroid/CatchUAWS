@@ -285,7 +285,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
             String toolbarTitle = post.getUser().getUsername();
 
             PostHelper.SinglePostClicked singlePostClickedInstance = PostHelper.SinglePostClicked.getInstance();
-            Integer pstn = postPositionHashMap.get(post.getPostid());
             singlePostClickedInstance.setSinglePostItems(mContext, fragmentNavigation, toolbarTitle, post.getPostid(), postPositionHashMap.get(post.getPostid()));
             singlePostClickedInstance.setPostFeaturesCallback(new PostFeaturesCallback() {
                 @Override

@@ -329,6 +329,7 @@
     <string name="posts">Posts</string>
     <string name="postsInfo">Public and posted around posts of user is shown here. Click post for details. </string>
     <string name="emptyFeed2">No posts caught.</string>
+    <string name="notFound">Not Found.</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Social Interaction</string>

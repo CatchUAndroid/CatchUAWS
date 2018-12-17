@@ -196,7 +196,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
                     setPaginationValues();
                     checkLocationAndRetrievePosts();
                 }
-
             }
         });
     }

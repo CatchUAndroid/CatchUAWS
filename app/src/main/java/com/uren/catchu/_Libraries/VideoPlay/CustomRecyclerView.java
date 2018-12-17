@@ -68,7 +68,7 @@ public class CustomRecyclerView extends RecyclerView {
             public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
 
-                playAvailableVideos(newState);
+                //playAvailableVideos(newState);  /*açılırsa scroll edildiğinde patlıyor, düzenlenmesi gerekecek*/
             }
 
             @Override
@@ -149,6 +149,7 @@ public class CustomRecyclerView extends RecyclerView {
                     for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
                         final RecyclerView.ViewHolder holder = findViewHolderForAdapterPosition(i);
                         try {
+
                             CustomViewHolder cvh = (CustomViewHolder) holder;
 
                             if (i >= 0 && cvh != null && (cvh.getVideoUrl().endsWith(".mp4") || !checkForMp4)) {
