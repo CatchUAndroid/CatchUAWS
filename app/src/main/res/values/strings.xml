@@ -326,6 +326,9 @@
     <string name="caughtPosts">Caught Posts</string>
     <string name="deleteThisPost">Delete this Post?</string>
     <string name="reportPostMessage">Do you want to report this post? We will check and take an action immediately.</string>
+    <string name="posts">Posts</string>
+    <string name="postsInfo">Public and posted around posts of user is shown here. Click post for details. </string>
+    <string name="emptyFeed2">No posts caught.</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Social Interaction</string>

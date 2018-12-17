@@ -99,16 +99,14 @@ public class OtherProfileFragment extends BaseFragment
     @BindView(R.id.commonToolbarbackImgv)
     ClickableImageView commonToolbarbackImgv;
 
-    private static final int MARGING_GRID = 2;
-    private static final int SPAN_COUNT = 3;
 
-    private boolean loading = true;
+    private static final int ADAPTER_ITEMS_END_POSITION = 2;
     private boolean pulledToRefreshHeader = false;
     private boolean pulledToRefreshPost = false;
     private boolean isFirstFetch = false;
-    private boolean isPostsFetchedOnce = false;
     private boolean isMoreItemAvailable = true;
-    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private int lastCompletelyVisibleItemPosition;
+
     private int perPageCnt, pageCnt, innerRecyclerPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
@@ -178,7 +176,6 @@ public class OtherProfileFragment extends BaseFragment
     private void initRecyclerView() {
 
         isFirstFetch = true;
-        isFirstFetch = false;
         setLayoutManager();
         setAdapter();
         setPullToRefresh();
@@ -200,10 +197,6 @@ public class OtherProfileFragment extends BaseFragment
         otherProfileAdapter.addHeader(userInfoListItem);
         otherProfileAdapter.setFollowClickCallback(this);
         otherProfileAdapter.setInnerRecyclerScrollListener(this);
-
-        //recyclerView.setNestedScrollingEnabled(false);
-        recyclerView.setHasFixedSize(true);
-
 
     }
 
@@ -233,44 +226,24 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setRecyclerViewScroll() {
 
-
-
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+                lastCompletelyVisibleItemPosition = customLinearLayoutManager.findLastCompletelyVisibleItemPosition();
 
-                int x = customLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-
-                if(x == 2 && isMoreItemAvailable){
-                    CommonUtils.showCustomToast(getContext(), "sondayız");
+                if (lastCompletelyVisibleItemPosition == ADAPTER_ITEMS_END_POSITION && isMoreItemAvailable) {
                     otherProfileAdapter.addProgressLoading();
                     innerRecyclerPageCnt++;
                     getPosts();
                 }
 
-
-
-                /*
-                if(x==1){
-                    if(isPostsFetchedOnce){
-                        if(!otherProfileAdapter.isShowingProgressLoading()){
-                            otherProfileAdapter.addProgressLoading();
-                            innerRecyclerPageCnt++;
-                            getPosts();
-                        }
-                    }
-                }
-                */
-
             }
 
         });
 
-
     }
-
 
     private void getData() {
         getUserInfo();
@@ -295,7 +268,6 @@ public class OtherProfileFragment extends BaseFragment
 
                 if (userProfile == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserDetail");
-
                 } else {
                     CommonUtils.LOG_OK("UserDetail");
                     fetchedUser = userProfile;
@@ -313,7 +285,7 @@ public class OtherProfileFragment extends BaseFragment
             }
         }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), token);
 
-        loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loadUserDetail.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
     }
 
@@ -372,7 +344,12 @@ public class OtherProfileFragment extends BaseFragment
                 } else {
 
                     // permission denied, boo!
-                    //showNoFeedLayout(true, R.string.needLocationPermission);
+                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.needLocationPermission), "", new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
+
                     refresh_layout.setRefreshing(false);
 
                 }
@@ -391,7 +368,11 @@ public class OtherProfileFragment extends BaseFragment
                 if (location != null) {
                     startGetPosts(token);
                 } else {
-                    //showNoFeedLayout(true, R.string.locationError);
+                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.locationError), "", new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
                     refresh_layout.setRefreshing(false);
                 }
             }
@@ -405,7 +386,7 @@ public class OtherProfileFragment extends BaseFragment
         String sUserId = AccountHolderInfo.getUserID();
         String sUid = selectedUser.getUserid();
         String sLongitude = longitude;
-        String sPerpage = String.valueOf(9);
+        String sPerpage = String.valueOf(perPageCnt);
         String sLatitude = latitude;
         String sRadius = radius;
         String sPage = String.valueOf(innerRecyclerPageCnt);
@@ -423,20 +404,17 @@ public class OtherProfileFragment extends BaseFragment
                     CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
                 } else {
                     CommonUtils.LOG_OK("UserSharedPostListProcess");
-                 /*   if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        //showNoFeedLayout(true, R.string.emptyFeed);
+
+                    if (postListResponse.getItems().size() != 0) {
+                        isMoreItemAvailable = true;
                     } else {
-                        //showNoFeedLayout(false, 0);
-                    }*/
-                 if(postListResponse.getItems().size() != 0){
-                     setPostsInRecyclerView(postListResponse);
-                     isMoreItemAvailable=true;
-                 }else{
-                     isMoreItemAvailable=false;
-                 }
+                        isMoreItemAvailable = false;
+                    }
+
+                    setPostsInRecyclerView(postListResponse);
 
                 }
-                isPostsFetchedOnce = true;
+
                 refresh_layout.setRefreshing(false);
 
             }
@@ -450,41 +428,26 @@ public class OtherProfileFragment extends BaseFragment
                 }
 
                 refresh_layout.setRefreshing(false);
-/*
-                if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
-                    showNoFeedLayout(false, 0);
-                    if (userPostGridViewAdapter.isShowingProgressLoading()) {
-                        userPostGridViewAdapter.removeProgressLoading();
-                    }
-                } else {
-                    //showNoFeedLayout(true, R.string.serverError);
-                }
-                */
+
             }
 
             @Override
             public void onTaskContinue() {
 
-                if (pageCnt == 1 && !pulledToRefreshPost) {
+                if (innerRecyclerPageCnt == 1 && !pulledToRefreshPost) {
                     otherProfileAdapter.addProgressLoading();
                 }
 
             }
         }, sUserId, sUid, sLongitude, sPerpage, sLatitude, sRadius, sPage, sPrivacyType, token);
 
-        userSharedPostListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        userSharedPostListProcess.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
 
     }
 
     private void setPostsInRecyclerView(PostListResponse postListResponse) {
 
-        loading = true;
         objectList.addAll(postListResponse.getItems());
 
         if (innerRecyclerPageCnt != 1 && otherProfileAdapter.isShowingProgressLoading()) {

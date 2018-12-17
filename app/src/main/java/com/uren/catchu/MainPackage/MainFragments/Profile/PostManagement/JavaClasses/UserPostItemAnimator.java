@@ -13,7 +13,6 @@ import android.view.animation.OvershootInterpolator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.Utils;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostListViewAdapter;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +85,7 @@ public class UserPostItemAnimator extends DefaultItemAnimator {
                     .start();
         }
 
-        if (holder instanceof UserPostListViewAdapter.MyViewHolder) {
+        if (holder instanceof FeedAdapter.MyViewHolder) {
             final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
             holder.itemView.setTranslationY(screenHeight);
             holder.itemView.animate()
@@ -102,6 +101,23 @@ public class UserPostItemAnimator extends DefaultItemAnimator {
                     .start();
         }
 
+/*
+        if (holder instanceof SilinecekAdapter.MyViewHolder) {
+            final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
+            holder.itemView.setTranslationY(screenHeight);
+            holder.itemView.animate()
+                    .translationY(0)
+                    .setInterpolator(new DecelerateInterpolator(3.f))
+                    .setDuration(50)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            dispatchAddFinished(holder);
+                        }
+                    })
+                    .start();
+        }
+*/
     }
 
     @Override

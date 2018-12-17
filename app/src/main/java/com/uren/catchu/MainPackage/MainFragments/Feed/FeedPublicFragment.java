@@ -131,8 +131,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             initListeners();
             initRecyclerView();
             checkLocationAndRetrievePosts();
-            //getPosts();
-
         }
 
         if (!mPulsator.isStarted()) {
@@ -296,15 +294,11 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                     // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    Toast.makeText(getContext(), " ACCESS_FINE_LOCATION - Permission granted", Toast.LENGTH_SHORT).show();
                     getPosts();
 
                 } else {
 
                     // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(getContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                     showPulsatorLayout(false);
                     showNoFeedLayout(true, R.string.needLocationPermission);
                     refresh_layout.setRefreshing(false);
@@ -464,8 +458,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             feedAdapter.removeProgressLoading();
         }
 
-        //postList=setJunkData();
-        //logPostId(postList); //todo NT - silinecek
         postList.addAll(postListResponse.getItems());
 
         if (pulledToRefresh) {
@@ -496,21 +488,8 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     }
 
-    //todo NT - silinecek
-    private void logPostId(List<Post> postList) {
-        int postNumber;
-        for (int i = 0; i < postList.size(); i++) {
-            postNumber = i + 1;
-            if (postList.get(i).getPostid() != null && !postList.get(i).getPostid().isEmpty()) {
-                Log.i("post-" + postNumber + " :", postList.get(i).getPostid());
-            }
-        }
-    }
-
-
     private void setRecyclerViewProperties() {
 
-        //todo before setAdapter
         recyclerView.setActivity(getActivity());
 
         //optional - to play only first visible video
@@ -532,44 +511,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         recyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
     }
-
-    private ArrayList<Post> setJunkData() {
-
-        //Video
-        Media media1 = new Media();
-        media1.setUrl("http://res.cloudinary.com/krupen/video/upload/w_300,h_150,c_crop,q_70/v1491561340/hello_cuwgcb.mp4");
-        media1.setType(VIDEO_TYPE);
-
-        //Image
-        Media media2 = new Media();
-        media2.setUrl("https://i.hizliresim.com/mo94Vy.png");
-        media2.setType(IMAGE_TYPE);
-
-        List<Media> mediaList = new ArrayList<Media>();
-        mediaList.add(media1);
-        mediaList.add(media2);
-
-        User user = new User();
-        user.setName("JunkUser");
-        user.setUsername("junkUser");
-
-        Post post = new Post();
-        post.setAttachments(mediaList);
-        post.setUser(user);
-        post.setLikeCount(20);
-        post.setCommentCount(20);
-        post.setIsLiked(true);
-
-        ArrayList<Post> postList = new ArrayList<Post>();
-
-        for (int i = 0; i < 1; i++) {
-            postList.add(post);
-        }
-
-        return postList;
-
-    }
-
 
     private void setLocationInfo() {
         longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());

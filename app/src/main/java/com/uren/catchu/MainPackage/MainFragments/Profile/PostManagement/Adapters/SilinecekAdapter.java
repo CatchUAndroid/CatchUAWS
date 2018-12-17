@@ -12,12 +12,12 @@ import com.uren.catchu.R;
 import java.util.List;
 
 
-public class UserPostListViewAdapter extends RecyclerView.Adapter<UserPostListViewAdapter.MyViewHolder> {
+public class SilinecekAdapter extends RecyclerView.Adapter<SilinecekAdapter.MyViewHolder> {
 
     private Context context;
     private List<String> textList;
 
-    public UserPostListViewAdapter(Context context, List<String> textList) {
+    public SilinecekAdapter(Context context, List<String> textList) {
         this.context = context;
         this.textList = textList;
     }

@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -193,6 +194,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         View mView;
         ImageView imgProfile;
+        ImageView imgInfo;
         TextView txtProfile;
         TextView txtName;
         TextView txtBio;
@@ -212,6 +214,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
             mView = view;
             imgProfile = (ImageView) view.findViewById(R.id.imgProfile);
+            imgInfo = (ImageView) view.findViewById(R.id.imgInfo);
             txtProfile = (TextView) view.findViewById(R.id.txtProfile);
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtBio = (TextView) view.findViewById(R.id.txtBio);
@@ -240,6 +243,18 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     fragmentNavigation.pushFragment(new MessageWithPersonFragment(selectedUser), ANIMATE_LEFT_TO_RIGHT);
+                }
+            });
+
+            //imgInfo
+            imgInfo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogBoxUtil.showInfoDialogBox(mContext, mContext.getResources().getString(R.string.postsInfo), "", new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
                 }
             });
         }
@@ -441,25 +456,33 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         RecyclerView gridRecyclerView;
         OtherProfilePostAdapter otherProfilePostAdapter;
         CustomGridLayoutManager customGridLayoutManager;
+        RelativeLayout rl_no_feed;
+        ImageView imgSad;
+        TextView txtNoFeedExplanation;
 
         private static final int MARGING_GRID = 2;
         private static final int SPAN_COUNT = 3;
         private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
-        private boolean loading = true;
-        private boolean isFirstFetch = false;
-        private int pastVisibleItems, visibleItemCount, totalItemCount;
 
         public PostViewHolder(View view) {
             super(view);
 
             mView = view;
             gridRecyclerView = (RecyclerView) view.findViewById(R.id.gridRecyclerView);
+            rl_no_feed = (RelativeLayout) view.findViewById(R.id.rl_no_feed);
+            imgSad = (ImageView) view.findViewById(R.id.imgSad);
+            txtNoFeedExplanation = (TextView) view.findViewById(R.id.txtNoFeedExplanation);
 
             setListeners();
             setLayoutManager();
             setAdapter();
-            //setRecyclerViewScroll();
+
+            if(postList.size() > 0){
+                showNoFeedLayout(false);
+            }else{
+                showNoFeedLayout(true);
+            }
 
         }
 
@@ -487,7 +510,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         }
 
-        @SuppressLint("ClickableViewAccessibility")
         private void setAdapter() {
             otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation);
             gridRecyclerView.setAdapter(otherProfilePostAdapter);
@@ -497,43 +519,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             //gridRecyclerView.setNestedScrollingEnabled(false);
 
         }
-
-        private void setRecyclerViewScroll() {
-
-            gridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-                @Override
-                public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
-                    super.onScrolled(recyclerView, dx, dy);
-
-                    CommonUtils.showCustomToast(mContext, "Scrolling inner RV");
-
-
-                    /*
-                    if (dy > 0) //check for scroll down
-                    {
-                        visibleItemCount = customGridLayoutManager.getChildCount();
-                        totalItemCount = customGridLayoutManager.getItemCount();
-                        pastVisibleItems = customGridLayoutManager.findFirstVisibleItemPosition();
-
-                        if (loading) {
-
-                            if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                                loading = false;
-                                //Do pagination.. i.e. fetch new data
-                                recyclerScrollListener.onLoadMore();
-
-
-                            }
-                        }
-                    }
-                    */
-                }
-
-            });
-
-        }
-
 
         public void setData(Post post, int position) {
         }
@@ -545,6 +530,20 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         public void loadMorePost() {
             otherProfilePostAdapter.addAll(addedPostList);
         }
+
+        private void showNoFeedLayout(boolean showNoFeedLayout) {
+            if(showNoFeedLayout){
+                gridRecyclerView.setVisibility(View.GONE);
+                imgSad.setVisibility(View.GONE);
+                rl_no_feed.setVisibility(View.VISIBLE);
+                txtNoFeedExplanation.setText(mContext.getResources().getString(R.string.emptyFeed2));
+            }else{
+                gridRecyclerView.setVisibility(View.VISIBLE);
+                rl_no_feed.setVisibility(View.GONE);
+            }
+        }
+
+
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
@@ -566,6 +565,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         public void setData(String s, int position) {
             textView.setText(s);
+            textView.setVisibility(View.GONE);
         }
     }
 
@@ -588,7 +588,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
     public void updateHeader(UserProfile userProfile) {
         if (userProfile != null) {
-            notifyItemChanged(0, userProfile);
+            notifyItemRangeChanged(0, 1, userProfile);
+            //notifyItemChanged(0, userProfile);
         }
     }
 
