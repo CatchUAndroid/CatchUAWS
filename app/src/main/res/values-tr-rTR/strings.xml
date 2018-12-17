@@ -259,7 +259,7 @@
     <string name="SEND_MESSAGE">Mesaj Gönder</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
-    <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>
+    <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfen Ayarlar\'dan konum izinlerini aktifleştirin.</string>
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
     <string name="loading">Yükleniyor...</string>
@@ -287,6 +287,9 @@
     <string name="caughtPosts">Yakaladığım paylaşımlar</string>
     <string name="deleteThisPost">Bu paylaşımı sil?</string>
     <string name="reportPostMessage">Bu paylaşımı şikayet etmek istiyor musunuz? Ekibimiz değerlendirip, uygunsuzsa kaldıracaklardır.</string>
+    <string name="posts">Paylaşımlar</string>
+    <string name="postsInfo">Kişinin civarda ve herkese açık yaptığı paylaşımlar burada gösterilir. Paylaşım detayı için paylaşıma tıklayabilirsiniz. </string>
+    <string name="emptyFeed2">Herhangi bir paylaşım yakalanamadı.</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>

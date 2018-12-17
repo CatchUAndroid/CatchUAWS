@@ -10,10 +10,12 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -73,7 +75,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 public class OtherProfileFragment extends BaseFragment
         implements View.OnClickListener,
         FollowClickCallback,
-        RecyclerScrollListener{
+        RecyclerScrollListener {
 
     View mView;
     UserInfoListItem userInfoListItem;
@@ -99,15 +101,14 @@ public class OtherProfileFragment extends BaseFragment
     @BindView(R.id.commonToolbarbackImgv)
     ClickableImageView commonToolbarbackImgv;
 
-    private static final int MARGING_GRID = 2;
-    private static final int SPAN_COUNT = 3;
 
-    private boolean loading = true;
+    private static final int ADAPTER_ITEMS_END_POSITION = 2;
     private boolean pulledToRefreshHeader = false;
     private boolean pulledToRefreshPost = false;
     private boolean isFirstFetch = false;
-    private boolean isPostsFetchedOnce = false;
-    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private boolean isMoreItemAvailable = true;
+    private int lastCompletelyVisibleItemPosition;
+
     private int perPageCnt, pageCnt, innerRecyclerPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
@@ -174,7 +175,6 @@ public class OtherProfileFragment extends BaseFragment
     private void initRecyclerView() {
 
         isFirstFetch = true;
-        isFirstFetch = false;
         setLayoutManager();
         setAdapter();
         setPullToRefresh();
@@ -196,6 +196,7 @@ public class OtherProfileFragment extends BaseFragment
         otherProfileAdapter.addHeader(userInfoListItem);
         otherProfileAdapter.setFollowClickCallback(this);
         otherProfileAdapter.setInnerRecyclerScrollListener(this);
+
     }
 
     private void setPullToRefresh() {
@@ -229,47 +230,19 @@ public class OtherProfileFragment extends BaseFragment
             public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (!recyclerView.canScrollVertically(1) ) {
-                    if(isPostsFetchedOnce){
-                        if(!otherProfileAdapter.isShowingProgressLoading()){
-                            otherProfileAdapter.addProgressLoading();
-                            innerRecyclerPageCnt++;
-                            getPosts();
-                        }
-                    }
+                lastCompletelyVisibleItemPosition = customLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+
+                if (lastCompletelyVisibleItemPosition == ADAPTER_ITEMS_END_POSITION && isMoreItemAvailable) {
+                    otherProfileAdapter.addProgressLoading();
+                    innerRecyclerPageCnt++;
+                    getPosts();
                 }
-
-
-
-
-/*
-                if (dy > 0) //check for scroll down
-                {
-                    visibleItemCount = customLinearLayoutManager.getChildCount();
-                    totalItemCount = customLinearLayoutManager.getItemCount();
-                    pastVisibleItems = customLinearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (loading) {
-
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            loading = false;
-                            Log.v("...", "Last Item Wow !");
-                            //Do pagination.. i.e. fetch new data
-                            pageCnt++;
-                            //otherProfileAdapter.addProgressLoading();
-                            //getPosts();
-
-                        }
-                    }
-                }
-                */
 
             }
 
         });
 
     }
-
 
     private void getData() {
         getUserInfo();
@@ -294,7 +267,6 @@ public class OtherProfileFragment extends BaseFragment
 
                 if (userProfile == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserDetail");
-
                 } else {
                     CommonUtils.LOG_OK("UserDetail");
                     fetchedUser = userProfile;
@@ -312,7 +284,7 @@ public class OtherProfileFragment extends BaseFragment
             }
         }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), token);
 
-        loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        loadUserDetail.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
     }
 
@@ -371,7 +343,12 @@ public class OtherProfileFragment extends BaseFragment
                 } else {
 
                     // permission denied, boo!
-                    //showNoFeedLayout(true, R.string.needLocationPermission);
+                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.needLocationPermission), "", new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
+
                     refresh_layout.setRefreshing(false);
 
                 }
@@ -390,7 +367,11 @@ public class OtherProfileFragment extends BaseFragment
                 if (location != null) {
                     startGetPosts(token);
                 } else {
-                    //showNoFeedLayout(true, R.string.locationError);
+                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.locationError), "", new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
                     refresh_layout.setRefreshing(false);
                 }
             }
@@ -404,7 +385,7 @@ public class OtherProfileFragment extends BaseFragment
         String sUserId = AccountHolderInfo.getUserID();
         String sUid = selectedUser.getUserid();
         String sLongitude = longitude;
-        String sPerpage = String.valueOf(9);
+        String sPerpage = String.valueOf(perPageCnt);
         String sLatitude = latitude;
         String sRadius = radius;
         String sPage = String.valueOf(innerRecyclerPageCnt);
@@ -414,7 +395,7 @@ public class OtherProfileFragment extends BaseFragment
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
 
-                if(otherProfileAdapter.isShowingProgressLoading()){
+                if (otherProfileAdapter.isShowingProgressLoading()) {
                     otherProfileAdapter.removeProgressLoading();
                 }
 
@@ -422,14 +403,17 @@ public class OtherProfileFragment extends BaseFragment
                     CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
                 } else {
                     CommonUtils.LOG_OK("UserSharedPostListProcess");
-                 /*   if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        //showNoFeedLayout(true, R.string.emptyFeed);
+
+                    if (postListResponse.getItems().size() != 0) {
+                        isMoreItemAvailable = true;
                     } else {
-                        //showNoFeedLayout(false, 0);
-                    }*/
+                        isMoreItemAvailable = false;
+                    }
+
                     setPostsInRecyclerView(postListResponse);
+
                 }
-                isPostsFetchedOnce=true;
+
                 refresh_layout.setRefreshing(false);
 
             }
@@ -438,46 +422,31 @@ public class OtherProfileFragment extends BaseFragment
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
 
-                if(otherProfileAdapter.isShowingProgressLoading()){
+                if (otherProfileAdapter.isShowingProgressLoading()) {
                     otherProfileAdapter.removeProgressLoading();
                 }
 
                 refresh_layout.setRefreshing(false);
-/*
-                if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
-                    showNoFeedLayout(false, 0);
-                    if (userPostGridViewAdapter.isShowingProgressLoading()) {
-                        userPostGridViewAdapter.removeProgressLoading();
-                    }
-                } else {
-                    //showNoFeedLayout(true, R.string.serverError);
-                }
-                */
+
             }
 
             @Override
             public void onTaskContinue() {
 
-                if (pageCnt == 1 && !pulledToRefreshPost) {
+                if (innerRecyclerPageCnt == 1 && !pulledToRefreshPost) {
                     otherProfileAdapter.addProgressLoading();
                 }
 
             }
         }, sUserId, sUid, sLongitude, sPerpage, sLatitude, sRadius, sPage, sPrivacyType, token);
 
-        userSharedPostListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        userSharedPostListProcess.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
 
 
     }
 
     private void setPostsInRecyclerView(PostListResponse postListResponse) {
 
-        loading = true;
         objectList.addAll(postListResponse.getItems());
 
         if (innerRecyclerPageCnt != 1 && otherProfileAdapter.isShowingProgressLoading()) {
@@ -488,9 +457,10 @@ public class OtherProfileFragment extends BaseFragment
             otherProfileAdapter.updatePosts(postListResponse.getItems());
             pulledToRefreshPost = false;
         } else {
-            if(innerRecyclerPageCnt == 1){
+            if (innerRecyclerPageCnt == 1) {
                 otherProfileAdapter.addPosts(postListResponse.getItems());
-            }else{
+                otherProfileAdapter.addLastItem();
+            } else {
                 otherProfileAdapter.loadMorePost(postListResponse.getItems());
             }
         }
@@ -559,7 +529,6 @@ public class OtherProfileFragment extends BaseFragment
             return false;
         }
     }
-
 
 
 }

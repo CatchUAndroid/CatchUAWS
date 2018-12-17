@@ -5,7 +5,7 @@
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="30dp"
+    android:layout_marginBottom="15dp"
     android:orientation="vertical">
 
     <include layout="@layout/layout_progress_bar" />
@@ -213,13 +213,13 @@
 
                     </LinearLayout>
 
-                    <View
+                    <!--View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
 
                         android:layout_marginTop="30dp"
                         android:alpha="0.5"
-                        android:background="@color/black" />
+                        android:background="@color/black" /-->
 
                 </LinearLayout>
 
@@ -227,28 +227,44 @@
                 <LinearLayout
                     android:id="@+id/llPosts"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
                     android:orientation="vertical">
-
 
                     <LinearLayout
                         android:id="@+id/llMyPosts"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:background="@color/red"
-                        android:orientation="vertical">
+                        android:layout_height="match_parent"
+                        android:background="@drawable/filter_name"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:weightSum="5">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
 
                         <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:layout_weight="3"
                             android:gravity="center"
-                            android:text="User Posts -> Click here"
-                            android:textColor="@color/white"
-                            android:textStyle="bold" />
+                            android:text="@string/posts"
+                            android:textColor="@color/black"
+                            android:textSize="17sp" />
 
+
+                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
+                            android:id="@+id/imgInfo"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="right"
+                            android:layout_weight="1"
+                            android:padding="10dp"
+                            android:src="@mipmap/icon_info" />
 
                     </LinearLayout>
 
