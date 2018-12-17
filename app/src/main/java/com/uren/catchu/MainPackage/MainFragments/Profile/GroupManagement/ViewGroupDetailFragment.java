@@ -154,7 +154,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             permissionModule = new PermissionModule(getActivity());
             mProgressDialog = new ProgressDialog(getActivity());
             groupParticipantList = new ArrayList<>();
-            progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
+            progressDialogUtil = new ProgressDialogUtil(getActivity(), null, true);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
                     new Object() {

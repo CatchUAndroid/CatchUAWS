@@ -115,6 +115,7 @@ public class MessageWithPersonFragment extends BaseFragment {
 
     User chattedUser;
     DatabaseReference databaseReference;
+    DatabaseReference databaseReference1;
     ValueEventListener valueEventListener;
     ArrayList<MessageBox> messageBoxList;
     MessageWithPersonAdapter messageWithPersonAdapter;
