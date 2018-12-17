@@ -68,7 +68,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -127,7 +127,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -142,7 +142,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -165,7 +165,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -192,7 +192,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -206,7 +206,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -230,7 +230,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -248,7 +248,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -262,7 +262,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return listSize;

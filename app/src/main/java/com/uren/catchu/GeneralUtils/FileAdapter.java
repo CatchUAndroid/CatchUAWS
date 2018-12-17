@@ -67,7 +67,7 @@ public class FileAdapter {
         }catch (Exception e){
             ErrorSaveHelper.writeErrorToDB(null, FileAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -90,7 +90,7 @@ public class FileAdapter {
         }catch (Exception e){
             ErrorSaveHelper.writeErrorToDB(null, FileAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 

@@ -33,7 +33,7 @@ public class AnimationUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, AnimationUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

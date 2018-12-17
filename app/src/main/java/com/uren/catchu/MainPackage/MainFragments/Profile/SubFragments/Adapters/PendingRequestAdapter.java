@@ -63,6 +63,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView profileName;
+        TextView profileUserName;
         TextView shortUserNameTv;
         ImageView profileImage;
         Button btnFollowStatus;
@@ -74,6 +75,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
             super(view);
 
             profileName = view.findViewById(R.id.profile_name);
+            profileUserName = view.findViewById(R.id.profile_user_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
             profileImage = view.findViewById(R.id.profile_image);
             btnFollowStatus = view.findViewById(R.id.btnFollowStatus);
@@ -164,24 +166,17 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         public void setData(UserProfileProperties userProfileProperties, int position) {
             this.userProfileProperties = userProfileProperties;
             this.position = position;
-            setProfileName();
+            UserDataUtil.setName(userProfileProperties.getName(), profileName);
+            UserDataUtil.setUsername(userProfileProperties.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(context, userProfileProperties.getProfilePhotoUrl(),
                     userProfileProperties.getName(),
                     userProfileProperties.getUsername(), shortUserNameTv, profileImage);
             UserDataUtil.updatePendingButton(context, btnFollowStatus);
         }
-
-        public void setProfileName(){
-            if(userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
-                UserDataUtil.setName(userProfileProperties.getName(), profileName);
-            else if(userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
-                UserDataUtil.setName(CHAR_AMPERSAND + userProfileProperties.getUsername(), profileName);
-        }
     }
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-
         UserProfileProperties userProfileProperties = friendRequestList.getResultArray().get(position);
         holder.setData(userProfileProperties, position);
     }
@@ -193,10 +188,4 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         else
             return 0;
     }
-
-    public void updateAdapterWithPosition(int position) {
-
-        notifyItemChanged(position);
-    }
-
 }

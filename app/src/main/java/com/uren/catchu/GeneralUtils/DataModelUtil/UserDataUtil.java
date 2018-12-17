@@ -24,6 +24,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.User;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
@@ -36,15 +37,36 @@ public class UserDataUtil {
         try {
             int nameMaxLen = 25;
             if (name != null && nameTextView != null && !name.isEmpty()) {
+                nameTextView.setVisibility(View.VISIBLE);
                 if (name.length() > nameMaxLen)
                     nameTextView.setText(name.trim().substring(0, nameMaxLen) + "...");
                 else
                     nameTextView.setText(name);
-            }
+            } else if (nameTextView != null)
+                nameTextView.setVisibility(View.GONE);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public static void setUsername(String username, TextView usernameTextView) {
+        try {
+            int nameMaxLen = 25;
+            if (username != null && usernameTextView != null && !username.isEmpty()) {
+                usernameTextView.setVisibility(View.VISIBLE);
+                if (username.length() > nameMaxLen)
+                    usernameTextView.setText(CHAR_AMPERSAND + username.trim().substring(0, nameMaxLen) + "...");
+                else
+                    usernameTextView.setText(CHAR_AMPERSAND + username);
+            } else if (usernameTextView != null)
+                usernameTextView.setVisibility(View.GONE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, UserDataUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -62,7 +84,7 @@ public class UserDataUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -79,16 +101,16 @@ public class UserDataUtil {
                         .load(url)
                         .apply(RequestOptions.circleCropTransform())
                         .into(profilePicImgView);
-                profilePicImgView.setPadding(1,1,1,1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
+                profilePicImgView.setPadding(1, 1, 1, 1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
             } else {
                 if (name != null && !name.trim().isEmpty()) {
                     shortNameTv.setVisibility(View.VISIBLE);
                     shortNameTv.setText(UserDataUtil.getShortenUserName(name));
                     profilePicImgView.setImageDrawable(null);
-                }else if(username != null && !username.trim().isEmpty()) {
-                        shortNameTv.setVisibility(View.VISIBLE);
-                        shortNameTv.setText(UserDataUtil.getShortenUserName(username));
-                        profilePicImgView.setImageDrawable(null);
+                } else if (username != null && !username.trim().isEmpty()) {
+                    shortNameTv.setVisibility(View.VISIBLE);
+                    shortNameTv.setText(UserDataUtil.getShortenUserName(username));
+                    profilePicImgView.setImageDrawable(null);
                 } else {
                     shortNameTv.setVisibility(View.GONE);
                     Glide.with(context)
@@ -105,7 +127,7 @@ public class UserDataUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -142,7 +164,7 @@ public class UserDataUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -159,7 +181,7 @@ public class UserDataUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -211,12 +233,12 @@ public class UserDataUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
 
-    public static void updateInviteButton(Context context,Button displayButton, Boolean isHideKeyboard) {
+    public static void updateInviteButton(Context context, Button displayButton, Boolean isHideKeyboard) {
 
         try {
             if (isHideKeyboard != null && isHideKeyboard)
@@ -232,7 +254,7 @@ public class UserDataUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

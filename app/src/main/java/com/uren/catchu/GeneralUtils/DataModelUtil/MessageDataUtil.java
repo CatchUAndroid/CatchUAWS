@@ -63,7 +63,7 @@ public class MessageDataUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, MessageDataUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 

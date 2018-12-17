@@ -39,7 +39,7 @@ public class BlurBuilder {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(ctx, BlurBuilder.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -55,7 +55,7 @@ public class BlurBuilder {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, BlurBuilder.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return b;

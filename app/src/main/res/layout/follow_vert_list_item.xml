@@ -58,15 +58,33 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="5">
+                        android:layout_weight="5"
+                        android:gravity="center_vertical">
 
-                        <TextView
-                            android:id="@+id/profile_name"
+                        <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="5dp"
-                            android:textSize="15sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/profile_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
+                                android:textSize="15sp" />
+
+                            <TextView
+                                android:id="@+id/profile_user_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="5dp"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+
 
                     </RelativeLayout>
 
