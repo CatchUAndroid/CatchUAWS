@@ -9,6 +9,7 @@ public class MessageBox {
     String messageText;
     User senderUser;
     User receiptUser;
+    boolean receiptIsSeen;
     boolean selectedForDelete;
 
     public String getMessageId() {
@@ -57,5 +58,13 @@ public class MessageBox {
 
     public void setSelectedForDelete(boolean selectedForDelete) {
         this.selectedForDelete = selectedForDelete;
+    }
+
+    public boolean isReceiptIsSeen() {
+        return receiptIsSeen;
+    }
+
+    public void setReceiptIsSeen(boolean receiptIsSeen) {
+        this.receiptIsSeen = receiptIsSeen;
     }
 }

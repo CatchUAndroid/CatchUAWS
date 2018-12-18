@@ -257,6 +257,9 @@
     <string name="COMMENT_SETTINGS_DESC">Bu özelliği paylaşım yapıldıktan sonra gönderi ayarlarından güncelleyebilirsin</string>
     <string name="LOCATION_SETTINGS_DESC">Bu özellik paylaşım yapıldıktan sonra güncellenemez</string>
     <string name="SEND_MESSAGE">Mesaj Gönder</string>
+    <string name="MESSAGES">Mesajlarım</string>
+    <string name="TODAY">Bugün</string>
+    <string name="YESTERDAY">Dün</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfer Ayarlar\'dan konum izinlerini aktifleştirin.</string>

@@ -154,12 +154,14 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                         messageTv.setText(messageBox.getMessageText());
 
                     if (messageBox.getDate() != 0) {
-                        Date date = new Date(messageBox.getDate());
+
+                        createAtTv.setText(CommonUtils.getMessageTime(context, messageBox.getDate()));
+                        /*Date date = new Date(messageBox.getDate());
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
                         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
                         String formatted = format.format(date);
                         System.out.println("formatted:" + formatted);
-                        createAtTv.setText(formatted.substring(11, 16));
+                        createAtTv.setText(formatted.substring(11, 16));*/
                     }
                 }
             } catch (Exception e) {

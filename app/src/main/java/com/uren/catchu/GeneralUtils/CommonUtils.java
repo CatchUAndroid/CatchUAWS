@@ -22,6 +22,7 @@ import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.text.Layout;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -43,6 +44,7 @@ import com.uren.catchu.R;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
@@ -69,13 +71,13 @@ public class CommonUtils {
     }*/
 
 
-    public static final void showCustomToast(Context context, String message){
+    public static final void showCustomToast(Context context, String message) {
 
-        if(context == null) return;
-        if(message == null || message.isEmpty()) return;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-        View view = inflater.inflate( R.layout.layout_custom_toast, null );
-        View layout = (LinearLayout) view.findViewById( R.id.custom_toast_container );
+        if (context == null) return;
+        if (message == null || message.isEmpty()) return;
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.layout_custom_toast, null);
+        View layout = (LinearLayout) view.findViewById(R.id.custom_toast_container);
 
         layout.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.CornflowerBlue, null),
                 context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 3));
@@ -85,7 +87,7 @@ public class CommonUtils {
         text.setTextColor(context.getResources().getColor(R.color.White, null));
 
         Toast toast = new Toast(context);
-        toast.setGravity(Gravity.CENTER_VERTICAL|Gravity.BOTTOM, 0, 200);
+        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.BOTTOM, 0, 200);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.setView(layout);
         toast.show();
@@ -345,6 +347,47 @@ public class CommonUtils {
         return convTime;
     }
 
+    public static String getMessageTime(Context context, long time) {
+        Date date = new Date(time);
+        String dateValueStr;
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+        String formatted = format.format(date);
+        String hour = formatted.substring(11, 16);
+
+        System.out.println("formatted:" + formatted);
+
+        if(isToday(date))
+            dateValueStr = context.getResources().getString(R.string.TODAY);
+        else if(isYesterday(date))
+            dateValueStr = context.getResources().getString(R.string.YESTERDAY);
+        else {
+            String[] monthArray = context.getResources().getStringArray(R.array.months);
+            String monthValue = monthArray[Integer.parseInt(formatted.substring(5, 7)) - 1];
+
+            dateValueStr = formatted.substring(8, 10) + " "
+                    + monthValue.substring(0, 3) +
+                    " " + formatted.substring(0, 4);
+        }
+
+        return dateValueStr + "  " + hour;
+    }
+
+    public static boolean isToday(Date date){
+        Calendar today = Calendar.getInstance();
+        Calendar specifiedDate  = Calendar.getInstance();
+        specifiedDate.setTime(date);
+
+        return today.get(Calendar.DAY_OF_MONTH) == specifiedDate.get(Calendar.DAY_OF_MONTH)
+                &&  today.get(Calendar.MONTH) == specifiedDate.get(Calendar.MONTH)
+                &&  today.get(Calendar.YEAR) == specifiedDate.get(Calendar.YEAR);
+    }
+
+    public static boolean isYesterday(Date d) {
+        return DateUtils.isToday(d.getTime() + DateUtils.DAY_IN_MILLIS);
+    }
+
     public static Date fromISO8601UTC(String dateStr) {
 
         TimeZone tz = TimeZone.getTimeZone("UTC");
@@ -378,7 +421,7 @@ public class CommonUtils {
         return false;
     }
 
-    public static void connectionErrSnackbarShow(View view, Context context){
+    public static void connectionErrSnackbarShow(View view, Context context) {
         Snackbar snackbar = Snackbar.make(view,
                 context.getResources().getString(R.string.CHECK_YOUR_INTERNET_CONNECTION),
                 Snackbar.LENGTH_SHORT);
