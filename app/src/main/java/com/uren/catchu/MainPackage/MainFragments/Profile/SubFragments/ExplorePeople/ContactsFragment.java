@@ -30,7 +30,6 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderContactsProces
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.PhoneNumberFormatUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -38,7 +37,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeo
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Interfaces.ContactFriendSelectCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Models.ContactFriendModel;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;

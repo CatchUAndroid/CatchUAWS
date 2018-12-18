@@ -1,26 +1,21 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -31,14 +26,12 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +64,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private BaseFragment.FragmentNavigation fragmentNavigation;
     private FollowClickCallback followClickCallback;
     private RecyclerScrollListener recyclerScrollListener;
+    private User selectedUser;
 
     private static final int OPERATION_TYPE_NONE = -1;
     private static final int OPERATION_TYPE_LOAD_MORE = 0;
@@ -202,7 +196,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
 
-        User selectedUser;
         UserProfile fetchedUser;
         String followStatus;
         int followingCount, followerCount;
@@ -511,7 +504,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private void setAdapter() {
-            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation);
+            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser);
             gridRecyclerView.setAdapter(otherProfilePostAdapter);
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
@@ -598,6 +591,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             Post post = new Post();
             objectList.add(post);
             postList.addAll(addedPostList);
+            OtherProfilePostList.getInstance().addPostList(addedPostList);
             notifyItemRangeInserted(1, 1);
         }
     }
@@ -605,6 +599,9 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     public void updatePosts(List<Post> addedPostList) {
         this.postList.clear();
         this.postList.addAll(addedPostList);
+        OtherProfilePostList.getInstance().clearPostList();
+        OtherProfilePostList.getInstance().addPostList(addedPostList);
+
         operationType = OPERATION_TYPE_UPDATE_POST;
         Post post = new Post(); //just to recognize the 'instance of'
         notifyItemRangeChanged(1, 1, post);
@@ -615,6 +612,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             this.addedPostList.clear();
             this.addedPostList.addAll(addedPostList);
             this.postList.addAll(addedPostList);
+            OtherProfilePostList.getInstance().addPostList(addedPostList);
+
             Post post = new Post(); //just to recognize the 'instance of'
             operationType = OPERATION_TYPE_LOAD_MORE;
             notifyItemRangeChanged(1, 1, post);
