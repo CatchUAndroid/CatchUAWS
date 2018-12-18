@@ -37,9 +37,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+
+import org.joda.time.Days;
+import org.joda.time.ReadableInstant;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -73,24 +78,31 @@ public class CommonUtils {
 
     public static final void showCustomToast(Context context, String message) {
 
-        if (context == null) return;
-        if (message == null || message.isEmpty()) return;
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.layout_custom_toast, null);
-        View layout = (LinearLayout) view.findViewById(R.id.custom_toast_container);
+        try {
+            if (context == null) return;
+            if (message == null || message.isEmpty()) return;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View view = inflater.inflate(R.layout.layout_custom_toast, null);
+            View layout = (LinearLayout) view.findViewById(R.id.custom_toast_container);
 
-        layout.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.CornflowerBlue, null),
-                context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 3));
+            layout.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.CornflowerBlue, null),
+                    context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 3));
 
-        TextView text = (TextView) layout.findViewById(R.id.text);
-        text.setText(message);
-        text.setTextColor(context.getResources().getColor(R.color.White, null));
+            TextView text = (TextView) layout.findViewById(R.id.text);
+            text.setText(message);
+            text.setTextColor(context.getResources().getColor(R.color.White, null));
 
-        Toast toast = new Toast(context);
-        toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.BOTTOM, 0, 200);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.setView(layout);
-        toast.show();
+            Toast toast = new Toast(context);
+            toast.setGravity(Gravity.CENTER_VERTICAL | Gravity.BOTTOM, 0, 200);
+            toast.setDuration(Toast.LENGTH_SHORT);
+            toast.setView(layout);
+            toast.show();
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public static final String getDeviceID(Context context) {
@@ -145,29 +157,38 @@ public class CommonUtils {
 
     public static Drawable setDrawableSelector(Context context, int normal, int selected) {
 
-        Drawable state_normal = ContextCompat.getDrawable(context, normal);
-        Drawable state_pressed = ContextCompat.getDrawable(context, selected);
+        StateListDrawable drawable = null;
 
-        Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
+        try {
+            Drawable state_normal = ContextCompat.getDrawable(context, normal);
+            Drawable state_pressed = ContextCompat.getDrawable(context, selected);
 
-        // Setting alpha directly just didn't work, so we draw a new bitmap!
-        Bitmap disabledBitmap = Bitmap.createBitmap(
-                state_normal.getIntrinsicWidth(),
-                state_normal.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(disabledBitmap);
+            Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
 
-        Paint paint = new Paint();
-        paint.setAlpha(126);
-        canvas.drawBitmap(state_normal_bitmap, 0, 0, paint);
+            // Setting alpha directly just didn't work, so we draw a new bitmap!
+            Bitmap disabledBitmap = Bitmap.createBitmap(
+                    state_normal.getIntrinsicWidth(),
+                    state_normal.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(disabledBitmap);
 
-        BitmapDrawable state_normal_drawable = new BitmapDrawable(context.getResources(), disabledBitmap);
+            Paint paint = new Paint();
+            paint.setAlpha(126);
+            canvas.drawBitmap(state_normal_bitmap, 0, 0, paint);
 
-        StateListDrawable drawable = new StateListDrawable();
+            BitmapDrawable state_normal_drawable = new BitmapDrawable(context.getResources(), disabledBitmap);
 
-        drawable.addState(new int[]{android.R.attr.state_selected},
-                state_pressed);
-        drawable.addState(new int[]{android.R.attr.state_enabled},
-                state_normal_drawable);
+            drawable = new StateListDrawable();
+
+            drawable.addState(new int[]{android.R.attr.state_selected},
+                    state_pressed);
+            drawable.addState(new int[]{android.R.attr.state_enabled},
+                    state_normal_drawable);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
 
         return drawable;
     }
@@ -251,13 +272,18 @@ public class CommonUtils {
     }
 
     public static boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
+        try {
+            if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+                // this device has a camera
+                return true;
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
+        return false;
     }
 
     public static void LOG_OK(String proccessName) {
@@ -293,10 +319,17 @@ public class CommonUtils {
     }
 
     public static void hideKeyBoard(Context context) {
-        Activity activity = (Activity) context;
-        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        if (activity.getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        try {
+            Activity activity = (Activity) context;
+            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+            if (activity.getCurrentFocus() != null) {
+                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -341,6 +374,9 @@ public class CommonUtils {
                 convTime = day + " " + resources.getString(R.string.days) + " " + suffix;
             }
         } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -348,41 +384,47 @@ public class CommonUtils {
     }
 
     public static String getMessageTime(Context context, long time) {
-        Date date = new Date(time);
-        String dateValueStr;
+        String dateValueStr = null;
+        String hour = null;
 
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-        format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-        String formatted = format.format(date);
-        String hour = formatted.substring(11, 16);
+        try {
+            Date date = new Date(time);
 
-        System.out.println("formatted:" + formatted);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+            format.setTimeZone(TimeZone.getDefault());
+            String formatted = format.format(date);
+            hour = formatted.substring(11, 16);
 
-        if(isToday(date))
-            dateValueStr = context.getResources().getString(R.string.TODAY);
-        else if(isYesterday(date))
-            dateValueStr = context.getResources().getString(R.string.YESTERDAY);
-        else {
-            String[] monthArray = context.getResources().getStringArray(R.array.months);
-            String monthValue = monthArray[Integer.parseInt(formatted.substring(5, 7)) - 1];
+            Date todayDate = new Date(System.currentTimeMillis());
+            String formattedTodayDate = format.format(todayDate);
 
-            dateValueStr = formatted.substring(8, 10) + " "
-                    + monthValue.substring(0, 3) +
-                    " " + formatted.substring(0, 4);
+            if (formatted.substring(0, 10).equals(formattedTodayDate.substring(0, 10)))
+                dateValueStr = context.getResources().getString(R.string.TODAY);
+            else if (isYesterday(date))
+                dateValueStr = context.getResources().getString(R.string.YESTERDAY);
+            else {
+                String[] monthArray = context.getResources().getStringArray(R.array.months);
+                String monthValue = monthArray[Integer.parseInt(formatted.substring(5, 7)) - 1];
+
+                dateValueStr = formatted.substring(8, 10) + " "
+                        + monthValue.substring(0, 3) +
+                        " " + formatted.substring(0, 4);
+            }
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        } catch (NumberFormatException e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
 
         return dateValueStr + "  " + hour;
     }
 
-    public static boolean isToday(Date date){
-        Calendar today = Calendar.getInstance();
-        Calendar specifiedDate  = Calendar.getInstance();
-        specifiedDate.setTime(date);
-
-        return today.get(Calendar.DAY_OF_MONTH) == specifiedDate.get(Calendar.DAY_OF_MONTH)
-                &&  today.get(Calendar.MONTH) == specifiedDate.get(Calendar.MONTH)
-                &&  today.get(Calendar.YEAR) == specifiedDate.get(Calendar.YEAR);
-    }
 
     public static boolean isYesterday(Date d) {
         return DateUtils.isToday(d.getTime() + DateUtils.DAY_IN_MILLIS);
@@ -405,31 +447,52 @@ public class CommonUtils {
     }
 
     public static void setImageScaleType(PhotoSelectUtil photoSelectUtil, ImageView imageView) {
-        if (photoSelectUtil.isPortraitMode())
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        else
-            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        try {
+            if (photoSelectUtil.isPortraitMode())
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            else
+                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public static boolean isNetworkConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
+        try {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+                return true;
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
 
         return false;
     }
 
     public static void connectionErrSnackbarShow(View view, Context context) {
-        Snackbar snackbar = Snackbar.make(view,
-                context.getResources().getString(R.string.CHECK_YOUR_INTERNET_CONNECTION),
-                Snackbar.LENGTH_SHORT);
-        View snackBarView = snackbar.getView();
-        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
-        TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-        tv.setTextColor(context.getResources().getColor(R.color.White, null));
-        snackbar.show();
+        try {
+            Snackbar snackbar = Snackbar.make(view,
+                    context.getResources().getString(R.string.CHECK_YOUR_INTERNET_CONNECTION),
+                    Snackbar.LENGTH_SHORT);
+            View snackBarView = snackbar.getView();
+            snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
+            TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+            tv.setTextColor(context.getResources().getColor(R.color.White, null));
+            snackbar.show();
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public static int getRandomColor(Context context) {
