@@ -33,6 +33,7 @@ import java.util.List;
 import catchu.model.User;
 import catchu.model.UserListResponse;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
@@ -69,6 +70,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView profileName;
+        TextView profileUserName;
         TextView shortUserNameTv;
         ImageView profileImage;
         Button btnFollowStatus;
@@ -80,14 +82,13 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             super(view);
 
             profileName = (TextView) view.findViewById(R.id.profile_name);
+            profileUserName = (TextView) view.findViewById(R.id.profile_user_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
             profileImage = (ImageView) view.findViewById(R.id.profile_image);
             btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
             cardView = (CardView) view.findViewById(R.id.card_view);
             profileImage.setBackground(imageShape);
-
             setListeners();
-
         }
 
         private void setListeners() {
@@ -107,7 +108,6 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
                     listItemClickListener.onClick(v, user, position);
                 }
             });
-
         }
 
         public void manageFollowStatus() {
@@ -139,11 +139,11 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
             this.user = user;
             this.position = position;
             UserDataUtil.setName(user.getName(), profileName);
+            UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
                     user.getName(), user.getUsername(), shortUserNameTv, profileImage);
 
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
-
         }
 
 

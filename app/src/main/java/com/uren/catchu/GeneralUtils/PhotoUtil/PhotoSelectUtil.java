@@ -112,7 +112,7 @@ public class PhotoSelectUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             if (getScreeanShotBitmap() != null) {
                 resizedBitmap = getScreeanShotBitmap();
             } else if (getBitmap() != null) {
@@ -133,7 +133,7 @@ public class PhotoSelectUtil {
         } catch (IOException e) {
             ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -153,7 +153,7 @@ public class PhotoSelectUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -167,7 +167,7 @@ public class PhotoSelectUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -188,7 +188,7 @@ public class PhotoSelectUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

@@ -76,7 +76,7 @@ public class LocationTrackerAdapter implements LocationListener {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return false;
@@ -90,7 +90,7 @@ public class LocationTrackerAdapter implements LocationListener {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return location;
@@ -118,7 +118,7 @@ public class LocationTrackerAdapter implements LocationListener {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -146,7 +146,7 @@ public class LocationTrackerAdapter implements LocationListener {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -167,7 +167,7 @@ public class LocationTrackerAdapter implements LocationListener {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

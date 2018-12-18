@@ -41,6 +41,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -341,6 +342,11 @@ public class ProfileFragment extends BaseFragment
                     case R.id.manageGroupsItem:
                         drawerLayout.closeDrawer(Gravity.START);
                         startGroupSettingFragment();
+                        break;
+
+                    case R.id.messagesItem:
+                        drawerLayout.closeDrawer(Gravity.START);
+                        startMessageListFragment();
                         break;
 
                     case R.id.settingsItem:
@@ -682,6 +688,12 @@ public class ProfileFragment extends BaseFragment
 
                         }
                     }), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
+
+    public void startMessageListFragment(){
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new MessageListFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

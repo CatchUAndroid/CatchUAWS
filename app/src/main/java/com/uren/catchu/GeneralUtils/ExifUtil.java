@@ -53,7 +53,7 @@ public class ExifUtil {
         } catch (IOException e) {
             ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -70,7 +70,7 @@ public class ExifUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return bitmap;
@@ -121,14 +121,14 @@ public class ExifUtil {
             } catch (OutOfMemoryError e) {
                 ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
                 return bitmap;
             }
         } catch (IOException e) {
             ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 
@@ -156,7 +156,7 @@ public class ExifUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 

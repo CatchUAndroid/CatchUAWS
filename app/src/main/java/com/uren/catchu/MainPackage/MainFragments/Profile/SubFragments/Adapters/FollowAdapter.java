@@ -62,6 +62,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView profileName;
+        TextView profileUserName;
         TextView shortUserNameTv;
         ImageView profileImage;
         Button btnFollowStatus;
@@ -73,6 +74,7 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
             super(view);
 
             profileName = (TextView) view.findViewById(R.id.profile_name);
+            profileUserName = (TextView) view.findViewById(R.id.profile_user_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
             profileImage = (ImageView) view.findViewById(R.id.profile_image);
             btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
@@ -124,17 +126,11 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
         public void setData(User user, int position) {
             this.user = user;
             this.position = position;
-            setProfileName();
+            UserDataUtil.setName(user.getName(), profileName);
+            UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
                     user.getName(), user.getUsername(),  shortUserNameTv, profileImage);
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
-        }
-
-        public void setProfileName(){
-            if(user.getName() != null && !user.getName().isEmpty())
-                UserDataUtil.setName(user.getName(), profileName);
-            else if(user.getUsername() != null && !user.getUsername().isEmpty())
-                UserDataUtil.setName(CHAR_AMPERSAND + user.getUsername(), profileName);
         }
 
         private void openDialogBox() {

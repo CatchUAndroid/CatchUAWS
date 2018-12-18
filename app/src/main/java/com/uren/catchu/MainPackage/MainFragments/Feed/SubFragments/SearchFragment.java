@@ -26,6 +26,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapt
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import butterknife.BindView;
@@ -60,6 +61,12 @@ public class SearchFragment extends BaseFragment
         SearchFragment fragment = new SearchFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
     }
 
     @Nullable

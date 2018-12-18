@@ -32,7 +32,7 @@ public class BitmapConversion extends AppCompatActivity {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return bitmap;
@@ -54,7 +54,7 @@ public class BitmapConversion extends AppCompatActivity {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -79,7 +79,7 @@ public class BitmapConversion extends AppCompatActivity {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return resizedBitmap;
@@ -124,13 +124,13 @@ public class BitmapConversion extends AppCompatActivity {
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return result;
@@ -146,7 +146,7 @@ public class BitmapConversion extends AppCompatActivity {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
 

@@ -46,7 +46,7 @@ public class VideoSelectUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -58,7 +58,7 @@ public class VideoSelectUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -71,7 +71,7 @@ public class VideoSelectUtil {
         } catch (IllegalArgumentException e) {
             ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

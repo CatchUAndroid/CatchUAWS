@@ -93,6 +93,12 @@ public class SelectFriendFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        super.onStart();
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }

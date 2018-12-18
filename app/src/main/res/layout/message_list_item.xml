@@ -18,11 +18,9 @@
 
 
             <RelativeLayout
-                android:id="@+id/rlUserInfo"
+                android:id="@+id/messageRelLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="11dp">
+                android:layout_height="match_parent">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -39,7 +37,7 @@
                         android:layout_weight="1.5">
 
                         <ImageView
-                            android:id="@+id/profile_image"
+                            android:id="@+id/profilePicImgView"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
@@ -62,28 +60,31 @@
                         android:gravity="center_vertical">
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/profile_name"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/profileNameTv"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
+                                android:layout_marginBottom="2dp"
                                 android:layout_marginLeft="5dp"
+                                android:text="Ugur Gogebakan"
+                                android:textColor="@color/Black"
                                 android:textSize="15sp" />
 
                             <TextView
-                                android:id="@+id/profile_user_name"
-                                android:layout_width="wrap_content"
+                                android:id="@+id/messageTextTv"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:layout_marginLeft="5dp"
+                                android:text="Merhaba ugur naber?"
                                 android:textSize="12sp" />
 
                         </LinearLayout>
-
 
 
                     </RelativeLayout>
@@ -91,21 +92,20 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="3">
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="2">
 
-                        <Button
-                            android:id="@+id/btnFollowStatus"
+                        <TextView
+                            android:id="@+id/messageDateTv"
                             android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="10dp"
-                            android:text="@string/follow"
-                            android:textAllCaps="false"
-                            android:textSize="10sp" />
+                            android:layout_marginLeft="5dp"
+                            android:gravity="center"
+                            android:text="20 haz 2018"
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
-
 
 
                 </LinearLayout>

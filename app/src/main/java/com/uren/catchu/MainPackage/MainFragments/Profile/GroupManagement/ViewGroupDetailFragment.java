@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -32,6 +33,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
@@ -45,9 +47,11 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithGroupAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithGroupFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -94,8 +98,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.addFriendImgv)
     ImageView addFriendImgv;
-    @BindView(R.id.sendMessageBtn)
-    FloatingActionButton sendMessageBtn;
+    @BindView(R.id.sendMessageImgv)
+    ImageView sendMessageImgv;
 
     boolean photoExistOnImgv = false;
 
@@ -127,78 +131,135 @@ public class ViewGroupDetailFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.fragment_view_group_detail, container, false);
-            ButterKnife.bind(this, mView);
-            setGUIVariables();
-            getGroupInformation();
-            addListeners();
-            setShapes();
+        try {
+            if (mView == null) {
+                mView = inflater.inflate(R.layout.fragment_view_group_detail, container, false);
+                ButterKnife.bind(this, mView);
+                setGUIVariables();
+                getGroupInformation();
+                addListeners();
+                setShapes();
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
         return mView;
     }
 
     public void setGUIVariables() {
-        permissionModule = new PermissionModule(getActivity());
-        mProgressDialog = new ProgressDialog(getActivity());
-        groupParticipantList = new ArrayList<>();
-        progressDialogUtil = new ProgressDialogUtil(getActivity(), null, false);
+        try {
+            permissionModule = new PermissionModule(getActivity());
+            mProgressDialog = new ProgressDialog(getActivity());
+            groupParticipantList = new ArrayList<>();
+            progressDialogUtil = new ProgressDialogUtil(getActivity(), null, true);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void setShapes(){
-        addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
-                0, GradientDrawable.OVAL, 50, 0));
+        try {
+            addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.OVAL, 50, 0));
+            sendMessageImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumTurquoise, null),
+                    0, GradientDrawable.OVAL, 50, 0));
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void getGroupInformation() {
-        if (groupRequestResultResultArrayItem != null) {
-            setCardViewVisibility();
-            setGroupTitle();
-            if (groupRequestResultResultArrayItem.getGroupPhotoUrl() != null)
-                setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
-            startGetGroupParticipants();
+        try {
+            if (groupRequestResultResultArrayItem != null) {
+                setCardViewVisibility();
+                setGroupTitle();
+                if (groupRequestResultResultArrayItem.getGroupPhotoUrl() != null)
+                    setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                startGetGroupParticipants();
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
     private void startGetGroupParticipants() {
 
-        progressDialogUtil.dialogShow();
-        UserGroupsProcess.getGroupParticipants(groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
-            @Override
-            public void onComplete(Object object) {
-                groupRequestResult = (GroupRequestResult) object;
-                groupParticipantList = new ArrayList<>();
-                groupParticipantList.addAll(groupRequestResult.getResultArrayParticipantList());
-                setParticipantCount();
-                setupViewRecyclerView();
-                progressDialogUtil.dialogDismiss();
-            }
+        try {
+            progressDialogUtil.dialogShow();
+            UserGroupsProcess.getGroupParticipants(groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    groupRequestResult = (GroupRequestResult) object;
+                    groupParticipantList = new ArrayList<>();
+                    groupParticipantList.addAll(groupRequestResult.getResultArrayParticipantList());
+                    setParticipantCount();
+                    setupViewRecyclerView();
+                    progressDialogUtil.dialogDismiss();
+                }
 
-            @Override
-            public void onFailed(Exception e) {
-                progressDialogUtil.dialogDismiss();
-                CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.error) +
-                        getResources().getString(R.string.SOMETHING_WENT_WRONG));
-            }
-        });
+                @Override
+                public void onFailed(Exception e) {
+                    progressDialogUtil.dialogDismiss();
+                    ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.error) +
+                            getResources().getString(R.string.SOMETHING_WENT_WRONG));
+                }
+            });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void setParticipantCount() {
-        personCntTv.setText(Integer.toString(groupParticipantList.size()));
-    }
-
-    public int getParticipantCount() {
-        return groupParticipantList.size();
+        try {
+            personCntTv.setText(Integer.toString(groupParticipantList.size()));
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void setCardViewVisibility() {
-        if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
-            addFriendCardView.setVisibility(View.VISIBLE);
+        try {
+            if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
+                addFriendCardView.setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void setGroupTitle() {
-        subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
-        subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
+        try {
+            subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
+            subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public String getToolbarSubtitle() {
@@ -207,248 +268,327 @@ public class ViewGroupDetailFragment extends BaseFragment {
     }
 
     public void setGroupImage(String photoUrl) {
-        if (photoUrl != null && !photoUrl.trim().isEmpty()) {
-            photoExistOnImgv = true;
-            groupPictureImgV.setPadding(0, 0, 0, 0);
-            Glide.with(this)
-                    .load(photoUrl)
-                    .apply(RequestOptions.centerInsideTransform())
-                    .into(groupPictureImgV);
-        } else {
-            photoExistOnImgv = false;
-            groupPictureImgV.setPadding(200, 200, 200, 200);
-            Glide.with(this)
-                    .load(getResources().getIdentifier("groups_icon_500", "drawable", getActivity().getPackageName()))
-                    .apply(RequestOptions.centerInsideTransform())
-                    .into(groupPictureImgV);
+        try {
+            if (photoUrl != null && !photoUrl.trim().isEmpty()) {
+                photoExistOnImgv = true;
+                groupPictureImgV.setPadding(0, 0, 0, 0);
+                Glide.with(this)
+                        .load(photoUrl)
+                        .apply(RequestOptions.centerInsideTransform())
+                        .into(groupPictureImgV);
+            } else {
+                photoExistOnImgv = false;
+                groupPictureImgV.setPadding(200, 200, 200, 200);
+                Glide.with(this)
+                        .load(getResources().getIdentifier("groups_icon_500", "drawable", getActivity().getPackageName()))
+                        .apply(RequestOptions.centerInsideTransform())
+                        .into(groupPictureImgV);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
     public void addListeners() {
 
-        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mFragmentNavigation.pushFragment(new MessageWithGroupFragment(groupRequestResultResultArrayItem), ANIMATE_LEFT_TO_RIGHT);
-            }
-        });
-
-        addFriendCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (mFragmentNavigation != null) {
-                    mFragmentNavigation.pushFragment(new SelectFriendFragment(groupRequestResultResultArrayItem.getGroupid(),
-                            groupParticipantList, ViewGroupDetailFragment.class.getName(),
-                            new ReturnCallback() {
-                                @Override
-                                public void onReturn(Object object) {
-                                    startGetGroupParticipants();
-                                }
-                            }), ANIMATE_RIGHT_TO_LEFT);
+        try {
+            sendMessageImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    sendMessageImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                    mFragmentNavigation.pushFragment(new MessageWithGroupFragment(groupRequestResultResultArrayItem), ANIMATE_LEFT_TO_RIGHT);
                 }
-            }
-        });
+            });
 
-        deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DialogBoxUtil.showYesNoDialog(getActivity(), null, getResources().getString(R.string.areYouSureExitFromGroup), new YesNoDialogBoxCallback() {
-                    @Override
-                    public void yesClick() {
-                        exitFromGroup(AccountHolderInfo.getUserID());
-                    }
+            addFriendCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                    @Override
-                    public void noClick() {
-
-                    }
-                });
-            }
-        });
-
-        editImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if (mFragmentNavigation != null) {
-                    mFragmentNavigation.pushFragment(new EditGroupNameFragment(groupRequestResultResultArrayItem,
-                            new CompleteCallback() {
-                                @Override
-                                public void onComplete(Object object) {
-                                    if (object != null) {
-                                        String edittedGroupName = (String) object;
-                                        subtitleCollapsingToolbarLayout.setTitle(edittedGroupName);
-                                        recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
+                    if (mFragmentNavigation != null) {
+                        mFragmentNavigation.pushFragment(new SelectFriendFragment(groupRequestResultResultArrayItem.getGroupid(),
+                                groupParticipantList, ViewGroupDetailFragment.class.getName(),
+                                new ReturnCallback() {
+                                    @Override
+                                    public void onReturn(Object object) {
+                                        startGetGroupParticipants();
                                     }
-                                }
-
-                                @Override
-                                public void onFailed(Exception e) {
-                                    DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                        @Override
-                                        public void okClick() {
-                                        }
-                                    });
-                                }
-                            }), ANIMATE_LEFT_TO_RIGHT);
+                                }), ANIMATE_RIGHT_TO_LEFT);
+                    }
                 }
-            }
-        });
+            });
 
-        groupPictureImgV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startChooseImageProc();
-            }
-        });
+            deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogBoxUtil.showYesNoDialog(getActivity(), null, getResources().getString(R.string.areYouSureExitFromGroup), new YesNoDialogBoxCallback() {
+                        @Override
+                        public void yesClick() {
+                            exitFromGroup(AccountHolderInfo.getUserID());
+                        }
+
+                        @Override
+                        public void noClick() {
+
+                        }
+                    });
+                }
+            });
+
+            editImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                    if (mFragmentNavigation != null) {
+                        mFragmentNavigation.pushFragment(new EditGroupNameFragment(groupRequestResultResultArrayItem,
+                                new CompleteCallback() {
+                                    @Override
+                                    public void onComplete(Object object) {
+                                        if (object != null) {
+                                            String edittedGroupName = (String) object;
+                                            subtitleCollapsingToolbarLayout.setTitle(edittedGroupName);
+                                            recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception e) {
+                                        DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                            @Override
+                                            public void okClick() {
+                                            }
+                                        });
+                                    }
+                                }), ANIMATE_LEFT_TO_RIGHT);
+                    }
+                }
+            });
+
+            groupPictureImgV.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startChooseImageProc();
+                }
+            });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void setupViewRecyclerView() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        adapter = new GroupDetailListAdapter(getActivity(), groupParticipantList, groupRequestResultResultArrayItem, new ItemClickListener() {
-            @Override
-            public void onClick(Object object, int clickedItem) {
-                if (clickedItem == CODE_DISPLAY_PROFILE) {
-                    if (mFragmentNavigation != null) {
-                        User user = (User) object;
-                        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-                        userInfoListItem.setAdapter(adapter);
-                        userInfoListItem.setClickedPosition(clickedItem);
-                        mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+        try {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            adapter = new GroupDetailListAdapter(getActivity(), groupParticipantList, groupRequestResultResultArrayItem, new ItemClickListener() {
+                @Override
+                public void onClick(Object object, int clickedItem) {
+                    if (clickedItem == CODE_DISPLAY_PROFILE) {
+                        if (mFragmentNavigation != null) {
+                            User user = (User) object;
+                            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                            userInfoListItem.setAdapter(adapter);
+                            userInfoListItem.setClickedPosition(clickedItem);
+                            mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                        }
+                    } else if (clickedItem == CODE_REMOVE_FROM_GROUP) {
+                        List<UserProfileProperties> groupParticipantList1 = (List<UserProfileProperties>) object;
+                        groupParticipantList.clear();
+                        groupParticipantList.addAll(groupParticipantList1);
+                    } else if (clickedItem == CODE_CHANGE_AS_ADMIN) {
+                        recyclerViewAdapterCallback.OnChanged((GroupRequestResultResultArrayItem) object);
                     }
-                } else if (clickedItem == CODE_REMOVE_FROM_GROUP) {
-                    List<UserProfileProperties> groupParticipantList1 = (List<UserProfileProperties>) object;
-                    groupParticipantList.clear();
-                    groupParticipantList.addAll(groupParticipantList1);
-                } else if (clickedItem == CODE_CHANGE_AS_ADMIN) {
-                    recyclerViewAdapterCallback.OnChanged((GroupRequestResultResultArrayItem) object);
                 }
-            }
-        });
-        recyclerView.setAdapter(adapter);
+            });
+            recyclerView.setAdapter(adapter);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
         super.onStart();
     }
 
     public void exitFromGroup(final String userid) {
 
-        UserGroupsProcess.exitFromGroup(userid, groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
-            @Override
-            public void onComplete(Object object) {
-                recyclerViewAdapterCallback.OnRemoved();
-                getActivity().onBackPressed();
-            }
+        try {
+            UserGroupsProcess.exitFromGroup(userid, groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    recyclerViewAdapterCallback.OnRemoved();
+                    getActivity().onBackPressed();
+                }
 
-            @Override
-            public void onFailed(Exception e) {
-                DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                    @Override
-                    public void okClick() {
-                    }
-                });
-            }
-        });
+                @Override
+                public void onFailed(Exception e) {
+                    DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
+                }
+            });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void startChooseImageProc() {
-        DialogBoxUtil.photoChosenDialogBox(getActivity(), getResources().
-                getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
-            @Override
-            public void onGallerySelected() {
-                startGalleryProcess();
-            }
+        try {
+            DialogBoxUtil.photoChosenDialogBox(getActivity(), getResources().
+                    getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
+                @Override
+                public void onGallerySelected() {
+                    startGalleryProcess();
+                }
 
-            @Override
-            public void onCameraSelected() {
-                startCameraProcess();
-            }
+                @Override
+                public void onCameraSelected() {
+                    startCameraProcess();
+                }
 
-            @Override
-            public void onPhotoRemoved() {
-                groupRequestResultResultArrayItem.setGroupPhotoUrl("");
-                photoSelectUtil = null;
-                updateGroup();
-            }
-        });
+                @Override
+                public void onPhotoRemoved() {
+                    groupRequestResultResultArrayItem.setGroupPhotoUrl("");
+                    photoSelectUtil = null;
+                    updateGroup();
+                }
+            });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void startCameraProcess() {
 
-        if (!CommonUtils.checkCameraHardware(getActivity())) {
-            CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
-            return;
-        }
+        try {
+            if (!CommonUtils.checkCameraHardware(getActivity())) {
+                CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
+                return;
+            }
 
-        if (!permissionModule.checkWriteExternalStoragePermission())
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        else
-            checkCameraPermission();
+            if (!permissionModule.checkWriteExternalStoragePermission())
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+            else
+                checkCameraPermission();
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void checkCameraPermission() {
-        if (!permissionModule.checkCameraPermission())
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
-        else {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+        try {
+            if (!permissionModule.checkCameraPermission())
+                requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
+            else {
+                startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
     private void startGalleryProcess() {
-        startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
+        try {
+            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                    getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == permissionModule.PERMISSION_CAMERA) {
-                photoSelectUtil = new PhotoSelectUtil(getActivity(), data, CAMERA_TEXT);
-                updateGroup();
-            } else if (requestCode == permissionModule.getImageGalleryPermission()) {
-                photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
-                updateGroup();
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == permissionModule.PERMISSION_CAMERA) {
+                    photoSelectUtil = new PhotoSelectUtil(getActivity(), data, CAMERA_TEXT);
+                    updateGroup();
+                } else if (requestCode == permissionModule.getImageGalleryPermission()) {
+                    photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
+                    updateGroup();
+                }
             }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                checkCameraPermission();
+        try {
+            if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    checkCameraPermission();
+                }
+            } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+                startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
             }
-        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
     public void updateGroup() {
 
-        UserGroupsProcess.updateGroup(getContext(), photoSelectUtil, groupRequestResultResultArrayItem,
-                new UpdateGroupCallback() {
-                    @Override
-                    public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
-                        if (groupItem != null) {
-                            groupRequestResultResultArrayItem = groupItem;
-                            setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
-                            recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
-                        }
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
+        try {
+            UserGroupsProcess.updateGroup(getContext(), photoSelectUtil, groupRequestResultResultArrayItem,
+                    new UpdateGroupCallback() {
+                        @Override
+                        public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
+                            if (groupItem != null) {
+                                groupRequestResultResultArrayItem = groupItem;
+                                setGroupImage(groupRequestResultResultArrayItem.getGroupPhotoUrl());
+                                recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
                             }
-                        });
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onFailed(Exception e) {
+                            DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
+                        }
+                    });
+        } catch (Resources.NotFoundException e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 }

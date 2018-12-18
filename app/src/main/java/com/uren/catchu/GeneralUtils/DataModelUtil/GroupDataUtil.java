@@ -46,7 +46,7 @@ public class GroupDataUtil {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, EffectTouchListener.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

@@ -142,6 +142,8 @@ public class StringConstants {
     public static final String FB_CHILD_RECEIPT = "Receipt";
     public static final String FB_CHILD_NAME = "Name";
     public static final String FB_CHILD_USERID = "UserId";
+    public static final String FB_CHILD_IS_SEEN = "IsSeen";
+    public static final String FB_CHILD_MESSAGE_CONTENT = "MessageContent";
 
     public static final String FB_CHILD_ERRORS = "Errors";
     public static final String FB_CHILD_ANDROID = "Android";

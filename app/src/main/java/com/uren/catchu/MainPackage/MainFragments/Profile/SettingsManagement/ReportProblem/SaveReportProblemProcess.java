@@ -98,7 +98,7 @@ public class SaveReportProblemProcess {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -154,7 +154,7 @@ public class SaveReportProblemProcess {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -166,7 +166,7 @@ public class SaveReportProblemProcess {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -188,7 +188,7 @@ public class SaveReportProblemProcess {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -223,7 +223,7 @@ public class SaveReportProblemProcess {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -261,7 +261,7 @@ public class SaveReportProblemProcess {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

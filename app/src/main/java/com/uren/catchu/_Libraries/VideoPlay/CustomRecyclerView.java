@@ -142,7 +142,7 @@ public class CustomRecyclerView extends RecyclerView {
                         } catch (Exception e) {
                             ErrorSaveHelper.writeErrorToDB(null, CustomRecyclerView.class.getSimpleName(),
                                     new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                                    }.getClass().getEnclosingMethod().getName(), e.toString());
                         }
                     }
                 } else {

@@ -68,7 +68,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -127,7 +127,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -142,7 +142,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -154,18 +154,20 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                         messageTv.setText(messageBox.getMessageText());
 
                     if (messageBox.getDate() != 0) {
-                        Date date = new Date(messageBox.getDate());
+
+                        createAtTv.setText(CommonUtils.getMessageTime(context, messageBox.getDate()));
+                        /*Date date = new Date(messageBox.getDate());
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
                         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
                         String formatted = format.format(date);
                         System.out.println("formatted:" + formatted);
-                        createAtTv.setText(formatted.substring(11, 16));
+                        createAtTv.setText(formatted.substring(11, 16));*/
                     }
                 }
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -192,7 +194,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -206,7 +208,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -230,7 +232,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -248,7 +250,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -262,7 +264,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return listSize;

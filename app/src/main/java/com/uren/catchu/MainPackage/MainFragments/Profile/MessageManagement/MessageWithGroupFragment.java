@@ -156,7 +156,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             //messageEdittext.setUseSystemDefault(true);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return mView;
@@ -182,7 +182,7 @@ public class MessageWithGroupFragment extends BaseFragment {
                     0, GradientDrawable.RECTANGLE, 25, 0));
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -196,7 +196,7 @@ public class MessageWithGroupFragment extends BaseFragment {
                 toolbarTitle.setText(chattedGroup.getName());
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -292,11 +292,11 @@ public class MessageWithGroupFragment extends BaseFragment {
             });
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         } catch (NumberFormatException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -367,7 +367,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -394,7 +394,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             messageBoxList.add(groupMessageBox);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -421,7 +421,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             setAdapterVal = true;
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -453,7 +453,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -490,7 +490,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -504,7 +504,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             deleteMsgCntTv.setText("");
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -517,7 +517,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             messageWithGroupAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -529,7 +529,7 @@ public class MessageWithGroupFragment extends BaseFragment {
             databaseReference.removeEventListener(valueEventListener);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),MessageWithGroupFragment.class.getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

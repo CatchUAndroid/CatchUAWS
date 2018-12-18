@@ -100,6 +100,7 @@ public class GroupManagementFragment extends BaseFragment {
 
     @Override
     public void onStart() {
+        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
         super.onStart();
     }
 

@@ -53,17 +53,21 @@ public class ErrorSaveHelper {
         // TODO: 14.12.2018 - DB ye yazma adimlari silinecek
 
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_ERRORS).child(FB_CHILD_ANDROID)
-                .child(className).child(methodName);
+        try {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_ERRORS).child(FB_CHILD_ANDROID)
+                    .child(className).child(methodName);
 
-        Map<String, String> errorVal = new HashMap<>();
-        errorVal.put(errMessage, " ");
+            Map<String, String> errorVal = new HashMap<>();
+            errorVal.put(databaseReference.push().getKey(), errMessage);
 
-        databaseReference.setValue(errorVal, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-
-            }
-        });
+            databaseReference.setValue(errorVal, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    System.out.println();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

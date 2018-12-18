@@ -61,6 +61,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView profileName;
+        TextView profileUserName;
         TextView shortUserNameTv;
         ImageView profileImage;
         Button btnFollowStatus;
@@ -72,6 +73,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
             super(view);
 
             profileName = (TextView) view.findViewById(R.id.profile_name);
+            profileUserName = (TextView) view.findViewById(R.id.profile_user_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
             profileImage = (ImageView) view.findViewById(R.id.profile_image);
             btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
@@ -121,13 +123,12 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
         }
 
         public void setData(User person, int position) {
-
-            this.profileName.setText(person.getName());
             this.person = person;
             this.position = position;
+            UserDataUtil.setName(person.getName(), profileName);
+            UserDataUtil.setUsername(person.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(context, person.getProfilePhotoUrl(),
                     person.getName(), person.getUsername(), shortUserNameTv, profileImage);
-
             UserDataUtil.updateFollowButton2(context, person.getFollowStatus(), btnFollowStatus, true);
         }
 

@@ -70,7 +70,7 @@ public class PendingRequestsFragment extends BaseFragment {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return mView;
@@ -85,7 +85,7 @@ public class PendingRequestsFragment extends BaseFragment {
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -101,7 +101,7 @@ public class PendingRequestsFragment extends BaseFragment {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

@@ -64,7 +64,7 @@ public class PhoneNumberFormatUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhoneNumberFormatUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -94,7 +94,7 @@ public class PhoneNumberFormatUtil {
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhoneNumberFormatUtil.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }

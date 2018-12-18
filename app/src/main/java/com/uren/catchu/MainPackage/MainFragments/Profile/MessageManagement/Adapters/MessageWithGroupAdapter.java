@@ -46,7 +46,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -113,7 +113,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, MessageWithGroupAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -128,7 +128,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -155,7 +155,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -182,7 +182,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -196,7 +196,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -220,7 +220,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                         new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
         }
@@ -238,7 +238,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
@@ -252,7 +252,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
                     new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return listSize;
