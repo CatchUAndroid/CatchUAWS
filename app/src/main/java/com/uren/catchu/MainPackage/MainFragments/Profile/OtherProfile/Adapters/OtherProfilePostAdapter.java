@@ -58,12 +58,14 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
     private User selectedUser;
+    private int pageCnt;
 
-    public OtherProfilePostAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation ,User selectedUser) {
+    public OtherProfilePostAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation ,User selectedUser, int pageCnt) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.selectedUser = selectedUser;
+        this.pageCnt = pageCnt;
         this.postList = new ArrayList<Post>();
     }
 
@@ -147,7 +149,7 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
                     String catchType  = OTHER_PROFILE_POST_TYPE_SHARED;
                     String targetUid = selectedUser.getUserid();
                     String userName = selectedUser.getUsername();
-                    fragmentNavigation.pushFragment(OtherProfilePostListViewFragment.newInstance(catchType, targetUid, position, userName));
+                    fragmentNavigation.pushFragment(OtherProfilePostListViewFragment.newInstance(catchType, targetUid, position, userName, pageCnt));
 
                     //setSinglePostFragmentItems();
                     Log.i("clickedPostId ", postList.get(position).getPostid());
@@ -341,6 +343,10 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
         this.postList.addAll(newPostList);
         diffResult.dispatchUpdatesTo(this);
 
+    }
+
+    public void  updatePageCount(int pageCount){
+        this.pageCnt = pageCount;
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {

@@ -62,6 +62,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private List<Post> postList;
     private List<Post> addedPostList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
+    private int pageCnt;
     private FollowClickCallback followClickCallback;
     private RecyclerScrollListener recyclerScrollListener;
     private User selectedUser;
@@ -69,12 +70,14 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private static final int OPERATION_TYPE_NONE = -1;
     private static final int OPERATION_TYPE_LOAD_MORE = 0;
     private static final int OPERATION_TYPE_UPDATE_POST = 1;
+    private static final int OPERATION_TYPE_PAGE_COUNT = 2;
     private int operationType = OPERATION_TYPE_NONE;
 
-    public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
+    public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation, int pageCnt) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
+        this.pageCnt = pageCnt;
         this.objectList = new ArrayList<Object>();
         this.postList = new ArrayList<Post>();
         this.addedPostList = new ArrayList<Post>();
@@ -154,6 +157,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                             ((PostViewHolder) holder).updatePostList(position);
                         } else if (operationType == OPERATION_TYPE_LOAD_MORE) {
                             ((PostViewHolder) holder).loadMorePost();
+                        }else if( operationType == OPERATION_TYPE_PAGE_COUNT){
+                            ((PostViewHolder) holder).updatePageCount();
                         }
 
                         operationType = OPERATION_TYPE_NONE;
@@ -504,7 +509,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private void setAdapter() {
-            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser);
+            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser, pageCnt);
             gridRecyclerView.setAdapter(otherProfilePostAdapter);
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
@@ -522,6 +527,10 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         public void loadMorePost() {
             otherProfilePostAdapter.addAll(addedPostList);
+        }
+
+        public void updatePageCount() {
+            otherProfilePostAdapter.updatePageCount(pageCnt);
         }
 
         private void showNoFeedLayout(boolean showNoFeedLayout) {
@@ -594,9 +603,17 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             OtherProfilePostList.getInstance().addPostList(addedPostList);
             notifyItemRangeInserted(1, 1);
         }
+
+        addLastItem();
     }
 
     public void updatePosts(List<Post> addedPostList) {
+
+        if(objectList.size() == 1){
+            addPosts(addedPostList);
+            return;
+        }
+
         this.postList.clear();
         this.postList.addAll(addedPostList);
         OtherProfilePostList.getInstance().clearPostList();
@@ -646,6 +663,13 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             return true;
         else
             return false;
+    }
+
+    public void innerRecyclerPageCntChanged(int pageCnt) {
+        this.pageCnt = pageCnt;
+        Post post = new Post(); //just to recognize the 'instance of'
+        operationType = OPERATION_TYPE_PAGE_COUNT;
+        notifyItemRangeChanged(1, 1, post);
     }
 
 

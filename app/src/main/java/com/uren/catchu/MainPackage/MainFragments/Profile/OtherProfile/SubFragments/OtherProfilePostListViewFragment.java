@@ -78,6 +78,7 @@ implements View.OnClickListener{
     private boolean isFirstFetch = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt, pageCnt;
+    private int comingPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
     //Location
@@ -108,12 +109,13 @@ implements View.OnClickListener{
 
 
 
-    public static OtherProfilePostListViewFragment newInstance(String catchType, String targetUid, int position, String userName) {
+    public static OtherProfilePostListViewFragment newInstance(String catchType, String targetUid, int position, String userName, int comingPageCnt) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);
         args.putString("targetUid", targetUid);
         args.putInt("position", position);
         args.putString("userName", userName);
+        args.putInt("comingPageCnt", comingPageCnt);
         OtherProfilePostListViewFragment fragment = new OtherProfilePostListViewFragment();
         fragment.setArguments(args);
         return fragment;
@@ -169,6 +171,7 @@ implements View.OnClickListener{
             targetUid = (String) args.getString("targetUid");
             position = (Integer) args.getInt("position");
             userName = (String) args.getString("userName");
+            comingPageCnt = (Integer) args.getInt("comingPageCnt");
         }
     }
 
@@ -180,6 +183,8 @@ implements View.OnClickListener{
         setPullToRefresh();
         setRecyclerViewScroll();
         setPaginationValues();
+
+        pageCnt = comingPageCnt;
 
     }
 
@@ -374,7 +379,7 @@ implements View.OnClickListener{
         String sUserId = AccountHolderInfo.getUserID();
         String sUid = targetUid;
         String sLongitude = longitude;
-        String sPerpage = String.valueOf(perPageCnt);
+        String sPerpage = String.valueOf(9);
         String sLatitude = latitude;
         String sRadius = radius;
         String sPage = String.valueOf(pageCnt);
@@ -447,6 +452,7 @@ implements View.OnClickListener{
         loading = true;
         postList.addAll(addPostList);
         if (pageCnt != 1) {
+            boolean x = userPostListViewAdapter.isShowingProgressLoading();
             userPostListViewAdapter.removeProgressLoading();
         }
 
