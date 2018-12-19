@@ -233,6 +233,9 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             loading = false;
+
+                            // TODO: 20.12.2018 - en alta gelindiginde tekrar scroll yapildiginda bu blok calisiyor, bakilabilir.
+                            
                             Log.v("...", "Last Item Wow !");
                             //Do pagination.. i.e. fetch new data
                             pageCnt++;

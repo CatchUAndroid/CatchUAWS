@@ -93,7 +93,7 @@ public class AccountHolderFacebookFriends {
                                 providerListProcess(providerList);
 
                             } catch (JSONException e) {
-                                ErrorSaveHelper.writeErrorToDB(null, AccountHolderFacebookFriends.class.getSimpleName(),
+                                ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                                 e.printStackTrace();

@@ -140,7 +140,7 @@ public class CustomRecyclerView extends RecyclerView {
                                 }
                             }
                         } catch (Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(null, CustomRecyclerView.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.toString());
                         }
@@ -186,7 +186,7 @@ public class CustomRecyclerView extends RecyclerView {
                                 }
                             }
                         } catch (Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(null, CustomRecyclerView.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
                         }

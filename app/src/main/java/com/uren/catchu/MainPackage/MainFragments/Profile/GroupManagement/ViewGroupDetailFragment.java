@@ -141,7 +141,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 setShapes();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -156,7 +156,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             groupParticipantList = new ArrayList<>();
             progressDialogUtil = new ProgressDialogUtil(getActivity(), null, true);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -170,7 +170,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             sendMessageImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumTurquoise, null),
                     0, GradientDrawable.OVAL, 50, 0));
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -187,7 +187,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 startGetGroupParticipants();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -212,7 +212,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 @Override
                 public void onFailed(Exception e) {
                     progressDialogUtil.dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                     CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.error) +
@@ -220,7 +220,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 }
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -231,7 +231,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
         try {
             personCntTv.setText(Integer.toString(groupParticipantList.size()));
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -243,7 +243,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
                 addFriendCardView.setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -255,7 +255,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
             subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -285,7 +285,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                         .into(groupPictureImgV);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ViewGroupDetailFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

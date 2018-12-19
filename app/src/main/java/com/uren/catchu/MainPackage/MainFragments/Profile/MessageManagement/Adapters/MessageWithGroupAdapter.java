@@ -44,7 +44,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             this.messageDeleteCallback = messageDeleteCallback;
             this.deleteMsgCntTv = deleteMsgCntTv;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -111,7 +111,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     }
                 });
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -126,7 +126,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                 setCardViewPosition();
                 setSelectedDeleteValues();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -153,7 +153,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     }
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -180,7 +180,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -194,7 +194,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -218,7 +218,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     deleteMsgCntTv.setText(Integer.toString(deleteCount));
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -236,7 +236,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             GroupMessageBox groupMessageBox = messageBoxArrayList.get(position);
             holder.setData(groupMessageBox, position);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -250,7 +250,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
                 listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

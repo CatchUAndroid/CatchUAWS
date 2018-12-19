@@ -599,7 +599,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -801,7 +801,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -822,7 +822,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -846,7 +846,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 requestPermissions(new String[]{Manifest.permission.CAMERA},
                         permissionModule.PERMISSION_CAMERA);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -861,7 +861,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -876,7 +876,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             startActivityForResult(Intent.createChooser(intent,
                     getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -895,7 +895,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
                 startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -919,7 +919,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 });
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -970,7 +970,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -985,7 +985,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 mapView.getMapAsync(this);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1007,7 +1007,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             } else
                 initializeMap(mMap);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1093,7 +1093,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 startVideoViewFragment();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
@@ -1109,7 +1109,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             setVideoSelectImgvFilled();
             startVideoViewFragment();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1122,7 +1122,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
             shareItems.addVideoShareItemBox(videoShareItemBox);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1150,7 +1150,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         }), ANIMATE_RIGHT_TO_LEFT);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1189,7 +1189,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1203,7 +1203,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
             shareItems.getPost().setLocation(tempLoc);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1216,7 +1216,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             shareItems.clearImageShareItemBox();
             shareItems.addImageShareItemBox(imageShareItemBox);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1235,7 +1235,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1254,7 +1254,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                             }
                         });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1268,7 +1268,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (locationManager != null)
                 locationManager.removeUpdates(locationTrackObj);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1283,7 +1283,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             if (locationManager != null)
                 locationManager.removeUpdates(locationTrackObj);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1304,7 +1304,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 }));
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1320,7 +1320,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
             justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1334,7 +1334,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     GradientDrawable.OVAL, 50, 3));
             photoCheckedImgv.setVisibility(View.VISIBLE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1348,7 +1348,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     GradientDrawable.OVAL, 50, 3));
             videoCheckedImgv.setVisibility(View.VISIBLE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1362,7 +1362,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     GradientDrawable.OVAL, 50, 3));
             textCheckedImgv.setVisibility(View.VISIBLE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1374,7 +1374,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             photoSelectImgv.setBackground(null);
             photoCheckedImgv.setVisibility(View.GONE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1386,7 +1386,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             videoSelectImgv.setBackground(null);
             videoCheckedImgv.setVisibility(View.GONE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1398,7 +1398,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             textSelectImgv.setBackground(null);
             textCheckedImgv.setVisibility(View.GONE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1417,7 +1417,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 keyboardResized = true;
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -1430,7 +1430,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         try {
             keyboardHeightProvider.close();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), SharePostFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

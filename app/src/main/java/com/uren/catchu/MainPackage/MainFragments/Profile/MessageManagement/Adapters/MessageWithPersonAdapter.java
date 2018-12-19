@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,8 +28,10 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -40,6 +43,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import catchu.model.FollowInfoListResponse;
@@ -73,7 +77,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             this.messageDeleteCallback = messageDeleteCallback;
             this.deleteMsgCntTv = deleteMsgCntTv;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -130,7 +134,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             }
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -182,7 +186,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     }
                 });
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -197,7 +201,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                 setCardViewPosition();
                 setSelectedDeleteValues();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -222,7 +226,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     }
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -249,7 +253,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -263,7 +267,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -287,7 +291,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     deleteMsgCntTv.setText(Integer.toString(deleteCount));
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -329,6 +333,15 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             return false;
     }
 
+    /*public void updateMessageListItems(List<MessageBox> newMessageList) {
+        final MessageDiffCallback diffCallback = new MessageDiffCallback(this.messageBoxArrayList, newMessageList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+
+        this.messageBoxArrayList.clear();
+        this.messageBoxArrayList.addAll(newMessageList);
+        diffResult.dispatchUpdatesTo(this);
+    }*/
+
     @Override
     public int getItemCount() {
         int listSize = 0;
@@ -336,7 +349,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
                 listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

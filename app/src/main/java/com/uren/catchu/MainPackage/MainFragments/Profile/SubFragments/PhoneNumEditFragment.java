@@ -135,7 +135,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 checkPhoneNumExistance();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -157,7 +157,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             countryListResponse.setItems(new ArrayList<Country>());
             selectedPhone = new Phone();
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -233,7 +233,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -268,7 +268,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             } else
                 getCountryList();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -287,7 +287,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 }), ANIMATE_DOWN_TO_UP);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -341,7 +341,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 }
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -355,7 +355,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             selectedPhone.setCountryCode(country.getCode());
             selectedPhone.setDialCode(country.getDialCode());
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -376,7 +376,7 @@ public class PhoneNumEditFragment extends BaseFragment {
 
                 @Override
                 public void onFailed(Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     DialogBoxUtil.showErrorDialog(getActivity(), e.getMessage(), new InfoDialogBoxCallback() {
@@ -389,7 +389,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 }
             }, false, userProfileProperties, null);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -414,7 +414,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 @Override
                 public void onFailed(Exception e) {
                     dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
@@ -427,7 +427,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             });
             phoneVerification.startPhoneNumberVerification();
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -446,14 +446,14 @@ public class PhoneNumEditFragment extends BaseFragment {
 
                     @Override
                     public void onFailed(Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+                        ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                                 new Object() {
                                 }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     }
                 }), ANIMATE_DOWN_TO_UP);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PhoneNumEditFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

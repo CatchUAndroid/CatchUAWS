@@ -75,7 +75,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -87,7 +87,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             this.groupParticipantList = new ArrayList<UserProfileProperties>();
             this.groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -107,7 +107,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
             addFriendCardView = activity.findViewById(R.id.addFriendCardView);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -175,7 +175,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                             AlertDialog alert = builder.create();
                             alert.show();
                         } catch (Resources.NotFoundException e) {
-                            ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.toString());
                             e.printStackTrace();
@@ -197,7 +197,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 user.setUsername(userProfile.getUsername());
                 user.setProvider(userProfile.getProvider());
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -215,7 +215,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 UserDataUtil.setProfilePicture(context, userProfile.getProfilePhotoUrl(),
                         userProfile.getName(), userProfile.getUsername(), shortUsernameTv, specialProfileImgView);
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -251,7 +251,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 } else
                     adminDisplayBtn.setVisibility(View.GONE);
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -273,7 +273,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
                     @Override
                     public void onFailed(Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                        ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                                 new Object() {
                                 }.getClass().getEnclosingMethod().getName(), e.toString());
                         CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) +
@@ -281,7 +281,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                     }
                 });
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -304,7 +304,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
                             @Override
                             public void onFailed(Exception e) {
-                                ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.toString());
                                 CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) +
@@ -312,7 +312,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                             }
                         });
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -326,7 +326,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
             UserProfileProperties selectedFriend = groupParticipantList.get(position);
             holder.setData(selectedFriend, position);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,GroupDetailListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

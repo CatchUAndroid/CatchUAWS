@@ -55,11 +55,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.Post;
 import catchu.model.User;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 
@@ -141,12 +143,13 @@ public class MessageWithPersonFragment extends BaseFragment {
 
     boolean itemAdded = false;
     boolean adapterLoaded = false;
-    boolean progressLoaded = false;
+    boolean progressLoaded = true;
     MessageBox lastAddedMessage;
 
     String messageContentId = null;
     long lastChattedTime;
     int limitValue;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
 
     private static final int CODE_FIRST_LOADED = 0;
     private static final int CODE_SCROLL_LOADED = 1;
@@ -182,7 +185,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             //emojIcon.setUseSystemEmoji(true);
             //messageEdittext.setUseSystemDefault(true);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -210,7 +213,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 25, 0));
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -232,7 +235,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             else
                 toolbarSubTitle.setVisibility(View.GONE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -326,13 +329,19 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                     FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
 
-                    if(dy < 0) {
-                        if (linearLayoutManager.findFirstVisibleItemPosition() == 0 && !progressLoaded) {
+                    if (dy < 0) {
+
+                        visibleItemCount = linearLayoutManager.getChildCount();
+                        totalItemCount = linearLayoutManager.getItemCount();
+                        pastVisibleItems = linearLayoutManager.findLastVisibleItemPosition();
+
+
+                        if (progressLoaded && (visibleItemCount + (totalItemCount - (pastVisibleItems + 1))) >= totalItemCount) {
 
                             if (messageContentId != null && messageBoxList != null && messageBoxList.size() > 0) {
+                                progressLoaded = false;
                                 limitValue = limitValue + MESSAGE_LIMIT_COUNT;
                                 messageWithPersonAdapter.addProgressLoading();
-                                progressLoaded = true;
                                 getUsersMessaging(CODE_SCROLL_LOADED);
                             }
                         }
@@ -341,12 +350,12 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         } catch (NumberFormatException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -381,7 +390,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                                             new Object() {
                                             }.getClass().getEnclosingMethod().getName(), e.toString());
                                 }
@@ -391,7 +400,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -418,7 +427,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             messageWithPersonAdapter.setDeleteActivated(false);
             deleteMsgCntTv.setText("");
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -432,7 +441,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             }
             messageWithPersonAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -467,7 +476,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             });
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -484,7 +493,7 @@ public class MessageWithPersonFragment extends BaseFragment {
 
             Query query = databaseReference.orderByChild(FB_CHILD_DATE).limitToLast(limitValue);
 
-            query.addChildEventListener(new ChildEventListener() {
+            /*query.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                     System.out.println("onChildAdded");
@@ -509,17 +518,12 @@ public class MessageWithPersonFragment extends BaseFragment {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     System.out.println("onCancelled");
                 }
-            });
+            });*/
 
             valueEventListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
-
-                        if(progressLoaded){
-                            messageWithPersonAdapter.removeProgressLoading();
-                            progressLoaded = false;
-                        }
 
                         messageBoxListTemp = new ArrayList<>();
 
@@ -531,22 +535,31 @@ public class MessageWithPersonFragment extends BaseFragment {
                                 messageBoxListCheck(outboundSnapshot, loadCode);
                             }
                         }
-                        if(loadCode == CODE_SCROLL_LOADED)
-                            messageBoxList.addAll(0, messageBoxListTemp);
-                        adapterLoadCheck();
+
+                        if(!progressLoaded){
+                            progressLoaded = true;
+                            messageWithPersonAdapter.removeProgressLoading();
+                        }
+
+                        if (loadCode == CODE_SCROLL_LOADED && messageBoxListTemp != null &&
+                                messageBoxListTemp.size() > 0) {
+                            addTempList(messageBoxListTemp);
+                        } else
+                            adapterLoadCheck();
+
                         setSmoothScrolling(loadCode);
                     }
                 }
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), databaseError.toString());
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -570,15 +583,15 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                 MessageBox messageBox = getMessageBox(mDataSnapshot);
 
-                if(loadCode == CODE_FIRST_LOADED) {
+                if (loadCode == CODE_FIRST_LOADED) {
                     lastAddedMessage = messageBox;
                     messageBoxList.add(messageBox);
-                }else if(loadCode == CODE_SCROLL_LOADED){
+                } else if (loadCode == CODE_SCROLL_LOADED) {
                     messageBoxListTemp.add(messageBox);
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -595,16 +608,23 @@ public class MessageWithPersonFragment extends BaseFragment {
                     messageWithPersonAdapter.notifyDataSetChanged();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
 
+    public void addTempList(List<MessageBox> addedMessageList) {
+        if (addedMessageList != null) {
+            messageBoxList.addAll(0, messageBoxListTemp);
+            messageWithPersonAdapter.notifyItemRangeInserted(0, messageBoxListTemp.size());
+        }
+    }
+
     private void setSmoothScrolling(int loadCode) {
         try {
-            if(loadCode == CODE_FIRST_LOADED) {
+            if (loadCode == CODE_FIRST_LOADED) {
                 if (adapterLoaded) {
                     if (messageBoxList != null && messageBoxList.size() > 0)
                         recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
@@ -621,7 +641,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -655,7 +675,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             return messageBox;
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -693,7 +713,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.toString());
                         }
@@ -702,13 +722,13 @@ public class MessageWithPersonFragment extends BaseFragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -748,7 +768,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -776,7 +796,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             recyclerView.setLayoutManager(linearLayoutManager);
             setAdapterVal = true;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -799,7 +819,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.toString());
                         }
@@ -807,7 +827,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -840,7 +860,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 deleteMsgCntTv.setText("");
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -864,7 +884,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                 }
@@ -878,13 +898,13 @@ public class MessageWithPersonFragment extends BaseFragment {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -902,7 +922,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                 databaseReference3.removeEventListener(valueEventListener3);
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
