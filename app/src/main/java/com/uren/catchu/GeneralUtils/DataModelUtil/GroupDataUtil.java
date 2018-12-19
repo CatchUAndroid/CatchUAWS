@@ -44,7 +44,7 @@ public class GroupDataUtil {
                     GradientDrawable.OVAL, 50, 3);
             groupPicImgView.setBackground(imageShape);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, EffectTouchListener.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, GroupDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

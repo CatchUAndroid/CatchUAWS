@@ -272,7 +272,7 @@ public class AddGroupFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                ErrorSaveHelper.writeErrorToDB(null, AddGroupFragment.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 DialogBoxUtil.showErrorDialog(getContext(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
@@ -318,7 +318,7 @@ public class AddGroupFragment extends BaseFragment {
                         .into(groupPictureImgv);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, AddGroupFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

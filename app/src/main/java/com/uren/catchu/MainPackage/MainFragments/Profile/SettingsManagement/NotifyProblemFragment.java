@@ -126,7 +126,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 initProblemList();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -147,7 +147,7 @@ public class NotifyProblemFragment extends BaseFragment {
             NextActivity.notifyProblemFragment = this;
             commonToolbarTickImgv.setVisibility(View.VISIBLE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -163,7 +163,7 @@ public class NotifyProblemFragment extends BaseFragment {
             addPhotoImgv3.setBackground(shape);
             addPhotoImgv4.setBackground(shape);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -255,7 +255,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -290,7 +290,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemListBox.add(p4);
             setViewPadding(addPhotoImgv4, p4);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -304,7 +304,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_CENTER);
             problemNotifyModel.getDeleteImgv().setVisibility(View.GONE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -318,7 +318,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_XY);
             problemNotifyModel.getDeleteImgv().setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -350,7 +350,7 @@ public class NotifyProblemFragment extends BaseFragment {
 
             startPhotoChosen();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -395,7 +395,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -417,7 +417,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -438,7 +438,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -454,7 +454,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -472,7 +472,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -490,7 +490,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -513,7 +513,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -545,7 +545,7 @@ public class NotifyProblemFragment extends BaseFragment {
                         }
                     });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -561,7 +561,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),NotifyProblemFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

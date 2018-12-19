@@ -34,7 +34,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             this.messageBoxArrayList = messageBoxArrayList;
             this.itemClickListener = itemClickListener;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -78,7 +78,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 });
 
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -93,7 +93,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 setMessageText();
                 setMessageDate();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -116,7 +116,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                             messageListBox.getUserProfileProperties().getUsername(), shortUserNameTv, profilePicImgView);
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -128,7 +128,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                 if(messageListBox != null && messageListBox.getDate() != 0)
                     messageDateTv.setText(CommonUtils.getMessageTime(context, messageListBox.getDate()));
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -148,7 +148,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     messageTextTv.setTextColor(context.getResources().getColor(R.color.DarkGray, null));
                 }
             } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -162,7 +162,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             MessageListBox messageListBox = messageBoxArrayList.get(position);
             holder.setData(messageListBox, position);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -176,7 +176,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
                 listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageListAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

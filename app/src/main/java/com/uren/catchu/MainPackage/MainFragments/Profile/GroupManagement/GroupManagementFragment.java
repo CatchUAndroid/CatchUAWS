@@ -116,7 +116,7 @@ public class GroupManagementFragment extends BaseFragment {
                 initValues();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -136,7 +136,7 @@ public class GroupManagementFragment extends BaseFragment {
             setFloatButtonVisibility();
             getGroups();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -148,7 +148,7 @@ public class GroupManagementFragment extends BaseFragment {
             if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
                 nextFab.setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -239,7 +239,7 @@ public class GroupManagementFragment extends BaseFragment {
                 }
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -307,7 +307,7 @@ public class GroupManagementFragment extends BaseFragment {
                         @Override
                         public void onFailed(Exception e) {
                             progressBar.setVisibility(View.GONE);
-                            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
                             if (getContext() != null) {
@@ -320,7 +320,7 @@ public class GroupManagementFragment extends BaseFragment {
                         }
                     });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -351,7 +351,7 @@ public class GroupManagementFragment extends BaseFragment {
             } else if (opType == ITEM_INSERTED)
                 groupRequestResult.getResultArray().add(arrayItem);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -388,7 +388,7 @@ public class GroupManagementFragment extends BaseFragment {
                 @Override
                 public void onFailed(Exception e) {
                     searchToolbarAddItemImgv.setEnabled(true);
-                    ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     if (getContext() != null) {
@@ -401,7 +401,7 @@ public class GroupManagementFragment extends BaseFragment {
                 }
             });
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),GroupManagementFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

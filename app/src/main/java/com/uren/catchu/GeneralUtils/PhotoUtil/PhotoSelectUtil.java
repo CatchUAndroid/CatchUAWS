@@ -110,7 +110,7 @@ public class PhotoSelectUtil {
                     resizedBitmap = mBitmap;
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             if (getScreeanShotBitmap() != null) {
@@ -131,7 +131,7 @@ public class PhotoSelectUtil {
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
             bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
         } catch (IOException e) {
-            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -147,11 +147,14 @@ public class PhotoSelectUtil {
                     imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
                     bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
                 } catch (IOException e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
                     e.printStackTrace();
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -165,7 +168,7 @@ public class PhotoSelectUtil {
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
             bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -186,7 +189,7 @@ public class PhotoSelectUtil {
             else
                 portraitMode = false;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, PhotoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

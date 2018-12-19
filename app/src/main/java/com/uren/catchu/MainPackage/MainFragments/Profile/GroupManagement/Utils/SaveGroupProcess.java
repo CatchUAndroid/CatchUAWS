@@ -59,7 +59,7 @@ public class SaveGroupProcess {
             else
                 processSaveGroup(" ");
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class SaveGroupProcess {
                                     processSaveGroup(commonS3BucketResult.getImages().get(0).getDownloadUrl());
                                 } else {
                                     InputStream is = urlConnection.getErrorStream();
-                                    ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+                                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                             new Object() {
                                             }.getClass().getEnclosingMethod().getName(), is.toString());
                                     CommonUtils.showCustomToast(context, is.toString());
@@ -110,7 +110,7 @@ public class SaveGroupProcess {
                                 }
                             } catch (IOException e) {
                                 dialogDismiss();
-                                ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+                                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                                 CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -121,7 +121,7 @@ public class SaveGroupProcess {
                         @Override
                         public void onFailure(Exception e) {
                             dialogDismiss();
-                            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
                             CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -140,7 +140,7 @@ public class SaveGroupProcess {
                 @Override
                 public void onFailure(Exception e) {
                     dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -155,7 +155,7 @@ public class SaveGroupProcess {
 
             signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -180,7 +180,7 @@ public class SaveGroupProcess {
                 participantArrayItems.add(group);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -197,7 +197,7 @@ public class SaveGroupProcess {
             groupRequest.setGroupParticipantArray(participantArrayItems);
             groupRequest.setGroupPhotoUrl(downloadUrl);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -228,7 +228,7 @@ public class SaveGroupProcess {
                 @Override
                 public void onFailure(Exception e) {
                     dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -242,7 +242,7 @@ public class SaveGroupProcess {
 
             groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -259,7 +259,7 @@ public class SaveGroupProcess {
             groupRequestResultResultArrayItem.setCreateAt(groupRequestResult.getResultArray().get(0).getCreateAt());
             completeCallback.onComplete(groupRequestResultResultArrayItem);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, SaveGroupProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

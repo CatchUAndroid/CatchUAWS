@@ -89,7 +89,7 @@ public class PhoneVerification {
                 }
             };
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,PhoneVerification.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -118,7 +118,7 @@ public class PhoneVerification {
                         }
                     });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,PhoneVerification.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -136,7 +136,7 @@ public class PhoneVerification {
 
             mVerificationInProgress = true;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,PhoneVerification.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -154,7 +154,7 @@ public class PhoneVerification {
                     mCallbacks,                         // OnVerificationStateChangedCallbacks
                     token);                             // ForceResendingToken from callbacks
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,PhoneVerification.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

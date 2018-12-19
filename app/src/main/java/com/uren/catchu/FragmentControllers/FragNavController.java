@@ -488,7 +488,7 @@ public class FragNavController {
             try {
                 dialogFragment.show(fragmentManager, dialogFragment.getClass().getName());
             } catch (IllegalStateException e) {
-                ErrorSaveHelper.writeErrorToDB(null, FragNavController.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 // Activity was likely destroyed before we had a chance to show, nothing can be done here.
@@ -805,7 +805,7 @@ public class FragNavController {
 
             outState.putString(EXTRA_FRAGMENT_STACK, stackArrays.toString());
         } catch (Throwable t) {
-            ErrorSaveHelper.writeErrorToDB(null, FragNavController.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), t.getMessage());
             // Nothing we can do
@@ -888,7 +888,7 @@ public class FragNavController {
             //Successfully restored state
             return true;
         } catch (Throwable t) {
-            ErrorSaveHelper.writeErrorToDB(null, FragNavController.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), t.getMessage());
             return false;

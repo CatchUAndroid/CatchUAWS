@@ -85,7 +85,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
                 ButterKnife.bind(this, mView);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -102,7 +102,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
             addListeners();
             getCountryList();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -119,7 +119,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
                     0, GradientDrawable.RECTANGLE, 15, 0);
             mainLinearLayout.setBackground(shape);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -154,7 +154,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -178,7 +178,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
             }
             listener.onClick(myCountry, 0);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -199,7 +199,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
 
                     @Override
                     public void onFailure(Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+                        ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                                 new Object() {
                                 }.getClass().getEnclosingMethod().getName(), e.getMessage());
                         DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
@@ -242,7 +242,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
 
             countryListView.setAdapter(countryAdapter);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SelectCountryFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

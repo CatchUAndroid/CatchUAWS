@@ -31,7 +31,7 @@ public class ProgressDialogUtil {
             progressDialog.setCancelable(cancelableValue);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(null, ProgressDialogUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
