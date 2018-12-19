@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adap
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +26,7 @@ import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
@@ -41,6 +44,7 @@ import java.util.TimeZone;
 
 import catchu.model.FollowInfoListResponse;
 import catchu.model.FriendRequestList;
+import catchu.model.Post;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
@@ -50,13 +54,16 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 
-public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPersonAdapter.MyViewHolder> {
+public class MessageWithPersonAdapter extends RecyclerView.Adapter{
 
     private Context context;
     private ArrayList<MessageBox> messageBoxArrayList;
     boolean deleteActivated;
     MessageDeleteCallback messageDeleteCallback;
     TextView deleteMsgCntTv;
+
+    public static final int VIEW_ITEM = 1;
+    public static final int VIEW_PROG = 0;
 
     public MessageWithPersonAdapter(Context context, ArrayList<MessageBox> messageBoxArrayList,
                                     MessageDeleteCallback messageDeleteCallback, TextView deleteMsgCntTv) {
@@ -74,10 +81,60 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
     }
 
     @Override
-    public MessageWithPersonAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
+    public int getItemViewType(int position) {
+        return messageBoxArrayList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        /*View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.message_item, parent, false);
-        return new MessageWithPersonAdapter.MyViewHolder(itemView);
+        return new MessageWithPersonAdapter.MyViewHolder(itemView);*/
+
+
+        RecyclerView.ViewHolder viewHolder;
+        if (viewType == VIEW_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_item, parent, false);
+
+            viewHolder = new MessageWithPersonAdapter.MyViewHolder(itemView);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            viewHolder = new ProgressViewHolder(v);
+        }
+        return viewHolder;
+    }
+
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        try {
+            /*MessageBox messageBox = messageBoxArrayList.get(position);
+            holder.setData(messageBox, position);*/
+
+            if (holder instanceof MessageWithPersonAdapter.MyViewHolder) {
+                MessageBox messageBox = messageBoxArrayList.get(position);
+                ((MessageWithPersonAdapter.MyViewHolder) holder).setData(messageBox, position);
+            } else {
+                ((MessageWithPersonAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            }
+
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -242,7 +299,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         deleteActivated = value;
     }
 
-    @Override
+    /*@Override
     public void onBindViewHolder(final MessageWithPersonAdapter.MyViewHolder holder, final int position) {
         try {
             MessageBox messageBox = messageBoxArrayList.get(position);
@@ -253,6 +310,23 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }*/
+
+    public void addProgressLoading() {
+        messageBoxArrayList.add(0, null);
+        notifyItemInserted(0);
+    }
+
+    public void removeProgressLoading() {
+        messageBoxArrayList.remove(0);
+        notifyItemRemoved(0);
+    }
+
+    public boolean isShowingProgressLoading() {
+        if (getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG)
+            return true;
+        else
+            return false;
     }
 
     @Override
