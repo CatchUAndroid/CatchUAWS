@@ -63,8 +63,10 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
@@ -127,7 +129,6 @@ public class MessageWithPersonFragment extends BaseFragment {
     DatabaseReference databaseReference2;
     DatabaseReference databaseReference3;
     ValueEventListener valueEventListener;
-    ValueEventListener valueEventListener1;
     ArrayList<MessageBox> messageBoxList;
     MessageWithPersonAdapter messageWithPersonAdapter;
     LinearLayoutManager linearLayoutManager;
@@ -136,6 +137,9 @@ public class MessageWithPersonFragment extends BaseFragment {
     boolean itemAdded = false;
     boolean adapterLoaded = false;
     MessageBox lastAddedMessage;
+
+    String messageContentId = null;
+    long lastChattedTime;
 
 
     public MessageWithPersonFragment(User chattedUser) {
@@ -162,7 +166,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             ButterKnife.bind(this, mView);
             initVariables();
             addListeners();
-            getUsersMessaging();
+            getContentId();
             EmojIconActions emojIcon = new EmojIconActions(getContext(), mainLinearLayout, messageEdittext, smileyImgv);
             emojIcon.ShowEmojIcon();
             //emojIcon.setUseSystemEmoji(true);
@@ -323,13 +327,15 @@ public class MessageWithPersonFragment extends BaseFragment {
             for (int index = firstVisibleItemPosition; index >= 0; index--) {
                 final MessageBox messageBox = messageBoxList.get(index);
 
-                if (messageBox != null && messageBox.isReceiptIsSeen() == false) {
+                if (messageBox != null && messageBox.isReceiptIsSeen() == false && messageContentId != null) {
 
                     if (messageBox.getReceiptUser() != null && messageBox.getReceiptUser().getUserid() != null &&
                             !messageBox.getReceiptUser().getUserid().isEmpty()) {
 
                         if (messageBox.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT).child(messageBox.getMessageId())
+                            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                                    .child(messageContentId)
+                                    .child(messageBox.getMessageId())
                                     .child(FB_CHILD_RECEIPT);
 
                             final Map<String, Object> values = new HashMap<>();
@@ -401,15 +407,50 @@ public class MessageWithPersonFragment extends BaseFragment {
         }
     }
 
+    public void getContentId() {
+        try {
+            progressBar.setVisibility(View.VISIBLE);
+
+            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                    .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(FB_CHILD_MESSAGE_CONTENT);
+
+            valueEventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
+                        Map<String, Object> map = (Map) dataSnapshot.getValue();
+
+                        if (map != null) {
+                            messageContentId = (String) map.get(FB_CHILD_CONTENT_ID);
+                            lastChattedTime = (long) map.get(FB_CHILD_LAST_MESSAGE_DATE);
+                            getUsersMessaging();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
     private void getUsersMessaging() {
 
         try {
             progressBar.setVisibility(View.VISIBLE);
 
-            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                    .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid());
+            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                    .child(messageContentId);
 
-            Query query = databaseReference.orderByValue();
+            Query query = databaseReference.orderByChild(FB_CHILD_DATE);
 
             valueEventListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -420,33 +461,13 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                             if (outboundSnapshot != null &&
                                     outboundSnapshot.getKey() != null && outboundSnapshot.getValue() != null) {
-                                System.out.println("outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-                                System.out.println("outboundSnapshot.getValue():" + outboundSnapshot.getValue());
 
-                                databaseReference3 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT).child(outboundSnapshot.getKey());
+                                messageBoxListCheck(outboundSnapshot);
 
-                                valueEventListener1 = databaseReference3.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot mDataSnapshot) {
-                                        System.out.println("dataSnapshot.getKey():" + mDataSnapshot.getKey());
-                                        System.out.println("dataSnapshot.getValue():" + mDataSnapshot.getValue());
-
-                                        progressBar.setVisibility(View.GONE);
-
-                                        messageBoxListCheck(mDataSnapshot);
-                                        adapterLoadCheck();
-                                        setSmoothScrolling();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
-                                                new Object() {
-                                                }.getClass().getEnclosingMethod().getName(), databaseError.toString());
-                                    }
-                                });
                             }
                         }
+                        adapterLoadCheck();
+                        setSmoothScrolling();
                     }
                 }
 
@@ -457,72 +478,6 @@ public class MessageWithPersonFragment extends BaseFragment {
                             }.getClass().getEnclosingMethod().getName(), databaseError.toString());
                 }
             });
-
-
-
-
-
-
-
-            /*Query query = databaseReference.orderByChild(FB_CHILD_DATE);
-
-            valueEventListener = query.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
-                        if (outboundSnapshot.getKey() != null && outboundSnapshot.getValue() != null) {
-                            System.out.println("outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-                            System.out.println("outboundSnapshot.getValue():" + outboundSnapshot.getValue());
-
-                            boolean notInList = false;
-                            for (MessageBox messageBox : messageBoxList) {
-                                if (messageBox != null && messageBox.getMessageId() != null) {
-                                    if (messageBox.getMessageId().equals(outboundSnapshot.getKey())) {
-                                        notInList = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (!notInList) {
-                                itemAdded = true;
-                                fillMessageBoxList(outboundSnapshot);
-                            }
-                        }
-                    }
-
-                    if (!setAdapterVal) {
-                        adapterLoaded = true;
-                        setAdapter();
-                    } else {
-                        if (messageWithPersonAdapter != null)
-                            messageWithPersonAdapter.notifyDataSetChanged();
-                    }
-
-                    progressBar.setVisibility(View.GONE);
-
-                    if (adapterLoaded) {
-                        if (messageBoxList != null && messageBoxList.size() > 0)
-                            recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
-                        adapterLoaded = false;
-                    } else if (itemAdded) {
-                        if (lastAddedMessage != null && lastAddedMessage.getSenderUser() != null &&
-                                lastAddedMessage.getSenderUser().getUserid() != null) {
-                            if (lastAddedMessage.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                                if (messageBoxList != null && messageBoxList.size() > 0)
-                                    recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
-                                itemAdded = false;
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    progressBar.setVisibility(View.GONE);
-                }
-            });*/
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
                     new Object() {
@@ -532,68 +487,69 @@ public class MessageWithPersonFragment extends BaseFragment {
     }
 
     private void messageBoxListCheck(DataSnapshot mDataSnapshot) {
-        boolean notInList = false;
-        for (MessageBox messageBox : messageBoxList) {
-            if (messageBox != null && messageBox.getMessageId() != null) {
-                if (messageBox.getMessageId().equals(mDataSnapshot.getKey())) {
-                    notInList = true;
-                    break;
-                }
-            }
-        }
-
-        if (!notInList) {
-            itemAdded = true;
-            fillMessageBoxList(mDataSnapshot);
-        }
-    }
-
-    private void adapterLoadCheck() {
-        if (!setAdapterVal) {
-            adapterLoaded = true;
-            setAdapter();
-        } else {
-            if (messageWithPersonAdapter != null)
-                messageWithPersonAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void setSmoothScrolling() {
-        if (adapterLoaded) {
-            if (messageBoxList != null && messageBoxList.size() > 0)
-                recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
-            adapterLoaded = false;
-        } else if (itemAdded) {
-            if (lastAddedMessage != null && lastAddedMessage.getSenderUser() != null &&
-                    lastAddedMessage.getSenderUser().getUserid() != null) {
-                if (lastAddedMessage.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                    if (messageBoxList != null && messageBoxList.size() > 0)
-                        recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
-                    itemAdded = false;
-                }
-            }
-        }
-    }
-
-    /*public String getMessageKey() {
-        String messageKey = null;
         try {
-            int compareResult = chattedUser.getUserid().compareTo(AccountHolderInfo.getUserID());
+            boolean notInList = false;
+            for (MessageBox messageBox : messageBoxList) {
+                if (messageBox != null && messageBox.getMessageId() != null) {
+                    if (messageBox.getMessageId().equals(mDataSnapshot.getKey())) {
+                        notInList = true;
+                        break;
+                    }
+                }
+            }
 
-            if (compareResult < 0)
-                messageKey = chattedUser.getUserid().trim() + "-" + AccountHolderInfo.getUserID().trim();
-            else if (compareResult > 0)
-                messageKey = AccountHolderInfo.getUserID().trim() + "-" + chattedUser.getUserid().trim();
-
-            System.out.println("messageKey:" + messageKey);
+            if (!notInList) {
+                itemAdded = true;
+                fillMessageBoxList(mDataSnapshot);
+            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-        return messageKey;
-    }*/
+    }
+
+    private void adapterLoadCheck() {
+        try {
+            if (!setAdapterVal) {
+                adapterLoaded = true;
+                setAdapter();
+            } else {
+                if (messageWithPersonAdapter != null)
+                    messageWithPersonAdapter.notifyDataSetChanged();
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void setSmoothScrolling() {
+        try {
+            if (adapterLoaded) {
+                if (messageBoxList != null && messageBoxList.size() > 0)
+                    recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
+                adapterLoaded = false;
+            } else if (itemAdded) {
+                if (lastAddedMessage != null && lastAddedMessage.getSenderUser() != null &&
+                        lastAddedMessage.getSenderUser().getUserid() != null) {
+                    if (lastAddedMessage.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+                        if (messageBoxList != null && messageBoxList.size() > 0)
+                            recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
+                        itemAdded = false;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
 
     public void fillMessageBoxList(DataSnapshot outboundSnapshot) {
         try {
@@ -634,25 +590,29 @@ public class MessageWithPersonFragment extends BaseFragment {
     public void addMessage() {
         try {
             databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                    .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid());
+                    .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(FB_CHILD_MESSAGE_CONTENT);
 
-            final String messageId = databaseReference.push().getKey();
+            if (messageContentId == null)
+                messageContentId = databaseReference.push().getKey();
+
+            if (messageContentId == null) return;
 
             final Map<String, Object> values = new HashMap<>();
             final long messageTime = System.currentTimeMillis();
-            values.put(messageId, messageTime);
+            values.put(FB_CHILD_CONTENT_ID, messageContentId);
+            values.put(FB_CHILD_LAST_MESSAGE_DATE, messageTime);
 
             databaseReference.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
 
                     databaseReference1 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                            .child(chattedUser.getUserid()).child(AccountHolderInfo.getUserID());
+                            .child(chattedUser.getUserid()).child(AccountHolderInfo.getUserID()).child(FB_CHILD_MESSAGE_CONTENT);
 
                     databaseReference1.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            saveMessageContent(messageId, messageTime);
+                            saveMessageContent(messageTime);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -679,33 +639,44 @@ public class MessageWithPersonFragment extends BaseFragment {
         }
     }
 
-    public void saveMessageContent(String messageId, long messageTime) {
-        databaseReference2 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT).child(messageId);
+    public void saveMessageContent(long messageTime) {
+        try {
+            databaseReference2 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                    .child(messageContentId);
 
-        Map<String, Object> values = new HashMap<>();
+            String messageId = databaseReference2.push().getKey();
+            databaseReference2 = databaseReference2.child(messageId);
 
-        values.put(FB_CHILD_DATE, messageTime);
-        values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString());
+            Map<String, Object> values = new HashMap<>();
 
-        Map<String, String> sender = new HashMap<>();
-        sender.put(FB_CHILD_NAME, AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-        sender.put(FB_CHILD_USERID, AccountHolderInfo.getUserID());
+            values.put(FB_CHILD_DATE, messageTime);
+            values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString());
 
-        Map<String, Object> receipt = new HashMap<>();
-        receipt.put(FB_CHILD_NAME, chattedUser.getName());
-        receipt.put(FB_CHILD_USERID, chattedUser.getUserid());
-        receipt.put(FB_CHILD_IS_SEEN, false);
+            Map<String, String> sender = new HashMap<>();
+            sender.put(FB_CHILD_NAME, AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+            sender.put(FB_CHILD_USERID, AccountHolderInfo.getUserID());
 
-        values.put(FB_CHILD_SENDER, sender);
-        values.put(FB_CHILD_RECEIPT, receipt);
+            Map<String, Object> receipt = new HashMap<>();
+            receipt.put(FB_CHILD_NAME, chattedUser.getName());
+            receipt.put(FB_CHILD_USERID, chattedUser.getUserid());
+            receipt.put(FB_CHILD_IS_SEEN, false);
 
-        databaseReference2.setValue(values, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                sendMessageBtn.setEnabled(true);
-                messageEdittext.setText("");
-            }
-        });
+            values.put(FB_CHILD_SENDER, sender);
+            values.put(FB_CHILD_RECEIPT, receipt);
+
+            databaseReference2.setValue(values, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                    sendMessageBtn.setEnabled(true);
+                    messageEdittext.setText("");
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public void setAdapter() {
@@ -740,44 +711,9 @@ public class MessageWithPersonFragment extends BaseFragment {
         try {
             for (final MessageBox messageBox : messageBoxList) {
                 if (messageBox.isSelectedForDelete()) {
-                    final Map<String, Object> values = new HashMap<>();
-                    values.put(messageBox.getMessageId(), " ");
 
-                    databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                            .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(messageBox.getMessageId());
-
-                    databaseReference1 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                            .child(chattedUser.getUserid()).child(AccountHolderInfo.getUserID()).child(messageBox.getMessageId());
-
-                    databaseReference2 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT).child(messageBox.getMessageId());
-
-                    databaseReference.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.toString());
-                        }
-                    });
-
-                    databaseReference1.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.toString());
-                        }
-                    });
+                    databaseReference2 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                            .child(messageContentId).child(messageBox.getMessageId());
 
                     databaseReference2.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
@@ -803,22 +739,79 @@ public class MessageWithPersonFragment extends BaseFragment {
     }
 
     public void completeMessageDeletion(MessageBox messageBox) {
-        messageBoxList.remove(messageBox);
-        messageWithPersonAdapter.notifyDataSetChanged();
+        try {
+            messageBoxList.remove(messageBox);
+            messageWithPersonAdapter.notifyDataSetChanged();
 
-        boolean checkVal = false;
-        for (MessageBox messageBox1 : messageBoxList) {
-            if (messageBox1.isSelectedForDelete()) {
-                checkVal = true;
-                break;
+            boolean checkVal = false;
+
+            if (messageBoxList != null) {
+                for (MessageBox messageBox1 : messageBoxList) {
+                    if (messageBox1.isSelectedForDelete()) {
+                        checkVal = true;
+                        break;
+                    }
+                }
+
+                if (messageBoxList.size() == 0)
+                    deleteMessageContent();
             }
-        }
 
-        if (!checkVal) {
-            relLayout1.setVisibility(View.VISIBLE);
-            relLayout2.setVisibility(View.GONE);
-            messageWithPersonAdapter.setDeleteActivated(false);
-            deleteMsgCntTv.setText("");
+            if (!checkVal) {
+                relLayout1.setVisibility(View.VISIBLE);
+                relLayout2.setVisibility(View.GONE);
+                messageWithPersonAdapter.setDeleteActivated(false);
+                deleteMsgCntTv.setText("");
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteMessageContent() {
+
+        try {
+            databaseReference2 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                    .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(FB_CHILD_MESSAGE_CONTENT);
+
+            databaseReference3 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                    .child(chattedUser.getUserid()).child(AccountHolderInfo.getUserID()).child(FB_CHILD_MESSAGE_CONTENT);
+
+            databaseReference2.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                }
+            });
+
+            databaseReference3.removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -826,8 +819,9 @@ public class MessageWithPersonFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         try {
-            databaseReference.removeEventListener(valueEventListener);
-            databaseReference3.removeEventListener(valueEventListener1);
+            if (valueEventListener != null && databaseReference != null)
+                databaseReference.removeEventListener(valueEventListener);
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
                     new Object() {

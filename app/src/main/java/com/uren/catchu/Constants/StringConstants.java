@@ -144,6 +144,8 @@ public class StringConstants {
     public static final String FB_CHILD_USERID = "UserId";
     public static final String FB_CHILD_IS_SEEN = "IsSeen";
     public static final String FB_CHILD_MESSAGE_CONTENT = "MessageContent";
+    public static final String FB_CHILD_CONTENT_ID = "ContentId";
+    public static final String FB_CHILD_LAST_MESSAGE_DATE = "LastMessageDate";
 
     public static final String FB_CHILD_ERRORS = "Errors";
     public static final String FB_CHILD_ANDROID = "Android";

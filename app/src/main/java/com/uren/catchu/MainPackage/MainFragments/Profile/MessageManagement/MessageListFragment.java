@@ -49,6 +49,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -62,8 +63,10 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
@@ -175,17 +178,23 @@ public class MessageListFragment extends BaseFragment {
             databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
                     .child(AccountHolderInfo.getUserID());
 
-            valueEventListener = databaseReference.addValueEventListener(new ValueEventListener() {
+            Query query = databaseReference
+                    .orderByChild(FB_CHILD_MESSAGE_CONTENT + "/" + FB_CHILD_LAST_MESSAGE_DATE)
+                    .limitToLast(20);
+            // TODO: 19.12.2018 - buraya bakacagiz
+
+            valueEventListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
 
+                        System.out.println("dataSnapshot.getKey():" + dataSnapshot.getKey());
+                        System.out.println("dataSnapshot.getValue():" + dataSnapshot.getValue());
+
                         for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
-                            System.out.println("-----outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-                            System.out.println("-----outboundSnapshot.getValue():" + outboundSnapshot.getValue());
-
+                            System.out.println("outboundSnapshot.getKey():" + outboundSnapshot.getKey());
+                            System.out.println("outboundSnapshot.getValue():" + outboundSnapshot.getValue());
                             getUserDetail( outboundSnapshot);
-
                         }
                     }
                 }
@@ -213,8 +222,9 @@ public class MessageListFragment extends BaseFragment {
                         public void onSuccess(UserProfile userProfile) {
 
                             if (userProfile != null && userProfile.getUserInfo() != null) {
-                                getLastMessage(userProfile.getUserInfo());
-
+                                Map<String, Object> map = (Map) outboundSnapshot.getValue();
+                                Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
+                                getLastMessage(userProfile.getUserInfo(), (String) contentMap.get(FB_CHILD_CONTENT_ID));
                             }
                         }
 
@@ -239,13 +249,13 @@ public class MessageListFragment extends BaseFragment {
         }
     }
 
-    private void getLastMessage(final UserProfileProperties userProfileProperties) {
+    private void getLastMessage(final UserProfileProperties userProfileProperties, final String messageContentId) {
         try {
             if(userProfileProperties.getUserid() != null) {
-                databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                        .child(AccountHolderInfo.getUserID()).child(userProfileProperties.getUserid());
+                databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                        .child(messageContentId);
 
-                Query query = databaseReference.orderByValue().limitToLast(1);
+                Query query = databaseReference.orderByChild(FB_CHILD_DATE).limitToLast(1);
 
                 valueEventListener = query.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -255,29 +265,13 @@ public class MessageListFragment extends BaseFragment {
                             System.out.println("xxxxxxxx>dataSnapshot.getKey():" + dataSnapshot.getKey());
                             System.out.println("xxxxxxxx>dataSnapshot.getValue():" + dataSnapshot.getValue());
 
-                            for (final DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
-                                System.out.println("........>outboundSnapshot.getKey():" + outboundSnapshot.getKey());
+                            for(DataSnapshot child : dataSnapshot.getChildren()){
+                                System.out.println("---->child.getKey():" + child.getKey());
+                                System.out.println("---->child.getValue():" + child.getValue());
 
-                                databaseReference1 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT).child(outboundSnapshot.getKey());
-
-                                valueEventListener1 = databaseReference1.addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot mDataSnapshot) {
-                                        System.out.println("_____>dataSnapshot.getKey():" + mDataSnapshot.getKey());
-                                        System.out.println("_____>dataSnapshot.getValue():" + mDataSnapshot.getValue());
-
-                                        messageBoxListCheck(mDataSnapshot, userProfileProperties);
-                                        adapterLoadCheck();
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                    }
-                                });
+                                messageBoxListCheck(child, userProfileProperties);
+                                adapterLoadCheck();
                             }
-
-
                         }
                     }
 
@@ -367,6 +361,10 @@ public class MessageListFragment extends BaseFragment {
 
     public void fillMessageBoxList(DataSnapshot outboundSnapshot, UserProfileProperties userProfileProperties) {
         try {
+
+            System.out.println("outboundSnapshot.getKey():" + outboundSnapshot.getKey());
+            System.out.println("outboundSnapshot.getValue():" + outboundSnapshot.getValue());
+
             MessageListBox messageListBox = new MessageListBox();
 
             messageListBox.setUserProfileProperties(userProfileProperties);
