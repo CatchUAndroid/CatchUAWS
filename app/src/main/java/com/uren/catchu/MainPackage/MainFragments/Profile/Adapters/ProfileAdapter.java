@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,9 +26,9 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
@@ -49,7 +49,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
-public class OtherProfileAdapter extends RecyclerView.Adapter {
+public class ProfileAdapter extends RecyclerView.Adapter {
 
     public static final int VIEW_HEADER = 0;
     public static final int VIEW_ITEM = 1;
@@ -73,7 +73,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private static final int OPERATION_TYPE_PAGE_COUNT = 2;
     private int operationType = OPERATION_TYPE_NONE;
 
-    public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation, int pageCnt) {
+    public ProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation, int pageCnt) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
@@ -110,24 +110,24 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         if (viewType == VIEW_HEADER) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.otherprofile_header_view, parent, false);
+                    .inflate(R.layout.profile_header_view, parent, false);
 
-            viewHolder = new OtherProfileAdapter.ProfileHeaderViewHolder(itemView);
+            viewHolder = new ProfileAdapter.ProfileHeaderViewHolder(itemView);
         } else if (viewType == VIEW_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.profile_shared_post_view, parent, false);
 
-            viewHolder = new OtherProfileAdapter.PostViewHolder(itemView);
+            viewHolder = new ProfileAdapter.PostViewHolder(itemView);
         } else if (viewType == VIEW_LAST_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.recycler_row, parent, false);
 
-            viewHolder = new OtherProfileAdapter.LastItemViewHolder(itemView);
+            viewHolder = new ProfileAdapter.LastItemViewHolder(itemView);
         } else {
             View itemView = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.progressbar_item, parent, false);
 
-            viewHolder = new OtherProfileAdapter.ProgressViewHolder(itemView);
+            viewHolder = new ProfileAdapter.ProgressViewHolder(itemView);
         }
         return viewHolder;
 
@@ -174,17 +174,17 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        if (holder instanceof OtherProfileAdapter.ProfileHeaderViewHolder) {
+        if (holder instanceof ProfileAdapter.ProfileHeaderViewHolder) {
             UserInfoListItem userInfoListItem = (UserInfoListItem) objectList.get(position);
-            ((OtherProfileAdapter.ProfileHeaderViewHolder) holder).setData(userInfoListItem, position);
-        } else if (holder instanceof OtherProfileAdapter.PostViewHolder) {
+            ((ProfileAdapter.ProfileHeaderViewHolder) holder).setData(userInfoListItem, position);
+        } else if (holder instanceof ProfileAdapter.PostViewHolder) {
             Post post = (Post) objectList.get(position);
-            ((OtherProfileAdapter.PostViewHolder) holder).setData(post, position);
-        } else if (holder instanceof OtherProfileAdapter.LastItemViewHolder) {
+            ((ProfileAdapter.PostViewHolder) holder).setData(post, position);
+        } else if (holder instanceof ProfileAdapter.LastItemViewHolder) {
             String s = (String) objectList.get(position);
-            ((OtherProfileAdapter.LastItemViewHolder) holder).setData(s, position);
+            ((ProfileAdapter.LastItemViewHolder) holder).setData(s, position);
         } else {
-            ((OtherProfileAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            ((ProfileAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
 
     }
@@ -197,7 +197,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         TextView txtProfile;
         TextView txtName;
         TextView txtBio;
-        Button btnFollowStatus;
+
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
 
@@ -216,7 +216,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             txtProfile = (TextView) view.findViewById(R.id.txtProfile);
             txtName = (TextView) view.findViewById(R.id.txtName);
             txtBio = (TextView) view.findViewById(R.id.txtBio);
-            btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
+
             txtFollowerCnt = (TextView) view.findViewById(R.id.txtFollowerCnt);
             txtFollowingCnt = (TextView) view.findViewById(R.id.txtFollowingCnt);
             sendMessageBtn = (Button) view.findViewById(R.id.sendMessageBtn);
@@ -452,7 +452,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         //View items
         RecyclerView gridRecyclerView;
-        OtherProfilePostAdapter otherProfilePostAdapter;
+        ProfilePostAdapter profilePostAdapter;
         CustomGridLayoutManager customGridLayoutManager;
         RelativeLayout rl_no_feed;
         ImageView imgSad;
@@ -495,10 +495,10 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             customGridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                 @Override
                 public int getSpanSize(int position) {
-                    switch (otherProfilePostAdapter.getItemViewType(position)) {
-                        case OtherProfilePostAdapter.VIEW_ITEM:
+                    switch (profilePostAdapter.getItemViewType(position)) {
+                        case ProfilePostAdapter.VIEW_ITEM:
                             return 1;
-                        case OtherProfilePostAdapter.VIEW_PROG:
+                        case ProfilePostAdapter.VIEW_PROG:
                             return SPAN_COUNT; //number of columns of the grid
                         default:
                             return -1;
@@ -509,11 +509,11 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private void setAdapter() {
-            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser, pageCnt);
-            gridRecyclerView.setAdapter(otherProfilePostAdapter);
+            profilePostAdapter = new ProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser, pageCnt);
+            gridRecyclerView.setAdapter(profilePostAdapter);
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
-            otherProfilePostAdapter.addAll(postList);
+            profilePostAdapter.addAll(postList);
             //gridRecyclerView.setNestedScrollingEnabled(false);
 
         }
@@ -522,15 +522,15 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         public void updatePostList(int position) {
-            otherProfilePostAdapter.updatePostListItems(postList);
+            profilePostAdapter.updatePostListItems(postList);
         }
 
         public void loadMorePost() {
-            otherProfilePostAdapter.addAll(addedPostList);
+            profilePostAdapter.addAll(addedPostList);
         }
 
         public void updatePageCount() {
-            otherProfilePostAdapter.updatePageCount(pageCnt);
+            profilePostAdapter.updatePageCount(pageCnt);
         }
 
         private void showNoFeedLayout(boolean showNoFeedLayout) {
