@@ -55,6 +55,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
     public static final int VIEW_PROG = 0;
     public static final int VIEW_ITEM = 1;
     public static final int VIEW_NULL = 2;
+    public static final int VIEW_NULL2 = 3;
 
     private Activity mActivity;
     private Context mContext;
