@@ -28,7 +28,7 @@ import java.util.TimeZone;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
-public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGroupAdapter.MyViewHolder> {
+public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGroupAdapter.MessageWithGroupHolder> {
 
     private Context context;
     private ArrayList<GroupMessageBox> messageBoxArrayList;
@@ -52,13 +52,13 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
     }
 
     @Override
-    public MessageWithGroupAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageWithGroupAdapter.MessageWithGroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.group_message_item, parent, false);
-        return new MessageWithGroupAdapter.MyViewHolder(itemView);
+        return new MessageWithGroupAdapter.MessageWithGroupHolder(itemView);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MessageWithGroupHolder extends RecyclerView.ViewHolder {
 
         EmojiconTextView messageTv;
         TextView createAtTv;
@@ -68,7 +68,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
         int position;
         GroupMessageBox groupMessageBox;
 
-        public MyViewHolder(View view) {
+        public MessageWithGroupHolder(View view) {
             super(view);
 
             try {
@@ -231,7 +231,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
     }
 
     @Override
-    public void onBindViewHolder(final MessageWithGroupAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MessageWithGroupAdapter.MessageWithGroupHolder holder, final int position) {
         try {
             GroupMessageBox groupMessageBox = messageBoxArrayList.get(position);
             holder.setData(groupMessageBox, position);

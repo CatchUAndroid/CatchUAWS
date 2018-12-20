@@ -21,7 +21,7 @@ import com.uren.catchu.R;
 
 import java.util.ArrayList;
 
-public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MyViewHolder> {
+public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MessageListHolder> {
 
     private Context context;
     private ArrayList<MessageListBox> messageBoxArrayList;
@@ -42,13 +42,13 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     }
 
     @Override
-    public MessageListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageListAdapter.MessageListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.message_list_item, parent, false);
-        return new MessageListAdapter.MyViewHolder(itemView);
+        return new MessageListAdapter.MessageListHolder(itemView);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MessageListHolder extends RecyclerView.ViewHolder {
 
         ImageView profilePicImgView;
         TextView shortUserNameTv;
@@ -59,7 +59,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         int position;
         MessageListBox messageListBox;
 
-        public MyViewHolder(View view) {
+        public MessageListHolder(View view) {
             super(view);
 
             try {
@@ -157,7 +157,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(final MessageListAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MessageListAdapter.MessageListHolder holder, final int position) {
         try {
             MessageListBox messageListBox = messageBoxArrayList.get(position);
             holder.setData(messageListBox, position);

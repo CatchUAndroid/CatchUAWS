@@ -91,17 +91,13 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        /*View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_item, parent, false);
-        return new MessageWithPersonAdapter.MyViewHolder(itemView);*/
-
 
         RecyclerView.ViewHolder viewHolder;
         if (viewType == VIEW_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.message_item, parent, false);
 
-            viewHolder = new MessageWithPersonAdapter.MyViewHolder(itemView);
+            viewHolder = new MessageWithPersonAdapter.MessageWithPersonHolder(itemView);
         } else {
             View v = LayoutInflater.from(parent.getContext()).inflate(
                     R.layout.progressbar_item, parent, false);
@@ -123,12 +119,9 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         try {
-            /*MessageBox messageBox = messageBoxArrayList.get(position);
-            holder.setData(messageBox, position);*/
-
-            if (holder instanceof MessageWithPersonAdapter.MyViewHolder) {
+            if (holder instanceof MessageWithPersonAdapter.MessageWithPersonHolder) {
                 MessageBox messageBox = messageBoxArrayList.get(position);
-                ((MessageWithPersonAdapter.MyViewHolder) holder).setData(messageBox, position);
+                ((MessageWithPersonAdapter.MessageWithPersonHolder) holder).setData(messageBox, position);
             } else {
                 ((MessageWithPersonAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
             }
@@ -141,7 +134,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
         }
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MessageWithPersonHolder extends RecyclerView.ViewHolder {
 
         EmojiconTextView messageTv;
         TextView createAtTv;
@@ -150,7 +143,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
         int position;
         MessageBox messageBox;
 
-        public MyViewHolder(View view) {
+        public MessageWithPersonHolder(View view) {
             super(view);
 
             try {
@@ -303,19 +296,6 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
         deleteActivated = value;
     }
 
-    /*@Override
-    public void onBindViewHolder(final MessageWithPersonAdapter.MyViewHolder holder, final int position) {
-        try {
-            MessageBox messageBox = messageBoxArrayList.get(position);
-            holder.setData(messageBox, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-    }*/
-
     public void addProgressLoading() {
         messageBoxArrayList.add(0, null);
         notifyItemInserted(0);
@@ -333,15 +313,6 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             return false;
     }
 
-    /*public void updateMessageListItems(List<MessageBox> newMessageList) {
-        final MessageDiffCallback diffCallback = new MessageDiffCallback(this.messageBoxArrayList, newMessageList);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
-
-        this.messageBoxArrayList.clear();
-        this.messageBoxArrayList.addAll(newMessageList);
-        diffResult.dispatchUpdatesTo(this);
-    }*/
-
     @Override
     public int getItemCount() {
         int listSize = 0;
@@ -356,6 +327,4 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
         }
         return listSize;
     }
-
-
 }
