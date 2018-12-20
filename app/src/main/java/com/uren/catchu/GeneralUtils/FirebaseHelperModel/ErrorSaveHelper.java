@@ -31,12 +31,12 @@ public class ErrorSaveHelper {
         if (errMessage == null) return;
         if (errMessage.isEmpty()) return;
 
-        if(context != null)
-            mContext =context;
-        else if(NextActivity.thisActivity != null)
+        if (context != null)
+            mContext = context;
+        else if (NextActivity.thisActivity != null)
             mContext = NextActivity.thisActivity;
 
-        if(mContext == null) return;
+        if (mContext == null) return;
 
         CommonUtils.LOG_EXCEPTION_ERR(className + " - " + methodName, errMessage);
 

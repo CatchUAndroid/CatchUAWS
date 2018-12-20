@@ -1,8 +1,10 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -23,6 +25,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -47,6 +50,8 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMen
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -65,6 +70,7 @@ import catchu.model.Post;
 import catchu.model.User;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 
+import static com.uren.catchu.Constants.NumericConstants.KEYBOARD_CHECK_VALUE;
 import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
@@ -150,9 +156,12 @@ public class MessageWithPersonFragment extends BaseFragment {
     long lastChattedTime;
     int limitValue;
     int pastVisibleItems, visibleItemCount, totalItemCount;
+    int listOldSize, listNewSize;
+    int loadCode;
+    boolean deletedCheck;
 
-    private static final int CODE_FIRST_LOADED = 0;
-    private static final int CODE_SCROLL_LOADED = 1;
+    private static final int CODE_BOTTOM_LOADED = 0;
+    private static final int CODE_TOP_LOADED = 1;
 
 
     public MessageWithPersonFragment(User chattedUser) {
@@ -212,6 +221,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                     getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
             sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 25, 0));
+
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
@@ -327,14 +337,11 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                     System.out.println("dy:" + dy);
 
-                    FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-
                     if (dy < 0) {
 
                         visibleItemCount = linearLayoutManager.getChildCount();
                         totalItemCount = linearLayoutManager.getItemCount();
                         pastVisibleItems = linearLayoutManager.findLastVisibleItemPosition();
-
 
                         if (progressLoaded && (visibleItemCount + (totalItemCount - (pastVisibleItems + 1))) >= totalItemCount) {
 
@@ -342,7 +349,8 @@ public class MessageWithPersonFragment extends BaseFragment {
                                 progressLoaded = false;
                                 limitValue = limitValue + MESSAGE_LIMIT_COUNT;
                                 messageWithPersonAdapter.addProgressLoading();
-                                getUsersMessaging(CODE_SCROLL_LOADED);
+                                loadCode = CODE_TOP_LOADED;
+                                getUsersMessaging();
                             }
                         }
                     }
@@ -450,6 +458,7 @@ public class MessageWithPersonFragment extends BaseFragment {
 
     public void getContentId() {
         try {
+            loadCode = CODE_BOTTOM_LOADED;
             progressBar.setVisibility(View.VISIBLE);
 
             databaseReference3 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
@@ -464,7 +473,7 @@ public class MessageWithPersonFragment extends BaseFragment {
                         if (map != null) {
                             messageContentId = (String) map.get(FB_CHILD_CONTENT_ID);
                             lastChattedTime = (long) map.get(FB_CHILD_LAST_MESSAGE_DATE);
-                            getUsersMessaging(CODE_FIRST_LOADED);
+                            getUsersMessaging();
                         }
                     }
                 }
@@ -483,7 +492,7 @@ public class MessageWithPersonFragment extends BaseFragment {
         }
     }
 
-    private void getUsersMessaging(final int loadCode) {
+    private void getUsersMessaging() {
 
         try {
             progressBar.setVisibility(View.VISIBLE);
@@ -492,33 +501,6 @@ public class MessageWithPersonFragment extends BaseFragment {
                     .child(messageContentId);
 
             Query query = databaseReference.orderByChild(FB_CHILD_DATE).limitToLast(limitValue);
-
-            /*query.addChildEventListener(new ChildEventListener() {
-                @Override
-                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    System.out.println("onChildAdded");
-                }
-
-                @Override
-                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    System.out.println("onChildChanged");
-                }
-
-                @Override
-                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-                    System.out.println("onChildRemoved");
-                }
-
-                @Override
-                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                    System.out.println("onChildMoved");
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    System.out.println("onCancelled");
-                }
-            });*/
 
             valueEventListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -532,22 +514,23 @@ public class MessageWithPersonFragment extends BaseFragment {
                             if (outboundSnapshot != null &&
                                     outboundSnapshot.getKey() != null && outboundSnapshot.getValue() != null) {
 
-                                messageBoxListCheck(outboundSnapshot, loadCode);
+                                messageBoxListCheck(outboundSnapshot);
                             }
                         }
 
-                        if(!progressLoaded){
+                        if (!progressLoaded) {
                             progressLoaded = true;
                             messageWithPersonAdapter.removeProgressLoading();
                         }
 
-                        if (loadCode == CODE_SCROLL_LOADED && messageBoxListTemp != null &&
+                        if (loadCode == CODE_TOP_LOADED && messageBoxListTemp != null &&
                                 messageBoxListTemp.size() > 0) {
                             addTempList(messageBoxListTemp);
                         } else
                             adapterLoadCheck();
 
-                        setSmoothScrolling(loadCode);
+                        setSmoothScrolling();
+                        loadCode = CODE_BOTTOM_LOADED;
                     }
                 }
 
@@ -566,7 +549,7 @@ public class MessageWithPersonFragment extends BaseFragment {
         }
     }
 
-    private void messageBoxListCheck(DataSnapshot mDataSnapshot, int loadCode) {
+    private void messageBoxListCheck(DataSnapshot mDataSnapshot) {
         try {
             boolean notInList = false;
             for (MessageBox messageBox : messageBoxList) {
@@ -583,10 +566,11 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                 MessageBox messageBox = getMessageBox(mDataSnapshot);
 
-                if (loadCode == CODE_FIRST_LOADED) {
+                if (loadCode == CODE_BOTTOM_LOADED) {
                     lastAddedMessage = messageBox;
                     messageBoxList.add(messageBox);
-                } else if (loadCode == CODE_SCROLL_LOADED) {
+                    listNewSize = messageBoxList.size();
+                } else if (loadCode == CODE_TOP_LOADED) {
                     messageBoxListTemp.add(messageBox);
                 }
             }
@@ -618,25 +602,35 @@ public class MessageWithPersonFragment extends BaseFragment {
     public void addTempList(List<MessageBox> addedMessageList) {
         if (addedMessageList != null) {
             messageBoxList.addAll(0, messageBoxListTemp);
+            listNewSize = messageBoxList.size();
             messageWithPersonAdapter.notifyItemRangeInserted(0, messageBoxListTemp.size());
         }
     }
 
-    private void setSmoothScrolling(int loadCode) {
+    private void setSmoothScrolling() {
         try {
-            if (loadCode == CODE_FIRST_LOADED) {
+            if (loadCode == CODE_BOTTOM_LOADED) {
                 if (adapterLoaded) {
                     if (messageBoxList != null && messageBoxList.size() > 0)
                         recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
                     adapterLoaded = false;
                 } else if (itemAdded) {
-                    if (lastAddedMessage != null && lastAddedMessage.getSenderUser() != null &&
-                            lastAddedMessage.getSenderUser().getUserid() != null) {
-                        if (lastAddedMessage.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                            if (messageBoxList != null && messageBoxList.size() > 0)
+                    if (lastAddedMessage != null && messageBoxList != null && messageBoxList.size() > 0) {
+
+                        if (lastAddedMessage.getSenderUser() != null && lastAddedMessage.getSenderUser().getUserid() != null &&
+                                lastAddedMessage.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+
+                            recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
+
+                        } else if(lastAddedMessage.getReceiptUser() != null && lastAddedMessage.getReceiptUser().getUserid() != null &&
+                                lastAddedMessage.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())){
+
+                            if(linearLayoutManager.findLastVisibleItemPosition() + 3 >= messageBoxList.size()){
+                                loadCode = CODE_BOTTOM_LOADED;
                                 recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
-                            itemAdded = false;
+                            }
                         }
+                        itemAdded = false;
                     }
                 }
             }
@@ -647,6 +641,8 @@ public class MessageWithPersonFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+
 
     public MessageBox getMessageBox(DataSnapshot outboundSnapshot) {
         MessageBox messageBox = new MessageBox();
@@ -685,6 +681,7 @@ public class MessageWithPersonFragment extends BaseFragment {
 
     public void addMessage() {
         try {
+            loadCode = CODE_BOTTOM_LOADED;
             databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
                     .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(FB_CHILD_MESSAGE_CONTENT);
 
@@ -808,6 +805,7 @@ public class MessageWithPersonFragment extends BaseFragment {
             for (final MessageBox messageBox : messageBoxList) {
                 if (messageBox.isSelectedForDelete()) {
 
+                    loadCode = CODE_TOP_LOADED;
                     databaseReference2 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
                             .child(messageContentId).child(messageBox.getMessageId());
 
@@ -836,8 +834,10 @@ public class MessageWithPersonFragment extends BaseFragment {
 
     public void completeMessageDeletion(MessageBox messageBox) {
         try {
+            int deletedIndex = messageBoxList.indexOf(messageBox);
             messageBoxList.remove(messageBox);
-            messageWithPersonAdapter.notifyDataSetChanged();
+            messageWithPersonAdapter.notifyItemRemoved(deletedIndex);
+            messageWithPersonAdapter.notifyItemRangeChanged(deletedIndex, messageBoxList.size());
 
             boolean checkVal = false;
 

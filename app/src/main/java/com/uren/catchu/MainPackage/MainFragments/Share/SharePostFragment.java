@@ -95,6 +95,7 @@ import catchu.model.UserProfile;
 
 import static android.content.Context.LOCATION_SERVICE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static com.uren.catchu.Constants.NumericConstants.KEYBOARD_CHECK_VALUE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_SIZE;
@@ -223,8 +224,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     private static final int REQUEST_CODE_VIDEO_CAMERA_SELECT = 225;
 
     private static final int ANIMATION_DURATION_FOR_OTHERVIEWS = 300;
-
-    private final static int KEYBOARD_CHECK_VALUE = 200;
 
     PhotoSelectUtil photoSelectUtil;
     VideoSelectUtil videoSelectUtil;

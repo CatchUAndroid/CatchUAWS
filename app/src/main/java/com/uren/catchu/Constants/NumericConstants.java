@@ -72,4 +72,6 @@ public class NumericConstants {
     public static final int CODE_DELETE_POST = 3;
 
     public static final int MESSAGE_LIMIT_COUNT = 25;
+
+    public final static int KEYBOARD_CHECK_VALUE = 200;
 }
