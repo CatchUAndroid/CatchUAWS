@@ -20,6 +20,7 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.ImageZoomListener;
@@ -60,10 +61,17 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_show_selected_photo, container, false);
-        ButterKnife.bind(this, mView);
-        initVariables();
-        setImage();
+        try {
+            mView = inflater.inflate(R.layout.fragment_show_selected_photo, container, false);
+            ButterKnife.bind(this, mView);
+            initVariables();
+            setImage();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
         return mView;
     }
 
@@ -73,15 +81,29 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        photoSelectImgv.getImageMatrix();
-        photoSelectImgv.setOnTouchListener(new ImageZoomListener(initMatrix));
+        try {
+            photoSelectImgv.getImageMatrix();
+            photoSelectImgv.setOnTouchListener(new ImageZoomListener(initMatrix));
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void setImage() {
 
-        Glide.with(getContext())
-                .load(photoUrl)
-                .apply(RequestOptions.fitCenterTransform())
-                .into(photoSelectImgv);
+        try {
+            Glide.with(getContext())
+                    .load(photoUrl)
+                    .apply(RequestOptions.fitCenterTransform())
+                    .into(photoSelectImgv);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 }

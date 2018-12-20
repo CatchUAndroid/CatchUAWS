@@ -1,12 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.Context;
-import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -15,20 +10,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -38,43 +28,33 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
-import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.Post;
 import catchu.model.User;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 
-import static com.uren.catchu.Constants.NumericConstants.KEYBOARD_CHECK_VALUE;
 import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
@@ -155,25 +135,23 @@ public class MessageWithPersonFragment extends BaseFragment {
     ArrayList<MessageBox> messageBoxListTemp;
     MessageWithPersonAdapter messageWithPersonAdapter;
     LinearLayoutManager linearLayoutManager;
-    boolean setAdapterVal = false;
-
-    boolean itemAdded = false;
-    boolean adapterLoaded = false;
-    boolean progressLoaded = true;
     MessageBox lastAddedMessage;
 
     String messageContentId = null;
     long lastChattedTime;
+
+    boolean setAdapterVal = false;
+    boolean itemAdded = false;
+    boolean adapterLoaded = false;
+    boolean progressLoaded = true;
+
     int limitValue;
     int pastVisibleItems, visibleItemCount, totalItemCount;
-    int listOldSize, listNewSize;
     int loadCode;
-    boolean deletedCheck;
     int invisibleMsgCnt = 0;
 
     private static final int CODE_BOTTOM_LOADED = 0;
     private static final int CODE_TOP_LOADED = 1;
-
 
     public MessageWithPersonFragment(User chattedUser) {
         this.chattedUser = chattedUser;
@@ -188,7 +166,6 @@ public class MessageWithPersonFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -275,27 +252,34 @@ public class MessageWithPersonFragment extends BaseFragment {
         moreSettingsImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getContext(), moreSettingsImgv);
-                popupMenu.inflate(R.menu.message_with_person_menu);
+                try {
+                    PopupMenu popupMenu = new PopupMenu(getContext(), moreSettingsImgv);
+                    popupMenu.inflate(R.menu.message_with_person_menu);
 
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.blockPerson:
-                                System.out.println();
-                                break;
-                            case R.id.complainPerson:
-                                System.out.println();
-                                break;
-                            case R.id.clearConversion:
-                                System.out.println();
-                                break;
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.blockPerson:
+                                    System.out.println();
+                                    break;
+                                case R.id.complainPerson:
+                                    System.out.println();
+                                    break;
+                                case R.id.clearConversion:
+                                    System.out.println();
+                                    break;
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                popupMenu.show();
+                    });
+                    popupMenu.show();
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -641,7 +625,6 @@ public class MessageWithPersonFragment extends BaseFragment {
                     itemAdded = true;
                     lastAddedMessage = messageBox;
                     messageBoxList.add(messageBox);
-                    listNewSize = messageBoxList.size();
                 } else if (loadCode == CODE_TOP_LOADED) {
                     messageBoxListTemp.add(messageBox);
                 }
@@ -672,10 +655,16 @@ public class MessageWithPersonFragment extends BaseFragment {
     }
 
     public void addTempList(List<MessageBox> addedMessageList) {
-        if (addedMessageList != null) {
-            messageBoxList.addAll(0, messageBoxListTemp);
-            listNewSize = messageBoxList.size();
-            messageWithPersonAdapter.notifyItemRangeInserted(0, messageBoxListTemp.size());
+        try {
+            if (addedMessageList != null) {
+                messageBoxList.addAll(0, messageBoxListTemp);
+                messageWithPersonAdapter.notifyItemRangeInserted(0, messageBoxListTemp.size());
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
