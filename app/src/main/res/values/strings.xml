@@ -298,6 +298,9 @@
     <string name="MESSAGES">My Messages</string>
     <string name="TODAY">Today</string>
     <string name="YESTERDAY">Yesterday</string>
+    <string name="BLOCK">Block</string>
+    <string name="REPORT_PERSON">Report</string>
+    <string name="CLEAR_CHAT">Clear Chat</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

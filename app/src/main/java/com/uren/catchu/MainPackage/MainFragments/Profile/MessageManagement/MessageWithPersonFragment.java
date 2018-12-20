@@ -18,6 +18,9 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -26,6 +29,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -133,6 +137,12 @@ public class MessageWithPersonFragment extends BaseFragment {
     ImageView smileyImgv;
     @BindView(R.id.mainLinearLayout)
     View mainLinearLayout;
+    @BindView(R.id.messageReachLay)
+    RelativeLayout messageReachLay;
+    @BindView(R.id.waitingMsgCntTv)
+    TextView waitingMsgCntTv;
+    @BindView(R.id.waitingMsgImgv)
+    ImageView waitingMsgImgv;
 
     User chattedUser;
     DatabaseReference databaseReference;
@@ -159,6 +169,7 @@ public class MessageWithPersonFragment extends BaseFragment {
     int listOldSize, listNewSize;
     int loadCode;
     boolean deletedCheck;
+    int invisibleMsgCnt = 0;
 
     private static final int CODE_BOTTOM_LOADED = 0;
     private static final int CODE_TOP_LOADED = 1;
@@ -177,6 +188,7 @@ public class MessageWithPersonFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -184,13 +196,15 @@ public class MessageWithPersonFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-            mView = inflater.inflate(R.layout.fragment_message_with_person, container, false);
-            ButterKnife.bind(this, mView);
-            initVariables();
-            addListeners();
-            getContentId();
-            EmojIconActions emojIcon = new EmojIconActions(getContext(), mainLinearLayout, messageEdittext, smileyImgv);
-            emojIcon.ShowEmojIcon();
+            if(mView == null) {
+                mView = inflater.inflate(R.layout.fragment_message_with_person, container, false);
+                ButterKnife.bind(this, mView);
+                initVariables();
+                addListeners();
+                getContentId();
+                EmojIconActions emojIcon = new EmojIconActions(getContext(), mainLinearLayout, messageEdittext, smileyImgv);
+                emojIcon.ShowEmojIcon();
+            }
             //emojIcon.setUseSystemEmoji(true);
             //messageEdittext.setUseSystemDefault(true);
         } catch (Exception e) {
@@ -216,12 +230,17 @@ public class MessageWithPersonFragment extends BaseFragment {
             /*dateLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 15, 0));*/
             setChattedPersonInfo();
+            setMessageMenu();
             smileyImgv.setColorFilter(getContext().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
             edittextRelLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
                     getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
             sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 25, 0));
 
+            waitingMsgImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
+                    0, GradientDrawable.OVAL, 50, 0));
+
+            moreSettingsImgv.setColorFilter(getContext().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
@@ -252,8 +271,55 @@ public class MessageWithPersonFragment extends BaseFragment {
         }
     }
 
+    public void setMessageMenu(){
+        moreSettingsImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popupMenu = new PopupMenu(getContext(), moreSettingsImgv);
+                popupMenu.inflate(R.menu.message_with_person_menu);
+
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.blockPerson:
+                                System.out.println();
+                                break;
+                            case R.id.complainPerson:
+                                System.out.println();
+                                break;
+                            case R.id.clearConversion:
+                                System.out.println();
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popupMenu.show();
+            }
+        });
+    }
+
     public void addListeners() {
         try {
+
+            profilePicImgView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(chattedUser != null && chattedUser.getProfilePhotoUrl() != null &&
+                            !chattedUser.getProfilePhotoUrl().isEmpty()){
+                        mFragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(chattedUser.getProfilePhotoUrl()));
+                    }
+                }
+            });
+
+            waitingMsgImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (recyclerView != null && messageBoxList != null)
+                        recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
+                }
+            });
 
             deleteMsgImgv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -337,11 +403,12 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                     System.out.println("dy:" + dy);
 
+                    pastVisibleItems = linearLayoutManager.findLastVisibleItemPosition();
+
                     if (dy < 0) {
 
                         visibleItemCount = linearLayoutManager.getChildCount();
                         totalItemCount = linearLayoutManager.getItemCount();
-                        pastVisibleItems = linearLayoutManager.findLastVisibleItemPosition();
 
                         if (progressLoaded && (visibleItemCount + (totalItemCount - (pastVisibleItems + 1))) >= totalItemCount) {
 
@@ -353,6 +420,12 @@ public class MessageWithPersonFragment extends BaseFragment {
                                 getUsersMessaging();
                             }
                         }
+                    }
+
+                    if (pastVisibleItems == (messageBoxList.size() - 1)) {
+                        if (messageReachLay.getVisibility() == View.VISIBLE)
+                            messageReachLay.setVisibility(View.GONE);
+                        invisibleMsgCnt = 0;
                     }
                 }
 
@@ -562,11 +635,10 @@ public class MessageWithPersonFragment extends BaseFragment {
             }
 
             if (!notInList) {
-                itemAdded = true;
-
                 MessageBox messageBox = getMessageBox(mDataSnapshot);
 
                 if (loadCode == CODE_BOTTOM_LOADED) {
+                    itemAdded = true;
                     lastAddedMessage = messageBox;
                     messageBoxList.add(messageBox);
                     listNewSize = messageBoxList.size();
@@ -622,12 +694,17 @@ public class MessageWithPersonFragment extends BaseFragment {
 
                             recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
 
-                        } else if(lastAddedMessage.getReceiptUser() != null && lastAddedMessage.getReceiptUser().getUserid() != null &&
-                                lastAddedMessage.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())){
+                        } else if (lastAddedMessage.getReceiptUser() != null && lastAddedMessage.getReceiptUser().getUserid() != null &&
+                                lastAddedMessage.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())) {
 
-                            if(linearLayoutManager.findLastVisibleItemPosition() + 3 >= messageBoxList.size()){
+                            if (linearLayoutManager.findLastVisibleItemPosition() + 3 >= messageBoxList.size()) {
                                 loadCode = CODE_BOTTOM_LOADED;
                                 recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
+                            } else {
+                                invisibleMsgCnt = invisibleMsgCnt + 1;
+                                waitingMsgCntTv.setText(Integer.toString(invisibleMsgCnt));
+                                if (messageReachLay.getVisibility() == View.GONE)
+                                    messageReachLay.setVisibility(View.VISIBLE);
                             }
                         }
                         itemAdded = false;
@@ -641,7 +718,6 @@ public class MessageWithPersonFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
 
 
     public MessageBox getMessageBox(DataSnapshot outboundSnapshot) {

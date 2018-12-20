@@ -260,6 +260,9 @@
     <string name="MESSAGES">Mesajlarım</string>
     <string name="TODAY">Bugün</string>
     <string name="YESTERDAY">Dün</string>
+    <string name="BLOCK">Engelle</string>
+    <string name="REPORT_PERSON">Şikayet Et</string>
+    <string name="CLEAR_CHAT">Sohbeti Temizle</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfen Ayarlar\'dan konum izinlerini aktifleştirin.</string>
