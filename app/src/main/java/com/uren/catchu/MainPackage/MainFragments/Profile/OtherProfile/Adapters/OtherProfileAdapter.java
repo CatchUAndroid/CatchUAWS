@@ -600,6 +600,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             Post post = new Post();
             objectList.add(post);
             postList.addAll(addedPostList);
+            OtherProfilePostList.getInstance().clearPostList();
             OtherProfilePostList.getInstance().addPostList(addedPostList);
             notifyItemRangeInserted(1, 1);
         }
