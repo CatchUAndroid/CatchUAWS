@@ -1,9 +1,11 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,34 +16,34 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.ClickCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
-import catchu.model.FriendList;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 
-public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAdapter.FriendGridListHolder> {
-    FriendList friendList;
+public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFriendHorizontalAdapter.SelectFriendHorizontalHolder> {
+
     View view;
     LayoutInflater layoutInflater;
     Context context;
+    Activity activity;
+    ClickCallback clickCallback;
     GradientDrawable imageShape;
-    GradientDrawable deleteShape;
-    ReturnCallback returnCallback;
+    GradientDrawable deleteImgvShape;
 
-    public FriendGridListAdapter(Context context, FriendList friendList, ReturnCallback returnCallback) {
+    public SelectFriendHorizontalAdapter(Context context, ClickCallback clickCallback) {
         try {
             layoutInflater = LayoutInflater.from(context);
-            this.friendList = friendList;
             this.context = context;
-            this.returnCallback = returnCallback;
+            this.clickCallback = clickCallback;
+            activity = (Activity) context;
             imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0);
-            deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                    0, GradientDrawable.OVAL, 50, 0);
+            deleteImgvShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                    context.getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 0);
         } catch (Resources.NotFoundException e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
@@ -50,44 +52,55 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         }
     }
 
-    public Object getItem(int position) {
-        return position;
-    }
-
+    @NonNull
     @Override
-    public FriendGridListAdapter.FriendGridListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-        view = layoutInflater.inflate(R.layout.special_grid_list_item, parent, false);
-        FriendGridListAdapter.FriendGridListHolder holder = new FriendGridListAdapter.FriendGridListHolder(view);
+    public SelectFriendHorizontalAdapter.SelectFriendHorizontalHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        view = layoutInflater.inflate(R.layout.grid_list_item_small, viewGroup, false);
+        final SelectFriendHorizontalAdapter.SelectFriendHorizontalHolder holder = new SelectFriendHorizontalAdapter.SelectFriendHorizontalHolder(view);
         return holder;
     }
 
-    class FriendGridListHolder extends RecyclerView.ViewHolder {
+    @Override
+    public void onBindViewHolder(@NonNull SelectFriendHorizontalAdapter.SelectFriendHorizontalHolder myViewHolder, int position) {
 
-        TextView userNameSurname;
-        TextView shortUserNameTv;
-        UserProfileProperties selectedFriend;
+        UserProfileProperties userProfileProperties = SelectedFriendList.getInstance().getSelectedFriendList().getResultArray().get(position);
+        myViewHolder.setData(userProfileProperties, position);
+    }
+
+    class SelectFriendHorizontalHolder extends RecyclerView.ViewHolder {
+
+        ImageView specialPictureImgView;
         ImageView deletePersonImgv;
-        ImageView specialProfileImgView;
+        TextView specialNameTextView;
+        TextView shortenTextView;
+        UserProfileProperties selectedFriend;
+
         int position = 0;
 
-        public FriendGridListHolder(View itemView) {
+        public SelectFriendHorizontalHolder(final View itemView) {
             super(itemView);
 
             try {
-                specialProfileImgView = view.findViewById(R.id.specialPictureImgView);
-                userNameSurname = view.findViewById(R.id.specialNameTextView);
+                specialPictureImgView = view.findViewById(R.id.specialPictureImgView);
                 deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
-                shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-                specialProfileImgView.setBackground(imageShape);
-                deletePersonImgv.setBackground(deleteShape);
+                specialNameTextView = view.findViewById(R.id.specialNameTextView);
+                shortenTextView = view.findViewById(R.id.shortenTextView);
+                specialPictureImgView.setBackground(imageShape);
+                deletePersonImgv.setBackground(deleteImgvShape);
+
+                specialPictureImgView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        removeItem(position);
+                        clickCallback.onItemClick();
+                    }
+                });
 
                 deletePersonImgv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         removeItem(position);
-                        returnCallback.onReturn(getItemCount());
+                        clickCallback.onItemClick();
                     }
                 });
             } catch (Exception e) {
@@ -100,8 +113,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
 
         private void removeItem(int position) {
             try {
-                friendList.getResultArray().remove(selectedFriend);
-                SelectedFriendList.updateFriendList(friendList.getResultArray());
+                SelectedFriendList.getInstance().removeFriend(selectedFriend);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
             } catch (Exception e) {
@@ -118,7 +130,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
                 this.selectedFriend = selectedFriend;
                 setProfileName();
                 UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                        selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, specialProfileImgView);
+                        selectedFriend.getName(), selectedFriend.getUsername(), shortenTextView, specialPictureImgView);
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -130,9 +142,9 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         public void setProfileName(){
             try {
                 if(selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
-                    UserDataUtil.setName(selectedFriend.getName(), userNameSurname);
+                    UserDataUtil.setName(selectedFriend.getName(), specialNameTextView);
                 else if(selectedFriend.getUsername() != null && !selectedFriend.getUsername().isEmpty())
-                    UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), userNameSurname);
+                    UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), specialNameTextView);
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -143,17 +155,16 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
     }
 
     @Override
-    public void onBindViewHolder(FriendGridListAdapter.FriendGridListHolder holder, int position) {
-        UserProfileProperties selectedFriend = friendList.getResultArray().get(position);
-        holder.setData(selectedFriend, position);
-    }
-
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
     public int getItemCount() {
-        return friendList.getResultArray().size();
+        int size = 0;
+        try {
+            size = SelectedFriendList.getInstance().getSize();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+        return size;
     }
 }
