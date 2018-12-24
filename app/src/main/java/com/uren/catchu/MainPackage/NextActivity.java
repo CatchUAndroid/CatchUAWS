@@ -7,6 +7,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.RoutePersonMessage;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -49,6 +51,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_WILL_START_FRAGMENT;
 
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
@@ -94,6 +97,7 @@ public class NextActivity extends AppCompatActivity implements
         Fabric.with(this, new Crashlytics());
         thisActivity = this;
 
+        //startPersonMessagingFragment();
         initValues();
 
         fragmentHistory = new FragmentHistory();
@@ -135,23 +139,47 @@ public class NextActivity extends AppCompatActivity implements
         fillGroupListHolder();
     }
 
+    /*private void startPersonMessagingFragment() {
+        String willStartFragment = getIntent().getStringExtra(FCM_CODE_WILL_START_FRAGMENT);
+
+        if (willStartFragment != null && !willStartFragment.isEmpty()) {
+
+            if (willStartFragment.equals(MessageWithPersonFragment.class.getSimpleName())) {
+
+                String chattedUserid = getIntent().getStringExtra(FCM_CODE_CHATTED_USERID);
+
+                if (chattedUserid != null && !chattedUserid.isEmpty()) {
+
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+
+                    RoutePersonMessage routePersonMessage = new RoutePersonMessage(
+                            NextActivity.this,
+                            chattedUserid,
+                            R.id.profilePageMainLayout,
+                            fragmentTransaction);
+                    routePersonMessage.routePersonMessagingFragment();
+                }
+            }
+        }
+    }*/
+
     public void checkFeedFragmentReselected(TabLayout.Tab tab) {
         if (tab.getPosition() == FragNavController.TAB1 && feedFragment != null) {
 
             int selectedTabPosition = feedFragment.getSelectedTabPosition();
             List<Fragment> fragments = feedFragment.getFragmentManager().getFragments();
-            
-            if(selectedTabPosition == 0){
-                for (int i = 0; i < fragments.size(); i++){
-                    if(fragments.get(i) instanceof FeedPublicFragment){
+
+            if (selectedTabPosition == 0) {
+                for (int i = 0; i < fragments.size(); i++) {
+                    if (fragments.get(i) instanceof FeedPublicFragment) {
                         ((FeedPublicFragment) fragments.get(i)).scrollRecViewInitPosition();
                     }
                 }
             }
 
-            if(selectedTabPosition == 1){
-                for (int i = 0; i < fragments.size(); i++){
-                    if(fragments.get(i) instanceof FeedCatchedFragment){
+            if (selectedTabPosition == 1) {
+                for (int i = 0; i < fragments.size(); i++) {
+                    if (fragments.get(i) instanceof FeedCatchedFragment) {
                         ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
                     }
                 }
@@ -181,7 +209,7 @@ public class NextActivity extends AppCompatActivity implements
         AccountHolderInfo.getInstance();
     }
 
-    public void fillGroupListHolder(){
+    public void fillGroupListHolder() {
         GroupListHolder.setInstance(null);
         GroupListHolder.getInstance();
     }

@@ -146,7 +146,7 @@ public class PhotoSelectUtil {
                     bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
                     imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
                     bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());

@@ -73,7 +73,7 @@ public class DialogBoxUtil {
             });
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -102,7 +102,7 @@ public class DialogBoxUtil {
             });
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -139,7 +139,7 @@ public class DialogBoxUtil {
             });
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -176,7 +176,7 @@ public class DialogBoxUtil {
             });
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -202,7 +202,7 @@ public class DialogBoxUtil {
 
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -230,7 +230,7 @@ public class DialogBoxUtil {
 
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -256,7 +256,7 @@ public class DialogBoxUtil {
                         }
                     });
             alertDialog.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -293,7 +293,7 @@ public class DialogBoxUtil {
 
             AlertDialog alert = builder.create();
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -342,7 +342,7 @@ public class DialogBoxUtil {
                 }
             });
             alertDialog.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(act, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -434,7 +434,7 @@ public class DialogBoxUtil {
 
             // show dialog
             alert.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -473,7 +473,7 @@ public class DialogBoxUtil {
             if (post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
                 myList.add(context.getResources().getString(R.string.delete));
             }
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DialogBoxUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

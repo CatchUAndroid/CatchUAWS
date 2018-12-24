@@ -45,6 +45,7 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -53,6 +54,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.TwitterAuthProvider;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -73,6 +76,7 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -501,7 +505,17 @@ public class LoginActivity extends AppCompatActivity
 
         loginUser.setEmail(userEmail);
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
+        updateDeviceTokenForFCM();
+    }
 
+    public void updateDeviceTokenForFCM(){
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String deviceToken = instanceIdResult.getToken();
+                MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, mAuth.getCurrentUser().getUid());
+            }
+        });
     }
 
     private void startMainPage() {
@@ -575,6 +589,7 @@ public class LoginActivity extends AppCompatActivity
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in loginUser's information
                                 Log.i("Info", "  >>signInWithCredential:success");
+                                updateDeviceTokenForFCM();
                                 checkUserInSystem();
 
                             } else {
@@ -656,7 +671,7 @@ public class LoginActivity extends AppCompatActivity
         loginUser.setProviderId(String.valueOf(session.getUserId()));
         //providerType
         loginUser.setProviderType(PROVIDER_TYPE_TWITTER);
-
+        updateDeviceTokenForFCM();
     }
 
     public void checkUserInSystem() {

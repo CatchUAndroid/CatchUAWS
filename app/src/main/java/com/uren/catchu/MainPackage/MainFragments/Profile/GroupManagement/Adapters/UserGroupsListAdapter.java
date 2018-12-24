@@ -75,7 +75,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                     context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
             groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -265,7 +265,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                     adminDisplayButton.setVisibility(View.VISIBLE);
                 } else
                     adminDisplayButton.setVisibility(View.GONE);
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

@@ -178,7 +178,7 @@ public class ChangePasswordFragment extends BaseFragment {
             }
 
             changePassword();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -222,7 +222,7 @@ public class ChangePasswordFragment extends BaseFragment {
                             }
                         }
                     });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

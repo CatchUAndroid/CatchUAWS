@@ -102,7 +102,7 @@ public class SettingsFragment extends BaseFragment {
                 privateAccSwitch.setChecked(true);
             else
                 privateAccSwitch.setChecked(false);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

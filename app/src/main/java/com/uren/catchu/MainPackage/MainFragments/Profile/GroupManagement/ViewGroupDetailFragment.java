@@ -169,7 +169,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     0, GradientDrawable.OVAL, 50, 0));
             sendMessageImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumTurquoise, null),
                     0, GradientDrawable.OVAL, 50, 0));
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -219,7 +219,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                             getResources().getString(R.string.SOMETHING_WENT_WRONG));
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -372,7 +372,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     startChooseImageProc();
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -437,7 +437,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     });
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -466,7 +466,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     updateGroup();
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -486,7 +486,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
             else
                 checkCameraPermission();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -513,7 +513,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
         try {
             startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                     getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -584,7 +584,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                             });
                         }
                     });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

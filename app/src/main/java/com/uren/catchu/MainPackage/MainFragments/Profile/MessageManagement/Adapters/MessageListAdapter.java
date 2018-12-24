@@ -147,7 +147,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.NORMAL);
                     messageTextTv.setTextColor(context.getResources().getColor(R.color.DarkGray, null));
                 }
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

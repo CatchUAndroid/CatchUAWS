@@ -118,7 +118,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
             GradientDrawable shape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.White, null),
                     0, GradientDrawable.RECTANGLE, 15, 0);
             mainLinearLayout.setBackground(shape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

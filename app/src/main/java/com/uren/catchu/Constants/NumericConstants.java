@@ -74,4 +74,6 @@ public class NumericConstants {
     public static final int MESSAGE_LIMIT_COUNT = 25;
 
     public final static int KEYBOARD_CHECK_VALUE = 200;
+
+    public final static int MESSAGE_SEEN_TIMER_VAL_IN_SEC = 10;
 }

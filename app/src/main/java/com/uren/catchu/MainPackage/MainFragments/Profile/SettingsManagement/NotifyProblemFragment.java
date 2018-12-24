@@ -146,7 +146,7 @@ public class NotifyProblemFragment extends BaseFragment {
             permissionModule = new PermissionModule(getContext());
             NextActivity.notifyProblemFragment = this;
             commonToolbarTickImgv.setVisibility(View.VISIBLE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -162,7 +162,7 @@ public class NotifyProblemFragment extends BaseFragment {
             addPhotoImgv2.setBackground(shape);
             addPhotoImgv3.setBackground(shape);
             addPhotoImgv4.setBackground(shape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -254,7 +254,7 @@ public class NotifyProblemFragment extends BaseFragment {
                     removePhoto();
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -303,7 +303,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemNotifyModel.getImageView().setColorFilter(getActivity().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
             problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_CENTER);
             problemNotifyModel.getDeleteImgv().setVisibility(View.GONE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -453,7 +453,7 @@ public class NotifyProblemFragment extends BaseFragment {
             else
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -471,7 +471,7 @@ public class NotifyProblemFragment extends BaseFragment {
                             getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
                 }
             }
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -544,7 +544,7 @@ public class NotifyProblemFragment extends BaseFragment {
                                     });
                         }
                     });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

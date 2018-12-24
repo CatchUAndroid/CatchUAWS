@@ -41,7 +41,7 @@ public class DynamicLinkUtil {
                             }
                         }
                     });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, DynamicLinkUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

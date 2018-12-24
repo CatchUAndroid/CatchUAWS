@@ -124,7 +124,7 @@ public class UserDataUtil {
                     context.getResources().getColor(R.color.White, null),
                     GradientDrawable.OVAL, 50, 3);
             profilePicImgView.setBackground(imageShape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -161,7 +161,7 @@ public class UserDataUtil {
                 }
             }
             displayButton.setBackground(buttonShape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -178,7 +178,7 @@ public class UserDataUtil {
             buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 15, 0);
             displayButton.setBackground(buttonShape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -230,7 +230,7 @@ public class UserDataUtil {
             }
 
             displayButton.setBackground(buttonShape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -251,7 +251,7 @@ public class UserDataUtil {
                     context.getResources().getColor(R.color.Coral, null), GradientDrawable.RECTANGLE, 15, 3);
 
             displayButton.setBackground(buttonShape);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

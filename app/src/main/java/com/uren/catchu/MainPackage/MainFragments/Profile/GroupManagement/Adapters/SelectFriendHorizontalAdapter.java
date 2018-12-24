@@ -44,7 +44,7 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
                     0, GradientDrawable.OVAL, 50, 0);
             deleteImgvShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     context.getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 0);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

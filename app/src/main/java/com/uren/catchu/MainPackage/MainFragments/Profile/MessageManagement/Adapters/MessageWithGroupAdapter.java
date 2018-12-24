@@ -15,9 +15,7 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.GroupMessageBox;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -179,7 +177,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -193,7 +191,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

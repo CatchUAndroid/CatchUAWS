@@ -238,7 +238,7 @@ public class GroupManagementFragment extends BaseFragment {
                     imgCancelSearch.setVisibility(View.GONE);
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -319,7 +319,7 @@ public class GroupManagementFragment extends BaseFragment {
                             }
                         }
                     });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -400,7 +400,7 @@ public class GroupManagementFragment extends BaseFragment {
                     }
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

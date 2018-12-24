@@ -67,7 +67,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             this.contactFriendSelectCallback = contactFriendSelectCallback;
             imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -162,7 +162,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                         }
                     }
                 });
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -230,7 +230,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                                 });
                             }
                         });
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

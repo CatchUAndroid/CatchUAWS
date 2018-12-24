@@ -42,7 +42,7 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
                     0, GradientDrawable.OVAL, 50, 0);
             deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     0, GradientDrawable.OVAL, 50, 0);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

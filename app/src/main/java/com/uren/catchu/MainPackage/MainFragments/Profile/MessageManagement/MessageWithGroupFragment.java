@@ -180,7 +180,7 @@ public class MessageWithGroupFragment extends BaseFragment {
                     getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
             sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 25, 0));
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -290,11 +290,7 @@ public class MessageWithGroupFragment extends BaseFragment {
                 }
 
             });
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object(){}.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

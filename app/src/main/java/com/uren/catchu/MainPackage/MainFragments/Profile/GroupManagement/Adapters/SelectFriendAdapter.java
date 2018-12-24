@@ -63,7 +63,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             horAdapterUpdateChk = false;
             imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     context.getResources().getColor(R.color.Orange, null), GradientDrawable.OVAL, 50, 0);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

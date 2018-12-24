@@ -820,7 +820,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             } else
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -844,7 +844,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             } else
                 requestPermissions(new String[]{Manifest.permission.CAMERA},
                         permissionModule.PERMISSION_CAMERA);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -874,7 +874,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             intent.setAction(Intent.ACTION_GET_CONTENT);
             startActivityForResult(Intent.createChooser(intent,
                     getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -1252,7 +1252,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                                 startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
                             }
                         });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -1318,7 +1318,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
             groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
             justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -1332,7 +1332,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     getContext().getResources().getColor(R.color.RoyalBlue, null),
                     GradientDrawable.OVAL, 50, 3));
             photoCheckedImgv.setVisibility(View.VISIBLE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -1346,7 +1346,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     getContext().getResources().getColor(R.color.RoyalBlue, null),
                     GradientDrawable.OVAL, 50, 3));
             videoCheckedImgv.setVisibility(View.VISIBLE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -1360,7 +1360,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     getContext().getResources().getColor(R.color.RoyalBlue, null),
                     GradientDrawable.OVAL, 50, 3));
             textCheckedImgv.setVisibility(View.VISIBLE);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

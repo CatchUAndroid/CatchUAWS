@@ -31,7 +31,6 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -245,7 +244,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -259,7 +258,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

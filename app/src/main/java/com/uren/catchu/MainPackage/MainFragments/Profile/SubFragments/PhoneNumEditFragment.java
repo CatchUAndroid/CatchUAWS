@@ -156,7 +156,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             countryListResponse = new CountryListResponse();
             countryListResponse.setItems(new ArrayList<Country>());
             selectedPhone = new Phone();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -340,7 +340,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                     countryListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -426,7 +426,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 }
             });
             phoneVerification.startPhoneNumberVerification();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

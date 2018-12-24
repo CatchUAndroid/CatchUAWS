@@ -74,7 +74,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                     0, GradientDrawable.OVAL, 50, 0);
             adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -174,7 +174,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } catch (Resources.NotFoundException e) {
+                        } catch (Exception e) {
                             ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -280,7 +280,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                 context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
                     }
                 });
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -311,7 +311,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                         context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
                             }
                         });
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

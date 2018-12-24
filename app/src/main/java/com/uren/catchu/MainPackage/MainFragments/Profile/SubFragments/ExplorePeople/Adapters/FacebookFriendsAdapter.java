@@ -67,7 +67,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             activity = (Activity) context;
             imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -146,7 +146,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
                         listItemClickListener.onClick(v, newUser, position);
                     }
                 });
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -228,7 +228,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
                                 });
                             }
                         });
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());

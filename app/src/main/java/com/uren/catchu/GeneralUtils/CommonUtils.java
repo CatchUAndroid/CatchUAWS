@@ -97,7 +97,7 @@ public class CommonUtils {
             toast.setDuration(Toast.LENGTH_SHORT);
             toast.setView(layout);
             toast.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -410,12 +410,7 @@ public class CommonUtils {
                         + monthValue.substring(0, 3) +
                         " " + formatted.substring(0, 4);
             }
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -487,7 +482,7 @@ public class CommonUtils {
             TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
             tv.setTextColor(context.getResources().getColor(R.color.White, null));
             snackbar.show();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

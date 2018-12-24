@@ -82,7 +82,7 @@ public class PendingRequestsFragment extends BaseFragment {
             toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
             addListeners();
             getData();
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -170,7 +170,7 @@ public class PendingRequestsFragment extends BaseFragment {
                     });
                 }
             });
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

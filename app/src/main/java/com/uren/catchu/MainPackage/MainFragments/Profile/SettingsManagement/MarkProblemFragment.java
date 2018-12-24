@@ -110,7 +110,7 @@ public class MarkProblemFragment extends BaseFragment {
             commonToolbarTickImgv.setVisibility(View.VISIBLE);
             markProblemLayout.setBackground(ShapeUtil.getShape(0,
                     getResources().getColor(R.color.DodgerBlue, null), GradientDrawable.RECTANGLE, 0, 2));
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
