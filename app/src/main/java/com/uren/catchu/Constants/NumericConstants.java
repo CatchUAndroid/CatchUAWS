@@ -75,5 +75,8 @@ public class NumericConstants {
 
     public final static int KEYBOARD_CHECK_VALUE = 200;
 
-    public final static int MESSAGE_SEEN_TIMER_VAL_IN_SEC = 10;
+    public final static int FCM_MAX_MESSAGE_LEN = 30;
+    public final static int MAX_ALLOWED_NOTIFICATION_SIZE = 4;
+
+
 }

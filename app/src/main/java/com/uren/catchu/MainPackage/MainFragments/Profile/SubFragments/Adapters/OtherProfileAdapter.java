@@ -886,7 +886,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     public void setInnerRecyclerScrollListener(RecyclerScrollListener recyclerScrollListener) {
         this.recyclerScrollListener = recyclerScrollListener;
     }
-
 }
 
 

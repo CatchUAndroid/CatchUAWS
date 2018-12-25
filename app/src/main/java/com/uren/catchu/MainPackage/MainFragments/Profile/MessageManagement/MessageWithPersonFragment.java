@@ -1,8 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -38,12 +36,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.SendMessageToFCM;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -62,9 +57,9 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
-import static com.uren.catchu.Constants.StringConstants.CHAR_COLON;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE;
@@ -73,6 +68,7 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NAME;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_SENDER;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 
@@ -262,8 +258,8 @@ public class MessageWithPersonFragment extends BaseFragment {
     private void getOtherUserDeviceToken() {
 
         try {
-            tokenReference = FirebaseDatabase.getInstance().getReference("DeviceToken")
-                    .child(chattedUser.getUserid()).child("Token");
+            tokenReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
+                    .child(chattedUser.getUserid()).child(FB_CHILD_TOKEN);
 
             tokenListener = tokenReference.addValueEventListener(new ValueEventListener() {
                 @Override

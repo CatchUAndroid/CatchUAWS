@@ -49,6 +49,13 @@
             </intent-filter>
         </activity>
 
+        <!--<service android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageNotificationListener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>-->
+
         <service android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -121,7 +128,6 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".LoginPackage.AppIntroductionActivity" />
-        <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.MessageListActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity"></activity>
     </application>

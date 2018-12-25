@@ -193,22 +193,13 @@ public class BitmapConversion extends AppCompatActivity {
         return dpValue;
     }
 
-    public static Bitmap getBitmapFromURL(String strURL, Context context) {
+    public static Bitmap getBitmapFromInputStream(InputStream input, Context context,
+                                                  int width, int height) {
         Bitmap myBitmap = null;
         try {
-            URL url = new URL(strURL);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
             myBitmap = BitmapFactory.decodeStream(input);
-
-            Bitmap roundedBitmap = BitmapConversion.getRoundedShape(myBitmap, 350, 350);
-
-            if(roundedBitmap != null)
-                myBitmap = roundedBitmap;
-
-            return myBitmap;
+            Bitmap roundedBitmap = BitmapConversion.getRoundedShape(myBitmap, width, height);
+            return roundedBitmap;
         } catch (Exception e) {
 
             ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),

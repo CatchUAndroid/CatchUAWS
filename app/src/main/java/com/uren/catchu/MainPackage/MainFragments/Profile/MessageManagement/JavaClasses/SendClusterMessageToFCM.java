@@ -1,8 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -17,8 +15,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Inter
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.FCMItems;
 import com.uren.catchu.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -33,10 +29,11 @@ import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_TITLE;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_TO;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_URL;
 
-public class SendMessageToFCM {
+public class SendClusterMessageToFCM {
 
     static OkHttpClient mClient = new OkHttpClient();
 
@@ -54,16 +51,15 @@ public class SendMessageToFCM {
                     notification.put(FCM_CODE_TITLE, fcmItems.getTitle());
 
                     JSONObject data = new JSONObject();
-                    data.put(FCM_CODE_PHOTO_URL, fcmItems.getPhotoUrl());
                     data.put(FCM_CODE_SENDER_USERID, fcmItems.getSenderUserid());
                     data.put(FCM_CODE_RECEIPT_USERID, fcmItems.getReceiptUserid());
-                    data.put(FCM_CODE_MESSAGE_ID, fcmItems.getMessageid());
-                    data.put(FCM_MESSAGE_TYPE, FCM_MESSAGE_TYPE_NORMAL_TO_PERSON);
+                    data.put(FCM_MESSAGE_TYPE, FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON);
                     root.put(FCM_CODE_NOTIFICATION, notification);
                     root.put(FCM_CODE_DATA, data);
                     root.put(FCM_CODE_TO, fcmItems.getOtherUserDeviceToken());
 
-                    String result = postToFCM(root.toString(), context, messageSentFCMCallback);
+                    String result = postToFCM(root.toString(), context,
+                            messageSentFCMCallback);
                     Log.i("Info", "Result: " + result);
                     return result;
                 } catch (Exception e) {

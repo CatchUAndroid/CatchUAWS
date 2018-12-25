@@ -25,15 +25,12 @@ import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.FragmentTabHiddenUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.RoutePersonMessage;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
 import com.uren.catchu.R;
@@ -97,7 +94,6 @@ public class NextActivity extends AppCompatActivity implements
         Fabric.with(this, new Crashlytics());
         thisActivity = this;
 
-        //startPersonMessagingFragment();
         initValues();
 
         fragmentHistory = new FragmentHistory();
@@ -138,30 +134,6 @@ public class NextActivity extends AppCompatActivity implements
         fillAccountHolder();
         fillGroupListHolder();
     }
-
-    /*private void startPersonMessagingFragment() {
-        String willStartFragment = getIntent().getStringExtra(FCM_CODE_WILL_START_FRAGMENT);
-
-        if (willStartFragment != null && !willStartFragment.isEmpty()) {
-
-            if (willStartFragment.equals(MessageWithPersonFragment.class.getSimpleName())) {
-
-                String chattedUserid = getIntent().getStringExtra(FCM_CODE_CHATTED_USERID);
-
-                if (chattedUserid != null && !chattedUserid.isEmpty()) {
-
-                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-
-                    RoutePersonMessage routePersonMessage = new RoutePersonMessage(
-                            NextActivity.this,
-                            chattedUserid,
-                            R.id.profilePageMainLayout,
-                            fragmentTransaction);
-                    routePersonMessage.routePersonMessagingFragment();
-                }
-            }
-        }
-    }*/
 
     public void checkFeedFragmentReselected(TabLayout.Tab tab) {
         if (tab.getPosition() == FragNavController.TAB1 && feedFragment != null) {

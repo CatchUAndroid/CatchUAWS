@@ -1,5 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -12,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -25,9 +28,15 @@ import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessagingPersonProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -36,6 +45,7 @@ import butterknife.BindView;
 import catchu.model.User;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
+import io.fabric.sdk.android.Fabric;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
@@ -49,6 +59,10 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_SENDER;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
+import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
+import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_SEND;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 
 public class MessageListActivity extends AppCompatActivity {
 
@@ -64,40 +78,82 @@ public class MessageListActivity extends AppCompatActivity {
     ArrayList<MessageListBox> messageListBoxes;
     MessageListAdapter messageListAdapter;
     LinearLayoutManager linearLayoutManager;
+    public static Activity thisActivity;
 
     boolean setAdapterVal = false;
     boolean adapterLoaded = false;
 
-    FirebaseAuth mAuth;
-    String userid = null;
+    String receiptUserId; // Bu benim
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_message_list);
+        thisActivity = this;
+        Fabric.with(this, new Crashlytics());
+
+        receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
         initVariables();
         addListeners();
-
-        if (userid != null && !userid.isEmpty())
-            getMessages();
+        checkMyInformation();
     }
 
     public void initVariables() {
         try {
-            searchToolbarBackImgv = findViewById(R.id.searchToolbarBackImgv);
-            imgCancelSearch = findViewById(R.id.imgCancelSearch);
-            editTextSearch = findViewById(R.id.editTextSearch);
-            progressBar = findViewById(R.id.progressBar);
-            recyclerView = findViewById(R.id.recyclerView);
+            initUIValues();
             messageListBoxes = new ArrayList<>();
-            mAuth = FirebaseAuth.getInstance();
-            userid = mAuth.getCurrentUser().getUid();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    private void initUIValues() {
+        searchToolbarBackImgv = findViewById(R.id.searchToolbarBackImgv);
+        imgCancelSearch = findViewById(R.id.imgCancelSearch);
+        editTextSearch = findViewById(R.id.editTextSearch);
+        progressBar = findViewById(R.id.progressBar);
+        recyclerView = findViewById(R.id.recyclerView);
+    }
+
+    private void checkMyInformation() {
+        try {
+            if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty())
+                updateClusterStatus();
+            else if (receiptUserId != null && !receiptUserId.isEmpty()) {
+                AccountHolderInfo.getInstance();
+                AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
+                    @Override
+                    public void onAccountHolderIfoTaken(UserProfile userProfile) {
+                        if (receiptUserId.equals(userProfile.getUserInfo().getUserid()))
+                            updateClusterStatus();
+                    }
+                });
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    private void updateClusterStatus() {
+
+        MessagingPersonProcess.updateClusterStatus(AccountHolderInfo.getUserID(),
+                FB_VALUE_NOTIFICATION_READ, new MessageUpdateCallback() {
+                    @Override
+                    public void onComplete() {
+                        getMessages();
+                    }
+
+                    @Override
+                    public void onFailed(String errMessage) {
+
+                    }
+                });
     }
 
     public void addListeners() {
@@ -120,7 +176,7 @@ public class MessageListActivity extends AppCompatActivity {
     public void getMessages() {
         try {
             databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                    .child(userid);
+                    .child(AccountHolderInfo.getUserID());
 
             Query query = databaseReference
                     .orderByChild(FB_CHILD_MESSAGE_CONTENT + "/" + FB_CHILD_LAST_MESSAGE_DATE)
@@ -180,7 +236,7 @@ public class MessageListActivity extends AppCompatActivity {
                         @Override
                         public void onTaskContinue() {
                         }
-                    }, userid, outboundSnapshot.getKey(), token);
+                    }, AccountHolderInfo.getUserID(), outboundSnapshot.getKey(), token);
 
                     loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
@@ -344,7 +400,7 @@ public class MessageListActivity extends AppCompatActivity {
             Map<String, Object> receiptMap = (Map) map.get(FB_CHILD_RECEIPT);
             String receiptUserid = (String) receiptMap.get(FB_CHILD_USERID);
 
-            if (receiptUserid.equals(userid))
+            if (receiptUserid.equals(AccountHolderInfo.getUserID()))
                 messageListBox.setIamReceipt(true);
             else
                 messageListBox.setIamReceipt(false);
@@ -373,5 +429,15 @@ public class MessageListActivity extends AppCompatActivity {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if (NextActivity.thisActivity == null)
+            this.startActivity(new Intent(MessageListActivity.this, NextActivity.class));
+
+        this.finish();
     }
 }

@@ -57,16 +57,9 @@ public class AccountHolderInfo {
     }
 
     public AccountHolderInfo() {
-        try {
-            firebaseAuth = FirebaseAuth.getInstance();
-            Crashlytics.setUserIdentifier(getUserIdFromFirebase());
-            getProfileDetail(getUserIdFromFirebase());
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        firebaseAuth = FirebaseAuth.getInstance();
+        Crashlytics.setUserIdentifier(getUserIdFromFirebase());
+        getProfileDetail(getUserIdFromFirebase());
     }
 
     public static void setInstance(AccountHolderInfo instance) {

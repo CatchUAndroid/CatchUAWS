@@ -302,6 +302,7 @@
     <string name="REPORT_PERSON">Report</string>
     <string name="CLEAR_CHAT">Clear Chat</string>
     <string name="YOU_HAVE_A_NEW_MESSAGE">You have a new message</string>
+    <string name="YOU_HAVE_NEW_MESSAGES">You have new messages</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

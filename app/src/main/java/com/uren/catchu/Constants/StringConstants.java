@@ -148,6 +148,16 @@ public class StringConstants {
     public static final String FB_CHILD_CONTENT_ID = "ContentId";
     public static final String FB_CHILD_LAST_MESSAGE_DATE = "LastMessageDate";
     public static final String FB_CHILD_PAGE_IS_SEEN = "PageIsSeen";
+    public static final String FB_CHILD_DEVICE_TOKEN = "DeviceToken";
+    public static final String FB_CHILD_TOKEN = "Token";
+    public static final String FB_CHILD_NOTIFICATIONS = "Notifications";
+    public static final String FB_CHILD_NOTIFICATION_STATUS = "NotificationStatus";
+    public static final String FB_CHILD_CLUSTER_STATUS = "ClusterStatus";
+    public static final String FB_CHILD_CLUSTER_MESSAGE_NOTIFICATION = "ClusterMessageNotification";
+
+    public static final String FB_VALUE_NOTIFICATION_SEND = "Sended";
+    public static final String FB_VALUE_NOTIFICATION_READ = "Readed";
+    public static final String FB_VALUE_NOTIFICATION_DELETE = "Deleted";
 
     public static final String FB_CHILD_ERRORS = "Errors";
     public static final String FB_CHILD_ANDROID = "Android";
@@ -166,4 +176,7 @@ public class StringConstants {
     public static final String FCM_CODE_TO = "to";
     public static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
 
+    public static final String FCM_MESSAGE_TYPE = "MessageType";
+    public static final String FCM_MESSAGE_TYPE_NORMAL_TO_PERSON = "NormalMessageToPerson";
+    public static final String FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON = "ClusterMessageToPerson";
 }

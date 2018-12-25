@@ -28,19 +28,30 @@ import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.AppIntroductionActivity;
 import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListActivity;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
 import catchu.model.Provider;
 import catchu.model.User;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 import io.fabric.sdk.android.Fabric;
+
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
 
     private FirebaseAuth firebaseAuth;
     User user;
+    String receiptUserId = null;
+    String senderUserId = null;
+    String messagingType = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else
-            checkUser();
+            fillUserInfo();
     }
 
     private void initVariables() {
@@ -122,17 +136,14 @@ public class MainActivity extends AppCompatActivity {
         Twitter.initialize(twitterConfig);
     }
 
-    private void checkUser() {
-        fillUserInfo();
-        displayUserInfo(user);
-        loginProcess();
-    }
-
-    public void fillUserInfo(){
+    public void fillUserInfo() {
         user = new User();
         Bundle extras = getIntent().getExtras();
         Provider provider = new Provider();
         LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
+        receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
+        senderUserId = (String) getIntent().getSerializableExtra(FCM_CODE_SENDER_USERID);
+        messagingType = (String) getIntent().getSerializableExtra(FCM_MESSAGE_TYPE);
 
         if (extras != null && loginUser != null) {
 
@@ -154,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
             provider.setProviderid(loginUser.getProviderId());
             provider.setProviderType(loginUser.getProviderType());
             user.setProvider(provider);
+            displayUserInfo(user);
+            loginProcess();
 
         } else {
 
@@ -166,23 +179,25 @@ public class MainActivity extends AppCompatActivity {
             provider.setProviderid("");
             provider.setProviderType("");
             user.setProvider(provider);
+            displayUserInfo(user);
+            loginProcess();
         }
     }
 
-    public void loginProcess(){
-        if(!CommonUtils.isNetworkConnected(MainActivity.this)){
+    public void loginProcess() {
+        if (!CommonUtils.isNetworkConnected(MainActivity.this)) {
             tryAgainButton.setVisibility(View.VISIBLE);
             networkTryDesc.setVisibility(View.VISIBLE);
             CommonUtils.connectionErrSnackbarShow(mainActLayout, MainActivity.this);
             refresh_layout.setRefreshing(false);
-        }else {
+        } else {
             tryAgainButton.setVisibility(View.GONE);
             networkTryDesc.setVisibility(View.GONE);
             startLoginProcess();
         }
     }
 
-    public void startLoginProcess(){
+    public void startLoginProcess() {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -200,7 +215,26 @@ public class MainActivity extends AppCompatActivity {
                             CommonUtils.LOG_OK_BUT_NULL("LoginProcess");
                         } else {
                             CommonUtils.LOG_OK("LoginProcess");
-                            startActivity(new Intent(MainActivity.this, NextActivity.class));
+
+                            if (messagingType == null)
+                                startActivity(new Intent(MainActivity.this, NextActivity.class));
+                            else {
+                                switch (messagingType) {
+                                    case FCM_MESSAGE_TYPE_NORMAL_TO_PERSON:
+                                        if (!receiptUserId.isEmpty())
+                                            startMessagePersonActivity();
+                                        break;
+
+                                    case FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON:
+                                        if (!receiptUserId.isEmpty())
+                                            startMessageListActivity();
+                                        break;
+
+                                    default:
+                                        startActivity(new Intent(MainActivity.this, NextActivity.class));
+                                        break;
+                                }
+                            }
                             finish();
                         }
                     }
@@ -220,6 +254,26 @@ public class MainActivity extends AppCompatActivity {
                 loginProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         });
+    }
+
+    private void startMessagePersonActivity() {
+        if (MessageWithPersonActivity.thisActivity != null) {
+            MessageWithPersonActivity.thisActivity.finish();
+        }
+        Intent intent = new Intent(this, MessageWithPersonActivity.class);
+        intent.putExtra(FCM_CODE_SENDER_USERID, senderUserId);
+        intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptUserId);
+        startActivity(intent);
+    }
+
+    private void startMessageListActivity() {
+        if (MessageListActivity.thisActivity != null) {
+            MessageListActivity.thisActivity.finish();
+        }
+        Intent intent = new Intent(this, MessageListActivity.class);
+        intent.putExtra(FCM_CODE_SENDER_USERID, senderUserId);
+        intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptUserId);
+        startActivity(intent);
     }
 
     private void displayUserInfo(User user) {

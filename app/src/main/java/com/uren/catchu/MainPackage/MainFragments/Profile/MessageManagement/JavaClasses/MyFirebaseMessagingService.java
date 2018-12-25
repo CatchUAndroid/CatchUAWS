@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -31,7 +32,9 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.ReceiveMessageBox;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -46,16 +49,20 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.uren.catchu.Constants.NumericConstants.MESSAGE_SEEN_TIMER_VAL_IN_SEC;
-import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
+import static com.uren.catchu.Constants.NumericConstants.MAX_ALLOWED_NOTIFICATION_SIZE;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_PAGE_IS_SEEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_PHOTO_URL;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_WILL_START_FRAGMENT;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON;
+import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -69,6 +76,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
     // [START receive_message]
+    @SuppressLint("WrongThread")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
@@ -110,11 +118,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-        if (remoteMessage.getData().size() > 0 && remoteMessage.getNotification() != null)
-            checkMessageIsSeen(remoteMessage);
+        if (remoteMessage.getData().size() > 0 && remoteMessage.getNotification() != null) {
+            String photoUrl = (String) remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
+
+            if(photoUrl == null) photoUrl = "";
+
+            new GetNotification(remoteMessage).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoUrl);
+            //checkMessageIsSeen(remoteMessage);
+        }
     }
 
-    public void checkMessageIsSeen(final RemoteMessage remoteMessage) {
+    /*public void checkMessageIsSeen(final RemoteMessage remoteMessage) {
 
         try {
             databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES)
@@ -163,7 +177,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-    }
+    }*/
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -220,10 +234,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static void sendRegistrationToServer(String token, String userid) {
 
         try {
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference("DeviceToken").child(userid);
+            DatabaseReference database = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
+                    .child(userid);
 
             final Map<String, Object> values = new HashMap<>();
-            values.put("Token", token);
+            values.put(FB_CHILD_TOKEN, token);
 
             database.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -244,11 +259,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private void sendNotification(String messageBody, String messageTitle, String senderId, String receiptId, Bitmap bitmap) {
+    private void sendNotification(RemoteMessage remoteMessage, Bitmap bitmap) {
         try {
-            Intent intent = new Intent(this, MessageWithPersonActivity.class);
-            intent.putExtra(FCM_CODE_SENDER_USERID, senderId);
-            intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptId);
+
+            String messageBody = remoteMessage.getNotification().getBody();
+            String messageTitle = remoteMessage.getNotification().getTitle();
+            String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
+            String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
+            String messageType = (String) remoteMessage.getData().get(FCM_MESSAGE_TYPE);
+
+            Intent intent = new Intent(this, MainActivity.class);
+
+            if (senderId != null && !senderId.isEmpty())
+                intent.putExtra(FCM_CODE_SENDER_USERID, senderId);
+
+            if (receiptId != null && !receiptId.isEmpty())
+                intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptId);
+
+            if (messageType != null && !messageType.isEmpty())
+                intent.putExtra(FCM_MESSAGE_TYPE, messageType);
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
@@ -288,7 +317,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationManager.createNotificationChannel(channel);
             }
 
+            //ReceivingMessageUtil.getInstance().getListSize() ;
+
             notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+
+           /* ReceiveMessageBox receiveMessageBox = new ReceiveMessageBox();
+            receiveMessageBox.setNotificationId();*/
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
@@ -309,23 +344,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         protected Void doInBackground(String... urls) {
 
             try {
-                URL url = new URL(urls[0]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                Bitmap myBitmap = BitmapFactory.decodeStream(input);
-                Bitmap roundedBitmap = BitmapConversion.getRoundedShape(myBitmap, 350, 350);
+                String photoUrl = urls[0];
+                Bitmap myBitmap = null;
 
-                if (roundedBitmap != null)
-                    myBitmap = roundedBitmap;
+                if(photoUrl != null && !photoUrl.isEmpty()) {
+                    URL url = new URL(urls[0]);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+                    InputStream input = connection.getInputStream();
+                    myBitmap = BitmapConversion.getBitmapFromInputStream(input, getApplicationContext(), 350, 350);
+                }
 
-                sendNotification(remoteMessage.getNotification().getBody(),
-                        remoteMessage.getNotification().getTitle(),
-                        (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID),
-                        (String)remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID),
-                        myBitmap);
-
+                sendNotification(remoteMessage, myBitmap);
 
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
