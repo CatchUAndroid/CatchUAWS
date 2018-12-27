@@ -101,7 +101,7 @@ public class SettingOperation {
                     }
                 });
             }
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -132,7 +132,7 @@ public class SettingOperation {
                     });
                 }
             }, false, userProfileProperties, null);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());

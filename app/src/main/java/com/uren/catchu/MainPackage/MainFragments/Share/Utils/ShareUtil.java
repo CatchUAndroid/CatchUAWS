@@ -78,8 +78,8 @@ public class ShareUtil {
                     }
                 }
             });
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(null, ShareUtil.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class ShareUtil {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, ShareUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -124,7 +124,7 @@ public class ShareUtil {
                         .build();
 
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(null, ShareUtil.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
@@ -138,7 +138,7 @@ public class ShareUtil {
             intent.setData(Uri.fromFile(file));
             NextActivity.thisActivity.sendBroadcast(intent);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, ShareUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -172,7 +172,7 @@ public class ShareUtil {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, ShareUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

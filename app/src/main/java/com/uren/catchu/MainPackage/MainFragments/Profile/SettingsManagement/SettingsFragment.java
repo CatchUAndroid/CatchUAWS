@@ -73,7 +73,7 @@ public class SettingsFragment extends BaseFragment {
             setDefaultUIValues();
             addListeners();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -102,8 +102,8 @@ public class SettingsFragment extends BaseFragment {
                 privateAccSwitch.setChecked(true);
             else
                 privateAccSwitch.setChecked(false);
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -177,7 +177,7 @@ public class SettingsFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -216,7 +216,7 @@ public class SettingsFragment extends BaseFragment {
             getActivity().finish();
             startActivity(new Intent(getActivity(), MainActivity.class));
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),SettingsFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

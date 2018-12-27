@@ -115,6 +115,7 @@ public class StringConstants {
 
     //Character constants
     public static final String CHAR_AMPERSAND = "@";
+    public static final String CHAR_COLON = ":";
 
     public static final String GROUP_OP_CHOOSE_TYPE = "CHOOSE";
     public static final String GROUP_OP_VIEW_TYPE = "VIEW";
@@ -145,10 +146,38 @@ public class StringConstants {
     public static final String FB_CHILD_USERID = "UserId";
     public static final String FB_CHILD_IS_SEEN = "IsSeen";
     public static final String FB_CHILD_MESSAGE_CONTENT = "MessageContent";
+    public static final String FB_CHILD_CONTENT_ID = "ContentId";
+    public static final String FB_CHILD_LAST_MESSAGE_DATE = "LastMessageDate";
+    public static final String FB_CHILD_PAGE_IS_SEEN = "PageIsSeen";
+    public static final String FB_CHILD_DEVICE_TOKEN = "DeviceToken";
+    public static final String FB_CHILD_TOKEN = "Token";
+    public static final String FB_CHILD_NOTIFICATIONS = "Notifications";
+    public static final String FB_CHILD_NOTIFICATION_STATUS = "NotificationStatus";
+    public static final String FB_CHILD_CLUSTER_STATUS = "ClusterStatus";
+    public static final String FB_CHILD_CLUSTER_MESSAGE_NOTIFICATION = "ClusterMessageNotification";
+
+    public static final String FB_VALUE_NOTIFICATION_SEND = "Sended";
+    public static final String FB_VALUE_NOTIFICATION_READ = "Readed";
+    public static final String FB_VALUE_NOTIFICATION_DELETE = "Deleted";
 
     public static final String FB_CHILD_ERRORS = "Errors";
     public static final String FB_CHILD_ANDROID = "Android";
 
+    public static final String FCM_CODE_SENDER_USERID = "SENDER_USERID";
+    public static final String FCM_CODE_RECEIPT_USERID = "RECEIPT_USERID";
+    public static final String FCM_CODE_MESSAGE_ID = "MESSAGE_ID";
+    public static final String FCM_CODE_WILL_START_FRAGMENT = "WILL_START_FRAGMENT";
+    public static final String FCM_CODE_CHATTED_USER = "CHATTED_USER";
 
+    public static final String FCM_CODE_BODY = "body";
+    public static final String FCM_CODE_TITLE = "title";
+    public static final String FCM_CODE_PHOTO_URL = "photoUrl";
+    public static final String FCM_CODE_NOTIFICATION = "notification";
+    public static final String FCM_CODE_DATA = "data";
+    public static final String FCM_CODE_TO = "to";
+    public static final String FCM_MESSAGE_URL = "https://fcm.googleapis.com/fcm/send";
 
+    public static final String FCM_MESSAGE_TYPE = "MessageType";
+    public static final String FCM_MESSAGE_TYPE_NORMAL_TO_PERSON = "NormalMessageToPerson";
+    public static final String FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON = "ClusterMessageToPerson";
 }

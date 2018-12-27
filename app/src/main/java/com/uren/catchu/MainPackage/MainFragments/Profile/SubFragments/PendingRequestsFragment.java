@@ -67,7 +67,7 @@ public class PendingRequestsFragment extends BaseFragment {
             mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
             ButterKnife.bind(this, mView);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -81,8 +81,8 @@ public class PendingRequestsFragment extends BaseFragment {
             toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
             addListeners();
             getData();
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -98,7 +98,7 @@ public class PendingRequestsFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -140,7 +140,7 @@ public class PendingRequestsFragment extends BaseFragment {
 
                                     @Override
                                     public void onFailed(Exception e) {
-                                        ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                                        ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                                                 new Object() {
                                                 }.getClass().getEnclosingMethod().getName(), e.getMessage());
                                     }
@@ -158,7 +158,7 @@ public class PendingRequestsFragment extends BaseFragment {
                 @Override
                 public void onFailed(Exception e) {
                     progressBar.setVisibility(View.GONE);
-                    ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
@@ -169,8 +169,8 @@ public class PendingRequestsFragment extends BaseFragment {
                     });
                 }
             });
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -187,7 +187,7 @@ public class PendingRequestsFragment extends BaseFragment {
                 mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),PendingRequestsFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

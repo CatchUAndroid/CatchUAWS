@@ -93,7 +93,7 @@ public class ChangePasswordFragment extends BaseFragment {
                 addListeners();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ChangePasswordFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -155,7 +155,7 @@ public class ChangePasswordFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ChangePasswordFragment.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -178,8 +178,8 @@ public class ChangePasswordFragment extends BaseFragment {
             }
 
             changePassword();
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ChangePasswordFragment.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -222,8 +222,8 @@ public class ChangePasswordFragment extends BaseFragment {
                             }
                         }
                     });
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),ChangePasswordFragment.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -239,7 +239,7 @@ public class ChangePasswordFragment extends BaseFragment {
                 getActivity().finish();
                 startActivity(new Intent(getActivity(), MainActivity.class));
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(getContext(),ChangePasswordFragment.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();

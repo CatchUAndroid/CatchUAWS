@@ -44,7 +44,7 @@ public class VideoSelectUtil {
             videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
             setBitmapFromUriForVideo();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class VideoSelectUtil {
             videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
             setBitmapFromUriForVideo();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -69,7 +69,7 @@ public class VideoSelectUtil {
             retriever.setDataSource(videoRealPath);
             videoBitmap = retriever.getFrameAtTime(100);
         } catch (IllegalArgumentException e) {
-            ErrorSaveHelper.writeErrorToDB(context, VideoSelectUtil.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

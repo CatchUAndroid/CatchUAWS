@@ -20,6 +20,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -42,7 +43,6 @@ public class AccountHolderInfo {
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
-    private static String FBuserId;
 
     public static AccountHolderInfo getInstance() {
         if (accountHolderInfoInstance == null) {
@@ -114,8 +114,16 @@ public class AccountHolderInfo {
     }
 
     public static String getUserIdFromFirebase() {
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        FBuserId = currentUser.getUid();
+        String FBuserId = "";
+        try {
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            FBuserId = currentUser.getUid();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
         return FBuserId;
     }
 
@@ -125,65 +133,86 @@ public class AccountHolderInfo {
 
     public static void getToken(final TokenCallback tokenCallback) {
 
-        if (NextActivity.thisActivity != null) {
-            if (!CommonUtils.isNetworkConnected(NextActivity.thisActivity)) {
-                CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
-                return;
-            }
-        }
-
-        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
-        tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-            @Override
-            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                if (task.isSuccessful()) {
-                    tokenCallback.onTokenTaken(task.getResult().getToken());
-                } else {
-                    Log.i("info", "Token task operation fail");
+        try {
+            if (NextActivity.thisActivity != null) {
+                if (!CommonUtils.isNetworkConnected(NextActivity.thisActivity)) {
+                    CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
+                    return;
                 }
             }
-        });
+
+            final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
+            tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+                @Override
+                public void onComplete(@NonNull Task<GetTokenResult> task) {
+                    if (task.isSuccessful()) {
+                        tokenCallback.onTokenTaken(task.getResult().getToken());
+                    } else {
+                        Log.i("info", "Token task operation fail");
+                    }
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public static void updateAccountHolderFollowCnt(String requestType) {
-        int followingCnt = 0, followerCnt = 0;
-        String followingCount, followerCount;
+        try {
+            int followingCnt = 0, followerCnt = 0;
+            String followingCount, followerCount;
 
-        followingCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount();
-        followerCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount();
+            followingCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount();
+            followerCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount();
 
-        if (!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)) {
-            followingCnt = Integer.parseInt(followingCount);
-        }
+            if (!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)) {
+                followingCnt = Integer.parseInt(followingCount);
+            }
 
-        if (!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)) {
-            followerCnt = Integer.parseInt(followerCount);
-        }
+            if (!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)) {
+                followerCnt = Integer.parseInt(followerCount);
+            }
 
-        switch (requestType) {
-            case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                followingCnt = followingCnt + 1;
-                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
-                break;
+            switch (requestType) {
+                case FRIEND_CREATE_FOLLOW_DIRECTLY:
+                    followingCnt = followingCnt + 1;
+                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
+                    break;
 
-            case FRIEND_DELETE_FOLLOW:
-                followingCnt = followingCnt - 1;
-                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
-                break;
+                case FRIEND_DELETE_FOLLOW:
+                    followingCnt = followingCnt - 1;
+                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
+                    break;
 
-            case FRIEND_ACCEPT_REQUEST:
-                followerCnt = followerCnt + 1;
-                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
-                break;
+                case FRIEND_ACCEPT_REQUEST:
+                    followerCnt = followerCnt + 1;
+                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
+                    break;
 
-            default:
-                break;
+                default:
+                    break;
+            }
+        } catch (NumberFormatException e) {
+            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
     public static void setAccountHolderInfoCallback(AccountHolderInfoCallback accountHolderInfoCallback) {
-        accountHolderInfoInstance.accountHolderInfoCallback = accountHolderInfoCallback;
+        try {
+            accountHolderInfoInstance.accountHolderInfoCallback = accountHolderInfoCallback;
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public static synchronized void reset() {

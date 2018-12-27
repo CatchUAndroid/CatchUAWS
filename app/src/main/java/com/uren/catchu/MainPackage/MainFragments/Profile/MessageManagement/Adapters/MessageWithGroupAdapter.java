@@ -15,9 +15,7 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.GroupMessageBox;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -28,7 +26,7 @@ import java.util.TimeZone;
 
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
-public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGroupAdapter.MyViewHolder> {
+public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGroupAdapter.MessageWithGroupHolder> {
 
     private Context context;
     private ArrayList<GroupMessageBox> messageBoxArrayList;
@@ -44,7 +42,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             this.messageDeleteCallback = messageDeleteCallback;
             this.deleteMsgCntTv = deleteMsgCntTv;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -52,13 +50,13 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
     }
 
     @Override
-    public MessageWithGroupAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MessageWithGroupAdapter.MessageWithGroupHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.group_message_item, parent, false);
-        return new MessageWithGroupAdapter.MyViewHolder(itemView);
+        return new MessageWithGroupAdapter.MessageWithGroupHolder(itemView);
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MessageWithGroupHolder extends RecyclerView.ViewHolder {
 
         EmojiconTextView messageTv;
         TextView createAtTv;
@@ -68,7 +66,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
         int position;
         GroupMessageBox groupMessageBox;
 
-        public MyViewHolder(View view) {
+        public MessageWithGroupHolder(View view) {
             super(view);
 
             try {
@@ -111,7 +109,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     }
                 });
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -126,7 +124,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                 setCardViewPosition();
                 setSelectedDeleteValues();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -153,7 +151,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     }
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -179,8 +177,8 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
-            } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -193,8 +191,8 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
-            } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -218,7 +216,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                     deleteMsgCntTv.setText(Integer.toString(deleteCount));
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -231,12 +229,12 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
     }
 
     @Override
-    public void onBindViewHolder(final MessageWithGroupAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MessageWithGroupAdapter.MessageWithGroupHolder holder, final int position) {
         try {
             GroupMessageBox groupMessageBox = messageBoxArrayList.get(position);
             holder.setData(groupMessageBox, position);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -250,7 +248,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
                 listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithGroupAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

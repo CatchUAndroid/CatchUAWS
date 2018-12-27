@@ -74,7 +74,7 @@ public class LocationTrackerAdapter implements LocationListener {
             else
                 return true;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -88,7 +88,7 @@ public class LocationTrackerAdapter implements LocationListener {
             setLocationFromGPSProvider();
             setLocationFromBestProvider();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -116,7 +116,7 @@ public class LocationTrackerAdapter implements LocationListener {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -144,7 +144,7 @@ public class LocationTrackerAdapter implements LocationListener {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -165,7 +165,7 @@ public class LocationTrackerAdapter implements LocationListener {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, LocationTrackerAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

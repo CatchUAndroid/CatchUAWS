@@ -8,6 +8,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,7 +23,45 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.R;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 public class BitmapConversion extends AppCompatActivity {
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int Width, int Height) {
+
+        Bitmap targetBitmap = null;
+
+        try {
+            int targetWidth = Width;
+            int targetHeight = Height;
+            targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight,Bitmap.Config.ARGB_8888);
+
+            Canvas canvas = new Canvas(targetBitmap);
+            Path path = new Path();
+            path.addCircle(((float) targetWidth - 1) / 2,
+                    ((float) targetHeight - 1) / 2,
+                    (Math.min(((float) targetWidth),
+                            ((float) targetHeight)) / 2),
+                    Path.Direction.CCW);
+
+            canvas.clipPath(path);
+            canvas.drawBitmap(scaleBitmapImage,
+                    new Rect(0, 0, scaleBitmapImage.getWidth(),
+                            scaleBitmapImage.getHeight()),
+                    new Rect(0, 0, targetWidth, targetHeight), null);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+            e.printStackTrace();
+        }
+
+        return targetBitmap;
+    }
 
     public static Bitmap getScreenShot(View view) {
         Bitmap bitmap = null;
@@ -151,5 +191,22 @@ public class BitmapConversion extends AppCompatActivity {
         }
 
         return dpValue;
+    }
+
+    public static Bitmap getBitmapFromInputStream(InputStream input, Context context,
+                                                  int width, int height) {
+        Bitmap myBitmap = null;
+        try {
+            myBitmap = BitmapFactory.decodeStream(input);
+            Bitmap roundedBitmap = BitmapConversion.getRoundedShape(myBitmap, width, height);
+            return roundedBitmap;
+        } catch (Exception e) {
+
+            ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+        return myBitmap;
     }
 }

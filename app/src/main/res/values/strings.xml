@@ -298,6 +298,11 @@
     <string name="MESSAGES">My Messages</string>
     <string name="TODAY">Today</string>
     <string name="YESTERDAY">Yesterday</string>
+    <string name="BLOCK">Block</string>
+    <string name="REPORT_PERSON">Report</string>
+    <string name="CLEAR_CHAT">Clear Chat</string>
+    <string name="YOU_HAVE_A_NEW_MESSAGE">You have a new message</string>
+    <string name="YOU_HAVE_NEW_MESSAGES">You have new messages</string>
 
     <string name="emptyFeed">No posts yets...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
@@ -359,5 +364,21 @@
         <item>November</item>
         <item>December</item>
     </array>
+
+    <!-- silinecek -->
+    <string name="quickstart_message">Click the SUBSCRIBE TO WEATHER button below to subscribe to the
+        weather topic. Messages sent to the weather topic will be received. The LOG TOKEN button logs the
+        InstanceID token to logcat.</string>
+    <string name="subscribe_to_weather">Subscribe To Weather</string>
+    <string name="log_token">Log Token</string>
+    <string name="msg_subscribed">Subscribed to weather topic</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="default_notification_channel_name" translatable="true">Weather</string>
+    <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
+    <string name="fcm_message">FCM Message</string>
+
+    <string name="FCM_SERVER_KEY">AAAA168Go7o:APA91bHDsAJ8_8KZuXmdfBztNN-TSNOQOaQO_dPv6zXbRR4KzgH-83jh6NZ05imPxnUFopz8j8wOzL9jFVLCvgcJrAVuxrNDi_vz2QowCGnQxdxotXAp93tz7z7OblJkwk7GaCuc0Ebl</string>
+    <string name="title_activity_message_list">MessageListActivity</string>
 
 </resources>

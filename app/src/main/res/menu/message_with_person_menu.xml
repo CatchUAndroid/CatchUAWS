@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/blockPerson"
+        android:orderInCategory="100"
+        android:title="@string/BLOCK"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/complainPerson"
+        android:orderInCategory="100"
+        android:title="@string/REPORT_PERSON"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/clearConversion"
+        android:orderInCategory="100"
+        app:showAsAction="never"
+        android:title="@string/CLEAR_CHAT"/>
+
+</menu>
+

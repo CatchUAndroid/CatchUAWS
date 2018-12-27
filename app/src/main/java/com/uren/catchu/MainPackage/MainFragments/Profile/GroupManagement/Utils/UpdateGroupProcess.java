@@ -60,8 +60,8 @@ public class UpdateGroupProcess {
                 dialogShow();
                 updateGroupToNeoJ();
             }
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -95,14 +95,14 @@ public class UpdateGroupProcess {
                                     updateGroupToNeoJ();
                                 } else {
                                     InputStream is = urlConnection.getErrorStream();
-                                    ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                             new Object() {
                                             }.getClass().getEnclosingMethod().getName(), is.toString());
                                     CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + is.toString());
                                     updateGroupCallback.onFailed(new Exception(is.toString()));
                                 }
                             } catch (IOException e) {
-                                ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                                 CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -112,7 +112,7 @@ public class UpdateGroupProcess {
 
                         @Override
                         public void onFailure(Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
                             CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -131,7 +131,7 @@ public class UpdateGroupProcess {
                 @Override
                 public void onFailure(Exception e) {
                     dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -145,8 +145,8 @@ public class UpdateGroupProcess {
             }, 1, 0, token);
 
             signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -182,7 +182,7 @@ public class UpdateGroupProcess {
                 @Override
                 public void onFailure(Exception e) {
                     dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
@@ -196,8 +196,8 @@ public class UpdateGroupProcess {
             }, groupRequest, token);
 
             groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, UpdateGroupProcess.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

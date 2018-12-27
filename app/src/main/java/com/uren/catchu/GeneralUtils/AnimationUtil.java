@@ -30,7 +30,7 @@ public class AnimationUtil {
         try {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.blink);
             view.startAnimation(animation);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, AnimationUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

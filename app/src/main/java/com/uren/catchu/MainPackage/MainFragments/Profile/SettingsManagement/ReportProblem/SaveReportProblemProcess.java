@@ -96,7 +96,7 @@ public class SaveReportProblemProcess {
 
             signedUrlGetProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -152,7 +152,7 @@ public class SaveReportProblemProcess {
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -164,7 +164,7 @@ public class SaveReportProblemProcess {
             if ((bucketIndex + 1) == imageCount)
                 saveReportProblem();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -186,7 +186,7 @@ public class SaveReportProblemProcess {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -220,8 +220,8 @@ public class SaveReportProblemProcess {
                 }
             }, userid, token, report, "");
             reportProblemProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -259,7 +259,7 @@ public class SaveReportProblemProcess {
                 signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SaveReportProblemProcess.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

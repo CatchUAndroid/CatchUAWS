@@ -71,5 +71,12 @@ public class NumericConstants {
     public static final int CODE_REPORT_POSITION = 2;
     public static final int CODE_DELETE_POST = 3;
 
+    public static final int MESSAGE_LIMIT_COUNT = 25;
+
+    public final static int KEYBOARD_CHECK_VALUE = 200;
+
+    public final static int FCM_MAX_MESSAGE_LEN = 30;
+    public final static int MAX_ALLOWED_NOTIFICATION_SIZE = 4;
+
 
 }

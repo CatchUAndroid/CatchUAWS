@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
@@ -39,7 +41,7 @@ import static com.uren.catchu.Constants.NumericConstants.GROUP_NAME_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 
-public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.MyViewHolder> implements Filterable {
+public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.UserGroupsListHolder> implements Filterable {
 
     View view;
     LayoutInflater layoutInflater;
@@ -57,33 +59,39 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
     ItemClickListener itemClickListener;
 
     private static final int SHOW_GROUP_DETAIL = 0;
-    private static final int EXIT_FROM_GROUP = 1;
 
     public UserGroupsListAdapter(Context context, GroupRequestResult groupRequestResult, ReturnCallback returnCallback,
                                  ItemClickListener itemClickListener, String operationType) {
-        layoutInflater = LayoutInflater.from(context);
-        this.groupRequestResult = groupRequestResult;
-        this.orgGroupRequestResult = groupRequestResult;
-        this.returnCallback = returnCallback;
-        this.itemClickListener = itemClickListener;
-        this.context = context;
-        activity = (Activity) context;
-        this.operationType = operationType;
-        adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
-        groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                0, GradientDrawable.OVAL, 50, 0);
+        try {
+            layoutInflater = LayoutInflater.from(context);
+            this.groupRequestResult = groupRequestResult;
+            this.orgGroupRequestResult = groupRequestResult;
+            this.returnCallback = returnCallback;
+            this.itemClickListener = itemClickListener;
+            this.context = context;
+            activity = (Activity) context;
+            this.operationType = operationType;
+            adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                    context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
+            groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.OVAL, 50, 0);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public UserGroupsListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public UserGroupsListAdapter.UserGroupsListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         view = layoutInflater.inflate(R.layout.group_vert_list_item, parent, false);
-        UserGroupsListAdapter.MyViewHolder holder = new UserGroupsListAdapter.MyViewHolder(view);
+        UserGroupsListAdapter.UserGroupsListHolder holder = new UserGroupsListAdapter.UserGroupsListHolder(view);
         return holder;
     }
 
-    class MyViewHolder extends RecyclerView.ViewHolder {
+    class UserGroupsListHolder extends RecyclerView.ViewHolder {
 
         TextView groupnameTextView;
         TextView shortGroupNameTv;
@@ -94,124 +102,180 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
         int position = 0;
 
-        public MyViewHolder(final View itemView) {
+        public UserGroupsListHolder(final View itemView) {
             super(itemView);
 
-            groupPicImgView = view.findViewById(R.id.groupPicImgView);
-            groupnameTextView = view.findViewById(R.id.groupnameTextView);
-            adminDisplayButton = view.findViewById(R.id.adminDisplayButton);
-            groupSelectMainLinLay = view.findViewById(R.id.groupSelectMainLinLay);
-            selectGroupRb = view.findViewById(R.id.selectGroupRb);
-            shortGroupNameTv = view.findViewById(R.id.shortGroupNameTv);
-            adminDisplayButton.setBackground(adminButtonShape);
-            groupPicImgView.setBackground(groupPhotoShape);
+            try {
+                groupPicImgView = view.findViewById(R.id.groupPicImgView);
+                groupnameTextView = view.findViewById(R.id.groupnameTextView);
+                adminDisplayButton = view.findViewById(R.id.adminDisplayButton);
+                groupSelectMainLinLay = view.findViewById(R.id.groupSelectMainLinLay);
+                selectGroupRb = view.findViewById(R.id.selectGroupRb);
+                shortGroupNameTv = view.findViewById(R.id.shortGroupNameTv);
+                adminDisplayButton.setBackground(adminButtonShape);
+                groupPicImgView.setBackground(groupPhotoShape);
 
-            if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
-                selectGroupRb.setVisibility(View.VISIBLE);
+                if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
+                    selectGroupRb.setVisibility(View.VISIBLE);
 
-            groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
-                        selectGroupRb.setChecked(true);
-                        manageSelectedItem();
-                    } else if(operationType.equals(GROUP_OP_VIEW_TYPE)){
-                        itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
+                groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
+                            selectGroupRb.setChecked(true);
+                            manageSelectedItem();
+                        } else if(operationType.equals(GROUP_OP_VIEW_TYPE)){
+                            itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
+                        }
                     }
-                }
-            });
+                });
 
-            selectGroupRb.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    manageSelectedItem();
-                }
-            });
+                selectGroupRb.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        manageSelectedItem();
+                    }
+                });
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
         }
 
         public void manageSelectedItem() {
-            seledtedGroup = groupRequestResultResultArrayItem;
+            try {
+                seledtedGroup = groupRequestResultResultArrayItem;
 
-            notifyItemChanged(position);
+                notifyItemChanged(position);
 
-            if (beforeSelectedPosition > -1)
-                notifyItemChanged(beforeSelectedPosition);
+                if (beforeSelectedPosition > -1)
+                    notifyItemChanged(beforeSelectedPosition);
 
-            beforeSelectedPosition = position;
+                beforeSelectedPosition = position;
 
-            returnCallback.onReturn(groupRequestResultResultArrayItem);
+                returnCallback.onReturn(groupRequestResultResultArrayItem);
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
         }
 
         public void setData(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, int position) {
-            this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
-            this.position = position;
-            setGroupName();
-            setGroupPhoto();
-            setAdminButtonValues();
-            setRadioButtonValues();
+            try {
+                this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
+                this.position = position;
+                setGroupName();
+                setGroupPhoto();
+                setAdminButtonValues();
+                setRadioButtonValues();
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
         }
 
         public void setGroupName() {
-            if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
-                if (groupRequestResultResultArrayItem.getName().trim().length() > GROUP_NAME_MAX_LENGTH)
-                    this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName().trim().substring(0, GROUP_NAME_MAX_LENGTH) + "...");
-                else
-                    this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName());
+            try {
+                if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
+                    if (groupRequestResultResultArrayItem.getName().trim().length() > GROUP_NAME_MAX_LENGTH)
+                        this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName().trim().substring(0, GROUP_NAME_MAX_LENGTH) + "...");
+                    else
+                        this.groupnameTextView.setText(groupRequestResultResultArrayItem.getName());
+                }
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
             }
         }
 
         public void setGroupPhoto() {
-            if (groupRequestResultResultArrayItem.getGroupPhotoUrl() != null && !groupRequestResultResultArrayItem.getGroupPhotoUrl().trim().isEmpty()) {
-                shortGroupNameTv.setVisibility(View.GONE);
-                Glide.with(context)
-                        .load(groupRequestResultResultArrayItem.getGroupPhotoUrl())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(groupPicImgView);
-            } else {
-                if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
-                    shortGroupNameTv.setVisibility(View.VISIBLE);
-                    shortGroupNameTv.setText(getShortGroupName());
-                    groupPicImgView.setImageDrawable(null);
-                } else {
+            try {
+                if (groupRequestResultResultArrayItem.getGroupPhotoUrl() != null && !groupRequestResultResultArrayItem.getGroupPhotoUrl().trim().isEmpty()) {
                     shortGroupNameTv.setVisibility(View.GONE);
                     Glide.with(context)
-                            .load(context.getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
+                            .load(groupRequestResultResultArrayItem.getGroupPhotoUrl())
                             .apply(RequestOptions.circleCropTransform())
                             .into(groupPicImgView);
+                } else {
+                    if (groupRequestResultResultArrayItem.getName() != null && !groupRequestResultResultArrayItem.getName().trim().isEmpty()) {
+                        shortGroupNameTv.setVisibility(View.VISIBLE);
+                        shortGroupNameTv.setText(getShortGroupName());
+                        groupPicImgView.setImageDrawable(null);
+                    } else {
+                        shortGroupNameTv.setVisibility(View.GONE);
+                        Glide.with(context)
+                                .load(context.getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
+                                .apply(RequestOptions.circleCropTransform())
+                                .into(groupPicImgView);
+                    }
                 }
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
             }
         }
 
         public String getShortGroupName() {
             String returnValue = "";
-            String[] seperatedName = groupRequestResultResultArrayItem.getName().trim().split(" ");
-            for (String word : seperatedName) {
-                if (returnValue.length() < 3)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+            try {
+                String[] seperatedName = groupRequestResultResultArrayItem.getName().trim().split(" ");
+                for (String word : seperatedName) {
+                    if (returnValue.length() < 3)
+                        returnValue = returnValue + word.substring(0, 1).toUpperCase();
+                }
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
             }
             return returnValue;
         }
 
         public void setRadioButtonValues() {
-            if (seledtedGroup != null && groupRequestResultResultArrayItem != null) {
-                if (seledtedGroup.getGroupid().equals(groupRequestResultResultArrayItem.getGroupid()))
-                    selectGroupRb.setChecked(true);
-                else
-                    selectGroupRb.setChecked(false);
+            try {
+                if (seledtedGroup != null && groupRequestResultResultArrayItem != null) {
+                    if (seledtedGroup.getGroupid().equals(groupRequestResultResultArrayItem.getGroupid()))
+                        selectGroupRb.setChecked(true);
+                    else
+                        selectGroupRb.setChecked(false);
+                }
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
             }
         }
 
         public void setAdminButtonValues() {
-            if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID())) {
-                adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
-                adminDisplayButton.setVisibility(View.VISIBLE);
-            } else
-                adminDisplayButton.setVisibility(View.GONE);
+            try {
+                if (groupRequestResultResultArrayItem.getGroupAdmin().equals(AccountHolderInfo.getUserID())) {
+                    adminDisplayButton.setText(context.getResources().getString(R.string.adminText));
+                    adminDisplayButton.setVisibility(View.VISIBLE);
+                } else
+                    adminDisplayButton.setVisibility(View.GONE);
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
         }
     }
 
     @Override
-    public void onBindViewHolder(UserGroupsListAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(UserGroupsListAdapter.UserGroupsListHolder holder, int position) {
 
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem = groupRequestResult.getResultArray().get(position);
         holder.setData(groupRequestResultResultArrayItem, position);
@@ -223,12 +287,28 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
 
     @Override
     public int getItemCount() {
-        return groupRequestResult.getResultArray().size();
+        int size = 0;
+        try {
+            size = groupRequestResult.getResultArray().size();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+        return size;
     }
 
     public void updateAdapter(String searchText, ReturnCallback searchResultCallback) {
-        this.searchResultCallback = searchResultCallback;
-        getFilter().filter(searchText);
+        try {
+            this.searchResultCallback = searchResultCallback;
+            getFilter().filter(searchText);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -236,38 +316,50 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults filterResults = new FilterResults();
+                try {
+                    String searchString = charSequence.toString();
 
-                String searchString = charSequence.toString();
+                    if (searchString.trim().isEmpty())
+                        groupRequestResult = orgGroupRequestResult;
+                    else {
+                        GroupRequestResult tempGroupRequestResult = new GroupRequestResult();
+                        List<GroupRequestResultResultArrayItem> listItem = new ArrayList<>();
+                        tempGroupRequestResult.setResultArray(listItem);
 
-                if (searchString.trim().isEmpty())
-                    groupRequestResult = orgGroupRequestResult;
-                else {
-                    GroupRequestResult tempGroupRequestResult = new GroupRequestResult();
-                    List<GroupRequestResultResultArrayItem> listItem = new ArrayList<>();
-                    tempGroupRequestResult.setResultArray(listItem);
-
-                    for (GroupRequestResultResultArrayItem item : orgGroupRequestResult.getResultArray()) {
-                        if (item.getName().toLowerCase().contains(searchString.toLowerCase()))
-                            tempGroupRequestResult.getResultArray().add(item);
+                        for (GroupRequestResultResultArrayItem item : orgGroupRequestResult.getResultArray()) {
+                            if (item.getName().toLowerCase().contains(searchString.toLowerCase()))
+                                tempGroupRequestResult.getResultArray().add(item);
+                        }
+                        groupRequestResult = tempGroupRequestResult;
                     }
 
-                    groupRequestResult = tempGroupRequestResult;
+                    filterResults.values = groupRequestResult;
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
                 }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = groupRequestResult;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                groupRequestResult = (GroupRequestResult) filterResults.values;
-                notifyDataSetChanged();
+                try {
+                    groupRequestResult = (GroupRequestResult) filterResults.values;
+                    notifyDataSetChanged();
 
-                if(groupRequestResult != null && groupRequestResult.getResultArray() != null && groupRequestResult.getResultArray().size() > 0)
-                    searchResultCallback.onReturn(groupRequestResult.getResultArray().size());
-                else
-                    searchResultCallback.onReturn(0);
+                    if(groupRequestResult != null && groupRequestResult.getResultArray() != null && groupRequestResult.getResultArray().size() > 0)
+                        searchResultCallback.onReturn(groupRequestResult.getResultArray().size());
+                    else
+                        searchResultCallback.onReturn(0);
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
             }
         };
     }

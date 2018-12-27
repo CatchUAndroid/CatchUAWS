@@ -43,8 +43,8 @@ public class GroupDataUtil {
                     context.getResources().getColor(R.color.White, null),
                     GradientDrawable.OVAL, 50, 3);
             groupPicImgView.setBackground(imageShape);
-        } catch (Resources.NotFoundException e) {
-            ErrorSaveHelper.writeErrorToDB(context, EffectTouchListener.class.getSimpleName(),
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, GroupDataUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

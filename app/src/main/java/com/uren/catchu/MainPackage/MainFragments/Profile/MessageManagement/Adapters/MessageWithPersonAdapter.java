@@ -3,6 +3,8 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adap
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
+import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -24,6 +27,8 @@ import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
@@ -37,10 +42,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import catchu.model.FollowInfoListResponse;
 import catchu.model.FriendRequestList;
+import catchu.model.Post;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
@@ -50,13 +57,16 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 
-public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPersonAdapter.MyViewHolder> {
+public class MessageWithPersonAdapter extends RecyclerView.Adapter{
 
     private Context context;
     private ArrayList<MessageBox> messageBoxArrayList;
     boolean deleteActivated;
     MessageDeleteCallback messageDeleteCallback;
     TextView deleteMsgCntTv;
+
+    public static final int VIEW_ITEM = 1;
+    public static final int VIEW_PROG = 0;
 
     public MessageWithPersonAdapter(Context context, ArrayList<MessageBox> messageBoxArrayList,
                                     MessageDeleteCallback messageDeleteCallback, TextView deleteMsgCntTv) {
@@ -66,7 +76,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             this.messageDeleteCallback = messageDeleteCallback;
             this.deleteMsgCntTv = deleteMsgCntTv;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -74,13 +84,56 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
     }
 
     @Override
-    public MessageWithPersonAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_item, parent, false);
-        return new MessageWithPersonAdapter.MyViewHolder(itemView);
+    public int getItemViewType(int position) {
+        return messageBoxArrayList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        RecyclerView.ViewHolder viewHolder;
+        if (viewType == VIEW_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_item, parent, false);
+
+            viewHolder = new MessageWithPersonAdapter.MessageWithPersonHolder(itemView);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            viewHolder = new ProgressViewHolder(v);
+        }
+        return viewHolder;
+    }
+
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        try {
+            if (holder instanceof MessageWithPersonAdapter.MessageWithPersonHolder) {
+                MessageBox messageBox = messageBoxArrayList.get(position);
+                ((MessageWithPersonAdapter.MessageWithPersonHolder) holder).setData(messageBox, position);
+            } else {
+                ((MessageWithPersonAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            }
+
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public class MessageWithPersonHolder extends RecyclerView.ViewHolder {
 
         EmojiconTextView messageTv;
         TextView createAtTv;
@@ -89,7 +142,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         int position;
         MessageBox messageBox;
 
-        public MyViewHolder(View view) {
+        public MessageWithPersonHolder(View view) {
             super(view);
 
             try {
@@ -125,7 +178,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     }
                 });
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -140,7 +193,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                 setCardViewPosition();
                 setSelectedDeleteValues();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -165,7 +218,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     }
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -191,8 +244,8 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
-            } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -205,8 +258,8 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
-            } catch (Resources.NotFoundException e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -230,7 +283,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
                     deleteMsgCntTv.setText(Integer.toString(deleteCount));
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -242,17 +295,21 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
         deleteActivated = value;
     }
 
-    @Override
-    public void onBindViewHolder(final MessageWithPersonAdapter.MyViewHolder holder, final int position) {
-        try {
-            MessageBox messageBox = messageBoxArrayList.get(position);
-            holder.setData(messageBox, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+    public void addProgressLoading() {
+        messageBoxArrayList.add(0, null);
+        notifyItemInserted(0);
+    }
+
+    public void removeProgressLoading() {
+        messageBoxArrayList.remove(0);
+        notifyItemRemoved(0);
+    }
+
+    public boolean isShowingProgressLoading() {
+        if (getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG)
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -262,13 +319,11 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter<MessageWithPe
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
                 listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,MessageWithPersonAdapter.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return listSize;
     }
-
-
 }
