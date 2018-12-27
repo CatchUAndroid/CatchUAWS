@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
+package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,7 +29,6 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;

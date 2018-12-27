@@ -1,6 +1,5 @@
 package com.uren.catchu;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
@@ -18,33 +17,26 @@ import com.crashlytics.android.Crashlytics;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
-import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.LoginPackage.AppIntroductionActivity;
 import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
 import catchu.model.Provider;
 import catchu.model.User;
-import catchu.model.UserProfile;
-import catchu.model.UserProfileProperties;
 import io.fabric.sdk.android.Fabric;
 
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;

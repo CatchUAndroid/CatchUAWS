@@ -42,8 +42,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -60,7 +59,6 @@ import com.uren.catchu.Singleton.GroupListHolder;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -73,9 +71,7 @@ import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;

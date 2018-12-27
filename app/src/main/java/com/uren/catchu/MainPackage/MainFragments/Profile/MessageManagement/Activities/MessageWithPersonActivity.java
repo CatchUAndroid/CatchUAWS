@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses;
+package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -6,7 +6,6 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,10 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,7 +32,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -46,10 +40,11 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapt
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetContentIdCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageSentFCMCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.NotificationStatusCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.FCMItems;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageAddProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageDeleteProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -57,42 +52,28 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import butterknife.BindView;
 import catchu.model.User;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import io.fabric.sdk.android.Fabric;
 
-import static com.uren.catchu.Constants.NumericConstants.FCM_MAX_MESSAGE_LEN;
-import static com.uren.catchu.Constants.NumericConstants.MAX_ALLOWED_NOTIFICATION_SIZE;
 import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
-import static com.uren.catchu.Constants.StringConstants.APP_NAME;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CLUSTER_STATUS;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NAME;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATIONS;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATION_STATUS;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_PAGE_IS_SEEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_SENDER;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
-import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_SEND;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
@@ -126,15 +107,10 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     DatabaseReference databaseReference1;
     DatabaseReference databaseReference2;
-    DatabaseReference databaseReference3;
     ValueEventListener valueEventListener;
-    ValueEventListener valueEventListener3;
 
     DatabaseReference tokenReference;
     ValueEventListener tokenListener;
-
-    DatabaseReference notificationReference;
-    ValueEventListener notificationListener;
 
     ArrayList<MessageBox> messageBoxList;
     ArrayList<MessageBox> messageBoxListTemp;
@@ -779,17 +755,14 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     }
 
     public void UnmarkAllItemsForNotDelete() {
-        try {
+        if (messageBoxList != null) {
             for (MessageBox messageBox : messageBoxList) {
                 messageBox.setSelectedForDelete(false);
             }
-            messageWithPersonAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageWithPersonActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
         }
+
+        if (messageWithPersonAdapter != null)
+            messageWithPersonAdapter.notifyDataSetChanged();
     }
 
     public void getContentId() {
@@ -1042,9 +1015,6 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
             if (valueEventListener != null && databaseReference != null)
                 databaseReference.removeEventListener(valueEventListener);
-
-            if (valueEventListener3 != null && databaseReference3 != null)
-                databaseReference3.removeEventListener(valueEventListener3);
 
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(MessageWithPersonActivity.this, this.getClass().getSimpleName(),
