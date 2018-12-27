@@ -56,6 +56,12 @@
             </intent-filter>
         </service>-->
 
+        <receiver android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.NotificationBroadcastReceiver">
+            <intent-filter>
+                <action android:name="notification_cancelled"/>
+            </intent-filter>
+        </receiver>
+
         <service android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

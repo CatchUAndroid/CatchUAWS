@@ -288,7 +288,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
                     .setAutoCancel(true)
                     .setSound(defaultSoundUri)
-                    .setContentIntent(pendingIntent);
+                    .setContentIntent(pendingIntent)
+                    .setDeleteIntent(getDeleteIntent());
+
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
@@ -330,6 +332,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    protected PendingIntent getDeleteIntent()
+    {
+        Intent intent = new Intent(this, NotificationBroadcastReceiver.class);
+        intent.setAction("notification_cancelled");
+        return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
 
     public class GetNotification extends AsyncTask<String, Void, Void> {
