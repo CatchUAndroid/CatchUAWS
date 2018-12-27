@@ -52,8 +52,9 @@ import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 public class FeedAdapter extends RecyclerView.Adapter {
 
-    public static final int VIEW_ITEM = 1;
     public static final int VIEW_PROG = 0;
+    public static final int VIEW_ITEM = 1;
+    public static final int VIEW_NULL = 2;
 
     private Activity mActivity;
     private Context mContext;
@@ -73,7 +74,12 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        return postList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        if(postList.size() > 0 && position >= 0){
+            return postList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        }else{
+            return VIEW_NULL;
+        }
+
     }
 
     @Override
@@ -469,13 +475,17 @@ public class FeedAdapter extends RecyclerView.Adapter {
     }
 
     public void addProgressLoading() {
-        postList.add(null);
-        notifyItemInserted(postList.size() - 1);
+        if (getItemViewType(postList.size() - 1) != VIEW_PROG){
+            postList.add(null);
+            notifyItemInserted(postList.size() - 1);
+        }
     }
 
     public void removeProgressLoading() {
-        postList.remove(postList.size() - 1);
-        notifyItemRemoved(postList.size());
+        if (getItemViewType(postList.size() - 1) == VIEW_PROG){
+            postList.remove(postList.size() - 1);
+            notifyItemRemoved(postList.size());
+        }
     }
 
     public boolean isShowingProgressLoading() {

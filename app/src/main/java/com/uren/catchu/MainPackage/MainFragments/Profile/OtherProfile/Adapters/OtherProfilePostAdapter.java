@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +29,8 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCal
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.SubFragments.OtherProfilePostListViewFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostListViewFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -36,8 +38,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import catchu.model.Post;
+import catchu.model.User;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.OTHER_PROFILE_POST_TYPE_SHARED;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 public class OtherProfilePostAdapter extends RecyclerView.Adapter {
@@ -51,11 +57,15 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
     public Context mContext;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
+    private User selectedUser;
+    private int pageCnt;
 
-    public OtherProfilePostAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
+    public OtherProfilePostAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation ,User selectedUser, int pageCnt) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
+        this.selectedUser = selectedUser;
+        this.pageCnt = pageCnt;
         this.postList = new ArrayList<Post>();
     }
 
@@ -136,11 +146,13 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
             rlContent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String catchType  = OTHER_PROFILE_POST_TYPE_SHARED;
+                    String targetUid = selectedUser.getUserid();
+                    String userName = selectedUser.getUsername();
+                    fragmentNavigation.pushFragment(OtherProfilePostListViewFragment.newInstance(catchType, targetUid, position, userName, pageCnt));
 
-                    setSinglePostFragmentItems();
-
+                    //setSinglePostFragmentItems();
                     Log.i("clickedPostId ", postList.get(position).getPostid());
-                    CommonUtils.showCustomToast(mContext, postList.get(position).getPostid());
                 }
             });
 
@@ -331,6 +343,10 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
         this.postList.addAll(newPostList);
         diffResult.dispatchUpdatesTo(this);
 
+    }
+
+    public void  updatePageCount(int pageCount){
+        this.pageCnt = pageCount;
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {

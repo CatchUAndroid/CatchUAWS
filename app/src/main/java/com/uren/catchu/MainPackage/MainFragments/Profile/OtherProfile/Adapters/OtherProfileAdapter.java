@@ -1,26 +1,21 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
+package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
@@ -31,14 +26,12 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,18 +62,22 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     private List<Post> postList;
     private List<Post> addedPostList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
+    private int pageCnt;
     private FollowClickCallback followClickCallback;
     private RecyclerScrollListener recyclerScrollListener;
+    private User selectedUser;
 
     private static final int OPERATION_TYPE_NONE = -1;
     private static final int OPERATION_TYPE_LOAD_MORE = 0;
     private static final int OPERATION_TYPE_UPDATE_POST = 1;
+    private static final int OPERATION_TYPE_PAGE_COUNT = 2;
     private int operationType = OPERATION_TYPE_NONE;
 
-    public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
+    public OtherProfileAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation, int pageCnt) {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
+        this.pageCnt = pageCnt;
         this.objectList = new ArrayList<Object>();
         this.postList = new ArrayList<Post>();
         this.addedPostList = new ArrayList<Post>();
@@ -113,7 +110,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         if (viewType == VIEW_HEADER) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.profile_header_view, parent, false);
+                    .inflate(R.layout.otherprofile_header_view, parent, false);
 
             viewHolder = new OtherProfileAdapter.ProfileHeaderViewHolder(itemView);
         } else if (viewType == VIEW_ITEM) {
@@ -160,6 +157,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                             ((PostViewHolder) holder).updatePostList(position);
                         } else if (operationType == OPERATION_TYPE_LOAD_MORE) {
                             ((PostViewHolder) holder).loadMorePost();
+                        }else if( operationType == OPERATION_TYPE_PAGE_COUNT){
+                            ((PostViewHolder) holder).updatePageCount();
                         }
 
                         operationType = OPERATION_TYPE_NONE;
@@ -202,7 +201,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
 
-        User selectedUser;
         UserProfile fetchedUser;
         String followStatus;
         int followingCount, followerCount;
@@ -511,7 +509,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private void setAdapter() {
-            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation);
+            otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser, pageCnt);
             gridRecyclerView.setAdapter(otherProfilePostAdapter);
             gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
@@ -529,6 +527,10 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         public void loadMorePost() {
             otherProfilePostAdapter.addAll(addedPostList);
+        }
+
+        public void updatePageCount() {
+            otherProfilePostAdapter.updatePageCount(pageCnt);
         }
 
         private void showNoFeedLayout(boolean showNoFeedLayout) {
@@ -598,13 +600,26 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             Post post = new Post();
             objectList.add(post);
             postList.addAll(addedPostList);
+            OtherProfilePostList.getInstance().clearPostList();
+            OtherProfilePostList.getInstance().addPostList(addedPostList);
             notifyItemRangeInserted(1, 1);
         }
+
+        addLastItem();
     }
 
     public void updatePosts(List<Post> addedPostList) {
+
+        if(objectList.size() == 1){
+            addPosts(addedPostList);
+            return;
+        }
+
         this.postList.clear();
         this.postList.addAll(addedPostList);
+        OtherProfilePostList.getInstance().clearPostList();
+        OtherProfilePostList.getInstance().addPostList(addedPostList);
+
         operationType = OPERATION_TYPE_UPDATE_POST;
         Post post = new Post(); //just to recognize the 'instance of'
         notifyItemRangeChanged(1, 1, post);
@@ -615,6 +630,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             this.addedPostList.clear();
             this.addedPostList.addAll(addedPostList);
             this.postList.addAll(addedPostList);
+            OtherProfilePostList.getInstance().addPostList(addedPostList);
+
             Post post = new Post(); //just to recognize the 'instance of'
             operationType = OPERATION_TYPE_LOAD_MORE;
             notifyItemRangeChanged(1, 1, post);
@@ -647,6 +664,13 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             return true;
         else
             return false;
+    }
+
+    public void innerRecyclerPageCntChanged(int pageCnt) {
+        this.pageCnt = pageCnt;
+        Post post = new Post(); //just to recognize the 'instance of'
+        operationType = OPERATION_TYPE_PAGE_COUNT;
+        notifyItemRangeChanged(1, 1, post);
     }
 
 

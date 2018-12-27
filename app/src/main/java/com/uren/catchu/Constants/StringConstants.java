@@ -131,6 +131,7 @@ public class StringConstants {
     public static final String PROFILE_POST_TYPE_GROUP = "group";
     public static final String USER_POST_VIEW_TYPE_GRID= "gridview";
     public static final String USER_POST_VIEW_TYPE_LIST = "listview";
+    public static final String OTHER_PROFILE_POST_TYPE_SHARED = "otherShared";
 
     //FIrebase messaging constants
     public static final String FB_CHILD_MESSAGES = "Messages";
