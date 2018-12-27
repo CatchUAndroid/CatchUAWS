@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,10 +27,9 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessagingPersonProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -42,13 +39,10 @@ import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 import java.util.ArrayList;
 import java.util.Map;
 
-import butterknife.BindView;
-import catchu.model.User;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 import io.fabric.sdk.android.Fabric;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
@@ -61,10 +55,8 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_SENDER;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
-import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_SEND;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 
 public class MessageListActivity extends AppCompatActivity {
 
@@ -144,7 +136,7 @@ public class MessageListActivity extends AppCompatActivity {
 
     private void updateClusterStatus() {
 
-        MessagingPersonProcess.updateClusterStatus(AccountHolderInfo.getUserID(),
+        MessageUpdateProcess.updateClusterStatus(AccountHolderInfo.getUserID(),
                 FB_VALUE_NOTIFICATION_READ, new MessageUpdateCallback() {
                     @Override
                     public void onComplete() {
