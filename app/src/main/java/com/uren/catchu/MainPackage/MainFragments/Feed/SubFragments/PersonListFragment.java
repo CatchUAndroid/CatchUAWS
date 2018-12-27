@@ -34,6 +34,7 @@ import catchu.model.User;
 import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
 
@@ -46,11 +47,8 @@ public class PersonListFragment extends BaseFragment
     String toolbarTitle;
     String postId;
     String comingFor;
-    String page;
-    String perPage;
-
-    @BindView(R.id.toolbarTitle)
-    TextView txtToolbarTitle;
+    String page = "1";
+    String perPage = "500";
 
     @BindView(R.id.personList_recyclerView)
     RecyclerView personList_recyclerView;
@@ -58,8 +56,11 @@ public class PersonListFragment extends BaseFragment
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.imgBack)
-    ClickableImageView imgBack;
+    @BindView(R.id.commonToolbarbackImgv)
+    ClickableImageView commonToolbarbackImgv;
+
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
 
     public static PersonListFragment newInstance(String toolbarTitle, String postId, String comingFor) {
         Bundle args = new Bundle();
@@ -91,7 +92,7 @@ public class PersonListFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     private void getItemsFromBundle() {
@@ -106,10 +107,10 @@ public class PersonListFragment extends BaseFragment
     private void init() {
 
         if (toolbarTitle != null && !toolbarTitle.isEmpty()) {
-            txtToolbarTitle.setText(toolbarTitle);
+            toolbarTitleTv.setText(toolbarTitle);
         }
 
-        imgBack.setOnClickListener(this);
+        commonToolbarbackImgv.setOnClickListener(this);
 
     }
 
@@ -117,7 +118,7 @@ public class PersonListFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == imgBack) {
+        if (v == commonToolbarbackImgv) {
 
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
@@ -154,8 +155,8 @@ public class PersonListFragment extends BaseFragment
 
         String userId = AccountHolderInfo.getUserID();
         String postID = postId;
-        String perPage = "100";
-        String page = "1";
+        String perPage = this.perPage;
+        String page = this.page;
         String commentId = AWS_EMPTY;
 
 
@@ -194,7 +195,6 @@ public class PersonListFragment extends BaseFragment
         PersonListItemClickListener personListItemClickListener = new PersonListItemClickListener() {
             @Override
             public void onPersonListItemClicked(View view, User user, int clickedPosition) {
-                CommonUtils.showCustomToast(getContext(), "Clicked : " + user.getName());
                 startPersonInfoProcess(user,clickedPosition);
             }
         };
