@@ -1,11 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,10 +26,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
-import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
-import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
@@ -46,9 +40,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Adapters.ProfileAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters.OtherProfileAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -58,33 +50,24 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFr
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.GroupListHolder;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
-import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
-import catchu.model.PostListResponse;
 import catchu.model.UserProfile;
 
-import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
-import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
@@ -98,18 +81,6 @@ public class ProfileFragment extends BaseFragment
     View mView;
     UserProfile myProfile;
     boolean mDrawerState;
-
-    private ProfileAdapter profileAdapter;
-    private CustomLinearLayoutManager customLinearLayoutManager;
-    private List<Object> objectList = new ArrayList<Object>();
-
-    //Refresh layout
-    @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
-
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
-
 
     TextView navViewNameTv;
     TextView navViewEmailTv;
@@ -125,6 +96,21 @@ public class ProfileFragment extends BaseFragment
     Toolbar toolbar;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
+
+    @BindView(R.id.imgProfile)
+    ImageView imgProfile;
+    @BindView(R.id.txtProfile)
+    TextView txtProfile;
+
+    @BindView(R.id.txtName)
+    TextView txtName;
+    @BindView(R.id.txtBio)
+    TextView txtBio;
+
+    @BindView(R.id.txtFollowerCnt)
+    TextView txtFollowerCnt;
+    @BindView(R.id.txtFollowingCnt)
+    TextView txtFollowingCnt;
 
     @BindView(R.id.pendReqCntTv)
     TextView pendReqCntTv;
@@ -144,27 +130,33 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.backLayout)
     RelativeLayout backLayout;
 
-    private static final int ADAPTER_ITEMS_END_POSITION = 2;
-    private boolean pulledToRefreshHeader = false;
-    private boolean pulledToRefreshPost = false;
-    private boolean loading = true;
-    private boolean isMoreItemAvailable = true;
-    private int lastCompletelyVisibleItemPosition;
+    @BindView(R.id.refresh_layout)
+    RecyclerRefreshLayout refresh_layout;
 
-    private int perPageCnt, pageCnt, innerRecyclerPageCnt;
-    private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
+    //posts
+    @BindView(R.id.llMyPosts)
+    LinearLayout llMyPosts;
+    @BindView(R.id.llCatchedPosts)
+    LinearLayout llCatchedPosts;
+    @BindView(R.id.llMyGroups)
+    LinearLayout llMyGroups;
+    @BindView(R.id.followersLayout)
+    LinearLayout followersLayout;
+    @BindView(R.id.followingsLayout)
+    LinearLayout followingsLayout;
+    @BindView(R.id.sharedPostCount)
+    TextView sharedPostCount;
+    @BindView(R.id.caughtPostCount)
+    TextView caughtPostCount;
 
-    //Location
-    private LocationTrackerAdapter locationTrackObj;
-    private PermissionModule permissionModule;
-    private String longitude;
-    private String latitude;
-    private String radius;
+    //Groups
+    @BindView(R.id.groupRecyclerView)
+    RecyclerView groupRecyclerView;
 
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
-        args.putBoolean("comingFromTab", comingFromTab);
+        args.putBoolean(ARGS_INSTANCE, comingFromTab);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
@@ -199,12 +191,8 @@ public class ProfileFragment extends BaseFragment
             setDrawerListeners();
 
             initListeners();
-            //updateUI();
-
-
-
-            initRecyclerView();
-            getData();
+            updateUI();
+            setPullToRefresh();
 
         }
 
@@ -216,120 +204,18 @@ public class ProfileFragment extends BaseFragment
         super.onViewCreated(view, savedInstanceState);
     }
 
-    private void initRecyclerView() {
-
-        setPaginationValues();
-        setLayoutManager();
-        setAdapter();
-        setPullToRefresh();
-        setRecyclerViewScroll();
-
-    }
-
-    private void setLayoutManager() {
-        customLinearLayoutManager = new CustomLinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(customLinearLayoutManager);
-    }
-
-    private void setAdapter() {
-        profileAdapter = new ProfileAdapter(getActivity(), getContext(), mFragmentNavigation, innerRecyclerPageCnt);
-        recyclerView.setAdapter(profileAdapter);
-        recyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
-
-        addHeader();
-
-    }
-
-    private void addHeader() {
-
-        profileAdapter.addHeader(userInfoListItem);
-
-
-        /*
-        AccountHolderInfo instance = AccountHolderInfo.getInstance();
-
-        if (instance != null) {
-            myProfile = instance.getUser();
-            if(myProfile.getUserInfo().getUsername() == null){
-                AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
-                    @Override
-                    public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                        setProfileDetail(userProfile);
-                    }
-                });
-            }else{
-                setProfileDetail(myProfile);
-            }
-        } else {
-            getProfileDetail(AccountHolderInfo.getUserID());
-        }
-
-        getGroupsFromSingleton();
-        */
-
-    }
-
-    private void setPullToRefresh() {
-
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pulledToRefreshHeader = true;
-                pulledToRefreshPost = true;
-                setPaginationValues();
-                profileAdapter.innerRecyclerPageCntChanged(innerRecyclerPageCnt);
-
-                getData();
-            }
-        });
-
-    }
-
-    private void setPaginationValues() {
-        perPageCnt = DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
-        pageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
-        innerRecyclerPageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
-        isMoreItemAvailable = true;
-        float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
-        radius = String.valueOf(radiusInKm);
-    }
-
-
-    private void setRecyclerViewScroll() {
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(final RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (dy > 0) //check for scroll down
-                {
-                    lastCompletelyVisibleItemPosition = customLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-
-                    if (loading) {
-
-                        if (lastCompletelyVisibleItemPosition == ADAPTER_ITEMS_END_POSITION && isMoreItemAvailable) {
-                            loading = false;
-                            innerRecyclerPageCnt++;
-                            profileAdapter.innerRecyclerPageCntChanged(innerRecyclerPageCnt);
-                            profileAdapter.addProgressLoading();
-                            recyclerView.scrollToPosition(profileAdapter.getItemCount()-1);
-
-                            getPosts();
-                        }
-
-                    }
-
-                }
-
-            }
-
-        });
-
-    }
-
     private void initListeners() {
+
         imgUserEdit.setOnClickListener(this);
+        txtFollowerCnt.setOnClickListener(this);
+        txtFollowingCnt.setOnClickListener(this);
+
+        llMyPosts.setOnClickListener(this);
+        llCatchedPosts.setOnClickListener(this);
+        llMyGroups.setOnClickListener(this);
+
+        followersLayout.setOnClickListener(this);
+        followingsLayout.setOnClickListener(this);
 
     }
 
@@ -349,15 +235,35 @@ public class ProfileFragment extends BaseFragment
             }else{
                 setProfileDetail(myProfile);
             }
+        } else {
+            getProfileDetail(AccountHolderInfo.getUserID());
         }
+
+        getGroupsFromSingleton();
 
     }
 
 
+    private void setPullToRefresh() {
+
+        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AccountHolderInfo.getToken(new TokenCallback() {
+                    @Override
+                    public void onTokenTaken(String token) {
+                        startGetProfileDetail(AccountHolderInfo.getUserID(), token);
+                    }
+                });
+                getGroupsHere();
+            }
+        });
+    }
+
     private void checkBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            Boolean comingFromTab = (Boolean) args.getBoolean("comingFromTab");
+            Boolean comingFromTab = (Boolean) args.getBoolean(ARGS_INSTANCE);
             if (!comingFromTab) {
                 //if not coming from Tab, edits disabled..
                 imgUserEdit.setVisibility(View.GONE);
@@ -366,11 +272,6 @@ public class ProfileFragment extends BaseFragment
                 imgBackBtn.setOnClickListener(this);
             }
         }
-    }
-
-    private void getData() {
-        getUserInfo();
-        checkLocationAndRetrievePosts();
     }
 
 
@@ -471,25 +372,61 @@ public class ProfileFragment extends BaseFragment
             //Name
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getName());
+                txtName.setText(user.getUserInfo().getName());
             } else if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getUsername());
+                txtName.setText(user.getUserInfo().getUsername());
             }
             //Username
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
                 toolbarTitle.setText(user.getUserInfo().getUsername());
                 navViewEmailTv.setText(user.getUserInfo().getEmail().trim());
             }
-
+            //profile picture
+            UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
+            imgProfile.setPadding(3, 3, 3, 3);
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), navViewShortenTextView, navImgProfile);
+            //Biography
+            // todo NT - biography usera beslenmiyor.düzenlenecek
 
             if (user.getUserInfo().getIsPrivateAccount() != null) {
                 getPendingFriendList();
             }
         }
 
+        setUserFollowerAndFollowingCnt(user);
+        setPostCounts(user);
         refresh_layout.setRefreshing(false);
+    }
+
+    private void setPostCounts(UserProfile user) {
+
+        if (user != null && user.getRelationInfo() != null) {
+
+            if (user.getRelationInfo().getPostCount() != null && !user.getRelationInfo().getPostCount().toString().trim().isEmpty())
+                sharedPostCount.setText(String.valueOf(user.getRelationInfo().getPostCount()));
+
+            if (user.getRelationInfo().getCatchCount() != null && !user.getRelationInfo().getCatchCount().toString().trim().isEmpty())
+                caughtPostCount.setText(String.valueOf(user.getRelationInfo().getFollowingCount()));
+        }
+
+    }
+
+    private void setUserFollowerAndFollowingCnt(UserProfile user) {
+
+        if (user != null && user.getRelationInfo() != null) {
+            Log.i("->UserRelationCountInfo", user.getRelationInfo().toString());
+
+            if (user.getRelationInfo().getFollowerCount() != null && !user.getRelationInfo().getFollowerCount().trim().isEmpty())
+                txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount());
+
+            if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
+                txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount());
+
+        }
     }
 
     private void getPendingFriendList() {
@@ -531,230 +468,124 @@ public class ProfileFragment extends BaseFragment
         });
     }
 
-    private void getUserInfo() {
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                startGetUserInfo(token);
-            }
-        });
+    private void getProfileDetail(final String userID) {
+
+        if (myProfile == null) {
+
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    startGetProfileDetail(userID, token);
+                }
+            });
+
+        } else {
+            setProfileDetail(myProfile);
+        }
+
     }
 
-    private void startGetUserInfo(String token) {
+    private void startGetProfileDetail(final String userID, String token) {
 
         UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
 
             @Override
-            public void onSuccess(UserProfile userProfile) {
-
-                if (userProfile == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserDetail");
-                } else {
-                    CommonUtils.LOG_OK("UserDetail");
-                    myProfile = userProfile;
-                    setHeaderInRecyclerView(myProfile);
-                }
-
+            public void onSuccess(UserProfile up) {
+                Log.i("userDetail", "successful");
+                progressBar.setVisibility(View.GONE);
+                myProfile = up;
+                setProfileDetail(up);
             }
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserDetail", e.toString());
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onTaskContinue() {
+                progressBar.setVisibility(View.VISIBLE);
             }
         }, AccountHolderInfo.getUserID(), AccountHolderInfo.getUserID(), token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    private void setHeaderInRecyclerView(UserProfile userProfile) {
-        profileAdapter.updateHeader(userProfile);
-    }
+    private void getGroupsFromSingleton() {
 
-    private void checkLocationAndRetrievePosts() {
-        permissionModule = new PermissionModule(getContext());
-        initLocationTracker();
-        checkCanGetLocation();
-    }
+        GroupListHolder groupListHolderInstance = GroupListHolder.getInstance();
 
-    private void initLocationTracker() {
-        locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
-            @Override
-            public void onLocationChanged(Location location) {
+        if(groupListHolderInstance != null && groupListHolderInstance.getGroupList() != null){
+            GroupRequestResult groupRequestResult = groupListHolderInstance.getGroupList();
+            if(groupRequestResult != null && groupRequestResult.getResultArray() != null &&
+                    groupRequestResult.getResultArray().size() > 0){
+                CommonUtils.showCustomToast(getContext(), "grupları singletondan hemen aldım");
+                setGroupRecyclerView(groupRequestResult);
+            }else{
+                GroupListHolder.setGroupListHolderCallback(new GroupListHolderCallback() {
+                    @Override
+                    public void onGroupListInfoTaken(GroupRequestResult groupRequestResult) {
+                        CommonUtils.showCustomToast(getContext(), "grupları singletondan Callback ile aldım");
+                        setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
+                    }
+                });
             }
-        });
-    }
-
-    private void checkCanGetLocation() {
-
-        if (!locationTrackObj.canGetLocation())
-            //gps ve network provider olup olmadığı kontrol edilir
-            //todo NT - gps kapatıldığında case'i handle et
-            DialogBoxUtil.showSettingsAlert(getActivity());
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                if (permissionModule.checkAccessFineLocationPermission()) {
-                    getPosts();
-                } else {
-                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
-                }
-            } else {
-                getPosts();
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay!
-                    getPosts();
-
-                } else {
-
-                    // permission denied, boo!
-                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.needLocationPermission), "", new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
-
-                    refresh_layout.setRefreshing(false);
-
-                }
-
-            }
-
+        }else{
+            getGroupsHere();
         }
 
     }
 
-    private void getPosts() {
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(final String token) {
-                Location location = locationTrackObj.getLocation();
-                if (location != null) {
-                    startGetPosts(token);
-                } else {
-                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.locationError), "", new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
-                    refresh_layout.setRefreshing(false);
-                }
-            }
-        });
-    }
+    private void getGroupsHere() {
 
-    private void startGetPosts(String token) {
-
-        setLocationInfo();
-
-        String sUserId = AccountHolderInfo.getUserID();
-        String sUid = AccountHolderInfo.getUserID();
-        String sLongitude = longitude;
-        String sPerpage = String.valueOf(9);
-        String sLatitude = latitude;
-        String sRadius = radius;
-        String sPage = String.valueOf(innerRecyclerPageCnt);
-        String sPrivacyType = "";
-
-        UserSharedPostListProcess userSharedPostListProcess = new UserSharedPostListProcess(getContext(), new OnEventListener<PostListResponse>() {
-            @Override
-            public void onSuccess(final PostListResponse postListResponse) {
-
-                if (profileAdapter.isShowingProgressLoading()) {
-                    profileAdapter.removeProgressLoading();
-                }
-
-                if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
-                } else {
-                    CommonUtils.LOG_OK("UserSharedPostListProcess");
-
-                    if (postListResponse.getItems().size() != 0) {
-                        isMoreItemAvailable = true;
-                    } else {
-                        isMoreItemAvailable = false;
+        UserGroupsProcess.getGroups(AccountHolderInfo.getUserID(),
+                new CompleteCallback() {
+                    @Override
+                    public void onComplete(Object object) {
+                        CommonUtils.showCustomToast(getContext(), "grupları bu sayfadan aldım- Not singleton");
+                        GroupRequestResult groupRequestResult = (GroupRequestResult) object;
+                        setGroupRecyclerView(groupRequestResult);
                     }
 
-                    setPostsInRecyclerView(postListResponse);
+                    @Override
+                    public void onFailed(Exception e) {
 
-                }
+                        if (getContext() != null) {
+                            DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
+                        }
+                    }
+                });
+    }
 
-                refresh_layout.setRefreshing(false);
+    private void setGroupRecyclerView(GroupRequestResult groupRequestResult) {
 
-            }
+        orderGroupByName(groupRequestResult);
 
+        //layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        groupRecyclerView.setLayoutManager(layoutManager);
+        groupRecyclerView.setItemViewCacheSize(25);
+
+        //adapter
+        GroupsListAdapter groupsListAdapter = new GroupsListAdapter(getContext(), mFragmentNavigation, groupRequestResult);
+        groupRecyclerView.setAdapter(groupsListAdapter);
+
+    }
+
+    private void orderGroupByName(GroupRequestResult groupRequestResult) {
+        //order
+        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>() {
             @Override
-            public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
-
-                if (profileAdapter.isShowingProgressLoading()) {
-                    profileAdapter.removeProgressLoading();
-                }
-
-                refresh_layout.setRefreshing(false);
-
+            public int compare(GroupRequestResultResultArrayItem o1, GroupRequestResultResultArrayItem o2) {
+                return o1.getName().compareToIgnoreCase(o2.getName());
             }
 
-            @Override
-            public void onTaskContinue() {
-
-                if (innerRecyclerPageCnt == 1 && !pulledToRefreshPost) {
-                    profileAdapter.addProgressLoading();
-                }
-
-            }
-        }, sUserId, sUid, sLongitude, sPerpage, sLatitude, sRadius, sPage, sPrivacyType, token);
-
-        userSharedPostListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
-
+        });
     }
-
-    private void setPostsInRecyclerView(PostListResponse postListResponse) {
-
-        objectList.addAll(postListResponse.getItems());
-        loading = true;
-
-        if (innerRecyclerPageCnt != 1 && profileAdapter.isShowingProgressLoading()) {
-            profileAdapter.removeProgressLoading();
-        }
-
-        if (pulledToRefreshPost) {
-            profileAdapter.updatePosts(postListResponse.getItems());
-            pulledToRefreshPost = false;
-        } else {
-            if (innerRecyclerPageCnt == 1) {
-                profileAdapter.addPosts(postListResponse.getItems());
-            } else {
-                profileAdapter.loadMorePost(postListResponse.getItems());
-            }
-        }
-
-    }
-
-    private void setLocationInfo() {
-        longitude = String.valueOf(locationTrackObj.getLocation().getLongitude());
-        latitude = String.valueOf(locationTrackObj.getLocation().getLatitude());
-    }
-
-
 
     @Override
     public void onClick(View v) {
@@ -769,6 +600,32 @@ public class ProfileFragment extends BaseFragment
             getActivity().onBackPressed();
         }
 
+        if (v == llMyPosts) {
+            String targetUid = AccountHolderInfo.getUserID();
+            String toolbarTitle = getContext().getResources().getString(R.string.myPosts);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == llCatchedPosts) {
+            String targetUid = AccountHolderInfo.getUserID();
+            String toolbarTitle = getContext().getResources().getString(R.string.caughtPosts);
+            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == llMyGroups) {
+            String targetUid = AccountHolderInfo.getUserID();
+            //mFragmentNavigation.pushFragment(UserGroupsFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
+        }
+
+        if (v == followingsLayout) {
+            followingsLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            followingClicked();
+        }
+
+        if (v == followersLayout) {
+            followersLayout.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            followerClicked();
+        }
 
     }
 
@@ -777,6 +634,23 @@ public class ProfileFragment extends BaseFragment
         if (mFragmentNavigation != null) {
             //mFragmentNavigation.pushFragment(new UserEditFragment());
             mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_LEFT_TO_RIGHT);
+        }
+
+    }
+
+    private void followerClicked() {
+
+        if (mFragmentNavigation != null) {
+            //mFragmentNavigation.pushFragment(new UserEditFragment());
+            mFragmentNavigation.pushFragment(new FollowerFragment(), ANIMATE_RIGHT_TO_LEFT);
+        }
+    }
+
+    private void followingClicked() {
+
+        if (mFragmentNavigation != null) {
+            //mFragmentNavigation.pushFragment(new UserEditFragment());
+            mFragmentNavigation.pushFragment(new FollowingFragment(), ANIMATE_RIGHT_TO_LEFT);
         }
 
     }
@@ -820,5 +694,3 @@ public class ProfileFragment extends BaseFragment
     }
 
 }
-
-
