@@ -37,9 +37,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScro
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.ChattedUser;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
@@ -678,7 +675,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         private void setAdapter() {
 
             try {
-                otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation);
+                otherProfilePostAdapter = new OtherProfilePostAdapter(mActivity, mContext, fragmentNavigation, selectedUser, pageCnt);
                 gridRecyclerView.setAdapter(otherProfilePostAdapter);
                 gridRecyclerView.setItemViewCacheSize(RECYCLER_VIEW_CACHE_COUNT);
 
