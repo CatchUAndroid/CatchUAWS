@@ -430,7 +430,9 @@
                                     <android.support.v7.widget.RecyclerView
                                         android:id="@+id/groupRecyclerView"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+                                        android:layout_height="match_parent">
+
+                                    </android.support.v7.widget.RecyclerView>
 
                                 </LinearLayout>
 
@@ -470,7 +472,3 @@
         app:menu="@menu/profile_navview_menu" />
 
 </android.support.v4.widget.DrawerLayout>
-
-
-
-

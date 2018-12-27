@@ -8,18 +8,29 @@
     <include layout="@layout/no_feed_layout" />
     <include layout="@layout/layout_progress_bar" />
 
-    <com.dinuscxj.refresh.RecyclerRefreshLayout
-        android:id="@+id/refresh_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/listRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+        <include layout="@layout/common_toolbar_layout" />
 
-    </com.dinuscxj.refresh.RecyclerRefreshLayout>
+        <com.dinuscxj.refresh.RecyclerRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/listRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.dinuscxj.refresh.RecyclerRefreshLayout>
+
+    </LinearLayout>
+
+
 
 
 </RelativeLayout>

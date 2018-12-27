@@ -713,5 +713,3 @@ public class ProfileFragment extends BaseFragment
     }
 
 }
-
-

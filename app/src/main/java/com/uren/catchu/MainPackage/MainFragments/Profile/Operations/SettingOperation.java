@@ -14,7 +14,7 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
-import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.PhoneVerification;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.R;
@@ -64,6 +64,7 @@ public class SettingOperation {
             SingletonPostItem.reset();
             SingletonSinglePost.reset();
             SingletonPostList.reset();
+            OtherProfilePostList.reset();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
                     new Object() {

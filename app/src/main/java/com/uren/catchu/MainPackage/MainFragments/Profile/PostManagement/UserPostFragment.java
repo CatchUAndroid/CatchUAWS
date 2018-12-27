@@ -54,9 +54,6 @@ public class UserPostFragment extends BaseFragment
 
     FloatingActionButton fabScrollUp;
 
-
-
-
     public static UserPostFragment newInstance(String catchType, String targetUid, String toolbarTitle) {
         Bundle args = new Bundle();
         args.putString("catchType", catchType);

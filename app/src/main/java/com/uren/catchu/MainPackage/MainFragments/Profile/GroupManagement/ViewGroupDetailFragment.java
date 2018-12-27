@@ -50,7 +50,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoLis
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithGroupAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithGroupFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.OtherProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
