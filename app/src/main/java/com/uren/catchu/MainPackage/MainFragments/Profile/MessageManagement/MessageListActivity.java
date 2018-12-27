@@ -27,6 +27,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
@@ -61,6 +62,7 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_SEND;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 
@@ -192,8 +194,8 @@ public class MessageListActivity extends AppCompatActivity {
                         System.out.println("dataSnapshot.getValue():" + dataSnapshot.getValue());
 
                         for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
-                            System.out.println("outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-                            System.out.println("outboundSnapshot.getValue():" + outboundSnapshot.getValue());
+                            System.out.println("getMessages.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
+                            System.out.println("getMessages.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
                             getUserDetail(outboundSnapshot);
                         }
                     }
@@ -224,7 +226,10 @@ public class MessageListActivity extends AppCompatActivity {
                             if (userProfile != null && userProfile.getUserInfo() != null) {
                                 Map<String, Object> map = (Map) outboundSnapshot.getValue();
                                 Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
-                                getLastMessage(userProfile.getUserInfo(), (String) contentMap.get(FB_CHILD_CONTENT_ID));
+
+                                String contentId = (String) contentMap.get(FB_CHILD_CONTENT_ID);
+                                if (contentId != null && !contentId.isEmpty())
+                                    getLastMessage(userProfile.getUserInfo(), contentId);
                             }
                         }
 
@@ -341,8 +346,7 @@ public class MessageListActivity extends AppCompatActivity {
                 @Override
                 public void onClick(Object object, int clickedItem) {
                     MessageListBox messageListBox = (MessageListBox) object;
-                    startMessageWithPersonFragment(messageListBox);
-
+                    startMessageWithPersonActivity(messageListBox);
                 }
             });
 
@@ -359,19 +363,17 @@ public class MessageListActivity extends AppCompatActivity {
         }
     }
 
-    private void startMessageWithPersonFragment(MessageListBox messageListBox) {
+    private void startMessageWithPersonActivity(MessageListBox messageListBox) {
 
         try {
-            /*if (mFragmentNavigation != null && messageListBox != null && messageListBox.getUserProfileProperties() != null) {
-                User user = new User();
-                user.setUsername(messageListBox.getUserProfileProperties().getUsername());
-                user.setName(messageListBox.getUserProfileProperties().getName());
-                user.setUserid(messageListBox.getUserProfileProperties().getUserid());
-                user.setProfilePhotoUrl(messageListBox.getUserProfileProperties().getProfilePhotoUrl());
-                user.setEmail(messageListBox.getUserProfileProperties().getEmail());
-                user.setProvider(messageListBox.getUserProfileProperties().getProvider());
-                mFragmentNavigation.pushFragment(new MessageWithPersonFragment(user), ANIMATE_LEFT_TO_RIGHT);
-            }*/
+            if (MessageWithPersonActivity.thisActivity != null) {
+                MessageWithPersonActivity.thisActivity.finish();
+            }
+
+            Intent intent = new Intent(this, MessageWithPersonActivity.class);
+            intent.putExtra(FCM_CODE_CHATTED_USER, getChattedUserInfo(messageListBox));
+            intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+            startActivity(intent);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
                     new Object() {
@@ -380,11 +382,42 @@ public class MessageListActivity extends AppCompatActivity {
         }
     }
 
+    public LoginUser getChattedUserInfo(MessageListBox messageListBox) {
+        LoginUser user = null;
+        try {
+            user = new LoginUser();
+            if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
+                UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
+
+                if (userProfileProperties.getEmail() != null && !userProfileProperties.getEmail().isEmpty())
+                    user.setEmail(userProfileProperties.getEmail());
+
+                if (userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
+                    user.setName(userProfileProperties.getName());
+
+                if (userProfileProperties.getProfilePhotoUrl() != null && !userProfileProperties.getProfilePhotoUrl().isEmpty())
+                    user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
+
+                if (userProfileProperties.getUserid() != null && !userProfileProperties.getUserid().isEmpty())
+                    user.setUserId(userProfileProperties.getUserid());
+
+                if (userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
+                    user.setUsername(userProfileProperties.getUsername());
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+        return user;
+    }
+
     public void fillMessageBoxList(DataSnapshot outboundSnapshot, UserProfileProperties userProfileProperties) {
         try {
 
-            System.out.println("outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-            System.out.println("outboundSnapshot.getValue():" + outboundSnapshot.getValue());
+            System.out.println("fillMessageBoxList.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
+            System.out.println("fillMessageBoxList.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
 
             MessageListBox messageListBox = new MessageListBox();
 

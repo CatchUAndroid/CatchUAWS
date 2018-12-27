@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -41,6 +42,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
@@ -72,6 +74,8 @@ import catchu.model.UserProfile;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
@@ -346,7 +350,7 @@ public class ProfileFragment extends BaseFragment
 
                     case R.id.messagesItem:
                         drawerLayout.closeDrawer(Gravity.START);
-                        startMessageListFragment();
+                        startMessageListActivity();
                         break;
 
                     case R.id.settingsItem:
@@ -691,10 +695,13 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    public void startMessageListFragment(){
-        if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new MessageListFragment(), ANIMATE_RIGHT_TO_LEFT);
+    public void startMessageListActivity(){
+        if (MessageListActivity.thisActivity != null) {
+            MessageListActivity.thisActivity.finish();
         }
+        Intent intent = new Intent(getContext(), MessageListActivity.class);
+        intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+        startActivity(intent);
     }
 
     public void startNotifyProblemFragment() {
