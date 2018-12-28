@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
@@ -91,6 +91,8 @@ public class UserPostListViewFragment extends BaseFragment {
     RelativeLayout rl_no_feed;
     @BindView(R.id.txtNoFeedExplanation)
     TextView txtNoFeedExplanation;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
     private boolean hasLoadedOnce = false; // your boolean field
 
@@ -147,6 +149,7 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void initItems() {
         listRecyclerView = (RecyclerView) mView.findViewById(R.id.listRecyclerView);
+        toolbar.setVisibility(View.GONE);
     }
 
     private void getItemsFromBundle() {
