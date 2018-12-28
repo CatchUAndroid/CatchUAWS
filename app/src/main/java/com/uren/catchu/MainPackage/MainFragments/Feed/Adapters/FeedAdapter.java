@@ -74,9 +74,9 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemViewType(int position) {
-        if(postList.size() > 0 && position >= 0){
+        if (postList.size() > 0 && position >= 0) {
             return postList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
-        }else{
+        } else {
             return VIEW_NULL;
         }
 
@@ -115,6 +115,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
+        View mView;
         ImageView imgProfilePic;
         TextView txtProfilePic;
         //TextView txtName;
@@ -137,7 +138,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
         TextView txtCreateAt;
         ImageView imgTarget;
 
-        View mView;
 
         public MyViewHolder(View view) {
             super(view);
@@ -398,9 +398,11 @@ public class FeedAdapter extends RecyclerView.Adapter {
             if (!post.getIsCommentAllowed()) {
                 imgCommentNotAllowed.setVisibility(View.VISIBLE);
                 txtCommentCount.setText(String.valueOf(0));
+                imgBtnComment.setEnabled(false);
             } else {
                 imgCommentNotAllowed.setVisibility(View.GONE);
                 txtCommentCount.setText(String.valueOf(commentCount));
+                imgBtnComment.setEnabled(true);
             }
         }
 
@@ -475,14 +477,14 @@ public class FeedAdapter extends RecyclerView.Adapter {
     }
 
     public void addProgressLoading() {
-        if (getItemViewType(postList.size() - 1) != VIEW_PROG){
+        if (getItemViewType(postList.size() - 1) != VIEW_PROG) {
             postList.add(null);
             notifyItemInserted(postList.size() - 1);
         }
     }
 
     public void removeProgressLoading() {
-        if (getItemViewType(postList.size() - 1) == VIEW_PROG){
+        if (getItemViewType(postList.size() - 1) == VIEW_PROG) {
             postList.remove(postList.size() - 1);
             notifyItemRemoved(postList.size());
         }

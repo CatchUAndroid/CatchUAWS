@@ -113,7 +113,6 @@
 
                 </LinearLayout>
 
-
                 <!-- Like Icon /-->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -227,7 +226,7 @@
                             android:id="@+id/imgCommentNotAllowed"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:background="@drawable/btn_feed_action"
+                            android:clickable="false"
                             android:paddingBottom="12dp"
                             android:paddingLeft="10dp"
                             android:paddingRight="10dp"
@@ -310,25 +309,8 @@
 
             </LinearLayout>
 
-            <!-- Date layout  /-->
-            <!--LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_margin="10dp"
-                >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txtCreateAt" />
-
-
-            </LinearLayout-->
-
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
-
 
 </LinearLayout>

@@ -50,6 +50,11 @@ import catchu.model.Report;
 
 import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
 import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_INAPPROPIATE;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_GROUP;
+import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 public class SinglePostAdapter extends RecyclerView.Adapter {
 
@@ -168,38 +173,52 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
     public class PostViewHolder extends RecyclerView.ViewHolder {
 
-        Post post;
-        CardView cardView;
+        View mView;
+        ImageView imgProfilePic;
+        TextView txtProfilePic;
+        //TextView txtName;
+        TextView txtUserName;
         TextView txtDetail;
         ViewPager viewPager;
+        CardView cardView;
+        ImageView imgLike;
+        private int position;
+        boolean isPostLiked = false;
+        Post post;
         TextView txtLikeCount;
         TextView txtCommentCount;
-        ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
-        ImageView imgCommentNotAllowed;
-        TextView txtLocationDistance;
-
-        int position;
-        boolean isPostLiked = false;
         int likeCount;
         int commentCount;
-
-        View mView;
+        ImageButton imgBtnLike, imgBtnComment, imgBtnMore, imgBtnLocationDetail;
+        ImageView imgCommentNotAllowed;
+        LinearLayout profileMainLayout;
+        TextView txtLocationDistance;
+        TextView txtCreateAt;
+        ImageView imgTarget;
 
         public PostViewHolder(View view) {
             super(view);
 
             mView = view;
             cardView = (CardView) view.findViewById(R.id.card_view);
+            imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
+            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
+            //txtName = (TextView) view.findViewById(R.id.txtName);
+            txtUserName = (TextView) view.findViewById(R.id.txtUserName);
             txtDetail = (TextView) view.findViewById(R.id.txtDetail);
             viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+            imgLike = (ImageView) view.findViewById(R.id.imgLike);
             txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
             txtCommentCount = (TextView) view.findViewById(R.id.txtCommentCount);
+            profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
             txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
             imgBtnLike = (ImageButton) view.findViewById(R.id.imgBtnLike);
             imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
             imgCommentNotAllowed = (ImageView) view.findViewById(R.id.imgCommentNotAllowed);
             imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
             imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
+            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
+            imgTarget = (ImageView) view.findViewById(R.id.imgTarget);
             likeCount = 0;
             commentCount = 0;
 
@@ -211,6 +230,33 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //init Variables
             imgCommentNotAllowed.setVisibility(View.GONE);
+
+            //imgLike
+            imgLike.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+
+                    if (isPostLiked) {
+                        isPostLiked = false;
+                        post.setIsLiked(isPostLiked);
+                        post.setLikeCount(post.getLikeCount() - 1);
+                        setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
+                    } else {
+                        isPostLiked = true;
+                        post.setIsLiked(isPostLiked);
+                        post.setLikeCount(post.getLikeCount() + 1);
+                        setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
+                    }
+                    PostHelper.LikeClicked.startProcess(mContext, post.getPostid(), null, isPostLiked);
+                    PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), feedPosition, numberOfCallback);
+
+                    //Like count
+                    txtLikeCount.setText(String.valueOf(post.getLikeCount()));
+                }
+            });
+
 
             //Like layout
             imgBtnLike.setOnClickListener(new View.OnClickListener() {
@@ -288,6 +334,17 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             this.likeCount = post.getLikeCount();
             this.commentCount = post.getCommentCount();
 
+            //profile picture
+            UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
+                    post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
+            //Name
+            if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
+                //this.txtName.setText(post.getUser().getName());
+            }
+            //Username
+            if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
+                this.txtUserName.setText(post.getUser().getUsername());
+            }
             //Text
             if (post.getMessage() != null && !post.getMessage().isEmpty()) {
                 this.txtDetail.setText(post.getMessage());
@@ -302,14 +359,80 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             } else {
                 viewPager.setVisibility(View.GONE);
             }
-            //Like count
-            txtLikeCount.setText(String.valueOf(likeCount));
+            //Like
+            if (post.getIsLiked()) {
+                setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, false);
+            } else {
+                setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
+            }
             //Comment
-            setCommentStatus();
+            if (post.getIsCommentAllowed() != null) {
+                setCommentStatus();
+            }
             //Location distance
             if (post.getDistance() != null) {
-                txtLocationDistance.setText(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue()));
+                txtLocationDistance.setText(String.valueOf(PostHelper.Utils.calculateDistance(post.getDistance().doubleValue())));
             }
+            //Location show on map
+            if (!post.getIsShowOnMap()) {
+                imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else {
+                imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+            //Create at
+            if (post.getCreateAt() != null) {
+                txtCreateAt.setText(CommonUtils.timeAgo(mContext, post.getCreateAt()));
+            }
+            //Target
+            if (post.getPrivacyType() != null) {
+                setTargetImage();
+            }
+
+        }
+
+        private void setTargetImage() {
+
+            int targetIcon = R.drawable.world_icon_96;
+
+            if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
+                targetIcon = R.drawable.world_icon_96;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
+                targetIcon = R.drawable.friends;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
+                targetIcon = R.drawable.groups_icon_500;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
+                targetIcon = R.drawable.groups_icon_500;
+            } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
+                targetIcon = R.drawable.groups_icon_500;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
+            }
+
+            Glide.with(mContext)
+                    .load(targetIcon)
+                    .into(imgTarget);
+        }
+
+        private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
+            imgLike.setColorFilter(ContextCompat.getColor(mContext, color), android.graphics.PorterDuff.Mode.SRC_IN);
+
+            Glide.with(mContext)
+                    .load(icon)
+                    .into(imgLike);
+
+            if (isClientOperation) {
+                if (isPostLiked) {
+                    likeCount++;
+                    post.setLikeCount(likeCount);
+                } else {
+                    likeCount--;
+                    post.setLikeCount(likeCount);
+                }
+            }
+
+            txtLikeCount.setText(String.valueOf(likeCount));
 
         }
 
@@ -331,9 +454,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             if (!post.getIsCommentAllowed()) {
                 imgCommentNotAllowed.setVisibility(View.VISIBLE);
                 txtCommentCount.setText(String.valueOf(0));
+                imgBtnComment.setEnabled(false);
             } else {
                 imgCommentNotAllowed.setVisibility(View.GONE);
                 txtCommentCount.setText(String.valueOf(commentCount));
+                imgBtnComment.setEnabled(true);
             }
         }
 

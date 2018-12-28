@@ -98,6 +98,7 @@
     <string name="TAKE_SCREENSHOT">Ekran görüntüsü al</string>
     <string name="CIRCLE_THE_PROBLEM">Sorunu daire içine al</string>
     <string name="SCREENSHOT">Çek</string>
+    <string name="detail">Detay</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -279,7 +280,7 @@
     <string name="enableComment">Yorum yapılmasına izin ver</string>
     <string name="report">Şikayet et...</string>
     <string name="delete">Sil</string>
-    <string name="commentHint">Ne düşünüyorsunuz?</string>
+    <string name="commentHint">Ne düşünüyorsun?</string>
     <string name="like">Beğen</string>
     <string name="filterSettings">Filtre Ayarları</string>
     <string name="apply">Uygula</string>

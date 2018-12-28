@@ -2,6 +2,8 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +46,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter;
@@ -75,6 +79,8 @@ import catchu.model.CommentListResponse;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
@@ -94,23 +100,17 @@ public class SinglePostFragment extends BaseFragment
         CommentAllowedCallback,
         PostDeletedCallback{
 
-    View mView;
-    String toolbarTitle;
-    Post post;
-    String postId;
-    int position;
-    int numberOfCallback;
-    SinglePostAdapter singlePostAdapter;
-    LinearLayoutManager mLayoutManager;
+    private View mView;
+    private String toolbarTitle;
+    private Post post;
+    private String postId;
+    private int position;
+    private int numberOfCallback;
+    private SinglePostAdapter singlePostAdapter;
+    private LinearLayoutManager mLayoutManager;
 
-    //toolbar
-    ImageView imgProfilePic, imgTarget;
-    TextView txtProfilePic;
-    TextView txtUserName;
-    TextView txtCreateAt;
-    ImageView imgLike;
-    boolean isPostLiked = false;
-    int likeCount = 0;
+    @BindView(R.id.rootLayout)
+    RelativeLayout rootLayout;
 
     @BindView(R.id.refresh_layout)
     RecyclerRefreshLayout refresh_layout;
@@ -121,38 +121,40 @@ public class SinglePostFragment extends BaseFragment
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
 
-    @BindView(R.id.imgBack)
-    ClickableImageView imgBack;
+    @BindView(R.id.smileyImgv)
+    ImageView smileyImgv;
+    @BindView(R.id.edittextRelLayout)
+    RelativeLayout edittextRelLayout;
 
-    @BindView(R.id.edtAddComment)
-    EditText edtAddComment;
+    //toolbar
+    @BindView(R.id.commonToolbarbackImgv)
+    ClickableImageView commonToolbarbackImgv;
+    @BindView(R.id.toolbarTitleTv)
+    TextView toolbarTitleTv;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
 
-    @BindView(R.id.btnSendComment)
-    SendCommentButton btnSendComment;
-
+    //Content
     @BindView(R.id.contentRoot)
     LinearLayout contentRoot;
     @BindView(R.id.llAddComment)
     LinearLayout llAddComment;
-    @BindView(R.id.toolbarLayout)
-    Toolbar toolbarLayout;
-    @BindView(R.id.llProfilePic)
-    LinearLayout llProfilePic;
-    @BindView(R.id.llUserName)
-    LinearLayout llUserName;
+    @BindView(R.id.edtAddComment)
+    EmojiconEditText edtAddComment;
+    @BindView(R.id.btnSendComment)
+    SendCommentButton btnSendComment;
 
     //Location
     private LocationTrackerAdapter locationTrackObj;
-    PermissionModule permissionModule;
-    String longitude;
-    String latitude;
-    String radius;
+    private PermissionModule permissionModule;
+    private String longitude;
+    private String latitude;
+    private String radius;
 
     private boolean pulledToRefreshPost = false;
     private boolean pulledToRefreshComment = false;
     private List<Post> postList = new ArrayList<Post>();
     private List<Comment> commentList = new ArrayList<Comment>();
-    private int drawingStartLocation = 0;
 
     public static SinglePostFragment newInstance(String toolbarTitle, String postId, int position, int numberOfCallback) {
         Bundle args = new Bundle();
@@ -215,8 +217,6 @@ public class SinglePostFragment extends BaseFragment
 
     private void setContent() {
 
-        Log.i("nrlh_postId", post.getPostid());
-
         //sadece postId ile gelindiğinde
         if (post == null && postId != null) {
             checkLocationAndRetrievePosts();
@@ -236,7 +236,6 @@ public class SinglePostFragment extends BaseFragment
 
     private void fillContent(Post post) {
         setListeners();
-        setPostDetailOnToolbar();
         setPostDetail(post);
         getCommentList();
     }
@@ -277,83 +276,29 @@ public class SinglePostFragment extends BaseFragment
         }
     }
 
-    private void setPostDetailOnToolbar() {
 
-        //profile picture
-        UserDataUtil.setProfilePicture(getContext(), post.getUser().getProfilePhotoUrl(),
-                post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
-
-        //Username
-        if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
-            this.txtUserName.setText(post.getUser().getUsername());
-        }
-        //likeCount
-        likeCount = post.getLikeCount();
-        //isLiked
-        isPostLiked = post.getIsLiked();
-        //Like
-        if (post.getIsLiked()) {
-            setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, false);
-        } else {
-            setLikeIconUI(R.color.black, R.mipmap.icon_like, false);
-        }
-        //create At
-        if (post.getCreateAt() != null) {
-            String text = CommonUtils.timeAgo(getContext(), post.getCreateAt());
-            txtCreateAt.setText(text);
-        }
-        //target
-        if (post.getPrivacyType() != null) {
-            setTargetImage();
-        }
-
-    }
-
-    private void setTargetImage() {
-
-        int targetIcon = R.drawable.world_icon_96;
-
-        if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
-            targetIcon = R.drawable.world_icon_96;
-            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
-            targetIcon = R.drawable.friends;
-            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
-            targetIcon = R.drawable.groups_icon_500;
-            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-        } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
-            targetIcon = R.drawable.groups_icon_500;
-        } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
-            targetIcon = R.drawable.groups_icon_500;
-            imgTarget.setColorFilter(ContextCompat.getColor(getContext(), R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
-        }
-
-        Glide.with(getContext())
-                .load(targetIcon)
-                .into(imgTarget);
-
-    }
 
     private void setVariables() {
 
-        if (toolbarTitle != null && !toolbarTitle.isEmpty()) {
-            //txtToolbarTitle.setText(toolbarTitle);
-        }
-
-        imgProfilePic = (ImageView) mView.findViewById(R.id.imgProfilePic);
-        txtProfilePic = (TextView) mView.findViewById(R.id.txtProfilePic);
-        txtUserName = (TextView) mView.findViewById(R.id.txtUserName);
-        txtCreateAt = (TextView) mView.findViewById(R.id.txtCreateAt);
-        imgTarget = (ImageView) mView.findViewById(R.id.imgTarget);
-        imgLike = (ImageView) mView.findViewById(R.id.imgLike);
+        //toolbar
+        toolbar.setBackground(getResources().getDrawable(R.color.white, null));
+        toolbarTitleTv.setText(getContext().getResources().getString(R.string.detail));
+        toolbarTitleTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary)) ;
 
         //imgBack
-        imgBack.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgBack.setOnClickListener(this);
+        commonToolbarbackImgv.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        commonToolbarbackImgv.setOnClickListener(this);
 
         //Comment Allowed
         llAddComment.setVisibility(View.GONE);
+
+        //Emojicon
+        EmojIconActions emojIcon = new EmojIconActions(getContext(), rootLayout, edtAddComment, smileyImgv);
+        emojIcon.ShowEmojIcon();
+
+        smileyImgv.setColorFilter(this.getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
+        edittextRelLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
 
     }
 
@@ -361,66 +306,11 @@ public class SinglePostFragment extends BaseFragment
 
         btnSendComment.setOnSendClickListener(this);
 
-        //Profile layout
-        llProfilePic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startPersonInfoProcess(post.getUser(), 0);
-            }
-        });
-        llUserName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startPersonInfoProcess(post.getUser(), 0);
-            }
-        });
-
-        //imgLike
-        imgLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                imgLike.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-
-                if (isPostLiked) {
-                    isPostLiked = false;
-                    post.setIsLiked(isPostLiked);
-                    post.setLikeCount(post.getLikeCount() - 1);
-                    setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
-                } else {
-                    isPostLiked = true;
-                    post.setIsLiked(isPostLiked);
-                    post.setLikeCount(post.getLikeCount() + 1);
-                    setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
-                }
-                PostHelper.LikeClicked.startProcess(getContext(), post.getPostid(), null, isPostLiked);
-                PostHelper.SinglePostClicked.postLikeStatusChanged(isPostLiked, post.getLikeCount(), position, numberOfCallback);
-
-                singlePostAdapter.updateLikeCount(post.getLikeCount());
-            }
-        });
-
         //Comment Allowed
         if (!post.getIsCommentAllowed()) {
             llAddComment.setVisibility(View.GONE);
         } else {
             llAddComment.setVisibility(View.VISIBLE);
-        }
-
-    }
-
-    private void setLikeIconUI(int color, int icon, boolean isClientOperation) {
-        imgLike.setColorFilter(ContextCompat.getColor(getContext(), color), android.graphics.PorterDuff.Mode.SRC_IN);
-        Glide.with(getContext()).load(icon).into(imgLike);
-
-        if (isClientOperation) {
-            if (isPostLiked) {
-                likeCount++;
-                post.setLikeCount(likeCount);
-            } else {
-                likeCount--;
-                post.setLikeCount(likeCount);
-            }
         }
 
     }
@@ -437,7 +327,6 @@ public class SinglePostFragment extends BaseFragment
         singlePostAdapter.setCommentAllowedCallback(this);
         singlePostAdapter.setPostDeletedCallback(this);
         recyclerView.setAdapter(singlePostAdapter);
-
     }
 
     private void setPullToRefresh() {
@@ -461,7 +350,7 @@ public class SinglePostFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v == imgBack) {
+        if (v == commonToolbarbackImgv) {
             SingletonSinglePost.getInstance().setPost(null);
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
@@ -649,7 +538,8 @@ public class SinglePostFragment extends BaseFragment
     private void setRecyclerViewComments(CommentListResponse commentListResponse) {
 
         commentList.clear();
-        commentList = reverseList(commentListResponse.getItems());
+        commentList.addAll(commentListResponse.getItems());
+        //commentList = reverseList(commentListResponse.getItems());
 
         if (pulledToRefreshComment) {
             singlePostAdapter.updateCommentListItems(commentList);
@@ -752,8 +642,6 @@ public class SinglePostFragment extends BaseFragment
 
     @Override
     public void onPostDeleted() {
-
-        imgBack.callOnClick();
-
+        commonToolbarbackImgv.callOnClick();
     }
 }

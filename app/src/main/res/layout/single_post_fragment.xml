@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/tools"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment">
+    tools:context=".MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment"
+    android:id="@+id/rootLayout">
 
     <include layout="@layout/layout_progress_bar" />
 
@@ -13,174 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbarLayout"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:contentInsetLeft="0dp"
-            app:contentInsetStart="0dp"
-            app:elevation="@dimen/default_elevation"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="5dp"
-                android:gravity="left"
-                android:orientation="horizontal"
-                android:weightSum="5">
-
-                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-                    android:id="@+id/imgBack"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom|left"
-                    android:layout_weight="0.7"
-                    android:gravity="left"
-                    android:paddingBottom="17dp"
-                    android:paddingRight="17dp"
-                    android:paddingTop="17dp"
-                    android:src="@mipmap/icon_back" />
-
-                <!-- Top of Post Text /-->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="4.3"
-                    android:orientation="horizontal">
-
-                    <!-- Profile layout /-->
-                    <LinearLayout
-                        android:id="@+id/profileMainLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <!-- Profile Picture /-->
-                        <LinearLayout
-                            android:id="@+id/llProfilePic"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="center"
-                            android:padding="5dp">
-
-                            <RelativeLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent">
-
-                                <ImageView
-                                    android:id="@+id/imgProfilePic"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_gravity="center" />
-
-                                <TextView
-                                    android:id="@+id/txtProfilePic"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/White"
-                                    android:textSize="20sp"
-                                    android:visibility="gone" />
-
-                            </RelativeLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_gravity="center"
-                            android:orientation="vertical"
-                            android:weightSum="3">
-
-
-                            <!-- Profile Detail Name-Username /-->
-                            <LinearLayout
-                                android:id="@+id/llUserName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="2"
-                                android:gravity="center|left"
-                                android:orientation="vertical"
-                                android:paddingTop="5dp">
-
-                                <TextView
-                                    android:id="@+id/txtUserName"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:fontFamily="@font/capriola"
-                                    android:text="'@'username"
-                                    android:textColor="?attr/colorPrimary"
-                                    android:textSize="15sp" />
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:id="@+id/llCreateAt"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
-                                android:layout_weight="1"
-                                android:gravity="center"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:layout_width="15dp"
-                                    android:layout_height="15dp"
-                                    android:layout_marginRight="5dp"
-                                    android:scaleType="fitXY"
-                                    android:src="@mipmap/icon_time" />
-
-                                <TextView
-                                    android:id="@+id/txtCreateAt"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/gray" />
-
-                                <ImageView
-                                    android:id="@+id/imgTarget"
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="10dp"
-                                    android:scaleType="fitXY" />
-
-                            </LinearLayout>
-
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-
-                    <!-- Like Icon /-->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|right"
-                        android:gravity="right"
-                        android:paddingRight="15dp">
-
-                        <ImageView
-                            android:id="@+id/imgLike"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:layout_marginRight="10dp"
-                            android:src="@mipmap/icon_like" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-        </android.support.v7.widget.Toolbar>
+        <include layout="@layout/common_toolbar_layout" />
 
         <LinearLayout
             android:id="@+id/contentRoot"
@@ -207,6 +42,7 @@
                         android:id="@+id/rv_single_post"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:clipToPadding="false"
                         android:scrollbars="none">
 
                     </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>
@@ -220,38 +56,88 @@
                     android:background="@drawable/shadow_top" />
             </FrameLayout>
 
+
             <LinearLayout
-                android:id="@+id/llAddComment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/bg_comments"
-                android:elevation="@dimen/default_elevation"
-                android:gravity="center_vertical"
-                android:paddingBottom="4dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingTop="8dp">
+                android:background="@color/WhiteSmoke"
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/edtAddComment"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/commentHint"
-                    android:textColor="#555555"
-                    android:textSize="16sp" />
+                <LinearLayout
+                    android:id="@+id/llAddComment"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical">
 
-                <com.uren.catchu._Libraries.SendCommentButton.SendCommentButton
-                    android:id="@+id/btnSendComment"
-                    android:layout_width="72dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="2dp"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/btn_send_comment"
-                    android:elevation="4dp"
-                    android:orientation="vertical" />
+                    <RelativeLayout
+                        android:id="@+id/edittextRelLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:id="@+id/smileyImgv"
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:padding="3dp"
+                                android:src="@mipmap/icon_happy_smiley" />
+
+                            <!--<EditText
+                                android:id="@+id/messageEdittext"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:background="@null"
+                                android:hint="@string/typeToAddText"
+                                android:textColor="#555555"
+                                android:textSize="16sp" />-->
+
+                            <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                                android:id="@+id/edtAddComment"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_gravity="center"
+                                android:layout_marginLeft="5dp"
+                                android:background="@null"
+                                android:hint="@string/commentHint"
+                                android:textColor="#555555"
+                                android:textSize="16sp"
+                                emojicon:emojiconSize="28sp" />
+
+                        </LinearLayout>
+
+
+                    </RelativeLayout>
+
+
+                    <com.uren.catchu._Libraries.SendCommentButton.SendCommentButton
+                        android:id="@+id/btnSendComment"
+                        android:layout_width="72dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="2dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/btn_send_comment"
+                        android:elevation="4dp"
+                        android:orientation="vertical" />
+
+                </LinearLayout>
 
             </LinearLayout>
+
+
 
 
         </LinearLayout>
