@@ -91,6 +91,7 @@
     <string name="dragForDelete">Drag for Delete</string>
     <string name="finish">Finish</string>
     <string name="USE">Use</string>
+    <string name="detail">Detail</string>
 
     <string name="typeToAddText">Say something...</string>
     <string name="UPDATING">Updating...</string>
