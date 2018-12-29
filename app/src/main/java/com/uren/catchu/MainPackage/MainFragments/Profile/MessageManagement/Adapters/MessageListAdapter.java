@@ -4,11 +4,15 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adap
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -16,22 +20,33 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
+import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Models.ContactFriendModel;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MessageListHolder> {
+import catchu.model.UserProfileProperties;
+
+public class MessageListAdapter extends RecyclerView.Adapter implements Filterable {
 
     private Context context;
     private ArrayList<MessageListBox> messageBoxArrayList;
+    private ArrayList<MessageListBox> orgMessageBoxArrayList;
     ItemClickListener itemClickListener;
+
+    public static final int VIEW_ITEM = 1;
+    public static final int VIEW_PROG = 0;
 
     public MessageListAdapter(Context context, ArrayList<MessageListBox> messageBoxArrayList,
                               ItemClickListener itemClickListener) {
         try {
             this.context = context;
             this.messageBoxArrayList = messageBoxArrayList;
+            this.orgMessageBoxArrayList = messageBoxArrayList;
             this.itemClickListener = itemClickListener;
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
@@ -42,10 +57,53 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     }
 
     @Override
-    public MessageListAdapter.MessageListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.message_list_item, parent, false);
-        return new MessageListAdapter.MessageListHolder(itemView);
+    public int getItemViewType(int position) {
+        return messageBoxArrayList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+    }
+
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        RecyclerView.ViewHolder viewHolder;
+        if (viewType == VIEW_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.message_list_item, parent, false);
+
+            viewHolder = new MessageListAdapter.MessageListHolder(itemView);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            viewHolder = new MessageListAdapter.ProgressViewHolder(v);
+        }
+        return viewHolder;
+    }
+
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        try {
+            if (holder instanceof MessageListAdapter.MessageListHolder) {
+                MessageListBox messageListBox = messageBoxArrayList.get(position);
+                ((MessageListAdapter.MessageListHolder) holder).setData(messageListBox, position);
+            } else {
+                ((MessageListAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            }
+
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public class MessageListHolder extends RecyclerView.ViewHolder {
@@ -102,12 +160,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         private void setUserInfo() {
             try {
-                if (messageListBox != null && messageListBox.getUserProfileProperties() != null ) {
+                if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
 
-                    if(messageListBox.getUserProfileProperties().getName() != null &&
+                    if (messageListBox.getUserProfileProperties().getName() != null &&
                             !messageListBox.getUserProfileProperties().getName().isEmpty())
                         UserDataUtil.setName(messageListBox.getUserProfileProperties().getName(), profileNameTv);
-                    else if(messageListBox.getUserProfileProperties().getUsername() != null &&
+                    else if (messageListBox.getUserProfileProperties().getUsername() != null &&
                             !messageListBox.getUserProfileProperties().getUsername().isEmpty())
                         UserDataUtil.setUsername(messageListBox.getUserProfileProperties().getUsername(), profileNameTv);
 
@@ -125,7 +183,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         private void setMessageDate() {
             try {
-                if(messageListBox != null && messageListBox.getDate() != 0)
+                if (messageListBox != null && messageListBox.getDate() != 0)
                     messageDateTv.setText(CommonUtils.getMessageTime(context, messageListBox.getDate()));
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
@@ -142,7 +200,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
                 if (messageListBox.isIamReceipt() && !messageListBox.isSeen()) {
                     messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.BOLD);
-                    messageTextTv.setTextColor(context.getResources().getColor(R.color.Black, null));
+                    messageTextTv.setTextColor(context.getResources().getColor(R.color.Red, null));
                 } else {
                     messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.NORMAL);
                     messageTextTv.setTextColor(context.getResources().getColor(R.color.DarkGray, null));
@@ -156,17 +214,21 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         }
     }
 
-    @Override
-    public void onBindViewHolder(final MessageListAdapter.MessageListHolder holder, final int position) {
-        try {
-            MessageListBox messageListBox = messageBoxArrayList.get(position);
-            holder.setData(messageListBox, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+    public void addProgressLoading() {
+        messageBoxArrayList.add(0, null);
+        notifyItemInserted(0);
+    }
+
+    public void removeProgressLoading() {
+        messageBoxArrayList.remove(0);
+        notifyItemRemoved(0);
+    }
+
+    public boolean isShowingProgressLoading() {
+        if (getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG)
+            return true;
+        else
+            return false;
     }
 
     @Override
@@ -182,5 +244,78 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             e.printStackTrace();
         }
         return listSize;
+    }
+
+    public void updateAdapter(String searchText) {
+        getFilter().filter(searchText);
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                FilterResults filterResults = null;
+                try {
+                    String searchString = charSequence.toString();
+
+                    if (searchString.trim().isEmpty())
+                        messageBoxArrayList = orgMessageBoxArrayList;
+                    else {
+                        ArrayList<MessageListBox> tempList = new ArrayList<>();
+
+                        for (MessageListBox messageListBox : orgMessageBoxArrayList) {
+                            if (messageListBox != null) {
+
+                                if (messageListBox.getMessageText() != null &&
+                                        messageListBox.getMessageText().toLowerCase().contains(searchString.toLowerCase())) {
+                                    tempList.add(messageListBox);
+                                } else if (messageListBox.getUserProfileProperties() != null) {
+
+                                    UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
+
+                                    if (userProfileProperties.getName() != null &&
+                                            userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase())) {
+                                        tempList.add(messageListBox);
+                                    } else if (userProfileProperties.getUsername() != null &&
+                                            userProfileProperties.getUsername().toLowerCase().contains(searchString.toLowerCase())) {
+                                        tempList.add(messageListBox);
+                                    }
+                                }
+                            }
+                        }
+                        messageBoxArrayList = tempList;
+                    }
+
+                    filterResults = new FilterResults();
+                    filterResults.values = messageBoxArrayList;
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                try {
+                    messageBoxArrayList = (ArrayList<MessageListBox>) filterResults.values;
+                    notifyDataSetChanged();
+
+                   /* if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
+                        returnCallback.onReturn(contactFriendModelList.size());
+                    else
+                        returnCallback.onReturn(0);*/
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 }

@@ -16,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -107,7 +108,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     ImageView waitingMsgImgv;
     View mainLinearLayout;
 
-    User chattedUser = new User();
+    public static User chattedUser = new User();
     DatabaseReference databaseReference;
     ValueEventListener valueEventListener;
 
@@ -143,12 +144,13 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
     int notificationReadCount = 0, notificationDeleteCount = 0, notificationSendCount = 0;
     String myNotificationStatus = null;
+    String otherUserNotificationStatus = null;
     String clusterNotificationStatus = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_message_with_person);
+        setContentView(R.layout.activity_message_with_person);
         thisActivity = this;
         context = MessageWithPersonActivity.this;
         Fabric.with(this, new Crashlytics());
@@ -295,23 +297,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
             getOtherUserNotificationCount();
             getMyNotificationInfo();
             getContentId();
-            notificationUpdateProcess();
-            //updatePageSeenValue(true);
             EmojIconActions emojIcon = new EmojIconActions(this, mainLinearLayout, messageEdittext, smileyImgv);
             emojIcon.ShowEmojIcon();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    private void notificationUpdateProcess() {
-        try {
-            if (myNotificationStatus != null && !myNotificationStatus.equals(FB_VALUE_NOTIFICATION_READ)) {
-                MessageUpdateProcess.updateNotificationStatus(AccountHolderInfo.getUserID(), chattedUser.getUserid(), FB_VALUE_NOTIFICATION_READ);
-            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(this, this.getClass().getSimpleName(),
                     new Object() {
@@ -327,8 +314,15 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                     @Override
                     public void onReturn(String status) {
                         myNotificationStatus = status;
+                        notificationUpdateProcess();
                     }
                 });
+    }
+
+    private void notificationUpdateProcess() {
+        if (myNotificationStatus != null && !myNotificationStatus.equals(FB_VALUE_NOTIFICATION_READ)) {
+            MessageUpdateProcess.updateNotificationStatus(AccountHolderInfo.getUserID(), chattedUser.getUserid(), FB_VALUE_NOTIFICATION_READ);
+        }
     }
 
     private void getOtherUserNotificationCount() {
@@ -353,7 +347,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
                     @Override
                     public void onNotifStatus(String status) {
-
+                        otherUserNotificationStatus = status;
                     }
 
                     @Override
@@ -542,7 +536,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (s != null && !s.toString().isEmpty()) {
+                    if (s != null && !s.toString().trim().isEmpty()) {
                         sendMessageBtn.setEnabled(true);
                     } else
                         sendMessageBtn.setEnabled(false);
@@ -557,7 +551,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                     loadCode = CODE_BOTTOM_LOADED;
                     MessageAddProcess messageAddProcess = new MessageAddProcess(context,
                             chattedUser, messageContentId, messageEdittext, sendMessageBtn,
-                            notificationSendCount, chattedUserDeviceToken, clusterNotificationStatus);
+                            notificationSendCount, chattedUserDeviceToken, clusterNotificationStatus,
+                            otherUserNotificationStatus);
                     messageAddProcess.addMessage();
                 }
             });
@@ -570,8 +565,6 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                     MessageUpdateProcess.updateReceiptIsSeenValue(context,
                             linearLayoutManager.findLastCompletelyVisibleItemPosition(),
                             messageBoxList, messageContentId);
-
-                    //updateReceiptIsSeenValue(linearLayoutManager.findLastCompletelyVisibleItemPosition());
                 }
 
                 @Override
@@ -792,9 +785,12 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         try {
             if (loadCode == CODE_BOTTOM_LOADED) {
                 if (adapterLoaded) {
-                    if (messageBoxList != null && messageBoxList.size() > 0)
+                    if (messageBoxList != null && messageBoxList.size() > 0) {
                         recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
+                        MessageUpdateProcess.updateReceiptIsSeenValue(context, (messageBoxList.size() - 1), messageBoxList, messageContentId);
+                    }
                     adapterLoaded = false;
+
                 } else if (itemAdded) {
                     if (lastAddedMessage != null && messageBoxList != null && messageBoxList.size() > 0) {
 
@@ -806,7 +802,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                         } else if (lastAddedMessage.getReceiptUser() != null && lastAddedMessage.getReceiptUser().getUserid() != null &&
                                 lastAddedMessage.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())) {
 
-                            if (linearLayoutManager.findLastVisibleItemPosition() + 3 >= messageBoxList.size()) {
+                            if (linearLayoutManager.findLastVisibleItemPosition() + 5 >= messageBoxList.size()) {
                                 loadCode = CODE_BOTTOM_LOADED;
                                 recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
                             } else {
@@ -897,6 +893,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         super.onDestroy();
         try {
             MessageGetProcess.removeAllListeners();
+            thisActivity = null;
 
             if (valueEventListener != null && databaseReference != null)
                 databaseReference.removeEventListener(valueEventListener);

@@ -43,6 +43,8 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -89,6 +91,7 @@ public class ProfileFragment extends BaseFragment
     TextView navViewShortenTextView;
     RelativeLayout profileNavViewLayout;
     TextView navPendReqCntTv;
+    TextView navMessageCntTv;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -113,8 +116,8 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.txtFollowingCnt)
     TextView txtFollowingCnt;
 
-    @BindView(R.id.pendReqCntTv)
-    TextView pendReqCntTv;
+    @BindView(R.id.requestWaitingCntTv)
+    TextView requestWaitingCntTv;
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
     @BindView(R.id.navViewLayout)
@@ -154,6 +157,9 @@ public class ProfileFragment extends BaseFragment
     @BindView(R.id.groupRecyclerView)
     RecyclerView groupRecyclerView;
 
+    int unreadMessageCount = 0;
+    int pendingRequestCount = 0;
+    int waitingRequestCount = 0;
 
     public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
@@ -226,14 +232,14 @@ public class ProfileFragment extends BaseFragment
 
         if (instance != null) {
             myProfile = instance.getUser();
-            if(myProfile.getUserInfo().getUsername() == null){
+            if (myProfile.getUserInfo().getUsername() == null) {
                 AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                     @Override
                     public void onAccountHolderIfoTaken(UserProfile userProfile) {
                         setProfileDetail(userProfile);
                     }
                 });
-            }else{
+            } else {
                 setProfileDetail(myProfile);
             }
         } else {
@@ -310,8 +316,8 @@ public class ProfileFragment extends BaseFragment
             @Override
             public void onClick(View v) {
                 menuImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if (pendReqCntTv != null)
-                    pendReqCntTv.setVisibility(View.GONE);
+                if (requestWaitingCntTv != null)
+                    requestWaitingCntTv.setVisibility(View.GONE);
 
                 if (mDrawerState) {
                     drawerLayout.closeDrawer(Gravity.START);
@@ -345,6 +351,9 @@ public class ProfileFragment extends BaseFragment
                         break;
 
                     case R.id.messagesItem:
+                        if (navMessageCntTv != null)
+                            navMessageCntTv.setVisibility(View.GONE);
+
                         drawerLayout.closeDrawer(Gravity.START);
                         startMessageListActivity();
                         break;
@@ -398,14 +407,62 @@ public class ProfileFragment extends BaseFragment
             //Biography
             // todo NT - biography usera beslenmiyor.düzenlenecek
 
-            if (user.getUserInfo().getIsPrivateAccount() != null) {
-                getPendingFriendList();
-            }
+            setWaitingRequestsCount(user);
         }
 
         setUserFollowerAndFollowingCnt(user);
         setPostCounts(user);
         refresh_layout.setRefreshing(false);
+    }
+
+    public void setWaitingRequestsCount(UserProfile user) {
+        unreadMessageCount = 0;
+        setNavViewMenuItems();
+
+        if (user.getUserInfo().getIsPrivateAccount() != null)
+            getPendingFriendList();
+        else
+            getUserUnreadMsgCount();
+    }
+
+    private void setNavViewMenuItems() {
+        Menu menu = navViewLayout.getMenu();
+        for (int index = 0; index < menu.size(); index++) {
+            MenuItem menuItem = menu.getItem(index);
+            if (menuItem.getItemId() == R.id.viewItem) {
+                RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
+                navPendReqCntTv = rootView.findViewById(R.id.pendReqCntTv);
+            } else if (menuItem.getItemId() == R.id.messagesItem) {
+                RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
+                navMessageCntTv = rootView.findViewById(R.id.messageCntTv);
+            }
+        }
+    }
+
+    public void getUserUnreadMsgCount() {
+
+        MessageGetProcess.getUnreadMessageCount(new UnreadMessageCallback() {
+            @Override
+            public void onReturn(int listSize) {
+                unreadMessageCount = listSize;
+                waitingRequestCount = unreadMessageCount + pendingRequestCount;
+
+                if (requestWaitingCntTv.getVisibility() == View.GONE && waitingRequestCount > 0)
+                    requestWaitingCntTv.setVisibility(View.VISIBLE);
+
+                requestWaitingCntTv.setText(Integer.toString(waitingRequestCount));
+
+                if (navMessageCntTv != null) {
+                    if (unreadMessageCount > 0) {
+                        if (navMessageCntTv.getVisibility() == View.GONE)
+                            navMessageCntTv.setVisibility(View.VISIBLE);
+                        navMessageCntTv.setText(Integer.toString(unreadMessageCount));
+                    } else
+                        navMessageCntTv.setVisibility(View.GONE);
+                }
+            }
+        });
+
     }
 
     private void setPostCounts(UserProfile user) {
@@ -444,32 +501,26 @@ public class ProfileFragment extends BaseFragment
                     FriendRequestList friendRequestList = (FriendRequestList) object;
 
                     if (friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0) {
-                        pendReqCntTv.setVisibility(View.VISIBLE);
-                        pendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
-                    } else
-                        pendReqCntTv.setVisibility(View.GONE);
+                        pendingRequestCount = friendRequestList.getResultArray().size();
+                        requestWaitingCntTv.setVisibility(View.VISIBLE);
+                        requestWaitingCntTv.setText(Integer.toString(pendingRequestCount));
+                    }
 
-
-                    Menu menu = navViewLayout.getMenu();
-                    for (int index = 0; index < menu.size(); index++) {
-                        MenuItem menuItem = menu.getItem(index);
-                        if (menuItem.getItemId() == R.id.viewItem) {
-                            RelativeLayout rootView = (RelativeLayout) menuItem.getActionView();
-                            navPendReqCntTv = rootView.findViewById(R.id.pendReqCntTv);
-
-                            if (friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0) {
-                                navPendReqCntTv.setVisibility(View.VISIBLE);
-                                navPendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
-                            } else
-                                navPendReqCntTv.setVisibility(View.GONE);
-                        }
+                    if (navPendReqCntTv != null) {
+                        if (friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0) {
+                            navPendReqCntTv.setVisibility(View.VISIBLE);
+                            navPendReqCntTv.setText(Integer.toString(friendRequestList.getResultArray().size()));
+                        } else
+                            navPendReqCntTv.setVisibility(View.GONE);
                     }
                 }
+
+                getUserUnreadMsgCount();
             }
 
             @Override
             public void onFailed(Exception e) {
-
+                getUserUnreadMsgCount();
             }
         });
     }
@@ -521,22 +572,22 @@ public class ProfileFragment extends BaseFragment
 
         GroupListHolder groupListHolderInstance = GroupListHolder.getInstance();
 
-        if(groupListHolderInstance != null && groupListHolderInstance.getGroupList() != null){
+        if (groupListHolderInstance != null && groupListHolderInstance.getGroupList() != null) {
             GroupRequestResult groupRequestResult = groupListHolderInstance.getGroupList();
-            if(groupRequestResult != null && groupRequestResult.getResultArray() != null &&
-                    groupRequestResult.getResultArray().size() > 0){
-                CommonUtils.showCustomToast(getContext(), "grupları singletondan hemen aldım");
+            if (groupRequestResult != null && groupRequestResult.getResultArray() != null &&
+                    groupRequestResult.getResultArray().size() > 0) {
+                CommonUtils.showToastShort(getContext(), "grupları singletondan hemen aldım");
                 setGroupRecyclerView(groupRequestResult);
-            }else{
+            } else {
                 GroupListHolder.setGroupListHolderCallback(new GroupListHolderCallback() {
                     @Override
                     public void onGroupListInfoTaken(GroupRequestResult groupRequestResult) {
-                        CommonUtils.showCustomToast(getContext(), "grupları singletondan Callback ile aldım");
+                        CommonUtils.showToastShort(getContext(), "grupları singletondan Callback ile aldım");
                         setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
                     }
                 });
             }
-        }else{
+        } else {
             getGroupsHere();
         }
 
@@ -548,7 +599,7 @@ public class ProfileFragment extends BaseFragment
                 new CompleteCallback() {
                     @Override
                     public void onComplete(Object object) {
-                        CommonUtils.showCustomToast(getContext(), "grupları bu sayfadan aldım- Not singleton");
+                        CommonUtils.showToastShort(getContext(), "grupları bu sayfadan aldım- Not singleton");
                         GroupRequestResult groupRequestResult = (GroupRequestResult) object;
                         setGroupRecyclerView(groupRequestResult);
                     }
@@ -691,7 +742,7 @@ public class ProfileFragment extends BaseFragment
         }
     }
 
-    public void startMessageListActivity(){
+    public void startMessageListActivity() {
         if (MessageListActivity.thisActivity != null) {
             MessageListActivity.thisActivity.finish();
         }

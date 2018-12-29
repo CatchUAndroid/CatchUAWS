@@ -487,7 +487,7 @@ public class SinglePostFragment extends BaseFragment
 
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.needLocationPermission));
+                    CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.needLocationPermission));
                     refresh_layout.setRefreshing(false);
                 }
 
@@ -541,7 +541,7 @@ public class SinglePostFragment extends BaseFragment
                     CommonUtils.LOG_OK("PostListResponseProcess");
                     if (postListResponse.getItems().size() == 0) {
                         //no such data - post bulunamadi
-                        CommonUtils.showCustomToast(getContext(), getString(R.string.notFound));
+                        CommonUtils.showToastShort(getContext(), getString(R.string.notFound));
                     } else {
                         post = postListResponse.getItems().get(0);
                         fillContent(postListResponse.getItems().get(0));

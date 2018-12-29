@@ -184,7 +184,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 public void onClick(View v) {
                     if (noteTextEditText != null && noteTextEditText.getText() != null &&
                             noteTextEditText.getText().toString().isEmpty()) {
-                        CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
+                        CommonUtils.showToastShort(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
                         return;
                     }
                     saveReport();

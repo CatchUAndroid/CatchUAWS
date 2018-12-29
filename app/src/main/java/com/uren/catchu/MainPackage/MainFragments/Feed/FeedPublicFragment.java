@@ -164,7 +164,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         PostHelper.FeedRefresh.getInstance().setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
             public void onFeedRefresh() {
-                CommonUtils.showCustomToast(getContext(), "Feed - Public refreshing..");
+                CommonUtils.showToastShort(getContext(), "Feed - Public refreshing..");
                 pulledToRefresh = true;
                 Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 setPaginationValues();

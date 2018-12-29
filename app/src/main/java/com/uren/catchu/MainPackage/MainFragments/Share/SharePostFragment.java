@@ -379,6 +379,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.RoyalBlue, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 60, 0));
 
+        moreSettingsImgv.setColorFilter(this.getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+
         //showMapImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
         //        getResources().getColor(R.color.Red, null), GradientDrawable.OVAL, 20, 3));
     }
@@ -468,7 +470,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 shareButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
 
                 if (!checkShareItems.shareIsPossible()) {
-                    CommonUtils.showCustomToast(getContext(), checkShareItems.getErrMessage());
+                    CommonUtils.showToastShort(getContext(), checkShareItems.getErrMessage());
                     return;
                 }
                 sharePost();
@@ -831,7 +833,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     private void checkCameraProcess() {
         try {
             if (!CommonUtils.checkCameraHardware(getContext())) {
-                CommonUtils.showCustomToast(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
+                CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
                 return;
             }
 
@@ -1095,7 +1097,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
+            CommonUtils.showToastShort(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
         }
     }
 

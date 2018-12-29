@@ -89,7 +89,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:padding="10dp"
                 android:src="@drawable/baseline_add_white_48"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
         </RelativeLayout>
 

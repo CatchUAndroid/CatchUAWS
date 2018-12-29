@@ -276,7 +276,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                         ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                                 new Object() {
                                 }.getClass().getEnclosingMethod().getName(), e.toString());
-                        CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) +
+                        CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) +
                                 context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
                     }
                 });
@@ -307,7 +307,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                 ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.toString());
-                                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) +
+                                CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) +
                                         context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
                             }
                         });

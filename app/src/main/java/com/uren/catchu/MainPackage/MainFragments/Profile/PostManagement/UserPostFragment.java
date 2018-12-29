@@ -219,12 +219,12 @@ public class UserPostFragment extends BaseFragment
         if(view == fabScrollUp){
 
             if(selectedTabPosition == USER_POST_VIEW_TYPE_GRID){
-                CommonUtils.showCustomToast(getContext(), "grid için tıklandı");
+                CommonUtils.showToastShort(getContext(), "grid için tıklandı");
                 //UserPostGridViewFragment.customGridLayoutManager.smoothScrollToPosition(UserPostGridViewFragment.gridRecyclerView, null, 0);
             }
 
             if(selectedTabPosition == USER_POST_VIEW_TYPE_LIST){
-                CommonUtils.showCustomToast(getContext(), "list için tıklandı");
+                CommonUtils.showToastShort(getContext(), "list için tıklandı");
                 //UserPostListViewFragment.customLinearLayoutManager.scrollToPositionWithOffset(0,);
 
                 //UserPostListViewFragment.customLinearLayoutManager.smoothScrollToPosition(UserPostListViewFragment.listRecyclerView, null, 0);

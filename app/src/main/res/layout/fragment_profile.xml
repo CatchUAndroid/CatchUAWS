@@ -62,7 +62,7 @@
                                 android:src="@drawable/menu_white_18dp" />
 
                             <TextView
-                                android:id="@+id/pendReqCntTv"
+                                android:id="@+id/requestWaitingCntTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"

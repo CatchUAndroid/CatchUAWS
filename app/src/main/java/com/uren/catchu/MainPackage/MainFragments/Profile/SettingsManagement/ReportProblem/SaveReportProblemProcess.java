@@ -30,6 +30,7 @@ import catchu.model.Media;
 import catchu.model.Report;
 
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.REPORT_PLATFORM_ANDROID;
 import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_BUG;
 
 public class SaveReportProblemProcess {
@@ -175,6 +176,8 @@ public class SaveReportProblemProcess {
         try {
             report.setType(REPORT_PROBLEM_TYPE_BUG);
             report.setMessage(message);
+            report.setPlatform(REPORT_PLATFORM_ANDROID);
+
             if (mediaList != null && mediaList.size() > 0)
                 report.setAttachments(mediaList);
             report.setIsFixed(false);

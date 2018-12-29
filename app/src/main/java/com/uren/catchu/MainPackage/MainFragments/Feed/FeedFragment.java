@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.support.design.widget.TabItem;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 
+import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
@@ -29,13 +31,20 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SearchFragment;
 
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 
 
 public class FeedFragment extends BaseFragment implements View.OnClickListener {
@@ -58,11 +67,17 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     TabLayout tabLayout;
     @BindView(R.id.htab_viewpager)
     ViewPager viewPager;
+    @BindView(R.id.unreadMsgCntTv)
+    TextView unreadMsgCntTv;
+    @BindView(R.id.myMessagesImgv)
+    ImageView myMessagesImgv;
 
     private static final int TAB_PUBLIC = 0;
     private static final int TAB_CATCHED = 1;
 
     int selectedTabPosition = TAB_PUBLIC;
+
+    int unreadMessageCount = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -82,6 +97,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
             initItems();
             setUpPager();
             initListeners();
+            getUserUnreadMsgCount();
         }
 
 
@@ -102,6 +118,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     private void initListeners() {
         imgFilter.setOnClickListener(this);
         llSearch.setOnClickListener(this);
+        myMessagesImgv.setOnClickListener(this);
     }
 
     private void setUpPager() {
@@ -199,6 +216,21 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         this.selectedTabPosition = selectedTabPosition;
     }
 
+    public void getUserUnreadMsgCount() {
+
+        MessageGetProcess.getUnreadMessageCount(new UnreadMessageCallback() {
+            @Override
+            public void onReturn(int listSize) {
+                unreadMessageCount = listSize;
+
+                if (unreadMsgCntTv.getVisibility() == View.GONE && unreadMessageCount > 0)
+                    unreadMsgCntTv.setVisibility(View.VISIBLE);
+
+                unreadMsgCntTv.setText(Integer.toString(unreadMessageCount));
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -210,5 +242,30 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
             mFragmentNavigation.pushFragment(SearchFragment.newInstance(), "");
         }
 
+        if (view == myMessagesImgv) {
+            startMessageListActivity();
+        }
+    }
+
+    private void startMessageListActivity() {
+        if (MessageListActivity.thisActivity != null) {
+            MessageListActivity.thisActivity.finish();
+        }
+
+        final Intent intent = new Intent(getContext(), MessageListActivity.class);
+
+        if (AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty()) {
+            intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+            startActivity(intent);
+        }else {
+            AccountHolderInfo.getInstance();
+            AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
+                @Override
+                public void onAccountHolderIfoTaken(UserProfile userProfile) {
+                    intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+                    startActivity(intent);
+                }
+            });
+        }
     }
 }

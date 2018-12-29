@@ -65,7 +65,7 @@ public class CommonUtils {
     public static String exceptionErrPrefix = "--------->";
 
 
-    /*public static final void showToast(Context context, String message) {
+    public static final void showToastShort(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
@@ -73,10 +73,10 @@ public class CommonUtils {
     public static final void showToastLong(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
-    }*/
+    }
 
 
-    public static final void showCustomToast(Context context, String message) {
+    /*public static final void showCustomToast(Context context, String message) {
 
         try {
             if (context == null) return;
@@ -103,7 +103,7 @@ public class CommonUtils {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-    }
+    }*/
 
     public static final String getDeviceID(Context context) {
         return Settings.Secure.getString(context.getContentResolver(),

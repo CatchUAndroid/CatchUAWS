@@ -208,9 +208,10 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             CommonUtils.LOG_OK("LoginProcess");
 
-                            if (messagingType == null)
+                            if (messagingType == null) {
                                 startActivity(new Intent(MainActivity.this, NextActivity.class));
-                            else {
+                                finish();
+                            }else {
                                 switch (messagingType) {
                                     case FCM_MESSAGE_TYPE_NORMAL_TO_PERSON:
                                         if (!receiptUserId.isEmpty())
@@ -224,10 +225,10 @@ public class MainActivity extends AppCompatActivity {
 
                                     default:
                                         startActivity(new Intent(MainActivity.this, NextActivity.class));
+                                        finish();
                                         break;
                                 }
                             }
-                            finish();
                         }
                     }
 
@@ -256,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(FCM_CODE_SENDER_USERID, senderUserId);
         intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptUserId);
         startActivity(intent);
+        finish();
     }
 
     private void startMessageListActivity() {
@@ -266,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(FCM_CODE_SENDER_USERID, senderUserId);
         intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptUserId);
         startActivity(intent);
+        finish();
     }
 
     private void displayUserInfo(User user) {

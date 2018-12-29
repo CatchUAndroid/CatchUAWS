@@ -134,6 +134,10 @@ public class StringConstants {
     public static final String USER_POST_VIEW_TYPE_LIST = "listview";
     public static final String OTHER_PROFILE_POST_TYPE_SHARED = "otherShared";
 
+    //REPORT PLATFORM TYPES
+    public static final String REPORT_PLATFORM_ANDROID = "Android";
+    public static final String REPORT_PLATFORM_IOS = "Ios";
+
     //FIrebase messaging constants
     public static final String FB_CHILD_MESSAGES = "Messages";
     public static final String FB_CHILD_WITH_PERSON = "WithPerson";

@@ -105,7 +105,7 @@ public class SaveGroupProcess {
                                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                             new Object() {
                                             }.getClass().getEnclosingMethod().getName(), is.toString());
-                                    CommonUtils.showCustomToast(context, is.toString());
+                                    CommonUtils.showToastShort(context, is.toString());
                                     completeCallback.onFailed(new Exception(is.toString()));
                                 }
                             } catch (IOException e) {
@@ -113,7 +113,7 @@ public class SaveGroupProcess {
                                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                                CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                                 completeCallback.onFailed(e);
                             }
                         }
@@ -124,7 +124,7 @@ public class SaveGroupProcess {
                             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                            CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                            CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                             completeCallback.onFailed(e);
                         }
 
@@ -143,7 +143,7 @@ public class SaveGroupProcess {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                    CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                     completeCallback.onFailed(e);
                 }
 
@@ -231,7 +231,7 @@ public class SaveGroupProcess {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                    CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                     completeCallback.onFailed(e);
                 }
 

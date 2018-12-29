@@ -29,7 +29,7 @@
             android:checkable="true"
             android:icon="@mipmap/icon_speech_bubble"
             android:title="@string/MESSAGES"
-            app:actionLayout="@layout/navmenu_action_layout"/>
+            app:actionLayout="@layout/navmenu_message_layout"/>
     </group>
 
     <group

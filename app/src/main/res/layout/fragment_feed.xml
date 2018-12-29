@@ -95,13 +95,35 @@
 
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/llOther"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:orientation="horizontal">
+                    <RelativeLayout
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="2dp">
 
-                    </LinearLayout>
+                        <ImageView
+                            android:id="@+id/myMessagesImgv"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_margin="8dp"
+                            android:src="@mipmap/icon_speech_bubble" />
+
+                        <TextView
+                            android:id="@+id/unreadMsgCntTv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:background="@drawable/circle_text_bg"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textColor="@color/white"
+                            android:textSize="9dp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
