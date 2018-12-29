@@ -12,6 +12,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageSentFCMCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
@@ -53,9 +54,11 @@ public class MessageAddProcess {
     int notificationSendCount;
     String chattedUserDeviceToken;
     String clusterNotificationStatus;
+    String otherUserNotificationStatus;
 
     public MessageAddProcess(Context context, User chattedUser, String messageContentId, EditText messageEdittext, Button sendMessageBtn,
-                             int notificationSendCount, String chattedUserDeviceToken, String clusterNotificationStatus){
+                             int notificationSendCount, String chattedUserDeviceToken, String clusterNotificationStatus,
+                             String otherUserNotificationStatus) {
         this.context = context;
         this.chattedUser = chattedUser;
         this.messageContentId = messageContentId;
@@ -64,6 +67,7 @@ public class MessageAddProcess {
         this.notificationSendCount = notificationSendCount;
         this.chattedUserDeviceToken = chattedUserDeviceToken;
         this.clusterNotificationStatus = clusterNotificationStatus;
+        this.otherUserNotificationStatus = otherUserNotificationStatus;
     }
 
     public void addMessage() {
@@ -77,9 +81,9 @@ public class MessageAddProcess {
             if (messageContentId == null) return;
 
             final Map<String, Object> values = new HashMap<>();
-            final long messageTime = System.currentTimeMillis();
+            //final long messageTime = System.currentTimeMillis();
             values.put(FB_CHILD_CONTENT_ID, messageContentId);
-            values.put(FB_CHILD_LAST_MESSAGE_DATE, messageTime);
+            values.put(FB_CHILD_LAST_MESSAGE_DATE, ServerValue.TIMESTAMP);
 
             databaseReference.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
@@ -90,11 +94,12 @@ public class MessageAddProcess {
                             .updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            saveMessageContent(messageTime);
+                            saveMessageContent();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
+                            enableUIItems();
                             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -104,12 +109,14 @@ public class MessageAddProcess {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
+                    enableUIItems();
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                 }
             });
         } catch (Exception e) {
+            enableUIItems();
             ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -117,7 +124,12 @@ public class MessageAddProcess {
         }
     }
 
-    public  void saveMessageContent(long messageTime) {
+    public void enableUIItems(){
+        sendMessageBtn.setEnabled(true);
+        messageEdittext.setText("");
+    }
+
+    public void saveMessageContent() {
         try {
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
                     .child(messageContentId);
@@ -127,8 +139,11 @@ public class MessageAddProcess {
 
             Map<String, Object> values = new HashMap<>();
 
-            values.put(FB_CHILD_DATE, messageTime);
-            values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString());
+            System.out.println("messageEdittext.getText().toString():" +
+                    messageEdittext.getText().toString());
+
+            values.put(FB_CHILD_DATE, ServerValue.TIMESTAMP);
+            values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString().trim());
 
             Map<String, String> sender = new HashMap<>();
             sender.put(FB_CHILD_NAME, AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
@@ -146,11 +161,11 @@ public class MessageAddProcess {
                 @Override
                 public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                     sendMessageToCloudFunction(messageId);
-                    sendMessageBtn.setEnabled(true);
-                    messageEdittext.setText("");
+                    enableUIItems();
                 }
             });
         } catch (Exception e) {
+            enableUIItems();
             ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -169,6 +184,9 @@ public class MessageAddProcess {
                 return;
             }
 
+            if(otherUserNotificationStatus != null &&
+                    otherUserNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) return;
+
             UserProfileProperties userProfileProperties =
                     AccountHolderInfo.getInstance().getUser().getUserInfo();
 
@@ -183,13 +201,16 @@ public class MessageAddProcess {
                     return;
             } else return;
 
+            System.out.println("messageEdittext.getText().toString():" +
+                    messageEdittext.getText().toString());
+
             if (messageEdittext != null && messageEdittext.getText() != null &&
                     !messageEdittext.getText().toString().isEmpty()) {
 
-                if (messageEdittext.getText().toString().length() < FCM_MAX_MESSAGE_LEN)
-                    body = messageEdittext.getText().toString();
+                if (messageEdittext.getText().toString().trim().length() < FCM_MAX_MESSAGE_LEN)
+                    body = messageEdittext.getText().toString().trim();
                 else
-                    body = messageEdittext.getText().toString().substring(0, FCM_MAX_MESSAGE_LEN) + "...";
+                    body = messageEdittext.getText().toString().trim().substring(0, FCM_MAX_MESSAGE_LEN) + "...";
             } else
                 return;
 
@@ -232,51 +253,53 @@ public class MessageAddProcess {
 
     public void sendClusterMessage() {
         try {
-            if (!clusterNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) {
-                String body;
-                String title;
+            if (clusterNotificationStatus != null &&
+                    clusterNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) return;
 
-                UserProfileProperties userProfileProperties =
-                        AccountHolderInfo.getInstance().getUser().getUserInfo();
+            String body;
+            String title;
 
-                title = APP_NAME;
-                body = context.getResources().getString(R.string.YOU_HAVE_NEW_MESSAGES);
+            UserProfileProperties userProfileProperties =
+                    AccountHolderInfo.getInstance().getUser().getUserInfo();
 
-                if (chattedUserDeviceToken == null || chattedUserDeviceToken.isEmpty())
-                    return;
+            title = APP_NAME;
+            body = context.getResources().getString(R.string.YOU_HAVE_NEW_MESSAGES);
 
-                FCMItems fcmItems = new FCMItems();
-                fcmItems.setBody(body);
-                fcmItems.setOtherUserDeviceToken(chattedUserDeviceToken);
-                fcmItems.setTitle(title);
-                fcmItems.setSenderUserid(userProfileProperties.getUserid());
-                fcmItems.setReceiptUserid(chattedUser.getUserid());
+            if (chattedUserDeviceToken == null || chattedUserDeviceToken.isEmpty())
+                return;
 
-                SendClusterMessageToFCM.sendMessage(context,
-                        fcmItems,
-                        new MessageSentFCMCallback() {
-                            @Override
-                            public void onSuccess() {
-                                MessageUpdateProcess.updateClusterStatus(chattedUser.getUserid(),
-                                        FB_VALUE_NOTIFICATION_SEND, new MessageUpdateCallback() {
-                                            @Override
-                                            public void onComplete() {
+            FCMItems fcmItems = new FCMItems();
+            fcmItems.setBody(body);
+            fcmItems.setOtherUserDeviceToken(chattedUserDeviceToken);
+            fcmItems.setTitle(title);
+            fcmItems.setSenderUserid(userProfileProperties.getUserid());
+            fcmItems.setReceiptUserid(chattedUser.getUserid());
 
-                                            }
+            SendClusterMessageToFCM.sendMessage(context,
+                    fcmItems,
+                    new MessageSentFCMCallback() {
+                        @Override
+                        public void onSuccess() {
+                            MessageUpdateProcess.updateClusterStatus(chattedUser.getUserid(),
+                                    FB_VALUE_NOTIFICATION_SEND, new MessageUpdateCallback() {
+                                        @Override
+                                        public void onComplete() {
 
-                                            @Override
-                                            public void onFailed(String errMessage) {
+                                        }
 
-                                            }
-                                        });
-                            }
+                                        @Override
+                                        public void onFailed(String errMessage) {
 
-                            @Override
-                            public void onFailed(Exception e) {
+                                        }
+                                    });
+                        }
 
-                            }
-                        });
-            }
+                        @Override
+                        public void onFailed(Exception e) {
+
+                        }
+                    });
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
                     new Object() {

@@ -26,11 +26,11 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
 
 public class MessageUpdateProcess {
 
-    public static void updateReceiptIsSeenValue(final Context context, int firstVisibleItemPosition, final ArrayList<MessageBox> messageBoxList,
+    public static void updateReceiptIsSeenValue(final Context context, int lastVisibleItemPosition, final ArrayList<MessageBox> messageBoxList,
                                                  String messageContentId) {
 
         try {
-            for (int index = firstVisibleItemPosition; index >= 0; index--) {
+            for (int index = lastVisibleItemPosition; index >= 0; index--) {
                 final MessageBox messageBox = messageBoxList.get(index);
 
                 if (messageBox != null && messageBox.isReceiptIsSeen() == false && messageContentId != null) {

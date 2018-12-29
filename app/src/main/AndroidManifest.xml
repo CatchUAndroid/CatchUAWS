@@ -134,8 +134,8 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".LoginPackage.AppIntroductionActivity" />
-        <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.MessageListActivity" />
-        <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity"></activity>
+        <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity" />
+        <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity"></activity>
     </application>
 
 </manifest>

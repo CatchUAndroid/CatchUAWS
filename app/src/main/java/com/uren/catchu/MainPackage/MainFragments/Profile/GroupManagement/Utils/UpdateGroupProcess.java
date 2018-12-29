@@ -98,14 +98,14 @@ public class UpdateGroupProcess {
                                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                             new Object() {
                                             }.getClass().getEnclosingMethod().getName(), is.toString());
-                                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + is.toString());
+                                    CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + is.toString());
                                     updateGroupCallback.onFailed(new Exception(is.toString()));
                                 }
                             } catch (IOException e) {
                                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                         new Object() {
                                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                                CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                                 updateGroupCallback.onFailed(e);
                             }
                         }
@@ -115,7 +115,7 @@ public class UpdateGroupProcess {
                             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                            CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                            CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                             updateGroupCallback.onFailed(e);
                         }
 
@@ -134,7 +134,7 @@ public class UpdateGroupProcess {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                    CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                     updateGroupCallback.onFailed(e);
                 }
 
@@ -185,7 +185,7 @@ public class UpdateGroupProcess {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                    CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                     updateGroupCallback.onFailed(e);
                 }
 

@@ -106,7 +106,7 @@ public class SharePostProcess {
             public void onFailure(Exception e) {
                 //dialogDismiss();
                 Log.i("Info", "Paylasim Exception yedi2:" + e.getMessage());
-                CommonUtils.showCustomToast(context, context.getResources().getString(R.string.error) + e.getMessage());
+                CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                 serviceCompleteCallback.onFailed(e);
                 signedUrlGetProcess.cancel(true);
             }

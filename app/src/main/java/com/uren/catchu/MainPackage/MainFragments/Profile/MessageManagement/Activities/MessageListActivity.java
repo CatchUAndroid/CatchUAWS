@@ -1,4 +1,4 @@
-package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement;
+package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,13 +26,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageWithPersonActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -43,6 +47,8 @@ import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 import io.fabric.sdk.android.Fabric;
 
+import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.REC_MAXITEM_LIMIT_COUNT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
@@ -62,6 +68,7 @@ public class MessageListActivity extends AppCompatActivity {
 
     ImageView searchToolbarBackImgv;
     ImageView imgCancelSearch;
+    ImageView searchToolbarAddItemImgv;
     EditText editTextSearch;
     ProgressBar progressBar;
     RecyclerView recyclerView;
@@ -76,13 +83,17 @@ public class MessageListActivity extends AppCompatActivity {
 
     boolean setAdapterVal = false;
     boolean adapterLoaded = false;
+    boolean dataLoaded = true;
+
+    int limitValue;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
 
     String receiptUserId; // Bu benim
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_message_list);
+        setContentView(R.layout.activity_message_list);
         thisActivity = this;
         Fabric.with(this, new Crashlytics());
 
@@ -96,6 +107,9 @@ public class MessageListActivity extends AppCompatActivity {
         try {
             initUIValues();
             messageListBoxes = new ArrayList<>();
+            searchToolbarAddItemImgv.setVisibility(View.GONE);
+            setRecyclerViewScroll();
+            limitValue = REC_MAXITEM_LIMIT_COUNT;
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
                     new Object() {
@@ -107,6 +121,7 @@ public class MessageListActivity extends AppCompatActivity {
     private void initUIValues() {
         searchToolbarBackImgv = findViewById(R.id.searchToolbarBackImgv);
         imgCancelSearch = findViewById(R.id.imgCancelSearch);
+        searchToolbarAddItemImgv = findViewById(R.id.searchToolbarAddItemImgv);
         editTextSearch = findViewById(R.id.editTextSearch);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
@@ -151,20 +166,51 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     public void addListeners() {
-        try {
-            searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    onBackPressed();
-                }
-            });
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.toString() != null && !s.toString().trim().isEmpty()) {
+                    if (messageListAdapter != null)
+                        messageListAdapter.updateAdapter(s.toString());
+                    imgCancelSearch.setVisibility(View.VISIBLE);
+                    searchToolbarBackImgv.setVisibility(View.GONE);
+                } else {
+                    if (messageListAdapter != null)
+                        messageListAdapter.updateAdapter("");
+                    imgCancelSearch.setVisibility(View.GONE);
+                    searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (editTextSearch != null)
+                    editTextSearch.setText("");
+                imgCancelSearch.setVisibility(View.GONE);
+                CommonUtils.hideKeyBoard(MessageListActivity.this);
+                searchToolbarBackImgv.setVisibility(View.VISIBLE);
+
+            }
+        });
     }
 
     public void getMessages() {
@@ -174,8 +220,7 @@ public class MessageListActivity extends AppCompatActivity {
 
             Query query = databaseReference
                     .orderByChild(FB_CHILD_MESSAGE_CONTENT + "/" + FB_CHILD_LAST_MESSAGE_DATE)
-                    .limitToLast(20);
-            // TODO: 19.12.2018 - buraya bakacagiz
+                    .limitToLast(limitValue);
 
             valueEventListener = query.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -189,6 +234,11 @@ public class MessageListActivity extends AppCompatActivity {
                             System.out.println("getMessages.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
                             System.out.println("getMessages.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
                             getUserDetail(outboundSnapshot);
+                        }
+
+                        if (!dataLoaded) {
+                            dataLoaded = true;
+                            messageListAdapter.removeProgressLoading();
                         }
                     }
                 }
@@ -204,6 +254,32 @@ public class MessageListActivity extends AppCompatActivity {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    private void setRecyclerViewScroll() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (dataLoaded) {
+
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            dataLoaded = false;
+                            limitValue = limitValue + REC_MAXITEM_LIMIT_COUNT;
+                            messageListAdapter.addProgressLoading();
+                            getMessages();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void getUserDetail(final DataSnapshot outboundSnapshot) {

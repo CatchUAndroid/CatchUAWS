@@ -694,7 +694,7 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onFailure(Exception e) {
                         startAppIntroPage();
-                        CommonUtils.showCustomToast(LoginActivity.this, e.toString());
+                        CommonUtils.showToastShort(LoginActivity.this, e.toString());
                     }
 
                     @Override

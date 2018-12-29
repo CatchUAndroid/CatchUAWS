@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.firebase.client.ServerValue;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -57,7 +59,7 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 
-public class MessageWithPersonAdapter extends RecyclerView.Adapter{
+public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 
     private Context context;
     private ArrayList<MessageBox> messageBoxArrayList;
@@ -126,7 +128,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             }
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -138,51 +140,44 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
         EmojiconTextView messageTv;
         TextView createAtTv;
         CardView messageCardview;
-        RelativeLayout mainRelLayout;
+        View mainRelLayout;
         int position;
         MessageBox messageBox;
 
         public MessageWithPersonHolder(View view) {
             super(view);
 
-            try {
-                messageTv = view.findViewById(R.id.messageTv);
-                createAtTv = view.findViewById(R.id.createAtTv);
-                messageCardview = view.findViewById(R.id.messageCardview);
-                mainRelLayout = view.findViewById(R.id.mainRelLayout);
+            messageTv = view.findViewById(R.id.messageTv);
+            createAtTv = view.findViewById(R.id.createAtTv);
+            messageCardview = view.findViewById(R.id.messageCardview);
+            mainRelLayout = view.findViewById(R.id.mainRelLayout);
 
-                messageCardview.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        deleteActivated = true;
-                        messageDeleteCallback.OnDeleteActivated(deleteActivated);
-                        return false;
-                    }
-                });
+            messageCardview.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    deleteActivated = true;
+                    messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                    return false;
+                }
+            });
 
-                messageCardview.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            messageCardview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                        if (deleteActivated) {
-                            if (messageBox.isSelectedForDelete()) {
-                                messageBox.setSelectedForDelete(false);
-                                setSelectedDeleteValues();
-                            } else {
-                                messageBox.setSelectedForDelete(true);
-                                setSelectedDeleteValues();
-                            }
-
-                            checkDeletedMessages();
+                    if (deleteActivated) {
+                        if (messageBox.isSelectedForDelete()) {
+                            messageBox.setSelectedForDelete(false);
+                            setSelectedDeleteValues();
+                        } else {
+                            messageBox.setSelectedForDelete(true);
+                            setSelectedDeleteValues();
                         }
+
+                        checkDeletedMessages();
                     }
-                });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                }
+            });
         }
 
         public void setData(MessageBox messageBox, int position) {
@@ -191,9 +186,10 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                 this.position = position;
                 setMessageDetails();
                 setCardViewPosition();
+                setRelLayoutWidth();
                 setSelectedDeleteValues();
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -218,7 +214,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     }
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -227,25 +223,44 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
 
         public void setCardViewPosition() {
             try {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
+                params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+
                 if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
-                    params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
                     params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                     params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    messageCardview.setLayoutParams(params);
                     messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.PowderBlue, null),
                             0, GradientDrawable.RECTANGLE, 15, 0));
+
                 } else {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
-                    params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
                     params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                     params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    messageCardview.setLayoutParams(params);
                     messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
                             0, GradientDrawable.RECTANGLE, 15, 0));
                 }
+
+                messageCardview.setLayoutParams(params);
+
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
+        }
+
+        public void setRelLayoutWidth() {
+            try {
+                RecyclerView.LayoutParams paramsRel = (RecyclerView.LayoutParams) mainRelLayout.getLayoutParams();
+                if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID()))
+                    mainRelLayout.setPadding(120, 0, 0, 0);
+                else
+                    mainRelLayout.setPadding(0, 0, 120, 0);
+
+                mainRelLayout.setLayoutParams(paramsRel);
+
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -259,7 +274,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                 else
                     mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -283,7 +298,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
                     deleteMsgCntTv.setText(Integer.toString(deleteCount));
                 }
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
@@ -319,7 +334,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter{
             if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
                 listSize = messageBoxArrayList.size();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

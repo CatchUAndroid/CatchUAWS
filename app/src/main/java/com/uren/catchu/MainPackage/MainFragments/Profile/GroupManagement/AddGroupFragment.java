@@ -153,7 +153,7 @@ public class AddGroupFragment extends BaseFragment {
             public void onClick(View v) {
                 CommonUtils.hideKeyBoard(getContext());
                 if (groupNameEditText.getText().toString().equals("") || groupNameEditText.getText() == null) {
-                    CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.pleaseWriteGroupName));
+                    CommonUtils.showToastShort(getContext(), getResources().getString(R.string.pleaseWriteGroupName));
                     return;
                 }
                 saveGroup();
@@ -221,7 +221,7 @@ public class AddGroupFragment extends BaseFragment {
     public void startCameraProcess() {
 
         if (!CommonUtils.checkCameraHardware(getContext())) {
-            CommonUtils.showCustomToast(getContext(), getResources().getString(R.string.deviceHasNoCamera));
+            CommonUtils.showToastShort(getContext(), getResources().getString(R.string.deviceHasNoCamera));
             return;
         }
 

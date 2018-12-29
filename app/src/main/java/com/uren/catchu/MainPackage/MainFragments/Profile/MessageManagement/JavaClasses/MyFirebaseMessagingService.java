@@ -33,6 +33,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.ReceiveMessageBox;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -48,6 +49,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
+import catchu.model.User;
 
 import static com.uren.catchu.Constants.NumericConstants.MAX_ALLOWED_NOTIFICATION_SIZE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
@@ -65,10 +68,6 @@ import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_CLUSTER
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-
-    private static final String TAG = "MyFirebaseMsgService";
-    DatabaseReference databaseReference;
-    ValueEventListener valueEventListener;
 
     /**
      * Called when message is received.
@@ -96,88 +95,35 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        Log.d(TAG, "From: " + remoteMessage.getFrom());
-
-        // Check if message contains a data payload.
-        /*if (remoteMessage.getData().size() > 0) {
-
-            if (true) {
-                // For long-running tasks (10 seconds or more) use Firebase Job Dispatcher.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
-
-        }*/
-
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-        }
-
         if (remoteMessage.getData().size() > 0 && remoteMessage.getNotification() != null) {
             String photoUrl = (String) remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
 
-            if(photoUrl == null) photoUrl = "";
+            if (photoUrl == null) photoUrl = "";
 
-            new GetNotification(remoteMessage).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoUrl);
-            //checkMessageIsSeen(remoteMessage);
+            if (!checkMessagingPageIsOpen(remoteMessage))
+                new GetNotification(remoteMessage).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoUrl);
         }
     }
 
-    /*public void checkMessageIsSeen(final RemoteMessage remoteMessage) {
-
+    private boolean checkMessagingPageIsOpen(RemoteMessage remoteMessage) {
         try {
-            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES)
-                    .child(FB_CHILD_WITH_PERSON)
-                    .child((String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID))
-                    .child((String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID))
-                    .child(FB_CHILD_MESSAGE_CONTENT)
-                    .child(FB_CHILD_PAGE_IS_SEEN);
+            if(MessageWithPersonActivity.thisActivity != null){
 
-            valueEventListener = databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    try {
-                        if (dataSnapshot != null) {
-                            boolean pageSeen = (boolean) dataSnapshot.getValue();
+                User chattedUser = MessageWithPersonActivity.chattedUser;
+                String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
+                String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
 
-                            if (!pageSeen){
-                                new GetNotification(remoteMessage).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,
-                                        (String) remoteMessage.getData().get(FCM_CODE_PHOTO_URL));
-                            }
-
-                            if (databaseReference != null && valueEventListener != null)
-                                databaseReference.removeEventListener(valueEventListener);
-                        }
-                    } catch (Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(null, MyFirebaseMessagingService.class.getSimpleName(),
-                                new Object() {
-                                }.getClass().getEnclosingMethod().getName(), e.toString());
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    ErrorSaveHelper.writeErrorToDB(null, MyFirebaseMessagingService.class.getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), databaseError.toString());
-
-                    if (databaseReference != null && valueEventListener != null)
-                        databaseReference.removeEventListener(valueEventListener);
-                }
-            });
+                if(senderId.equals(chattedUser.getUserid()) && receiptId.equals(AccountHolderInfo.getUserID()))
+                    return true;
+            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, MyFirebaseMessagingService.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-    }*/
+        return false;
+    }
 
     /**
      * Called if InstanceID token is updated. This may occur if the security of
@@ -186,7 +132,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
 
         try {
             FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
@@ -202,35 +147,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    /**
-     * Schedule a job using FirebaseJobDispatcher.
-     */
-    private void scheduleJob() {
-        // [START dispatch_job]
-        FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(new GooglePlayDriver(this));
-        Job myJob = dispatcher.newJobBuilder()
-                .setService(MyJobService.class)
-                .setTag("my-job-tag")
-                .build();
-        dispatcher.schedule(myJob);
-        // [END dispatch_job]
-    }
-
-    /**
-     * Handle time allotted to BroadcastReceivers.
-     */
-    private void handleNow() {
-        Log.d(TAG, "Short lived task is done.");
-    }
-
-    /**
-     * Persist token to third-party servers.
-     * <p>
-     * Modify this method to associate the user's FCM InstanceID token with any server-side account
-     * maintained by your application.
-     *
-     * @param token The new token.
-     */
     public static void sendRegistrationToServer(String token, String userid) {
 
         try {
@@ -291,7 +207,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .setContentIntent(pendingIntent)
                     .setDeleteIntent(getDeleteIntent());
 
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
                 notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
@@ -319,12 +234,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 notificationManager.createNotificationChannel(channel);
             }
 
-            //ReceivingMessageUtil.getInstance().getListSize() ;
-
-            notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-
-           /* ReceiveMessageBox receiveMessageBox = new ReceiveMessageBox();
-            receiveMessageBox.setNotificationId();*/
+            notificationManager.notify(NotificationID.getID(), notificationBuilder.build());
 
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
@@ -334,8 +244,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    protected PendingIntent getDeleteIntent()
-    {
+    protected PendingIntent getDeleteIntent() {
         Intent intent = new Intent(this, NotificationBroadcastReceiver.class);
         intent.setAction("notification_cancelled");
         return PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -356,7 +265,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 String photoUrl = urls[0];
                 Bitmap myBitmap = null;
 
-                if(photoUrl != null && !photoUrl.isEmpty()) {
+                if (photoUrl != null && !photoUrl.isEmpty()) {
                     URL url = new URL(urls[0]);
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     connection.setDoInput(true);

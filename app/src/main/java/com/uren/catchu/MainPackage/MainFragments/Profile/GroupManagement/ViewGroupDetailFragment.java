@@ -215,7 +215,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
-                    CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.error) +
+                    CommonUtils.showToastShort(getActivity(), getResources().getString(R.string.error) +
                             getResources().getString(R.string.SOMETHING_WENT_WRONG));
                 }
             });
@@ -478,7 +478,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
         try {
             if (!CommonUtils.checkCameraHardware(getActivity())) {
-                CommonUtils.showCustomToast(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
+                CommonUtils.showToastShort(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
                 return;
             }
 

@@ -8,23 +8,36 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetContentIdCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetDeviceTokenCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.NotificationStatusCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CLUSTER_STATUS;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATIONS;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATION_STATUS;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_DELETE;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
@@ -40,6 +53,9 @@ public class MessageGetProcess {
 
     static DatabaseReference notificationReference;
     static ValueEventListener notificationListener;
+
+    static DatabaseReference tokenReference;
+    static ValueEventListener tokenListener;
 
     public static void getContentId(User chattedUser,
                                     final GetContentIdCallback getContentIdCallback) {
@@ -170,6 +186,93 @@ public class MessageGetProcess {
         }
     }
 
+    public static void getOtherUserDeviceToken(final Context context, User chattedUser,
+                                               final GetDeviceTokenCallback getDeviceTokenCallback) {
+
+        try {
+            tokenReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
+                    .child(chattedUser.getUserid()).child(FB_CHILD_TOKEN);
+
+            tokenListener = tokenReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    if (dataSnapshot != null)
+                        getDeviceTokenCallback.onSuccess((String) dataSnapshot.getValue());
+
+                    tokenReference.removeEventListener(tokenListener);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), databaseError.toString());
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, MessageGetProcess.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public static void getUnreadMessageCount(final UnreadMessageCallback unreadMessageCallback) {
+        DatabaseReference unreadMessageReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                .child(AccountHolderInfo.getUserID());
+
+        unreadMessageReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList<String> contentIdList = new ArrayList<>();
+                for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
+                    Map<String, Object> map = (Map) dataSnapshot1.getValue();
+                    Map<String, Object> messageContentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
+                    String contentId = (String) messageContentMap.get(FB_CHILD_CONTENT_ID);
+                    contentIdList.add(contentId);
+                }
+                getUnreadMessageDetails(contentIdList, unreadMessageCallback);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getUnreadMessageDetails(ArrayList<String> contentIdList, final UnreadMessageCallback unreadMessageCallback) {
+
+        final Map<String, String> uniqueContentIdMap = new HashMap<>();
+        for (final String contentId : contentIdList) {
+            DatabaseReference unreadMessageReference1 = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT).child(contentId);
+            Query query = unreadMessageReference1.orderByChild(FB_CHILD_RECEIPT + "/" + FB_CHILD_IS_SEEN).equalTo(false);
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
+                        Map<String, Object> map = (Map) dataSnapshot2.getValue();
+                        Map<String, Object> receiptMap = (Map) map.get(FB_CHILD_RECEIPT);
+                        String receiptUserId = (String) receiptMap.get(FB_CHILD_USERID);
+
+                        if (receiptUserId != null && receiptUserId.equals(AccountHolderInfo.getUserID())) {
+                            uniqueContentIdMap.put(contentId, contentId);
+                            unreadMessageCallback.onReturn(uniqueContentIdMap.size());
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+    }
+
     public static void removeAllListeners() {
         if (contentIdReference != null && contentIdListener != null)
             contentIdReference.removeEventListener(contentIdListener);
@@ -179,5 +282,8 @@ public class MessageGetProcess {
 
         if (notificationReference != null && notificationListener != null)
             notificationReference.removeEventListener(notificationListener);
+
+        if (tokenReference != null && tokenListener != null)
+            tokenReference.removeEventListener(tokenListener);
     }
 }
