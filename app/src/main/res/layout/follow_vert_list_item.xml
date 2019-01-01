@@ -21,10 +21,11 @@
                 android:id="@+id/rlUserInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="10dp"
-                android:paddingRight="11dp">
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
 
                 <LinearLayout
+                    android:id="@+id/xxxxx"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -58,7 +59,7 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="5"
+                        android:layout_weight="6"
                         android:gravity="center_vertical">
 
                         <LinearLayout
@@ -85,7 +86,6 @@
                         </LinearLayout>
 
 
-
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -99,13 +99,11 @@
                             android:layout_height="40dp"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginRight="10dp"
                             android:text="@string/follow"
                             android:textAllCaps="false"
                             android:textSize="10sp" />
 
                     </RelativeLayout>
-
 
 
                 </LinearLayout>

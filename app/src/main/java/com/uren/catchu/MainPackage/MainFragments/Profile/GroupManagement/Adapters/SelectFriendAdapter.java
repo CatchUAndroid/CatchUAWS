@@ -190,23 +190,11 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
             try {
                 this.position = position;
                 this.selectedFriend = selectedFriend;
-                setProfileName();
-                setUserName();
+                UserDataUtil.setName(selectedFriend.getName(), nameTextView);
+                UserDataUtil.setUsername(selectedFriend.getUsername(), usernameTextView);
                 UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                         selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView);
                 updateRadioButtonValue();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
-        }
-
-        public void setUserName() {
-            try {
-                if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().trim().isEmpty())
-                    this.usernameTextView.setText(selectedFriend.getUsername());
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -221,18 +209,6 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                     selectRadioBtn.setChecked(true);
                 else
                     selectRadioBtn.setChecked(false);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
-        }
-
-        public void setProfileName() {
-            try {
-                if (selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
-                    UserDataUtil.setName(selectedFriend.getName(), nameTextView);
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -283,8 +259,13 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                         FriendList tempFriendList = new FriendList();
                         List<UserProfileProperties> userList = new ArrayList<>();
                         tempFriendList.setResultArray(userList);
+
                         for (UserProfileProperties userProfileProperties : orginalFriendList.getResultArray()) {
-                            if (userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase()))
+                            if (userProfileProperties.getName() != null &&
+                                    userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase()))
+                                tempFriendList.getResultArray().add(userProfileProperties);
+                            else if (userProfileProperties.getUsername() != null &&
+                                    userProfileProperties.getUsername().toLowerCase().contains(searchString.toLowerCase()))
                                 tempFriendList.getResultArray().add(userProfileProperties);
                         }
                         friendList.setResultArray(tempFriendList.getResultArray());

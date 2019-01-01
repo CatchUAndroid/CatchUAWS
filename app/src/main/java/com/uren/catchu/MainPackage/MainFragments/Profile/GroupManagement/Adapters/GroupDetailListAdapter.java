@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +24,6 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithGroupAdapter;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -35,6 +33,8 @@ import java.util.List;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
+
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 
 public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailListAdapter.GroupDetailListHolder> {
 
@@ -154,7 +154,8 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                                 adapter.add(context.getResources().getString(R.string.changeAsAdmin));
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle(userProfile.getName());
+
+                            builder.setTitle(getAlertDialogTitle());
 
                             builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int item) {
@@ -183,6 +184,15 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                     }
                 }
             });
+        }
+
+        public String getAlertDialogTitle(){
+            String title = "";
+            if(userProfile.getName() != null && !userProfile.getName().isEmpty())
+                title = userProfile.getName();
+            else if(userProfile.getUsername() != null && !userProfile.getUsername().isEmpty())
+                title = CHAR_AMPERSAND + userProfile.getUsername();
+            return title;
         }
 
         public User getFollowProperties() {
@@ -221,23 +231,6 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 e.printStackTrace();
             }
         }
-
-        /*public void setName() {
-            if (AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().trim().isEmpty() &&
-                    userProfile.getUserid() != null && !userProfile.getUserid().trim().isEmpty()) {
-
-                if (AccountHolderInfo.getUserID().equals(userProfile.getUserid()))
-                    this.nameSurname.setText(context.getResources().getString(R.string.youText));
-                else
-                    UserDataUtil.setName(userProfile.getName(), nameSurname);
-            } else if (userProfile.getName() != null && !userProfile.getName().trim().isEmpty())
-                UserDataUtil.setName(userProfile.getName(), nameSurname);
-        }
-
-        public void setUserName() {
-            if (userProfile.getUsername() != null && !userProfile.getUsername().trim().isEmpty())
-                this.username.setText(userProfile.getUsername());
-        }*/
 
         public void setGroupAdmin() {
             try {

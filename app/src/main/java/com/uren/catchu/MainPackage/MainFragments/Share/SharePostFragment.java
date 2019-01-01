@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -856,6 +857,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void openCameraForPhotoSelect() {
         try {
+            //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            //StrictMode.setVmPolicy(builder.build());
             photoUri = Uri.fromFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_IMAGE_SIZE);
@@ -967,7 +970,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                 if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
                         !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
-                    UserDataUtil.setName(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
+                    UserDataUtil.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
                 }
             }
         } catch (Exception e) {
@@ -1429,7 +1432,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void onDestroy() {
         super.onDestroy();
         try {
-            keyboardHeightProvider.close();
+            if (keyboardHeightProvider != null)
+                keyboardHeightProvider.close();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
