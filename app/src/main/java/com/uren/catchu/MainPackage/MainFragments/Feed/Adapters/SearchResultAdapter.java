@@ -254,6 +254,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         diffResult.dispatchUpdatesTo(this);
     }
 
+    public void clearList() {
+        int listSize = userList.size();
+        userList.clear();
+        notifyItemRangeChanged(0, listSize);
+    }
+
     public void setListItemClickListener(ListItemClickListener listItemClickListener) {
         this.listItemClickListener = listItemClickListener;
     }

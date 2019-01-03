@@ -29,10 +29,16 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoLis
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.User;
 import catchu.model.UserListResponse;
+
+import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
 
 public class SearchFragment extends BaseFragment
         implements View.OnClickListener, ListItemClickListener {
@@ -55,6 +61,11 @@ public class SearchFragment extends BaseFragment
 
     @BindView(R.id.edtSearch)
     EditText edtSearch;
+
+    private Timer timer;
+
+    public SearchFragment() {
+    }
 
     public static SearchFragment newInstance() {
         Bundle args = new Bundle();
@@ -107,22 +118,47 @@ public class SearchFragment extends BaseFragment
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
+                // user is typing: reset already started timer (if existing)
+                if (timer != null) {
+                    timer.cancel();
+                }
 
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                tempSearchText = edtSearch.getText().toString();
 
-                if (tempSearchText.matches("")) {
-                    searchText = tempSearchText;
-                    return;
-                }
+                // user typed: start the timer
+                timer = new Timer();
+                timer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        // do your actual work here
+                        tempSearchText = edtSearch.getText().toString();
 
-                if (!tempSearchText.matches(searchText)) {
-                    searchText = tempSearchText;
-                    getSearchResult();
-                }
+                        if (tempSearchText.matches("")) {
+                            searchText = tempSearchText;
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    searchResultAdapter.clearList();
+                                }
+                            });
+
+                            return;
+                        }
+
+                        if (!tempSearchText.matches(searchText)) {
+                            searchText = tempSearchText;
+                            getSearchResult();
+                        }
+                    }
+                }, 1000); // 600ms delay before the timer executes the „run“ method from TimerTask
+
+
+
+
             }
         });
 
