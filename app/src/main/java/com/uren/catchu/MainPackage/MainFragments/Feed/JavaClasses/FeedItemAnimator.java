@@ -58,7 +58,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         if (viewHolder.getItemViewType() == FeedAdapter.VIEW_ITEM) {
             if (viewHolder.getLayoutPosition() > lastAddAnimatedItem) {
                 lastAddAnimatedItem++;
-                runEnterAnimation((FeedAdapter.MyViewHolder) viewHolder);
+                runEnterAnimation(viewHolder);
                 return false;
             }
         }
@@ -67,7 +67,7 @@ public class FeedItemAnimator extends DefaultItemAnimator {
         return false;
     }
 
-    private void runEnterAnimation(final FeedAdapter.MyViewHolder holder) {
+    private void runEnterAnimation(final RecyclerView.ViewHolder holder) {
         final int screenHeight = Utils.getScreenHeight(holder.itemView.getContext());
         holder.itemView.setTranslationY(screenHeight);
         holder.itemView.animate()

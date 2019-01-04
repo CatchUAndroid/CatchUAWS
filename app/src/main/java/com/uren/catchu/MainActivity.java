@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Fabric.with(this, new Crashlytics());
+        CommonUtils.hideKeyBoard(this);
         initVariables();
 
         CommonUtils.LOG_NEREDEYIZ("MainActivity");

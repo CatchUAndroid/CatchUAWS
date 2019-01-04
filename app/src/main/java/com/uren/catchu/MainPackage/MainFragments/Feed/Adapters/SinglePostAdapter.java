@@ -304,7 +304,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
                         @Override
                         public void onDeletePostSelected() {
-                            if(postDeletedCallback !=  null){
+                            if (postDeletedCallback != null) {
                                 postDeletedCallback.onPostDeleted();
                                 PostHelper.SinglePostClicked.postDeleted(feedPosition, numberOfCallback);
                             }
@@ -315,14 +315,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             });
 
             //Location Detail Layout
-            /* TODO : NT - profil imajı yüklenmeli..
             imgBtnLocationDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, txtProfilePic, imgProfilePic);
                 }
             });
-            */
+
 
         }
 
@@ -376,8 +375,10 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             //Location show on map
             if (!post.getIsShowOnMap()) {
                 imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgBtnLocationDetail.setEnabled(false);
             } else {
                 imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgBtnLocationDetail.setEnabled(true);
             }
             //Create at
             if (post.getCreateAt() != null) {
@@ -707,7 +708,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         notifyItemRangeChanged(0, postList.size(), PARTIAL_DATA_LOADING);
     }
 
-    public void removeAllComments(){
+    public void removeAllComments() {
         commentList.clear();
     }
 

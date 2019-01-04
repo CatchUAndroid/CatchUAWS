@@ -380,8 +380,10 @@ public class FeedAdapter extends RecyclerView.Adapter {
             //Location show on map
             if (!post.getIsShowOnMap()) {
                 imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgBtnLocationDetail.setEnabled(false);
             } else {
                 imgBtnLocationDetail.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgBtnLocationDetail.setEnabled(true);
             }
             //Create at
             if (post.getCreateAt() != null) {
@@ -514,6 +516,5 @@ public class FeedAdapter extends RecyclerView.Adapter {
             progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
         }
     }
-
 
 }

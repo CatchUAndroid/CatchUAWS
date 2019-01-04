@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainPackage.MainFragments.Feed.SubFragments.PersonListFragment">
-
-    <include layout="@layout/layout_progress_bar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,6 +12,13 @@
 
         <include layout="@layout/toolbar_search" />
 
+        <TextView
+            android:id="@+id/txtResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColor="@color/gray"
+            android:textSize="17sp" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_recyclerView"
@@ -24,9 +28,6 @@
 
         </android.support.v7.widget.RecyclerView>
 
-
     </LinearLayout>
 
-
-
-</RelativeLayout>
+</FrameLayout>

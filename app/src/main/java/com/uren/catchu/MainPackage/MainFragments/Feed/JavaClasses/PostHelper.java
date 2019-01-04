@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -339,6 +341,8 @@ public class PostHelper {
 
                         MarkerOptions options = new MarkerOptions().position(latLng);
                         Bitmap bitmap = BitmapConversion.createUserMapBitmap(context, imgProfilePic);
+                        //Bitmap bitmap = ((BitmapDrawable)imgProfilePic.getDrawable()).getBitmap();
+
                         if (bitmap != null) {
                             options.title(post.getUser().getName());
                             options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
@@ -362,7 +366,6 @@ public class PostHelper {
                         setMyLocation(context);
                     }
                 });
-
 
             }
         }
