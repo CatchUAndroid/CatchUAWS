@@ -35,6 +35,8 @@ public class ViewPagerUtils {
         if(dotscount<2){
             sliderDotspanel.setVisibility(View.GONE);
             return;
+        }else{
+            sliderDotspanel.setVisibility(View.VISIBLE);
         }
 
         for (int i = 0; i < dotscount; i++) {

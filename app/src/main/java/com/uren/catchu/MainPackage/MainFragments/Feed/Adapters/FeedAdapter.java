@@ -357,12 +357,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
                 this.txtDetail.setVisibility(View.GONE);
             }
             //Attachments
-            if (post.getAttachments().size() > 0) {
-                setViewPager(post);
-                viewPager.setVisibility(View.VISIBLE);
-            } else {
-                viewPager.setVisibility(View.GONE);
-            }
+            setViewPager(post);
             //Like
             if (post.getIsLiked()) {
                 setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, false);
@@ -456,10 +451,14 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setViewPager(Post post) {
 
-            viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), fragmentNavigation));
-            viewPager.setOffscreenPageLimit(post.getAttachments().size());
-            if (post.getAttachments().size() > 0) {
-                ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
+            ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
+
+            if(post.getAttachments().size() > 0){
+                viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), fragmentNavigation));
+                viewPager.setOffscreenPageLimit(post.getAttachments().size());
+                viewPager.setVisibility(View.VISIBLE);
+            }else{
+                viewPager.setVisibility(View.GONE);
             }
 
         }
