@@ -69,6 +69,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.Camera2VideoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
@@ -497,6 +498,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                     @Override
                     public void onCameraSelected() {
+                        //mFragmentNavigation.pushFragment(new Camera2VideoFragment());
                         checkCameraProcess();
                     }
 
