@@ -215,13 +215,13 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
     }
 
     public void addProgressLoading() {
-        messageBoxArrayList.add(0, null);
-        notifyItemInserted(0);
+        messageBoxArrayList.add(null);
+        notifyItemInserted(messageBoxArrayList.size() - 1);
     }
 
     public void removeProgressLoading() {
-        messageBoxArrayList.remove(0);
-        notifyItemRemoved(0);
+        messageBoxArrayList.remove(messageBoxArrayList.size() - 1);
+        notifyItemRemoved(messageBoxArrayList.size());
     }
 
     public boolean isShowingProgressLoading() {
@@ -304,11 +304,6 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
                 try {
                     messageBoxArrayList = (ArrayList<MessageListBox>) filterResults.values;
                     notifyDataSetChanged();
-
-                   /* if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
-                        returnCallback.onReturn(contactFriendModelList.size());
-                    else
-                        returnCallback.onReturn(0);*/
                 } catch (Exception e) {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {

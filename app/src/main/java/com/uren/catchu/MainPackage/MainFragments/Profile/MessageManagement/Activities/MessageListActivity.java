@@ -222,24 +222,20 @@ public class MessageListActivity extends AppCompatActivity {
                     .orderByChild(FB_CHILD_MESSAGE_CONTENT + "/" + FB_CHILD_LAST_MESSAGE_DATE)
                     .limitToLast(limitValue);
 
-            valueEventListener = query.addValueEventListener(new ValueEventListener() {
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
 
-                        System.out.println("dataSnapshot.getKey():" + dataSnapshot.getKey());
-                        System.out.println("dataSnapshot.getValue():" + dataSnapshot.getValue());
-
-                        for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
-                            System.out.println("getMessages.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-                            System.out.println("getMessages.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
-                            getUserDetail(outboundSnapshot);
-                        }
-
                         if (!dataLoaded) {
                             dataLoaded = true;
-                            messageListAdapter.removeProgressLoading();
+                            if (messageListAdapter.isShowingProgressLoading())
+                                messageListAdapter.removeProgressLoading();
                         }
+
+                        for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren())
+                            if (outboundSnapshot != null)
+                                getUserDetail(outboundSnapshot);
                     }
                 }
 
@@ -254,32 +250,6 @@ public class MessageListActivity extends AppCompatActivity {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-    }
-
-    private void setRecyclerViewScroll() {
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (dy > 0) {
-                    visibleItemCount = linearLayoutManager.getChildCount();
-                    totalItemCount = linearLayoutManager.getItemCount();
-                    pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
-
-                    if (dataLoaded) {
-
-                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
-                            dataLoaded = false;
-                            limitValue = limitValue + REC_MAXITEM_LIMIT_COUNT;
-                            messageListAdapter.addProgressLoading();
-                            getMessages();
-                        }
-                    }
-                }
-            }
-        });
     }
 
     private void getUserDetail(final DataSnapshot outboundSnapshot) {
@@ -330,18 +300,12 @@ public class MessageListActivity extends AppCompatActivity {
 
                 Query query = databaseReference.orderByChild(FB_CHILD_DATE).limitToLast(1);
 
-                valueEventListener = query.addValueEventListener(new ValueEventListener() {
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
                         if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
-                            System.out.println("xxxxxxxx>dataSnapshot.getKey():" + dataSnapshot.getKey());
-                            System.out.println("xxxxxxxx>dataSnapshot.getValue():" + dataSnapshot.getValue());
-
                             for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                System.out.println("---->child.getKey():" + child.getKey());
-                                System.out.println("---->child.getValue():" + child.getValue());
-
                                 messageBoxListCheck(child, userProfileProperties);
                                 adapterLoadCheck();
                             }
@@ -364,6 +328,32 @@ public class MessageListActivity extends AppCompatActivity {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    private void setRecyclerViewScroll() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (dataLoaded) {
+
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            dataLoaded = false;
+                            limitValue = limitValue + REC_MAXITEM_LIMIT_COUNT;
+                            messageListAdapter.addProgressLoading();
+                            getMessages();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private void messageBoxListCheck(DataSnapshot mDataSnapshot, UserProfileProperties userProfileProperties) {

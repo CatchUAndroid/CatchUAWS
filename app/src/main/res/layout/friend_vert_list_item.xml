@@ -42,7 +42,7 @@
                     android:visibility="gone" />
             </FrameLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -64,7 +64,40 @@
                     android:textColor="@color/tintColor"
                     android:textSize="10dp"
                     android:textStyle="italic" />
-            </LinearLayout>
+            </LinearLayout>-->
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="5"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/nameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/usernameTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+
+
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="0dp"

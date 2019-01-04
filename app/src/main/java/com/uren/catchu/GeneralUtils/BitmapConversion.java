@@ -84,9 +84,11 @@ public class BitmapConversion extends AppCompatActivity {
         try {
             if (mBitmap != null)
                 bitmap = mBitmap;
-            else if (drawableItem != 0)
-                bitmap = BitmapFactory.decodeResource(context.getResources(), drawableItem);
-            else return;
+            else if (drawableItem != 0) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 1;
+                bitmap = BitmapFactory.decodeResource(context.getResources(), drawableItem, options);
+            }else return;
 
             Bitmap blurBitmap = BlurBuilder.blur(context, bitmap, bitmapScale, blurRadius);
             Drawable dr = new BitmapDrawable(context.getResources(), blurBitmap);

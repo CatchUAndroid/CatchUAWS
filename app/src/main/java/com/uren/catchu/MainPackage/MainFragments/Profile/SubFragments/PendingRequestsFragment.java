@@ -64,8 +64,13 @@ public class PendingRequestsFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
-            mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
-            ButterKnife.bind(this, mView);
+            if(mView == null) {
+                mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
+                ButterKnife.bind(this, mView);
+                toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
+                addListeners();
+                getData();
+            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
                     new Object() {
@@ -77,16 +82,7 @@ public class PendingRequestsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        try {
-            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
-            addListeners();
-            getData();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+
     }
 
     private void addListeners() {
@@ -178,7 +174,6 @@ public class PendingRequestsFragment extends BaseFragment {
     }
 
     private void startFollowingInfoProcess(User user, int clickedPosition) {
-
         try {
             if (mFragmentNavigation != null) {
                 UserInfoListItem userInfoListItem = new UserInfoListItem(user);

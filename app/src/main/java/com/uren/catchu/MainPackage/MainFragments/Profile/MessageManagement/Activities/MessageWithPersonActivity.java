@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,10 +36,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
+import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetContentIdCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetDeviceTokenCallback;
@@ -51,6 +54,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaC
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -82,6 +86,7 @@ import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_RE
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
+import static com.uren.catchu.MainPackage.NextActivity.TABS;
 
 public class MessageWithPersonActivity extends AppCompatActivity {
 
@@ -152,6 +157,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_with_person);
         thisActivity = this;
+
         context = MessageWithPersonActivity.this;
         Fabric.with(this, new Crashlytics());
         initUIValues();
@@ -486,7 +492,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
                     if (chattedUser != null && chattedUser.getProfilePhotoUrl() != null &&
                             !chattedUser.getProfilePhotoUrl().isEmpty()) {
-                        //mFragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(chattedUser.getProfilePhotoUrl()));
+                        //mNavController.pushFragment(new ShowSelectedPhotoFragment(chattedUser.getProfilePhotoUrl()));
                     }
                 }
             });

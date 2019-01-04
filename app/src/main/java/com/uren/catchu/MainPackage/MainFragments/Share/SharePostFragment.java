@@ -17,6 +17,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -68,6 +69,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.Camera2VideoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
@@ -496,6 +498,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                     @Override
                     public void onCameraSelected() {
+                        //mFragmentNavigation.pushFragment(new Camera2VideoFragment());
                         checkCameraProcess();
                     }
 
@@ -856,6 +859,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void openCameraForPhotoSelect() {
         try {
+            //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            //StrictMode.setVmPolicy(builder.build());
             photoUri = Uri.fromFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_IMAGE_SIZE);
@@ -967,7 +972,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                 if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
                         !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
-                    UserDataUtil.setName(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
+                    UserDataUtil.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
                 }
             }
         } catch (Exception e) {
@@ -1429,7 +1434,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void onDestroy() {
         super.onDestroy();
         try {
-            keyboardHeightProvider.close();
+            if (keyboardHeightProvider != null)
+                keyboardHeightProvider.close();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
