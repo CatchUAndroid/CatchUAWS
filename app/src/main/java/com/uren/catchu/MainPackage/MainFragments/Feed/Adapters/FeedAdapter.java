@@ -517,5 +517,4 @@ public class FeedAdapter extends RecyclerView.Adapter {
         }
     }
 
-
 }

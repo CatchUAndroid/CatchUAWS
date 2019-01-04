@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -18,6 +19,7 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -42,7 +44,11 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
-public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapter.MyViewHolder> {
+public class SearchResultAdapter extends RecyclerView.Adapter {
+
+    public static final int VIEW_PROG = 0;
+    public static final int VIEW_ITEM = 1;
+    public static final int VIEW_NULL = 2;
 
     private Context mContext;
     private List<User> userList;
@@ -60,11 +66,57 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.follow_vert_list_item, parent, false);
+    public int getItemViewType(int position) {
+        if (userList.size() > 0 && position >= 0) {
+            return userList.get(position) != null ? VIEW_ITEM : VIEW_PROG;
+        } else {
+            return VIEW_NULL;
+        }
+    }
 
-        return new MyViewHolder(itemView);
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        RecyclerView.ViewHolder viewHolder = null;
+        try {
+            if (viewType == VIEW_ITEM) {
+                View itemView = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.follow_vert_list_item, parent, false);
+
+                viewHolder = new MyViewHolder(itemView);
+            } else {
+                View v = LayoutInflater.from(parent.getContext()).inflate(
+                        R.layout.progressbar_item, parent, false);
+
+                viewHolder = new ProgressViewHolder(v);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+        return viewHolder;
+
+    }
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        try {
+            if (holder instanceof MyViewHolder) {
+                User user = userList.get(position);
+                ((MyViewHolder) holder).setData(user, position);
+            } else {
+                ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -216,10 +268,41 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
         }
     }
 
-    @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        User user = userList.get(position);
-        holder.setData(user, position);
+    public static class ProgressViewHolder extends RecyclerView.ViewHolder {
+        public ProgressBar progressBar;
+
+        public ProgressViewHolder(View v) {
+            super(v);
+            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+        }
+    }
+
+    public void addProgressLoading() {
+        try {
+            if (getItemViewType(userList.size() - 1) != VIEW_PROG) {
+                userList.add(null);
+                notifyItemInserted(userList.size() - 1);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public void removeProgressLoading() {
+        try {
+            if (getItemViewType(userList.size() - 1) == VIEW_PROG) {
+                userList.remove(userList.size() - 1);
+                notifyItemRemoved(userList.size());
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -236,28 +319,45 @@ public class SearchResultAdapter extends RecyclerView.Adapter<SearchResultAdapte
     }
 
     public void addAll(UserListResponse userListResponse) {
-
-        if (userListResponse != null) {
-
-            userList.addAll(userListResponse.getItems());
-            notifyItemRangeInserted(userList.size(), userList.size() + userListResponse.getItems().size());
-
+        try {
+            if (userListResponse != null) {
+                userList.addAll(userListResponse.getItems());
+                notifyItemRangeInserted(userList.size(), userList.size() + userListResponse.getItems().size());
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
     public void updateListItems(List<User> newUserList) {
-        final SearchResultDiffCallback diffCallback = new SearchResultDiffCallback(this.getPersonList(), newUserList);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        try {
+            final SearchResultDiffCallback diffCallback = new SearchResultDiffCallback(this.getPersonList(), newUserList);
+            final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
-        this.userList.clear();
-        this.userList.addAll(newUserList);
-        diffResult.dispatchUpdatesTo(this);
+            this.userList.clear();
+            this.userList.addAll(newUserList);
+            diffResult.dispatchUpdatesTo(this);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void clearList() {
-        int listSize = userList.size();
-        userList.clear();
-        notifyItemRangeChanged(0, listSize);
+        try {
+            userList.clear();
+            notifyDataSetChanged();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void setListItemClickListener(ListItemClickListener listItemClickListener) {

@@ -16,13 +16,17 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -39,6 +43,7 @@ import catchu.model.User;
 import catchu.model.UserListResponse;
 
 import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 public class SearchFragment extends BaseFragment
         implements View.OnClickListener, ListItemClickListener {
@@ -53,14 +58,13 @@ public class SearchFragment extends BaseFragment
     @BindView(R.id.search_recyclerView)
     RecyclerView recyclerView;
 
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-
     @BindView(R.id.imgCancel)
     ClickableImageView imgCancel;
 
     @BindView(R.id.edtSearch)
     EditText edtSearch;
+    @BindView(R.id.txtResult)
+    TextView txtResult;
 
     private Timer timer;
 
@@ -84,17 +88,26 @@ public class SearchFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (mView == null) {
-            mView = inflater.inflate(R.layout.search_person_fragment, container, false);
-            ButterKnife.bind(this, mView);
+        try {
+            if (mView == null) {
+                mView = inflater.inflate(R.layout.search_person_fragment, container, false);
+                ButterKnife.bind(this, mView);
 
-            initListeners();
-            initRecyclerView();
-            //getPersonList();
+                showResultView(true,getString(R.string.searchUser));
+                initListeners();
+                initRecyclerView();
+                //getPersonList();
+            }
+
+            edtSearch.requestFocus();
+            showKeyboard(true);
+
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-
-        edtSearch.requestFocus();
-        showKeyboard(true);
 
         return mView;
     }
@@ -102,7 +115,7 @@ public class SearchFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void initListeners() {
@@ -133,31 +146,39 @@ public class SearchFragment extends BaseFragment
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        // do your actual work here
-                        tempSearchText = edtSearch.getText().toString();
 
-                        if (tempSearchText.matches("")) {
-                            searchText = tempSearchText;
+                        try {
+                            // do your actual work here
+                            tempSearchText = edtSearch.getText().toString();
 
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    searchResultAdapter.clearList();
-                                }
-                            });
+                            if (tempSearchText.matches("")) {
 
-                            return;
-                        }
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        searchText = tempSearchText;
+                                        searchResultAdapter.addProgressLoading();
+                                        searchResultAdapter.clearList();
+                                        searchResultAdapter.removeProgressLoading();
+                                        showResultView(true,getString(R.string.searchUser));
+                                    }
+                                });
 
-                        if (!tempSearchText.matches(searchText)) {
-                            searchText = tempSearchText;
-                            getSearchResult();
+                                return;
+                            }
+
+                            if (!tempSearchText.matches(searchText)) {
+                                searchText = tempSearchText;
+                                getSearchResult();
+                            }
+                        } catch (Exception e) {
+                            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                                    new Object() {
+                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                            e.printStackTrace();
                         }
                     }
-                }, 1000); // 600ms delay before the timer executes the „run“ method from TimerTask
-
-
-
+                }, 800);
 
             }
         });
@@ -172,6 +193,7 @@ public class SearchFragment extends BaseFragment
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new FeedItemAnimator());
     }
 
     private void setAdapter() {
@@ -181,13 +203,40 @@ public class SearchFragment extends BaseFragment
     }
 
     private void showKeyboard(boolean showKeyboard) {
-        if (showKeyboard) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-        } else {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+
+        try {
+            if (showKeyboard) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            } else {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void showResultView(boolean isShowResult, @Nullable String msg) {
+        try {
+            if(isShowResult){
+                if(msg!= null){
+                    txtResult.setText(msg);
+                    txtResult.setVisibility(View.VISIBLE);
+                }
+            }else{
+                txtResult.setText("");
+                txtResult.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -216,7 +265,7 @@ public class SearchFragment extends BaseFragment
 
         String userId = AccountHolderInfo.getUserID();
         String page = "1";
-        String perPage = "500";
+        String perPage = "5000";
 
         SearchResultProcess searchResultProcess = new SearchResultProcess(getActivity(), new OnEventListener<UserListResponse>() {
 
@@ -228,18 +277,17 @@ public class SearchFragment extends BaseFragment
                     CommonUtils.LOG_OK("SearchResultProcess");
                     setUpRecyclerView(userListResponse);
                 }
-                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("SearchResultProcess", e.toString());
-                progressBar.setVisibility(View.GONE);
+                searchResultAdapter.removeProgressLoading();
             }
 
             @Override
             public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
+                searchResultAdapter.addProgressLoading();
             }
         }, userId, searchText, perPage, page, token);
 
@@ -249,20 +297,36 @@ public class SearchFragment extends BaseFragment
 
     private void setUpRecyclerView(UserListResponse userListResponse) {
 
-        for(int i=0; i<userListResponse.getItems().size(); i++){
-            Log.i("user ", userListResponse.getItems().get(i).getName());
+        try {
+            searchResultAdapter.removeProgressLoading();
+            searchResultAdapter.updateListItems(userListResponse.getItems());
+
+            if(userListResponse.getItems().size() > 0){
+                showResultView(false,null);
+            }else{
+                showResultView(true, getString(R.string.THERE_IS_NO_SEARCH_RESULT));
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-
-        searchResultAdapter.updateListItems(userListResponse.getItems());
     }
-
 
     @Override
     public void onClick(View view, User user, int clickedPosition) {
-        showKeyboard(false);
-        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-        userInfoListItem.setAdapter(searchResultAdapter);
-        userInfoListItem.setClickedPosition(clickedPosition);
-        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
+        try {
+            showKeyboard(false);
+            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+            userInfoListItem.setAdapter(searchResultAdapter);
+            userInfoListItem.setClickedPosition(clickedPosition);
+            PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
