@@ -169,14 +169,29 @@ public class UserDataUtil {
         }
     }
 
-    public static void updatePendingButton(Context context, Button displayButton) {
+    public static void updatePendingApproveButton(Context context, Button displayButton) {
         try {
             CommonUtils.hideKeyBoard(context);
             GradientDrawable buttonShape;
-            displayButton.setText(context.getResources().getString(R.string.ACCEPT_REQUEST));
             displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
             buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 15, 0);
+            displayButton.setBackground(buttonShape);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public static void updatePendingRejectButton(Context context, Button displayButton) {
+        try {
+            CommonUtils.hideKeyBoard(context);
+            GradientDrawable buttonShape;
+            displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                    context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
             displayButton.setBackground(buttonShape);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),

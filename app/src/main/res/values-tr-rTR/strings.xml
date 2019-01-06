@@ -267,6 +267,8 @@
     <string name="CLEAR_CHAT">Sohbeti Temizle</string>
     <string name="YOU_HAVE_A_NEW_MESSAGE">Yeni mesajınız var</string>
     <string name="YOU_HAVE_NEW_MESSAGES">Yeni mesajlarınız var</string>
+    <string name="ACCEPT">Onayla</string>
+    <string name="REJECT">Reddet</string>
 
     <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfen Ayarlar\'dan konum izinlerini aktifleştirin.</string>
