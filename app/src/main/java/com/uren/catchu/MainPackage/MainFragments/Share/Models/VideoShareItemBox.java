@@ -22,10 +22,6 @@ public class VideoShareItemBox {
         return videoSelectUtil;
     }
 
-    public void setVideoSelectUtil(VideoSelectUtil videoSelectUtil) {
-        this.videoSelectUtil = videoSelectUtil;
-    }
-
     public boolean isThumbnailImgUploaded() {
         return thumbnailImgUploaded;
     }

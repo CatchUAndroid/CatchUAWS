@@ -170,7 +170,6 @@ public class StringConstants {
     public static final String FCM_CODE_SENDER_USERID = "SENDER_USERID";
     public static final String FCM_CODE_RECEIPT_USERID = "RECEIPT_USERID";
     public static final String FCM_CODE_MESSAGE_ID = "MESSAGE_ID";
-    public static final String FCM_CODE_WILL_START_FRAGMENT = "WILL_START_FRAGMENT";
     public static final String FCM_CODE_CHATTED_USER = "CHATTED_USER";
 
     public static final String FCM_CODE_BODY = "body";

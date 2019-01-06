@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -80,13 +81,11 @@ public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             fileInputStream.close();
             dos.flush();
             dos.close();
-        } catch (MalformedURLException e) {
-            mException = e;
-            e.printStackTrace();
-            Log.e("Upload file to server", "error: " + e.getMessage(), e);
         } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
-            e.printStackTrace();
             e.printStackTrace();
         }
 

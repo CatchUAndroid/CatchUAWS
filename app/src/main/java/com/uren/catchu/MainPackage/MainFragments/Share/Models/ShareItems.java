@@ -1,10 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Models;
 
-import android.graphics.Bitmap;
-
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +15,14 @@ public class ShareItems {
     Post post;
     List<ImageShareItemBox> imageShareItemBoxes;
     List<VideoShareItemBox> videoShareItemBoxes;
-    Bitmap textBitmap;
     String selectedShareType;
     int shareTryCount = 0;
     BucketUploadResponse bucketUploadResponse;
     GroupRequestResultResultArrayItem selectedGroup;
 
     public ShareItems() {
-        imageShareItemBoxes = new ArrayList<ImageShareItemBox>();
-        videoShareItemBoxes = new ArrayList<VideoShareItemBox>();
+        imageShareItemBoxes = new ArrayList<>();
+        videoShareItemBoxes = new ArrayList<>();
         selectedGroup = new GroupRequestResultResultArrayItem();
         post = new Post();
         post.setAttachments(new ArrayList<Media>());
@@ -44,28 +38,12 @@ public class ShareItems {
         this.post = post;
     }
 
-    public Bitmap getTextBitmap() {
-        return textBitmap;
-    }
-
-    public void setTextBitmap(Bitmap textBitmap) {
-        this.textBitmap = textBitmap;
-    }
-
     public List<ImageShareItemBox> getImageShareItemBoxes() {
         return imageShareItemBoxes;
     }
 
-    public void setImageShareItemBoxes(List<ImageShareItemBox> imageShareItemBoxes) {
-        this.imageShareItemBoxes = imageShareItemBoxes;
-    }
-
     public List<VideoShareItemBox> getVideoShareItemBoxes() {
         return videoShareItemBoxes;
-    }
-
-    public void setVideoShareItemBoxes(List<VideoShareItemBox> videoShareItemBoxes) {
-        this.videoShareItemBoxes = videoShareItemBoxes;
     }
 
     public void addImageShareItemBox(ImageShareItemBox shareItemBox) {
@@ -82,10 +60,6 @@ public class ShareItems {
 
     public void clearVideoShareItemBox() {
         videoShareItemBoxes.clear();
-    }
-
-    public int getTotalMediaCount() {
-        return videoShareItemBoxes.size() + imageShareItemBoxes.size();
     }
 
     public String getSelectedShareType() {

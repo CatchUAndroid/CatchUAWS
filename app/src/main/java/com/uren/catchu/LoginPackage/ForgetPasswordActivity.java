@@ -3,6 +3,7 @@ package com.uren.catchu.LoginPackage;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.R;
@@ -53,12 +55,18 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
     }
 
     private void setShapes() {
-        lockImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
-                0, GradientDrawable.OVAL, 50, 0));
-        emailET.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
-                0, GradientDrawable.RECTANGLE, 20, 0));
-        btnSendLink.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.colorPrimary, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 3));
+        try {
+            lockImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
+                    0, GradientDrawable.OVAL, 50, 0));
+            emailET.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                    0, GradientDrawable.RECTANGLE, 20, 0));
+            btnSendLink.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.colorPrimary, null),
+                    getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 3));
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(ForgetPasswordActivity.this,this.getClass().getSimpleName(),
+                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void init() {
@@ -108,31 +116,43 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
 
     private void btnSendLinkClicked() {
 
-        progressDialog.setMessage(this.getString(R.string.PLEASE_WAIT));
-        progressDialog.show();
+        try {
+            progressDialog.setMessage(this.getString(R.string.PLEASE_WAIT));
+            progressDialog.show();
 
-        userEmail = emailET.getText().toString();
+            userEmail = emailET.getText().toString();
 
-        //validation controls
-        if (!checkValidation(userEmail)) {
-            return;
+            //validation controls
+            if (!checkValidation(userEmail)) {
+                return;
+            }
+
+            sendLinkToMail(userEmail);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(ForgetPasswordActivity.this,this.getClass().getSimpleName(),
+                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
-
-        sendLinkToMail(userEmail);
     }
 
     private boolean checkValidation(String userEmail) {
 
-        if (!Validation.getInstance().isValidEmail(this, userEmail)) {
-            progressDialog.dismiss();
-            DialogBoxUtil.showInfoDialogBox(ForgetPasswordActivity.this,
-                    Validation.getInstance().getErrorMessage(), null, new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
+        try {
+            if (!Validation.getInstance().isValidEmail(this, userEmail)) {
+                progressDialog.dismiss();
+                DialogBoxUtil.showInfoDialogBox(ForgetPasswordActivity.this,
+                        Validation.getInstance().getErrorMessage(), null, new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
 
-                        }
-                    });
-            return false;
+                            }
+                        });
+                return false;
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(ForgetPasswordActivity.this,this.getClass().getSimpleName(),
+                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
         return true;
     }
@@ -141,40 +161,53 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
 
         final Context context = this;
 
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        ActionCodeSettings actionCodeSettings = ActionCodeSettings.newBuilder()
-                .setAndroidPackageName("uren.com.catchu", true, null)
-                .setHandleCodeInApp(false)
-                .setIOSBundleId(null)
-                .setUrl("https://catchu-594ca.firebaseapp.com/")
-                .build();
-
+        FirebaseAuth auth = null;
+        ActionCodeSettings actionCodeSettings = null;
+        try {
+            auth = FirebaseAuth.getInstance();
+            actionCodeSettings = ActionCodeSettings.newBuilder()
+                    .setAndroidPackageName("uren.com.catchu", true, null)
+                    .setHandleCodeInApp(false)
+                    .setIOSBundleId(null)
+                    .setUrl("https://catchu-594ca.firebaseapp.com/")
+                    .build();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(ForgetPasswordActivity.this,this.getClass().getSimpleName(),
+                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
 
         auth.sendPasswordResetEmail(userEmail, actionCodeSettings)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        progressDialog.dismiss();
-                        if (task.isSuccessful()) {
-                            Log.i("reset Email status :", "Email sent success.");
+                        try {
+                            progressDialog.dismiss();
+                            if (task.isSuccessful()) {
+                                Log.i("reset Email status :", "Email sent success.");
 
-                            DialogBoxUtil.showInfoDialogBox(ForgetPasswordActivity.this,
-                                    context.getString(R.string.PASSWORD_LINK_SEND_SUCCESS), null, new InfoDialogBoxCallback() {
-                                        @Override
-                                        public void okClick() {
+                                DialogBoxUtil.showInfoDialogBox(ForgetPasswordActivity.this,
+                                        context.getString(R.string.PASSWORD_LINK_SEND_SUCCESS), null, new InfoDialogBoxCallback() {
+                                            @Override
+                                            public void okClick() {
 
-                                        }
-                                    });
-                        } else {
-                            Log.i("reset Email status :", "Email sent fail.");
+                                            }
+                                        });
+                            } else {
+                                Log.i("reset Email status :", "Email sent fail.");
 
-                            DialogBoxUtil.showInfoDialogBox(ForgetPasswordActivity.this,
-                                    context.getString(R.string.PASSWORD_LINK_SEND_FAIL), null, new InfoDialogBoxCallback() {
-                                        @Override
-                                        public void okClick() {
+                                DialogBoxUtil.showInfoDialogBox(ForgetPasswordActivity.this,
+                                        context.getString(R.string.PASSWORD_LINK_SEND_FAIL), null, new InfoDialogBoxCallback() {
+                                            @Override
+                                            public void okClick() {
 
-                                        }
-                                    });
+                                            }
+                                        });
+                            }
+                        } catch (Exception e) {
+                            ErrorSaveHelper.writeErrorToDB(ForgetPasswordActivity.this,this.getClass().getSimpleName(),
+                                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                            e.printStackTrace();
                         }
 
                     }

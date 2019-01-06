@@ -1,6 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
@@ -67,7 +65,8 @@ public class PendingRequestsFragment extends BaseFragment {
             if(mView == null) {
                 mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
                 ButterKnife.bind(this, mView);
-                toolbarTitleTv.setText(getActivity().getResources().getString(R.string.PENDING_REQUESTS));
+                toolbarTitleTv.setText(getContext().getResources().getString(R.string.PENDING_REQUESTS));
+                warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
                 addListeners();
                 getData();
             }
@@ -115,8 +114,7 @@ public class PendingRequestsFragment extends BaseFragment {
                     FriendRequestList friendRequestList = (FriendRequestList) object;
 
                     if(getContext() != null) {
-                        MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
-                                getContext().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                        setMessageWarning(friendRequestList);
 
                         pendingRequestAdapter = new PendingRequestAdapter(getContext(), friendRequestList, new ListItemClickListener() {
                             @Override
@@ -129,9 +127,8 @@ public class PendingRequestsFragment extends BaseFragment {
                                 AccountHolderFollowProcess.getPendingList(new CompleteCallback() {
                                     @Override
                                     public void onComplete(Object object) {
-                                        FriendRequestList friendRequestList = (FriendRequestList) object;
-                                        MessageDataUtil.setWarningMessageVisibility(friendRequestList, warningMsgTv,
-                                                getActivity().getResources().getString(R.string.THERE_IS_NO_PENDING_REQUEST));
+                                        FriendRequestList friendRequestList1 = (FriendRequestList) object;
+                                        setMessageWarning(friendRequestList1);
                                     }
 
                                     @Override
@@ -171,6 +168,14 @@ public class PendingRequestsFragment extends BaseFragment {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void setMessageWarning(FriendRequestList friendRequestList) {
+        if(friendRequestList != null && friendRequestList.getResultArray() != null &&
+                friendRequestList.getResultArray().size() > 0)
+            warningMsgTv.setVisibility(View.GONE);
+        else
+            warningMsgTv.setVisibility(View.VISIBLE);
     }
 
     private void startFollowingInfoProcess(User user, int clickedPosition) {

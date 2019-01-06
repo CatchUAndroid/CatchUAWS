@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement;
 
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,7 +23,6 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
@@ -34,7 +32,6 @@ import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.UserGroupsListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.UpdateGroupProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -100,7 +97,7 @@ public class GroupManagementFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        NextActivity.bottomTabLayout.setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -133,6 +130,7 @@ public class GroupManagementFragment extends BaseFragment {
         try {
             searchToolbarLayout.setVisibility(View.VISIBLE);
             searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
+            warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
             setFloatButtonVisibility();
             getGroups();
         } catch (Exception e) {
@@ -258,8 +256,7 @@ public class GroupManagementFragment extends BaseFragment {
                             groupRequestResult = (GroupRequestResult) object;
 
                             if (getContext() != null) {
-                                MessageDataUtil.setWarningMessageVisibility(groupRequestResult, warningMsgTv,
-                                        getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+                                setMessageWarning(groupRequestResult);
 
                                 userGroupsListAdapter = new UserGroupsListAdapter(getContext(), groupRequestResult, new ReturnCallback() {
                                     @Override
@@ -325,6 +322,14 @@ public class GroupManagementFragment extends BaseFragment {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    private void setMessageWarning(GroupRequestResult groupRequestResult) {
+        if(groupRequestResult != null && groupRequestResult.getResultArray() != null &&
+                groupRequestResult.getResultArray().size() > 0)
+            warningMsgTv.setVisibility(View.GONE);
+        else
+            warningMsgTv.setVisibility(View.VISIBLE);
     }
 
     public void localGroupOperation(int opType, GroupRequestResultResultArrayItem arrayItem) {

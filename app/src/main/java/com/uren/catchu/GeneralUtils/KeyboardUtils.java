@@ -8,6 +8,8 @@ import android.view.ViewTreeObserver;
 import android.content.Context;
 import android.view.inputmethod.InputMethodManager;
 
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+
 import java.util.HashMap;
 
 /**
@@ -34,24 +36,31 @@ public class KeyboardUtils implements ViewTreeObserver.OnGlobalLayoutListener
     @Override
     public void onGlobalLayout()
     {
-        Rect r = new Rect();
-        mRootView.getWindowVisibleDisplayFrame(r);
+        try {
+            Rect r = new Rect();
+            mRootView.getWindowVisibleDisplayFrame(r);
 
-        System.out.println("mRootView.getRootView().getHeight()1:" + mRootView.getRootView().getHeight());
-        System.out.println("r.bottom:" + r.bottom);
-        System.out.println("r.top:" + r.top);
+            System.out.println("mRootView.getRootView().getHeight()1:" + mRootView.getRootView().getHeight());
+            System.out.println("r.bottom:" + r.bottom);
+            System.out.println("r.top:" + r.top);
 
-        int heightDiff = mRootView.getRootView().getHeight() - (r.bottom - r.top);
-        float dp = heightDiff/ mScreenDensity;
-        boolean isVisible = dp > MAGIC_NUMBER;
+            int heightDiff = mRootView.getRootView().getHeight() - (r.bottom - r.top);
+            float dp = heightDiff/ mScreenDensity;
+            boolean isVisible = dp > MAGIC_NUMBER;
 
-        System.out.println("heightDiff:" + heightDiff);
-        System.out.println("dp        :" + dp);
-        System.out.println("mRootView.getRootView().getHeight()2:" + mRootView.getRootView().getHeight());
+            System.out.println("heightDiff:" + heightDiff);
+            System.out.println("dp        :" + dp);
+            System.out.println("mRootView.getRootView().getHeight()2:" + mRootView.getRootView().getHeight());
 
-        if (mCallback != null && (prevValue == null || isVisible != prevValue)) {
-            prevValue = isVisible;
-            mCallback.onToggleSoftKeyboard(isVisible, heightDiff, dp);
+            if (mCallback != null && (prevValue == null || isVisible != prevValue)) {
+                prevValue = isVisible;
+                mCallback.onToggleSoftKeyboard(isVisible, heightDiff, dp);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, FileAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 

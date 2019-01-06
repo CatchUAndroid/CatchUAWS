@@ -197,6 +197,8 @@ public class UserDataUtil {
                 CommonUtils.hideKeyBoard(context);
 
             GradientDrawable buttonShape = null;
+            displayButton.setVisibility(View.VISIBLE);
+
             if (followStatus.equals(FOLLOW_STATUS_FOLLOWING)) {
                 //takip ediliyor
                 displayButton.setText(context.getResources().getString(R.string.following));

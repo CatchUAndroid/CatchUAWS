@@ -30,6 +30,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
@@ -184,19 +185,33 @@ public class VerifyPhoneNumberFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length() == 6) {
-                    commonToolbarTickImgv.setVisibility(View.VISIBLE);
-                } else
-                    commonToolbarTickImgv.setVisibility(View.GONE);
+                try {
+                    if (s.toString().length() == 6) {
+                        commonToolbarTickImgv.setVisibility(View.VISIBLE);
+                    } else
+                        commonToolbarTickImgv.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
             }
         });
 
         sendCodeAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                warningMessageTv.setVisibility(View.GONE);
-                phoneVerification.resendVerificationCode(phone.getDialCode().trim() + phone.getPhoneNumber().toString().trim(), phoneVerification.getmResendToken());
-                setTimer();
+                try {
+                    warningMessageTv.setVisibility(View.GONE);
+                    phoneVerification.resendVerificationCode(phone.getDialCode().trim() + phone.getPhoneNumber().toString().trim(), phoneVerification.getmResendToken());
+                    setTimer();
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                            ((Button) v).getText().toString() + " - " + new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -239,23 +254,30 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     public void setTimer() {
-        sendCodeAgainBtn.setEnabled(false);
+        try {
+            sendCodeAgainBtn.setEnabled(false);
 
-        new CountDownTimer(VERIFY_PHONE_NUM_DURATION * 1000, 1000) {
+            new CountDownTimer(VERIFY_PHONE_NUM_DURATION * 1000, 1000) {
 
-            int duration = VERIFY_PHONE_NUM_DURATION;
+                int duration = VERIFY_PHONE_NUM_DURATION;
 
-            public void onTick(long millisUntilFinished) {
-                remainingTimeTv.setText(checkDigit(duration));
-                duration--;
-            }
+                public void onTick(long millisUntilFinished) {
+                    remainingTimeTv.setText(checkDigit(duration));
+                    duration--;
+                }
 
-            public void onFinish() {
-                remainingTimeTv.setText(checkDigit(0));
-                sendCodeAgainBtn.setEnabled(true);
-                warningMessageTv.setVisibility(View.VISIBLE);
-            }
-        }.start();
+                public void onFinish() {
+                    remainingTimeTv.setText(checkDigit(0));
+                    sendCodeAgainBtn.setEnabled(true);
+                    warningMessageTv.setVisibility(View.VISIBLE);
+                }
+            }.start();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     public String checkDigit(int number) {

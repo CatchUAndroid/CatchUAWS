@@ -7,7 +7,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +24,6 @@ import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FragmentTabHiddenUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
@@ -48,7 +46,6 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_WILL_START_FRAGMENT;
 
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
@@ -284,12 +281,6 @@ public class NextActivity extends AppCompatActivity implements
 
     @Override
     public void onBackPressed() {
-
-        if (mNavController != null && mNavController.getCurrentFrag() != null) {
-            if (FragmentTabHiddenUtil.isFragmentInHiddenList(mNavController.getCurrentFrag().getClass().getName()) &&
-                    bottomTabLayout != null)
-                bottomTabLayout.setVisibility(View.VISIBLE);
-        }
 
         if (!mNavController.isRootFragment()) {
             setTransactionOption();
