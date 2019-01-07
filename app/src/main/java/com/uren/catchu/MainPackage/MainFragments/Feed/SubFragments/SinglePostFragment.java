@@ -276,8 +276,6 @@ public class SinglePostFragment extends BaseFragment
         }
     }
 
-
-
     private void setVariables() {
 
         //toolbar

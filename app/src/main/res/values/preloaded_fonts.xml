@@ -4,5 +4,7 @@
         <item>@font/alike_angular</item>
         <item>@font/capriola</item>
         <item>@font/pacifico</item>
+        <item>@font/roboto</item>
+        <item>@font/roboto_thin</item>
     </array>
 </resources>

@@ -140,6 +140,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:text="contentText"
+                android:fontFamily="@font/roboto"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 

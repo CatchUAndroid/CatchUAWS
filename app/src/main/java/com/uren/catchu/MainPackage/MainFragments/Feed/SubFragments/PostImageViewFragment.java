@@ -32,6 +32,7 @@ import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 public class PostImageViewFragment extends BaseFragment {
 
@@ -80,8 +81,12 @@ public class PostImageViewFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        imgFeedItem.getImageMatrix();
-        imgFeedItem.setOnTouchListener(new ImageZoomListener(initMatrix));
+        //imgFeedItem.getImageMatrix();
+        //imgFeedItem.setOnTouchListener(new ImageZoomListener(initMatrix));
+
+        //yeni
+        PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(imgFeedItem);
+        photoViewAttacher.update();
     }
 
     private void setImage() {
