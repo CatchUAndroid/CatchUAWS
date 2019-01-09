@@ -105,6 +105,7 @@ public class StringConstants {
 
     //Dynamic Link constants
     public static final String DYNAMIC_LINK_DOMAIN = "f2wrp.app.goo.gl";
+    public static final String APP_INVITATION_LINK = "https://f2wrp.app.goo.gl/ZEcd";
 
     //Report problem constants
     public static final String REPORT_PROBLEM_TYPE_BUG = "bug";
@@ -116,6 +117,7 @@ public class StringConstants {
     //Character constants
     public static final String CHAR_AMPERSAND = "@";
     public static final String CHAR_COLON = ":";
+    public static final String CHAR_HYPHEN = "-";
 
     public static final String GROUP_OP_CHOOSE_TYPE = "CHOOSE";
     public static final String GROUP_OP_VIEW_TYPE = "VIEW";
@@ -183,4 +185,6 @@ public class StringConstants {
     public static final String FCM_MESSAGE_TYPE = "MessageType";
     public static final String FCM_MESSAGE_TYPE_NORMAL_TO_PERSON = "NormalMessageToPerson";
     public static final String FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON = "ClusterMessageToPerson";
+
+
 }

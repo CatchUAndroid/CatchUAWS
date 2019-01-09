@@ -43,6 +43,8 @@ import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
+import com.uren.catchu.Interfaces.ReturnCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
@@ -101,6 +103,14 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
             R.drawable.ic_flash_on,
     };
 
+    ShareItems shareItems;
+    ReturnCallback returnCallback;
+
+    public VideoPickerFrag(ShareItems shareItems, ReturnCallback returnCallback){
+        this.shareItems = shareItems;
+        this.returnCallback = returnCallback;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,7 +128,7 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         initUI();
         addListeners();
-        checkCameraFlash();
+        //checkCameraFlash();
     }
 
     private void initUI() {
@@ -248,10 +258,10 @@ public class VideoPickerFrag extends Fragment implements MediaRecorder.OnInfoLis
         mMediaRecorder.start();
     }
 
-    public void checkCameraFlash() {
-      /*  if (!CameraUtil.hasDeviceFlush(getActivity()))
-            flashModeImgv.setVisibility(View.GONE);*/
-    }
+    /*public void checkCameraFlash() {
+        if (!CameraUtil.hasDeviceFlush(getActivity()))
+            flashModeImgv.setVisibility(View.GONE);
+    }*/
 
     /*private void getOptimalPreviewSize() {
         Camera.Parameters parameters = mCamera.getParameters();

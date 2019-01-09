@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -29,6 +30,7 @@ import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderContactsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.PhoneNumberFormatUtil;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.DynamicLinkUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -54,6 +56,7 @@ import catchu.model.User;
 import catchu.model.UserListResponse;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.APP_INVITATION_LINK;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_PHONE;
 
 @SuppressLint("ValidFragment")
@@ -89,6 +92,7 @@ public class ContactsFragment extends BaseFragment {
 
     boolean showTollbar;
     boolean edittextFocused = false;
+    Fragment fragment;
 
     public ContactsFragment(boolean showTollbar) {
         this.showTollbar = showTollbar;
@@ -124,6 +128,7 @@ public class ContactsFragment extends BaseFragment {
         inviteContactsList = new ArrayList<>();
         searchToolbarAddItemImgv.setVisibility(View.GONE);
         contactFriendModelList = new ArrayList<>();
+        fragment = this;
     }
 
     private void checkToolbarVisibility() {
@@ -331,7 +336,7 @@ public class ContactsFragment extends BaseFragment {
             contactsAdapter = new ContactsAdapter(getContext(), contactFriendModelList, new ContactFriendSelectCallback() {
                 @Override
                 public void contactSelected(Contact contact) {
-                    sendSmsToInvite(contact);
+                    DynamicLinkUtil.setAppInvitationLinkForSms(getContext(), contact, fragment);
                 }
 
                 @Override
@@ -346,15 +351,6 @@ public class ContactsFragment extends BaseFragment {
         }
 
         progressBar.setVisibility(View.GONE);
-    }
-
-    public void sendSmsToInvite(Contact contact) {
-        if (contact != null && contact.getPhoneNumber() != null) {
-            Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-            sendIntent.setData(Uri.parse("sms:" + contact.getPhoneNumber()));
-            sendIntent.putExtra("sms_body", getActivity().getResources().getString(R.string.CONTACT_INVITE_MESSAGE) + CommonUtils.getGooglePlayAppLink(getActivity()));
-            startActivity(sendIntent);
-        }
     }
 
     public void prepareInviteContactList() {

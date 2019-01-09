@@ -53,18 +53,6 @@
 
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/cancelImageView"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="15dp"
-        android:padding="8dp"
-        android:src="@drawable/cancel_gray"
-        android:visibility="gone" />
-
     <LinearLayout
         android:id="@+id/camParamsLayout"
         android:layout_width="wrap_content"

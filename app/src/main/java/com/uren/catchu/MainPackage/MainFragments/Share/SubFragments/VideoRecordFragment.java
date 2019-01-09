@@ -62,7 +62,7 @@ import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 
 @SuppressLint("ValidFragment")
-public class Camera2VideoFragment extends BaseFragment implements View.OnClickListener, MediaRecorder.OnInfoListener {
+public class VideoRecordFragment extends BaseFragment implements View.OnClickListener, MediaRecorder.OnInfoListener {
 
     private static final int SENSOR_ORIENTATION_DEFAULT_DEGREES = 90;
     private static final int SENSOR_ORIENTATION_INVERSE_DEGREES = 270;
@@ -182,7 +182,7 @@ public class Camera2VideoFragment extends BaseFragment implements View.OnClickLi
     private CaptureRequest.Builder mPreviewBuilder;
     private ReturnCallback returnCallback;
 
-    public Camera2VideoFragment(ReturnCallback returnCallback) {
+    public VideoRecordFragment(ReturnCallback returnCallback) {
         this.returnCallback = returnCallback;
     }
 
@@ -231,7 +231,7 @@ public class Camera2VideoFragment extends BaseFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_camera2_video, container, false);
+        return inflater.inflate(R.layout.fragment_video_record, container, false);
     }
 
     @Override
