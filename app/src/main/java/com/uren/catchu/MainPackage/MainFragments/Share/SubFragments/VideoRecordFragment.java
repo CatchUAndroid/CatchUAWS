@@ -20,6 +20,7 @@ import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
@@ -33,6 +34,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
@@ -58,6 +60,7 @@ import java.util.concurrent.TimeUnit;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
+import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 
@@ -75,8 +78,9 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
     private boolean isFlashSupported;
     private boolean isTorchOn;
+    private static Context context;
 
-    private static final String TAG = "Camera2VideoFragment";
+    private static final String TAG = "VideoRecordFragment";
 
     int PERMISSION_ALL = 1;
     String[] PERMISSIONS = {
@@ -104,6 +108,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
     private ToggleButton toggleRecordingButton;
     private ImageView flashModeImgv;
     private ImageView switchCamImgv;
+    private TextView remainingTimeTv;
 
     private CameraDevice mCameraDevice;
     private CameraCaptureSession mPreviewSession;
@@ -208,24 +213,32 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
     }
 
     private static Size chooseOptimalSize(Size[] choices, int width, int height, Size aspectRatio) {
-        // Collect the supported resolutions that are at least as big as the preview Surface
-        List<Size> bigEnough = new ArrayList<>();
-        int w = aspectRatio.getWidth();
-        int h = aspectRatio.getHeight();
-        for (Size option : choices) {
-            if (option.getHeight() == option.getWidth() * h / w &&
-                    option.getWidth() >= width && option.getHeight() >= height) {
-                bigEnough.add(option);
+        try {
+            // Collect the supported resolutions that are at least as big as the preview Surface
+            List<Size> bigEnough = new ArrayList<>();
+            int w = aspectRatio.getWidth();
+            int h = aspectRatio.getHeight();
+            for (Size option : choices) {
+                if (option.getHeight() == option.getWidth() * h / w &&
+                        option.getWidth() >= width && option.getHeight() >= height) {
+                    bigEnough.add(option);
+                }
             }
-        }
 
-        // Pick the smallest of those, assuming we found any
-        if (bigEnough.size() > 0) {
-            return Collections.min(bigEnough, new CompareSizesByArea());
-        } else {
-            Log.e(TAG, "Couldn't find any suitable preview size");
-            return choices[0];
+            // Pick the smallest of those, assuming we found any
+            if (bigEnough.size() > 0) {
+                return Collections.min(bigEnough, new CompareSizesByArea());
+            } else {
+                Log.e(TAG, "Couldn't find any suitable preview size");
+                return choices[0];
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, VideoRecordFragment.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
         }
+        return choices[0];
     }
 
     @Override
@@ -240,10 +253,12 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         toggleRecordingButton = (ToggleButton) view.findViewById(R.id.toggleRecordingButton);
         flashModeImgv = (ImageView) view.findViewById(R.id.flashModeImgv);
         switchCamImgv = (ImageView) view.findViewById(R.id.switchCamImgv);
+        remainingTimeTv = (TextView) view.findViewById(R.id.remainingTimeTv);
         permissionModule = new PermissionModule(getActivity());
         toggleRecordingButton.setOnClickListener(this);
         flashModeImgv.setOnClickListener(this);
         switchCamImgv.setOnClickListener(this);
+        context = getContext();
     }
 
     @Override
@@ -329,8 +344,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
         if (requestCode == PERMISSION_ALL) {
             if (grantResults.length > 0 && checkGrantResults(grantResults) ) {
@@ -634,12 +648,10 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
                         @Override
                         public void run() {
                             try {
-                                // UI
                                 toggleRecordingButton.setBackgroundResource(R.drawable.btn_capture_photo);
                                 mIsRecordingVideo = true;
-
-                                // Start recording
                                 mMediaRecorder.start();
+                                setTimer();
                             } catch (Exception e) {
                                 ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                                         methodName + CHAR_HYPHEN + new Object() {
@@ -722,6 +734,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED) {
                 stopRecordingVideo();
                 toggleRecordingButton.setChecked(false);
+                remainingTimeTv.setText(checkDigit(0));
             }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
@@ -776,5 +789,32 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    public void setTimer() {
+        try {
+            new CountDownTimer(MAX_VIDEO_DURATION * 1000, 1000) {
 
+                int duration = MAX_VIDEO_DURATION;
+
+                public void onTick(long millisUntilFinished) {
+                    if(mIsRecordingVideo) {
+                        remainingTimeTv.setText(checkDigit(duration));
+                        duration--;
+                    }
+                }
+
+                public void onFinish() {
+                    remainingTimeTv.setText(checkDigit(0));
+                }
+            }.start();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public String checkDigit(int number) {
+        return number <= 9 ? "0" + number : String.valueOf(number);
+    }
 }
