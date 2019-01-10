@@ -110,7 +110,7 @@
 
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.uren.catchu"
+            android:authorities="com.uren.catchu.provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
