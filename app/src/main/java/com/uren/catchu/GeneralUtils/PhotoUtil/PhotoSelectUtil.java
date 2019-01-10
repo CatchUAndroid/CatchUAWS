@@ -128,9 +128,16 @@ public class PhotoSelectUtil {
     private void onSelectFromFileResult() {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-            imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-        } catch (IOException e) {
+
+            imageRealPath = UriAdapter.getRealPathFromURI(mediaUri, context);
+
+            if (imageRealPath != null && !imageRealPath.isEmpty())
+                bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+            else {
+                imageRealPath = UriAdapter.getFilePathFromURI(context, mediaUri);
+                bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+            }
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
