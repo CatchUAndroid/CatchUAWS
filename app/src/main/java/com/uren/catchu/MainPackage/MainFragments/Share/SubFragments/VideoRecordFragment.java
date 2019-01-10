@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.MainThread;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -166,15 +167,19 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
             mCameraOpenCloseLock.release();
-            cameraDevice.close();
-            mCameraDevice = null;
+            mCameraDevice = cameraDevice;
+            closeCameraDevice();
+           /* cameraDevice.close();
+            mCameraDevice = null;*/
         }
 
         @Override
         public void onError(@NonNull CameraDevice cameraDevice, int error) {
             mCameraOpenCloseLock.release();
-            cameraDevice.close();
-            mCameraDevice = null;
+            mCameraDevice = cameraDevice;
+            closeCameraDevice();
+            /*cameraDevice.close();
+            mCameraDevice = null;*/
             Activity activity = getActivity();
             if (null != activity) {
                 activity.finish();
@@ -189,6 +194,14 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
     public VideoRecordFragment(ReturnCallback returnCallback) {
         this.returnCallback = returnCallback;
+    }
+
+    @MainThread
+    private void closeCameraDevice() {
+        if (mCameraDevice != null) {
+            mCameraDevice.close();
+            mCameraDevice = null;
+        }
     }
 
     public static boolean hasPermissions(Context context, String... permissions) {

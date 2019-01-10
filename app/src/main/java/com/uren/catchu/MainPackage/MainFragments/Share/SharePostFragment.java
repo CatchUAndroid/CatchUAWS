@@ -21,6 +21,7 @@ import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -870,7 +871,17 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         try {
             //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             //StrictMode.setVmPolicy(builder.build());
-            photoUri = Uri.fromFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
+            //photoUri = Uri.fromFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
+            //photoUri = Uri.parse((FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE)).toString());
+
+
+            System.out.println("getContext().getPackageName():" + getContext().getPackageName());
+
+            photoUri = FileProvider.getUriForFile(
+                    getContext(),
+                    getContext().getPackageName() + ".provider",
+                    FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
+
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_IMAGE_SIZE);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
@@ -1082,6 +1093,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA_SELECT) {
+                //photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
                 photoSelectUtil = new PhotoSelectUtil(getContext(), photoUri, FROM_FILE_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_VIDEO_GALLERY_SELECT) {
