@@ -36,6 +36,7 @@ import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 
 public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAdapter.PendingRequestHolder> {
 
@@ -67,7 +68,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         View itemView = null;
         try {
             itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.follow_vert_list_item, parent, false);
+                    .inflate(R.layout.pending_request_list_item, parent, false);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
@@ -83,7 +84,8 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
         TextView profileUserName;
         TextView shortUserNameTv;
         ImageView profileImage;
-        Button btnFollowStatus;
+        Button btnApprove;
+        Button btnReject;
         CardView cardView;
         UserProfileProperties userProfileProperties;
         int position;
@@ -96,16 +98,26 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                 profileUserName = view.findViewById(R.id.profile_user_name);
                 shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
                 profileImage = view.findViewById(R.id.profile_image);
-                btnFollowStatus = view.findViewById(R.id.btnFollowStatus);
+                btnApprove = view.findViewById(R.id.btnApprove);
+                btnReject = view.findViewById(R.id.btnReject);
                 cardView = view.findViewById(R.id.card_view);
                 profileImage.setBackground(imageShape);
 
-                btnFollowStatus.setOnClickListener(new View.OnClickListener() {
+                btnApprove.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        btnFollowStatus.setEnabled(false);
-                        btnFollowStatus.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
+                        btnApprove.setEnabled(false);
+                        btnApprove.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
                         managePendingRequest();
+                    }
+                });
+
+                btnReject.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        btnReject.setEnabled(false);
+                        btnReject.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
+                        rejectPendingRequest();
                     }
                 });
 
@@ -194,6 +206,37 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
             }
         }
 
+        public void rejectPendingRequest(){
+            try {
+                AccountHolderFollowProcess.friendFollowRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST,
+                        userProfileProperties.getUserid(), AccountHolderInfo.getUserID(),
+                        new CompleteCallback() {
+                            @Override
+                            public void onComplete(Object object) {
+                                friendRequestList.getResultArray().remove(position);
+                                notifyItemRemoved(position);
+                                notifyItemRangeChanged(position, getItemCount());
+                                returnCallback.onReturn(null);
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+                                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                    @Override
+                                    public void okClick() {
+
+                                    }
+                                });
+                            }
+                        });
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
+        }
+
         public void setData(UserProfileProperties userProfileProperties, int position) {
             try {
                 this.userProfileProperties = userProfileProperties;
@@ -203,7 +246,8 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                 UserDataUtil.setProfilePicture(context, userProfileProperties.getProfilePhotoUrl(),
                         userProfileProperties.getName(),
                         userProfileProperties.getUsername(), shortUserNameTv, profileImage);
-                UserDataUtil.updatePendingButton(context, btnFollowStatus);
+                UserDataUtil.updatePendingApproveButton(context, btnApprove);
+                UserDataUtil.updatePendingRejectButton(context, btnReject);
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {

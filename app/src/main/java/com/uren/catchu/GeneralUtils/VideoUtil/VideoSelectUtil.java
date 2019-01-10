@@ -41,7 +41,9 @@ public class VideoSelectUtil {
 
     public void onSelectFromCameraResult() {
         try {
-            videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
+            if (videoRealPath == null || videoRealPath.isEmpty())
+                videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
+            //videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
             setBitmapFromUriForVideo();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
@@ -68,7 +70,7 @@ public class VideoSelectUtil {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
             retriever.setDataSource(videoRealPath);
             videoBitmap = retriever.getFrameAtTime(100);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

@@ -50,7 +50,7 @@ public class ExifUtil {
                 default:
                     rotatedBitmap = bitmap;
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -114,18 +114,11 @@ public class ExifUtil {
                     return bitmap;
             }
 
-            try {
-                Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-                bitmap.recycle();
-                return oriented;
-            } catch (OutOfMemoryError e) {
-                ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-                return bitmap;
-            }
-        } catch (IOException e) {
+            Bitmap oriented = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return oriented;
+
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, ExifUtil.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
@@ -135,7 +128,7 @@ public class ExifUtil {
         return bitmap;
     }
 
-    public static int getExifOrientation(String src) throws IOException {
+    public static int getExifOrientation(String src) {
         int orientation = 1;
 
         try {

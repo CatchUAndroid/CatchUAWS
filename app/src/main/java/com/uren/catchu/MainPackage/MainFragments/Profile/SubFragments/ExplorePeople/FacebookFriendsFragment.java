@@ -26,7 +26,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.uren.catchu.FragmentControllers.FragNavController;
-import com.uren.catchu.GeneralUtils.DataModelUtil.MessageDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -111,6 +110,7 @@ public class FacebookFriendsFragment extends BaseFragment {
         warningMsgTv.setTypeface(warningMsgTv.getTypeface(), Typeface.BOLD);
         warningMsgTv.setTextSize(15f);
         warningMsgTv.setTextColor(getResources().getColor(R.color.DodgerBlue, null));
+        warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
         connectFacebookButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.RECTANGLE, 15, 2));
     }
@@ -156,8 +156,7 @@ public class FacebookFriendsFragment extends BaseFragment {
 
                 if (userListResponse != null && userListResponse.getItems() != null &&
                         userListResponse.getItems().size() > 0 && getContext() != null) {
-                    MessageDataUtil.setWarningMessageVisibility(userListResponse, warningMsgTv,
-                            getContext().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
+                    setMessageWarning(userListResponse);
 
                     facebookFriendsAdapter = new FacebookFriendsAdapter(getContext(), userListResponse, new ListItemClickListener() {
                         @Override
@@ -178,6 +177,14 @@ public class FacebookFriendsFragment extends BaseFragment {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void setMessageWarning(UserListResponse userListResponse) {
+        if(userListResponse != null && userListResponse.getItems() != null &&
+                userListResponse.getItems().size() > 0)
+            warningMsgTv.setVisibility(View.GONE);
+        else
+            warningMsgTv.setVisibility(View.VISIBLE);
     }
 
     private void displayUserProfile(User user, int clickedPosition) {

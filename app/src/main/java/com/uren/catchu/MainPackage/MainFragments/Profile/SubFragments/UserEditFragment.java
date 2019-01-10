@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
@@ -28,7 +29,6 @@ import android.widget.RelativeLayout;
 
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -38,6 +38,7 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -106,7 +107,6 @@ public class UserEditFragment extends BaseFragment
     @BindArray(R.array.genderForServer)
     String[] GENDERS_FOR_SERVER;
 
-
     PermissionModule permissionModule;
     PhotoSelectUtil photoSelectUtil;
 
@@ -162,10 +162,17 @@ public class UserEditFragment extends BaseFragment
     }
 
     public void setShapes() {
-        addPhotoImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 5));
-        imgProfile.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
-                0, GradientDrawable.OVAL, 50, 0));
+        try {
+            addPhotoImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                    getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 5));
+            imgProfile.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.OVAL, 50, 0));
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void setBirthDayDataSetListener() {
@@ -180,20 +187,27 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void setGenderClickListener() {
-        genderSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, GENDERS);
-        genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        genderSpinner.setAdapter(genderSpinnerAdapter);
+        try {
+            genderSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, GENDERS);
+            genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            genderSpinner.setAdapter(genderSpinnerAdapter);
 
-        genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGender = GENDERS[position];
-            }
+            genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedGender = GENDERS[position];
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -204,81 +218,95 @@ public class UserEditFragment extends BaseFragment
 
     private void updateUI() {
 
-        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
-                AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+        try {
+            if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
+                    AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
 
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
-                edtName.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-                shortUserNameTv.setText(UserDataUtil.getShortenUserName(AccountHolderInfo.getInstance().getUser().getUserInfo().getName()));
-            }
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
-                edtUserName.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
-            }
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite().isEmpty()) {
-                edtWebsite.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite());
-            }
-
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail().isEmpty()) {
-                edtEmail.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail());
-            }
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone() != null) {
-                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getDialCode() != null &&
-                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getDialCode().isEmpty() &&
-                        AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getPhoneNumber() != null &&
-                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getPhoneNumber().toString().trim().isEmpty())
-                    edtPhone.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getDialCode() +
-                            AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getPhoneNumber());
-            }
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getBirthday() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getBirthday().isEmpty()) {
-                edtBirthDay.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getBirthday());
-            }
-            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getGender() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().isEmpty()) {
-                for(int i=0; i<GENDERS_FOR_SERVER.length; i++){
-                    if(AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().equals(GENDERS_FOR_SERVER[i])){
-                        selectedGender = GENDERS[i];
-                    }
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
+                    edtName.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+                    shortUserNameTv.setText(UserDataUtil.getShortenUserName(AccountHolderInfo.getInstance().getUser().getUserInfo().getName()));
                 }
-                genderSpinner.setSelection(genderSpinnerAdapter.getPosition(selectedGender));
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
+                    edtUserName.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+                }
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite().isEmpty()) {
+                    edtWebsite.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite());
+                }
+
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail().isEmpty()) {
+                    edtEmail.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail());
+                }
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone() != null) {
+                    if (AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getDialCode() != null &&
+                            !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getDialCode().isEmpty() &&
+                            AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getPhoneNumber() != null &&
+                            !AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getPhoneNumber().toString().trim().isEmpty())
+                        edtPhone.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getDialCode() +
+                                AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone().getPhoneNumber());
+                }
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getBirthday() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getBirthday().isEmpty()) {
+                    edtBirthDay.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getBirthday());
+                }
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getGender() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().isEmpty()) {
+                    for(int i=0; i<GENDERS_FOR_SERVER.length; i++){
+                        if(AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().equals(GENDERS_FOR_SERVER[i])){
+                            selectedGender = GENDERS[i];
+                        }
+                    }
+                    genderSpinner.setSelection(genderSpinnerAdapter.getPosition(selectedGender));
+                }
+
+                if(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl() != null &&
+                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl().isEmpty())
+                    photoExist = true;
             }
 
-            if(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl() != null &&
-                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl().isEmpty())
-                photoExist = true;
+            UserDataUtil.setProfilePicture(getContext(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(),
+                    shortUserNameTv, imgProfile);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
-
-        UserDataUtil.setProfilePicture(getContext(),
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
-                AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(),
-                shortUserNameTv, imgProfile);
     }
 
     private void setUserPhoto(Uri photoUri) {
-        if (photoUri != null && !photoUri.toString().trim().isEmpty()) {
-            photoExist = true;
-            shortUserNameTv.setVisibility(View.GONE);
-            Glide.with(getActivity())
-                    .load(photoUri)
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imgProfile);
-        } else if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
-                !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().trim().isEmpty()) {
-            photoExist = false;
-            shortUserNameTv.setVisibility(View.VISIBLE);
-            imgProfile.setImageDrawable(null);
-        } else {
-            photoExist = false;
-            shortUserNameTv.setVisibility(View.GONE);
-            Glide.with(getActivity())
-                    .load(getActivity().getResources().getIdentifier("icon_user_profile", "mipmap", getActivity().getPackageName()))
-                    .apply(RequestOptions.circleCropTransform())
-                    .into(imgProfile);
+        try {
+            if (photoUri != null && !photoUri.toString().trim().isEmpty()) {
+                photoExist = true;
+                shortUserNameTv.setVisibility(View.GONE);
+                Glide.with(getActivity())
+                        .load(photoUri)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imgProfile);
+            } else if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().trim().isEmpty()) {
+                photoExist = false;
+                shortUserNameTv.setVisibility(View.VISIBLE);
+                imgProfile.setImageDrawable(null);
+            } else {
+                photoExist = false;
+                shortUserNameTv.setVisibility(View.GONE);
+                Glide.with(getActivity())
+                        .load(getActivity().getResources().getIdentifier("icon_user_profile", "mipmap", getActivity().getPackageName()))
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(imgProfile);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 
@@ -329,18 +357,25 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void birthDayClicked() {
-        Calendar cal = Calendar.getInstance();
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
+        try {
+            Calendar cal = Calendar.getInstance();
+            int year = cal.get(Calendar.YEAR);
+            int month = cal.get(Calendar.MONTH);
+            int day = cal.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(),
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListener,
-                year, month, day);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+            DatePickerDialog dialog = new DatePickerDialog(
+                    getActivity(),
+                    android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                    mDateSetListener,
+                    year, month, day);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void editProfileCancelClicked() {
@@ -349,58 +384,65 @@ public class UserEditFragment extends BaseFragment
 
     private void editProfileConfirmClicked() {
 
-        UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
+        try {
+            UserProfileProperties userProfileProperties = AccountHolderInfo.getInstance().getUser().getUserInfo();
 
-        if (!photoExist)
-            userProfileProperties.setProfilePhotoUrl("");
-        else {
-            userProfileProperties.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
-        }
+            if (!photoExist)
+                userProfileProperties.setProfilePhotoUrl("");
+            else {
+                userProfileProperties.setProfilePhotoUrl(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl());
+            }
 
-        if (edtName.getText().toString().isEmpty()) {
-            userProfileProperties.setName("");
-        } else {
-            userProfileProperties.setName(edtName.getText().toString());
-        }
+            if (edtName.getText().toString().isEmpty()) {
+                userProfileProperties.setName("");
+            } else {
+                userProfileProperties.setName(edtName.getText().toString());
+            }
 
-        if (edtUserName.getText().toString().isEmpty()) {
-            userProfileProperties.setUsername("");
-        } else {
-            userProfileProperties.setUsername(edtUserName.getText().toString());
-        }
+            if (edtUserName.getText().toString().isEmpty()) {
+                userProfileProperties.setUsername("");
+            } else {
+                userProfileProperties.setUsername(edtUserName.getText().toString());
+            }
 
-        if (edtWebsite.getText().toString().isEmpty()) {
-            userProfileProperties.setWebsite("");
-        } else {
-            userProfileProperties.setWebsite(edtWebsite.getText().toString());
-        }
+            if (edtWebsite.getText().toString().isEmpty()) {
+                userProfileProperties.setWebsite("");
+            } else {
+                userProfileProperties.setWebsite(edtWebsite.getText().toString());
+            }
 
-        if (edtBirthDay.getText().toString().isEmpty()) {
-            userProfileProperties.setBirthday("");
-        } else {
-            userProfileProperties.setBirthday(edtBirthDay.getText().toString());
-        }
+            if (edtBirthDay.getText().toString().isEmpty()) {
+                userProfileProperties.setBirthday("");
+            } else {
+                userProfileProperties.setBirthday(edtBirthDay.getText().toString());
+            }
 
-        if (edtEmail.getText().toString().isEmpty()) {
-            userProfileProperties.setEmail("");
-        } else {
-            userProfileProperties.setEmail(edtEmail.getText().toString());
-        }
+            if (edtEmail.getText().toString().isEmpty()) {
+                userProfileProperties.setEmail("");
+            } else {
+                userProfileProperties.setEmail(edtEmail.getText().toString());
+            }
 
-        userProfileProperties.setPhone(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone());
+            userProfileProperties.setPhone(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone());
 
-        if (selectedGender.isEmpty()) {
-            userProfileProperties.setGender(GENDERS_FOR_SERVER[GENDERS_FOR_SERVER.length -1]);
-        } else {
+            if (selectedGender.isEmpty()) {
+                userProfileProperties.setGender(GENDERS_FOR_SERVER[GENDERS_FOR_SERVER.length -1]);
+            } else {
 
-            for(int i=0; i<GENDERS.length; i++){
-                if(selectedGender.equals(GENDERS[i])){
-                    userProfileProperties.setGender(GENDERS_FOR_SERVER[i]);
+                for(int i=0; i<GENDERS.length; i++){
+                    if(selectedGender.equals(GENDERS[i])){
+                        userProfileProperties.setGender(GENDERS_FOR_SERVER[i]);
+                    }
                 }
             }
-        }
 
-        updateOperation(userProfileProperties);
+            updateOperation(userProfileProperties);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
     }
 
     private void updateOperation(UserProfileProperties userProfileProperties) {
@@ -441,9 +483,16 @@ public class UserEditFragment extends BaseFragment
 
             @Override
             public void onPhotoRemoved() {
-                photoSelectUtil = new PhotoSelectUtil();
-                photoExist = false;
-                setUserPhoto(null);
+                try {
+                    photoSelectUtil = new PhotoSelectUtil();
+                    photoExist = false;
+                    setUserPhoto(null);
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.toString());
+                    e.printStackTrace();
+                }
             }
         };
 
@@ -493,16 +542,23 @@ public class UserEditFragment extends BaseFragment
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == ACTIVITY_REQUEST_CODE_OPEN_GALLERY) {
-                photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
-                setUserPhoto(data.getData());
-                profilPicChanged = true;
-            } else if (requestCode == ACTIVITY_REQUEST_CODE_OPEN_CAMERA) {
-                photoSelectUtil = new PhotoSelectUtil(getActivity(), data, CAMERA_TEXT);
-                setUserPhoto(data.getData());
-                profilPicChanged = true;
+        try {
+            if (resultCode == Activity.RESULT_OK) {
+                if (requestCode == ACTIVITY_REQUEST_CODE_OPEN_GALLERY) {
+                    photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
+                    setUserPhoto(data.getData());
+                    profilPicChanged = true;
+                } else if (requestCode == ACTIVITY_REQUEST_CODE_OPEN_CAMERA) {
+                    photoSelectUtil = new PhotoSelectUtil(getActivity(), data, CAMERA_TEXT);
+                    setUserPhoto(data.getData());
+                    profilPicChanged = true;
+                }
             }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
         }
     }
 }

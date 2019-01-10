@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.graphics.BitmapCompat;
+import android.text.format.DateFormat;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -13,6 +14,8 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FileAdapter;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
@@ -24,6 +27,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +38,8 @@ import catchu.model.PostRequest;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
@@ -80,32 +86,52 @@ public class SharePostProcess {
     }
 
     private void startUploadMediaToS3(String token) {
+        final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
+
         signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
-                final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
-                shareItems.setBucketUploadResponse(commonS3BucketResult);
+                try {
+                    final BucketUploadResponse commonS3BucketResult = (BucketUploadResponse) object;
+                    shareItems.setBucketUploadResponse(commonS3BucketResult);
 
-                int counter = 0;
-                for (final ImageShareItemBox imageShareItemBox : shareItems.getImageShareItemBoxes()) {
-                    BucketUpload bucketUpload = commonS3BucketResult.getImages().get(counter);
-                    uploadImages(bucketUpload, imageShareItemBox);
-                    counter++;
-                }
+                    int counter = 0;
+                    for (final ImageShareItemBox imageShareItemBox : shareItems.getImageShareItemBoxes()) {
+                        BucketUpload bucketUpload = commonS3BucketResult.getImages().get(counter);
+                        uploadImages(bucketUpload, imageShareItemBox);
+                        counter++;
+                    }
 
-                counter = 0;
-                for (final VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
-                    BucketUpload bucketUpload = commonS3BucketResult.getVideos().get(counter);
-                    uploadVideos(bucketUpload, videoShareItemBox);
-                    uploadThumbnailImage(bucketUpload, videoShareItemBox);
-                    counter++;
+                    counter = 0;
+                    for (final VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
+                        BucketUpload bucketUpload = commonS3BucketResult.getVideos().get(counter);
+
+                        /*String filePath = "/storage/emulated/0/CatchU/Movies";
+                        System.out.println("filePath:" + filePath);
+
+                        System.out.println("startTime:" + DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+                        SiliCompressor.with(context).compressVideo(videoShareItemBox.getVideoSelectUtil().getVideoRealPath(),
+                                filePath);
+
+                        System.out.println("finishTime:" + DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
+*/
+                        uploadVideos(bucketUpload, videoShareItemBox);
+                        uploadThumbnailImage(bucketUpload, videoShareItemBox);
+                        counter++;
+                    }
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            methodName + CHAR_HYPHEN + new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                //dialogDismiss();
-                Log.i("Info", "Paylasim Exception yedi2:" + e.getMessage());
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        methodName + CHAR_HYPHEN + new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) + e.getMessage());
                 serviceCompleteCallback.onFailed(e);
                 signedUrlGetProcess.cancel(true);
@@ -121,6 +147,7 @@ public class SharePostProcess {
     }
 
     public void uploadImages(final BucketUpload bucketUpload, final ImageShareItemBox imageShareItemBox) {
+        final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
         Bitmap photoBitmap = null;
 
         if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
@@ -164,7 +191,10 @@ public class SharePostProcess {
                         serviceCompleteCallback.onFailed(new Exception(""));
                         uploadImageToS3.cancel(true);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                            methodName + CHAR_HYPHEN + new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     imageShareItemBox.setUploaded(false);
                     serviceCompleteCallback.onFailed(e);
                     uploadImageToS3.cancel(true);

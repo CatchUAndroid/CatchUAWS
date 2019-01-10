@@ -93,7 +93,7 @@
                                 android:fontFamily="@font/capriola"
                                 android:gravity="left"
                                 android:textColor="@color/White"
-                                android:textSize="15sp" />
+                                android:textSize="15sp"/>
 
                             <TextView
                                 android:id="@+id/toolbarSubTitle"
@@ -105,7 +105,7 @@
                                 android:fontFamily="@font/capriola"
                                 android:gravity="left"
                                 android:textColor="@color/White"
-                                android:textSize="10sp" />
+                                android:textSize="10sp"/>
 
                         </LinearLayout>
 

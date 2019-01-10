@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -98,16 +100,30 @@ public class EditGroupNameFragment extends BaseFragment{
     }
 
     private void setGroupVariables() {
-        groupNameEditText.setText(groupRequestResultResultArrayItem.getName());
-        groupNameSize = GROUP_NAME_MAX_LENGTH - groupRequestResultResultArrayItem.getName().length();
-        textSizeCntTv.setText(Integer.toString(groupNameSize));
+        try {
+            groupNameEditText.setText(groupRequestResultResultArrayItem.getName());
+            groupNameSize = GROUP_NAME_MAX_LENGTH - groupRequestResultResultArrayItem.getName().length();
+            textSizeCntTv.setText(Integer.toString(groupNameSize));
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void setButtonShapes() {
-        buttonShape = ShapeUtil.getShape(getResources().getColor(R.color.White, null),
-                getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
-        cancelButton.setBackground(buttonShape);
-        approveButton.setBackground(buttonShape);
+        try {
+            buttonShape = ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                    getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
+            cancelButton.setBackground(buttonShape);
+            approveButton.setBackground(buttonShape);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     public void addListeners() {
@@ -137,12 +153,19 @@ public class EditGroupNameFragment extends BaseFragment{
 
             @Override
             public void afterTextChanged(Editable s) {
-                groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
+                try {
+                    groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
 
-                if (groupNameSize >= 0)
-                    textSizeCntTv.setText(Integer.toString(groupNameSize));
-                else
-                    textSizeCntTv.setText(Integer.toString(0));
+                    if (groupNameSize >= 0)
+                        textSizeCntTv.setText(Integer.toString(groupNameSize));
+                    else
+                        textSizeCntTv.setText(Integer.toString(0));
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -157,38 +180,51 @@ public class EditGroupNameFragment extends BaseFragment{
         approveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
-                approveButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if (groupNameEditText.getText() != null && !groupNameEditText.getText().toString().trim().isEmpty())
-                    updateGroup();
-                else {
-                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.pleaseWriteGroupName),null, new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
+                try {
+                    CommonUtils.hideKeyBoard(getContext());
+                    approveButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                    if (groupNameEditText.getText() != null && !groupNameEditText.getText().toString().trim().isEmpty())
+                        updateGroup();
+                    else {
+                        DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.pleaseWriteGroupName),null, new InfoDialogBoxCallback() {
+                            @Override
+                            public void okClick() {
 
-                        }
-                    });
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                            ((Button) v).getText().toString() + " - " + new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    e.printStackTrace();
                 }
             }
         });
     }
 
     public void updateGroup() {
-        groupRequestResultResultArrayItem.setName(groupNameEditText.getText().toString());
+        try {
+            groupRequestResultResultArrayItem.setName(groupNameEditText.getText().toString());
 
-        UserGroupsProcess.updateGroup(getContext(), null, groupRequestResultResultArrayItem,
-                new UpdateGroupCallback() {
-                    @Override
-                    public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
-                        completeCallback.onComplete(groupNameEditText.getText().toString());
-                        getActivity().onBackPressed();
-                    }
+            UserGroupsProcess.updateGroup(getContext(), null, groupRequestResultResultArrayItem,
+                    new UpdateGroupCallback() {
+                        @Override
+                        public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
+                            completeCallback.onComplete(groupNameEditText.getText().toString());
+                            getActivity().onBackPressed();
+                        }
 
-                    @Override
-                    public void onFailed(Exception e) {
-                        completeCallback.onFailed(e);
-                    }
-                });
+                        @Override
+                        public void onFailed(Exception e) {
+                            completeCallback.onFailed(e);
+                        }
+                    });
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 }

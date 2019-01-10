@@ -103,8 +103,6 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     boolean photoExistOnImgv = false;
 
-    //String groupId;
-
     GroupDetailListAdapter adapter;
     List<UserProfileProperties> groupParticipantList;
     GroupRequestResult groupRequestResult;

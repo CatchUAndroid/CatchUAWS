@@ -57,7 +57,6 @@ public class BitmapConversion extends AppCompatActivity {
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
-            e.printStackTrace();
         }
 
         return targetBitmap;
@@ -84,9 +83,11 @@ public class BitmapConversion extends AppCompatActivity {
         try {
             if (mBitmap != null)
                 bitmap = mBitmap;
-            else if (drawableItem != 0)
-                bitmap = BitmapFactory.decodeResource(context.getResources(), drawableItem);
-            else return;
+            else if (drawableItem != 0) {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 1;
+                bitmap = BitmapFactory.decodeResource(context.getResources(), drawableItem, options);
+            }else return;
 
             Bitmap blurBitmap = BlurBuilder.blur(context, bitmap, bitmapScale, blurRadius);
             Drawable dr = new BitmapDrawable(context.getResources(), blurBitmap);
@@ -159,14 +160,7 @@ public class BitmapConversion extends AppCompatActivity {
                 canvas.drawRoundRect(bitmapRect, dp(26, context), dp(26, context), roundPaint);
             }
             canvas.restore();
-            try {
-                canvas.setBitmap(null);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            canvas.setBitmap(null);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
                     new Object() {
@@ -201,7 +195,6 @@ public class BitmapConversion extends AppCompatActivity {
             Bitmap roundedBitmap = BitmapConversion.getRoundedShape(myBitmap, width, height);
             return roundedBitmap;
         } catch (Exception e) {
-
             ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());

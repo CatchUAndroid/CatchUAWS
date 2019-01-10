@@ -6,42 +6,28 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.ReceiveMessageBox;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
-import com.firebase.jobdispatcher.FirebaseJobDispatcher;
-import com.firebase.jobdispatcher.GooglePlayDriver;
-import com.firebase.jobdispatcher.Job;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.InputStream;
@@ -52,20 +38,12 @@ import java.util.Map;
 
 import catchu.model.User;
 
-import static com.uren.catchu.Constants.NumericConstants.MAX_ALLOWED_NOTIFICATION_SIZE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_PAGE_IS_SEEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_PHOTO_URL;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_WILL_START_FRAGMENT;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON;
-import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 

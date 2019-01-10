@@ -145,7 +145,7 @@ public class SettingsFragment extends BaseFragment {
             inviteForInstallLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DynamicLinkUtil.shareShortDynamicLink(getContext(), fragment);
+                    DynamicLinkUtil.setAppInvitationLink(getContext(), fragment);
                 }
             });
 

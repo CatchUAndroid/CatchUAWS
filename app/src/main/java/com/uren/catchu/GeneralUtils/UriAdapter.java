@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.FileSaveCallback;
 
@@ -222,17 +223,25 @@ public class UriAdapter extends AppCompatActivity {
     }
 
     public String getPath(Uri uri) {
-        String[] projection = {MediaStore.Video.Media.DATA};
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor != null) {
-            // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-            // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } else
-            return null;
+        try {
+            String[] projection = {MediaStore.Video.Media.DATA};
+            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+            if (cursor != null) {
+                // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
+                // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
+                int column_index = cursor
+                        .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } else
+                return null;
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, UriAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -243,6 +252,10 @@ public class UriAdapter extends AppCompatActivity {
 
             return Uri.parse(path);
         } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(inContext, UriAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
@@ -259,22 +272,33 @@ public class UriAdapter extends AppCompatActivity {
             }
             cursor.close();
         }catch (Exception e){
+            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return res;
     }
 
     public static boolean isImagePortrait(Uri uri){
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-        int imageHeight = options.outHeight;
-        int imageWidth = options.outWidth;
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
+            int imageHeight = options.outHeight;
+            int imageWidth = options.outWidth;
 
-        if(imageHeight > imageWidth)
-            return true;
-        else
-            return false;
+            if(imageHeight > imageWidth)
+                return true;
+            else
+                return false;
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, UriAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -505,7 +505,8 @@ public class ProfileFragment extends BaseFragment
                         pendingRequestCount = friendRequestList.getResultArray().size();
                         requestWaitingCntTv.setVisibility(View.VISIBLE);
                         requestWaitingCntTv.setText(Integer.toString(pendingRequestCount));
-                    }
+                    }else
+                        pendingRequestCount = 0;
 
                     if (navPendReqCntTv != null) {
                         if (friendRequestList.getResultArray() != null && friendRequestList.getResultArray().size() > 0) {
