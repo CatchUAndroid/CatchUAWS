@@ -117,7 +117,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
     private Size mPreviewSize;
     private Size mVideoSize;
     private MediaRecorder mMediaRecorder;
-    private PermissionModule permissionModule;
     private boolean mIsRecordingVideo;
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
@@ -267,7 +266,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         flashModeImgv = (ImageView) view.findViewById(R.id.flashModeImgv);
         switchCamImgv = (ImageView) view.findViewById(R.id.switchCamImgv);
         remainingTimeTv = (TextView) view.findViewById(R.id.remainingTimeTv);
-        permissionModule = new PermissionModule(getActivity());
         toggleRecordingButton.setOnClickListener(this);
         flashModeImgv.setOnClickListener(this);
         switchCamImgv.setOnClickListener(this);
@@ -653,8 +651,8 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    final String methodName = new Object() {
-                    }.getClass().getEnclosingMethod().getName();
+                    final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
+
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
                     getActivity().runOnUiThread(new Runnable() {

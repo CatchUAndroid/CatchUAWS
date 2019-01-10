@@ -22,4 +22,11 @@ public class IntentSelectUtil {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         return intent;
     }
+
+    public static Intent getGalleryIntentForVideo(){
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("video/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        return intent;
+    }
 }

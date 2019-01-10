@@ -28,20 +28,11 @@ import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableDeviceNotCompatibleException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
 import com.google.ar.core.exceptions.UnavailableUserDeclinedInstallationException;
-import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
-import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Share.Adapters.ColorPaletteAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.BrushCompleteCallback;
-import com.uren.catchu.ModelViews.PaintView;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
-import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class ARTestFragment extends BaseFragment {
 

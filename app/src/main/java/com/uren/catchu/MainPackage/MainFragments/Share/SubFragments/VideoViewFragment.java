@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaPlayer;
@@ -19,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.VideoView;
 
-import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.PermissionCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -28,9 +26,6 @@ import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 @SuppressLint("ValidFragment")
 public class VideoViewFragment extends BaseFragment {

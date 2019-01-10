@@ -828,7 +828,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
                 else if (selectedShareType.equals(VIDEO_TYPE))
-                    startGalleryForVideos();
+                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
+                            getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
             } else
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
@@ -894,12 +895,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    public void startGalleryForVideos() {
+    /*public void startGalleryForVideos() {
         try {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("video/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent,
+            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
                     getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
@@ -907,7 +905,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
-    }
+    }*/
 
     /*public void startCameraForVideos() {
         try {
@@ -1062,7 +1060,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
                 }else if(galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)){
-                    startGalleryForVideos();
+                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
+                            getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
 
 
