@@ -131,7 +131,7 @@ public class UriAdapter extends AppCompatActivity {
                 if (cursor != null)
                     cursor.close();
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -189,7 +189,7 @@ public class UriAdapter extends AppCompatActivity {
                 bos.write(buf);
             } while (bis.read(buf) != -1);
             fileSaveCallback.Saved(destinationFilename);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fileSaveCallback.OnError(e);
         } finally {
@@ -291,6 +291,9 @@ public class UriAdapter extends AppCompatActivity {
             }
             cursor.close();
         }catch (Exception e){
+            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return res;

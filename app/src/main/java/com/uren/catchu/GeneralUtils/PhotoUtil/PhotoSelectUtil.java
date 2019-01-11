@@ -242,4 +242,12 @@ public class PhotoSelectUtil {
     public void setScreeanShotBitmap(Bitmap screeanShotBitmap) {
         this.screeanShotBitmap = screeanShotBitmap;
     }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 }

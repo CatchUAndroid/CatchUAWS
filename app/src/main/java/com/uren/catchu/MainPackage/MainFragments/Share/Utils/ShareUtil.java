@@ -13,9 +13,11 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.GifDialogBox;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -28,6 +30,7 @@ import java.io.File;
 
 import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 
 public class ShareUtil {
 
@@ -48,7 +51,8 @@ public class ShareUtil {
                 @Override
                 public void onSuccess() {
                     showShareSuccessView();
-                    deleteSharedVideo();
+                    ShareDeleteProcess.deleteSharedVideo(null, permissionModule, shareItems);
+                    ShareDeleteProcess.deleteSharedPhoto(null, permissionModule, shareItems);
                 }
 
                 @Override
@@ -65,7 +69,8 @@ public class ShareUtil {
 
                                         @Override
                                         public void noClick() {
-                                            deleteSharedVideo();
+                                            ShareDeleteProcess.deleteSharedVideo(null, permissionModule, shareItems);
+                                            ShareDeleteProcess.deleteSharedPhoto(null, permissionModule, shareItems);
                                             deleteUploadedItems();
                                         }
                                     });
@@ -73,35 +78,12 @@ public class ShareUtil {
                     } else {
                         CommonUtils.showToastShort(NextActivity.thisActivity,
                                 NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_UNSUCCESSFUL));
-                        deleteSharedVideo();
+                        ShareDeleteProcess.deleteSharedVideo(null, permissionModule, shareItems);
+                        ShareDeleteProcess.deleteSharedPhoto(null, permissionModule, shareItems);
                         deleteUploadedItems();
                     }
                 }
             });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void deleteSharedVideo() {
-        try {
-            if (permissionModule.checkWriteExternalStoragePermission()) {
-
-                for (VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
-                    VideoSelectUtil videoSelectUtil = videoShareItemBox.getVideoSelectUtil();
-
-                    if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null && !videoSelectUtil.getVideoRealPath().isEmpty()) {
-                        if (videoSelectUtil.getSelectType() != null && videoSelectUtil.getSelectType().equals(CAMERA_TEXT)) {
-                            File file = new File(videoSelectUtil.getVideoRealPath());
-                            file.delete();
-                            updateGalleryAfterFileDelete(file);
-                        }
-                    }
-                }
-            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
                     new Object() {
@@ -129,19 +111,6 @@ public class ShareUtil {
                         }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 e.printStackTrace();
             }
-        }
-    }
-
-    public void updateGalleryAfterFileDelete(File file) {
-        try {
-            Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-            intent.setData(Uri.fromFile(file));
-            NextActivity.thisActivity.sendBroadcast(intent);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 

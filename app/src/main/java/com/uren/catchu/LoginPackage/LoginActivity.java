@@ -183,30 +183,12 @@ public class LoginActivity extends AppCompatActivity
                 .build();
 
         Twitter.initialize(twitterConfig);
-
     }
 
-
     private void initVariables() {
-        backgroundLayout = (RelativeLayout) findViewById(R.id.loginLayout);
-        emailET = (EditText) findViewById(R.id.input_email);
-        passwordET = (EditText) findViewById(R.id.input_password);
-        registerText = (TextView) findViewById(R.id.btnRegister);
-        forgetPasText = (TextView) findViewById(R.id.btnForgetPassword);
-        imgFacebook = (ClickableImageView) findViewById(R.id.clickImageFB);
-        imgTwitter = (ClickableImageView) findViewById(R.id.clickImageTwitter);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        rememberMeCheckBox = findViewById(R.id.rememberMeCb);
-        forgetPasswordBtn = findViewById(R.id.forgetPasswordBtn);
-        createAccBtn = findViewById(R.id.createAccBtn);
+        initUIValues();
         setClickableTexts(this);
-
-        backgroundLayout.setOnClickListener(this);
-        emailET.setOnClickListener(this);
-        passwordET.setOnClickListener(this);
-        imgFacebook.setOnClickListener(this);
-        imgTwitter.setOnClickListener(this);
-        btnLogin.setOnClickListener(this);
+        initUIListeners();
         progressDialog = new ProgressDialog(this);
 
         loginUser = new LoginUser();
@@ -221,11 +203,32 @@ public class LoginActivity extends AppCompatActivity
             passwordET.setText(loginPreferences.getString("password", passwordET.getText().toString()));
             rememberMeCheckBox.setChecked(true);
         }
+    }
 
+    private void initUIValues(){
+        backgroundLayout = (RelativeLayout) findViewById(R.id.loginLayout);
+        emailET = (EditText) findViewById(R.id.input_email);
+        passwordET = (EditText) findViewById(R.id.input_password);
+        registerText = (TextView) findViewById(R.id.btnRegister);
+        forgetPasText = (TextView) findViewById(R.id.btnForgetPassword);
+        imgFacebook = (ClickableImageView) findViewById(R.id.clickImageFB);
+        imgTwitter = (ClickableImageView) findViewById(R.id.clickImageTwitter);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        rememberMeCheckBox = findViewById(R.id.rememberMeCb);
+        forgetPasswordBtn = findViewById(R.id.forgetPasswordBtn);
+        createAccBtn = findViewById(R.id.createAccBtn);
+    }
+
+    private void initUIListeners(){
+        backgroundLayout.setOnClickListener(this);
+        emailET.setOnClickListener(this);
+        passwordET.setOnClickListener(this);
+        imgFacebook.setOnClickListener(this);
+        imgTwitter.setOnClickListener(this);
+        btnLogin.setOnClickListener(this);
     }
 
     private void setClickableTexts(Activity act) {
-
         final Activity activity = act;
         String textRegister = getResources().getString(R.string.createAccount);
         String textForgetPssword = getResources().getString(R.string.forgetPassword);
@@ -247,8 +250,6 @@ public class LoginActivity extends AppCompatActivity
                 } else {
                     Toast.makeText(LoginActivity.this, "sıçtık!", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         };
         spanStringRegister.setSpan(clickableSpan, 0, spanStringRegister.length(), 0);
@@ -262,7 +263,6 @@ public class LoginActivity extends AppCompatActivity
         forgetPasText.setHighlightColor(Color.TRANSPARENT);
         registerText.setLinkTextColor(getResources().getColor(R.color.White, null));
         forgetPasText.setLinkTextColor(getResources().getColor(R.color.White, null));
-
     }
 
     @Override
@@ -415,11 +415,6 @@ public class LoginActivity extends AppCompatActivity
         userEmail = emailET.getText().toString();
         userPassword = passwordET.getText().toString();
 
-        //Test scenario
-        //todo : NT - kaldırılacak
-        //userEmail = "ugogebakan@gmail.com";
-        //userPassword = "123456";
-
         //validation controls
         if (!checkValidation(userEmail, userPassword)) {
             return;
@@ -461,7 +456,6 @@ public class LoginActivity extends AppCompatActivity
 
     private void loginUser(final String userEmail, String userPassword) {
         final Context context = this;
-
 
         mAuth.signInWithEmailAndPassword(userEmail, userPassword)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -575,7 +569,6 @@ public class LoginActivity extends AppCompatActivity
 
     private void handleFacebookAccessToken(AccessToken token) {
 
-        CommonUtils.LOG_NEREDEYIZ("onActivityResult");
         Log.i("Info", "handleFacebookAccessToken starts:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());

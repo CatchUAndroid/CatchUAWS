@@ -73,6 +73,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeight
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoRecordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareDeleteProcess;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -441,6 +442,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                     @Override
                     public void onPhotoRemoved() {
+                        ShareDeleteProcess.deleteSharedPhoto(getContext(), permissionModule, shareItems);
                         photoSelectUtil = null;
                         isPhotoSelected = false;
                         shareItems.clearImageShareItemBox();
@@ -511,7 +513,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                     @Override
                     public void onVideoRemoved() {
-                        deleteSharedVideo();
+                        ShareDeleteProcess.deleteSharedVideo(getContext(), permissionModule, shareItems);
                         videoSelectUtil = null;
                         isVideoSelected = false;
                         shareItems.clearVideoShareItemBox();
@@ -596,31 +598,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 shareUtil.startToShare();
             }
         }, 300);
-    }
-
-    public void deleteSharedVideo() {
-        try {
-            if (permissionModule.checkWriteExternalStoragePermission()) {
-                if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null && !videoSelectUtil.getVideoRealPath().isEmpty()) {
-                    if (videoSelectUtil.getSelectType() != null && videoSelectUtil.getSelectType().equals(CAMERA_TEXT)) {
-                        File file = new File(videoSelectUtil.getVideoRealPath());
-                        file.delete();
-                        updateGalleryAfterFileDelete(file);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    public void updateGalleryAfterFileDelete(File file) {
-        Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        intent.setData(Uri.fromFile(file));
-        getContext().sendBroadcast(intent);
     }
 
     public void openWhomSelection() {
@@ -745,8 +722,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                                         selectedDescTv.setText(selectedGroup.getName());
                                         setHideAnimations();
                                     }
-
-
                                 }
                             }),
                     ANIMATE_RIGHT_TO_LEFT);
@@ -870,17 +845,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void openCameraForPhotoSelect() {
         try {
-            //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            //StrictMode.setVmPolicy(builder.build());
-            //photoUri = Uri.fromFile(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
-            //photoUri = Uri.parse((FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE)).toString());
-
-
-            System.out.println("getContext().getPackageName():" + getContext().getPackageName());
-
-            photoUri = FileProvider.getUriForFile(
-                    getContext(),
-                    getContext().getPackageName() + ".provider",
+            photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
                     FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -894,37 +859,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             e.printStackTrace();
         }
     }
-
-    /*public void startGalleryForVideos() {
-        try {
-            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
-                    getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
-
-    /*public void startCameraForVideos() {
-        try {
-            Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            takeVideoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, MAX_VIDEO_DURATION);
-            takeVideoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-            takeVideoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_VIDEO_SIZE);
-            takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.HEIGHT, SHARE_VIDEO_HEIGHT);
-            takeVideoIntent.putExtra(MediaStore.Video.Thumbnails.WIDTH, SHARE_VIDEO_WIDHT);
-
-            if (takeVideoIntent.resolveActivity(getContext().getPackageManager()) != null)
-                startActivityForResult(takeVideoIntent, REQUEST_CODE_VIDEO_CAMERA_SELECT);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
 
     private void getUserInfo() {
 
@@ -1049,7 +983,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         } else if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-
                 if(galleryOrCameraSelect.equals(CAMERA_TEXT) && selectedShareType.equals(IMAGE_TYPE)){
                     if(permissionModule.checkCameraPermission())
                         openCameraForPhotoSelect();
@@ -1063,14 +996,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
                             getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
-
-
-
-                /*if (selectedShareType.equals(IMAGE_TYPE))
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                            getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
-                else if (selectedShareType.equals(VIDEO_TYPE))
-                    startGalleryForVideos();*/
             }
         } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -1092,17 +1017,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_PHOTO_CAMERA_SELECT) {
-                //photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
                 photoSelectUtil = new PhotoSelectUtil(getContext(), photoUri, FROM_FILE_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_VIDEO_GALLERY_SELECT) {
                 checkVideoDuration(data);
-            } /*else if (requestCode == REQUEST_CODE_VIDEO_CAMERA_SELECT) {
-                setVideoFromCameraSelection(data);
-            }*/
-        }
-
-        if (requestCode == REQUEST_CODE_ENABLE_LOCATION) {
+            }
+        } else if (requestCode == REQUEST_CODE_ENABLE_LOCATION) {
             if (locationTrackObj.canGetLocation())
                 initializeMap(mMap);
         }
@@ -1142,22 +1062,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    /*public void setVideoFromCameraSelection(Intent data) {
-        try {
-            if (data == null) return;
-            isVideoSelected = true;
-            videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, CAMERA_TEXT);
-            addVideoShareItemList();
-            setVideoSelectImgvFilled();
-            startVideoViewFragment();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-    }*/
-
     public void addVideoShareItemList() {
         try {
             shareItems.clearVideoShareItemBox();
@@ -1183,7 +1087,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                             @Override
                             public void OnPermNotAllowed() {
-                                deleteSharedVideo();
+                                ShareDeleteProcess.deleteSharedVideo(getContext(), permissionModule, shareItems);
                                 videoSelectUtil = null;
                                 isVideoSelected = false;
                                 shareItems.clearVideoShareItemBox();

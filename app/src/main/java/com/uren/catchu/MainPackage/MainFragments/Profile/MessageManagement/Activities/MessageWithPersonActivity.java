@@ -377,10 +377,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                     getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
             sendMessageBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.RECTANGLE, 25, 0));
-
             waitingMsgImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
                     0, GradientDrawable.OVAL, 50, 0));
-
             moreSettingsImgv.setColorFilter(this.getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
