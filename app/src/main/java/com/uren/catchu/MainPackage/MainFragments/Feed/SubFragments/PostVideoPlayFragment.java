@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
 
+@SuppressLint("ValidFragment")
 public class PostVideoPlayFragment extends BaseFragment {
 
 
@@ -41,8 +43,10 @@ public class PostVideoPlayFragment extends BaseFragment {
     @BindView(R.id.root_view)
     LinearLayout root_view;
 
-    public PostVideoPlayFragment() {
+    Media media;
 
+    public PostVideoPlayFragment(Media media) {
+        this.media = media;
     }
 
     @Override
@@ -72,7 +76,7 @@ public class PostVideoPlayFragment extends BaseFragment {
 
     private void setVideo() {
 
-        Media media = SingletonPostItem.getInstance().getMedia();
+        //Media media = SingletonPostItem.getInstance().getMedia();
 
         MyVideoModel myVideoModel = new MyVideoModel(media.getUrl(), media.getThumbnail(), "video");
 

@@ -61,7 +61,7 @@ public class SettingOperation {
             SelectedFriendList.reset();
             GroupListHolder.reset();
 
-            SingletonPostItem.reset();
+            //SingletonPostItem.reset();
             SingletonSinglePost.reset();
             SingletonPostList.reset();
             OtherProfilePostList.reset();

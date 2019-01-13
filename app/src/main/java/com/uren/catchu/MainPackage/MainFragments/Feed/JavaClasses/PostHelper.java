@@ -227,18 +227,18 @@ public class PostHelper {
 
         private void showItemInFullView(Activity activity, Media media) {
 
-            SingletonPostItem.getInstance().setMedia(media);
+            //SingletonPostItem.getInstance().setMedia(media);
 
             if (media.getType().equals(IMAGE_TYPE)) {
 
                 if(mfragmentNavigation != null){
-                    mfragmentNavigation.pushFragment(new PostImageViewFragment());
+                    mfragmentNavigation.pushFragment(new PostImageViewFragment(media));
                 }
 
             } else if (media.getType().equals(VIDEO_TYPE)) {
 
                 if(mfragmentNavigation != null){
-                    mfragmentNavigation.pushFragment(new PostVideoPlayFragment());
+                    mfragmentNavigation.pushFragment(new PostVideoPlayFragment(media));
                 }
             } else {
                 Log.e("info", "unknown media type detected");
