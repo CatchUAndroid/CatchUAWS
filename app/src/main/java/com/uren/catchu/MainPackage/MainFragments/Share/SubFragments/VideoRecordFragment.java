@@ -622,6 +622,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    // TODO: 12.01.2019 - Bazi samsung galaxy cihazlarda once ses sonra video kayit ediliyor, buna detayli bakacagim...
     private void startRecordingVideo() {
         if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
             return;

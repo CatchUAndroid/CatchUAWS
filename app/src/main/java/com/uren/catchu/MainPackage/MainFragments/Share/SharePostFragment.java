@@ -69,8 +69,11 @@ import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.Main2Activity;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.TrimVideoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoRecordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareDeleteProcess;
@@ -105,6 +108,7 @@ import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
+import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
@@ -1047,6 +1051,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
                             }
                         });
+                // TODO: 12.01.2019 - Video trim olayi guzel olacak gibi, buna devam edelim...
+
+                //Intent intent = new Intent(getContext(), Main2Activity.class);
+                //startActivity(intent);
+
+                //mFragmentNavigation.pushFragment(new TrimVideoFragment(data.getData()));
             } else {
                 isVideoSelected = true;
                 videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, GALLERY_TEXT);

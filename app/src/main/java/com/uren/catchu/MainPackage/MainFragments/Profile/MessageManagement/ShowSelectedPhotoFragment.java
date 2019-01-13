@@ -30,6 +30,7 @@ import com.uren.catchu.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 @SuppressLint("ValidFragment")
 public class ShowSelectedPhotoFragment extends BaseFragment {
@@ -82,8 +83,8 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         try {
-            photoSelectImgv.getImageMatrix();
-            photoSelectImgv.setOnTouchListener(new ImageZoomListener(initMatrix));
+            PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoSelectImgv);
+            photoViewAttacher.update();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {

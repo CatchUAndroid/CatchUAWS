@@ -31,6 +31,7 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
@@ -223,6 +224,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     public class ProfileHeaderViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
+        RelativeLayout profilePicLayout;
         ImageView imgProfile;
         ImageView imgInfo;
         TextView txtProfile;
@@ -243,6 +245,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
             try {
                 mView = view;
+                profilePicLayout = view.findViewById(R.id.profilePicLayout);
                 imgProfile = (ImageView) view.findViewById(R.id.imgProfile);
                 imgInfo = (ImageView) view.findViewById(R.id.imgInfo);
                 txtProfile = (TextView) view.findViewById(R.id.txtProfile);
@@ -292,6 +295,16 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                             public void okClick() {
                             }
                         });
+                    }
+                });
+
+                profilePicLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(selectedUser != null && selectedUser.getProfilePhotoUrl() != null &&
+                                !selectedUser.getProfilePhotoUrl().isEmpty()){
+                            fragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(selectedUser.getProfilePhotoUrl()));
+                        }
                     }
                 });
             } catch (Exception e) {
