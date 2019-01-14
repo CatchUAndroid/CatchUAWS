@@ -320,14 +320,14 @@ public class UriAdapter extends AppCompatActivity {
         return false;
     }
 
-    public static String getFilePathFromURI(Context context, Uri contentUri) {
+    public static String getFilePathFromURI(Context context, Uri contentUri, int mediaType) {
         //copy file and send new file path
         try {
             String fileName = getFileName(context, contentUri);
             if (!TextUtils.isEmpty(fileName)) {
                 //File rootDataDir = context.getFilesDir();
                 //File copyFile = new File(rootDataDir + File.separator + fileName);
-                File copyFile = FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE);
+                File copyFile = FileAdapter.getOutputMediaFile(mediaType);
                 copy(context, contentUri, copyFile);
                 return copyFile.getAbsolutePath();
             }

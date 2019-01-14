@@ -13,6 +13,7 @@ import com.uren.catchu.GeneralUtils.UriAdapter;
 
 import java.io.IOException;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
@@ -134,7 +135,7 @@ public class PhotoSelectUtil {
             if (imageRealPath != null && !imageRealPath.isEmpty())
                 bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
             else {
-                imageRealPath = UriAdapter.getFilePathFromURI(context, mediaUri);
+                imageRealPath = UriAdapter.getFilePathFromURI(context, mediaUri, MEDIA_TYPE_IMAGE);
                 bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
             }
         } catch (Exception e) {

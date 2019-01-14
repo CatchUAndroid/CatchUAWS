@@ -168,8 +168,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
             closeCameraDevice();
-           /* cameraDevice.close();
-            mCameraDevice = null;*/
         }
 
         @Override
@@ -177,8 +175,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
             closeCameraDevice();
-            /*cameraDevice.close();
-            mCameraDevice = null;*/
             Activity activity = getActivity();
             if (null != activity) {
                 activity.finish();
@@ -717,7 +713,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             mMediaRecorder.reset();
 
             VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), Uri.parse(mNextVideoAbsolutePath),
-                    mNextVideoAbsolutePath, CAMERA_TEXT);
+                    mNextVideoAbsolutePath, true);
             returnCallback.onReturn(videoSelectUtil);
 
             mNextVideoAbsolutePath = null;

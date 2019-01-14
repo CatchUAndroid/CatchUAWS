@@ -37,6 +37,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
+import com.deep.videotrimmer.utils.FileUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -802,7 +803,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
                 else if (selectedShareType.equals(VIDEO_TYPE))
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
+                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
                             getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
             } else
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
@@ -992,7 +993,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
                 }else if(galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)){
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(),
+                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
                             getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
             }
@@ -1037,19 +1038,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             long timeInMillisec = Long.parseLong(time);
 
             if (timeInMillisec > ((MAX_VIDEO_DURATION + 1) * 1000)) {
-                mFragmentNavigation.pushFragment(new VideoTrimmerFragment(data.getData(), new VideoTrimmedCallback() {
-                    @Override
-                    public void onTrimmed(Uri uri) {
-                        isVideoSelected = true;
-                        videoSelectUtil = new VideoSelectUtil(getActivity(), uri, null, GALLERY_TEXT);
-                        videoSelectUtil.setSelectType(CAMERA_TEXT);
-                        addVideoShareItemList();
-                        setVideoSelectImgvFilled();
-                    }
-                }));
+                startVideoTrimmerFragment(data.getData());
             } else {
                 isVideoSelected = true;
-                videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, GALLERY_TEXT);
+                videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, false);
                 addVideoShareItemList();
                 setVideoSelectImgvFilled();
                 startVideoViewFragment();
@@ -1060,6 +1052,18 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             CommonUtils.showToastShort(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
         }
+    }
+
+    public void startVideoTrimmerFragment(Uri uri){
+        mFragmentNavigation.pushFragment(new VideoTrimmerFragment(uri, new VideoTrimmedCallback() {
+            @Override
+            public void onTrimmed(Uri uri, String realPath) {
+                isVideoSelected = true;
+                videoSelectUtil = new VideoSelectUtil(getActivity(), uri, realPath, true);
+                addVideoShareItemList();
+                setVideoSelectImgvFilled();
+            }
+        }));
     }
 
     public void addVideoShareItemList() {

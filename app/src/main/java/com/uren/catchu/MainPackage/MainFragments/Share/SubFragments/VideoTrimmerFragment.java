@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import com.deep.videotrimmer.DeepVideoTrimmer;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.VideoTrimmedCallback;
@@ -18,6 +20,7 @@ import com.uren.catchu.R;
 
 import butterknife.ButterKnife;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_SIZE_IN_MB;
@@ -66,6 +69,7 @@ public class VideoTrimmerFragment extends BaseFragment implements com.deep.video
                 mVideoTrimmer.setOnTrimVideoListener(this);
                 mVideoTrimmer.setVideoURI(Uri.parse(path));
                 mVideoTrimmer.setMaxFileSize(MAX_VIDEO_SIZE_IN_MB);
+                mVideoTrimmer.setDestinationPath("/storage/emulated/0/CatchU/Movies/");
             }
         }
     }
@@ -75,7 +79,7 @@ public class VideoTrimmerFragment extends BaseFragment implements com.deep.video
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                videoTrimmedCallback.onTrimmed(uri);
+                videoTrimmedCallback.onTrimmed(uri, uri.getPath());
 
                 DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
                         getContext().getResources().getString(R.string.PLEASE_WAIT),

@@ -28,7 +28,7 @@ public class ShareDeleteProcess {
                     VideoSelectUtil videoSelectUtil = videoShareItemBox.getVideoSelectUtil();
 
                     if (videoSelectUtil != null && videoSelectUtil.getVideoRealPath() != null && !videoSelectUtil.getVideoRealPath().isEmpty()) {
-                        if (videoSelectUtil.getSelectType() != null && videoSelectUtil.getSelectType().equals(CAMERA_TEXT)) {
+                        if (videoSelectUtil.isDeletable()) {
                             File file = new File(videoSelectUtil.getVideoRealPath());
                             file.delete();
                             updateGalleryAfterFileDelete(context, file);
