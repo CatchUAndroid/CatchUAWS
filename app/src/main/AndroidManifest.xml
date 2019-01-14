@@ -138,8 +138,6 @@
         <activity android:name=".LoginPackage.AppIntroductionActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity" />
-        <activity android:name=".MainPackage.MainFragments.Share.SubFragments.Main2Activity" />
-        <activity android:name=".MainPackage.MainFragments.Share.SubFragments.TrimmerActivity"></activity>
     </application>
 
 </manifest>

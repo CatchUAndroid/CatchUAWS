@@ -227,8 +227,6 @@ public class PostHelper {
 
         private void showItemInFullView(Activity activity, Media media) {
 
-            //SingletonPostItem.getInstance().setMedia(media);
-
             if (media.getType().equals(IMAGE_TYPE)) {
 
                 if(mfragmentNavigation != null){
@@ -243,10 +241,7 @@ public class PostHelper {
             } else {
                 Log.e("info", "unknown media type detected");
             }
-
         }
-
-
     }
 
     public static class ProfileClicked {

@@ -19,7 +19,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
@@ -75,8 +74,6 @@ public class PostVideoPlayFragment extends BaseFragment {
     }
 
     private void setVideo() {
-
-        //Media media = SingletonPostItem.getInstance().getMedia();
 
         MyVideoModel myVideoModel = new MyVideoModel(media.getUrl(), media.getThumbnail(), "video");
 

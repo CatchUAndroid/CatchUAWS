@@ -14,6 +14,7 @@ public class NumericConstants {
 
     //Share video properties
     public static final int MAX_VIDEO_DURATION = 15;
+    public static final int MAX_VIDEO_SIZE_IN_MB =  25;
     public static final long MAX_VIDEO_SIZE =  209715200L;
     public static final int SHARE_VIDEO_HEIGHT = 176;
     public static final int SHARE_VIDEO_WIDHT = 144;

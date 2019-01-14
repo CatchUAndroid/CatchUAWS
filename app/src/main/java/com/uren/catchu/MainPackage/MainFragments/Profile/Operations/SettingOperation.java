@@ -12,7 +12,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
@@ -61,7 +60,6 @@ public class SettingOperation {
             SelectedFriendList.reset();
             GroupListHolder.reset();
 
-            //SingletonPostItem.reset();
             SingletonSinglePost.reset();
             SingletonPostList.reset();
             OtherProfilePostList.reset();

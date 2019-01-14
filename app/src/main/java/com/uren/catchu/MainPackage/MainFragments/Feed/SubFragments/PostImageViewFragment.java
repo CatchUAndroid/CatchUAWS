@@ -20,7 +20,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
@@ -87,8 +86,6 @@ public class PostImageViewFragment extends BaseFragment {
     }
 
     private void setImage() {
-
-        //Media media = SingletonPostItem.getInstance().getMedia();
 
         Glide.with(this)
                 .load(media.getUrl())
