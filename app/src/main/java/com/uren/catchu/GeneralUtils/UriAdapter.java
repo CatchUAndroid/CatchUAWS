@@ -241,27 +241,6 @@ public class UriAdapter extends AppCompatActivity {
 
     }
 
-    public String getPath(Uri uri) {
-        try {
-            String[] projection = {MediaStore.Video.Media.DATA};
-            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null) {
-                // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-                // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-                int column_index = cursor
-                        .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-                cursor.moveToFirst();
-                return cursor.getString(column_index);
-            } else
-                return null;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
         try {

@@ -44,6 +44,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithGroupFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -93,6 +94,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     ImageView addFriendImgv;
     @BindView(R.id.sendMessageImgv)
     ImageView sendMessageImgv;
+    @BindView(R.id.changePicImgv)
+    ImageView changePicImgv;
 
     boolean photoExistOnImgv = false;
 
@@ -108,6 +111,10 @@ public class ViewGroupDetailFragment extends BaseFragment {
     ProgressDialogUtil progressDialogUtil;
 
     RecyclerViewAdapterCallback recyclerViewAdapterCallback;
+    String selectedType = "";
+
+    private static final int REQUEST_CODE_PHOTO_GALLERY_SELECT = 592;
+    private static final int REQUEST_CODE_PHOTO_CAMERA_SELECT = 676;
 
     public ViewGroupDetailFragment(GroupRequestResultResultArrayItem groupRequestResultResultArrayItem, RecyclerViewAdapterCallback recyclerViewAdapterCallback) {
         this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
@@ -132,7 +139,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 setShapes();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -147,21 +154,21 @@ public class ViewGroupDetailFragment extends BaseFragment {
             groupParticipantList = new ArrayList<>();
             progressDialogUtil = new ProgressDialogUtil(getActivity(), null, true);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
     }
 
-    public void setShapes(){
+    public void setShapes() {
         try {
             addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0));
             sendMessageImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumTurquoise, null),
                     0, GradientDrawable.OVAL, 50, 0));
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -178,7 +185,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 startGetGroupParticipants();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -203,7 +210,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 @Override
                 public void onFailed(Exception e) {
                     progressDialogUtil.dialogDismiss();
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                     CommonUtils.showToastShort(getActivity(), getResources().getString(R.string.error) +
@@ -211,7 +218,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -222,7 +229,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
         try {
             personCntTv.setText(Integer.toString(groupParticipantList.size()));
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -234,7 +241,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
                 addFriendCardView.setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -246,7 +253,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
             subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -276,7 +283,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                         .into(groupPictureImgV);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -360,15 +367,28 @@ public class ViewGroupDetailFragment extends BaseFragment {
             groupPictureImgV.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    startShowSelectedPhotoFragment();
+                }
+            });
+
+            changePicImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     startChooseImageProc();
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    private void startShowSelectedPhotoFragment(){
+        if (groupRequestResultResultArrayItem != null && groupRequestResultResultArrayItem.getGroupPhotoUrl() != null &&
+                !groupRequestResultResultArrayItem.getGroupPhotoUrl().trim().isEmpty())
+            mFragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(groupRequestResultResultArrayItem.getGroupPhotoUrl()));
     }
 
     private void setupViewRecyclerView() {
@@ -396,7 +416,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             });
             recyclerView.setAdapter(adapter);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -429,7 +449,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -442,11 +462,13 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     getString(R.string.CHOOSE_GROUP_PHOTO), photoExistOnImgv, new PhotoChosenCallback() {
                 @Override
                 public void onGallerySelected() {
+                    selectedType = GALLERY_TEXT;
                     startGalleryProcess();
                 }
 
                 @Override
                 public void onCameraSelected() {
+                    selectedType = CAMERA_TEXT;
                     startCameraProcess();
                 }
 
@@ -458,7 +480,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -478,7 +500,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             else
                 checkCameraPermission();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -490,10 +512,10 @@ public class ViewGroupDetailFragment extends BaseFragment {
             if (!permissionModule.checkCameraPermission())
                 requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
             else {
-                startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+                startActivityForResult(IntentSelectUtil.getCameraIntent(), REQUEST_CODE_PHOTO_CAMERA_SELECT);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -502,10 +524,14 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     private void startGalleryProcess() {
         try {
-            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                    getResources().getString(R.string.selectPicture)), permissionModule.getImageGalleryPermission());
+            if (!permissionModule.checkWriteExternalStoragePermission()) {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+            } else
+                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                        getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -517,16 +543,16 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
         try {
             if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == permissionModule.PERMISSION_CAMERA) {
+                if (requestCode == REQUEST_CODE_PHOTO_CAMERA_SELECT) {
                     photoSelectUtil = new PhotoSelectUtil(getActivity(), data, CAMERA_TEXT);
                     updateGroup();
-                } else if (requestCode == permissionModule.getImageGalleryPermission()) {
+                } else if (requestCode == REQUEST_CODE_PHOTO_GALLERY_SELECT) {
                     photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
                     updateGroup();
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -539,13 +565,16 @@ public class ViewGroupDetailFragment extends BaseFragment {
         try {
             if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    checkCameraPermission();
+                    if (selectedType.equals(CAMERA_TEXT))
+                        checkCameraPermission();
+                    else if (selectedType.equals(GALLERY_TEXT))
+                        startGalleryProcess();
                 }
             } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
-                startActivityForResult(IntentSelectUtil.getCameraIntent(), permissionModule.PERMISSION_CAMERA);
+                checkCameraPermission();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -576,7 +605,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                         }
                     });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();

@@ -2,6 +2,9 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.Operations;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.Switch;
 
 import com.facebook.login.LoginManager;
@@ -33,19 +36,39 @@ public class SettingOperation {
             FirebaseAuth firebaseAuth = AccountHolderInfo.getFirebaseAuth();
             firebaseAuth.signOut();
 
-            //Facebook users
-            if(LoginManager.getInstance()!=null){
-                LoginManager.getInstance().logOut();
-            }
-
-            //Twitter users
-            if(TwitterCore.getInstance()!=null){
-                TwitterCore.getInstance().getSessionManager().clearActiveSession();
-            }
-
+            facebookLogout();
+            twitterLogout();
             clearSingletonClasses();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, SettingOperation.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void facebookLogout() {
+        //Facebook users
+        try {
+            if (LoginManager.getInstance() != null) {
+                LoginManager.getInstance().logOut();
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, SettingOperation.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    public static void twitterLogout() {
+        //Twitter users
+        try {
+            if (TwitterCore.getInstance() != null) {
+                TwitterCore.getInstance().getSessionManager().clearActiveSession();
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, SettingOperation.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -64,7 +87,7 @@ public class SettingOperation {
             SingletonPostList.reset();
             OtherProfilePostList.reset();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, SettingOperation.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -100,7 +123,7 @@ public class SettingOperation {
                 });
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, SettingOperation.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -131,7 +154,7 @@ public class SettingOperation {
                 }
             }, false, userProfileProperties, null);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null,SettingOperation.class.getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(null, SettingOperation.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

@@ -596,6 +596,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void run() {
                 ShareUtil shareUtil = new ShareUtil(shareItems);
                 shareUtil.startToShare();
+
+                /*Intent intent = new Intent(getContext(), ShareUtil.class);
+                intent.putExtra("ShareItems", shareItems);
+                getContext().startService(intent);*/
+
+
             }
         }, 300);
     }

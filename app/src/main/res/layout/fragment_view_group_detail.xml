@@ -42,15 +42,27 @@
 
                 <ImageView
                     android:id="@+id/editImageView"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginBottom="15dp"
                     android:layout_marginRight="20dp"
                     android:fitsSystemWindows="true"
                     android:scaleType="centerCrop"
                     android:src="@mipmap/icon_pencil"
+                    app:layout_collapseMode="parallax" />
+
+                <ImageView
+                    android:id="@+id/changePicImgv"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignStart="@+id/editImageView"
+                    android:layout_marginBottom="61dp"
+                    android:fitsSystemWindows="true"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/photo_camera"
                     app:layout_collapseMode="parallax" />
 
             </RelativeLayout>
@@ -239,8 +251,6 @@
                 android:src="@mipmap/icon_email" />
 
         </RelativeLayout>
-
-
 
 
     </RelativeLayout>

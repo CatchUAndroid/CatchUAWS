@@ -70,6 +70,8 @@
             </intent-filter>
         </service>
 
+        <service android:name=".MainPackage.MainFragments.Share.Utils.ShareUtil"/>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/app_notif_icon" />
