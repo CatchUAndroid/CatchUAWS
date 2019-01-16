@@ -100,7 +100,7 @@ import catchu.model.UserProfile;
 import static android.content.Context.LOCATION_SERVICE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.uren.catchu.Constants.NumericConstants.KEYBOARD_CHECK_VALUE;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -855,7 +855,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, MAX_IMAGE_SIZE);
+            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) MAX_IMAGE_SIZE_1MB);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
             startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
         } catch (Exception e) {

@@ -10,6 +10,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
@@ -62,7 +63,6 @@ public class UpdateUserProfileProcess {
                 startUploadMediaToS3(token);
             }
         });
-
     }
 
     private void startUploadMediaToS3(String token) {

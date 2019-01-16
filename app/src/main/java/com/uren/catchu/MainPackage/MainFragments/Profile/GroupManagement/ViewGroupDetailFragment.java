@@ -278,7 +278,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 photoExistOnImgv = false;
                 groupPictureImgV.setPadding(200, 200, 200, 200);
                 Glide.with(this)
-                        .load(getResources().getIdentifier("groups_icon_500", "drawable", getActivity().getPackageName()))
+                        .load(getResources().getIdentifier("groups_icon_500", "drawable", getContext().getPackageName()))
                         .apply(RequestOptions.centerInsideTransform())
                         .into(groupPictureImgV);
             }
@@ -584,6 +584,9 @@ public class ViewGroupDetailFragment extends BaseFragment {
     public void updateGroup() {
 
         try {
+            if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
+                photoSelectUtil.setBitmap(photoSelectUtil.getResizedBitmap());
+
             UserGroupsProcess.updateGroup(getContext(), photoSelectUtil, groupRequestResultResultArrayItem,
                     new UpdateGroupCallback() {
                         @Override

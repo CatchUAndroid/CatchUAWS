@@ -8,9 +8,7 @@ import android.support.v4.content.FileProvider;
 
 import com.uren.catchu.GeneralUtils.FileAdapter;
 
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
 
 public class IntentSelectUtil {
 

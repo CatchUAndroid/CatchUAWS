@@ -11,10 +11,8 @@ import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
-import java.io.IOException;
-
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -79,9 +77,9 @@ public class PhotoSelectUtil {
                 System.out.println("BitmapCompat.getAllocationByteCount(getBitmap):" + BitmapCompat.getAllocationByteCount(getBitmap()));
             }
 
-            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE) {
+            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_1MB) {
 
-                for (float i = 0.9f; i > 0; i = i - 0.1f) {
+                for (float i = 0.9f; i > 0; i = i - 0.05f) {
                     System.out.println("i_1:" + i);
                     resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
                             (int) (mBitmap.getWidth() * i),
@@ -89,7 +87,7 @@ public class PhotoSelectUtil {
 
                     System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
-                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE) {
+                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE_1MB) {
                         break;
                     }
                 }
@@ -103,7 +101,7 @@ public class PhotoSelectUtil {
 
                         System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
-                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > MAX_IMAGE_SIZE) {
+                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > MAX_IMAGE_SIZE_1MB) {
                             break;
                         }
                     }

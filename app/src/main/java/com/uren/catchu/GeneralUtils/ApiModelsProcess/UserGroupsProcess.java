@@ -96,6 +96,7 @@ public class UserGroupsProcess {
 
     public static void updateGroup(Context context, PhotoSelectUtil photoSelectUtil, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem,
                                    final UpdateGroupCallback updateGroupCallback){
+
         new UpdateGroupProcess(context, photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
             public void onSuccess(GroupRequestResultResultArrayItem groupItem) {

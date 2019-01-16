@@ -104,8 +104,13 @@ public class BitmapConversion extends AppCompatActivity {
         Bitmap resizedBitmap = null;
 
         try {
+            System.out.println("BitmapConversion getResizedBitmap bm:" + bm.getAllocationByteCount());
             int width = bm.getWidth();
             int height = bm.getHeight();
+            System.out.println("width:" + width);
+            System.out.println("height:" + height);
+            System.out.println("newWidth:" + newWidth);
+            System.out.println("newHeight:" + newHeight);
             float scaleWidth = ((float) newWidth) / width;
             float scaleHeight = ((float) newHeight) / height;
             // CREATE A MATRIX FOR THE MANIPULATION
@@ -116,6 +121,10 @@ public class BitmapConversion extends AppCompatActivity {
             // "RECREATE" THE NEW BITMAP
             resizedBitmap = Bitmap.createBitmap(
                     bm, 0, 0, width, height, matrix, false);
+
+            System.out.println("BitmapConversion getResizedBitmap resizedBitmap:" + resizedBitmap.getAllocationByteCount());
+            System.out.println("width:" + resizedBitmap.getWidth());
+            System.out.println("height:" + resizedBitmap.getHeight());
             //bm.recycle();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
