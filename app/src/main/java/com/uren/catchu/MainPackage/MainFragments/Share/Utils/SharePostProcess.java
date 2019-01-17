@@ -37,12 +37,7 @@ import catchu.model.Media;
 import catchu.model.PostRequest;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
-import id.zelory.compressor.Compressor;
 
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-import static com.amazonaws.services.s3.internal.Constants.MB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
 import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
@@ -110,16 +105,6 @@ public class SharePostProcess {
                     counter = 0;
                     for (final VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
                         BucketUpload bucketUpload = commonS3BucketResult.getVideos().get(counter);
-
-                        /*String filePath = "/storage/emulated/0/CatchU/Movies";
-                        System.out.println("filePath:" + filePath);
-
-                        System.out.println("startTime:" + DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
-                        SiliCompressor.with(context).compressVideo(videoShareItemBox.getVideoSelectUtil().getVideoRealPath(),
-                                filePath);
-
-                        System.out.println("finishTime:" + DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
-*/
                         uploadVideos(bucketUpload, videoShareItemBox);
                         uploadThumbnailImage(bucketUpload, videoShareItemBox);
                         counter++;

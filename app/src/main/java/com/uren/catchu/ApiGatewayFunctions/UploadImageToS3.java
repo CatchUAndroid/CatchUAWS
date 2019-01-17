@@ -20,8 +20,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import id.zelory.compressor.Compressor;
-
 
 public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
 

@@ -298,7 +298,7 @@ public class GroupManagementFragment extends BaseFragment {
                                                     localGroupOperation(ITEM_CHANGED, null);
                                                     userGroupsListAdapter.notifyDataSetChanged();
                                                 }
-                                            }));
+                                            }), ANIMATE_LEFT_TO_RIGHT);
                                     }
                                 }, operationType);
 

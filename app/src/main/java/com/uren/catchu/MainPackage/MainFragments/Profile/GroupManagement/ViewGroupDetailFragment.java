@@ -10,6 +10,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.SubtitleCollapsingToolbarLayout;
 import android.support.v7.widget.CardView;
@@ -99,6 +100,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     ImageView changePicImgv;
     @BindView(R.id.exitGroupImgv)
     ImageView exitGroupImgv;
+    @BindView(R.id.backImgv)
+    ImageView backImgv;
 
     boolean photoExistOnImgv = false;
 
@@ -148,6 +151,12 @@ public class ViewGroupDetailFragment extends BaseFragment {
             e.printStackTrace();
         }
         return mView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     public void setGUIVariables() {
@@ -298,6 +307,12 @@ public class ViewGroupDetailFragment extends BaseFragment {
     public void addListeners() {
 
         try {
+            backImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getActivity().onBackPressed();
+                }
+            });
             sendMessageImgv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

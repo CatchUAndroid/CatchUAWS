@@ -15,9 +15,6 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
 import java.io.File;
-import java.io.IOException;
-
-import id.zelory.compressor.Compressor;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.uren.catchu.Constants.NumericConstants.IMAGE_RESOLUTION_480;
