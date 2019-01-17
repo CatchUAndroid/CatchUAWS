@@ -3,16 +3,26 @@ package com.uren.catchu.GeneralUtils.PhotoUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.graphics.BitmapCompat;
 
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
+import java.io.File;
+import java.io.IOException;
+
+import id.zelory.compressor.Compressor;
+
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
+import static com.uren.catchu.Constants.NumericConstants.IMAGE_RESOLUTION_480;
+import static com.uren.catchu.Constants.NumericConstants.IMAGE_RESOLUTION_640;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -28,7 +38,7 @@ public class PhotoSelectUtil {
     Intent data;
     String type;
     boolean portraitMode;
-    float bitmapResizeValue = 0.8f;
+    File file;
 
     public PhotoSelectUtil() {
 
@@ -39,6 +49,8 @@ public class PhotoSelectUtil {
         this.data = data;
         this.type = type;
         routeSelection();
+        setPortraitMode();
+        setImageFile();
     }
 
     public PhotoSelectUtil(Context context, Uri uri, String type) {
@@ -47,6 +59,7 @@ public class PhotoSelectUtil {
         this.mediaUri = uri;
         routeSelection();
         setPortraitMode();
+        setImageFile();
     }
 
     private void routeSelection() {
@@ -65,7 +78,60 @@ public class PhotoSelectUtil {
         }
     }
 
-    public Bitmap getResizedBitmap() {
+    public void setImageFile() {
+        try {
+            this.file = new File(imageRealPath);
+            System.out.println("setImageFile file.getAbsolutePath():" + file.getAbsolutePath());
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public Bitmap getImageResizedBitmap() {
+        Bitmap mBitmap = null;
+        int newWidth = 0, newHeight = 0;
+
+        try {
+            if (getScreeanShotBitmap() != null)
+                mBitmap = getScreeanShotBitmap();
+            else if (getBitmap() != null)
+                mBitmap = getBitmap();
+
+            int width = mBitmap.getWidth();
+            int height = mBitmap.getHeight();
+
+            if(isPortraitMode()) {
+                newWidth = IMAGE_RESOLUTION_480;
+                newHeight = IMAGE_RESOLUTION_640;
+            }else {
+                newWidth = IMAGE_RESOLUTION_640;
+                newHeight = IMAGE_RESOLUTION_480;
+            }
+
+            float scaleWidth = ((float) newWidth) / width;
+            float scaleHeight = ((float) newHeight) / height;
+
+            Matrix matrix = new Matrix();
+            matrix.postScale(scaleWidth, scaleHeight);
+
+            resizedBitmap = Bitmap.createBitmap(
+                    mBitmap, 0, 0, width, height, matrix, false);
+
+            //bm.recycle();
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+            return mBitmap;
+        }
+        return resizedBitmap;
+    }
+
+    /*public Bitmap getResizedBitmap() {
         Bitmap mBitmap = null;
 
         try {
@@ -77,7 +143,7 @@ public class PhotoSelectUtil {
                 System.out.println("BitmapCompat.getAllocationByteCount(getBitmap):" + BitmapCompat.getAllocationByteCount(getBitmap()));
             }
 
-            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_1MB) {
+            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_1ANDHALFMB) {
 
                 for (float i = 0.9f; i > 0; i = i - 0.05f) {
                     System.out.println("i_1:" + i);
@@ -87,7 +153,7 @@ public class PhotoSelectUtil {
 
                     System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
-                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE_1MB) {
+                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE_1ANDHALFMB) {
                         break;
                     }
                 }
@@ -101,7 +167,7 @@ public class PhotoSelectUtil {
 
                         System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
-                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > MAX_IMAGE_SIZE_1MB) {
+                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > MAX_IMAGE_SIZE_1ANDHALFMB) {
                             break;
                         }
                     }
@@ -122,7 +188,7 @@ public class PhotoSelectUtil {
         System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
         return resizedBitmap;
-    }
+    }*/
 
     private void onSelectFromFileResult() {
         try {
@@ -248,5 +314,13 @@ public class PhotoSelectUtil {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
     }
 }

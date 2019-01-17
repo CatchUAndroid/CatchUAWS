@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -96,6 +97,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     ImageView sendMessageImgv;
     @BindView(R.id.changePicImgv)
     ImageView changePicImgv;
+    @BindView(R.id.exitGroupImgv)
+    ImageView exitGroupImgv;
 
     boolean photoExistOnImgv = false;
 
@@ -163,10 +166,11 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     public void setShapes() {
         try {
-            addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+            addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LimeGreen, null),
                     0, GradientDrawable.OVAL, 50, 0));
             sendMessageImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumTurquoise, null),
                     0, GradientDrawable.OVAL, 50, 0));
+            exitGroupImgv.setColorFilter(getContext().getResources().getColor(R.color.likeButtonColor, null), PorterDuff.Mode.SRC_IN);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
@@ -227,7 +231,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     public void setParticipantCount() {
         try {
-            personCntTv.setText(Integer.toString(groupParticipantList.size()));
+            String participantText = Integer.toString(groupParticipantList.size()) + " " ;
+            personCntTv.setText(participantText);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
@@ -385,7 +390,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
         }
     }
 
-    private void startShowSelectedPhotoFragment(){
+    private void startShowSelectedPhotoFragment() {
         if (groupRequestResultResultArrayItem != null && groupRequestResultResultArrayItem.getGroupPhotoUrl() != null &&
                 !groupRequestResultResultArrayItem.getGroupPhotoUrl().trim().isEmpty())
             mFragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(groupRequestResultResultArrayItem.getGroupPhotoUrl()));
@@ -584,9 +589,6 @@ public class ViewGroupDetailFragment extends BaseFragment {
     public void updateGroup() {
 
         try {
-            if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-                photoSelectUtil.setBitmap(photoSelectUtil.getResizedBitmap());
-
             UserGroupsProcess.updateGroup(getContext(), photoSelectUtil, groupRequestResultResultArrayItem,
                     new UpdateGroupCallback() {
                         @Override

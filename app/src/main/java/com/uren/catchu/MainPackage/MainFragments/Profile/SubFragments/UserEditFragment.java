@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -148,7 +149,6 @@ public class UserEditFragment extends BaseFragment
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.editProfile));
         commonToolbarTickImgv.setVisibility(View.VISIBLE);
         permissionModule = new PermissionModule(getContext());
-        photoSelectUtil = new PhotoSelectUtil();
     }
 
     public void initListeners() {
@@ -447,9 +447,6 @@ public class UserEditFragment extends BaseFragment
 
     private void updateOperation(UserProfileProperties userProfileProperties) {
 
-        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            photoSelectUtil.setBitmap(photoSelectUtil.getResizedBitmap());
-
         new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
@@ -470,7 +467,7 @@ public class UserEditFragment extends BaseFragment
                 });
                 e.printStackTrace();
             }
-        }, profilPicChanged, userProfileProperties, photoSelectUtil.getBitmap());
+        }, profilPicChanged, userProfileProperties, photoSelectUtil);
     }
 
     private void chooseImageProcess() {
@@ -488,7 +485,7 @@ public class UserEditFragment extends BaseFragment
             @Override
             public void onPhotoRemoved() {
                 try {
-                    photoSelectUtil = new PhotoSelectUtil();
+                    photoSelectUtil = null;
                     photoExist = false;
                     setUserPhoto(null);
                 } catch (Exception e) {

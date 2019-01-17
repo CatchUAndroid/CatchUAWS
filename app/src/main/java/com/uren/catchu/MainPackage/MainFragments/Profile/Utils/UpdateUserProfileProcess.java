@@ -32,23 +32,30 @@ public class UpdateUserProfileProcess {
     ServiceCompleteCallback serviceCompleteCallback;
     boolean profilPicChanged;
     UserProfileProperties userProfileProperties;
-    Bitmap bitmap;
+    PhotoSelectUtil photoSelectUtil;
     ProgressDialogUtil progressDialogUtil;
     boolean dialogShowed;
+    Bitmap uploadBitmap = null;
 
     public UpdateUserProfileProcess(Context context, ServiceCompleteCallback serviceCompleteCallback, boolean profilPicChanged,
-                                    UserProfileProperties userProfileProperties, Bitmap bitmap){
+                                    UserProfileProperties userProfileProperties, PhotoSelectUtil photoSelectUtil){
         this.context = context;
         this.serviceCompleteCallback = serviceCompleteCallback;
         this.profilPicChanged = profilPicChanged;
         this.userProfileProperties = userProfileProperties;
-        this.bitmap = bitmap;
+        this.photoSelectUtil = photoSelectUtil;
         progressDialogUtil = new ProgressDialogUtil(context, context.getResources().getString(R.string.UPDATING), false);
+        setUploadBitmap();
 
-        if(this.profilPicChanged && bitmap != null)
+        if(this.profilPicChanged && uploadBitmap != null)
             uploadMediaToS3();
         else
             updateUserProfile();
+    }
+
+    public void setUploadBitmap() {
+        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
+            uploadBitmap = photoSelectUtil.getImageResizedBitmap();
     }
 
     public void uploadMediaToS3(){
@@ -101,7 +108,7 @@ public class UpdateUserProfileProcess {
                     @Override
                     public void onTaskContinue() {
                     }
-                }, bitmap, commonS3BucketResult.getImages().get(0).getUploadUrl());
+                }, uploadBitmap, commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                 uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

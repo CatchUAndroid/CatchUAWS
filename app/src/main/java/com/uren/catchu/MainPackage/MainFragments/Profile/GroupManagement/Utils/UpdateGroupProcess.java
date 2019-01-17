@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
@@ -34,6 +35,7 @@ public class UpdateGroupProcess {
     ProgressDialog mProgressDialog;
     GroupRequestResultResultArrayItem groupItem;
     UpdateGroupCallback updateGroupCallback;
+    Bitmap uploadBitmap = null;
 
     // TODO: 30.08.2018 - Grup fotosu guncellendi, S3 den silme akisi nasil olacak...
     // TODO: 5.10.2018 - grup fotosu silindiginde S3 den silme akisi yok...
@@ -45,8 +47,9 @@ public class UpdateGroupProcess {
             this.groupItem = groupItem;
             this.updateGroupCallback = updateGroupCallback;
             mProgressDialog = new ProgressDialog(context);
+            setUploadBitmap();
 
-            if (photoSelectUtil != null && photoSelectUtil.getMediaUri() != null) {
+            if (uploadBitmap != null) {
                 mProgressDialog.setMessage(context.getResources().getString(R.string.groupPhotoChanging));
                 dialogShow();
                 AccountHolderInfo.getToken(new TokenCallback() {
@@ -66,6 +69,11 @@ public class UpdateGroupProcess {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void setUploadBitmap() {
+        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
+            uploadBitmap = photoSelectUtil.getImageResizedBitmap();
     }
 
     public void dialogShow() {
@@ -123,7 +131,7 @@ public class UpdateGroupProcess {
                         public void onTaskContinue() {
 
                         }
-                    }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                    }, uploadBitmap, commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                     uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
@@ -162,7 +170,7 @@ public class UpdateGroupProcess {
         });
     }
 
-    public void startUpdateGroupToNeoJ(String token){
+    public void startUpdateGroupToNeoJ(String token) {
         try {
             final GroupRequest groupRequest = new GroupRequest();
 

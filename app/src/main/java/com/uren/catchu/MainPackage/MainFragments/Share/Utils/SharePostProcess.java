@@ -37,8 +37,12 @@ import catchu.model.Media;
 import catchu.model.PostRequest;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
+import id.zelory.compressor.Compressor;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
+import static com.amazonaws.services.s3.internal.Constants.MB;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
 import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
@@ -86,7 +90,8 @@ public class SharePostProcess {
     }
 
     private void startUploadMediaToS3(String token) {
-        final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
+        final String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
         signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -147,13 +152,15 @@ public class SharePostProcess {
     }
 
     public void uploadImages(final BucketUpload bucketUpload, final ImageShareItemBox imageShareItemBox) {
-        final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
+        final String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
         Bitmap photoBitmap = null;
 
-        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
-            if (imageShareItemBox.getPhotoSelectUtil().getResizedBitmap() != null)
-                photoBitmap = imageShareItemBox.getPhotoSelectUtil().getResizedBitmap();
-            else if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
+        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null)
+            photoBitmap = imageShareItemBox.getPhotoSelectUtil().getImageResizedBitmap();
+
+        if (photoBitmap == null) {
+            if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap();
             else if (imageShareItemBox.getPhotoSelectUtil().getBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getBitmap();

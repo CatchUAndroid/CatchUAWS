@@ -279,9 +279,6 @@ public class AddGroupFragment extends BaseFragment {
     }
 
     public void saveGroup() {
-        if(photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            photoSelectUtil.setBitmap(photoSelectUtil.getResizedBitmap());
-
         UserGroupsProcess.saveGroup(getContext(), photoSelectUtil, groupNameEditText.getText().toString(), new CompleteCallback() {
             @Override
             public void onComplete(final Object object) {

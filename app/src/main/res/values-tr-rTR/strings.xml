@@ -25,7 +25,7 @@
     <string name="groupIsCreating">Grup Oluşturuluyor...</string>
     <string name="writeGroupName">Grup adını yazın...</string>
     <string name="defineGroupNameAndIcon">Grup adı ve simgesi belirleyin</string>
-    <string name="participant">Katılımcı:</string>
+    <string name="participant"> katılımcı</string>
     <string name="constantItem">adet</string>
     <string name="adminText">  Grup Yöneticisi  </string>
     <string name="technicalError">Teknik Hata!</string>

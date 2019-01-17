@@ -46,7 +46,7 @@
     <string name="groupIsCreating">Group is composing...</string>
     <string name="writeGroupName">Write group name...</string>
     <string name="defineGroupNameAndIcon">Specify group name and icon</string>
-    <string name="participant">Participant:</string>
+    <string name="participant"> participants</string>
     <string name="constantItem">item</string>
     <string name="adminText">  Administrator  </string>
     <string name="technicalError">Technical Error!</string>
