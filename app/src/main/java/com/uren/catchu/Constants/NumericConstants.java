@@ -23,9 +23,13 @@ public class NumericConstants {
     public static final int MAX_IMAGE_SIZE_1MB =  1048576;
     public static final int MAX_IMAGE_SIZE_1ANDHALFMB =  1572864;
     public static final int MAX_IMAGE_SIZE_2MB =  2097152;
+    public static final int MAX_IMAGE_SIZE_2ANDHALFMB =  2621440;
+    public static final int MAX_IMAGE_SIZE_3MB =  3145728;
+    public static final int MAX_IMAGE_SIZE_5MB = 5242880;
 
     public static final int IMAGE_RESOLUTION_480 =  480;
     public static final int IMAGE_RESOLUTION_640 =  640;
+    public static final int IMAGE_RESOLUTION_800 =  800;
 
     //DialogBox Results
     public static final int UPDATE_RESULT_OK = 1;

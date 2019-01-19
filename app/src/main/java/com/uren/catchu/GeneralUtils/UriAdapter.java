@@ -270,9 +270,6 @@ public class UriAdapter extends AppCompatActivity {
             }
             cursor.close();
         }catch (Exception e){
-            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return res;

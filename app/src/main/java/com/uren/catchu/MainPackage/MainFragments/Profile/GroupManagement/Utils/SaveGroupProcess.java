@@ -71,7 +71,7 @@ public class SaveGroupProcess {
 
     public void setUploadBitmap() {
         if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            uploadBitmap = photoSelectUtil.getImageResizedBitmap();
+            uploadBitmap = photoSelectUtil.getResizedBitmap();
     }
 
     public void dialogShow() {

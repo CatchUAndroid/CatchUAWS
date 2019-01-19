@@ -55,7 +55,7 @@ public class UpdateUserProfileProcess {
 
     public void setUploadBitmap() {
         if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            uploadBitmap = photoSelectUtil.getImageResizedBitmap();
+            uploadBitmap = photoSelectUtil.getResizedBitmap();
     }
 
     public void uploadMediaToS3(){
