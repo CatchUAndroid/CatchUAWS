@@ -297,8 +297,6 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
 
     }
 
-
-
     public void updateItems() {
         /**/
         notifyDataSetChanged();

@@ -61,6 +61,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -134,7 +135,7 @@ public class UserEditFragment extends BaseFragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mView = inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
         ButterKnife.bind(this, mView);

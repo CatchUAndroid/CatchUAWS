@@ -12,8 +12,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -35,6 +37,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowS
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
@@ -47,6 +51,7 @@ import catchu.model.User;
 import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
@@ -179,7 +184,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                                 ((PostViewHolder) holder).updatePostList(position);
                             } else if (operationType == OPERATION_TYPE_LOAD_MORE) {
                                 ((PostViewHolder) holder).loadMorePost();
-                            }else if( operationType == OPERATION_TYPE_PAGE_COUNT){
+                            } else if (operationType == OPERATION_TYPE_PAGE_COUNT) {
                                 ((PostViewHolder) holder).updatePageCount();
                             }
 
@@ -233,6 +238,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         Button btnFollowStatus;
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
+        LinearLayout followersLayout;
+        LinearLayout followingsLayout;
 
         UserProfile fetchedUser;
         String followStatus;
@@ -255,9 +262,11 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 txtFollowerCnt = (TextView) view.findViewById(R.id.txtFollowerCnt);
                 txtFollowingCnt = (TextView) view.findViewById(R.id.txtFollowingCnt);
                 sendMessageBtn = (Button) view.findViewById(R.id.sendMessageBtn);
+                followersLayout = (LinearLayout) view.findViewById(R.id.followersLayout);
+                followingsLayout = (LinearLayout) view.findViewById(R.id.followingsLayout);
 
-                txtFollowerCnt.setClickable(false);
-                txtFollowingCnt.setClickable(false);
+                //txtFollowerCnt.setClickable(false);
+                //txtFollowingCnt.setClickable(false);
 
                 setListeners();
             } catch (Exception e) {
@@ -301,12 +310,35 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 profilePicLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(selectedUser != null && selectedUser.getProfilePhotoUrl() != null &&
-                                !selectedUser.getProfilePhotoUrl().isEmpty()){
+                        if (selectedUser != null && selectedUser.getProfilePhotoUrl() != null &&
+                                !selectedUser.getProfilePhotoUrl().isEmpty()) {
                             fragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(selectedUser.getProfilePhotoUrl()));
                         }
                     }
                 });
+
+                //followersLayout
+                followersLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isSelectedUserFollowInfoClickable()) {
+                            followersLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+                            followerClicked();
+                        }
+                    }
+                });
+
+                //followingsLayout
+                followingsLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (isSelectedUserFollowInfoClickable()) {
+                            followingsLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+                            followingClicked();
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
                         new Object() {
@@ -315,7 +347,33 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             }
         }
 
-        public void startMessageWithPersonFragment(){
+        private boolean isSelectedUserFollowInfoClickable() {
+            if (selectedUser.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+                return true;
+            } else {
+                if (selectedUser.getIsPrivateAccount()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
+
+        private void followerClicked() {
+            if (fragmentNavigation != null) {
+                String requestedUserId = selectedUser.getUserid();
+                fragmentNavigation.pushFragment(FollowerFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            }
+        }
+
+        private void followingClicked() {
+            if (fragmentNavigation != null) {
+                String requestedUserId = selectedUser.getUserid();
+                fragmentNavigation.pushFragment(FollowingFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            }
+        }
+
+        public void startMessageWithPersonFragment() {
             try {
                 Intent intent = new Intent(mContext, MessageWithPersonActivity.class);
                 intent.putExtra(FCM_CODE_CHATTED_USER, getChattedUserInfo());
@@ -816,7 +874,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     public void updatePosts(List<Post> addedPostList) {
 
         try {
-            if(objectList.size() == 1){
+            if (objectList.size() == 1) {
                 addPosts(addedPostList);
                 return;
             }

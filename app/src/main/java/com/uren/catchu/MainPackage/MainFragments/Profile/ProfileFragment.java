@@ -171,7 +171,6 @@ public class ProfileFragment extends BaseFragment
     }
 
     public ProfileFragment() {
-
     }
 
     @Override
@@ -210,19 +209,16 @@ public class ProfileFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void initListeners() {
 
         imgUserEdit.setOnClickListener(this);
-        txtFollowerCnt.setOnClickListener(this);
-        txtFollowingCnt.setOnClickListener(this);
         imgProfile.setOnClickListener(this);
 
         llMyPosts.setOnClickListener(this);
         llCatchedPosts.setOnClickListener(this);
-        llMyGroups.setOnClickListener(this);
 
         followersLayout.setOnClickListener(this);
         followingsLayout.setOnClickListener(this);
@@ -476,7 +472,7 @@ public class ProfileFragment extends BaseFragment
                 sharedPostCount.setText(String.valueOf(user.getRelationInfo().getPostCount()));
 
             if (user.getRelationInfo().getCatchCount() != null && !user.getRelationInfo().getCatchCount().toString().trim().isEmpty())
-                caughtPostCount.setText(String.valueOf(user.getRelationInfo().getFollowingCount()));
+                caughtPostCount.setText(String.valueOf(user.getRelationInfo().getCatchCount()));
         }
 
     }
@@ -552,14 +548,22 @@ public class ProfileFragment extends BaseFragment
 
             @Override
             public void onSuccess(UserProfile up) {
-                Log.i("userDetail", "successful");
+
+                if (up == null) {
+                    CommonUtils.LOG_OK_BUT_NULL("UserDetail");
+                } else {
+                    CommonUtils.LOG_OK("UserDetail");
+                    myProfile = up;
+                    setProfileDetail(up);
+                }
+
                 progressBar.setVisibility(View.GONE);
-                myProfile = up;
-                setProfileDetail(up);
+
             }
 
             @Override
             public void onFailure(Exception e) {
+                CommonUtils.LOG_FAIL("UserDetail", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -657,7 +661,6 @@ public class ProfileFragment extends BaseFragment
         }
 
         if (v == imgBackBtn) {
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
 
@@ -671,11 +674,6 @@ public class ProfileFragment extends BaseFragment
             String targetUid = AccountHolderInfo.getUserID();
             String toolbarTitle = getContext().getResources().getString(R.string.caughtPosts);
             mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
-        }
-
-        if (v == llMyGroups) {
-            String targetUid = AccountHolderInfo.getUserID();
-            //mFragmentNavigation.pushFragment(UserGroupsFragment.newInstance("", targetUid), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == followingsLayout) {
@@ -697,29 +695,23 @@ public class ProfileFragment extends BaseFragment
     }
 
     private void userEditClicked() {
-
         if (mFragmentNavigation != null) {
-            //mFragmentNavigation.pushFragment(new UserEditFragment());
             mFragmentNavigation.pushFragment(new UserEditFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
-
     }
 
     private void followerClicked() {
-
         if (mFragmentNavigation != null) {
-            //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new FollowerFragment(), ANIMATE_RIGHT_TO_LEFT);
+            String requestedUserId = AccountHolderInfo.getUserID();
+            mFragmentNavigation.pushFragment(FollowerFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
     private void followingClicked() {
-
         if (mFragmentNavigation != null) {
-            //mFragmentNavigation.pushFragment(new UserEditFragment());
-            mFragmentNavigation.pushFragment(new FollowingFragment(), ANIMATE_RIGHT_TO_LEFT);
+            String requestedUserId = AccountHolderInfo.getUserID();
+            mFragmentNavigation.pushFragment(FollowingFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
         }
-
     }
 
     private void startSettingsFragment() {

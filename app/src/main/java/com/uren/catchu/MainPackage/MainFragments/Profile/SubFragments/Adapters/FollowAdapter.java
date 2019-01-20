@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
@@ -23,6 +24,9 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClic
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import catchu.model.FollowInfoListResponse;
 import catchu.model.User;
 
@@ -37,16 +41,19 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
 public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHolder> {
 
+    private Activity mActivity;
     private Context mContext;
-    private FollowInfoListResponse followInfoListResponse;
     private ListItemClickListener listItemClickListener;
+    private List<User> userList;
+
     GradientDrawable imageShape;
     GradientDrawable buttonShape;
 
-    public FollowAdapter(Context context, FollowInfoListResponse followInfoListResponse, ListItemClickListener listItemClickListener) {
+    public FollowAdapter(Activity activity, Context context) {
+        this.mActivity = activity;
         this.mContext = context;
-        this.followInfoListResponse = followInfoListResponse;
-        this.listItemClickListener = listItemClickListener;
+
+        this.userList = new ArrayList<User>();
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
     }
@@ -93,7 +100,6 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     listItemClickListener.onClick(v, user, position);
                 }
             });
@@ -204,18 +210,30 @@ public class FollowAdapter extends RecyclerView.Adapter<FollowAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        User user = followInfoListResponse.getItems().get(position);
+        User user = userList.get(position);
         holder.setData(user, position);
     }
 
     @Override
     public int getItemCount() {
-        return followInfoListResponse.getItems().size();
+        return userList.size();
     }
 
     public void updateAdapterWithPosition(int position) {
         notifyItemChanged(position);
     }
+
+    public void setListItemClickListener(ListItemClickListener listItemClickListener) {
+        this.listItemClickListener = listItemClickListener;
+    }
+
+    public void addAll(List<User> addUserList) {
+        if (addUserList != null) {
+            userList.addAll(addUserList);
+            notifyItemRangeInserted(userList.size(), userList.size() + addUserList.size());
+        }
+    }
+
 }
 
 

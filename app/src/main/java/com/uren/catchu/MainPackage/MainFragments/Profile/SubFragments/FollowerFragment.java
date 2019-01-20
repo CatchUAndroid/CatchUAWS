@@ -39,10 +39,12 @@ public class FollowerFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    FollowAdapter followAdapter;
+    private LinearLayoutManager mLayoutManager;
+    private FollowAdapter followAdapter;
+    private String requestedUserId, perPage, page;
 
     @BindView(R.id.follower_recyclerView)
-    RecyclerView follower_recyclerView;
+    RecyclerView recyclerView;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -53,10 +55,14 @@ public class FollowerFragment extends BaseFragment
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
 
-    public FollowerFragment() {
+    public static FollowerFragment newInstance(String requestedUserId) {
+        Bundle args = new Bundle();
+        args.putString("requestedUserId", requestedUserId);
 
+        FollowerFragment fragment = new FollowerFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,7 +71,9 @@ public class FollowerFragment extends BaseFragment
             mView = inflater.inflate(R.layout.profile_subfragment_followers, container, false);
             ButterKnife.bind(this, mView);
 
+            getItemsFromBundle();
             init();
+            initRecyclerView();
             getFollowerList();
         }
 
@@ -75,7 +83,14 @@ public class FollowerFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+    }
+
+    private void getItemsFromBundle() {
+        Bundle args = getArguments();
+        if (args != null) {
+            requestedUserId = (String) args.getString("requestedUserId");
+        }
     }
 
     private void init() {
@@ -83,11 +98,33 @@ public class FollowerFragment extends BaseFragment
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.followers));
     }
 
+    private void initRecyclerView() {
+        setLayoutManager();
+        setAdapter();
+    }
+
+    private void setLayoutManager() {
+        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(mLayoutManager);
+    }
+
+    private void setAdapter() {
+        followAdapter = new FollowAdapter(getActivity(), getContext());
+        recyclerView.setAdapter(followAdapter);
+
+        followAdapter.setListItemClickListener(new ListItemClickListener() {
+            @Override
+            public void onClick(View view, User user, int clickedPosition) {
+                startFollowerInfoProcess(user, clickedPosition);
+            }
+        });
+    }
+
+
     @Override
     public void onClick(View v) {
 
         if (v == commonToolbarbackImgv) {
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
     }
@@ -108,7 +145,7 @@ public class FollowerFragment extends BaseFragment
 
         String userId = AccountHolderInfo.getUserID();
         String requestType = GET_USER_FOLLOWERS;
-        String requestedUserId = AccountHolderInfo.getUserID();
+        String requestedUserId = this.requestedUserId;
         String perPage = "";
         String page = "";
 
@@ -144,25 +181,14 @@ public class FollowerFragment extends BaseFragment
 
     private void setUpRecyclerView(FollowInfoListResponse followInfoListResponse) {
 
-        ListItemClickListener listItemClickListener = new ListItemClickListener() {
-            @Override
-            public void onClick(View view, User user, int clickedPosition) {
-                startFollowerInfoProcess(user, clickedPosition);
-            }
-        };
-
         if(getActivity() != null) {
-            followAdapter = new FollowAdapter(getContext(), followInfoListResponse, listItemClickListener);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-            follower_recyclerView.setLayoutManager(mLayoutManager);
-            follower_recyclerView.setAdapter(followAdapter);
+            followAdapter.addAll(followInfoListResponse.getItems());
         }
     }
 
     private void startFollowerInfoProcess(User user, int clickedPosition) {
 
         if (mFragmentNavigation != null) {
-
             UserInfoListItem userInfoListItem = new UserInfoListItem(user);
             userInfoListItem.setAdapter(followAdapter);
             userInfoListItem.setClickedPosition(clickedPosition);
