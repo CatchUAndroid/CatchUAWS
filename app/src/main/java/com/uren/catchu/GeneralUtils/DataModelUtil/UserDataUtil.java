@@ -244,6 +244,28 @@ public class UserDataUtil {
         }
     }
 
+    public static void updateMessagingButton(Context context, String followStatus, Button sendMessageBtn) {
+
+        try {
+            if (sendMessageBtn != null) {
+                sendMessageBtn.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                        context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
+
+                if (followStatus != null) {
+                    if (followStatus.equals(FOLLOW_STATUS_OWN))
+                        sendMessageBtn.setVisibility(View.GONE);
+                    else
+                        sendMessageBtn.setVisibility(View.VISIBLE);
+                }
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
     public static void updateInviteButton(Context context, Button displayButton, Boolean isHideKeyboard) {
 
         try {
