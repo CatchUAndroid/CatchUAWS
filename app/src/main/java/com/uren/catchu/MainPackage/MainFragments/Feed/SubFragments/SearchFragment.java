@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.text.TextWatcher;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -118,9 +120,21 @@ public class SearchFragment extends BaseFragment
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initListeners() {
 
         imgCancel.setOnClickListener(this);
+        //recyclerView.setOnClickListener(this);
+        edtSearch.setOnClickListener(this);
+
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                edtSearch.clearFocus();
+                showKeyboard(false);
+                return false;
+            }
+        });
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -212,6 +226,8 @@ public class SearchFragment extends BaseFragment
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
                         Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+                edtSearch.setFocusable(false);
+                edtSearch.setFocusableInTouchMode(true);
             }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
@@ -245,9 +261,17 @@ public class SearchFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == imgCancel) {
-            //((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             showKeyboard(false);
             getActivity().onBackPressed();
+        }
+
+        if (v == recyclerView) {
+            showKeyboard(false);
+        }
+
+        if(v == edtSearch){
+            edtSearch.requestFocus();
+            showKeyboard(true);
         }
 
     }

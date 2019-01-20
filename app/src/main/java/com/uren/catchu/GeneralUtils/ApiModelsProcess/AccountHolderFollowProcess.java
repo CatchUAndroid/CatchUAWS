@@ -47,11 +47,11 @@ public class AccountHolderFollowProcess {
         });
     }
 
-    public static void getFollowings(final CompleteCallback completeCallback) {
+    public static void getFollowings(final CompleteCallback completeCallback, final String requestedUserId, final String perPage, final String page) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startGetFollowings(token, completeCallback);
+                startGetFollowings(token, completeCallback,requestedUserId, perPage, page );
             }
         });
     }
@@ -139,10 +139,12 @@ public class AccountHolderFollowProcess {
     }
 
     //Get following list
-    public static void startGetFollowings(String token, final CompleteCallback completeCallback) {
+    public static void startGetFollowings(String token, final CompleteCallback completeCallback, String requestedUserId,
+                                          String perPage, String page) {
 
         String userId = AccountHolderInfo.getUserID();
         String requestType = GET_USER_FOLLOWINGS;
+
 
         FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfoListResponse>() {
             @Override
@@ -159,7 +161,7 @@ public class AccountHolderFollowProcess {
             @Override
             public void onTaskContinue() {
             }
-        }, userId, requestType, token);
+        },requestedUserId, userId, requestType,perPage, page, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

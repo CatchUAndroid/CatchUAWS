@@ -16,14 +16,20 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfoListRespo
     private OnEventListener<FollowInfoListResponse> mCallBack;
     public Exception mException;
     private String userId;
+    private String requestedUserId;
+    private String perPage;
+    private String page;
     private String requestType;
     private String token;
 
-    public FollowInfoProcess(OnEventListener callback, String userId, String requestType, String token) {
+    public FollowInfoProcess(OnEventListener callback, String userId, String requestedUserId, String requestType, String perPage, String page, String token) {
         mCallBack = callback;
         this.userId = userId;
         this.requestType = requestType;
         this.token = token;
+        this.requestedUserId = requestedUserId;
+        this.perPage = perPage;
+        this.page = page;
     }
 
 
@@ -33,9 +39,9 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfoListRespo
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            FollowInfoListResponse followInfoListResponse = instance.client.usersFollowGet(userId, requestType, token);
+            FollowInfoListResponse followInfoListResponse = instance.client.usersUidFollowGet(userId, requestedUserId, token, perPage, requestType, page);
 
-            if (followInfoListResponse.getError().getCode().intValue() == RESPONSE_OK) {
+            if (followInfoListResponse.getError().getCode() == RESPONSE_OK) {
                 return followInfoListResponse;
             } else {
                 return null;

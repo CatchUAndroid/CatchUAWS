@@ -296,7 +296,7 @@ public class OtherProfileFragment extends BaseFragment
             @Override
             public void onTaskContinue() {
             }
-        }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), token);
+        }, AccountHolderInfo.getUserID(), selectedUser.getUserid(), "false", token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

@@ -125,46 +125,12 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
                     @Override
                     public void onClick(final View v) {
 
-                        final ProgressDialogUtil progressDialogUtil = new ProgressDialogUtil(context,
-                                context.getResources().getString(R.string.loading), false);
-                        progressDialogUtil.dialogShow();
+                        User user = new User();
+                        user.setUserid(userProfileProperties.getUserid());
+                        user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
+                        user.setUsername(userProfileProperties.getUsername());
 
-                        AccountHolderFollowProcess.getFollowings(new CompleteCallback() {
-                            @Override
-                            public void onComplete(Object object) {
-                                User user = new User();
-                                user.setEmail(userProfileProperties.getUsername());
-                                user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
-                                user.setUserid(userProfileProperties.getUserid());
-                                user.setIsPrivateAccount(userProfileProperties.getIsPrivateAccount());
-                                user.setFollowStatus(FOLLOW_STATUS_NONE);
-
-                                if (object != null) {
-                                    FollowInfoListResponse followInfo = (FollowInfoListResponse) object;
-                                    for (User item : followInfo.getItems()) {
-                                        if (item != null && item.getUserid() != null && !item.getUserid().isEmpty()) {
-                                            if (item.getUserid().equals(userProfileProperties.getUserid())) {
-                                                user.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
-                                                break;
-                                            }
-                                        }
-                                    }
-                                }
-                                progressDialogUtil.dialogDismiss();
-                                listItemClickListener.onClick(v, user, position);
-                            }
-
-                            @Override
-                            public void onFailed(Exception e) {
-                                progressDialogUtil.dialogDismiss();
-                                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                    @Override
-                                    public void okClick() {
-
-                                    }
-                                });
-                            }
-                        });
+                        listItemClickListener.onClick(v, user, position);
                     }
                 });
             } catch (Exception e) {
@@ -206,7 +172,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
             }
         }
 
-        public void rejectPendingRequest(){
+        public void rejectPendingRequest() {
             try {
                 AccountHolderFollowProcess.friendFollowRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST,
                         userProfileProperties.getUserid(), AccountHolderInfo.getUserID(),

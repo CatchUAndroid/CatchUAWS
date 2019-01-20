@@ -254,7 +254,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                         public void onTaskContinue() {
 
                         }
-                    }, AccountHolderInfo.getUserID(), chattedUserId, token);
+                    }, AccountHolderInfo.getUserID(), chattedUserId, "true", token);
 
                     loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }

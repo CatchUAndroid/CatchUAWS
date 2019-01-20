@@ -13,15 +13,17 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
 
     private OnEventListener<UserProfile> mCallBack;
-    public Exception mException;
-    public String userid;
-    public String requestedUserId;
+    private Exception mException;
+    private String userid;
+    private String requestedUserId;
+    private String shortInfo;
     private String token;
 
-    public UserDetail(OnEventListener callback, String userid, String requestedUserId, String token) {
+    public UserDetail(OnEventListener callback, String userid, String requestedUserId, String shortInfo, String token) {
         mCallBack = callback;
         this.userid = userid;
         this.requestedUserId = requestedUserId;
+        this.shortInfo = shortInfo;
         this.token = token;
     }
 
@@ -32,9 +34,9 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            UserProfile userProfile = instance.client.usersGet(userid, requestedUserId, token);
+            UserProfile userProfile = instance.client.usersGet(userid, requestedUserId, token, shortInfo);
 
-            if(userProfile.getError().getCode().intValue() == RESPONSE_OK){
+            if(userProfile.getError().getCode() == RESPONSE_OK){
                 return userProfile;
             }else{
                 return null;

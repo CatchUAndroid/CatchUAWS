@@ -234,7 +234,7 @@ public class MessageListFragment extends BaseFragment {
                         @Override
                         public void onTaskContinue() {
                         }
-                    }, AccountHolderInfo.getUserID(), outboundSnapshot.getKey(), token);
+                    }, AccountHolderInfo.getUserID(), outboundSnapshot.getKey(), "true", token);
 
                     loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }

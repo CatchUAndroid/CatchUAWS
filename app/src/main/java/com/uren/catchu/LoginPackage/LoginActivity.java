@@ -701,7 +701,7 @@ public class LoginActivity extends AppCompatActivity
                     public void onTaskContinue() {
 
                     }
-                }, mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getUid(), token);
+                }, mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getUid(), "true", token);
 
                 loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

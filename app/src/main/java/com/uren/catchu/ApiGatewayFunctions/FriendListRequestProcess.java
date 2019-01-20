@@ -34,7 +34,8 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            FriendList friendList = instance.client.friendsGet(userid, token);
+            //
+            FriendList friendList = instance.client.friendsGet(userid,"", "", token);
 
             if (friendList.getError().getCode().intValue() == RESPONSE_OK) {
                 return friendList;

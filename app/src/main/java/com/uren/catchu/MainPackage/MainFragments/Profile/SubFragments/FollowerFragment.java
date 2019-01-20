@@ -108,6 +108,9 @@ public class FollowerFragment extends BaseFragment
 
         String userId = AccountHolderInfo.getUserID();
         String requestType = GET_USER_FOLLOWERS;
+        String requestedUserId = AccountHolderInfo.getUserID();
+        String perPage = "";
+        String page = "";
 
         FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfoListResponse>() {
             @Override
@@ -133,7 +136,7 @@ public class FollowerFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, userId, requestType, token);
+        }, userId, requestedUserId,  requestType, perPage, page, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 

@@ -975,7 +975,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, AccountHolderInfo.getUserID(), AccountHolderInfo.getUserID(), token);
+        }, AccountHolderInfo.getUserID(), AccountHolderInfo.getUserID(), "true", token);
 
         loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
