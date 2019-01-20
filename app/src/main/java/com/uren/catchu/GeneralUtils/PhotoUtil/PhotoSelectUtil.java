@@ -197,13 +197,14 @@ public class PhotoSelectUtil {
         int maxByteValue;
 
         try {
-            if (getScreeanShotBitmap() != null) {
+            if (getScreeanShotBitmap() != null)
                 mBitmap = getScreeanShotBitmap();
-                System.out.println("BitmapCompat.getAllocationByteCount(getScreeanShotBitmap):" + BitmapCompat.getAllocationByteCount(getScreeanShotBitmap()));
-            } else if (getBitmap() != null) {
+            else if (getBitmap() != null)
                 mBitmap = getBitmap();
-                System.out.println("BitmapCompat.getAllocationByteCount(getBitmap):" + BitmapCompat.getAllocationByteCount(getBitmap()));
-            }
+
+            if (mBitmap == null) return null;
+
+            System.out.println("BitmapCompat.getAllocationByteCount(mBitmap):" + BitmapCompat.getAllocationByteCount(mBitmap));
 
             if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_5MB)
                 maxByteValue = MAX_IMAGE_SIZE_2ANDHALFMB;

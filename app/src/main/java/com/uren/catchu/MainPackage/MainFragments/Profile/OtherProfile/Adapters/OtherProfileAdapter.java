@@ -429,8 +429,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 }
 
                 //send msg button
-                sendMessageBtn.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.White, null),
-                        mContext.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
+                UserDataUtil.updateMessagingButton(mContext, selectedUser.getFollowStatus(), sendMessageBtn);
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
                         new Object() {
