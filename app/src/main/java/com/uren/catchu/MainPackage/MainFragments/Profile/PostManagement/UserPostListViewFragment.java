@@ -120,6 +120,7 @@ public class UserPostListViewFragment extends BaseFragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_user_post_listview_layout, container, false);
             ButterKnife.bind(this, mView);
+            toolbar.setVisibility(View.GONE);
             //setUserVisibleHint olduktan sonra fonksiyonlar çalışır..
         }
         return mView;
@@ -149,7 +150,6 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void initItems() {
         listRecyclerView = (RecyclerView) mView.findViewById(R.id.listRecyclerView);
-        toolbar.setVisibility(View.GONE);
     }
 
     private void getItemsFromBundle() {
