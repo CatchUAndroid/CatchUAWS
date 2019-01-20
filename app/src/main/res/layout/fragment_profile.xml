@@ -41,10 +41,10 @@
                         android:id="@+id/notification"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
-                        android:clickable="true"
-                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:layout_gravity="center">
+                        android:clickable="true"
+                        android:gravity="center">
 
                         <RelativeLayout
                             android:id="@+id/menuLayout"
@@ -102,21 +102,21 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="4"
                         android:fontFamily="@font/alike_angular"
                         android:gravity="center"
                         android:text="@string/profile"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:layout_weight="4"/>
+                        android:textSize="20sp" />
 
                     <RelativeLayout
                         android:id="@+id/notification2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
+                        android:layout_weight="1"
                         android:clickable="true"
-                        android:gravity="center"
-                        android:layout_weight="1">
+                        android:gravity="center">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgUserEdit"
@@ -133,7 +133,6 @@
                 </LinearLayout>
 
 
-
             </android.support.v7.widget.Toolbar>
 
             <android.support.v4.widget.NestedScrollView
@@ -145,6 +144,7 @@
                     android:id="@+id/llContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:descendantFocusability="blocksDescendants"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -392,11 +392,11 @@
                                         <TextView
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
+                                            android:layout_weight="3"
                                             android:gravity="center"
                                             android:text="Caught Posts"
                                             android:textColor="@color/white"
-                                            android:textStyle="bold"
-                                            android:layout_weight="3"/>
+                                            android:textStyle="bold" />
 
                                         <TextView
                                             android:id="@+id/caughtPostCount"

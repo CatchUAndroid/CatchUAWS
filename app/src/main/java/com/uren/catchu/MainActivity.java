@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtils.showToastShort(getApplicationContext(), "maindeyiz");
         setContentView(R.layout.activity_main);
         Fabric.with(this, new Crashlytics());
         CommonUtils.hideKeyBoard(this);
