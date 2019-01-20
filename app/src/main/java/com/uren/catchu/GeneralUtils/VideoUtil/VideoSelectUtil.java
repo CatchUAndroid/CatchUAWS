@@ -5,9 +5,12 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
+import com.deep.videotrimmer.utils.FileUtils;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
+import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
@@ -16,47 +19,33 @@ public class VideoSelectUtil {
     Uri videoUri;
     Bitmap videoBitmap;
     String videoRealPath;
-    String selectType;
+    boolean isDeletable;
 
-    public VideoSelectUtil(Context context, Uri videoUri, String videoRealPath, String selectType) {
+    public VideoSelectUtil(Context context, Uri videoUri, String videoRealPath, boolean isDeletable) {
         this.context = context;
         this.videoUri = videoUri;
-        this.selectType = selectType;
         this.videoRealPath = videoRealPath;
-        routeVideoSelection();
+        this.isDeletable = isDeletable;
+        videoUriProcess();
     }
 
-    public void routeVideoSelection() {
-        switch (selectType) {
-            case CAMERA_TEXT:
-                onSelectFromCameraResult();
-                break;
-            case GALLERY_TEXT:
-                onSelectFromGalleryResult();
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void onSelectFromCameraResult() {
+    public void videoUriProcess() {
         try {
             if (videoRealPath == null || videoRealPath.isEmpty())
-                videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
-            //videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
-            setBitmapFromUriForVideo();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-    }
+                videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
 
-    public void onSelectFromGalleryResult() {
-        try {
-            videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
-            setBitmapFromUriForVideo();
+            if (videoRealPath == null || videoRealPath.isEmpty())
+                videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
+
+            if (videoRealPath == null || videoRealPath.isEmpty())
+                videoRealPath = UriAdapter.getFilePathFromURI(context, videoUri, MEDIA_TYPE_VIDEO);
+
+            if (videoRealPath == null || videoRealPath.isEmpty())
+                videoRealPath = videoUri.getPath();
+
+            if (videoRealPath != null && !videoRealPath.isEmpty())
+                setBitmapFromUriForVideo();
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
@@ -76,14 +65,6 @@ public class VideoSelectUtil {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-    }
-
-    public String getSelectType() {
-        return selectType;
-    }
-
-    public void setSelectType(String selectType) {
-        this.selectType = selectType;
     }
 
     public Uri getVideoUri() {
@@ -108,5 +89,13 @@ public class VideoSelectUtil {
 
     public void setVideoRealPath(String videoRealPath) {
         this.videoRealPath = videoRealPath;
+    }
+
+    public boolean isDeletable() {
+        return isDeletable;
+    }
+
+    public void setDeletable(boolean deletable) {
+        isDeletable = deletable;
     }
 }

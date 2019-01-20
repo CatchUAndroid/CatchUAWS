@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.User;
 
-public class ShareItems {
+public class ShareItems{
 
     Post post;
     List<ImageShareItemBox> imageShareItemBoxes;

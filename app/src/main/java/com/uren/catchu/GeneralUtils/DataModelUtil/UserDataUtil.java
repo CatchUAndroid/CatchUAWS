@@ -1,10 +1,7 @@
 package com.uren.catchu.GeneralUtils.DataModelUtil;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,24 +9,16 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.login.LoginManager;
-import com.google.firebase.auth.FirebaseAuth;
-import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.MainActivity;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
-
-import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
-
 
 public class UserDataUtil {
 

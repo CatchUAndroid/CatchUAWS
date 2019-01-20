@@ -4,8 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.support.v4.graphics.BitmapCompat;
-import android.text.format.DateFormat;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -14,7 +12,6 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.R;
@@ -27,7 +24,6 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +34,6 @@ import catchu.model.PostRequest;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
@@ -57,6 +52,7 @@ public class SharePostProcess {
     UploadImageToS3 uploadImageToS3 = null;
     UploadVideoToS3 uploadVideoToS3 = null;
     UploadImageToS3 uploadThumbnailToS3 = null;
+    Bitmap photoBitmap = null;
 
     public SharePostProcess(Context context, ShareItems shareItems, ServiceCompleteCallback serviceCompleteCallback) {
         this.context = context;
@@ -86,7 +82,8 @@ public class SharePostProcess {
     }
 
     private void startUploadMediaToS3(String token) {
-        final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
+        final String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
         signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -105,16 +102,6 @@ public class SharePostProcess {
                     counter = 0;
                     for (final VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
                         BucketUpload bucketUpload = commonS3BucketResult.getVideos().get(counter);
-
-                        /*String filePath = "/storage/emulated/0/CatchU/Movies";
-                        System.out.println("filePath:" + filePath);
-
-                        System.out.println("startTime:" + DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
-                        SiliCompressor.with(context).compressVideo(videoShareItemBox.getVideoSelectUtil().getVideoRealPath(),
-                                filePath);
-
-                        System.out.println("finishTime:" + DateFormat.format("dd-MM-yyyy hh:mm:ss", new java.util.Date()).toString());
-*/
                         uploadVideos(bucketUpload, videoShareItemBox);
                         uploadThumbnailImage(bucketUpload, videoShareItemBox);
                         counter++;
@@ -147,13 +134,14 @@ public class SharePostProcess {
     }
 
     public void uploadImages(final BucketUpload bucketUpload, final ImageShareItemBox imageShareItemBox) {
-        final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
-        Bitmap photoBitmap = null;
+        final String methodName = new Object() {
+        }.getClass().getEnclosingMethod().getName();
 
-        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
-            if (imageShareItemBox.getPhotoSelectUtil().getResizedBitmap() != null)
-                photoBitmap = imageShareItemBox.getPhotoSelectUtil().getResizedBitmap();
-            else if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
+        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null)
+            photoBitmap = imageShareItemBox.getPhotoSelectUtil().getResizedBitmap();
+
+        if (photoBitmap == null) {
+            if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap();
             else if (imageShareItemBox.getPhotoSelectUtil().getBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getBitmap();
@@ -172,6 +160,7 @@ public class SharePostProcess {
                 try {
                     if (urlConnection != null) {
                         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            recycleImageBitmaps(imageShareItemBox);
                             imageShareItemBox.setUploaded(true);
                             Media media = new Media();
                             media.setExtension(bucketUpload.getExtension());
@@ -213,6 +202,37 @@ public class SharePostProcess {
             }
         }, photoBitmap, bucketUpload.getUploadUrl());
         uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    public void recycleImageBitmaps(ImageShareItemBox imageShareItemBox) {
+        try {
+            if (photoBitmap != null)
+                photoBitmap.recycle();
+
+            if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
+                if (imageShareItemBox.getPhotoSelectUtil().getBitmap() != null &&
+                        !imageShareItemBox.getPhotoSelectUtil().getBitmap().isRecycled()) {
+                    imageShareItemBox.getPhotoSelectUtil().getBitmap().recycle();
+                    imageShareItemBox.getPhotoSelectUtil().setBitmap(null);
+                }
+
+                if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null &&
+                        !imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap().isRecycled()) {
+                    imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap().recycle();
+                    imageShareItemBox.getPhotoSelectUtil().setScreeanShotBitmap(null);
+                }
+
+                if (imageShareItemBox.getPhotoSelectUtil().getResizedBitmap() != null &&
+                        !imageShareItemBox.getPhotoSelectUtil().getResizedBitmap().isRecycled()) {
+                    imageShareItemBox.getPhotoSelectUtil().getResizedBitmap().recycle();
+                    imageShareItemBox.getPhotoSelectUtil().setResizedBitmap(null);
+                }
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(), new Object() {
+            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void uploadVideos(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
@@ -278,6 +298,7 @@ public class SharePostProcess {
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
                             uploadThumbnailToS3.cancel(true);
                         } else {
+                            recycleVideoBitmaps(videoShareItemBox);
                             videoShareItemBox.setThumbnailImgUploaded(true);
                             checkAllItemsUploaded();
                         }
@@ -305,6 +326,14 @@ public class SharePostProcess {
             }
         }, videoShareItemBox.getVideoSelectUtil().getVideoBitmap(), bucketUpload.getThumbnailUploadUrl());
         uploadThumbnailToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private void recycleVideoBitmaps(VideoShareItemBox videoShareItemBox) {
+        if (videoShareItemBox != null && videoShareItemBox.getVideoSelectUtil() != null &&
+                videoShareItemBox.getVideoSelectUtil().getVideoBitmap() != null && !videoShareItemBox.getVideoSelectUtil().getVideoBitmap().isRecycled()) {
+            videoShareItemBox.getVideoSelectUtil().getVideoBitmap().recycle();
+            videoShareItemBox.getVideoSelectUtil().setVideoBitmap(null);
+        }
     }
 
     public void checkAllItemsUploaded() {

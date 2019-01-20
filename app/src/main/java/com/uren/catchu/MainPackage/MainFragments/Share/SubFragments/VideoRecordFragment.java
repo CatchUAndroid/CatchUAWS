@@ -117,7 +117,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
     private Size mPreviewSize;
     private Size mVideoSize;
     private MediaRecorder mMediaRecorder;
-    private PermissionModule permissionModule;
     private boolean mIsRecordingVideo;
     private HandlerThread mBackgroundThread;
     private Handler mBackgroundHandler;
@@ -169,8 +168,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
             closeCameraDevice();
-           /* cameraDevice.close();
-            mCameraDevice = null;*/
         }
 
         @Override
@@ -178,8 +175,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             mCameraOpenCloseLock.release();
             mCameraDevice = cameraDevice;
             closeCameraDevice();
-            /*cameraDevice.close();
-            mCameraDevice = null;*/
             Activity activity = getActivity();
             if (null != activity) {
                 activity.finish();
@@ -267,7 +262,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         flashModeImgv = (ImageView) view.findViewById(R.id.flashModeImgv);
         switchCamImgv = (ImageView) view.findViewById(R.id.switchCamImgv);
         remainingTimeTv = (TextView) view.findViewById(R.id.remainingTimeTv);
-        permissionModule = new PermissionModule(getActivity());
         toggleRecordingButton.setOnClickListener(this);
         flashModeImgv.setOnClickListener(this);
         switchCamImgv.setOnClickListener(this);
@@ -624,6 +618,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    // TODO: 12.01.2019 - Bazi samsung galaxy cihazlarda once ses sonra video kayit ediliyor, buna detayli bakacagim...
     private void startRecordingVideo() {
         if (null == mCameraDevice || !mTextureView.isAvailable() || null == mPreviewSize) {
             return;
@@ -653,8 +648,8 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    final String methodName = new Object() {
-                    }.getClass().getEnclosingMethod().getName();
+                    final String methodName = new Object() {}.getClass().getEnclosingMethod().getName();
+
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
                     getActivity().runOnUiThread(new Runnable() {
@@ -718,7 +713,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             mMediaRecorder.reset();
 
             VideoSelectUtil videoSelectUtil = new VideoSelectUtil(getActivity(), Uri.parse(mNextVideoAbsolutePath),
-                    mNextVideoAbsolutePath, CAMERA_TEXT);
+                    mNextVideoAbsolutePath, true);
             returnCallback.onReturn(videoSelectUtil);
 
             mNextVideoAbsolutePath = null;

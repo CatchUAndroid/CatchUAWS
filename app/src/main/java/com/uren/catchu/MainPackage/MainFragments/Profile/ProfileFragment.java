@@ -45,6 +45,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupMa
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
@@ -217,6 +218,7 @@ public class ProfileFragment extends BaseFragment
         imgUserEdit.setOnClickListener(this);
         txtFollowerCnt.setOnClickListener(this);
         txtFollowingCnt.setOnClickListener(this);
+        imgProfile.setOnClickListener(this);
 
         llMyPosts.setOnClickListener(this);
         llCatchedPosts.setOnClickListener(this);
@@ -686,6 +688,12 @@ public class ProfileFragment extends BaseFragment
             followerClicked();
         }
 
+        if(v == imgProfile){
+            if(myProfile != null && myProfile.getUserInfo() != null && myProfile.getUserInfo().getProfilePhotoUrl() != null &&
+                    !myProfile.getUserInfo().getProfilePhotoUrl().isEmpty()){
+                mFragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(myProfile.getUserInfo().getProfilePhotoUrl()));
+            }
+        }
     }
 
     private void userEditClicked() {

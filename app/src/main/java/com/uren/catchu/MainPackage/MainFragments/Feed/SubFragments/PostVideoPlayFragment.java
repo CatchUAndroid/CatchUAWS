@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -18,7 +19,6 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
@@ -27,6 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
 
+@SuppressLint("ValidFragment")
 public class PostVideoPlayFragment extends BaseFragment {
 
 
@@ -41,8 +42,10 @@ public class PostVideoPlayFragment extends BaseFragment {
     @BindView(R.id.root_view)
     LinearLayout root_view;
 
-    public PostVideoPlayFragment() {
+    Media media;
 
+    public PostVideoPlayFragment(Media media) {
+        this.media = media;
     }
 
     @Override
@@ -71,8 +74,6 @@ public class PostVideoPlayFragment extends BaseFragment {
     }
 
     private void setVideo() {
-
-        Media media = SingletonPostItem.getInstance().getMedia();
 
         MyVideoModel myVideoModel = new MyVideoModel(media.getUrl(), media.getThumbnail(), "video");
 

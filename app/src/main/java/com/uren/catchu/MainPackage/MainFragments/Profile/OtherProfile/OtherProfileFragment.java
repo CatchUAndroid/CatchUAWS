@@ -243,15 +243,8 @@ public class OtherProfileFragment extends BaseFragment
                             Log.i("innerRecyclerPageCnt", String.valueOf(innerRecyclerPageCnt));
                             getPosts();
                         }
-
                     }
-
                 }
-
-
-
-
-
             }
 
         });

@@ -15,13 +15,6 @@ public class Validation {
     private static Validation instance = null;
     private String errorMessage;
 
-    //Constants
-    private final static String EMAIL_ERR_REQUIRED = "Email boş olamaz!";
-    private final static String EMAIL_ERR_INVALID = "Geçerli bir email adresi giriniz!";
-    private final static String PASSWORD_ERR_REQUIRED = "Şifre boş olamaz!";
-    private final static String PASSWORD_ERR_LENGTH = "Şifre en az 6 karakter olmalıdır!";
-    private final static String USERNAME_ERR_REQUIRED = "Kullanıcı adı boş olamaz!";
-
     private final static int PASSWORD_MAX_LENGTH = 6;
 
     public static Validation getInstance() {

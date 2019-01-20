@@ -68,6 +68,8 @@ dependencies {
     implementation 'com.amazonaws:aws-android-sdk-s3:2.6.+'
     implementation 'com.amazonaws:aws-android-sdk-cognito:2.6.+'
     implementation 'com.github.aarsy.googlemapsanimations:googlemapsanimations:1.0.5'
+    implementation 'com.deep.videotrimmer:videotrimmer:1.0'
+    //implementation 'id.zelory:compressor:2.1.0'
     //implementation 'com.iceteck.silicompressorr:silicompressor:2.2.1'
     //implementation 'com.github.picnic:FingerPaintView:1.0.0'
 

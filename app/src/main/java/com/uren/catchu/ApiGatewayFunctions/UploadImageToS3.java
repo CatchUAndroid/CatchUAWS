@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.support.v4.graphics.BitmapCompat;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
@@ -40,6 +41,9 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
         HttpURLConnection connection = null;
         
         try {
+
+            System.out.println("UploadImageToS3.bitmap_1:" + BitmapCompat.getAllocationByteCount(bitmap));
+
             URL url = new URL(uploadUrl);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -50,10 +54,13 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+            System.out.println("UploadImageToS3.bitmap_2:" + BitmapCompat.getAllocationByteCount(bitmap));
+
             byte[] b = baos.toByteArray();
 
             InputStream input = new ByteArrayInputStream(b);
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[8192];
             int length;
             while ((length = input.read(buffer)) > 0) {
                 output.write(buffer, 0, length);

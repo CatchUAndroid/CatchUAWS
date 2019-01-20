@@ -131,7 +131,7 @@ public class UriAdapter extends AppCompatActivity {
                 if (cursor != null)
                     cursor.close();
             }
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
@@ -189,7 +189,7 @@ public class UriAdapter extends AppCompatActivity {
                 bos.write(buf);
             } while (bis.read(buf) != -1);
             fileSaveCallback.Saved(destinationFilename);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fileSaveCallback.OnError(e);
         } finally {
@@ -241,27 +241,6 @@ public class UriAdapter extends AppCompatActivity {
 
     }
 
-    public String getPath(Uri uri) {
-        try {
-            String[] projection = {MediaStore.Video.Media.DATA};
-            Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null) {
-                // HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-                // THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
-                int column_index = cursor
-                        .getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-                cursor.moveToFirst();
-                return cursor.getString(column_index);
-            } else
-                return null;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
         try {
@@ -317,14 +296,14 @@ public class UriAdapter extends AppCompatActivity {
         return false;
     }
 
-    public static String getFilePathFromURI(Context context, Uri contentUri) {
+    public static String getFilePathFromURI(Context context, Uri contentUri, int mediaType) {
         //copy file and send new file path
         try {
             String fileName = getFileName(context, contentUri);
             if (!TextUtils.isEmpty(fileName)) {
                 //File rootDataDir = context.getFilesDir();
                 //File copyFile = new File(rootDataDir + File.separator + fileName);
-                File copyFile = FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE);
+                File copyFile = FileAdapter.getOutputMediaFile(mediaType);
                 copy(context, contentUri, copyFile);
                 return copyFile.getAbsolutePath();
             }

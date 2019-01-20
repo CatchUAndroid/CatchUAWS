@@ -113,7 +113,7 @@ public class GroupManagementFragment extends BaseFragment {
                 initValues();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -146,7 +146,7 @@ public class GroupManagementFragment extends BaseFragment {
             if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
                 nextFab.setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -180,6 +180,7 @@ public class GroupManagementFragment extends BaseFragment {
             searchToolbarAddItemImgv.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CommonUtils.hideKeyBoard(getContext());
                     searchToolbarAddItemImgv.setEnabled(false);
                     searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                     addNewGroup();
@@ -199,49 +200,56 @@ public class GroupManagementFragment extends BaseFragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    if (s != null && s.toString() != null) {
-                        if (!s.toString().trim().isEmpty()) {
-                            imgCancelSearch.setVisibility(View.VISIBLE);
-                            searchToolbarBackImgv.setVisibility(View.GONE);
-                        } else {
-                            imgCancelSearch.setVisibility(View.GONE);
-                            searchToolbarBackImgv.setVisibility(View.VISIBLE);
-                        }
-
-                        if (userGroupsListAdapter != null)
-                            userGroupsListAdapter.updateAdapter(s.toString(), new ReturnCallback() {
-                                @Override
-                                public void onReturn(Object object) {
-                                    int itemSize = (int) object;
-
-                                    if (warningMsgTv.getVisibility() == View.GONE) {
-                                        if (itemSize == 0)
-                                            searchResultTv.setVisibility(View.VISIBLE);
-                                        else
-                                            searchResultTv.setVisibility(View.GONE);
-                                    }
-                                }
-                            });
-                    } else
+                    if (s != null && s.toString() != null && !s.toString().isEmpty()) {
+                        imgCancelSearch.setVisibility(View.VISIBLE);
+                        searchToolbarBackImgv.setVisibility(View.GONE);
+                        searchItemInList(s.toString());
+                    } else {
                         imgCancelSearch.setVisibility(View.GONE);
+                        searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                        searchItemInList("");
+                    }
                 }
             });
 
             imgCancelSearch.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    imgCancelSearch.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                     CommonUtils.hideKeyBoard(getContext());
                     editTextSearch.setText("");
                     imgCancelSearch.setVisibility(View.GONE);
+                    searchResultTv.setVisibility(View.GONE);
+                    setMessageWarning(groupRequestResult);
+
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void searchItemInList(final String groupName) {
+        if (userGroupsListAdapter != null)
+            userGroupsListAdapter.updateAdapter(groupName, new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    int itemSize = (int) object;
+
+                    if (!groupName.isEmpty()) {
+                        warningMsgTv.setVisibility(View.GONE);
+                        if (itemSize == 0)
+                            searchResultTv.setVisibility(View.VISIBLE);
+                        else
+                            searchResultTv.setVisibility(View.GONE);
+                    }else {
+                        setMessageWarning(groupRequestResult);
+                        searchResultTv.setVisibility(View.GONE);
+                    }
+                }
+            });
     }
 
     public void getGroups() {
@@ -276,6 +284,7 @@ public class GroupManagementFragment extends BaseFragment {
                                                     userGroupsListAdapter.notifyItemRemoved(clickedItem);
                                                     userGroupsListAdapter.notifyItemRangeChanged(clickedItem,
                                                             groupRequestResult.getResultArray().size());
+                                                    setMessageWarning(groupRequestResult);
                                                 }
 
                                                 @Override
@@ -289,7 +298,7 @@ public class GroupManagementFragment extends BaseFragment {
                                                     localGroupOperation(ITEM_CHANGED, null);
                                                     userGroupsListAdapter.notifyDataSetChanged();
                                                 }
-                                            }));
+                                            }), ANIMATE_LEFT_TO_RIGHT);
                                     }
                                 }, operationType);
 
@@ -304,7 +313,7 @@ public class GroupManagementFragment extends BaseFragment {
                         @Override
                         public void onFailed(Exception e) {
                             progressBar.setVisibility(View.GONE);
-                            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                                     new Object() {
                                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
                             if (getContext() != null) {
@@ -317,7 +326,7 @@ public class GroupManagementFragment extends BaseFragment {
                         }
                     });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -325,7 +334,7 @@ public class GroupManagementFragment extends BaseFragment {
     }
 
     private void setMessageWarning(GroupRequestResult groupRequestResult) {
-        if(groupRequestResult != null && groupRequestResult.getResultArray() != null &&
+        if (groupRequestResult != null && groupRequestResult.getResultArray() != null &&
                 groupRequestResult.getResultArray().size() > 0)
             warningMsgTv.setVisibility(View.GONE);
         else
@@ -356,7 +365,7 @@ public class GroupManagementFragment extends BaseFragment {
             } else if (opType == ITEM_INSERTED)
                 groupRequestResult.getResultArray().add(arrayItem);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -382,6 +391,7 @@ public class GroupManagementFragment extends BaseFragment {
                                     public void onReturn(Object object) {
                                         localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem) object);
                                         userGroupsListAdapter.notifyDataSetChanged();
+                                        setMessageWarning(groupRequestResult);
                                     }
                                 }), ANIMATE_RIGHT_TO_LEFT);
                             }
@@ -393,7 +403,7 @@ public class GroupManagementFragment extends BaseFragment {
                 @Override
                 public void onFailed(Exception e) {
                     searchToolbarAddItemImgv.setEnabled(true);
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     if (getContext() != null) {
@@ -406,7 +416,7 @@ public class GroupManagementFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

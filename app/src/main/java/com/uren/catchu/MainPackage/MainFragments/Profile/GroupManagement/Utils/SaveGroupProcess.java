@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
@@ -43,6 +44,7 @@ public class SaveGroupProcess {
     GroupRequest groupRequest;
     String groupName;
     CompleteCallback completeCallback;
+    Bitmap uploadBitmap = null;
 
     public SaveGroupProcess(Context context, PhotoSelectUtil photoSelectUtil, String groupName, CompleteCallback completeCallback) {
         try {
@@ -53,8 +55,9 @@ public class SaveGroupProcess {
             mProgressDialog = new ProgressDialog(context);
             mProgressDialog.setMessage(context.getResources().getString(R.string.groupIsCreating));
             dialogShow();
+            setUploadBitmap();
 
-            if (photoSelectUtil != null && photoSelectUtil.getMediaUri() != null)
+            if (uploadBitmap != null)
                 saveGroupImageToS3();
             else
                 processSaveGroup(" ");
@@ -64,6 +67,11 @@ public class SaveGroupProcess {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    public void setUploadBitmap() {
+        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
+            uploadBitmap = photoSelectUtil.getResizedBitmap();
     }
 
     public void dialogShow() {
@@ -132,7 +140,7 @@ public class SaveGroupProcess {
                         public void onTaskContinue() {
 
                         }
-                    }, photoSelectUtil.getBitmap(), commonS3BucketResult.getImages().get(0).getUploadUrl());
+                    }, uploadBitmap, commonS3BucketResult.getImages().get(0).getUploadUrl());
 
                     uploadImageToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }

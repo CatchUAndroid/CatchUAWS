@@ -11,25 +11,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.ImageZoomListener;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
+import uk.co.senab.photoview.PhotoViewAttacher;
 
 @SuppressLint("ValidFragment")
 public class ShowSelectedPhotoFragment extends BaseFragment {
@@ -82,8 +75,8 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         try {
-            photoSelectImgv.getImageMatrix();
-            photoSelectImgv.setOnTouchListener(new ImageZoomListener(initMatrix));
+            PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoSelectImgv);
+            photoViewAttacher.update();
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {

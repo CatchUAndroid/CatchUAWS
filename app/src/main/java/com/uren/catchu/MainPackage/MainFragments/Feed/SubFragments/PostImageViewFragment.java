@@ -1,14 +1,12 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,18 +20,15 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonPostItem;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Utils.ImageZoomListener;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+@SuppressLint("ValidFragment")
 public class PostImageViewFragment extends BaseFragment {
 
 
@@ -49,9 +44,10 @@ public class PostImageViewFragment extends BaseFragment {
     LinearLayout llProgress;
 
     Matrix initMatrix;
+    Media media;
 
-    public PostImageViewFragment() {
-
+    public PostImageViewFragment(Media media) {
+        this.media = media;
     }
 
     @Override
@@ -90,8 +86,6 @@ public class PostImageViewFragment extends BaseFragment {
     }
 
     private void setImage() {
-
-        Media media = SingletonPostItem.getInstance().getMedia();
 
         Glide.with(this)
                 .load(media.getUrl())

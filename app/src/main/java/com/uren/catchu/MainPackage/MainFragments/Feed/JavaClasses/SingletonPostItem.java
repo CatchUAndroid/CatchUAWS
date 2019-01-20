@@ -4,7 +4,7 @@ import catchu.model.Media;
 
 public class SingletonPostItem {
 
-    private static SingletonPostItem ourInstance ;
+   /* private static SingletonPostItem ourInstance ;
     private static Media media;
 
     public static SingletonPostItem getInstance() {
@@ -29,5 +29,5 @@ public class SingletonPostItem {
     public static synchronized void reset(){
         ourInstance = null;
     }
-
+*/
 }

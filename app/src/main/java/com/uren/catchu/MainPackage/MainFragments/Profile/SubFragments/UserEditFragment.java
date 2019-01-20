@@ -32,6 +32,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -148,7 +149,6 @@ public class UserEditFragment extends BaseFragment
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.editProfile));
         commonToolbarTickImgv.setVisibility(View.VISIBLE);
         permissionModule = new PermissionModule(getContext());
-        photoSelectUtil = new PhotoSelectUtil();
     }
 
     public void initListeners() {
@@ -168,7 +168,7 @@ public class UserEditFragment extends BaseFragment
             imgProfile.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0));
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -203,7 +203,7 @@ public class UserEditFragment extends BaseFragment
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -254,15 +254,15 @@ public class UserEditFragment extends BaseFragment
                 }
                 if (AccountHolderInfo.getInstance().getUser().getUserInfo().getGender() != null &&
                         !AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().isEmpty()) {
-                    for(int i=0; i<GENDERS_FOR_SERVER.length; i++){
-                        if(AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().equals(GENDERS_FOR_SERVER[i])){
+                    for (int i = 0; i < GENDERS_FOR_SERVER.length; i++) {
+                        if (AccountHolderInfo.getInstance().getUser().getUserInfo().getGender().equals(GENDERS_FOR_SERVER[i])) {
                             selectedGender = GENDERS[i];
                         }
                     }
                     genderSpinner.setSelection(genderSpinnerAdapter.getPosition(selectedGender));
                 }
 
-                if(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl() != null &&
+                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl() != null &&
                         !AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl().isEmpty())
                     photoExist = true;
             }
@@ -273,7 +273,7 @@ public class UserEditFragment extends BaseFragment
                     AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(),
                     shortUserNameTv, imgProfile);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -303,7 +303,7 @@ public class UserEditFragment extends BaseFragment
                         .into(imgProfile);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -371,7 +371,7 @@ public class UserEditFragment extends BaseFragment
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -426,11 +426,11 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setPhone(AccountHolderInfo.getInstance().getUser().getUserInfo().getPhone());
 
             if (selectedGender.isEmpty()) {
-                userProfileProperties.setGender(GENDERS_FOR_SERVER[GENDERS_FOR_SERVER.length -1]);
+                userProfileProperties.setGender(GENDERS_FOR_SERVER[GENDERS_FOR_SERVER.length - 1]);
             } else {
 
-                for(int i=0; i<GENDERS.length; i++){
-                    if(selectedGender.equals(GENDERS[i])){
+                for (int i = 0; i < GENDERS.length; i++) {
+                    if (selectedGender.equals(GENDERS[i])) {
                         userProfileProperties.setGender(GENDERS_FOR_SERVER[i]);
                     }
                 }
@@ -438,7 +438,7 @@ public class UserEditFragment extends BaseFragment
 
             updateOperation(userProfileProperties);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
@@ -446,6 +446,7 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void updateOperation(UserProfileProperties userProfileProperties) {
+
         new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
@@ -466,7 +467,7 @@ public class UserEditFragment extends BaseFragment
                 });
                 e.printStackTrace();
             }
-        }, profilPicChanged, userProfileProperties, photoSelectUtil.getBitmap());
+        }, profilPicChanged, userProfileProperties, photoSelectUtil);
     }
 
     private void chooseImageProcess() {
@@ -484,11 +485,11 @@ public class UserEditFragment extends BaseFragment
             @Override
             public void onPhotoRemoved() {
                 try {
-                    photoSelectUtil = new PhotoSelectUtil();
+                    photoSelectUtil = null;
                     photoExist = false;
                     setUserPhoto(null);
                 } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                             new Object() {
                             }.getClass().getEnclosingMethod().getName(), e.toString());
                     e.printStackTrace();
@@ -555,7 +556,7 @@ public class UserEditFragment extends BaseFragment
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
