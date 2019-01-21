@@ -11,6 +11,7 @@ import com.uren.catchu.ApiGatewayFunctions.PostRequestProcess;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
 import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
@@ -138,7 +139,7 @@ public class SharePostProcess {
         }.getClass().getEnclosingMethod().getName();
 
         if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null)
-            photoBitmap = imageShareItemBox.getPhotoSelectUtil().getResizedBitmap();
+            photoBitmap = BitmapConversion.getResizedBitmap2(context, imageShareItemBox.getPhotoSelectUtil());
 
         if (photoBitmap == null) {
             if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
@@ -220,12 +221,6 @@ public class SharePostProcess {
                         !imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap().isRecycled()) {
                     imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap().recycle();
                     imageShareItemBox.getPhotoSelectUtil().setScreeanShotBitmap(null);
-                }
-
-                if (imageShareItemBox.getPhotoSelectUtil().getResizedBitmap() != null &&
-                        !imageShareItemBox.getPhotoSelectUtil().getResizedBitmap().isRecycled()) {
-                    imageShareItemBox.getPhotoSelectUtil().getResizedBitmap().recycle();
-                    imageShareItemBox.getPhotoSelectUtil().setResizedBitmap(null);
                 }
             }
         } catch (Exception e) {

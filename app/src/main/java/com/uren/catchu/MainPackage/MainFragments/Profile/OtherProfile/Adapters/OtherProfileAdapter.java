@@ -348,10 +348,12 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private boolean isSelectedUserFollowInfoClickable() {
-            if (selectedUser.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+            if (selectedUser != null && selectedUser.getFollowStatus() != null &&
+                    selectedUser.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
                 return true;
             } else {
-                if (selectedUser.getIsPrivateAccount()) {
+                if (selectedUser != null && selectedUser.getIsPrivateAccount() != null &&
+                        selectedUser.getIsPrivateAccount()) {
                     return false;
                 } else {
                     return true;

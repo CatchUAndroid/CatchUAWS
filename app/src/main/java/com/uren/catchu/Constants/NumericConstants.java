@@ -90,5 +90,7 @@ public class NumericConstants {
     public final static int FCM_MAX_MESSAGE_LEN = 30;
     public final static int MAX_ALLOWED_NOTIFICATION_SIZE = 4;
 
+    //Activity request codes
+    public final static int REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY = 1001;
 
 }

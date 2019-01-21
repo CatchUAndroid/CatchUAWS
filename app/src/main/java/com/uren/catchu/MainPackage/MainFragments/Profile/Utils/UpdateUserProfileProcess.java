@@ -10,6 +10,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
@@ -55,7 +56,7 @@ public class UpdateUserProfileProcess {
 
     public void setUploadBitmap() {
         if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            uploadBitmap = photoSelectUtil.getResizedBitmap();
+            uploadBitmap = BitmapConversion.getResizedBitmap2(context, photoSelectUtil);
     }
 
     public void uploadMediaToS3(){

@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.VideoView;
 
@@ -28,8 +30,6 @@ import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
-import hb.xvideoplayer.MxVideoPlayer;
-import hb.xvideoplayer.MxVideoPlayerWidget;
 
 @SuppressLint("ValidFragment")
 public class PostVideoPlay2Fragment extends BaseFragment {
@@ -42,8 +42,8 @@ public class PostVideoPlay2Fragment extends BaseFragment {
     LinearLayout llProgress;
     @BindView(R.id.root_view)
     LinearLayout root_view;
-    @BindView(R.id.videoPlayerWidget)
-    MxVideoPlayerWidget videoPlayerWidget;
+    @BindView(R.id.videoView)
+    VideoView videoView;
 
     Media media;
 
@@ -76,15 +76,14 @@ public class PostVideoPlay2Fragment extends BaseFragment {
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MxVideoPlayer.releaseAllVideos();
-    }
-
     private void setVideo() {
 
-        videoPlayerWidget.startPlay(media.getUrl(), MxVideoPlayer.SCREEN_LAYOUT_NORMAL, "video name");
+        MediaController mediaController = new MediaController(getContext());
+        mediaController.setAnchorView(videoView);
+        Uri video = Uri.parse(media.getUrl());
+        videoView.setMediaController(mediaController);
+        videoView.setVideoURI(video);
+        videoView.start();
 
 
     }

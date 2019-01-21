@@ -14,12 +14,14 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.BitmapCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.CrashlyticsHelper;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.R;
 
@@ -27,6 +29,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_2ANDHALFMB;
+import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_5MB;
+import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class BitmapConversion extends AppCompatActivity {
 
@@ -104,13 +111,9 @@ public class BitmapConversion extends AppCompatActivity {
         Bitmap resizedBitmap = null;
 
         try {
-            System.out.println("BitmapConversion getResizedBitmap bm:" + bm.getAllocationByteCount());
             int width = bm.getWidth();
             int height = bm.getHeight();
-            System.out.println("width:" + width);
-            System.out.println("height:" + height);
-            System.out.println("newWidth:" + newWidth);
-            System.out.println("newHeight:" + newHeight);
+
             float scaleWidth = ((float) newWidth) / width;
             float scaleHeight = ((float) newHeight) / height;
             // CREATE A MATRIX FOR THE MANIPULATION
@@ -122,16 +125,80 @@ public class BitmapConversion extends AppCompatActivity {
             resizedBitmap = Bitmap.createBitmap(
                     bm, 0, 0, width, height, matrix, false);
 
-            System.out.println("BitmapConversion getResizedBitmap resizedBitmap:" + resizedBitmap.getAllocationByteCount());
-            System.out.println("width:" + resizedBitmap.getWidth());
-            System.out.println("height:" + resizedBitmap.getHeight());
-            //bm.recycle();
+            if(bm != null && !bm.isRecycled())
+                bm.recycle();
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, BitmapConversion.class.getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+        return resizedBitmap;
+    }
+
+
+    public static Bitmap getResizedBitmap2(Context context, PhotoSelectUtil photoSelectUtil) {
+        Bitmap mBitmap = null;
+        Bitmap resizedBitmap = null;
+        int maxByteValue;
+
+        try {
+            if(photoSelectUtil != null) {
+                if (photoSelectUtil.getScreeanShotBitmap() != null)
+                    mBitmap = photoSelectUtil.getScreeanShotBitmap();
+                else if (photoSelectUtil.getBitmap() != null)
+                    mBitmap = photoSelectUtil.getBitmap();
+            }else
+                return null;
+
+            if (mBitmap == null) return null;
+
+            System.out.println("BitmapCompat.getAllocationByteCount(mBitmap):" + BitmapCompat.getAllocationByteCount(mBitmap));
+
+            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_5MB)
+                maxByteValue = MAX_IMAGE_SIZE_2ANDHALFMB;
+            else
+                maxByteValue = MAX_IMAGE_SIZE_1ANDHALFMB;
+
+            if (BitmapCompat.getAllocationByteCount(mBitmap) > maxByteValue) {
+
+                for (float i = 0.9f; i > 0; i = i - 0.05f) {
+                    System.out.println("i_1:" + i);
+                    resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
+                            (int) (mBitmap.getWidth() * i),
+                            (int) (mBitmap.getHeight() * i), true);
+
+                    System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
+
+                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < maxByteValue)
+                        break;
+                }
+            } else {
+                if (!photoSelectUtil.getType().equals(GALLERY_TEXT)) {
+                    for (float i = 1.2f; i < 20f; i = i + 1.2f) {
+                        System.out.println("i_2:" + i);
+                        resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
+                                (int) (mBitmap.getWidth() * i),
+                                (int) (mBitmap.getHeight() * i), true);
+
+                        System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
+
+                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > maxByteValue)
+                            break;
+                    }
+                } else
+                    resizedBitmap = mBitmap;
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, BitmapConversion.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            return mBitmap;
+        }
+
+        System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
+
         return resizedBitmap;
     }
 

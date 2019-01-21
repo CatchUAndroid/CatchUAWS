@@ -288,7 +288,7 @@ public class ContactsFragment extends BaseFragment {
                             if (getContext() != null) {
                                 if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
 
-                                    for(User user: appUsersList.getItems()){
+                                    for (User user : appUsersList.getItems()) {
                                         ContactFriendModel contactFriendModel = new ContactFriendModel();
                                         contactFriendModel.setUser(user);
                                         contactFriendModel.setContact(new Contact());
@@ -321,18 +321,18 @@ public class ContactsFragment extends BaseFragment {
         prepareInviteContactList();
 
         if (inviteContactsList != null && inviteContactsList.size() > 0 && getContext() != null) {
-            for(Contact contact: inviteContactsList){
-                ContactFriendModel contactFriendModel= new ContactFriendModel();
+            for (Contact contact : inviteContactsList) {
+                ContactFriendModel contactFriendModel = new ContactFriendModel();
                 contactFriendModel.setContact(contact);
                 contactFriendModel.setUser(new User());
                 contactFriendModelList.add(contactFriendModel);
             }
         }
 
-        if(contactFriendModelList != null && contactFriendModelList.size() == 0){
+        if (contactFriendModelList != null && contactFriendModelList.size() == 0) {
             warningMsgLayout.setVisibility(View.VISIBLE);
             warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
-        }else {
+        } else {
             contactsAdapter = new ContactsAdapter(getContext(), contactFriendModelList, new ContactFriendSelectCallback() {
                 @Override
                 public void contactSelected(Contact contact) {
@@ -377,16 +377,11 @@ public class ContactsFragment extends BaseFragment {
     }
 
     private void displayUserProfile(String userid) {
-
-        if (!userid.equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
-            if (mFragmentNavigation != null) {
-                User user = new User();
-                user.setUserid(userid);
-                UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-                mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
-            }
-        } else {
-            NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+        if (mFragmentNavigation != null) {
+            User user = new User();
+            user.setUserid(userid);
+            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+            mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
@@ -395,7 +390,7 @@ public class ContactsFragment extends BaseFragment {
         if (requestCode == permissionModule.PERMISSION_READ_CONTACTS) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startGetContactList();
-            }else {
+            } else {
                 warningMsgLayout.setVisibility(View.VISIBLE);
                 warningMsgTv.setText(getActivity().getResources().getString(R.string.GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS));
             }

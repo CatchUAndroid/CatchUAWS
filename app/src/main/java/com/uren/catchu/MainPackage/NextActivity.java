@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.FragmentControllers.FragNavController;
@@ -46,6 +48,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
+import static com.uren.catchu.FragmentControllers.FragNavController.TAB1;
 
 public class NextActivity extends AppCompatActivity implements
         BaseFragment.FragmentNavigation,
@@ -64,14 +67,16 @@ public class NextActivity extends AppCompatActivity implements
     public static Button screenShotCancelBtn;
     public static Button screenShotApproveBtn;
 
+    static int selectedTabColor, unSelectedTabColor;
+
     public String ANIMATION_TAG;
 
     public FragNavTransactionOptions transactionOptions;
 
     private int[] mTabIconsSelected = {
-            R.mipmap.icon_tab_home,
-            R.mipmap.icon_tab_share,
-            R.mipmap.icon_tab_profile};
+            R.mipmap.icon_home_tab,
+            R.mipmap.icon_share_tab,
+            R.mipmap.icon_profile_tab};
 
     public static String[] TABS;
     public static TabLayout bottomTabLayout;
@@ -90,6 +95,9 @@ public class NextActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_next);
         Fabric.with(this, new Crashlytics());
         thisActivity = this;
+
+        unSelectedTabColor = this.getResources().getColor(R.color.DarkGray, null);
+        selectedTabColor = this.getResources().getColor(R.color.OrangeRed, null);
 
         initValues();
 
@@ -133,7 +141,7 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     public void checkFeedFragmentReselected(TabLayout.Tab tab) {
-        if (tab.getPosition() == FragNavController.TAB1 && feedFragment != null) {
+        if (tab.getPosition() == TAB1 && feedFragment != null) {
 
             int selectedTabPosition = feedFragment.getSelectedTabPosition();
             List<Fragment> fragments = feedFragment.getFragmentManager().getFragments();
@@ -231,12 +239,24 @@ public class NextActivity extends AppCompatActivity implements
             for (int i = 0; i < TABS.length; i++) {
                 bottomTabLayout.addTab(bottomTabLayout.newTab());
                 TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
-                if (tab != null) {
+
+
+                if(tab != null){
+                    tab.setIcon(mTabIconsSelected[i]);
+                    //tab.setText(TABS[i]);
+
+                  /*  if(i == TAB1)
+                        tab.getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);*/
+                }
+
+                /*if (tab != null) {
                     tab.setCustomView(getTabView(i));
                     tab.setText(TABS[i]);
-                }
+                }*/
             }
+            bottomTabLayout.getTabAt(0).getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
         }
+
     }
 
     private View getTabView(int position) {
@@ -353,10 +373,13 @@ public class NextActivity extends AppCompatActivity implements
 
         for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
+
             if (currentTab != i) {
-                selectedTab.getCustomView().setSelected(false);
+                //selectedTab.getCustomView().setSelected(false);
+                selectedTab.getIcon().setColorFilter(unSelectedTabColor, PorterDuff.Mode.SRC_IN);
             } else {
-                selectedTab.getCustomView().setSelected(true);
+                //selectedTab.getCustomView().setSelected(true);
+                selectedTab.getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
             }
         }
     }
@@ -406,7 +429,7 @@ public class NextActivity extends AppCompatActivity implements
     public Fragment getRootFragment(int index) {
         switch (index) {
 
-            case FragNavController.TAB1:
+            case TAB1:
                 feedFragment = new FeedFragment();
                 return feedFragment;
             case FragNavController.TAB2:

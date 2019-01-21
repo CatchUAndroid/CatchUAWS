@@ -33,7 +33,7 @@ public class PhotoSelectUtil {
 
     Bitmap bitmap = null;
     Bitmap screeanShotBitmap = null;
-    Bitmap resizedBitmap = null;
+    //Bitmap resizedBitmap = null;
     Uri mediaUri = null;
     String imageRealPath = null;
     Context context;
@@ -192,7 +192,7 @@ public class PhotoSelectUtil {
         }
     }*/
 
-    public Bitmap getResizedBitmap() {
+    /*public Bitmap getResizedBitmap() {
         Bitmap mBitmap = null;
         int maxByteValue;
 
@@ -223,12 +223,12 @@ public class PhotoSelectUtil {
 
                     if (BitmapCompat.getAllocationByteCount(resizedBitmap) < maxByteValue) {
                         break;
-                    } else {
+                    } *//*else {
                         if (resizedBitmap != null && !resizedBitmap.isRecycled()) {
                             resizedBitmap.recycle();
                             resizedBitmap = null;
                         }
-                    }
+                    }*//*
                 }
             } else {
                 if (!type.equals(GALLERY_TEXT)) {
@@ -242,12 +242,12 @@ public class PhotoSelectUtil {
 
                         if (BitmapCompat.getAllocationByteCount(resizedBitmap) > maxByteValue)
                             break;
-                        else {
+                        *//*else {
                             if (resizedBitmap != null && !resizedBitmap.isRecycled()) {
                                 resizedBitmap.recycle();
                                 resizedBitmap = null;
                             }
-                        }
+                        }*//*
                     }
                 } else
                     resizedBitmap = mBitmap;
@@ -266,12 +266,11 @@ public class PhotoSelectUtil {
         System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
         return resizedBitmap;
-    }
+    }*/
 
     private void onSelectFromFileResult() {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-
             imageRealPath = UriAdapter.getRealPathFromURI(mediaUri, context);
 
             if (imageRealPath != null && !imageRealPath.isEmpty())
@@ -296,6 +295,7 @@ public class PhotoSelectUtil {
                     bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
                     imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
                     bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+
                 } catch (Exception e) {
                     ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                             new Object() {
@@ -313,10 +313,11 @@ public class PhotoSelectUtil {
 
     public void onSelectFromCameraResult() {
         try {
-            bitmap = (Bitmap) data.getExtras().get("data");
             mediaUri = data.getData();
+            bitmap = (Bitmap) data.getExtras().get("data");
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
             bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
@@ -394,7 +395,7 @@ public class PhotoSelectUtil {
         this.type = type;
     }
 
-    public void setResizedBitmap(Bitmap resizedBitmap) {
+    /*public void setResizedBitmap(Bitmap resizedBitmap) {
         this.resizedBitmap = resizedBitmap;
-    }
+    }*/
 }

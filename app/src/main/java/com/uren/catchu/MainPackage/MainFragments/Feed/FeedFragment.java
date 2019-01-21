@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
 
+import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 
@@ -256,16 +258,24 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
         if (AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty()) {
             intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
-            startActivity(intent);
-        }else {
+            startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
+        } else {
             AccountHolderInfo.getInstance();
             AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                 @Override
                 public void onAccountHolderIfoTaken(UserProfile userProfile) {
                     intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
-                    startActivity(intent);
+                    startActivityForResult(intent,REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY );
                 }
             });
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY) {
+            unreadMsgCntTv.setText(Integer.toString(0));
+            unreadMsgCntTv.setVisibility(View.GONE);
         }
     }
 }
