@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,10 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -29,7 +26,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.SelectFriendAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.FriendVerticalListAdapter;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -48,8 +45,8 @@ import catchu.model.FriendList;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.NumericConstants.CODE_SELECT_ALL;
-import static com.uren.catchu.Constants.NumericConstants.CODE_UNSELECT_ALL;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_GET_FOLLOWER_PAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
@@ -58,16 +55,12 @@ public class SelectFriendFragment extends BaseFragment {
 
     View mView;
 
-    @BindView(R.id.friendCountTv)
-    TextView friendCountTv;
     @BindView(R.id.nextFab)
     FloatingActionButton nextFab;
     @BindView(R.id.imgCancelSearch)
     ImageView imgCancelSearch;
     @BindView(R.id.editTextSearch)
     EditText editTextSearch;
-    @BindView(R.id.selectAllCb)
-    CheckBox selectAllCb;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.searchToolbarBackImgv)
@@ -75,16 +68,19 @@ public class SelectFriendFragment extends BaseFragment {
     @BindView(R.id.searchToolbarAddItemImgv)
     ImageView searchToolbarAddItemImgv;
 
-
-    FriendList followerList;
-    ProgressDialogUtil progressDialogUtil;
-    SelectFriendAdapter adapter;
-
-    String groupId;
-    List<UserProfileProperties> groupParticipantList;
-    String pendingName;
-
-    ReturnCallback returnCallback;
+    private FriendList followerList;
+    private ProgressDialogUtil progressDialogUtil;
+    private FriendVerticalListAdapter adapter;
+    private String groupId;
+    private List<UserProfileProperties> groupParticipantList;
+    private String pendingName;
+    private LinearLayoutManager linearLayoutManager;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private boolean loading = true;
+    private ReturnCallback returnCallback;
+    private int perPageCnt;
+    private int pageCnt;
+    private List<UserProfileProperties> userList = new ArrayList<>();
 
     public SelectFriendFragment(String groupId, List<UserProfileProperties> groupParticipantList, String pendingName,
                                 ReturnCallback returnCallback) {
@@ -115,6 +111,9 @@ public class SelectFriendFragment extends BaseFragment {
                 ButterKnife.bind(this, mView);
                 addListeners();
                 setShapes();
+                setPaginationValues();
+                setAdapter();
+                setRecyclerViewScroll();
                 initFollowerList();
                 getFriendSelectionPage();
                 SelectedFriendList.setInstance(null);
@@ -123,8 +122,9 @@ public class SelectFriendFragment extends BaseFragment {
                 searchToolbarAddItemImgv.setVisibility(View.GONE);
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return mView;
@@ -133,6 +133,11 @@ public class SelectFriendFragment extends BaseFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
+    }
+
+    private void setPaginationValues() {
+        perPageCnt = DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
+        pageCnt = DEFAULT_GET_FOLLOWER_PAGE_COUNT;
     }
 
     public void addListeners() {
@@ -187,21 +192,10 @@ public class SelectFriendFragment extends BaseFragment {
                     } else
                         imgCancelSearch.setVisibility(View.GONE);
                 } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                            new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
                     e.printStackTrace();
-                }
-            }
-        });
-
-        selectAllCb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (adapter != null) {
-                    if (selectAllCb.isChecked())
-                        adapter.updateAdapterForSelectAll(CODE_SELECT_ALL);
-                    else
-                        adapter.updateAdapterForSelectAll(CODE_UNSELECT_ALL);
                 }
             }
         });
@@ -213,8 +207,9 @@ public class SelectFriendFragment extends BaseFragment {
             followerList.setResultArray(new ArrayList<UserProfileProperties>());
             followerList.setError(new Error());
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -225,20 +220,46 @@ public class SelectFriendFragment extends BaseFragment {
                     0, GradientDrawable.OVAL, 50, 0);
             nextFab.setBackground(shape);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
 
+    private void setRecyclerViewScroll() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = false;
+                            pageCnt++;
+                            adapter.addProgressLoading();
+                            getFriendSelectionPage();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
     private void getFriendSelectionPage() {
 
-        AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
+        AccountHolderFollowProcess.getFollowers(pageCnt, perPageCnt, new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
                 if (object != null) {
-                    followerList = getUserFollowers((FriendList) object);
-                    setAdapter();
+                    followerList = (FriendList) object;
+                    setUpRecyclerView();
                 }
                 progressDialogUtil.dialogDismiss();
             }
@@ -246,6 +267,9 @@ public class SelectFriendFragment extends BaseFragment {
             @Override
             public void onFailed(Exception e) {
                 progressDialogUtil.dialogDismiss();
+                if (adapter.isShowingProgressLoading()) {
+                    adapter.removeProgressLoading();
+                }
                 DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
@@ -255,68 +279,28 @@ public class SelectFriendFragment extends BaseFragment {
         });
     }
 
+    private void setUpRecyclerView() {
+        loading = true;
+
+        if (pageCnt != 1)
+            adapter.removeProgressLoading();
+
+        userList.addAll(followerList.getResultArray());
+        adapter.addAll(followerList.getResultArray());
+    }
+
     public void setAdapter() {
         try {
-            setFriendCountTextView();
-            recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-            adapter = new SelectFriendAdapter(getContext(), followerList, new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
-                    if (followerList.getResultArray().size() == SelectedFriendList.getInstance().getSize())
-                        selectAllCb.setChecked(true);
-                    else
-                        selectAllCb.setChecked(false);
-                }
-            });
+            linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(linearLayoutManager);
+            adapter = new FriendVerticalListAdapter(getContext(), groupParticipantList);
             recyclerView.setAdapter(adapter);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    public void setFriendCountTextView() {
-        friendCountTv.setText(Integer.toString(followerList.getResultArray().size()));
-    }
-
-    public FriendList getUserFollowers(FriendList tempFriendList) {
-        try {
-            if (groupParticipantList == null)
-                return tempFriendList;
-            else
-                return extractGroupParticipants(tempFriendList);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public FriendList extractGroupParticipants(FriendList friendListTemp) {
-
-        try {
-            for (UserProfileProperties userProfileProperties1 : groupParticipantList) {
-
-                int index = 0;
-
-                for (UserProfileProperties userProfileProperties : friendListTemp.getResultArray()) {
-
-                    if (userProfileProperties.getUserid().equals(userProfileProperties1.getUserid())) {
-                        friendListTemp.getResultArray().remove(index);
-                        break;
-                    }
-                    index = index + 1;
-                }
-            }
-            return friendListTemp;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public void checkSelectedPerson() {
@@ -352,8 +336,9 @@ public class SelectFriendFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }
@@ -388,8 +373,9 @@ public class SelectFriendFragment extends BaseFragment {
 
             return selectedFriendList;
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return null;

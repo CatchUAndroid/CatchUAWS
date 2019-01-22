@@ -851,13 +851,15 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void openCameraForPhotoSelect() {
         try {
-            photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
+            /*photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
                     FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) MAX_IMAGE_SIZE_1MB);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
+            startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);*/
+
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), REQUEST_CODE_PHOTO_CAMERA_SELECT);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
@@ -989,16 +991,16 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         } else if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                if(galleryOrCameraSelect.equals(CAMERA_TEXT) && selectedShareType.equals(IMAGE_TYPE)){
-                    if(permissionModule.checkCameraPermission())
+                if (galleryOrCameraSelect.equals(CAMERA_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
+                    if (permissionModule.checkCameraPermission())
                         openCameraForPhotoSelect();
                     else
                         requestPermissions(new String[]{Manifest.permission.CAMERA},
                                 permissionModule.PERMISSION_CAMERA);
-                }else if(galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(IMAGE_TYPE)){
+                } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
-                }else if(galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)){
+                } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
                             getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
@@ -1060,7 +1062,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    public void startVideoTrimmerFragment(Uri uri){
+    public void startVideoTrimmerFragment(Uri uri) {
         mFragmentNavigation.pushFragment(new VideoTrimmerFragment(uri, new VideoTrimmedCallback() {
             @Override
             public void onTrimmed(Uri uri, String realPath) {

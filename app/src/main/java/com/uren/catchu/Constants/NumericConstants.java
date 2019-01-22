@@ -53,6 +53,10 @@ public class NumericConstants {
     public static final int DEFAULT_FEED_RADIUS = 5000; //metre cinsinden
     public static int FILTERED_FEED_RADIUS = 5000; //metre cinsinden
 
+    //Get Follower initial values
+    public static final int DEFAULT_GET_FOLLOWER_PAGE_COUNT = 1;
+    public static final int DEFAULT_GET_FOLLOWER_PERPAGE_COUNT = 30; // EN AZ 4 OLMALI.
+
     //Share type values
     public static final int CODE_PUBLIC_SHARED = 0;
     public static final int CODE_FRIEND_SHARED = 1;

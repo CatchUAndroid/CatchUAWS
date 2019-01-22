@@ -100,6 +100,7 @@
     <string name="SCREENSHOT">Çek</string>
     <string name="detail">Detay</string>
     <string name="searchUser">Kullanıcı arayın...</string>
+    <string name="IN_GROUP">Grupta</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

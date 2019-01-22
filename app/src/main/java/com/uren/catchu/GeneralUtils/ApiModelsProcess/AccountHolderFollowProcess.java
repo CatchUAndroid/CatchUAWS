@@ -20,11 +20,11 @@ import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 public class AccountHolderFollowProcess {
 
-    public static void getFollowers(final CompleteCallback completeCallback) {
+    public static void getFollowers(final int pageCount, final int perPageCount, final CompleteCallback completeCallback) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startGetFollowers(token, completeCallback);
+                startGetFollowers(token, pageCount, perPageCount, completeCallback);
             }
         });
     }
@@ -66,7 +66,7 @@ public class AccountHolderFollowProcess {
     }
 
     //Get followers list
-    public static void startGetFollowers(String token, final CompleteCallback completeCallback) {
+    public static void startGetFollowers(String token, int pageCount, int perPageCount, final CompleteCallback completeCallback) {
 
         FriendListRequestProcess friendListRequestProcess = new FriendListRequestProcess(new OnEventListener() {
             @Override
@@ -84,7 +84,7 @@ public class AccountHolderFollowProcess {
             public void onTaskContinue() {
 
             }
-        }, AccountHolderInfo.getUserID(), token);
+        }, AccountHolderInfo.getUserID(), token, pageCount, perPageCount);
 
         friendListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }

@@ -42,6 +42,8 @@ import catchu.model.FriendList;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_GET_FOLLOWER_PAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
@@ -80,6 +82,8 @@ public class GroupManagementFragment extends BaseFragment {
     GroupRequestResult groupRequestResult;
     String operationType;
     ReturnCallback returnCallback;
+    //private int pageCount;
+    //private int perPageCount;
 
     private static final int ITEM_CHANGED = 0;
     private static final int ITEM_REMOVED = 1;
@@ -132,7 +136,9 @@ public class GroupManagementFragment extends BaseFragment {
             searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
             warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
             setFloatButtonVisibility();
+            //setPaginationValues();
             getGroups();
+
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
@@ -140,6 +146,11 @@ public class GroupManagementFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
+
+    /*private void setPaginationValues(){
+        pageCount = DEFAULT_GET_FOLLOWER_PAGE_COUNT;
+        perPageCount = DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
+    }*/
 
     public void setFloatButtonVisibility() {
         try {
@@ -244,7 +255,7 @@ public class GroupManagementFragment extends BaseFragment {
                             searchResultTv.setVisibility(View.VISIBLE);
                         else
                             searchResultTv.setVisibility(View.GONE);
-                    }else {
+                    } else {
                         setMessageWarning(groupRequestResult);
                         searchResultTv.setVisibility(View.GONE);
                     }
@@ -265,47 +276,7 @@ public class GroupManagementFragment extends BaseFragment {
 
                             if (getContext() != null) {
                                 setMessageWarning(groupRequestResult);
-
-                                userGroupsListAdapter = new UserGroupsListAdapter(getContext(), groupRequestResult, new ReturnCallback() {
-                                    @Override
-                                    public void onReturn(Object object) {
-                                        selectedGroupItem = (GroupRequestResultResultArrayItem) object;
-                                    }
-                                }, new ItemClickListener() {
-                                    @Override
-                                    public void onClick(Object object, final int clickedItem) {
-                                        selectedGroupItem = (GroupRequestResultResultArrayItem) object;
-
-                                        if (mFragmentNavigation != null)
-                                            mFragmentNavigation.pushFragment(new ViewGroupDetailFragment(selectedGroupItem, new RecyclerViewAdapterCallback() {
-                                                @Override
-                                                public void OnRemoved() {
-                                                    localGroupOperation(ITEM_REMOVED, null);
-                                                    userGroupsListAdapter.notifyItemRemoved(clickedItem);
-                                                    userGroupsListAdapter.notifyItemRangeChanged(clickedItem,
-                                                            groupRequestResult.getResultArray().size());
-                                                    setMessageWarning(groupRequestResult);
-                                                }
-
-                                                @Override
-                                                public void OnInserted() {
-
-                                                }
-
-                                                @Override
-                                                public void OnChanged(Object object1) {
-                                                    selectedGroupItem = (GroupRequestResultResultArrayItem) object1;
-                                                    localGroupOperation(ITEM_CHANGED, null);
-                                                    userGroupsListAdapter.notifyDataSetChanged();
-                                                }
-                                            }), ANIMATE_LEFT_TO_RIGHT);
-                                    }
-                                }, operationType);
-
-                                specialRecyclerView.setAdapter(userGroupsListAdapter);
-                                linearLayoutManager = new LinearLayoutManager(getContext());
-                                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-                                specialRecyclerView.setLayoutManager(linearLayoutManager);
+                                setGroupsListAdapter();
                             }
                             progressBar.setVisibility(View.GONE);
                         }
@@ -339,6 +310,52 @@ public class GroupManagementFragment extends BaseFragment {
             warningMsgTv.setVisibility(View.GONE);
         else
             warningMsgTv.setVisibility(View.VISIBLE);
+    }
+
+    private void setGroupsListAdapter() {
+        userGroupsListAdapter = new UserGroupsListAdapter(getContext(), groupRequestResult, new ReturnCallback() {
+            @Override
+            public void onReturn(Object object) {
+                selectedGroupItem = (GroupRequestResultResultArrayItem) object;
+            }
+        }, new ItemClickListener() {
+            @Override
+            public void onClick(Object object, final int clickedItem) {
+                selectedGroupItem = (GroupRequestResultResultArrayItem) object;
+                startViewGroupDetailFragment(clickedItem);
+            }
+        }, operationType);
+
+        specialRecyclerView.setAdapter(userGroupsListAdapter);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        specialRecyclerView.setLayoutManager(linearLayoutManager);
+    }
+
+    private void startViewGroupDetailFragment(final int clickedItem) {
+        if (mFragmentNavigation != null)
+            mFragmentNavigation.pushFragment(new ViewGroupDetailFragment(selectedGroupItem, new RecyclerViewAdapterCallback() {
+                @Override
+                public void OnRemoved() {
+                    localGroupOperation(ITEM_REMOVED, null);
+                    userGroupsListAdapter.notifyItemRemoved(clickedItem);
+                    userGroupsListAdapter.notifyItemRangeChanged(clickedItem,
+                            groupRequestResult.getResultArray().size());
+                    setMessageWarning(groupRequestResult);
+                }
+
+                @Override
+                public void OnInserted() {
+
+                }
+
+                @Override
+                public void OnChanged(Object object1) {
+                    selectedGroupItem = (GroupRequestResultResultArrayItem) object1;
+                    localGroupOperation(ITEM_CHANGED, null);
+                    userGroupsListAdapter.notifyDataSetChanged();
+                }
+            }), ANIMATE_LEFT_TO_RIGHT);
     }
 
     public void localGroupOperation(int opType, GroupRequestResultResultArrayItem arrayItem) {
@@ -375,7 +392,7 @@ public class GroupManagementFragment extends BaseFragment {
     public void addNewGroup() {
 
         try {
-            AccountHolderFollowProcess.getFollowers(new CompleteCallback() {
+            AccountHolderFollowProcess.getFollowers(1, 1, new CompleteCallback() {
                 @Override
                 public void onComplete(Object object) {
                     if (object != null) {
@@ -383,19 +400,9 @@ public class GroupManagementFragment extends BaseFragment {
                         if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0 &&
                                 getContext() != null)
                             CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
-                        else {
-                            if (mFragmentNavigation != null) {
-                                mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null,
-                                        GroupManagementFragment.class.getName(), new ReturnCallback() {
-                                    @Override
-                                    public void onReturn(Object object) {
-                                        localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem) object);
-                                        userGroupsListAdapter.notifyDataSetChanged();
-                                        setMessageWarning(groupRequestResult);
-                                    }
-                                }), ANIMATE_RIGHT_TO_LEFT);
-                            }
-                        }
+                        else
+                            startSelectFriendFragment();
+
                     }
                     searchToolbarAddItemImgv.setEnabled(true);
                 }
@@ -420,6 +427,20 @@ public class GroupManagementFragment extends BaseFragment {
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
+        }
+    }
+
+    private void startSelectFriendFragment() {
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null,
+                    GroupManagementFragment.class.getName(), new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem) object);
+                    userGroupsListAdapter.notifyDataSetChanged();
+                    setMessageWarning(groupRequestResult);
+                }
+            }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 }

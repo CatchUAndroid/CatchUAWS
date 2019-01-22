@@ -21,11 +21,15 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
     public Exception mException;
     public String userid;
     private String token;
+    private String pageCount;
+    private String perPageCount;
 
-    public FriendListRequestProcess(OnEventListener callback, String userid, String token) {
+    public FriendListRequestProcess(OnEventListener callback, String userid, String token, int pageCount, int perPageCount) {
         this.mCallBack = callback;
         this.userid = userid;
         this.token = token;
+        this.pageCount = String.valueOf(pageCount);
+        this.perPageCount = String.valueOf(perPageCount);
     }
 
     @Override
@@ -35,7 +39,7 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
 
         try {
             //
-            FriendList friendList = instance.client.friendsGet(userid,"", "", token);
+            FriendList friendList = instance.client.friendsGet(userid, perPageCount, pageCount, token);
 
             if (friendList.getError().getCode().intValue() == RESPONSE_OK) {
                 return friendList;

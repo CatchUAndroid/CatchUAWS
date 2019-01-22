@@ -14,6 +14,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -54,10 +55,8 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         try {
             layoutInflater = LayoutInflater.from(context);
             this.context = context;
-            this.friendList = new FriendList();
-            this.friendList.setResultArray(friendList.getResultArray());
-            orginalFriendList = new FriendList();
-            orginalFriendList.setResultArray(this.friendList.getResultArray());
+            this.friendList = friendList;
+            orginalFriendList = friendList;
             activity = (Activity) context;
             this.returnCallback = returnCallback;
             horAdapterUpdateChk = false;
@@ -74,6 +73,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
     @NonNull
     @Override
     public SelectFriendAdapter.SelectFriendHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
         SelectFriendAdapter.SelectFriendHolder holder = null;
         try {
             view = layoutInflater.inflate(R.layout.friend_vert_list_item, viewGroup, false);
@@ -124,7 +124,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
         TextView usernameTextView;
         TextView shortUserNameTv;
         ImageView profilePicImgView;
-        RadioButton selectRadioBtn;
+        //RadioButton selectRadioBtn;
         LinearLayout specialListLinearLayout;
         UserProfileProperties selectedFriend;
         int position = 0;
@@ -136,12 +136,12 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                 profilePicImgView = view.findViewById(R.id.profilePicImgView);
                 nameTextView = view.findViewById(R.id.nameTextView);
                 usernameTextView = view.findViewById(R.id.usernameTextView);
-                selectRadioBtn = view.findViewById(R.id.selectRadioBtn);
+                //selectRadioBtn = view.findViewById(R.id.selectRadioBtn);
                 specialListLinearLayout = view.findViewById(R.id.specialListLinearLayout);
                 shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
                 profilePicImgView.setBackground(imageShape);
 
-                specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
+                /*specialListLinearLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         CommonUtils.hideKeyBoard(context);
@@ -177,7 +177,7 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
                             }
                         }
                     }
-                });
+                });*/
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -205,10 +205,10 @@ public class SelectFriendAdapter extends RecyclerView.Adapter<SelectFriendAdapte
 
         public void updateRadioButtonValue() {
             try {
-                if (SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid()))
+                /*if (SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid()))
                     selectRadioBtn.setChecked(true);
                 else
-                    selectRadioBtn.setChecked(false);
+                    selectRadioBtn.setChecked(false);*/
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
