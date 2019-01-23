@@ -108,7 +108,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 

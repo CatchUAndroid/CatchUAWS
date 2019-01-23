@@ -53,9 +53,6 @@ public class GroupManagementFragment extends BaseFragment {
 
     View mView;
 
-    LinearLayoutManager linearLayoutManager;
-    UserGroupsListAdapter userGroupsListAdapter;
-
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
     @BindView(R.id.searchToolbarLayout)
@@ -78,12 +75,12 @@ public class GroupManagementFragment extends BaseFragment {
     @BindView(R.id.nextFab)
     FloatingActionButton nextFab;
 
-    GroupRequestResultResultArrayItem selectedGroupItem;
-    GroupRequestResult groupRequestResult;
-    String operationType;
-    ReturnCallback returnCallback;
-    //private int pageCount;
-    //private int perPageCount;
+    private GroupRequestResultResultArrayItem selectedGroupItem;
+    private GroupRequestResult groupRequestResult;
+    private String operationType;
+    private ReturnCallback returnCallback;
+    private LinearLayoutManager linearLayoutManager;
+    private UserGroupsListAdapter userGroupsListAdapter;
 
     private static final int ITEM_CHANGED = 0;
     private static final int ITEM_REMOVED = 1;
@@ -101,7 +98,7 @@ public class GroupManagementFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -136,7 +133,6 @@ public class GroupManagementFragment extends BaseFragment {
             searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
             warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
             setFloatButtonVisibility();
-            //setPaginationValues();
             getGroups();
 
         } catch (Exception e) {
@@ -146,11 +142,6 @@ public class GroupManagementFragment extends BaseFragment {
             e.printStackTrace();
         }
     }
-
-    /*private void setPaginationValues(){
-        pageCount = DEFAULT_GET_FOLLOWER_PAGE_COUNT;
-        perPageCount = DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
-    }*/
 
     public void setFloatButtonVisibility() {
         try {

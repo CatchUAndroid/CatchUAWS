@@ -45,20 +45,27 @@
 
         </FrameLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/fab_color_shadow" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/tabMainLayout">
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.7dp"
+                android:background="@color/fab_color_shadow" />
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/bottom_tab_layout"
-            style="@style/BottomTabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/GhostWhite"
-            app:tabTextAppearance="@style/MainTabLayoutTextAppearance" />
+            <android.support.design.widget.TabLayout
+                android:id="@+id/bottom_tab_layout"
+                style="@style/BottomTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/GhostWhite"
+                app:tabTextAppearance="@style/MainTabLayoutTextAppearance" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

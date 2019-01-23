@@ -8,11 +8,13 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -50,24 +52,22 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
 import static com.uren.catchu.FragmentControllers.FragNavController.TAB1;
 
-public class NextActivity extends AppCompatActivity implements
+public class NextActivity extends FragmentActivity implements
         BaseFragment.FragmentNavigation,
         FragNavController.TransactionListener,
         FragNavController.RootFragmentListener {
 
-    private Context context;
-
-    private int onPauseCount = 0;
-    private boolean onPausedInd = false;
     public static Activity thisActivity;
 
     public static FrameLayout contentFrame;
-    public static LinearLayout profilePageMainLayout;
-    public static RelativeLayout screenShotMainLayout;
-    public static Button screenShotCancelBtn;
-    public static Button screenShotApproveBtn;
+    public LinearLayout profilePageMainLayout;
+    public RelativeLayout screenShotMainLayout;
+    public Button screenShotCancelBtn;
+    public Button screenShotApproveBtn;
+    public TabLayout bottomTabLayout;
+    public LinearLayout tabMainLayout;
 
-    static int selectedTabColor, unSelectedTabColor;
+    private int selectedTabColor, unSelectedTabColor;
 
     public String ANIMATION_TAG;
 
@@ -78,10 +78,9 @@ public class NextActivity extends AppCompatActivity implements
             R.mipmap.icon_share_tab,
             R.mipmap.icon_profile_tab};
 
-    public static String[] TABS;
-    public static TabLayout bottomTabLayout;
+    public String[] TABS;
 
-    private static FragNavController mNavController;
+    private FragNavController mNavController;
 
     public static NotifyProblemFragment notifyProblemFragment;
     public SharePostFragment sharePostFragment;
@@ -140,6 +139,10 @@ public class NextActivity extends AppCompatActivity implements
         fillGroupListHolder();
     }
 
+    public void clearStackGivenIndex(int index){
+        mNavController.clearStackWithGivenIndex(index);
+    }
+
     public void checkFeedFragmentReselected(TabLayout.Tab tab) {
         if (tab.getPosition() == TAB1 && feedFragment != null) {
 
@@ -192,8 +195,6 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     private void initValues() {
-        onPausedInd = true;
-        context = this;
         ButterKnife.bind(this);
         bottomTabLayout = findViewById(R.id.bottom_tab_layout);
         profilePageMainLayout = findViewById(R.id.profilePageMainLayout);
@@ -201,6 +202,7 @@ public class NextActivity extends AppCompatActivity implements
         screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
         screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
         contentFrame = findViewById(R.id.content_frame);
+        tabMainLayout = findViewById(R.id.tabMainLayout);
         TABS = getResources().getStringArray(R.array.tab_name);
         setShapes();
 
@@ -268,7 +270,6 @@ public class NextActivity extends AppCompatActivity implements
 
     public void onStart() {
         super.onStart();
-        onPausedInd = false;
     }
 
     @Override
@@ -276,7 +277,7 @@ public class NextActivity extends AppCompatActivity implements
         super.onStop();
     }
 
-    public static void switchTab(int position) {
+    public void switchTab(int position) {
         mNavController.switchTab(position);
     }
 
@@ -290,13 +291,6 @@ public class NextActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
-        onPauseCount = onPauseCount + 1;
-
-        if (onPauseCount > 1) {
-            onPausedInd = true;
-            Log.i("onPausedInd", "  >>onPause  onPausedInd:" + onPausedInd);
-        }
     }
 
     @Override
@@ -323,13 +317,12 @@ public class NextActivity extends AppCompatActivity implements
         }
     }
 
-    public static void switchAndUpdateTabSelection(int position) {
+    public void switchAndUpdateTabSelection(int position) {
         if (position != FragNavController.TAB2)
             bottomTabLayout.setVisibility(View.VISIBLE);
         switchTab(position);
         updateTabSelection(position);
     }
-
 
     private void setTransactionOption() {
         if (transactionOptions == null) {
@@ -369,7 +362,7 @@ public class NextActivity extends AppCompatActivity implements
             transactionOptions = null;
     }
 
-    public static void updateTabSelection(int currentTab) {
+    public void updateTabSelection(int currentTab) {
 
         for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
@@ -413,16 +406,16 @@ public class NextActivity extends AppCompatActivity implements
     @Override
     public void onTabTransaction(Fragment fragment, int index) {
         // If we have a backstack, show the back button
-        if (getSupportActionBar() != null && mNavController != null) {
+        /*if (getSupportActionBar() != null && mNavController != null) {
 
             //updateToolbar();
-        }
+        }*/
     }
 
     private void updateToolbar() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
         getSupportActionBar().setDisplayShowHomeEnabled(!mNavController.isRootFragment());
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);*/
     }
 
     @Override
@@ -446,14 +439,17 @@ public class NextActivity extends AppCompatActivity implements
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
         //do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life
         // If we have a backstack, show the back button
-        if (getSupportActionBar() != null && mNavController != null) {
+        /*if (getSupportActionBar() != null && mNavController != null) {
 
             //updateToolbar();
-        }
+        }*/
     }
 
-    public void updateToolbarTitle(String title) {
-
-        getSupportActionBar().setTitle(title);
+    public void updateStatusBarColor(int colorCode){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(colorCode);
+        }
     }
 }

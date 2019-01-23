@@ -175,7 +175,7 @@ public class ProfileFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
@@ -755,7 +755,7 @@ public class ProfileFragment extends BaseFragment
 
     public void startNotifyProblemFragment() {
         if (mFragmentNavigation != null) {
-            NextActivity.screenShotMainLayout.setVisibility(View.GONE);
+            getActivity().findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;
             mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }

@@ -86,7 +86,6 @@ import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_RE
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
-import static com.uren.catchu.MainPackage.NextActivity.TABS;
 
 public class MessageWithPersonActivity extends AppCompatActivity {
 

@@ -20,9 +20,10 @@
             android:gravity="center">
 
             <FrameLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp">
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1.5">
 
                 <ImageView
                     android:id="@+id/groupPicImgView"
@@ -31,50 +32,44 @@
                     android:layout_gravity="center" />
 
                 <TextView
+                    android:id="@+id/shortGroupNameTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:textColor="@color/White"
                     android:textStyle="bold"
-                    android:layout_gravity="center"
-                    android:id="@+id/shortGroupNameTv"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/tickImgv"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right|bottom"
+                    android:padding="4dp"
+                    android:src="@mipmap/icon_tick_white"
                     android:visibility="gone"/>
+
             </FrameLayout>
 
-
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="5dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_weight="5">
 
                 <TextView
                     android:id="@+id/groupnameTextView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginLeft="3dp"
                     android:layout_weight="10"
                     android:textSize="12dp"
                     android:textStyle="italic|bold" />
 
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6">
-
-                    <Button
-                        android:id="@+id/adminDisplayButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center"
-                        android:textAllCaps="false"
-                        android:textColor="@color/MediumSeaGreen"
-                        android:textSize="10sp"
-                        android:textStyle="normal|bold" />
-                </LinearLayout>
-
-                <RadioButton
+                <!--<RadioButton
                     android:id="@+id/selectGroupRb"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -83,7 +78,24 @@
                     android:layout_weight="2"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
-                    android:visibility="gone"/>
+                    android:visibility="gone"/>-->
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2.5">
+
+                <Button
+                    android:id="@+id/adminDisplayButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/MediumSeaGreen"
+                    android:textSize="10sp"
+                    android:textStyle="normal|bold" />
             </LinearLayout>
 
         </LinearLayout>

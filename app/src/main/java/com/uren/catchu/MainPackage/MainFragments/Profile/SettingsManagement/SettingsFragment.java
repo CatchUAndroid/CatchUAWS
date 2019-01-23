@@ -64,6 +64,12 @@ public class SettingsFragment extends BaseFragment {
     }
 
     @Override
+    public void onStart() {
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
+        super.onStart();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
@@ -204,7 +210,7 @@ public class SettingsFragment extends BaseFragment {
 
     public void startNotifyProblemFragment(){
         if (mFragmentNavigation != null) {
-            NextActivity.screenShotMainLayout.setVisibility(View.GONE);
+            getActivity().findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;
             mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }

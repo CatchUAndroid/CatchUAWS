@@ -15,8 +15,11 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class NotifyProblemFragment extends BaseFragment {
@@ -83,6 +87,11 @@ public class NotifyProblemFragment extends BaseFragment {
     @BindView(R.id.imgDelete4)
     ImageView imgDelete4;
 
+    Button screenShotApproveBtn;
+    Button screenShotCancelBtn;
+    RelativeLayout screenShotMainLayout;
+    LinearLayout profilePageMainLayout;
+
     List<ProblemNotifyModel> problemListBox;
     List<PhotoSelectUtil> photoSelectUtilList = new ArrayList<>();
     PermissionModule permissionModule;
@@ -97,7 +106,7 @@ public class NotifyProblemFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -125,7 +134,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 initProblemList();
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -145,8 +154,12 @@ public class NotifyProblemFragment extends BaseFragment {
             permissionModule = new PermissionModule(getContext());
             NextActivity.notifyProblemFragment = this;
             commonToolbarTickImgv.setVisibility(View.VISIBLE);
+            screenShotApproveBtn = getActivity().findViewById(R.id.screenShotApproveBtn);
+            screenShotCancelBtn = getActivity().findViewById(R.id.screenShotCancelBtn);
+            screenShotMainLayout = getActivity().findViewById(R.id.screenShotMainLayout);
+            profilePageMainLayout = getActivity().findViewById(R.id.profilePageMainLayout);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -162,7 +175,7 @@ public class NotifyProblemFragment extends BaseFragment {
             addPhotoImgv3.setBackground(shape);
             addPhotoImgv4.setBackground(shape);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -254,7 +267,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -289,7 +302,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemListBox.add(p4);
             setViewPadding(addPhotoImgv4, p4);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -303,7 +316,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_CENTER);
             problemNotifyModel.getDeleteImgv().setVisibility(View.GONE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -317,7 +330,7 @@ public class NotifyProblemFragment extends BaseFragment {
             problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_XY);
             problemNotifyModel.getDeleteImgv().setVisibility(View.VISIBLE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -349,7 +362,7 @@ public class NotifyProblemFragment extends BaseFragment {
 
             startPhotoChosen();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -374,12 +387,12 @@ public class NotifyProblemFragment extends BaseFragment {
         try {
             getActivity().onBackPressed();
 
-            NextActivity.screenShotMainLayout.setVisibility(View.VISIBLE);
+            screenShotMainLayout.setVisibility(View.VISIBLE);
 
-            NextActivity.screenShotApproveBtn.setOnClickListener(new View.OnClickListener() {
+            screenShotApproveBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Bitmap bitmap = BitmapConversion.getScreenShot(NextActivity.profilePageMainLayout);
+                    Bitmap bitmap = BitmapConversion.getScreenShot(profilePageMainLayout);
                     PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil();
                     photoSelectUtil.setBitmap(bitmap);
                     setPhotoSelectUtil(photoSelectUtil);
@@ -387,14 +400,14 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             });
 
-            NextActivity.screenShotCancelBtn.setOnClickListener(new View.OnClickListener() {
+            screenShotCancelBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     returnNotifyFragment();
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -403,20 +416,25 @@ public class NotifyProblemFragment extends BaseFragment {
 
     public void returnNotifyFragment() {
         try {
-            NextActivity.screenShotMainLayout.setVisibility(View.GONE);
-            NextActivity.screenShotApproveBtn.setOnClickListener(null);
-            NextActivity.screenShotCancelBtn.setOnClickListener(null);
+            screenShotMainLayout.setVisibility(View.GONE);
+            screenShotApproveBtn.setOnClickListener(null);
+            screenShotCancelBtn.setOnClickListener(null);
 
-            if (getContext() != null)
-                NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+            if (getActivity() != null)
+                //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+                ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
             else {
-                NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+                //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+
+                //System.out.println("((NextActivity) getActivity()):" + getActivity());
+
+                //((NextActivity) getContext()).switchAndUpdateTabSelection(FragNavController.TAB3);
                 if (mFragmentNavigation != null) {
                     mFragmentNavigation.pushFragment(NextActivity.notifyProblemFragment, ANIMATE_RIGHT_TO_LEFT);
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -437,7 +455,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -453,7 +471,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                         permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -471,7 +489,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -489,7 +507,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -512,7 +530,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -521,30 +539,42 @@ public class NotifyProblemFragment extends BaseFragment {
 
     public void saveReport() {
         try {
+            final String methodName = new Object() {
+            }.getClass().getEnclosingMethod().getName();
             setFinalReportBox();
             DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
                     getResources().getString(R.string.THANKS_FOR_FEEDBACK), 3000, new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
-                            getActivity().onBackPressed();
-                            new SaveReportProblemProcess(photoSelectUtilList,
-                                    noteTextEditText.getText().toString(),
-                                    AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
-                                    new CompleteCallback() {
-                                        @Override
-                                        public void onComplete(Object object) {
+                            try {
+                                getActivity().onBackPressed();
+                                ((NextActivity) getActivity()).clearStackGivenIndex(FragNavController.TAB1);
+                                ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
 
-                                        }
+                                new SaveReportProblemProcess(photoSelectUtilList,
+                                        noteTextEditText.getText().toString(),
+                                        AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                                        new CompleteCallback() {
+                                            @Override
+                                            public void onComplete(Object object) {
 
-                                        @Override
-                                        public void onFailed(Exception e) {
+                                            }
 
-                                        }
-                                    });
+                                            @Override
+                                            public void onFailed(Exception e) {
+
+                                            }
+                                        });
+                            } catch (Exception e) {
+                                ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                                        methodName + CHAR_HYPHEN + new Object() {
+                                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                                e.printStackTrace();
+                            }
                         }
                     });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
@@ -560,7 +590,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 }
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();

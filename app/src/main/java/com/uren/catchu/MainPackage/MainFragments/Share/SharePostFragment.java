@@ -247,7 +247,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         if (getContext() != null)
             CommonUtils.hideKeyBoard(getContext());
         super.onStart();
