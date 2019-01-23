@@ -41,9 +41,6 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
         HttpURLConnection connection = null;
         
         try {
-
-            System.out.println("UploadImageToS3.bitmap_1:" + BitmapCompat.getAllocationByteCount(bitmap));
-
             URL url = new URL(uploadUrl);
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -54,8 +51,6 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-            System.out.println("UploadImageToS3.bitmap_2:" + BitmapCompat.getAllocationByteCount(bitmap));
 
             byte[] b = baos.toByteArray();
 

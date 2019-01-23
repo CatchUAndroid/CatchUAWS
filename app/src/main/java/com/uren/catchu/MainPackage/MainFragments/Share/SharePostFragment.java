@@ -851,15 +851,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void openCameraForPhotoSelect() {
         try {
-            /*photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
+            photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
                     FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
 
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) MAX_IMAGE_SIZE_1MB);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);*/
-
-            startActivityForResult(IntentSelectUtil.getCameraIntent(), REQUEST_CODE_PHOTO_CAMERA_SELECT);
+            startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {

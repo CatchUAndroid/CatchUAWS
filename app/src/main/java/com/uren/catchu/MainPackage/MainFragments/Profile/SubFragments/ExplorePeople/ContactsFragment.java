@@ -355,11 +355,12 @@ public class ContactsFragment extends BaseFragment {
 
     public void prepareInviteContactList() {
         if (reformedContactList != null && reformedContactList.size() > 0) {
-            if (appUsersList != null && appUsersList.getItems() != null && appUsersList.getItems().size() > 0) {
-                for (Contact contact : reformedContactList) {
 
-                    boolean isExist = false;
+            for (Contact contact : reformedContactList) {
 
+                boolean isExist = false;
+
+                if(appUsersList != null && appUsersList.getItems() != null) {
                     for (User user : appUsersList.getItems()) {
                         if (user != null && user.getProvider() != null && user.getProvider().getProviderType() != null && user.getProvider().getProviderType().equals(PROVIDER_TYPE_PHONE)) {
                             if (user.getProvider().getProviderid().trim().equals(contact.getPhoneNumber().trim())) {
@@ -368,10 +369,10 @@ public class ContactsFragment extends BaseFragment {
                             }
                         }
                     }
-
-                    if (!isExist)
-                        inviteContactsList.add(contact);
                 }
+
+                if (!isExist)
+                    inviteContactsList.add(contact);
             }
         }
     }
