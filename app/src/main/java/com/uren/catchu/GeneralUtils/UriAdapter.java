@@ -263,13 +263,18 @@ public class UriAdapter extends AppCompatActivity {
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
             Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            if (cursor.moveToFirst()) {
-                ;
+
+            if(cursor == null){
+                res = contentUri.getPath();
+            }else if (cursor.moveToFirst()) {
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 res = cursor.getString(column_index);
             }
             cursor.close();
         }catch (Exception e){
+            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
         return res;

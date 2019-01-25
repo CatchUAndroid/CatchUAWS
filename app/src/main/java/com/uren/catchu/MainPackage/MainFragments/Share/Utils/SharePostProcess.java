@@ -138,8 +138,13 @@ public class SharePostProcess {
         final String methodName = new Object() {
         }.getClass().getEnclosingMethod().getName();
 
-        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null)
-            photoBitmap = BitmapConversion.getResizedBitmap2(context, imageShareItemBox.getPhotoSelectUtil());
+        if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
+
+            photoBitmap = BitmapConversion.compressImage(context, imageShareItemBox.getPhotoSelectUtil());
+
+            if (photoBitmap == null)
+                photoBitmap = BitmapConversion.getResizedBitmap2(context, imageShareItemBox.getPhotoSelectUtil());
+        }
 
         if (photoBitmap == null) {
             if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
@@ -150,8 +155,6 @@ public class SharePostProcess {
 
         if (photoBitmap == null)
             return;
-
-        System.out.println("photoBitmap.getAllocationByteCount(bitmap):" + BitmapCompat.getAllocationByteCount(photoBitmap));
 
         uploadImageToS3 = new UploadImageToS3(new OnEventListener() {
             @Override

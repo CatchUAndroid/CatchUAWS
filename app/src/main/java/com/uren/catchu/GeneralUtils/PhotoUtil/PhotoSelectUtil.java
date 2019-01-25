@@ -3,6 +3,7 @@ package com.uren.catchu.GeneralUtils.PhotoUtil;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Environment;
@@ -33,7 +34,6 @@ public class PhotoSelectUtil {
 
     Bitmap bitmap = null;
     Bitmap screeanShotBitmap = null;
-    //Bitmap resizedBitmap = null;
     Uri mediaUri = null;
     String imageRealPath = null;
     Context context;
@@ -42,7 +42,6 @@ public class PhotoSelectUtil {
     boolean portraitMode;
 
     public PhotoSelectUtil() {
-
     }
 
     public PhotoSelectUtil(Context context, Intent data, String type) {
@@ -77,201 +76,21 @@ public class PhotoSelectUtil {
         }
     }
 
-    /*public Bitmap getImageResizedBitmap() {
-        Bitmap mBitmap = null;
-        int newWidth, newHeight;
-
-        try {
-            if (getScreeanShotBitmap() != null)
-                mBitmap = getScreeanShotBitmap();
-            else if (getBitmap() != null)
-                mBitmap = getBitmap();
-
-            System.out.println("BitmapCompat.getAllocationByteCount(mBitmap):" + BitmapCompat.getAllocationByteCount(mBitmap));
-
-            int width = mBitmap.getWidth();
-            int height = mBitmap.getHeight();
-
-            if (isPortraitMode()) {
-                newWidth = IMAGE_RESOLUTION_480;
-                newHeight = IMAGE_RESOLUTION_800;
-            } else {
-                newWidth = IMAGE_RESOLUTION_800;
-                newHeight = IMAGE_RESOLUTION_480;
-            }
-
-            float scaleWidth = ((float) newWidth) / width;
-            float scaleHeight = ((float) newHeight) / height;
-
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
-
-            resizedBitmap = Bitmap.createBitmap(
-                    mBitmap, 0, 0, width, height, matrix, false);
-
-            //bm.recycle();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-            return mBitmap;
-        }
-        return resizedBitmap;
-    }*/
-
-    /*public Bitmap getImageResizedBitmap() {
-        Bitmap mBitmap = null;
-        int newWidth, newHeight;
-
-        try {
-            if (getScreeanShotBitmap() != null)
-                mBitmap = getScreeanShotBitmap();
-            else if (getBitmap() != null)
-                mBitmap = getBitmap();
-
-            System.out.println("BitmapCompat.getAllocationByteCount(mBitmap):" + BitmapCompat.getAllocationByteCount(mBitmap));
-
-            if (BitmapCompat.getAllocationByteCount(mBitmap) < MAX_IMAGE_SIZE_1MB)
-                return mBitmap;
-
-            if (isPortraitMode()) {
-                newWidth = IMAGE_RESOLUTION_480;
-                newHeight = IMAGE_RESOLUTION_800;
-            } else {
-                newWidth = IMAGE_RESOLUTION_800;
-                newHeight = IMAGE_RESOLUTION_480;
-            }
-
-            int width = mBitmap.getWidth();
-            int height = mBitmap.getHeight();
-
-            float scaleWidth = ((float) newWidth) / width;
-            float scaleHeight = ((float) newHeight) / height;
-
-            Matrix matrix = new Matrix();
-            matrix.postScale(scaleWidth, scaleHeight);
-
-            resizedBitmap = Bitmap.createBitmap(
-                    mBitmap, 0, 0, width, height, matrix, false);
-
-            System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap)_1:" + BitmapCompat.getAllocationByteCount(resizedBitmap));
-
-            if (BitmapCompat.getAllocationByteCount(resizedBitmap) < MAX_IMAGE_SIZE_2MB) {
-
-                for (int i = 0; i < 2000; i = i + 100) {
-                    newHeight = newHeight + i;
-                    newWidth = newWidth + i;
-
-                    System.out.println("BitmapCompat-->newWidth :" + newWidth);
-                    System.out.println("BitmapCompat-->newHeight:" + newHeight);
-
-                    scaleWidth = ((float) newWidth) / width;
-                    scaleHeight = ((float) newHeight) / height;
-
-                    Matrix tempMatrix = new Matrix();
-                    tempMatrix.postScale(scaleWidth, scaleHeight);
-
-                    resizedBitmap = Bitmap.createBitmap(mBitmap, 0, 0, width, height, tempMatrix, false);
-
-                    System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap)_2:" + BitmapCompat.getAllocationByteCount(resizedBitmap));
-
-                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) > MAX_IMAGE_SIZE_2MB)
-                        break;
-                }
-            }
-            return resizedBitmap;
-
-            //bm.recycle();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-            return mBitmap;
-        }
-    }*/
-
-    /*public Bitmap getResizedBitmap() {
-        Bitmap mBitmap = null;
-        int maxByteValue;
-
-        try {
-            if (getScreeanShotBitmap() != null)
-                mBitmap = getScreeanShotBitmap();
-            else if (getBitmap() != null)
-                mBitmap = getBitmap();
-
-            if (mBitmap == null) return null;
-
-            System.out.println("BitmapCompat.getAllocationByteCount(mBitmap):" + BitmapCompat.getAllocationByteCount(mBitmap));
-
-            if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_5MB)
-                maxByteValue = MAX_IMAGE_SIZE_2ANDHALFMB;
-            else
-                maxByteValue = MAX_IMAGE_SIZE_1ANDHALFMB;
-
-            if (BitmapCompat.getAllocationByteCount(mBitmap) > maxByteValue) {
-
-                for (float i = 0.9f; i > 0; i = i - 0.05f) {
-                    System.out.println("i_1:" + i);
-                    resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
-                            (int) (mBitmap.getWidth() * i),
-                            (int) (mBitmap.getHeight() * i), true);
-
-                    System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
-
-                    if (BitmapCompat.getAllocationByteCount(resizedBitmap) < maxByteValue) {
-                        break;
-                    } *//*else {
-                        if (resizedBitmap != null && !resizedBitmap.isRecycled()) {
-                            resizedBitmap.recycle();
-                            resizedBitmap = null;
-                        }
-                    }*//*
-                }
-            } else {
-                if (!type.equals(GALLERY_TEXT)) {
-                    for (float i = 1.2f; i < 20f; i = i + 1.2f) {
-                        System.out.println("i_2:" + i);
-                        resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
-                                (int) (mBitmap.getWidth() * i),
-                                (int) (mBitmap.getHeight() * i), true);
-
-                        System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
-
-                        if (BitmapCompat.getAllocationByteCount(resizedBitmap) > maxByteValue)
-                            break;
-                        *//*else {
-                            if (resizedBitmap != null && !resizedBitmap.isRecycled()) {
-                                resizedBitmap.recycle();
-                                resizedBitmap = null;
-                            }
-                        }*//*
-                    }
-                } else
-                    resizedBitmap = mBitmap;
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            if (getScreeanShotBitmap() != null) {
-                resizedBitmap = getScreeanShotBitmap();
-            } else if (getBitmap() != null) {
-                resizedBitmap = getBitmap();
-            }
-        }
-
-        System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
-
-        return resizedBitmap;
-    }*/
-
     private void onSelectFromFileResult() {
         try {
-            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+            if (mediaUri == null) return;
             imageRealPath = UriAdapter.getRealPathFromURI(mediaUri, context);
+
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                bitmap = BitmapFactory.decodeFile(imageRealPath, options);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (bitmap == null)
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
 
             if (imageRealPath != null && !imageRealPath.isEmpty())
                 bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
@@ -289,20 +108,24 @@ public class PhotoSelectUtil {
 
     public void onSelectFromGalleryResult() {
         try {
+            if (data == null) return;
             mediaUri = data.getData();
-            if (data != null) {
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-                    imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-                    bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
 
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+            if (mediaUri == null) return;
+            imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                bitmap = BitmapFactory.decodeFile(imageRealPath, options);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+
+            if (bitmap == null)
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+
+            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
@@ -313,9 +136,23 @@ public class PhotoSelectUtil {
 
     public void onSelectFromCameraResult() {
         try {
+            if (data == null) return;
             mediaUri = data.getData();
-            bitmap = (Bitmap) data.getExtras().get("data");
+
+            if (mediaUri == null) return;
             imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+
+            try {
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                bitmap = BitmapFactory.decodeFile(imageRealPath, options);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            if (bitmap == null)
+                bitmap = (Bitmap) data.getExtras().get("data");
+
             bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
 
         } catch (Exception e) {
@@ -324,7 +161,6 @@ public class PhotoSelectUtil {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
-
     }
 
     public void setPortraitMode() {
@@ -359,24 +195,12 @@ public class PhotoSelectUtil {
         return mediaUri;
     }
 
-    public void setMediaUri(Uri mediaUri) {
-        this.mediaUri = mediaUri;
-    }
-
     public String getImageRealPath() {
         return imageRealPath;
     }
 
-    public void setImageRealPath(String imageRealPath) {
-        this.imageRealPath = imageRealPath;
-    }
-
     public boolean isPortraitMode() {
         return portraitMode;
-    }
-
-    public void setPortraitMode(boolean portraitMode) {
-        this.portraitMode = portraitMode;
     }
 
     public Bitmap getScreeanShotBitmap() {
@@ -394,8 +218,4 @@ public class PhotoSelectUtil {
     public void setType(String type) {
         this.type = type;
     }
-
-    /*public void setResizedBitmap(Bitmap resizedBitmap) {
-        this.resizedBitmap = resizedBitmap;
-    }*/
 }

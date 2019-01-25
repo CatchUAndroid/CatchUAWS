@@ -71,8 +71,11 @@ public class SaveGroupProcess {
     }
 
     public void setUploadBitmap() {
-        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            uploadBitmap = BitmapConversion.getResizedBitmap2(context, photoSelectUtil);
+        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null) {
+            uploadBitmap = BitmapConversion.compressImage(context, photoSelectUtil);
+            if (uploadBitmap == null)
+                uploadBitmap = BitmapConversion.getResizedBitmap2(context, photoSelectUtil);
+        }
     }
 
     public void dialogShow() {
