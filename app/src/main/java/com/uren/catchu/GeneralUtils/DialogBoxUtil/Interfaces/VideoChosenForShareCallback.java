@@ -1,4 +1,4 @@
-package com.uren.catchu.GeneralUtils.DialogBoxUtil;
+package com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces;
 
 public interface VideoChosenForShareCallback {
     void onGallerySelected();
