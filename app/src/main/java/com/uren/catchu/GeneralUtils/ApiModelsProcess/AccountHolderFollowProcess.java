@@ -65,6 +65,15 @@ public class AccountHolderFollowProcess {
         });
     }
 
+    public static void removeFromFollowerRequest(final String requestType, final String requesterUserid, final String requestedUserid, final CompleteCallback completeCallback) {
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startFriendFollowRequest(requestType, requesterUserid, requestedUserid, token, completeCallback);
+            }
+        });
+    }
+
     //Get followers list
     public static void startGetFollowers(String token, int pageCount, int perPageCount, final CompleteCallback completeCallback) {
 
@@ -166,7 +175,11 @@ public class AccountHolderFollowProcess {
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    //Request types for : 1-FRIEND_DELETE_FOLLOW, 2-FRIEND_DELETE_PENDING_FOLLOW_REQUEST, 3-FRIEND_FOLLOW_REQUEST, 4-FRIEND_CREATE_FOLLOW_DIRECTLY
+    //Request types for :   1-FRIEND_DELETE_FOLLOW,
+    //                      2-FRIEND_DELETE_PENDING_FOLLOW_REQUEST
+    //                      3-FRIEND_FOLLOW_REQUEST
+    //                      4-FRIEND_CREATE_FOLLOW_DIRECTLY
+    //                      5-FRIEND_REMOVE_FROM_FOLLOWER_REQUEST
     public static void startFriendFollowRequest(String requestType, String requesterUserid, String requestedUserid, String token, final CompleteCallback completeCallback){
         FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
 

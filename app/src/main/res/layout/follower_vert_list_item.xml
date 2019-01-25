@@ -108,7 +108,7 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="1">
+                        android:layout_weight="1.2">
 
                         <ImageView
                             android:id="@+id/settingsImgv"
@@ -116,7 +116,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:padding="9dp"
+                            android:padding="12dp"
                             android:src="@mipmap/icon_horizontal_more" />
 
                     </RelativeLayout>

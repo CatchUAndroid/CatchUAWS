@@ -42,6 +42,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIR
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_REMOVE_FROM_FOLLOWER_REQUEST;
 
 public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.FollowerViewHolder> {
 
@@ -111,7 +112,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
             });
         }
 
-        public void showCustomDialog(){
+        public void showCustomDialog() {
 
             new CustomDialogBox.Builder((Activity) mContext)
                     .setMessage(mContext.getResources().getString(R.string.REMOVE_FOLLOWER_MESSAGE))
@@ -129,7 +130,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
                     .OnPositiveClicked(new CustomDialogListener() {
                         @Override
                         public void OnClick() {
-
+                            removeFollower();
                         }
                     })
                     .OnNegativeClicked(new CustomDialogListener() {
@@ -140,12 +141,31 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
                     }).build();
         }
 
-        public void setShapes(){
+        public void setShapes() {
             profileImage.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0));
         }
 
-        public void manageFollowStatus() {
+        private void removeFollower() {
+            AccountHolderFollowProcess.friendFollowRequest(FRIEND_REMOVE_FROM_FOLLOWER_REQUEST, user.getUserid(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                    new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                            AccountHolderInfo.updateAccountHolderFollowCnt(FRIEND_REMOVE_FROM_FOLLOWER_REQUEST);
+                            userList.remove(position);
+                            notifyItemRemoved(position);
+                            notifyItemRangeChanged(position, getItemCount());
+                        }
+
+                        @Override
+                        public void onFailed(Exception e) {
+                            System.out.println("Exception e:" + e.toString());
+                        }
+                    });
+        }
+
+        private void manageFollowStatus() {
 
             //takip ediliyor ise
             if (user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
@@ -175,7 +195,7 @@ public class FollowerAdapter extends RecyclerView.Adapter<FollowerAdapter.Follow
             UserDataUtil.setName(user.getName(), profileName);
             UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
-                    user.getName(), user.getUsername(),  shortUserNameTv, profileImage);
+                    user.getName(), user.getUsername(), shortUserNameTv, profileImage);
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
         }
 

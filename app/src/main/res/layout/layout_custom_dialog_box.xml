@@ -36,7 +36,8 @@
                         android:id="@+id/frameLayout"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_margin="10dp">
+                        android:layout_margin="10dp"
+                        android:layout_gravity="center">
 
                         <ImageView
                             android:id="@+id/profilePicImgView"
