@@ -703,14 +703,14 @@ public class ProfileFragment extends BaseFragment
     private void followerClicked() {
         if (mFragmentNavigation != null) {
             String requestedUserId = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(FollowerFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new FollowerFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
     private void followingClicked() {
         if (mFragmentNavigation != null) {
             String requestedUserId = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(FollowingFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new FollowingFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

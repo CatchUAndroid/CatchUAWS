@@ -359,14 +359,14 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         private void followerClicked() {
             if (fragmentNavigation != null) {
                 String requestedUserId = selectedUser.getUserid();
-                fragmentNavigation.pushFragment(FollowerFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(new FollowerFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
         private void followingClicked() {
             if (fragmentNavigation != null) {
                 String requestedUserId = selectedUser.getUserid();
-                fragmentNavigation.pushFragment(FollowingFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(new FollowingFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 

@@ -22,6 +22,30 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 
 public class UserDataUtil {
 
+    public static void setNameOrUserName(String name, String username, TextView textView){
+        try {
+            int nameMaxLen = 25;
+
+            if(name != null && !name.isEmpty()){
+                if (name.length() > nameMaxLen)
+                    textView.setText(name.trim().substring(0, nameMaxLen) + "...");
+                else
+                    textView.setText(name);
+            }else if(username != null && !username.isEmpty()){
+                if (username.length() > nameMaxLen)
+                    textView.setText(CHAR_AMPERSAND + username.trim().substring(0, nameMaxLen) + "...");
+                else
+                    textView.setText(CHAR_AMPERSAND + username);
+            }else
+                textView.setVisibility(View.GONE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, UserDataUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
     public static void setName(String name, TextView nameTextView) {
         try {
             int nameMaxLen = 25;

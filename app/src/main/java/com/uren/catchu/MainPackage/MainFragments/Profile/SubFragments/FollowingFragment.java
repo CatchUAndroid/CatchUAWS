@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
+import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,11 +19,10 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowingAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -38,12 +38,13 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 
+@SuppressLint("ValidFragment")
 public class FollowingFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
     private LinearLayoutManager mLayoutManager;
-    private FollowAdapter followAdapter;
+    private FollowingAdapter followingAdapter;
     private String requestedUserId, perPage, page;
 
     @BindView(R.id.following_recyclerView)
@@ -58,29 +59,21 @@ public class FollowingFragment extends BaseFragment
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
 
-    public static FollowingFragment newInstance(String requestedUserId) {
-        Bundle args = new Bundle();
-        args.putString("requestedUserId", requestedUserId);
-
-        FollowingFragment fragment = new FollowingFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public FollowingFragment (String requestedUserId) {
+        this.requestedUserId = requestedUserId;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        if (mView == null){
+        if (mView == null) {
             mView = inflater.inflate(R.layout.profile_subfragment_following, container, false);
             ButterKnife.bind(this, mView);
-
-            getItemsFromBundle();
             init();
             initRecyclerView();
             getFollowingList();
         }
-
         return mView;
     }
 
@@ -88,13 +81,6 @@ public class FollowingFragment extends BaseFragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-    }
-
-    private void getItemsFromBundle() {
-        Bundle args = getArguments();
-        if (args != null) {
-            requestedUserId = (String) args.getString("requestedUserId");
-        }
     }
 
     private void init() {
@@ -113,10 +99,10 @@ public class FollowingFragment extends BaseFragment
     }
 
     private void setAdapter() {
-        followAdapter = new FollowAdapter(getActivity(), getContext());
-        recyclerView.setAdapter(followAdapter);
+        followingAdapter = new FollowingAdapter(getContext());
+        recyclerView.setAdapter(followingAdapter);
 
-        followAdapter.setListItemClickListener(new ListItemClickListener() {
+        followingAdapter.setListItemClickListener(new ListItemClickListener() {
             @Override
             public void onClick(View view, User user, int clickedPosition) {
                 startFollowingInfoProcess(user, clickedPosition);
@@ -127,7 +113,7 @@ public class FollowingFragment extends BaseFragment
     @Override
     public void onClick(View v) {
 
-        if (v ==  commonToolbarbackImgv) {
+        if (v == commonToolbarbackImgv) {
             getActivity().onBackPressed();
         }
     }
@@ -173,7 +159,7 @@ public class FollowingFragment extends BaseFragment
             public void onTaskContinue() {
                 progressBar.setVisibility(View.VISIBLE);
             }
-        }, userId, requestedUserId,  requestType, perPage, page, token);
+        }, userId, requestedUserId, requestType, perPage, page, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -188,8 +174,8 @@ public class FollowingFragment extends BaseFragment
         }
         */
 
-        if(getActivity() != null) {
-            followAdapter.addAll(followInfoListResponse.getItems());
+        if (getActivity() != null) {
+            followingAdapter.addAll(followInfoListResponse.getItems());
         }
     }
 
@@ -197,7 +183,7 @@ public class FollowingFragment extends BaseFragment
 
         if (mFragmentNavigation != null) {
             UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-            userInfoListItem.setAdapter(followAdapter);
+            userInfoListItem.setAdapter(followingAdapter);
             userInfoListItem.setClickedPosition(clickedPosition);
             mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
