@@ -47,7 +47,7 @@ public class AccountHolderFollowProcess {
         });
     }
 
-    public static void getFollowings(final CompleteCallback completeCallback, final String requestedUserId, final String perPage, final String page) {
+    public static void getFollowings(final CompleteCallback completeCallback, final String requestedUserId, final int perPage, final int page) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -149,7 +149,7 @@ public class AccountHolderFollowProcess {
 
     //Get following list
     public static void startGetFollowings(String token, final CompleteCallback completeCallback, String requestedUserId,
-                                          String perPage, String page) {
+                                          int perPage, int page) {
 
         String userId = AccountHolderInfo.getUserID();
         String requestType = GET_USER_FOLLOWINGS;

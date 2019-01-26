@@ -22,14 +22,14 @@ public class FollowInfoProcess extends AsyncTask<Void, Void, FollowInfoListRespo
     private String requestType;
     private String token;
 
-    public FollowInfoProcess(OnEventListener callback, String userId, String requestedUserId, String requestType, String perPage, String page, String token) {
+    public FollowInfoProcess(OnEventListener callback, String userId, String requestedUserId, String requestType, int perPage, int page, String token) {
         mCallBack = callback;
         this.userId = userId;
         this.requestType = requestType;
         this.token = token;
         this.requestedUserId = requestedUserId;
-        this.perPage = perPage;
-        this.page = page;
+        this.page = String.valueOf(page);
+        this.perPage = String.valueOf(perPage);
     }
 
 

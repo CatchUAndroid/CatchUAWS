@@ -80,7 +80,6 @@ public class SelectFriendFragment extends BaseFragment {
     private ReturnCallback returnCallback;
     private int perPageCnt;
     private int pageCnt;
-    private List<UserProfileProperties> userList = new ArrayList<>();
 
     public SelectFriendFragment(String groupId, List<UserProfileProperties> groupParticipantList, String pendingName,
                                 ReturnCallback returnCallback) {
@@ -285,7 +284,6 @@ public class SelectFriendFragment extends BaseFragment {
         if (pageCnt != 1)
             adapter.removeProgressLoading();
 
-        userList.addAll(followerList.getResultArray());
         adapter.addAll(followerList.getResultArray());
     }
 

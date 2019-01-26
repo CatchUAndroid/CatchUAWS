@@ -126,7 +126,9 @@
     <string name="REMOVE">Remove</string>
     <string name="REMOVE_FOLLOWER_TITLE">Remove Follower?</string>
     <string name="REMOVE_FOLLOWER_MESSAGE">The information that you removed from the followers will not be forwarded to this user</string>
-
+    <string name="SEARCH_FOLLOWERS">Search followers...</string>
+    <string name="SEARCH_FOLLOWINGS">Search followings...</string>
+    <string name="USER_NOT_FOUND">User not found.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

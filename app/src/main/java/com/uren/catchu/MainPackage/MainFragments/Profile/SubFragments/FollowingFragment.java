@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -18,6 +22,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -32,6 +38,8 @@ import butterknife.ButterKnife;
 import catchu.model.FollowInfoListResponse;
 import catchu.model.User;
 
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_GET_FOLLOWER_PAGE_COUNT;
+import static com.uren.catchu.Constants.NumericConstants.DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
@@ -43,23 +51,36 @@ public class FollowingFragment extends BaseFragment
         implements View.OnClickListener {
 
     View mView;
-    private LinearLayoutManager mLayoutManager;
-    private FollowingAdapter followingAdapter;
-    private String requestedUserId, perPage, page;
 
     @BindView(R.id.following_recyclerView)
     RecyclerView recyclerView;
-
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
-
     @BindView(R.id.commonToolbarbackImgv)
     ClickableImageView commonToolbarbackImgv;
-
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
 
-    public FollowingFragment (String requestedUserId) {
+    //Search layout variables
+    @BindView(R.id.searchEdittext)
+    EditText searchEdittext;
+    @BindView(R.id.searchCancelImgv)
+    ImageView searchCancelImgv;
+    @BindView(R.id.searchResultTv)
+    TextView searchResultTv;
+
+    private LinearLayoutManager mLayoutManager;
+    private FollowingAdapter followingAdapter;
+    private String requestedUserId;
+    int perPage, page;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
+    private boolean loading = true;
+
+    private static final int CODE_FIRST_LOAD = 0;
+    private static final int CODE_MORE_LOAD = 1;
+    private int loadCode = CODE_FIRST_LOAD;
+
+    public FollowingFragment(String requestedUserId) {
         this.requestedUserId = requestedUserId;
     }
 
@@ -71,6 +92,8 @@ public class FollowingFragment extends BaseFragment
             mView = inflater.inflate(R.layout.profile_subfragment_following, container, false);
             ButterKnife.bind(this, mView);
             init();
+            setPaginationValues();
+            setListeners();
             initRecyclerView();
             getFollowingList();
         }
@@ -86,16 +109,113 @@ public class FollowingFragment extends BaseFragment
     private void init() {
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.followings));
+        searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWERS));
+        searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
+    }
+
+    private void setListeners() {
+        searchCancelImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchEdittext.setText("");
+                searchCancelImgv.setVisibility(View.GONE);
+            }
+        });
+
+        searchEdittext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                try {
+                    if (s != null && s.toString() != null) {
+                        if (!s.toString().trim().isEmpty()) {
+                            searchCancelImgv.setVisibility(View.VISIBLE);
+                        } else {
+                            searchCancelImgv.setVisibility(View.GONE);
+                        }
+
+                        if (followingAdapter != null)
+                            followingAdapter.updateAdapter(s.toString(), new ReturnCallback() {
+                                @Override
+                                public void onReturn(Object object) {
+                                    int itemSize = (int) object;
+
+                                    if (itemSize == 0)
+                                        searchResultTv.setVisibility(View.VISIBLE);
+                                    else
+                                        searchResultTv.setVisibility(View.GONE);
+                                }
+                            });
+                    } else
+                        searchCancelImgv.setVisibility(View.GONE);
+                } catch (Exception e) {
+                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                            new Object() {
+                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void setPaginationValues() {
+        perPage = DEFAULT_GET_FOLLOWER_PERPAGE_COUNT;
+        page = DEFAULT_GET_FOLLOWER_PAGE_COUNT;
     }
 
     private void initRecyclerView() {
         setLayoutManager();
         setAdapter();
+        setRecyclerViewScroll();
     }
 
     private void setLayoutManager() {
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
+    }
+
+    private void setRecyclerViewScroll() {
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                if (dy > 0) {
+                    visibleItemCount = mLayoutManager.getChildCount();
+                    totalItemCount = mLayoutManager.getItemCount();
+                    pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                            loading = false;
+                            page++;
+                            followingAdapter.addProgressLoading();
+                            loadCode = CODE_MORE_LOAD;
+                            getFollowingList();
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void setUpRecyclerView(FollowInfoListResponse followInfoListResponse) {
+        loading = true;
+
+        if (page != 1)
+            followingAdapter.removeProgressLoading();
+
+        followingAdapter.addAll(followInfoListResponse.getItems());
     }
 
     private void setAdapter() {
@@ -132,19 +252,13 @@ public class FollowingFragment extends BaseFragment
         String userId = AccountHolderInfo.getUserID();
         String requestType = GET_USER_FOLLOWINGS;
         String requestedUserId = this.requestedUserId;
-        String perPage = "";
-        String page = "";
 
         FollowInfoProcess followInfoProcess = new FollowInfoProcess(new OnEventListener<FollowInfoListResponse>() {
             @Override
             public void onSuccess(FollowInfoListResponse followInfoListResponse) {
 
-                if (followInfoListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("FollowInfoProcess");
-                } else {
-                    CommonUtils.LOG_OK("FollowInfoProcess");
+                if (followInfoListResponse != null)
                     setUpRecyclerView(followInfoListResponse);
-                }
 
                 progressBar.setVisibility(View.GONE);
             }
@@ -157,26 +271,13 @@ public class FollowingFragment extends BaseFragment
 
             @Override
             public void onTaskContinue() {
-                progressBar.setVisibility(View.VISIBLE);
+                if (loadCode == CODE_FIRST_LOAD)
+                    progressBar.setVisibility(View.VISIBLE);
             }
         }, userId, requestedUserId, requestType, perPage, page, token);
 
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
-    }
-
-    private void setUpRecyclerView(FollowInfoListResponse followInfoListResponse) {
-
-        //Takip edilenlerin isFollow degerleri set edilir.
-        /*
-        for(User item:followInfoListResponse.getItems()){
-            item.setFollowStatus(FOLLOW_STATUS_FOLLOWING);
-        }
-        */
-
-        if (getActivity() != null) {
-            followingAdapter.addAll(followInfoListResponse.getItems());
-        }
     }
 
     private void startFollowingInfoProcess(User user, int clickedPosition) {

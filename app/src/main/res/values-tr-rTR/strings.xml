@@ -102,8 +102,11 @@
     <string name="searchUser">Kullanıcı arayın...</string>
     <string name="IN_GROUP">Grupta</string>
     <string name="REMOVE">Çıkar</string>
-    <string name="REMOVE_FOLLOWER_TITLE">Takipten Çıkar?</string>
+    <string name="REMOVE_FOLLOWER_TITLE">Takipçiyi Çıkar?</string>
     <string name="REMOVE_FOLLOWER_MESSAGE">Takipçilerden çıkardığınız bilgisi bu kullanıcıya iletilmeyecektir</string>
+    <string name="SEARCH_FOLLOWERS">Takipçileri ara...</string>
+    <string name="SEARCH_FOLLOWINGS">Takip edilenleri ara...</string>
+    <string name="USER_NOT_FOUND">Kullanıcı bulunamadı.</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>

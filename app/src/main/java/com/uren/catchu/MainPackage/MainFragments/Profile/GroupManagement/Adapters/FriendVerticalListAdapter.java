@@ -35,12 +35,10 @@ import catchu.model.UserProfileProperties;
 public class FriendVerticalListAdapter extends RecyclerView.Adapter implements Filterable {
 
     View view;
-    LayoutInflater layoutInflater;
     private Context context;
     private FriendList friendList;
     private FriendList orginalFriendList;
     private RecyclerView horRecyclerView;
-    private LinearLayoutManager linearLayoutManager;
     private boolean horAdapterUpdateChk = false;
     private SelectFriendHorizontalAdapter selectFriendHorizontalAdapter = null;
     private List<UserProfileProperties> groupParticipantList;
@@ -54,7 +52,6 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
 
     public FriendVerticalListAdapter(Context context, List<UserProfileProperties> groupParticipantList) {
         try {
-            layoutInflater = LayoutInflater.from(context);
             this.context = context;
             this.friendList = new FriendList();
             this.friendList.setResultArray(new ArrayList<UserProfileProperties>());
@@ -88,7 +85,7 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
 
             viewHolder = new FriendVerticalListAdapter.SelectFriendHolder(itemView);
             horRecyclerView = ((Activity) context).findViewById(R.id.horRecyclerView);
-            linearLayoutManager = new LinearLayoutManager(context);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
             linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
             horRecyclerView.setLayoutManager(linearLayoutManager);
             setHorizontalAdapter();
