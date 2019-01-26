@@ -36,8 +36,9 @@
                         android:id="@+id/frameLayout"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_margin="10dp"
-                        android:layout_gravity="center">
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="10dp">
 
                         <ImageView
                             android:id="@+id/profilePicImgView"
@@ -76,8 +77,11 @@
                     android:id="@+id/xxxx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:paddingTop="10dp">
 
                     <TextView
                         android:id="@+id/title"

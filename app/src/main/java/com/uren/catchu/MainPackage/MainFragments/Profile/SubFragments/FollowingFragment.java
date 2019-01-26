@@ -109,7 +109,7 @@ public class FollowingFragment extends BaseFragment
     private void init() {
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.followings));
-        searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWERS));
+        searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWINGS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
 

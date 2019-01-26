@@ -18,9 +18,7 @@
             android:id="@+id/following_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/White"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp">
+            android:background="@color/White">
 
         </android.support.v7.widget.RecyclerView>
 
