@@ -176,6 +176,7 @@
     <string name="request_sended">Request sent</string>
     <string name="ACCEPT_REQUEST">Accept Request</string>
     <string name="cancel_following">Remove from followings?</string>
+    <string name="ASKING_STOP_FOLLOWING">Are you sure you want to stop following?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="feed">Feeds</string>

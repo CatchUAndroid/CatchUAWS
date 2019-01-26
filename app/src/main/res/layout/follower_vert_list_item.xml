@@ -25,7 +25,6 @@
                 android:paddingRight="5dp">
 
                 <LinearLayout
-                    android:id="@+id/xxxxx"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
@@ -108,7 +107,7 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="0.8">
+                        android:layout_weight="1">
 
                         <ImageView
                             android:id="@+id/settingsImgv"
@@ -116,7 +115,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
-                            android:paddingLeft="9dp"
+                            android:padding="7dp"
                             android:src="@mipmap/icon_vert_settings_gray" />
 
                     </RelativeLayout>

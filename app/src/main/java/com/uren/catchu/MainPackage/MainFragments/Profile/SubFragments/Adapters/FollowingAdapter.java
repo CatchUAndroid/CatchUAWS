@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
@@ -19,7 +20,9 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
@@ -185,19 +188,31 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
 
         private void openDialogBox() {
 
-            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
-                @Override
-                public void yesClick() {
-                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                }
-
-                @Override
-                public void noClick() {
-                    btnFollowStatus.setEnabled(true);
-                }
-            };
-
-            DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            new CustomDialogBox.Builder((Activity) mContext)
+                    .setMessage(mContext.getResources().getString(R.string.ASKING_STOP_FOLLOWING))
+                    .setTitle(mContext.getResources().getString(R.string.cancel_following))
+                    .setUser(user)
+                    .setNegativeBtnVisibility(View.VISIBLE)
+                    .setNegativeBtnText(mContext.getResources().getString(R.string.upperNo))
+                    .setNegativeBtnBackground(mContext.getResources().getColor(R.color.Silver, null))
+                    .setPositiveBtnVisibility(View.VISIBLE)
+                    .setPositiveBtnText(mContext.getResources().getString(R.string.upperYes))
+                    .setPositiveBtnBackground(mContext.getResources().getColor(R.color.DodgerBlue, null))
+                    .setTitleVisibility(View.VISIBLE)
+                    .setDurationTime(0)
+                    .isCancellable(true)
+                    .OnPositiveClicked(new CustomDialogListener() {
+                        @Override
+                        public void OnClick() {
+                            updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                        }
+                    })
+                    .OnNegativeClicked(new CustomDialogListener() {
+                        @Override
+                        public void OnClick() {
+                            btnFollowStatus.setEnabled(true);
+                        }
+                    }).build();
         }
 
         private void updateFollowStatus(final String requestType) {
