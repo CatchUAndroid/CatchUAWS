@@ -170,7 +170,6 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
                     .setPositiveBtnVisibility(View.VISIBLE)
                     .setPositiveBtnText(mContext.getResources().getString(R.string.REMOVE))
                     .setPositiveBtnBackground(mContext.getResources().getColor(R.color.bg_screen1, null))
-                    .setTitleVisibility(View.VISIBLE)
                     .setDurationTime(0)
                     .isCancellable(true)
                     .OnPositiveClicked(new CustomDialogListener() {
@@ -247,7 +246,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
 
         private void openDialogBox() {
 
-            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
+            DialogBoxUtil.removeFromFollowingsDialog(mContext, user, new YesNoDialogBoxCallback() {
                 @Override
                 public void yesClick() {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
@@ -257,9 +256,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
                 public void noClick() {
                     btnFollowStatus.setEnabled(true);
                 }
-            };
-
-            DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            });
         }
 
         private void updateFollowStatus(final String requestType) {

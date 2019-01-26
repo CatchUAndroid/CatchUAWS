@@ -15,6 +15,7 @@ import android.widget.ListView;
 
 import com.uren.catchu.Adapters.CustomListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForReportCallback;
@@ -29,6 +30,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 
 import catchu.model.Post;
+import catchu.model.User;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
@@ -38,6 +40,7 @@ import static com.uren.catchu.Constants.NumericConstants.CODE_PLAY_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.CODE_SCREENSHOT_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_VIDEO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
 public class DialogBoxUtil {
 
@@ -296,6 +299,33 @@ public class DialogBoxUtil {
         }
     }
 
+    public static void removeFromFollowingsDialog(Context context, User user, final YesNoDialogBoxCallback yesNoDialogBoxCallback) {
+        new CustomDialogBox.Builder((Activity) context)
+                .setMessage(context.getResources().getString(R.string.ASKING_STOP_FOLLOWING))
+                .setTitle(context.getResources().getString(R.string.cancel_following))
+                .setUser(user)
+                .setNegativeBtnVisibility(View.VISIBLE)
+                .setNegativeBtnText(context.getResources().getString(R.string.upperNo))
+                .setNegativeBtnBackground(context.getResources().getColor(R.color.Silver, null))
+                .setPositiveBtnVisibility(View.VISIBLE)
+                .setPositiveBtnText(context.getResources().getString(R.string.upperYes))
+                .setPositiveBtnBackground(context.getResources().getColor(R.color.DodgerBlue, null))
+                .setDurationTime(0)
+                .isCancellable(true)
+                .OnPositiveClicked(new CustomDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        yesNoDialogBoxCallback.yesClick();
+                    }
+                })
+                .OnNegativeClicked(new CustomDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        yesNoDialogBoxCallback.noClick();
+                    }
+                }).build();
+    }
+
     public static void showInfoDialogWithLimitedTime(Context context, String title, String message, long timeInMs, final InfoDialogBoxCallback infoDialogBoxCallback) {
         try {
             CommonUtils.hideKeyBoard(context);
@@ -392,34 +422,36 @@ public class DialogBoxUtil {
                     Resources resources = context.getResources();
                     String selectedItem = myList.get(position);
 
-                if (selectedItem.equals(resources.getString(R.string.report))) {
-                    String message = context.getResources().getString(R.string.reportPostMessage);
-                    DialogBoxUtil.showYesNoDialog(context, null,message, new YesNoDialogBoxCallback() {
-                        @Override
-                        public void yesClick() {
-                            postSettingsChoosenCallback.onReportSelected();
-                        }
-                        @Override
-                        public void noClick() {
-                        }
-                    });
-                } else if (selectedItem.equals(resources.getString(R.string.unfollow)) ||
-                        selectedItem.equals(resources.getString(R.string.follow))) {
-                    postSettingsChoosenCallback.onUnFollowSelected();
-                } else if (selectedItem.equals(resources.getString(R.string.disableComment)) ||
-                        selectedItem.equals(resources.getString(R.string.enableComment))) {
-                    postSettingsChoosenCallback.onDisableCommentSelected();
-                } else if (selectedItem.equals(resources.getString(R.string.delete))) {
-                    String message = context.getResources().getString(R.string.deleteThisPost);
-                    DialogBoxUtil.showYesNoDialog(context, null,message, new YesNoDialogBoxCallback() {
-                        @Override
-                        public void yesClick() {
-                            postSettingsChoosenCallback.onDeletePostSelected();
-                        }
-                        @Override
-                        public void noClick() {
-                        }
-                    });
+                    if (selectedItem.equals(resources.getString(R.string.report))) {
+                        String message = context.getResources().getString(R.string.reportPostMessage);
+                        DialogBoxUtil.showYesNoDialog(context, null, message, new YesNoDialogBoxCallback() {
+                            @Override
+                            public void yesClick() {
+                                postSettingsChoosenCallback.onReportSelected();
+                            }
+
+                            @Override
+                            public void noClick() {
+                            }
+                        });
+                    } else if (selectedItem.equals(resources.getString(R.string.unfollow)) ||
+                            selectedItem.equals(resources.getString(R.string.follow))) {
+                        postSettingsChoosenCallback.onUnFollowSelected();
+                    } else if (selectedItem.equals(resources.getString(R.string.disableComment)) ||
+                            selectedItem.equals(resources.getString(R.string.enableComment))) {
+                        postSettingsChoosenCallback.onDisableCommentSelected();
+                    } else if (selectedItem.equals(resources.getString(R.string.delete))) {
+                        String message = context.getResources().getString(R.string.deleteThisPost);
+                        DialogBoxUtil.showYesNoDialog(context, null, message, new YesNoDialogBoxCallback() {
+                            @Override
+                            public void yesClick() {
+                                postSettingsChoosenCallback.onDeletePostSelected();
+                            }
+
+                            @Override
+                            public void noClick() {
+                            }
+                        });
 
                     }
 

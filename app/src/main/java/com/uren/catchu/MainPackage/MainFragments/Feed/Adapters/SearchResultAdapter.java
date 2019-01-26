@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.util.DiffUtil;
@@ -16,7 +17,9 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
@@ -200,7 +203,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
 
         private void openDialogBox() {
 
-            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
+            DialogBoxUtil.removeFromFollowingsDialog(mContext, user, new YesNoDialogBoxCallback() {
                 @Override
                 public void yesClick() {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
@@ -210,9 +213,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
                 public void noClick() {
 
                 }
-            };
-
-            DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            });
         }
 
         private void updateFollowStatus(final String requestType) {

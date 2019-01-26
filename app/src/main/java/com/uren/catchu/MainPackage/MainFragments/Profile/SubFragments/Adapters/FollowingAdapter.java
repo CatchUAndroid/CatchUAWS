@@ -188,31 +188,17 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
 
         private void openDialogBox() {
 
-            new CustomDialogBox.Builder((Activity) mContext)
-                    .setMessage(mContext.getResources().getString(R.string.ASKING_STOP_FOLLOWING))
-                    .setTitle(mContext.getResources().getString(R.string.cancel_following))
-                    .setUser(user)
-                    .setNegativeBtnVisibility(View.VISIBLE)
-                    .setNegativeBtnText(mContext.getResources().getString(R.string.upperNo))
-                    .setNegativeBtnBackground(mContext.getResources().getColor(R.color.Silver, null))
-                    .setPositiveBtnVisibility(View.VISIBLE)
-                    .setPositiveBtnText(mContext.getResources().getString(R.string.upperYes))
-                    .setPositiveBtnBackground(mContext.getResources().getColor(R.color.DodgerBlue, null))
-                    .setTitleVisibility(View.VISIBLE)
-                    .setDurationTime(0)
-                    .isCancellable(true)
-                    .OnPositiveClicked(new CustomDialogListener() {
-                        @Override
-                        public void OnClick() {
-                            updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                        }
-                    })
-                    .OnNegativeClicked(new CustomDialogListener() {
-                        @Override
-                        public void OnClick() {
-                            btnFollowStatus.setEnabled(true);
-                        }
-                    }).build();
+            DialogBoxUtil.removeFromFollowingsDialog(mContext, user, new YesNoDialogBoxCallback() {
+                @Override
+                public void yesClick() {
+                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                }
+
+                @Override
+                public void noClick() {
+                    btnFollowStatus.setEnabled(true);
+                }
+            });
         }
 
         private void updateFollowStatus(final String requestType) {

@@ -27,10 +27,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
@@ -240,7 +241,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     public void setParticipantCount() {
         try {
-            String participantText = Integer.toString(groupParticipantList.size()) + " " ;
+            String participantText = Integer.toString(groupParticipantList.size()) + " ";
             personCntTv.setText(participantText);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
@@ -341,17 +342,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    DialogBoxUtil.showYesNoDialog(getActivity(), null, getResources().getString(R.string.areYouSureExitFromGroup), new YesNoDialogBoxCallback() {
-                        @Override
-                        public void yesClick() {
-                            exitFromGroup(AccountHolderInfo.getUserID());
-                        }
-
-                        @Override
-                        public void noClick() {
-
-                        }
-                    });
+                    showCustomDialog();
                 }
             });
 
@@ -403,6 +394,32 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+    }
+
+    private void showCustomDialog(){
+        new CustomDialogBox.Builder((Activity) getContext())
+                .setMessage(getContext().getResources().getString(R.string.areYouSureExitFromGroup))
+                .setGroup(groupRequestResultResultArrayItem)
+                .setNegativeBtnVisibility(View.VISIBLE)
+                .setNegativeBtnText(getContext().getResources().getString(R.string.upperNo))
+                .setNegativeBtnBackground(getContext().getResources().getColor(R.color.Silver, null))
+                .setPositiveBtnVisibility(View.VISIBLE)
+                .setPositiveBtnText(getContext().getResources().getString(R.string.upperYes))
+                .setPositiveBtnBackground(getContext().getResources().getColor(R.color.DodgerBlue, null))
+                .setDurationTime(0)
+                .isCancellable(true)
+                .OnPositiveClicked(new CustomDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        exitFromGroup(AccountHolderInfo.getUserID());
+                    }
+                })
+                .OnNegativeClicked(new CustomDialogListener() {
+                    @Override
+                    public void OnClick() {
+
+                    }
+                }).build();
     }
 
     private void startShowSelectedPhotoFragment() {
