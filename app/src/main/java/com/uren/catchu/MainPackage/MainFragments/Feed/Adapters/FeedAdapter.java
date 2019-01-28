@@ -24,6 +24,7 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PostSettingsChoosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
@@ -43,6 +44,12 @@ import java.util.List;
 import catchu.model.Post;
 import catchu.model.Report;
 
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_INAPPROPIATE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
@@ -225,6 +232,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
                         @Override
                         public void onUnFollowSelected() {
                             // todo NT -
+                            manageFollowStatus();
+
                         }
 
                         @Override
@@ -403,6 +412,63 @@ public class FeedAdapter extends RecyclerView.Adapter {
             }
         }
 
+        private void manageFollowStatus() {
+
+            if (post.getUser().getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+                if (post.getUser().getIsPrivateAccount() != null && post.getUser().getIsPrivateAccount()) {
+                    openDialogBox();
+                } else {
+                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                }
+            } else if (post.getUser().getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
+                if (post.getUser().getIsPrivateAccount() != null && post.getUser().getIsPrivateAccount()) {
+                    updateFollowStatus(FRIEND_FOLLOW_REQUEST);
+                } else {
+                    updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
+                }
+            } else {
+                //do nothing
+            }
+
+        }
+
+        private void openDialogBox() {
+            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
+                @Override
+                public void yesClick() {
+                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                }
+
+                @Override
+                public void noClick() {
+                }
+            };
+            DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+        }
+
+        private void updateFollowStatus(String requestType) {
+
+            String newFollowStatus = "";
+
+            if (requestType.equals(FRIEND_FOLLOW_REQUEST)) {
+                newFollowStatus = FOLLOW_STATUS_PENDING;
+            } else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
+                newFollowStatus = FOLLOW_STATUS_NONE;
+            } else if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY)) {
+                newFollowStatus = FOLLOW_STATUS_FOLLOWING;
+            } else {
+            }
+
+            for (int i = 0; i < postList.size(); i++) {
+                if (postList.get(i).getUser().getUserid().equals(post.getUser().getUserid())) {
+                    postList.get(i).getUser().setFollowStatus(newFollowStatus);
+                }
+            }
+
+            String requestedUserId = post.getUser().getUserid();
+            PostHelper.UpdateFollowStatus.startProcess(mContext, AccountHolderInfo.getUserID(), requestedUserId, requestType);
+        }
+
         private void setTargetImage() {
 
             int targetIcon = R.drawable.world_icon_96;
@@ -453,11 +519,11 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             ViewPagerUtils.setSliderDotsPanel(post.getAttachments().size(), mView, mContext);
 
-            if(post.getAttachments().size() > 0){
+            if (post.getAttachments().size() > 0) {
                 viewPager.setAdapter(new ViewPagerAdapter(mActivity, mContext, post.getAttachments(), fragmentNavigation));
                 viewPager.setOffscreenPageLimit(post.getAttachments().size());
                 viewPager.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 viewPager.setVisibility(View.GONE);
             }
 

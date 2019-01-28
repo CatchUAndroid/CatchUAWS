@@ -7,7 +7,7 @@
     </style-->
 
     <!--Style for Splash Screen-->
-    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="SplashScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name ="android:windowBackground"> @drawable/splash_screen_background</item>
     </style>
 

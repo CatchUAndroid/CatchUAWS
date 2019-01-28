@@ -32,6 +32,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemC
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostDeletedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
+import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -308,6 +309,14 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                 }
             });
 
+            //Profile layout
+            profileMainLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    UserInfoListItem userInfoListItem = new UserInfoListItem(post.getUser());
+                    PostHelper.ProfileClicked.startProcess(mContext, fragmentNavigation, userInfoListItem);
+                }
+            });
             //Location Detail Layout
             imgBtnLocationDetail.setOnClickListener(new View.OnClickListener() {
                 @Override

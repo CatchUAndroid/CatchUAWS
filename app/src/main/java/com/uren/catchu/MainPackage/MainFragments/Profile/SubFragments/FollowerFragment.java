@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -126,6 +128,15 @@ public class FollowerFragment extends BaseFragment
             }
         });
 
+
+        searchEdittext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchEdittext.requestFocus();
+                showKeyboard(true);
+            }
+        });
+
         searchEdittext.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -169,6 +180,27 @@ public class FollowerFragment extends BaseFragment
                 }
             }
         });
+    }
+
+    private void showKeyboard(boolean showKeyboard) {
+
+        try {
+            if (showKeyboard) {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            } else {
+                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                        Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchEdittext.getWindowToken(), 0);
+                searchEdittext.setFocusable(false);
+                searchEdittext.setFocusableInTouchMode(true);
+            }
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void setPaginationValues() {

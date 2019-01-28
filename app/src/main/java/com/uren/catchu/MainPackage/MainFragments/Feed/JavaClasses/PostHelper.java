@@ -32,9 +32,14 @@ import com.uren.catchu.ApiGatewayFunctions.PostDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
 import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
@@ -70,6 +75,13 @@ import catchu.model.User;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
@@ -666,6 +678,49 @@ public class PostHelper {
 
     }
 
+    public static class UpdateFollowStatus {
+
+        static String userId;
+        static String requestedUserId;
+        static String requestTYpe;
+
+        public static final void startProcess(Context context, String userId, String requestedUserId, String requestTYpe) {
+
+            UpdateFollowStatus.userId = userId;
+            UpdateFollowStatus.requestedUserId = requestedUserId;
+            UpdateFollowStatus.requestTYpe = requestTYpe;
+
+            UpdateFollowStatus updateFollowStatus = new UpdateFollowStatus(context);
+        }
+
+        private UpdateFollowStatus(final Context context) {
+
+            try {
+                AccountHolderFollowProcess.friendFollowRequest(requestTYpe, userId
+                        , requestedUserId, new CompleteCallback() {
+                            @Override
+                            public void onComplete(Object object) {
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+                                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                    @Override
+                                    public void okClick() {
+                                    }
+                                });
+                            }
+                        });
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
     public static class SinglePostClicked {
 
