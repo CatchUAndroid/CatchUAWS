@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
@@ -29,7 +28,7 @@ import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
@@ -54,7 +53,6 @@ import butterknife.ButterKnife;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
-import catchu.model.User;
 import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
@@ -62,8 +60,6 @@ import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_CO
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.FEED_TYPE_PUBLIC;
-import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 
 public class FeedPublicFragment extends BaseFragment implements View.OnClickListener {

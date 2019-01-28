@@ -1,18 +1,14 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.Operations;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Build;
-import android.webkit.CookieManager;
-import android.webkit.CookieSyncManager;
 import android.widget.Switch;
 
 import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;

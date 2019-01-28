@@ -25,6 +25,9 @@ public class ExifUtil {
         Bitmap rotatedBitmap = null;
 
         try {
+            if(bitmap == null)
+                return null;
+
             ei = new ExifInterface(photoPath);
 
             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,

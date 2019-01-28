@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment">
 
-    <include layout="@layout/layout_progress_bar" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,14 +12,18 @@
 
         <include layout="@layout/common_toolbar_layout" />
 
+        <include layout="@layout/custom_search_layout" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/follower_recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp">
+            android:background="@color/White">
 
         </android.support.v7.widget.RecyclerView>
-        
+
     </LinearLayout>
+
+    <include layout="@layout/layout_progress_bar" />
 
 </RelativeLayout>

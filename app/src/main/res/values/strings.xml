@@ -122,7 +122,13 @@
     <string name="CIRCLE_THE_PROBLEM">Take the problem round</string>
     <string name="SCREENSHOT">Take</string>
     <string name="searchUser">Search user...</string>
-
+    <string name="IN_GROUP">In Group</string>
+    <string name="REMOVE">Remove</string>
+    <string name="REMOVE_FOLLOWER_TITLE">Remove Follower?</string>
+    <string name="REMOVE_FOLLOWER_MESSAGE">The information that you removed from the followers will not be forwarded to this user</string>
+    <string name="SEARCH_FOLLOWERS">Search followers...</string>
+    <string name="SEARCH_FOLLOWINGS">Search followings...</string>
+    <string name="USER_NOT_FOUND">User not found.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -170,6 +176,7 @@
     <string name="request_sended">Request sent</string>
     <string name="ACCEPT_REQUEST">Accept Request</string>
     <string name="cancel_following">Remove from followings?</string>
+    <string name="ASKING_STOP_FOLLOWING">Are you sure you want to stop following?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="feed">Feeds</string>

@@ -74,7 +74,6 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
         TextView specialNameTextView;
         TextView shortenTextView;
         UserProfileProperties selectedFriend;
-
         int position = 0;
 
         public SelectFriendHorizontalHolder(final View itemView) {

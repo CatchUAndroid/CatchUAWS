@@ -30,6 +30,7 @@ import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,21 +44,18 @@ import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 
 public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAdapter.UserGroupsListHolder> implements Filterable {
 
-    View view;
-    LayoutInflater layoutInflater;
-    Context context;
-    GroupRequestResult groupRequestResult;
-    GroupRequestResult orgGroupRequestResult;
-    Activity activity;
-    String operationType;
-    GroupRequestResultResultArrayItem seledtedGroup;
-    int beforeSelectedPosition = -1;
-    GradientDrawable groupPhotoShape;
-    GradientDrawable adminButtonShape;
-    ReturnCallback returnCallback;
-    ReturnCallback searchResultCallback;
-    ItemClickListener itemClickListener;
+    private View view;
+    private LayoutInflater layoutInflater;
+    private Context context;
+    private GroupRequestResult groupRequestResult;
+    private GroupRequestResult orgGroupRequestResult;
+    private String operationType;
+    private GroupRequestResultResultArrayItem seledtedGroup;
+    private ReturnCallback returnCallback;
+    private ReturnCallback searchResultCallback;
+    private ItemClickListener itemClickListener;
 
+    private int beforeSelectedPosition = -1;
     private static final int SHOW_GROUP_DETAIL = 0;
 
     public UserGroupsListAdapter(Context context, GroupRequestResult groupRequestResult, ReturnCallback returnCallback,
@@ -69,12 +67,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             this.returnCallback = returnCallback;
             this.itemClickListener = itemClickListener;
             this.context = context;
-            activity = (Activity) context;
             this.operationType = operationType;
-            adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                    context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
-            groupPhotoShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.OVAL, 50, 0);
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                     new Object() {
@@ -98,7 +91,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         ImageView groupPicImgView;
         Button adminDisplayButton;
         LinearLayout groupSelectMainLinLay;
-        RadioButton selectGroupRb;
+        ImageView tickImgv;
         GroupRequestResultResultArrayItem groupRequestResultResultArrayItem;
         int position = 0;
 
@@ -110,32 +103,21 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 groupnameTextView = view.findViewById(R.id.groupnameTextView);
                 adminDisplayButton = view.findViewById(R.id.adminDisplayButton);
                 groupSelectMainLinLay = view.findViewById(R.id.groupSelectMainLinLay);
-                selectGroupRb = view.findViewById(R.id.selectGroupRb);
+                tickImgv = view.findViewById(R.id.tickImgv);
                 shortGroupNameTv = view.findViewById(R.id.shortGroupNameTv);
-                adminDisplayButton.setBackground(adminButtonShape);
-                groupPicImgView.setBackground(groupPhotoShape);
-
-                if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
-                    selectGroupRb.setVisibility(View.VISIBLE);
+                setShapes();
 
                 groupSelectMainLinLay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
-                            selectGroupRb.setChecked(true);
                             manageSelectedItem();
-                        } else if(operationType.equals(GROUP_OP_VIEW_TYPE)){
+                        } else if (operationType.equals(GROUP_OP_VIEW_TYPE)) {
                             itemClickListener.onClick(groupRequestResultResultArrayItem, SHOW_GROUP_DETAIL);
                         }
                     }
                 });
 
-                selectGroupRb.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        manageSelectedItem();
-                    }
-                });
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -144,17 +126,24 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             }
         }
 
+        private void setShapes() {
+            tickImgv.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.DarkTurquoise, null),
+                    context.getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3));
+            adminDisplayButton.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                    context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2));
+            groupPicImgView.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.OVAL, 50, 0));
+        }
+
         public void manageSelectedItem() {
             try {
                 seledtedGroup = groupRequestResultResultArrayItem;
-
                 notifyItemChanged(position);
 
                 if (beforeSelectedPosition > -1)
                     notifyItemChanged(beforeSelectedPosition);
 
                 beforeSelectedPosition = position;
-
                 returnCallback.onReturn(groupRequestResultResultArrayItem);
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
@@ -171,7 +160,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                 setGroupName();
                 setGroupPhoto();
                 setAdminButtonValues();
-                setRadioButtonValues();
+                updateTickImgv();
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
                         new Object() {
@@ -242,13 +231,13 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             return returnValue;
         }
 
-        public void setRadioButtonValues() {
+        public void updateTickImgv() {
             try {
                 if (seledtedGroup != null && groupRequestResultResultArrayItem != null) {
                     if (seledtedGroup.getGroupid().equals(groupRequestResultResultArrayItem.getGroupid()))
-                        selectGroupRb.setChecked(true);
+                        tickImgv.setVisibility(View.VISIBLE);
                     else
-                        selectGroupRb.setChecked(false);
+                        tickImgv.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
@@ -350,7 +339,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                     groupRequestResult = (GroupRequestResult) filterResults.values;
                     notifyDataSetChanged();
 
-                    if(groupRequestResult != null && groupRequestResult.getResultArray() != null && groupRequestResult.getResultArray().size() > 0)
+                    if (groupRequestResult != null && groupRequestResult.getResultArray() != null && groupRequestResult.getResultArray().size() > 0)
                         searchResultCallback.onReturn(groupRequestResult.getResultArray().size());
                     else
                         searchResultCallback.onReturn(0);

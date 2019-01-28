@@ -21,8 +21,8 @@
                 android:id="@+id/rlUserInfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp">
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
 
                 <LinearLayout
                     android:id="@+id/xxxxx"
@@ -59,7 +59,7 @@
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="6"
+                        android:layout_weight="5"
                         android:gravity="center_vertical">
 
                         <LinearLayout
@@ -102,6 +102,24 @@
                             android:text="@string/follow"
                             android:textAllCaps="false"
                             android:textSize="10sp" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/settingsRelLayout"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/settingsImgv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:padding="9dp"
+                            android:src="@mipmap/icon_horizontal_more" />
 
                     </RelativeLayout>
 

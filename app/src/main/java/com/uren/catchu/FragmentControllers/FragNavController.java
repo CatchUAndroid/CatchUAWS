@@ -14,7 +14,6 @@ import android.support.v4.util.Pair;
 import android.view.View;
 
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
 
 import org.json.JSONArray;
 
@@ -344,6 +343,61 @@ public class FragNavController {
 
             //Update the stored version we have in the list
             mFragmentStacks.set(mSelectedTabIndex, fragmentStack);
+
+            mCurrentFrag = fragment;
+            if (mTransactionListener != null) {
+                mTransactionListener.onFragmentTransaction(mCurrentFrag, TransactionType.POP);
+            }
+        }
+    }
+
+    public void clearStackWithGivenIndex(@Nullable int selectedTabIndex) {
+
+        //Grab Current stack
+        Stack<Fragment> fragmentStack = mFragmentStacks.get(selectedTabIndex);
+
+        // Only need to start popping and reattach if the stack is greater than 1
+        if (fragmentStack.size() > 1) {
+            Fragment fragment;
+            FragmentTransaction ft = createTransactionWithOptions(null);
+
+            //Pop all of the fragments on the stack and remove them from the FragmentManager
+            while (fragmentStack.size() > 1) {
+                fragment = mFragmentManager.findFragmentByTag(fragmentStack.pop().getTag());
+                if (fragment != null) {
+                    ft.remove(fragment);
+                }
+            }
+
+            //Attempt to reattach previous fragment
+            fragment = reattachPreviousFragment(ft);
+
+            boolean bShouldPush = false;
+            //If we can't reattach, either pull from the stack, or create a new root fragment
+            if (fragment != null) {
+                ft.commit();
+            } else {
+                if (!fragmentStack.isEmpty()) {
+                    fragment = fragmentStack.peek();
+                    ft.add(mContainerId, fragment, fragment.getTag());
+                    ft.commit();
+                } else {
+                    fragment = getRootFragment(selectedTabIndex);
+                    ft.add(mContainerId, fragment, generateTag(fragment));
+                    ft.commit();
+
+                    bShouldPush = true;
+                }
+            }
+
+            executePendingTransactions();
+
+         /*   if (bShouldPush) {
+                mFragmentStacks.get(selectedTabIndex).push(fragment);
+            }*/
+
+            //Update the stored version we have in the list
+            mFragmentStacks.set(selectedTabIndex, fragmentStack);
 
             mCurrentFrag = fragment;
             if (mTransactionListener != null) {

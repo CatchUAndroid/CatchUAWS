@@ -3,21 +3,25 @@ package com.uren.catchu.MainPackage;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.FragmentControllers.FragNavController;
@@ -46,37 +50,37 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_DOWN_TO_UP;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_UP_TO_DOWN;
+import static com.uren.catchu.FragmentControllers.FragNavController.TAB1;
 
-public class NextActivity extends AppCompatActivity implements
+public class NextActivity extends FragmentActivity implements
         BaseFragment.FragmentNavigation,
         FragNavController.TransactionListener,
         FragNavController.RootFragmentListener {
 
-    private Context context;
-
-    private int onPauseCount = 0;
-    private boolean onPausedInd = false;
     public static Activity thisActivity;
 
     public static FrameLayout contentFrame;
-    public static LinearLayout profilePageMainLayout;
-    public static RelativeLayout screenShotMainLayout;
-    public static Button screenShotCancelBtn;
-    public static Button screenShotApproveBtn;
+    public LinearLayout profilePageMainLayout;
+    public RelativeLayout screenShotMainLayout;
+    public Button screenShotCancelBtn;
+    public Button screenShotApproveBtn;
+    public TabLayout bottomTabLayout;
+    public LinearLayout tabMainLayout;
+
+    private int selectedTabColor, unSelectedTabColor;
 
     public String ANIMATION_TAG;
 
     public FragNavTransactionOptions transactionOptions;
 
     private int[] mTabIconsSelected = {
-            R.mipmap.icon_tab_home,
-            R.mipmap.icon_tab_share,
-            R.mipmap.icon_tab_profile};
+            R.mipmap.icon_home_tab,
+            R.mipmap.icon_share_tab,
+            R.mipmap.icon_profile_tab};
 
-    public static String[] TABS;
-    public static TabLayout bottomTabLayout;
+    public String[] TABS;
 
-    private static FragNavController mNavController;
+    private FragNavController mNavController;
 
     public static NotifyProblemFragment notifyProblemFragment;
     public SharePostFragment sharePostFragment;
@@ -90,6 +94,9 @@ public class NextActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_next);
         Fabric.with(this, new Crashlytics());
         thisActivity = this;
+
+        unSelectedTabColor = this.getResources().getColor(R.color.DarkGray, null);
+        selectedTabColor = this.getResources().getColor(R.color.OrangeRed, null);
 
         initValues();
 
@@ -132,8 +139,12 @@ public class NextActivity extends AppCompatActivity implements
         fillGroupListHolder();
     }
 
+    public void clearStackGivenIndex(int index){
+        mNavController.clearStackWithGivenIndex(index);
+    }
+
     public void checkFeedFragmentReselected(TabLayout.Tab tab) {
-        if (tab.getPosition() == FragNavController.TAB1 && feedFragment != null) {
+        if (tab.getPosition() == TAB1 && feedFragment != null) {
 
             int selectedTabPosition = feedFragment.getSelectedTabPosition();
             List<Fragment> fragments = feedFragment.getFragmentManager().getFragments();
@@ -184,8 +195,6 @@ public class NextActivity extends AppCompatActivity implements
     }
 
     private void initValues() {
-        onPausedInd = true;
-        context = this;
         ButterKnife.bind(this);
         bottomTabLayout = findViewById(R.id.bottom_tab_layout);
         profilePageMainLayout = findViewById(R.id.profilePageMainLayout);
@@ -193,6 +202,7 @@ public class NextActivity extends AppCompatActivity implements
         screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
         screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
         contentFrame = findViewById(R.id.content_frame);
+        tabMainLayout = findViewById(R.id.tabMainLayout);
         TABS = getResources().getStringArray(R.array.tab_name);
         setShapes();
 
@@ -231,12 +241,24 @@ public class NextActivity extends AppCompatActivity implements
             for (int i = 0; i < TABS.length; i++) {
                 bottomTabLayout.addTab(bottomTabLayout.newTab());
                 TabLayout.Tab tab = bottomTabLayout.getTabAt(i);
-                if (tab != null) {
+
+
+                if(tab != null){
+                    tab.setIcon(mTabIconsSelected[i]);
+                    //tab.setText(TABS[i]);
+
+                  /*  if(i == TAB1)
+                        tab.getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);*/
+                }
+
+                /*if (tab != null) {
                     tab.setCustomView(getTabView(i));
                     tab.setText(TABS[i]);
-                }
+                }*/
             }
+            bottomTabLayout.getTabAt(0).getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
         }
+
     }
 
     private View getTabView(int position) {
@@ -248,7 +270,6 @@ public class NextActivity extends AppCompatActivity implements
 
     public void onStart() {
         super.onStart();
-        onPausedInd = false;
     }
 
     @Override
@@ -256,7 +277,7 @@ public class NextActivity extends AppCompatActivity implements
         super.onStop();
     }
 
-    public static void switchTab(int position) {
+    public void switchTab(int position) {
         mNavController.switchTab(position);
     }
 
@@ -270,13 +291,6 @@ public class NextActivity extends AppCompatActivity implements
     @Override
     protected void onPause() {
         super.onPause();
-
-        onPauseCount = onPauseCount + 1;
-
-        if (onPauseCount > 1) {
-            onPausedInd = true;
-            Log.i("onPausedInd", "  >>onPause  onPausedInd:" + onPausedInd);
-        }
     }
 
     @Override
@@ -303,13 +317,12 @@ public class NextActivity extends AppCompatActivity implements
         }
     }
 
-    public static void switchAndUpdateTabSelection(int position) {
+    public void switchAndUpdateTabSelection(int position) {
         if (position != FragNavController.TAB2)
             bottomTabLayout.setVisibility(View.VISIBLE);
         switchTab(position);
         updateTabSelection(position);
     }
-
 
     private void setTransactionOption() {
         if (transactionOptions == null) {
@@ -349,14 +362,17 @@ public class NextActivity extends AppCompatActivity implements
             transactionOptions = null;
     }
 
-    public static void updateTabSelection(int currentTab) {
+    public void updateTabSelection(int currentTab) {
 
         for (int i = 0; i < TABS.length; i++) {
             TabLayout.Tab selectedTab = bottomTabLayout.getTabAt(i);
+
             if (currentTab != i) {
-                selectedTab.getCustomView().setSelected(false);
+                //selectedTab.getCustomView().setSelected(false);
+                selectedTab.getIcon().setColorFilter(unSelectedTabColor, PorterDuff.Mode.SRC_IN);
             } else {
-                selectedTab.getCustomView().setSelected(true);
+                //selectedTab.getCustomView().setSelected(true);
+                selectedTab.getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
             }
         }
     }
@@ -390,23 +406,23 @@ public class NextActivity extends AppCompatActivity implements
     @Override
     public void onTabTransaction(Fragment fragment, int index) {
         // If we have a backstack, show the back button
-        if (getSupportActionBar() != null && mNavController != null) {
+        /*if (getSupportActionBar() != null && mNavController != null) {
 
             //updateToolbar();
-        }
+        }*/
     }
 
     private void updateToolbar() {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
+        /*getSupportActionBar().setDisplayHomeAsUpEnabled(!mNavController.isRootFragment());
         getSupportActionBar().setDisplayShowHomeEnabled(!mNavController.isRootFragment());
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back_white_18dp);*/
     }
 
     @Override
     public Fragment getRootFragment(int index) {
         switch (index) {
 
-            case FragNavController.TAB1:
+            case TAB1:
                 feedFragment = new FeedFragment();
                 return feedFragment;
             case FragNavController.TAB2:
@@ -423,14 +439,17 @@ public class NextActivity extends AppCompatActivity implements
     public void onFragmentTransaction(Fragment fragment, FragNavController.TransactionType transactionType) {
         //do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life
         // If we have a backstack, show the back button
-        if (getSupportActionBar() != null && mNavController != null) {
+        /*if (getSupportActionBar() != null && mNavController != null) {
 
             //updateToolbar();
-        }
+        }*/
     }
 
-    public void updateToolbarTitle(String title) {
-
-        getSupportActionBar().setTitle(title);
+    public void updateStatusBarColor(int colorCode){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(colorCode);
+        }
     }
 }

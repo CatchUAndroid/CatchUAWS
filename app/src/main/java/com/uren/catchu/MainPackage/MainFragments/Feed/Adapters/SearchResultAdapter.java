@@ -17,8 +17,8 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -35,7 +35,6 @@ import java.util.List;
 import catchu.model.User;
 import catchu.model.UserListResponse;
 
-import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;

@@ -22,6 +22,30 @@ import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 
 public class UserDataUtil {
 
+    public static void setNameOrUserName(String name, String username, TextView textView){
+        try {
+            int nameMaxLen = 25;
+
+            if(name != null && !name.isEmpty()){
+                if (name.length() > nameMaxLen)
+                    textView.setText(name.trim().substring(0, nameMaxLen) + "...");
+                else
+                    textView.setText(name);
+            }else if(username != null && !username.isEmpty()){
+                if (username.length() > nameMaxLen)
+                    textView.setText(CHAR_AMPERSAND + username.trim().substring(0, nameMaxLen) + "...");
+                else
+                    textView.setText(CHAR_AMPERSAND + username);
+            }else
+                textView.setVisibility(View.GONE);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(null, UserDataUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
     public static void setName(String name, TextView nameTextView) {
         try {
             int nameMaxLen = 25;
@@ -236,6 +260,28 @@ public class UserDataUtil {
             }
 
             displayButton.setBackground(buttonShape);
+        } catch (Exception e) {
+            ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
+                    new Object() {
+                    }.getClass().getEnclosingMethod().getName(), e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateMessagingButton(Context context, String followStatus, Button sendMessageBtn) {
+
+        try {
+            if (sendMessageBtn != null) {
+                sendMessageBtn.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                        context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
+
+                if (followStatus != null) {
+                    if (followStatus.equals(FOLLOW_STATUS_OWN))
+                        sendMessageBtn.setVisibility(View.GONE);
+                    else
+                        sendMessageBtn.setVisibility(View.VISIBLE);
+                }
+            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, UserDataUtil.class.getSimpleName(),
                     new Object() {

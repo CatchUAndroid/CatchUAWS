@@ -1,13 +1,10 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,10 +15,6 @@ import android.widget.ImageView;
 
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
-import com.uren.catchu.Interfaces.OnLoadedListener;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -29,7 +22,6 @@ import com.uren.catchu.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ExplorePeopleFragment extends BaseFragment {

@@ -24,7 +24,7 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1">
+                android:layout_weight="1.5">
 
                 <ImageView
                     android:id="@+id/profilePicImgView"
@@ -40,31 +40,16 @@
                     android:textColor="@color/White"
                     android:textStyle="bold"
                     android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/tickImgv"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="right|bottom"
+                    android:padding="4dp"
+                    android:src="@mipmap/icon_tick_white" />
+
             </FrameLayout>
-
-            <!--<LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="4"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/usernameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/nameTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/tintColor"
-                    android:textSize="10dp"
-                    android:textStyle="italic" />
-            </LinearLayout>-->
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -95,26 +80,29 @@
 
                 </LinearLayout>
 
-
-
             </RelativeLayout>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="right|center"
-                android:layout_weight="1">
+                android:layout_height="match_parent"
+                android:layout_weight="2.5"
+                android:gravity="center">
 
-                <RadioButton
-                    android:id="@+id/selectRadioBtn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:scaleX="0.7"
-                    android:scaleY="0.7" />
+                <TextView
+                    android:id="@+id/inGroupTv"
+                    android:layout_height="37dp"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/IN_GROUP"
+                    android:textAllCaps="false"
+                    android:textColor="@color/Silver"
+                    android:textSize="12sp"
+                    android:visibility="visible"
+                    android:gravity="center"
+                    android:textStyle="italic|bold"/>
 
-            </LinearLayout>
-
+            </RelativeLayout>
 
         </LinearLayout>
 

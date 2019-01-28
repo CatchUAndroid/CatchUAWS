@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,7 +30,7 @@ import com.uren.catchu.ApiGatewayFunctions.UserGroupCaughtPostListProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.GridViewUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostGridViewAdapter;

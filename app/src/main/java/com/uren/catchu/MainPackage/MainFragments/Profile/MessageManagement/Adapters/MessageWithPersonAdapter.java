@@ -21,43 +21,17 @@ import android.widget.TextView;
 import com.firebase.client.ServerValue;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.Interfaces.CompleteCallback;
-import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostDiffCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
 
-import catchu.model.FollowInfoListResponse;
-import catchu.model.FriendRequestList;
-import catchu.model.Post;
-import catchu.model.User;
-import catchu.model.UserProfileProperties;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
-
-import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 
 public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 

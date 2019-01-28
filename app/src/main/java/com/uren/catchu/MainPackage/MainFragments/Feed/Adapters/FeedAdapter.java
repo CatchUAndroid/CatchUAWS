@@ -23,7 +23,7 @@ import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.PostSettingsChoosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PostSettingsChoosenCallback;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;

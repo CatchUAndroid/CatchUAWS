@@ -41,28 +41,23 @@ import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.AutoFitTextureView;
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
-import static com.uren.catchu.Constants.NumericConstants.VERIFY_PHONE_NUM_DURATION;
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 
 @SuppressLint("ValidFragment")
