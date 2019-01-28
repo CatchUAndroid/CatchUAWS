@@ -5,8 +5,6 @@
     android:layout_height="match_parent"
     tools:context=".MainPackage.MainFragments.Profile.SettingsManagement.SettingsFragment">
 
-    <include layout="@layout/layout_progress_bar" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -14,21 +12,33 @@
 
         <include layout="@layout/common_toolbar_layout" />
 
-        <RelativeLayout
+        <include layout="@layout/custom_search_layout" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/following_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/White">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/following_recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp">
-            </android.support.v7.widget.RecyclerView>
-
-            <include layout="@layout/warning_message_tv"></include>
-
-        </RelativeLayout>
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
+
+    <include layout="@layout/layout_progress_bar" />
+
+    <!--<ProgressBar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.DeviceDefault.Light.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/Red"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="visible">
+
+    </ProgressBar>-->
 
 </RelativeLayout>

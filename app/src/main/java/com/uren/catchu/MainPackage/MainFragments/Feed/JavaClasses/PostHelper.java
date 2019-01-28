@@ -42,6 +42,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCal
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageViewFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlay2Fragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -237,6 +238,7 @@ public class PostHelper {
 
                 if(mfragmentNavigation != null){
                     mfragmentNavigation.pushFragment(new PostVideoPlayFragment(media));
+                    //mfragmentNavigation.pushFragment(new PostVideoPlay2Fragment(media));
                 }
             } else {
                 Log.e("info", "unknown media type detected");

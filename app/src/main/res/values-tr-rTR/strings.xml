@@ -100,6 +100,13 @@
     <string name="SCREENSHOT">Çek</string>
     <string name="detail">Detay</string>
     <string name="searchUser">Kullanıcı arayın...</string>
+    <string name="IN_GROUP">Grupta</string>
+    <string name="REMOVE">Çıkar</string>
+    <string name="REMOVE_FOLLOWER_TITLE">Takipçiyi Çıkar?</string>
+    <string name="REMOVE_FOLLOWER_MESSAGE">Takipçilerden çıkardığınız bilgisi bu kullanıcıya iletilmeyecektir</string>
+    <string name="SEARCH_FOLLOWERS">Takipçileri ara...</string>
+    <string name="SEARCH_FOLLOWINGS">Takip edilenleri ara...</string>
+    <string name="USER_NOT_FOUND">Kullanıcı bulunamadı.</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -160,6 +167,7 @@
     <string name="request_sended">İstek gönderildi</string>
     <string name="ACCEPT_REQUEST">Kabul Et</string>
     <string name="cancel_following">Takip etmeyi bırak?</string>
+    <string name="ASKING_STOP_FOLLOWING">Takip etmeyi bırakmak istediğine emin misin?</string>
     <string name="yes">Evet</string>
     <string name="no">Hayır</string>
     <string name="feed">Paylaşımlar</string>

@@ -1,23 +1,9 @@
 package com.uren.catchu.Permissions;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
-
-import java.util.ArrayList;
-
-/*import static com.uren.catchu.Permissions.PermissionConstants.codeAccessFineLocationPermission;
-import static com.uren.catchu.Permissions.PermissionConstants.codeCameraPermission;
-import static com.uren.catchu.Permissions.PermissionConstants.codeReadContactsPermission;
-import static com.uren.catchu.Permissions.PermissionConstants.codeReadPhoneNumbersPermission;
-import static com.uren.catchu.Permissions.PermissionConstants.codeReadPhoneStatePermission;
-import static com.uren.catchu.Permissions.PermissionConstants.codeRecordAudioPermission;
-import static com.uren.catchu.Permissions.PermissionConstants.codeWriteExternalStoragePermission;*/
-import static com.uren.catchu.Permissions.PermissionConstants.codeShareGalleryPickerPerm;
-import static com.uren.catchu.Permissions.PermissionConstants.codeVideoGalerySelectedPerm;
-import static com.uren.catchu.Permissions.PermissionConstants.codeImageGalleryPermission;
 
 public class PermissionModule {
 
@@ -104,45 +90,4 @@ public class PermissionModule {
         }else
             return true;
     }
-
-   /* public int getWriteExternalStoragePermissionCode(){
-        return codeWriteExternalStoragePermission;
-    }
-
-    public int getReadContactsCode(){
-        return codeReadContactsPermission;
-    }
-
-    public int getReadPhoneStateCode(){
-        return codeReadPhoneStatePermission;
-    }
-
-    public int getReadPhoneNumbersCode(){
-        return codeReadPhoneNumbersPermission;
-    }
-
-    public int getAccessFineLocationCode(){
-        return codeAccessFineLocationPermission;
-    }
-
-    public int getCameraPermissionCode(){
-        return codeCameraPermission;
-    }
-
-    public int getRecordAudioPermissionCode(){
-        return codeRecordAudioPermission;
-    }*/
-
-    public int getImageGalleryPermission(){
-        return codeImageGalleryPermission;
-    }
-
-    public int getShareGalleryPickerPerm(){
-        return codeShareGalleryPickerPerm;
-    }
-
-    public int getVideoGalerySelectedPerm(){
-        return codeVideoGalerySelectedPerm;
-    }
-
 }

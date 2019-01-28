@@ -8,76 +8,16 @@
 
     <include layout="@layout/toolbar_layout"></include>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="10dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/friendsShareText"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="("
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/friendCountTv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=")"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="@string/selectAll"
-                android:textStyle="bold" />
-
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/selectAllCb"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginEnd="20dp"
-                android:scaleX="0.7"
-                android:scaleY="0.7"/>
-
-        </RelativeLayout>
-
-    </LinearLayout>
-
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/White">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/horRecyclerView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/White"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -101,8 +41,6 @@
             android:layout_margin="10dp"
             android:src="@drawable/right_arrow" />
 
-
     </RelativeLayout>
-
 
 </LinearLayout>

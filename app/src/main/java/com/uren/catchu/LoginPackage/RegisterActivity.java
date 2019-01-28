@@ -1,14 +1,9 @@
 package com.uren.catchu.LoginPackage;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,12 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,14 +23,12 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
-import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.Validation;
-import com.uren.catchu.MainActivity;
 import com.uren.catchu.R;
 
 import io.fabric.sdk.android.Fabric;

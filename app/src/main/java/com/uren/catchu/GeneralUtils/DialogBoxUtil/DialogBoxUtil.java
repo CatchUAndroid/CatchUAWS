@@ -9,40 +9,35 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.uren.catchu.Adapters.CustomListAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForReportCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForShareCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PostSettingsChoosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.VideoChosenForShareCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import catchu.model.Post;
 
 import static com.uren.catchu.Constants.NumericConstants.CODE_CAMERA_POSITION;
-import static com.uren.catchu.Constants.NumericConstants.CODE_DELETE_POST;
-import static com.uren.catchu.Constants.NumericConstants.CODE_DISABLE_COMMENTS_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_GALLERY_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_EDIT;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PHOTO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.CODE_PLAY_VIDEO;
-import static com.uren.catchu.Constants.NumericConstants.CODE_REPORT_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_SCREENSHOT_POSITION;
-import static com.uren.catchu.Constants.NumericConstants.CODE_UNFOLLOW_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_VIDEO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 
 public class DialogBoxUtil {
 

@@ -36,7 +36,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
@@ -175,7 +175,7 @@ public class ProfileFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
@@ -703,14 +703,14 @@ public class ProfileFragment extends BaseFragment
     private void followerClicked() {
         if (mFragmentNavigation != null) {
             String requestedUserId = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(FollowerFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new FollowerFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
     private void followingClicked() {
         if (mFragmentNavigation != null) {
             String requestedUserId = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(FollowingFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new FollowingFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
@@ -755,7 +755,7 @@ public class ProfileFragment extends BaseFragment
 
     public void startNotifyProblemFragment() {
         if (mFragmentNavigation != null) {
-            NextActivity.screenShotMainLayout.setVisibility(View.GONE);
+            getActivity().findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;
             mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }

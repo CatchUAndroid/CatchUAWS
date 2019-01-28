@@ -27,15 +27,15 @@ import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters.OtherProfileAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowerAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowingAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -113,20 +113,20 @@ public class OtherProfileFragment extends BaseFragment
      *             iii) eger adaptor beslenecek ise onFollowStatusChanged fonksiyonu icerisinde ilgili
      *             adaptor icin kosul eklenmeli..
      */
-    public OtherProfileFragment (UserInfoListItem user) {
+    public OtherProfileFragment(UserInfoListItem user) {
         this.userInfoListItem = user;
         this.selectedUser = user.getUser();
     }
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        NextActivity.bottomTabLayout.setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onCreate(savedInstanceState);
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
@@ -237,7 +237,7 @@ public class OtherProfileFragment extends BaseFragment
                             innerRecyclerPageCnt++;
                             otherProfileAdapter.innerRecyclerPageCntChanged(innerRecyclerPageCnt);
                             otherProfileAdapter.addProgressLoading();
-                            recyclerView.scrollToPosition(otherProfileAdapter.getItemCount()-1);
+                            recyclerView.scrollToPosition(otherProfileAdapter.getItemCount() - 1);
                             Log.i("1111111111111", "");
                             Log.i("lastCompletelyVisible", String.valueOf(lastCompletelyVisibleItemPosition));
                             Log.i("innerRecyclerPageCnt", String.valueOf(innerRecyclerPageCnt));
@@ -497,11 +497,11 @@ public class OtherProfileFragment extends BaseFragment
     public void onFollowStatusChanged(String followStatus) {
 
         if (userInfoListItem.getAdapter() != null) {
-            if (userInfoListItem.getAdapter() instanceof FollowAdapter) {
-                ((FollowAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
-                // else if (followInfoListItem.getAdapter() instanceof UserDetailAdapter) {
-                //((UserDetailAdapter) followInfoListItem.getAdapter()).updateAdapterWithPosition(followInfoListItem.getClickedPosition());
-            } else if (userInfoListItem.getAdapter() instanceof PersonListAdapter) {
+            if (userInfoListItem.getAdapter() instanceof FollowerAdapter)
+                ((FollowerAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
+            else if (userInfoListItem.getAdapter() instanceof FollowingAdapter)
+                ((FollowingAdapter) userInfoListItem.getAdapter()).updateAdapterWithPosition(userInfoListItem.getClickedPosition());
+            else if (userInfoListItem.getAdapter() instanceof PersonListAdapter) {
                 if (followStatus != null && !followStatus.isEmpty()) {
                     PersonListAdapter adapter = (PersonListAdapter) userInfoListItem.getAdapter();
                     User user = adapter.getPersonList().getItems().get(userInfoListItem.getClickedPosition());

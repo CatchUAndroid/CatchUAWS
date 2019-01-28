@@ -11,6 +11,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
@@ -70,8 +71,11 @@ public class SaveGroupProcess {
     }
 
     public void setUploadBitmap() {
-        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            uploadBitmap = photoSelectUtil.getResizedBitmap();
+        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null) {
+            uploadBitmap = BitmapConversion.compressImage(context, photoSelectUtil);
+            if (uploadBitmap == null)
+                uploadBitmap = BitmapConversion.getResizedBitmap2(context, photoSelectUtil);
+        }
     }
 
     public void dialogShow() {

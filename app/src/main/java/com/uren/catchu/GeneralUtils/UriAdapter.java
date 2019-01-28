@@ -203,45 +203,6 @@ public class UriAdapter extends AppCompatActivity {
         }
     }
 
-    public void createDirectoryFolder() {
-
-        String folder = Environment.getExternalStorageDirectory().toString();
-        File saveFolder = new File(folder + "/Movies/new /");
-        if (!saveFolder.exists()) {
-            saveFolder.mkdirs();
-        }
-    }
-
-    public void saveFrames(ArrayList<Bitmap> saveBitmapList) throws IOException {
-
-        String folder = Environment.getExternalStorageDirectory().toString();
-        File saveFolder = new File(folder + "/Movies/new /");
-        if (!saveFolder.exists()) {
-            saveFolder.mkdirs();
-        }
-
-
-        int i = 1;
-        for (Bitmap b : saveBitmapList) {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            b.compress(Bitmap.CompressFormat.JPEG, 40, bytes);
-
-            File f = new File(saveFolder, "frame" + i + ".jpg");
-
-            f.createNewFile();
-
-            FileOutputStream fo = new FileOutputStream(f);
-            fo.write(bytes.toByteArray());
-
-            fo.flush();
-            fo.close();
-
-            i++;
-        }
-
-    }
-
-
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
         try {
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -263,8 +224,10 @@ public class UriAdapter extends AppCompatActivity {
         try {
             String[] proj = {MediaStore.Images.Media.DATA};
             Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-            if (cursor.moveToFirst()) {
-                ;
+
+            if(cursor == null){
+                res = contentUri.getPath();
+            }else if (cursor.moveToFirst()) {
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 res = cursor.getString(column_index);
             }
@@ -275,34 +238,11 @@ public class UriAdapter extends AppCompatActivity {
         return res;
     }
 
-    public static boolean isImagePortrait(Uri uri){
-        try {
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-            BitmapFactory.decodeFile(new File(uri.getPath()).getAbsolutePath(), options);
-            int imageHeight = options.outHeight;
-            int imageWidth = options.outWidth;
-
-            if(imageHeight > imageWidth)
-                return true;
-            else
-                return false;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
-        return false;
-    }
-
     public static String getFilePathFromURI(Context context, Uri contentUri, int mediaType) {
         //copy file and send new file path
         try {
             String fileName = getFileName(context, contentUri);
             if (!TextUtils.isEmpty(fileName)) {
-                //File rootDataDir = context.getFilesDir();
-                //File copyFile = new File(rootDataDir + File.separator + fileName);
                 File copyFile = FileAdapter.getOutputMediaFile(mediaType);
                 copy(context, contentUri, copyFile);
                 return copyFile.getAbsolutePath();

@@ -10,6 +10,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SignedUrlGetProcess;
 import com.uren.catchu.ApiGatewayFunctions.UpdateUserProfile;
 import com.uren.catchu.ApiGatewayFunctions.UploadImageToS3;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
@@ -38,7 +39,7 @@ public class UpdateUserProfileProcess {
     Bitmap uploadBitmap = null;
 
     public UpdateUserProfileProcess(Context context, ServiceCompleteCallback serviceCompleteCallback, boolean profilPicChanged,
-                                    UserProfileProperties userProfileProperties, PhotoSelectUtil photoSelectUtil){
+                                    UserProfileProperties userProfileProperties, PhotoSelectUtil photoSelectUtil) {
         this.context = context;
         this.serviceCompleteCallback = serviceCompleteCallback;
         this.profilPicChanged = profilPicChanged;
@@ -47,23 +48,27 @@ public class UpdateUserProfileProcess {
         progressDialogUtil = new ProgressDialogUtil(context, context.getResources().getString(R.string.UPDATING), false);
         setUploadBitmap();
 
-        if(this.profilPicChanged && uploadBitmap != null)
+        if (this.profilPicChanged && uploadBitmap != null)
             uploadMediaToS3();
         else
             updateUserProfile();
     }
 
     public void setUploadBitmap() {
-        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null)
-            uploadBitmap = photoSelectUtil.getResizedBitmap();
+        if (photoSelectUtil != null && photoSelectUtil.getBitmap() != null) {
+            uploadBitmap = BitmapConversion.compressImage(context, photoSelectUtil);
+
+            if (uploadBitmap == null)
+                uploadBitmap = BitmapConversion.getResizedBitmap2(context, photoSelectUtil);
+        }
     }
 
-    public void uploadMediaToS3(){
+    public void uploadMediaToS3() {
 
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                if(!dialogShowed){
+                if (!dialogShowed) {
                     progressDialogUtil.dialogShow();
                     dialogShowed = true;
                 }
@@ -128,12 +133,12 @@ public class UpdateUserProfileProcess {
 
     }
 
-    public void updateUserProfile(){
+    public void updateUserProfile() {
 
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                if(!dialogShowed){
+                if (!dialogShowed) {
                     progressDialogUtil.dialogShow();
                     dialogShowed = true;
                 }

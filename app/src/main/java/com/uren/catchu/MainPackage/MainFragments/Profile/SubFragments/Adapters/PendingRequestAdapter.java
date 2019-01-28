@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -17,9 +16,8 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
@@ -27,14 +25,10 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClic
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import catchu.model.FollowInfoListResponse;
 import catchu.model.FriendRequestList;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
 

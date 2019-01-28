@@ -37,7 +37,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
-import com.deep.videotrimmer.utils.FileUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -53,9 +52,9 @@ import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenForShareCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.VideoChosenForShareCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForShareCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.VideoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
@@ -76,7 +75,6 @@ import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoTrimmer
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareDeleteProcess;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -247,7 +245,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         if (getContext() != null)
             CommonUtils.hideKeyBoard(getContext());
         super.onStart();
@@ -989,16 +987,16 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         } else if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                if(galleryOrCameraSelect.equals(CAMERA_TEXT) && selectedShareType.equals(IMAGE_TYPE)){
-                    if(permissionModule.checkCameraPermission())
+                if (galleryOrCameraSelect.equals(CAMERA_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
+                    if (permissionModule.checkCameraPermission())
                         openCameraForPhotoSelect();
                     else
                         requestPermissions(new String[]{Manifest.permission.CAMERA},
                                 permissionModule.PERMISSION_CAMERA);
-                }else if(galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(IMAGE_TYPE)){
+                } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
-                }else if(galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)){
+                } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
                             getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
@@ -1060,7 +1058,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    public void startVideoTrimmerFragment(Uri uri){
+    public void startVideoTrimmerFragment(Uri uri) {
         mFragmentNavigation.pushFragment(new VideoTrimmerFragment(uri, new VideoTrimmedCallback() {
             @Override
             public void onTrimmed(Uri uri, String realPath) {

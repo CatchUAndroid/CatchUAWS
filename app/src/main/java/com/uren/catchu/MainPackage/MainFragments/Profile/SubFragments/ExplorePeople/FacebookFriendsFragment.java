@@ -180,7 +180,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     private void setMessageWarning(UserListResponse userListResponse) {
-        if(userListResponse != null && userListResponse.getItems() != null &&
+        if (userListResponse != null && userListResponse.getItems() != null &&
                 userListResponse.getItems().size() > 0)
             warningMsgTv.setVisibility(View.GONE);
         else
@@ -188,16 +188,11 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     private void displayUserProfile(User user, int clickedPosition) {
-
-        if (!user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid())) {
-            if (mFragmentNavigation != null && facebookFriendsAdapter != null) {
-                UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-                userInfoListItem.setAdapter(facebookFriendsAdapter);
-                userInfoListItem.setClickedPosition(clickedPosition);
-                mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
-            }
-        } else {
-            NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+        if (mFragmentNavigation != null && facebookFriendsAdapter != null) {
+            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+            userInfoListItem.setAdapter(facebookFriendsAdapter);
+            userInfoListItem.setClickedPosition(clickedPosition);
+            mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
@@ -214,7 +209,7 @@ public class FacebookFriendsFragment extends BaseFragment {
             } else {
                 getFacebookFriends();
             }
-        } else{
+        } else {
             connectFacebookLayout.setVisibility(View.VISIBLE);
         }
     }
@@ -249,8 +244,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -1,14 +1,8 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses;
 
-import com.google.firebase.messaging.RemoteMessage;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.ReceiveMessageBox;
-import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;
-
-import catchu.model.FriendList;
-import catchu.model.UserProfileProperties;
 
 public class ReceivingMessageUtil {
 

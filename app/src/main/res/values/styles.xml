@@ -44,9 +44,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="ProfileTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">true</item>
+    <style name="MainTabLayoutTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

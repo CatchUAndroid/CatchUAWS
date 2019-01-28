@@ -99,7 +99,7 @@ public class FilterFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 

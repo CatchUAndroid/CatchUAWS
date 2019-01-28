@@ -30,8 +30,8 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
@@ -40,7 +40,6 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapter
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -96,7 +95,7 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 

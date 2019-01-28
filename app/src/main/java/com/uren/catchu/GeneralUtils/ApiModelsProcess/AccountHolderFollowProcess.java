@@ -20,11 +20,11 @@ import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 public class AccountHolderFollowProcess {
 
-    public static void getFollowers(final CompleteCallback completeCallback) {
+    public static void getFollowers(final int pageCount, final int perPageCount, final CompleteCallback completeCallback) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startGetFollowers(token, completeCallback);
+                startGetFollowers(token, pageCount, perPageCount, completeCallback);
             }
         });
     }
@@ -47,7 +47,7 @@ public class AccountHolderFollowProcess {
         });
     }
 
-    public static void getFollowings(final CompleteCallback completeCallback, final String requestedUserId, final String perPage, final String page) {
+    public static void getFollowings(final CompleteCallback completeCallback, final String requestedUserId, final int perPage, final int page) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -65,8 +65,17 @@ public class AccountHolderFollowProcess {
         });
     }
 
+    public static void removeFromFollowerRequest(final String requestType, final String requesterUserid, final String requestedUserid, final CompleteCallback completeCallback) {
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startFriendFollowRequest(requestType, requesterUserid, requestedUserid, token, completeCallback);
+            }
+        });
+    }
+
     //Get followers list
-    public static void startGetFollowers(String token, final CompleteCallback completeCallback) {
+    public static void startGetFollowers(String token, int pageCount, int perPageCount, final CompleteCallback completeCallback) {
 
         FriendListRequestProcess friendListRequestProcess = new FriendListRequestProcess(new OnEventListener() {
             @Override
@@ -84,7 +93,7 @@ public class AccountHolderFollowProcess {
             public void onTaskContinue() {
 
             }
-        }, AccountHolderInfo.getUserID(), token);
+        }, AccountHolderInfo.getUserID(), token, pageCount, perPageCount);
 
         friendListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -140,7 +149,7 @@ public class AccountHolderFollowProcess {
 
     //Get following list
     public static void startGetFollowings(String token, final CompleteCallback completeCallback, String requestedUserId,
-                                          String perPage, String page) {
+                                          int perPage, int page) {
 
         String userId = AccountHolderInfo.getUserID();
         String requestType = GET_USER_FOLLOWINGS;
@@ -166,7 +175,11 @@ public class AccountHolderFollowProcess {
         followInfoProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
-    //Request types for : 1-FRIEND_DELETE_FOLLOW, 2-FRIEND_DELETE_PENDING_FOLLOW_REQUEST, 3-FRIEND_FOLLOW_REQUEST, 4-FRIEND_CREATE_FOLLOW_DIRECTLY
+    //Request types for :   1-FRIEND_DELETE_FOLLOW,
+    //                      2-FRIEND_DELETE_PENDING_FOLLOW_REQUEST
+    //                      3-FRIEND_FOLLOW_REQUEST
+    //                      4-FRIEND_CREATE_FOLLOW_DIRECTLY
+    //                      5-FRIEND_REMOVE_FROM_FOLLOWER_REQUEST
     public static void startFriendFollowRequest(String requestType, String requesterUserid, String requestedUserid, String token, final CompleteCallback completeCallback){
         FriendRequestProcess friendRequestProcess = new FriendRequestProcess(new OnEventListener<FriendRequestList>() {
 

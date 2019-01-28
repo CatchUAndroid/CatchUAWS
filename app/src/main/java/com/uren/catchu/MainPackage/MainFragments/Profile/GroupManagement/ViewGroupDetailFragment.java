@@ -28,9 +28,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
@@ -445,7 +445,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        NextActivity.bottomTabLayout.setVisibility(View.GONE);
+        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 

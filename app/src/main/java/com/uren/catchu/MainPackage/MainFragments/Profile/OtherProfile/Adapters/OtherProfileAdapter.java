@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Rect;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,16 +21,14 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.GridViewUtil;
-import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.RecyclerScrollListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
@@ -50,7 +46,6 @@ import catchu.model.Post;
 import catchu.model.User;
 import catchu.model.UserProfile;
 
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
@@ -348,10 +343,12 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private boolean isSelectedUserFollowInfoClickable() {
-            if (selectedUser.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
+            if (selectedUser != null && selectedUser.getFollowStatus() != null &&
+                    selectedUser.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
                 return true;
             } else {
-                if (selectedUser.getIsPrivateAccount()) {
+                if (selectedUser != null && selectedUser.getIsPrivateAccount() != null &&
+                        selectedUser.getIsPrivateAccount()) {
                     return false;
                 } else {
                     return true;
@@ -362,14 +359,14 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         private void followerClicked() {
             if (fragmentNavigation != null) {
                 String requestedUserId = selectedUser.getUserid();
-                fragmentNavigation.pushFragment(FollowerFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(new FollowerFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
         private void followingClicked() {
             if (fragmentNavigation != null) {
                 String requestedUserId = selectedUser.getUserid();
-                fragmentNavigation.pushFragment(FollowingFragment.newInstance(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(new FollowingFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
@@ -429,8 +426,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 }
 
                 //send msg button
-                sendMessageBtn.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.White, null),
-                        mContext.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
+                UserDataUtil.updateMessagingButton(mContext, selectedUser.getFollowStatus(), sendMessageBtn);
             } catch (Resources.NotFoundException e) {
                 ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
                         new Object() {

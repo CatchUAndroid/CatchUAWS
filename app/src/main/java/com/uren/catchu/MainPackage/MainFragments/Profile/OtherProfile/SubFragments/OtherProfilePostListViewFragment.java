@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.SubFragme
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.Rect;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -19,23 +18,19 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.UserCaughtPostListProcess;
-import com.uren.catchu.ApiGatewayFunctions.UserGroupCaughtPostListProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
-import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -56,11 +51,7 @@ import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIE
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.OTHER_PROFILE_POST_TYPE_SHARED;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
 public class OtherProfilePostListViewFragment extends BaseFragment
 implements View.OnClickListener{
