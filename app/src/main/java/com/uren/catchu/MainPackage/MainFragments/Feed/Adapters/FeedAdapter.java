@@ -62,7 +62,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
     private BaseFragment.FragmentNavigation fragmentNavigation;
     private HashMap<String, Integer> postPositionHashMap;
 
-
     public FeedAdapter(Activity activity, Context context,
                        BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mActivity = activity;

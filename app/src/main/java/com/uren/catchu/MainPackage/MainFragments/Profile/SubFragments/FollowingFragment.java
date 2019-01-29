@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -47,8 +48,7 @@ import static com.uren.catchu.Constants.StringConstants.GET_USER_FOLLOWINGS;
 
 
 @SuppressLint("ValidFragment")
-public class FollowingFragment extends BaseFragment
-        implements View.OnClickListener {
+public class FollowingFragment extends BaseFragment {
 
     View mView;
 
@@ -88,6 +88,7 @@ public class FollowingFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         if (mView == null) {
             mView = inflater.inflate(R.layout.profile_subfragment_following, container, false);
             ButterKnife.bind(this, mView);
@@ -101,19 +102,30 @@ public class FollowingFragment extends BaseFragment
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void init() {
-        commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.followings));
         searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWINGS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
 
     private void setListeners() {
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
         searchCancelImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -228,14 +240,6 @@ public class FollowingFragment extends BaseFragment
                 startFollowingInfoProcess(user, clickedPosition);
             }
         });
-    }
-
-    @Override
-    public void onClick(View v) {
-
-        if (v == commonToolbarbackImgv) {
-            getActivity().onBackPressed();
-        }
     }
 
     private void getFollowingList() {

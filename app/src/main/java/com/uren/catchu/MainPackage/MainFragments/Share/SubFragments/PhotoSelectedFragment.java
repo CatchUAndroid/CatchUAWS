@@ -270,7 +270,7 @@ public class PhotoSelectedFragment extends BaseFragment {
     }
 
     public void setSelectedPhoto() {
-        CommonUtils.setImageScaleType(thisPhotoSelectUtil, selectedImageView);
+        //CommonUtils.setImageScaleType(thisPhotoSelectUtil, selectedImageView);
 
         if (thisPhotoSelectUtil != null) {
             if (thisPhotoSelectUtil.getScreeanShotBitmap() != null)
