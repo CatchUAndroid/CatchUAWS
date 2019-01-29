@@ -201,7 +201,7 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                     } else {
                         shortGroupNameTv.setVisibility(View.GONE);
                         Glide.with(context)
-                                .load(context.getResources().getIdentifier("groups_icon_500", "drawable", context.getPackageName()))
+                                .load(R.drawable.groups_icon_500)
                                 .apply(RequestOptions.circleCropTransform())
                                 .into(groupPicImgView);
                     }

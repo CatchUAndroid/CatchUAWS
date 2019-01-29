@@ -111,23 +111,36 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
             try {
                 this.group = group;
                 this.position = position;
+                setGroupName();
+                setGroupPhoto();
 
-                //Group picture
-                if(group.getGroupPhotoUrl()!= null && !group.getGroupPhotoUrl().isEmpty()){
-                    Glide.with(mContext)
-                            .load(group.getGroupPhotoUrl())
-                            .apply(RequestOptions.centerCropTransform())
-                            .into(imgGroupPic);
-                }
-                //Group name
-                if(group.getName() != null && !group.getName().isEmpty()){
-                    txtGroupName.setText(group.getName());
-                }
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
                         new Object() {
                         }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
+            }
+        }
+
+        private void setGroupName(){
+            if(group.getName() != null && !group.getName().isEmpty()){
+                txtGroupName.setText(group.getName());
+            }
+        }
+
+        private void setGroupPhoto(){
+            if(group.getGroupPhotoUrl()!= null && !group.getGroupPhotoUrl().isEmpty()){
+                imgGroupPic.setPadding(0, 0, 0, 0);
+                Glide.with(mContext)
+                        .load(group.getGroupPhotoUrl())
+                        .apply(RequestOptions.centerCropTransform())
+                        .into(imgGroupPic);
+            }else {
+                imgGroupPic.setPadding(30, 30, 30, 30);
+                Glide.with(mContext)
+                        .load(R.drawable.groups_icon_500)
+                        .apply(RequestOptions.centerInsideTransform())
+                        .into(imgGroupPic);
             }
         }
     }

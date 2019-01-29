@@ -293,7 +293,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 photoExistOnImgv = false;
                 groupPictureImgV.setPadding(200, 200, 200, 200);
                 Glide.with(this)
-                        .load(getResources().getIdentifier("groups_icon_500", "drawable", getContext().getPackageName()))
+                        .load(R.drawable.groups_icon_500)
                         .apply(RequestOptions.centerInsideTransform())
                         .into(groupPictureImgV);
             }
