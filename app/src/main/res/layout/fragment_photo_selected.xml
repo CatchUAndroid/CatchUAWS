@@ -38,10 +38,6 @@
         android:layout_alignParentTop="true"
         android:orientation="horizontal">
 
-
-
-
-
         <FrameLayout
             android:id="@+id/seekbarLayout"
             android:layout_width="32dp"
@@ -114,11 +110,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="normal|bold|italic" />
-
-
-
+        
     </RelativeLayout>
-
-
 
 </RelativeLayout>
