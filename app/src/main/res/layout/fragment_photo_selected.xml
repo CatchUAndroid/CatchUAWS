@@ -110,7 +110,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="normal|bold|italic" />
-        
+
     </RelativeLayout>
 
 </RelativeLayout>
