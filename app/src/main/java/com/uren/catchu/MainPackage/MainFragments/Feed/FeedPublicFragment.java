@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import com.github.androidprogresslayout.ProgressLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -50,6 +52,8 @@ import com.uren.catchu.TransitionHelper.TransitionHelper;
 import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
+import com.victor.loading.rotate.RotateLoading;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,31 +81,20 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     @BindView(R.id.rv_feed)
     CustomRecyclerView recyclerView;
 
-    @BindView(R.id.progressBar)
-    ProgressBar progressBar;
-
     @BindView(R.id.rl_no_feed)
     RelativeLayout rl_no_feed;
 
     @BindView(R.id.txtNoFeedExplanation)
     TextView txtNoFeedExplanation;
 
-    @BindView(R.id.rl_pulsator)
-    RelativeLayout rl_pulsator;
-
-    @BindView(R.id.pulsator)
-    PulsatorLayout mPulsator;
-
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    SwipeRefreshLayout refresh_layout;
 
-    @BindView(R.id.imgProfile)
-    ImageView imgProfile;
-    @BindView(R.id.txtProfile)
-    TextView txtProfile;
+    @BindView(R.id.loadingView)
+    AVLoadingIndicatorView loadingView;
 
     private boolean loading = true;
-    int pastVisibleItems, visibleItemCount, totalItemCount;
+    private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt;
     private int pageCnt;
     private List<Post> postList = new ArrayList<Post>();
@@ -135,10 +128,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             checkLocationAndRetrievePosts();
         }
 
-        if (!mPulsator.isStarted()) {
-            mPulsator.reset();
-            mPulsator.start();
-        }
+        loadingView.smoothToShow();
 
         return mView;
     }
@@ -149,9 +139,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     private void initRecyclerView() {
 
-        showPulsatorLayout(true);
-
-        isFirstFetch = true;
+        isFirstFetch=true;
         setLayoutManager();
         setAdapter();
         setRecyclerViewProperties();
@@ -167,10 +155,8 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             @Override
             public void onFeedRefresh() {
                 CommonUtils.showToastShort(getContext(), "Feed - Public refreshing..");
-                pulledToRefresh = true;
                 Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
-                setPaginationValues();
-                checkLocationAndRetrievePosts();
+                refreshFeed();
             }
         });
     }
@@ -178,9 +164,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     private void setLayoutManager() {
         mLayoutManager = new CustomLinearLayoutManager(getContext());
         recyclerView.setLayoutManager(mLayoutManager);
-
-        //mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        //recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new FeedItemAnimator());
     }
 
@@ -190,16 +173,18 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setPullToRefresh() {
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (rl_pulsator.getVisibility() != View.VISIBLE) {
-                    pulledToRefresh = true;
-                    setPaginationValues();
-                    checkLocationAndRetrievePosts();
-                }
+                refreshFeed();
             }
         });
+    }
+
+    private void refreshFeed(){
+        pulledToRefresh = true;
+        setPaginationValues();
+        checkLocationAndRetrievePosts();
     }
 
     private void setPaginationValues() {
@@ -218,32 +203,20 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-
                 if (dy > 0) //check for scroll down
                 {
                     visibleItemCount = mLayoutManager.getChildCount();
                     totalItemCount = mLayoutManager.getItemCount();
                     pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
 
-                    Log.i("visibleItemCount", String.valueOf(visibleItemCount));
-                    Log.i("totalItemCount", String.valueOf(totalItemCount));
-                    Log.i("pastVisibleItems", String.valueOf(pastVisibleItems));
-                    Log.i("loading", String.valueOf(loading));
-
                     if (loading) {
 
+                        //Do pagination.. i.e. fetch new data
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             loading = false;
-
-                            // TODO: 20.12.2018 - en alta gelindiginde tekrar scroll yapildiginda bu blok calisiyor, bakilabilir.
-                            
-                            Log.v("...", "Last Item Wow !");
-                            //Do pagination.. i.e. fetch new data
                             pageCnt++;
                             feedAdapter.addProgressLoading();
                             getPosts();
-
                         }
                     }
                 }
@@ -305,18 +278,13 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         switch (requestCode) {
             case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     getPosts();
 
                 } else {
-
                     // permission denied, boo! Disable the
-                    showPulsatorLayout(false);
                     showNoFeedLayout(true, R.string.needLocationPermission);
-                    refresh_layout.setRefreshing(false);
                 }
 
             }
@@ -336,9 +304,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
                 if (location != null) {
                     startGetPosts(token);
                 } else {
-                    showPulsatorLayout(false);
                     showNoFeedLayout(true, R.string.locationError);
-                    refresh_layout.setRefreshing(false);
                 }
             }
         });
@@ -360,29 +326,15 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
-
-                if (isFirstFetch) {
-                    final Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Do something after 5s = 5000ms
-                            isFirstFetch = false;
-                            setFetchData(postListResponse);
-                        }
-                    }, 1000);
-                } else {
-                    setFetchData(postListResponse);
-                }
-
+                setFetchData(postListResponse);
             }
 
             @Override
             public void onFailure(Exception e) {
                 CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
-                //progressBar.setVisibility(View.GONE);
+                loadingView.hide();
                 refresh_layout.setRefreshing(false);
-                showPulsatorLayout(false);
+
                 if (postList.size() > 0) {
                     DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
@@ -402,11 +354,8 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onTaskContinue() {
-
-                if (pageCnt == 1 && !pulledToRefresh) {
-                    //progressBar.setVisibility(View.VISIBLE);
-                }
             }
+
         }, sUserId, sPostId, sCatchType, sLongitude, sLatitude, sRadius, sPerpage, sPage, token);
 
         postListResponseProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -414,6 +363,11 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     }
 
     private void setFetchData(PostListResponse postListResponse) {
+
+        if(isFirstFetch){
+            isFirstFetch=false;
+            loadingView.smoothToHide();
+        }
 
         if (postListResponse == null) {
             CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
@@ -427,35 +381,14 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             setUpRecyclerView(postListResponse);
         }
 
-        //progressBar.setVisibility(View.GONE);
         refresh_layout.setRefreshing(false);
-        showPulsatorLayout(false);
 
-    }
-
-    private void showPulsatorLayout(boolean isShowPulsator) {
-        if (isShowPulsator) {
-            UserProfile user = AccountHolderInfo.getInstance().getUser();
-            UserDataUtil.setProfilePicture(getActivity(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
-            AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
-                @Override
-                public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                    UserDataUtil.setProfilePicture(getActivity(), userProfile.getUserInfo().getProfilePhotoUrl(),
-                            userProfile.getUserInfo().getName(), userProfile.getUserInfo().getUsername(), txtProfile, imgProfile);
-                }
-            });
-
-            rl_pulsator.setVisibility(View.VISIBLE);
-            mPulsator.start();
-        } else {
-            mPulsator.stop();
-            rl_pulsator.setVisibility(View.GONE);
-        }
     }
 
     private void showNoFeedLayout(boolean setVisible, int textDetail) {
         if (setVisible) {
+            refresh_layout.setRefreshing(false);
+            loadingView.hide();
             rl_no_feed.setVisibility(View.VISIBLE);
             txtNoFeedExplanation.setText(textDetail);
         } else {
@@ -467,13 +400,12 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
         loading = true;
+        postList.addAll(postListResponse.getItems());
         preDownloadUrls(postListResponse.getItems());
 
         if (pageCnt != 1) {
             feedAdapter.removeProgressLoading();
         }
-
-        postList.addAll(postListResponse.getItems());
 
         if (pulledToRefresh) {
             feedAdapter.updatePostListItems(postListResponse.getItems());

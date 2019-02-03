@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -75,7 +76,7 @@ public class OtherProfileFragment extends BaseFragment
 
     //Refresh layout
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    SwipeRefreshLayout refresh_layout;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -195,7 +196,7 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setPullToRefresh() {
 
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 pulledToRefreshHeader = true;

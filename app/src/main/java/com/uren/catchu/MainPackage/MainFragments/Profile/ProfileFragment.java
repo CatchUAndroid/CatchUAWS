@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -136,7 +137,7 @@ public class ProfileFragment extends BaseFragment
     RelativeLayout backLayout;
 
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    SwipeRefreshLayout refresh_layout;
 
     //posts
     @BindView(R.id.llMyPosts)
@@ -252,7 +253,7 @@ public class ProfileFragment extends BaseFragment
 
     private void setPullToRefresh() {
 
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 AccountHolderInfo.getToken(new TokenCallback() {
