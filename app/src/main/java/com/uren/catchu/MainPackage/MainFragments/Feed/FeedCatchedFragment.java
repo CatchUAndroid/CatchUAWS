@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -9,6 +10,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +28,7 @@ import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
+import com.uren.catchu.ErrorActivity;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -40,6 +44,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
+import com.uren.catchu.TransitionHelper.TransitionHelper;
 import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
 import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
@@ -269,11 +274,21 @@ public class FeedCatchedFragment extends BaseFragment implements View.OnClickLis
 
     private void checkCanGetLocation() {
 
-        if (!locationTrackObj.canGetLocation())
+        if (!locationTrackObj.canGetLocation()) {
             //gps ve network provider olup olmadığı kontrol edilir
             //todo NT - gps kapatıldığında case'i handle et
-            DialogBoxUtil.showSettingsAlert(getActivity());
-        else {
+            //DialogBoxUtil.showSettingsAlert(getActivity());
+
+            final int TYPE_XML = 1;
+
+            Intent i = new Intent(getActivity(), ErrorActivity.class);
+            i.putExtra("EXTRA_TYPE", TYPE_XML);
+
+            final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+            ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+            startActivity(i, transitionActivityOptions.toBundle());
+
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 if (permissionModule.checkAccessFineLocationPermission()) {
