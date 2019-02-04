@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -70,7 +71,7 @@ import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.FEED_TYPE_PUBLIC;
 
 
-public class FeedPublicFragment extends BaseFragment implements View.OnClickListener {
+public class FeedPublicFragment extends BaseFragment {
 
     View mView;
     FeedAdapter feedAdapter;
@@ -137,6 +138,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             initRecyclerView();
             checkLocationAndRetrievePosts();
 
+
             loadingView.show();
         }
 
@@ -145,14 +147,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
 
     private void initListeners() {
-        imgRetry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                refreshFeed();
-                showExceptionLayout(false, -1);
-                loadingView.show();
-            }
-        });
+
     }
 
     private void initRecyclerView() {
@@ -485,10 +480,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         //recyclerView.smoothScrollToPosition(0);
     }
 
-    @Override
-    public void onClick(View view) {
-
-    }
 
     /**********************************************/
     private void showExceptionLayout(boolean showException, int viewType) {
@@ -507,6 +498,10 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             if (viewType == VIEW_RETRY) {
                 imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 retryLayout.setVisibility(View.VISIBLE);
+
+                ((Button) mView.findViewById(R.id.btnClick)).setOnClickListener(screenshotOnClickListener);
+
+
             } else if (viewType == VIEW_NO_POST_FOUND) {
                 noPostFoundLayout.setVisibility(View.VISIBLE);
             } else if (viewType == VIEW_LOCATION_SERVICE_ERROR) {
@@ -522,5 +517,11 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         }
 
     }
+
+    private View.OnClickListener screenshotOnClickListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            CommonUtils.showToastShort(getContext(), "okkkk");
+        }
+    };
 
 }

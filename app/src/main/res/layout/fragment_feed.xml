@@ -16,8 +16,7 @@
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbarLayout"
@@ -37,30 +36,36 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:baselineAligned="false"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:weightSum="10">
 
                     <LinearLayout
-                        android:id="@+id/llFilter"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp">
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:id="@+id/llFilter">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgFilter"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="3dp"
-                            android:padding="3dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:padding="2dp"
                             android:src="@mipmap/icon_filterr" />
-
-                    </LinearLayout>
+                    </RelativeLayout>
 
                     <LinearLayout
                         android:id="@+id/llSearch"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_weight="7.4"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -80,12 +85,13 @@
                                     android:src="@mipmap/search" />
 
                                 <TextView
-                                    android:layout_width="240dp"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:background="@drawable/search_edittext"
                                     android:gravity="center"
                                     android:text="@string/search"
-                                    android:textSize="17sp" />
+                                    android:textSize="17sp"
+                                    android:textColor="@color/tintColor"/>
 
 
                             </FrameLayout>
@@ -96,17 +102,16 @@
                     </LinearLayout>
 
                     <RelativeLayout
-                        android:layout_width="50dp"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_margin="2dp">
+                        android:layout_margin="2dp"
+                        android:layout_weight="1"
+                        android:gravity="center">
 
-                        <ImageView
+                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/myMessagesImgv"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_margin="8dp"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
                             android:src="@mipmap/icon_speech_bubble" />
 
                         <TextView
@@ -124,6 +129,11 @@
                             android:visibility="gone" />
 
                     </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3" />
 
                 </LinearLayout>
 

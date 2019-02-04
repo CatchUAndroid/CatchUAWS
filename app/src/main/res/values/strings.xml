@@ -233,10 +233,13 @@
     <string name="rememberMe">Remember Me</string>
 
     <!-- User edit constants constants-->
+    <string name="PERSONAL_INFORMATION">Personal Information</string>
     <string name="NAME">Name</string>
     <string name="BIRTHDAY">Birthday</string>
     <string name="PHONE">Phone</string>
     <string name="GENDER">Gender</string>
+    <string name="WEBSITE">Website</string>
+    <string name="ABOUT_ME">About me</string>
 
     <!-- Time constants-->
     <string name="ago">ago</string>

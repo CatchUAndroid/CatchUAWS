@@ -58,4 +58,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="customTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">@color/SteelBlue</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
 </resources>

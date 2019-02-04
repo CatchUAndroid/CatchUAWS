@@ -86,29 +86,67 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@color/clearWhite"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtPersonalInfo"
+                            style="@style/customTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="bottom"
+                            android:text="@string/PERSONAL_INFORMATION   "
+                            android:textStyle="bold" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:alpha="0.5"
+                            android:background="@color/tintColor" />
+
+                    </LinearLayout>
 
                     <!-- Name /-->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/NAME"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom">
+
+                            <TextView
+                                android:id="@+id/txtName"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:gravity="bottom"
+                                android:text="@string/NAME" />
+
+
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/edtName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@android:color/transparent"
                             android:maxLength="30"
                             android:singleLine="true" />
 
@@ -118,22 +156,34 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtUserName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/username"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtUserName"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/username" />
+
+
+                        </LinearLayout>
+
 
                         <EditText
                             android:id="@+id/edtUserName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@android:color/transparent"
                             android:maxLength="30"
                             android:singleLine="true" />
 
@@ -143,22 +193,34 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtWebsite"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Website"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtWebsite"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/WEBSITE" />
+
+
+                        </LinearLayout>
+
 
                         <EditText
                             android:id="@+id/edtWebsite"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@android:color/transparent"
                             android:singleLine="true" />
 
                     </LinearLayout>
@@ -167,23 +229,43 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtBio"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Bio"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
 
-                        <EditText
-                            android:id="@+id/edtBio"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
-                            android:maxLength="150" />
+                            <TextView
+                                android:id="@+id/txtBio"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/ABOUT_ME" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:orientation="vertical">
+
+                            <EditText
+                                android:id="@+id/edtBio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:background="@android:color/transparent"
+                                android:maxLength="150" />
+
+                        </LinearLayout>
+
 
                     </LinearLayout>
 
@@ -191,22 +273,33 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtBirthday"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/BIRTHDAY"
-                            android:textColor="@color/black" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtBirthday"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/BIRTHDAY" />
+
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/edtBirthDay"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@android:color/transparent"
                             android:clickable="true"
                             android:focusableInTouchMode="false"
                             android:singleLine="true" />
@@ -217,24 +310,35 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtEmail"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Email"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtEmail"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/email" />
+
+                        </LinearLayout>
 
                         <EditText
                             android:id="@+id/edtEmail"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@android:color/transparent"
                             android:editable="false"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:textColor="@color/tintColor" />
 
                     </LinearLayout>
 
@@ -242,22 +346,33 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtPhone"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/PHONE"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtPhone"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/PHONE" />
+
+                        </LinearLayout>
+
 
                         <EditText
                             android:id="@+id/edtPhone"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp"
+                            android:background="@android:color/transparent"
                             android:focusableInTouchMode="false"
                             android:singleLine="true" />
 
@@ -267,26 +382,41 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal"
-                        android:weightSum="4">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/txtGender"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/GENDER"
-                            android:textColor="@color/black" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@color/clearWhite"
+                            android:gravity="bottom"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtGender"
+                                style="@style/customTextStyle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/GENDER" />
+
+                        </LinearLayout>
 
                         <Spinner
                             android:id="@+id/genderSpinner"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="2.8"></Spinner>
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="10dp" />
 
                     </LinearLayout>
 
+
+                    <!-- Space /-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:background="@color/clearWhite"
+                        android:orientation="vertical" />
 
                 </LinearLayout>
 
@@ -297,7 +427,6 @@
         </ScrollView>
 
     </LinearLayout>
-
 
 
 </RelativeLayout>

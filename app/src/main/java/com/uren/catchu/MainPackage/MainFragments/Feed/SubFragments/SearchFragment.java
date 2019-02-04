@@ -117,7 +117,7 @@ public class SearchFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) getActivity()).ANIMATION_TAG = null;
     }
 
     @SuppressLint("ClickableViewAccessibility")

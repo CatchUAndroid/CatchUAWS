@@ -19,6 +19,8 @@ import android.view.ViewGroup;
 
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
@@ -60,7 +62,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.imgFilter)
     ClickableImageView imgFilter;
     @BindView(R.id.llFilter)
-    LinearLayout llFilter;
+    RelativeLayout llFilter;
     @BindView(R.id.llSearch)
     LinearLayout llSearch;
     @BindView(R.id.toolbarLayout)
@@ -72,7 +74,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.unreadMsgCntTv)
     TextView unreadMsgCntTv;
     @BindView(R.id.myMessagesImgv)
-    ImageView myMessagesImgv;
+    ClickableImageView myMessagesImgv;
 
     private static final int TAB_PUBLIC = 0;
     private static final int TAB_CATCHED = 1;

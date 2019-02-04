@@ -206,10 +206,13 @@
     <string name="rememberMe">Beni Hatırla</string>
 
     <!-- User edit constants constants-->
+    <string name="PERSONAL_INFORMATION">Kişisel Bilgilerim</string>
     <string name="NAME">İsim</string>
     <string name="BIRTHDAY">Doğum günü</string>
     <string name="PHONE">Telefon</string>
     <string name="GENDER">Cinsiyet</string>
+    <string name="WEBSITE">Website</string>
+    <string name="ABOUT_ME">Hakkımda</string>
 
     // Mesajlar-Uyarılar
     <string name="UNKNOWN_ERROR">İşlem tamamlanamadı!</string>
