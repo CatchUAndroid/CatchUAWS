@@ -77,6 +77,10 @@ public class GroupListHolder {
             public void onTokenTaken(String token) {
                 startGetGroupList(userid, token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

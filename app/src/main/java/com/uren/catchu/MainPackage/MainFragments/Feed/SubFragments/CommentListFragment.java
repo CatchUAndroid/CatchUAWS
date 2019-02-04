@@ -186,6 +186,10 @@ public class CommentListFragment extends BaseFragment
             public void onTokenTaken(String token) {
                 startGetCommentList(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
 
     }

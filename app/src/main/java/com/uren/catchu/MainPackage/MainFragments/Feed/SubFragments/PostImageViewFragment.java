@@ -28,6 +28,8 @@ import butterknife.ButterKnife;
 import catchu.model.Media;
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
+
 @SuppressLint("ValidFragment")
 public class PostImageViewFragment extends BaseFragment {
 
@@ -53,6 +55,7 @@ public class PostImageViewFragment extends BaseFragment {
     @Override
     public void onStart() {
         getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        ((NextActivity) getActivity()).ANIMATION_TAG = null;
         super.onStart();
     }
 

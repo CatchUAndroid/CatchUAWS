@@ -25,11 +25,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:fontFamily="casual"
+            android:fontFamily="@font/roboto"
             android:text="@string/feedTypePublic"
             android:textColor="@color/black"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:textSize="17sp"
+            />
 
     </LinearLayout>
 
@@ -52,11 +52,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:fontFamily="casual"
+            android:fontFamily="@font/roboto"
             android:text="@string/feedTypeCatched"
             android:textColor="@color/black"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:textSize="17sp"
+            />
 
     </LinearLayout>
 

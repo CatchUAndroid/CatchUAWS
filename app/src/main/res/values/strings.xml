@@ -338,7 +338,7 @@
     <string name="clearFilter">Clear</string>
     <string name="now">Just now</string>
     <string name="feedTypePublic">Public</string>
-    <string name="feedTypeCatched">Catched</string>
+    <string name="feedTypeCatched">Catch</string>
     <string name="feedViewTypeGrid">Grid</string>
     <string name="feedViewTypeList">List</string>
     <string name="myPosts">My Posts</string>

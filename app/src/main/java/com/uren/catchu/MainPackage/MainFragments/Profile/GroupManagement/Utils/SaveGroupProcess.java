@@ -93,6 +93,10 @@ public class SaveGroupProcess {
             public void onTokenTaken(String token) {
                 startSaveGroupImageToS3(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -222,6 +226,10 @@ public class SaveGroupProcess {
             @Override
             public void onTokenTaken(String token) {
                 startSaveGroupToNeoJ(token);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

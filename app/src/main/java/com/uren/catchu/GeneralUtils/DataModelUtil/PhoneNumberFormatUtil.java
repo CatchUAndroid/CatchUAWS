@@ -60,6 +60,10 @@ public class PhoneNumberFormatUtil {
                             token);
                     countryListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(context, PhoneNumberFormatUtil.class.getSimpleName(),

@@ -36,6 +36,10 @@ public class UserGroupsProcess {
             public void onTokenTaken(String token) {
                 startGetGroups(userId, token, completeCallback);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -46,6 +50,10 @@ public class UserGroupsProcess {
             public void onTokenTaken(String token) {
                 startAddParticipantsToGroup(groupId, groupParticipantArray, token, completeCallback);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -54,6 +62,10 @@ public class UserGroupsProcess {
             @Override
             public void onTokenTaken(String token) {
                 startGetGroupParticipants(groupId, token, completeCallback);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }
@@ -64,6 +76,10 @@ public class UserGroupsProcess {
             public void onTokenTaken(String token) {
                 startExitFromGroup(userId, groupId, token, completeCallback);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -72,6 +88,10 @@ public class UserGroupsProcess {
             @Override
             public void onTokenTaken(String token) {
                 startChangeGroupAdmin(adminUserid, userId, groupId, token, completeCallback);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

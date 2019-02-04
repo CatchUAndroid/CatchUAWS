@@ -238,6 +238,10 @@ public class MessageListFragment extends BaseFragment {
 
                     loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),

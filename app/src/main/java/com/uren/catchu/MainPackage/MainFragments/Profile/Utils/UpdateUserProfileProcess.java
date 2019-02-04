@@ -74,6 +74,10 @@ public class UpdateUserProfileProcess {
                 }
                 startUploadMediaToS3(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -143,6 +147,10 @@ public class UpdateUserProfileProcess {
                     dialogShowed = true;
                 }
                 startUpdateUserProfile(token);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

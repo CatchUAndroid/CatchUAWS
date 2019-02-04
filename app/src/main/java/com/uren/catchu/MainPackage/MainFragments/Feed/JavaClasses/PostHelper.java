@@ -53,6 +53,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFra
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -111,6 +112,10 @@ public class PostHelper {
                 @Override
                 public void onTokenTaken(String token) {
                     startPostLikeClickedProcess(context, token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
                 }
             });
 
@@ -445,6 +450,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startPostAddCommentProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -513,6 +522,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startPostCommentPermissionProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -580,6 +593,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startDeletePostProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -641,6 +658,10 @@ public class PostHelper {
                 @Override
                 public void onTokenTaken(String token) {
                     startDeletePostProcess(context, token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
                 }
             });
         }

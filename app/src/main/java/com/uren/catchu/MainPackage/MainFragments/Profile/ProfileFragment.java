@@ -261,6 +261,10 @@ public class ProfileFragment extends BaseFragment
                     public void onTokenTaken(String token) {
                         startGetProfileDetail(AccountHolderInfo.getUserID(), token);
                     }
+
+                    @Override
+                    public void onTokenFail(String message) {
+                    }
                 });
                 getGroupsHere();
             }
@@ -534,6 +538,11 @@ public class ProfileFragment extends BaseFragment
                 @Override
                 public void onTokenTaken(String token) {
                     startGetProfileDetail(userID, token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
+                    refresh_layout.setRefreshing(false);
                 }
             });
 

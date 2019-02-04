@@ -58,6 +58,10 @@ public class UpdateGroupProcess {
                     public void onTokenTaken(String token) {
                         startUpdateGroup(token);
                     }
+
+                    @Override
+                    public void onTokenFail(String message) {
+                    }
                 });
             } else {
                 mProgressDialog.setMessage(context.getResources().getString(R.string.UPDATING));
@@ -170,6 +174,10 @@ public class UpdateGroupProcess {
             @Override
             public void onTokenTaken(String token) {
                 startUpdateGroupToNeoJ(token);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

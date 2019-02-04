@@ -3,6 +3,7 @@ package com.uren.catchu;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.dagang.library.GradientButton;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.FacebookSdk;
 import com.google.firebase.auth.FirebaseAuth;
@@ -49,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
 
     RelativeLayout mainActLayout;
     ImageView appIconImgv;
-    RecyclerRefreshLayout refresh_layout;
-    Button tryAgainButton;
+    SwipeRefreshLayout refresh_layout;
+    GradientButton tryAgainButton;
     TextView networkTryDesc;
 
     private FirebaseAuth firebaseAuth;
@@ -85,27 +87,25 @@ public class MainActivity extends AppCompatActivity {
         mainActLayout = findViewById(R.id.mainActLayout);
         refresh_layout = findViewById(R.id.refresh_layout);
         appIconImgv = findViewById(R.id.appIconImgv);
-        tryAgainButton = findViewById(R.id.tryAgainButton);
+        tryAgainButton = (GradientButton) findViewById(R.id.tryAgainButton);
         networkTryDesc = findViewById(R.id.networkTryDesc);
         AnimationUtil.blink(MainActivity.this, appIconImgv);
-        tryAgainButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.transparentBlack, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 20, 2));
+
         setPullToRefresh();
         addListeners();
     }
 
     private void addListeners() {
-        tryAgainButton.setOnClickListener(new View.OnClickListener() {
+        tryAgainButton.getButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tryAgainButton.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.image_click));
                 loginProcess();
             }
         });
     }
 
     private void setPullToRefresh() {
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loginProcess();
@@ -247,6 +247,11 @@ public class MainActivity extends AppCompatActivity {
                 }, user.getUserid(), baseRequest, token);
 
                 loginProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+                refresh_layout.setRefreshing(false);
             }
         });
     }

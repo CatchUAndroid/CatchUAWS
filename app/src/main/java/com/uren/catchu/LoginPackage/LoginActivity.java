@@ -698,6 +698,10 @@ public class LoginActivity extends AppCompatActivity
 
                 loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

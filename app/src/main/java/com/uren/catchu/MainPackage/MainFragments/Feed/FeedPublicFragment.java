@@ -8,10 +8,10 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -20,54 +20,52 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
-import com.github.androidprogresslayout.ProgressLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
-import com.uren.catchu.ErrorActivity;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
+import com.uren.catchu.InfoActivity;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
-import com.uren.catchu.TransitionHelper.TransitionHelper;
+import com.uren.catchu.GeneralUtils.TransitionHelper;
 import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
-import com.uren.catchu._Libraries.PulseView.PulsatorLayout;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
-import com.victor.loading.rotate.RotateLoading;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
 import catchu.model.Post;
 import catchu.model.PostListResponse;
-import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_LOCATION_PERMISSION;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_LOCATION_SERVICE_ERROR;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_NO_POST_FOUND;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_RETRY;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_SERVER_ERROR;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.FEED_TYPE_PUBLIC;
 
@@ -81,17 +79,29 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     @BindView(R.id.rv_feed)
     CustomRecyclerView recyclerView;
 
-    @BindView(R.id.rl_no_feed)
-    RelativeLayout rl_no_feed;
-
-    @BindView(R.id.txtNoFeedExplanation)
-    TextView txtNoFeedExplanation;
-
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout refresh_layout;
 
     @BindView(R.id.loadingView)
     AVLoadingIndicatorView loadingView;
+
+
+    @BindView(R.id.mainExceptionLayout)
+    RelativeLayout mainExceptionLayout;
+    @BindView(R.id.noPostFoundLayout)
+    LinearLayout noPostFoundLayout;
+    @BindView(R.id.retryLayout)
+    LinearLayout retryLayout;
+    @BindView(R.id.locationServiceError)
+    LinearLayout locationServiceError;
+    @BindView(R.id.needLocationPermission)
+    LinearLayout needLocationPermission;
+    @BindView(R.id.serverError)
+    LinearLayout serverError;
+
+    @BindView(R.id.imgRetry)
+    ClickableImageView imgRetry;
+
 
     private boolean loading = true;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
@@ -126,20 +136,29 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
             initListeners();
             initRecyclerView();
             checkLocationAndRetrievePosts();
-        }
 
-        loadingView.smoothToShow();
+            loadingView.show();
+        }
 
         return mView;
     }
 
 
     private void initListeners() {
+        imgRetry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                refreshFeed();
+                showExceptionLayout(false, -1);
+                loadingView.show();
+            }
+        });
     }
 
     private void initRecyclerView() {
 
-        isFirstFetch=true;
+        isFirstFetch = true;
+        mainExceptionLayout.setVisibility(View.GONE);
         setLayoutManager();
         setAdapter();
         setRecyclerViewProperties();
@@ -181,7 +200,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         });
     }
 
-    private void refreshFeed(){
+    private void refreshFeed() {
         pulledToRefresh = true;
         setPaginationValues();
         checkLocationAndRetrievePosts();
@@ -210,7 +229,6 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
                     pastVisibleItems = mLayoutManager.findFirstVisibleItemPosition();
 
                     if (loading) {
-
                         //Do pagination.. i.e. fetch new data
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             loading = false;
@@ -243,17 +261,13 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
         if (!locationTrackObj.canGetLocation()) {
             //gps ve network provider olup olmadığı kontrol edilir
-            //todo NT - gps kapatıldığında case'i handle et
             //DialogBoxUtil.showSettingsAlert(getActivity());
+            showExceptionLayout(true, VIEW_RETRY);
 
             final int TYPE_XML = 1;
-
-            Intent i = new Intent(getActivity(), ErrorActivity.class);
+            Intent i = new Intent(getActivity(), InfoActivity.class);
             i.putExtra("EXTRA_TYPE", TYPE_XML);
-
-            final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), true);
-            ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
-            startActivity(i, transitionActivityOptions.toBundle());
+            transitionTo(i);
 
 
         } else {
@@ -271,6 +285,13 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         }
     }
 
+    @SuppressWarnings("unchecked")
+    void transitionTo(Intent i) {
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+        startActivity(i, transitionActivityOptions.toBundle());
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -284,7 +305,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
                 } else {
                     // permission denied, boo! Disable the
-                    showNoFeedLayout(true, R.string.needLocationPermission);
+                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
                 }
 
             }
@@ -304,8 +325,14 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
                 if (location != null) {
                     startGetPosts(token);
                 } else {
-                    showNoFeedLayout(true, R.string.locationError);
+                    showExceptionLayout(true, VIEW_LOCATION_SERVICE_ERROR);
                 }
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+                refresh_layout.setRefreshing(false);
+                loadingView.hide();
             }
         });
     }
@@ -342,13 +369,13 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
                         }
                     });
-                    showNoFeedLayout(false, 0);
+                    showExceptionLayout(false, -1);
                     if (feedAdapter.isShowingProgressLoading()) {
                         feedAdapter.removeProgressLoading();
                     }
 
                 } else {
-                    showNoFeedLayout(true, R.string.serverError);
+                    showExceptionLayout(true, VIEW_SERVER_ERROR);
                 }
             }
 
@@ -364,8 +391,8 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     private void setFetchData(PostListResponse postListResponse) {
 
-        if(isFirstFetch){
-            isFirstFetch=false;
+        if (isFirstFetch) {
+            isFirstFetch = false;
             loadingView.smoothToHide();
         }
 
@@ -374,27 +401,16 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
         } else {
             CommonUtils.LOG_OK("PostListResponseProcess");
             if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                showNoFeedLayout(true, R.string.emptyFeed);
+                showExceptionLayout(true, VIEW_NO_POST_FOUND);
+
             } else {
-                showNoFeedLayout(false, 0);
+                showExceptionLayout(false, -1);
             }
             setUpRecyclerView(postListResponse);
         }
 
         refresh_layout.setRefreshing(false);
 
-    }
-
-    private void showNoFeedLayout(boolean setVisible, int textDetail) {
-        if (setVisible) {
-            refresh_layout.setRefreshing(false);
-            loadingView.hide();
-            rl_no_feed.setVisibility(View.VISIBLE);
-            txtNoFeedExplanation.setText(textDetail);
-        } else {
-            rl_no_feed.setVisibility(View.GONE);
-            txtNoFeedExplanation.setText("");
-        }
     }
 
     private void setUpRecyclerView(PostListResponse postListResponse) {
@@ -465,7 +481,7 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
     }
 
     public void scrollRecViewInitPosition() {
-        mLayoutManager.smoothScrollToPosition(recyclerView, null,0);
+        mLayoutManager.smoothScrollToPosition(recyclerView, null, 0);
         //recyclerView.smoothScrollToPosition(0);
     }
 
@@ -474,5 +490,37 @@ public class FeedPublicFragment extends BaseFragment implements View.OnClickList
 
     }
 
+    /**********************************************/
+    private void showExceptionLayout(boolean showException, int viewType) {
+
+        if (showException) {
+
+            refresh_layout.setRefreshing(false);
+            loadingView.hide();
+            mainExceptionLayout.setVisibility(View.VISIBLE);
+            retryLayout.setVisibility(View.GONE);
+            noPostFoundLayout.setVisibility(View.GONE);
+            locationServiceError.setVisibility(View.GONE);
+            needLocationPermission.setVisibility(View.GONE);
+            serverError.setVisibility(View.GONE);
+
+            if (viewType == VIEW_RETRY) {
+                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                retryLayout.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_NO_POST_FOUND) {
+                noPostFoundLayout.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_LOCATION_SERVICE_ERROR) {
+                locationServiceError.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_LOCATION_PERMISSION) {
+                needLocationPermission.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_SERVER_ERROR) {
+                serverError.setVisibility(View.VISIBLE);
+            }
+
+        } else {
+            mainExceptionLayout.setVisibility(View.GONE);
+        }
+
+    }
 
 }

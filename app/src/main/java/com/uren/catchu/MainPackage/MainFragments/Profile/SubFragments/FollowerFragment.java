@@ -282,6 +282,10 @@ public class FollowerFragment extends BaseFragment
             public void onTokenTaken(String token) {
                 startFollowInfoProcess(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

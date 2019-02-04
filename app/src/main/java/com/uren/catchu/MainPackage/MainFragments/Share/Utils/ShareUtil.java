@@ -171,6 +171,10 @@ public class ShareUtil{
                         signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                     }
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),

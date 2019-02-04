@@ -878,6 +878,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     public void onTokenTaken(String token) {
                         getProfileDetail(token);
                     }
+
+                    @Override
+                    public void onTokenFail(String message) {
+                    }
                 });
             }
         } catch (Exception e) {

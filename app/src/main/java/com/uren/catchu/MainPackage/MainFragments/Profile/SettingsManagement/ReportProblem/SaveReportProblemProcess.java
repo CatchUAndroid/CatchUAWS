@@ -70,6 +70,10 @@ public class SaveReportProblemProcess {
             public void onTokenTaken(String token) {
                 startSaveReportImagesToS3(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -187,6 +191,10 @@ public class SaveReportProblemProcess {
                 public void onTokenTaken(String token) {
                     startSaveReportProblem(token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(null,this.getClass().getSimpleName(),
@@ -236,6 +244,10 @@ public class SaveReportProblemProcess {
             @Override
             public void onTokenTaken(String token) {
                 startDeleteUploadedItems(token);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

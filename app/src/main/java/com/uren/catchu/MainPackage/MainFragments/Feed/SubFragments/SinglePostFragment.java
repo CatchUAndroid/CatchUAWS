@@ -171,6 +171,7 @@ public class SinglePostFragment extends BaseFragment
     @Override
     public void onStart() {
         getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         super.onStart();
     }
 
@@ -403,6 +404,10 @@ public class SinglePostFragment extends BaseFragment
                     refresh_layout.setRefreshing(false);
                 }
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
 
     }
@@ -488,6 +493,10 @@ public class SinglePostFragment extends BaseFragment
                 @Override
                 public void onTokenTaken(String token) {
                     startGetCommentList(token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
                 }
             });
         } else {

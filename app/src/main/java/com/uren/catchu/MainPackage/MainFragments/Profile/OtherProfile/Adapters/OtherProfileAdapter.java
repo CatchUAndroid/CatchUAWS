@@ -662,9 +662,11 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         RecyclerView gridRecyclerView;
         OtherProfilePostAdapter otherProfilePostAdapter;
         CustomGridLayoutManager customGridLayoutManager;
-        RelativeLayout rl_no_feed;
-        ImageView imgSad;
-        TextView txtNoFeedExplanation;
+        RelativeLayout mainExceptionLayout;
+        LinearLayout noPostFoundLayout;
+        ImageView imgNoPostFound;
+        TextView txtNoPostFound;
+
 
         private static final int MARGING_GRID = 2;
         private static final int SPAN_COUNT = 3;
@@ -677,9 +679,10 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             try {
                 mView = view;
                 gridRecyclerView = (RecyclerView) view.findViewById(R.id.gridRecyclerView);
-                rl_no_feed = (RelativeLayout) view.findViewById(R.id.rl_no_feed);
-                imgSad = (ImageView) view.findViewById(R.id.imgSad);
-                txtNoFeedExplanation = (TextView) view.findViewById(R.id.txtNoFeedExplanation);
+                mainExceptionLayout = (RelativeLayout) view.findViewById(R.id.mainExceptionLayout);
+                noPostFoundLayout = (LinearLayout) view.findViewById(R.id.noPostFoundLayout);
+                imgNoPostFound = (ImageView) view.findViewById(R.id.imgNoPostFound);
+                txtNoPostFound = (TextView) view.findViewById(R.id.txtNoPostFound);
 
                 setListeners();
                 setLayoutManager();
@@ -767,12 +770,14 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             try {
                 if (showNoFeedLayout) {
                     gridRecyclerView.setVisibility(View.GONE);
-                    imgSad.setVisibility(View.GONE);
-                    rl_no_feed.setVisibility(View.VISIBLE);
-                    txtNoFeedExplanation.setText(mContext.getResources().getString(R.string.emptyFeed2));
+                    imgNoPostFound.setVisibility(View.GONE);
+                    mainExceptionLayout.setVisibility(View.VISIBLE);
+                    noPostFoundLayout.setVisibility(View.VISIBLE);
+                    txtNoPostFound.setText(mContext.getResources().getString(R.string.emptyFeed2));
                 } else {
                     gridRecyclerView.setVisibility(View.VISIBLE);
-                    rl_no_feed.setVisibility(View.GONE);
+                    mainExceptionLayout.setVisibility(View.GONE);
+                    noPostFoundLayout.setVisibility(View.GONE);
                 }
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),

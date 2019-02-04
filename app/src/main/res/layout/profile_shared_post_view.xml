@@ -8,7 +8,7 @@
     android:layout_marginBottom="30dp"
     android:orientation="vertical">
 
-    <include layout="@layout/no_feed_layout" />
+    <include layout="@layout/feed_exception_layout" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gridRecyclerView"

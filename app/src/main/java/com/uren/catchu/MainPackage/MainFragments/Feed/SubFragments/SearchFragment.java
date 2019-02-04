@@ -282,6 +282,10 @@ public class SearchFragment extends BaseFragment
             public void onTokenTaken(String token) {
                 startGetProfileDetail(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

@@ -79,6 +79,10 @@ public class SharePostProcess {
             public void onTokenTaken(String token) {
                 startUploadMediaToS3(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -360,6 +364,10 @@ public class SharePostProcess {
             @Override
             public void onTokenTaken(String token) {
                 startSaveShareItemsToNeoJ(token);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }
