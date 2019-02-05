@@ -46,6 +46,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
+import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.ProfileHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -452,6 +453,7 @@ public class UserEditFragment extends BaseFragment
                 DialogBoxUtil.showSuccessDialogBox(getActivity(), getActivity().getResources().getString(R.string.profileUpdateSuccessful), null, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
+                        ProfileHelper.ProfileRefresh.getInstance().profileRefreshStart();
                         editProfileCancelClicked();
                     }
                 });

@@ -31,21 +31,6 @@
                 android:textSize="30sp" />
         </android.support.v7.widget.Toolbar-->
 
-        <FrameLayout
-            android:id="@+id/framlytt"
-            android:layout_width="match_parent"
-            android:layout_height="9dp">
-
-            <ProgressBar
-                android:id="@+id/toolbarprogress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/Orange"
-                android:progress="30" />
-
-        </FrameLayout>
-
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp" />

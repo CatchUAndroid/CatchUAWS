@@ -12,6 +12,8 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallb
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.GifDialogBox;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
@@ -76,6 +78,10 @@ public class ShareUtil{
 
     public void startToShare() {
         try {
+
+            //Start progress in FeedFragment
+            PostHelper.InitFeed.getFeedFragment().startProgressBar();
+
             int tryCount = shareItems.getShareTryCount();
             shareItems.setShareTryCount(tryCount + 1);
 
@@ -85,6 +91,9 @@ public class ShareUtil{
                     showShareSuccessView();
                     ShareDeleteProcess.deleteSharedVideo(null, permissionModule, shareItems);
                     ShareDeleteProcess.deleteSharedPhoto(null, permissionModule, shareItems);
+
+                    //Stop progressbar in FeedFragment
+                    PostHelper.InitFeed.getFeedFragment().stopProgressBar();
                 }
 
                 @Override
@@ -114,6 +123,9 @@ public class ShareUtil{
                         ShareDeleteProcess.deleteSharedPhoto(null, permissionModule, shareItems);
                         deleteUploadedItems();
                     }
+
+                    //Stop progressbar in FeedFragment
+                    PostHelper.InitFeed.getFeedFragment().stopProgressBar();
                 }
             });
         } catch (Exception e) {
@@ -121,6 +133,9 @@ public class ShareUtil{
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
+
+            //Stop progressbar in FeedFragment
+            PostHelper.InitFeed.getFeedFragment().stopProgressBar();
         }
     }
 
@@ -136,6 +151,8 @@ public class ShareUtil{
                         .setDurationTime(3000)
                         .isCancellable(true)
                         .build();
+
+                PostHelper.FeedRefresh.feedRefreshStart();
 
             } catch (Exception e) {
                 ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),

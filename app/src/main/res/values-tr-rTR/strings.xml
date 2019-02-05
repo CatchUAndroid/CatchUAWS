@@ -306,8 +306,9 @@
     <string name="feedTypeCatched">Catched</string>
     <string name="feedViewTypeGrid">Izgara</string>
     <string name="feedViewTypeList">Liste</string>
-    <string name="myPosts">Paylaşımlarım</string>
-    <string name="caughtPosts">Yakaladığım paylaşımlar</string>
+    <string name="sharedPosts">Paylaşımlarım</string>
+    <string name="caughtPosts">Catch ettiklerim</string>
+    <string name="groupPosts">Grup paylaşımları</string>
     <string name="deleteThisPost">Bu paylaşımı sil?</string>
     <string name="reportPostMessage">Bu paylaşımı şikayet etmek istiyor musunuz? Ekibimiz değerlendirip, uygunsuzsa kaldıracaklardır.</string>
     <string name="posts">Paylaşımlar</string>

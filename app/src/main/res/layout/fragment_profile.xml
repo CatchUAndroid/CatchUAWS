@@ -263,8 +263,8 @@
                                         android:id="@+id/followersLayout"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="1"
                                         android:layout_marginLeft="20dp"
+                                        android:layout_weight="1"
                                         android:gravity="center"
                                         android:orientation="vertical">
 
@@ -294,9 +294,9 @@
                                         android:id="@+id/followingsLayout"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginRight="20dp"
                                         android:layout_weight="1"
                                         android:gravity="center"
-                                        android:layout_marginRight="20dp"
                                         android:orientation="vertical">
 
                                         <TextView
@@ -333,13 +333,16 @@
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
 
-
+                                <!-- Shared posts -->
                                 <LinearLayout
+                                    android:id="@+id/llSharedPosts"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
-                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginTop="5dp"
                                     android:layout_weight="5"
-                                    android:id="@+id/llMyPosts">
+                                    android:background="?attr/selectableItemBackground"
+                                    android:orientation="horizontal">
 
                                     <LinearLayout
                                         android:layout_width="0dp"
@@ -348,10 +351,10 @@
                                         android:gravity="center">
 
                                         <ImageView
+                                            android:id="@+id/imgSharedPosts"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:src="@mipmap/icon_location"
-                                            android:id="@+id/img1"/>
+                                            android:src="@mipmap/icon_location" />
 
                                     </LinearLayout>
 
@@ -361,9 +364,9 @@
                                         android:layout_height="match_parent"
                                         android:layout_weight="3"
                                         android:gravity="center_vertical"
-                                        android:text="My Posts"
-                                        android:textColor="@color/black" />
-
+                                        android:text="@string/sharedPosts"
+                                        android:textColor="@color/gray"
+                                        android:textSize="17sp" />
 
                                     <TextView
                                         android:id="@+id/sharedPostCount"
@@ -375,32 +378,36 @@
                                         android:textSize="17sp" />
 
                                     <ImageView
+                                        android:id="@+id/imgForward1"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"
-                                        android:padding="5dp"
                                         android:layout_marginRight="10dp"
-                                        android:src="@mipmap/icon_forward_white"
-                                        android:id="@+id/imgForward1"/>
+                                        android:layout_weight="0.5"
+                                        android:padding="12dp"
+                                        android:src="@mipmap/icon_forward_white" />
 
 
                                 </LinearLayout>
 
-
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
-                                    android:alpha="0.5"
-                                    android:background="@color/tintColor"
                                     android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"/>
+                                    android:layout_marginRight="20dp"
+                                    android:alpha="0.5"
+                                    android:background="@color/tintColor" />
 
+
+                                <!-- Catch posts -->
                                 <LinearLayout
+                                    android:id="@+id/llCatchedPosts"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
-                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginTop="5dp"
                                     android:layout_weight="5"
-                                    android:id="@+id/llCatchedPosts">
+                                    android:background="?attr/selectableItemBackground"
+                                    android:orientation="horizontal">
 
                                     <LinearLayout
                                         android:layout_width="0dp"
@@ -409,11 +416,11 @@
                                         android:gravity="center">
 
                                         <ImageView
+                                            android:id="@+id/imgCatchPosts"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:padding="8dp"
-                                            android:src="@mipmap/icon_catch"
-                                            android:id="@+id/img2"/>
+                                            android:src="@mipmap/icon_catch" />
 
                                     </LinearLayout>
 
@@ -423,8 +430,9 @@
                                         android:layout_height="match_parent"
                                         android:layout_weight="3"
                                         android:gravity="center_vertical"
-                                        android:text="My Posts"
-                                        android:textColor="@color/black" />
+                                        android:text="@string/caughtPosts"
+                                        android:textColor="@color/gray"
+                                        android:textSize="17sp" />
 
                                     <TextView
                                         android:id="@+id/caughtPostCount"
@@ -437,13 +445,13 @@
 
 
                                     <ImageView
+                                        android:id="@+id/imgForward2"
                                         android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"
-                                        android:padding="5dp"
                                         android:layout_marginRight="10dp"
-                                        android:id="@+id/imgForward2"
-                                        android:src="@mipmap/icon_forward_white"/>
+                                        android:layout_weight="0.5"
+                                        android:padding="12dp"
+                                        android:src="@mipmap/icon_forward_white" />
 
 
                                 </LinearLayout>
@@ -451,17 +459,20 @@
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
-                                    android:alpha="0.5"
-                                    android:background="@color/tintColor"
                                     android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"/>
+                                    android:layout_marginRight="20dp"
+                                    android:alpha="0.5"
+                                    android:background="@color/tintColor" />
 
+                                <!-- Group posts -->
                                 <LinearLayout
+                                    android:id="@+id/llGroupPosts"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
-                                    android:orientation="horizontal"
+                                    android:layout_marginBottom="5dp"
+                                    android:layout_marginTop="5dp"
                                     android:layout_weight="5"
-                                    android:id="@+id/llMyGroups">
+                                    android:orientation="horizontal">
 
                                     <LinearLayout
                                         android:layout_width="0dp"
@@ -470,11 +481,11 @@
                                         android:gravity="center">
 
                                         <ImageView
+                                            android:id="@+id/imgGroupPosts"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:padding="8dp"
-                                            android:src="@drawable/groups_icon_500"
-                                            android:id="@+id/img3"/>
+                                            android:src="@drawable/groups_icon_500" />
 
                                     </LinearLayout>
 
@@ -484,26 +495,24 @@
                                         android:layout_height="match_parent"
                                         android:layout_weight="3"
                                         android:gravity="center_vertical"
-                                        android:text="@string/groups"
-                                        android:textColor="@color/black" />
+                                        android:text="@string/groupPosts"
+                                        android:textColor="@color/gray"
+                                        android:textSize="17sp" />
 
 
                                     <TextView
-                                        android:id="@+id/groupsCount"
+                                        android:id="@+id/txtEditGroup"
                                         android:layout_width="0dp"
+                                        android:layout_gravity="left"
                                         android:layout_height="match_parent"
-                                        android:layout_weight="0.5"
+                                        android:layout_weight="1"
                                         android:gravity="center"
-                                        android:text="0"
+                                        android:layout_marginRight="10dp"
+                                        android:text="@string/EDIT"
+                                        android:textColor="@color/oceanBlue"
                                         android:textSize="17sp" />
 
-                                    <ImageView
-                                        android:layout_width="0dp"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="0.5"
-                                        android:padding="5dp"
-                                        android:layout_marginRight="10dp"
-                                        android:src="@mipmap/icon_forward_white"/>
+
 
 
                                 </LinearLayout>
@@ -511,33 +520,31 @@
                                 <RelativeLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginTop="10dp">
+                                    android:layout_marginLeft="20dp">
 
                                     <LinearLayout
+                                        android:id="@+id/llGroupsInfo"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:id="@+id/llGroupsInfo"
                                         android:orientation="vertical">
 
 
                                         <TextView
+                                            android:id="@+id/txtGroupDetail"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:textSize="17sp"
-                                            android:id="@+id/txtGroupDetail"
-                                            android:text="Grouplar Yükleniyor.."/>
+                                            android:text="Grouplar Yükleniyor.."
+                                            android:textSize="17sp" />
 
                                     </LinearLayout>
 
 
-
                                     <LinearLayout
+                                        android:id="@+id/llGroupsRecycler"
                                         android:layout_width="match_parent"
                                         android:layout_height="200dp"
                                         android:layout_marginTop="10dp"
                                         android:orientation="vertical"
-                                        android:id="@+id/llGroupsRecycler"
                                         android:visibility="gone">
 
                                         <android.support.v7.widget.RecyclerView
@@ -551,13 +558,9 @@
                                 </RelativeLayout>
 
 
-
-
-
-
                                 <LinearLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="100dp"
+                                    android:layout_height="50dp"
                                     android:orientation="vertical">
 
                                 </LinearLayout>

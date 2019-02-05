@@ -6,17 +6,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.os.Handler;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v7.widget.Toolbar;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -31,6 +36,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SearchFragment;
 
@@ -42,9 +48,11 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfile;
+import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
@@ -76,12 +84,19 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     @BindView(R.id.myMessagesImgv)
     ClickableImageView myMessagesImgv;
 
+    @BindView(R.id.llSharing)
+    LinearLayout llSharing;
+    @BindView(R.id.smoothProgressBar)
+    SmoothProgressBar smoothProgressBar;
+
     private static final int TAB_PUBLIC = 0;
     private static final int TAB_CATCHED = 1;
 
     int selectedTabPosition = TAB_PUBLIC;
 
     int unreadMessageCount = 0;
+    private int progressStatus = 0;
+    private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,17 +111,19 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_feed, container, false);
+            PostHelper.InitFeed.setFeedFragment(this);
             ButterKnife.bind(this, mView);
 
             initItems();
             setUpPager();
             initListeners();
             getUserUnreadMsgCount();
-        }
 
+        }
 
         return mView;
     }
+
 
     @Override
     public void onStart() {
@@ -267,7 +284,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
                 @Override
                 public void onAccountHolderIfoTaken(UserProfile userProfile) {
                     intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
-                    startActivityForResult(intent,REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY );
+                    startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
                 }
             });
         }
@@ -279,5 +296,22 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
             unreadMsgCntTv.setText(Integer.toString(0));
             unreadMsgCntTv.setVisibility(View.GONE);
         }
+    }
+
+    public void startProgressBar() {
+
+        //smoothProgressBar.setSmoothProgressDrawableInterpolator(new FastOutSlowInInterpolator());
+        //smoothProgressBar.setSmoothProgressDrawableColors(getResources().getIntArray(R.array.gplus_colors));
+        //smoothProgressBar.setSmoothProgressDrawableInterpolator(new DecelerateInterpolator());
+        //smoothProgressBar.setSmoothProgressDrawableMirrorMode(true);
+        //smoothProgressBar.setSmoothProgressDrawableReversed(true);
+
+        llSharing.setVisibility(View.VISIBLE);
+        smoothProgressBar.progressiveStart();
+    }
+
+    public void stopProgressBar() {
+        llSharing.setVisibility(View.GONE);
+        smoothProgressBar.progressiveStop();
     }
 }

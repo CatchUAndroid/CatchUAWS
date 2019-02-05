@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
 import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -42,6 +43,7 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
@@ -842,6 +844,23 @@ public class PostHelper {
 
     }
 
+    public static class InitFeed {
+
+        private static FeedFragment feedFragment = null;
+        private static List<FeedRefreshCallback> feedRefreshCallbackList;
+
+        public InitFeed() {
+        }
+
+        public static void setFeedFragment(FeedFragment fragment) {
+            feedFragment = fragment;
+        }
+
+        public static FeedFragment getFeedFragment() {
+           return feedFragment;
+        }
+
+    }
 
     public static class Utils {
 

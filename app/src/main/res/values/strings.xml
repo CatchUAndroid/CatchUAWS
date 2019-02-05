@@ -344,8 +344,9 @@
     <string name="feedTypeCatched">Catch</string>
     <string name="feedViewTypeGrid">Grid</string>
     <string name="feedViewTypeList">List</string>
-    <string name="myPosts">My Posts</string>
-    <string name="caughtPosts">Caught Posts</string>
+    <string name="sharedPosts">Shared Posts</string>
+    <string name="caughtPosts">Catch Posts</string>
+    <string name="groupPosts">Group Posts</string>
     <string name="deleteThisPost">Delete this Post?</string>
     <string name="reportPostMessage">Do you want to report this post? We will check and take an action immediately.</string>
     <string name="posts">Posts</string>

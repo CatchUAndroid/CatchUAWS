@@ -43,6 +43,7 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
     @Override
     public void onStart() {
         getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        ((NextActivity) getActivity()).ANIMATION_TAG = null;
         super.onStart();
     }
 
