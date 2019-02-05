@@ -104,4 +104,12 @@ public class NumericConstants {
     public static final int VIEW_LOCATION_PERMISSION = 3;
     public static final int VIEW_SERVER_ERROR = 4;
 
+    //Orientation constants
+    public static final int ORIENTATION_LEFT_RIGHT = 0;
+    public static final int ORIENTATION_RIGHT_LEFT = 1;
+    public static final int ORIENTATION_TOPLEFT_BOTTOMRIGHT = 2;
+    public static final int ORIENTATION_BOTTOMRIGHT_TOPLEFT = 3;
+    public static final int ORIENTATION_TOP_BOTTOM = 4;
+    public static final int ORIENTATION_BOTTOM_TOP = 5;
+
 }

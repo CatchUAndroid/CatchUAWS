@@ -75,6 +75,12 @@
     <color name="dot_light_screen3">#93c6fd</color>
     <color name="dot_light_screen4">#e4b5fc</color>
 
+    <!-- gradient colors -->
+    <color name="SharedPostStartColor">#00b0ff</color>
+    <color name="SharedPostEndColor">#80d8ff</color>
+    <color name="CaughtPostStartColor">#1de9b6</color>
+    <color name="CaughtPostEndColor">#a7ffeb</color>
+
     <array name="array_dot_active">
         <item>@color/dot_light_screen1</item>
         <item>@color/dot_light_screen2</item>

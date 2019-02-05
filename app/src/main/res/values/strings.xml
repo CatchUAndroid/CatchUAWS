@@ -318,7 +318,7 @@
     <string name="ACCEPT">Accept</string>
     <string name="REJECT">Reject</string>
 
-    <string name="emptyFeed">No posts yets...</string>
+    <string name="emptyFeed">No posts yet...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
     <string name="likes">Likes</string>
     <string name="comments">Comments</string>
@@ -394,5 +394,13 @@
 
     <string name="FCM_SERVER_KEY">AAAA168Go7o:APA91bHDsAJ8_8KZuXmdfBztNN-TSNOQOaQO_dPv6zXbRR4KzgH-83jh6NZ05imPxnUFopz8j8wOzL9jFVLCvgcJrAVuxrNDi_vz2QowCGnQxdxotXAp93tz7z7OblJkwk7GaCuc0Ebl</string>
     <string name="title_activity_message_list">MessageListActivity</string>
+
+    <!-- Exception mesajları -->
+    <string name="opps">Opps!</string>
+    <string name="needLocationPermission2">To use CathcU enable location!</string>
+    <string name="locationSettings">Go: Settings > Connections > Location enable locatin.</string>
+
+
+
 
 </resources>

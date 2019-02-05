@@ -16,27 +16,36 @@
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_marginRight="20dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/ADD_YOUR_FRIENDS"
-                    android:textStyle="bold|italic" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/clearWhite"
+                    android:gravity="bottom">
+
+                    <TextView
+                        style="@style/customTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="bottom"
+                        android:text="@string/ADD_YOUR_FRIENDS"
+                        android:textStyle="bold|italic" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/addFromFacebookLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -60,6 +69,7 @@
                     android:id="@+id/addFromContactLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -78,23 +88,29 @@
                         android:text="@string/CONTACT_FRIENDS" />
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
+                    android:layout_height="50dp"
+                    android:background="@color/clearWhite"
+                    android:gravity="bottom">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/INVITE_YOUR_FRIENDS"
-                    android:textStyle="bold|italic" />
+                    <TextView
+                        style="@style/customTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="bottom"
+                        android:text="@string/INVITE_YOUR_FRIENDS"
+                        android:textStyle="bold|italic" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/inviteForInstallLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -107,22 +123,30 @@
                         android:text="@string/invite" />
                 </LinearLayout>
 
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
+                    android:layout_height="50dp"
+                    android:background="@color/clearWhite"
+                    android:gravity="bottom">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/ACCOUNT"
-                    android:textStyle="bold|italic" />
+                    <TextView
+                        style="@style/customTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="bottom"
+                        android:text="@string/ACCOUNT"
+                        android:textStyle="bold|italic" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/changePasswordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -139,6 +163,7 @@
                     android:id="@+id/likedPostLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -155,6 +180,7 @@
                     android:id="@+id/privateAccountLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -169,33 +195,41 @@
                         android:text="@string/PRIVATE_ACCOUNT" />
 
                     <Switch
+                        android:id="@+id/privateAccSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:id="@+id/privateAccSwitch"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="20dp"
-                        android:gravity="right"
-                        android:background="@drawable/img_border"/>
+                        android:background="@drawable/img_border"
+                        android:gravity="right" />
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray" />
+                    android:layout_height="50dp"
+                    android:background="@color/clearWhite"
+                    android:gravity="bottom">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/SUPPORT"
-                    android:textStyle="bold|italic" />
+                    <TextView
+                        style="@style/customTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="bottom"
+                        android:text="@string/SUPPORT"
+                        android:textStyle="bold|italic" />
+
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:id="@+id/helpCenterLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -212,6 +246,7 @@
                     android:id="@+id/problemInformLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginLeft="10dp"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
@@ -236,7 +271,8 @@
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
+                    android:layout_margin="5dp"
                     android:orientation="horizontal">
 
                     <TextView

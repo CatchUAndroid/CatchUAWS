@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto"
                 android:gravity="center_horizontal"
-                android:text="Hoppala"
+                android:text="@string/opps"
                 android:textColor="@color/black"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -61,7 +61,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/roboto"
                 android:gravity="center_horizontal"
-                android:text="Catchu'yu kullanabilmek için konumunu etkinleştirmelisin."
+                android:text="@string/needLocationPermission2"
                 android:textColor="@color/tintColor"
                 android:textSize="17sp" />
 
@@ -71,7 +71,7 @@
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/roboto"
                 android:gravity="center_horizontal"
-                android:text="Şuraya git: Ayarlar > Bağlantılar > Konum servisini açık hale getir."
+                android:text="@string/locationSettings"
                 android:textColor="@color/tintColor"
                 android:textSize="17sp" />
 
@@ -93,7 +93,7 @@
                 app:button_shadow_radius="10dp"
                 app:button_size="10sp"
                 app:button_start_color="#1565c0"
-                app:button_text="Ayarlar"
+                app:button_text="@string/settings"
                 app:button_text_color="@color/white" />
 
 

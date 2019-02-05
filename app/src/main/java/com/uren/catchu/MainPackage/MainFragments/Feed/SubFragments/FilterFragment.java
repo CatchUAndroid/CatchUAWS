@@ -11,6 +11,7 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.dagang.library.GradientButton;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
@@ -53,7 +54,7 @@ public class FilterFragment extends BaseFragment
     TextView txtProfilePic;
 
     @BindView(R.id.btnClearFilter)
-    Button btnClearFilter;
+    GradientButton btnClearFilter;
 
     /*
     @BindView(R.id.imgCancel)
@@ -108,7 +109,7 @@ public class FilterFragment extends BaseFragment
         //imgCancel.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
         txtApply.setOnClickListener(this);
-        btnClearFilter.setOnClickListener(this);
+        btnClearFilter.getButton().setOnClickListener(this);
 
     }
 
@@ -173,7 +174,7 @@ public class FilterFragment extends BaseFragment
 
         }
 
-        if (v == btnClearFilter) {
+        if (v == btnClearFilter.getButton()) {
             radius = DEFAULT_FEED_RADIUS;
             seekBar.setProgress(radius);
         }

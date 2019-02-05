@@ -138,7 +138,7 @@
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/clearWhite">
+                android:background="@color/White">
 
                 <LinearLayout
                     android:id="@+id/llContent"
@@ -234,7 +234,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:alpha="0"
+                            android:alpha="0.5"
                             android:background="@color/black" />
 
 
@@ -248,8 +248,8 @@
                                 android:id="@+id/llFollowInfo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="40dp"
-                                android:layout_marginRight="40dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
                                 android:layout_marginTop="16dp"
                                 android:orientation="vertical">
 
@@ -264,6 +264,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
+                                        android:layout_marginLeft="20dp"
                                         android:gravity="center"
                                         android:orientation="vertical">
 
@@ -286,7 +287,7 @@
                                         android:layout_width="1dp"
                                         android:layout_height="match_parent"
                                         android:alpha="0.5"
-                                        android:background="@color/black" />
+                                        android:background="@color/tintColor" />
 
 
                                     <LinearLayout
@@ -295,6 +296,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_weight="1"
                                         android:gravity="center"
+                                        android:layout_marginRight="20dp"
                                         android:orientation="vertical">
 
                                         <TextView
@@ -318,10 +320,9 @@
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
-
                                     android:layout_marginTop="30dp"
                                     android:alpha="0.5"
-                                    android:background="@color/black" />
+                                    android:background="@color/tintColor" />
 
                             </LinearLayout>
 
@@ -334,107 +335,225 @@
 
 
                                 <LinearLayout
-                                    android:id="@+id/llMyPosts"
                                     android:layout_width="match_parent"
                                     android:layout_height="50dp"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:layout_marginTop="20dp"
-                                    android:background="@color/red"
-                                    android:orientation="vertical">
+                                    android:orientation="horizontal"
+                                    android:layout_weight="5"
+                                    android:id="@+id/llMyPosts">
 
                                     <LinearLayout
-                                        android:layout_width="match_parent"
+                                        android:layout_width="0dp"
                                         android:layout_height="match_parent"
-                                        android:orientation="horizontal"
-                                        android:weightSum="5">
+                                        android:layout_weight="1"
+                                        android:gravity="center">
 
-                                        <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="3"
-                                            android:gravity="center"
-                                            android:text="My Posts"
-                                            android:textColor="@color/white"
-                                            android:textStyle="bold" />
-
-                                        <TextView
-                                            android:id="@+id/sharedPostCount"
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="2"
-                                            android:gravity="center"
-                                            android:text="0"
-                                            android:textSize="17sp" />
-
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:src="@mipmap/icon_location"
+                                            android:id="@+id/img1"/>
 
                                     </LinearLayout>
 
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llCatchedPosts"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:layout_marginTop="10dp"
-                                    android:background="@color/green"
-                                    android:orientation="vertical">
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="horizontal"
-                                        android:weightSum="5">
-
-                                        <TextView
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="3"
-                                            android:gravity="center"
-                                            android:text="Caught Posts"
-                                            android:textColor="@color/white"
-                                            android:textStyle="bold" />
-
-                                        <TextView
-                                            android:id="@+id/caughtPostCount"
-                                            android:layout_width="0dp"
-                                            android:layout_height="match_parent"
-                                            android:layout_weight="2"
-                                            android:gravity="center"
-                                            android:text="0"
-                                            android:textSize="17sp" />
-
-                                    </LinearLayout>
-
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llMyGroups"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="200dp"
-                                    android:layout_marginTop="10dp"
-                                    android:orientation="vertical">
 
                                     <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginLeft="20dp"
-                                        android:text="@string/groups"
-                                        android:textSize="17sp"
-                                        android:textStyle="bold" />
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="3"
+                                        android:gravity="center_vertical"
+                                        android:text="My Posts"
+                                        android:textColor="@color/black" />
 
-                                    <android.support.v7.widget.RecyclerView
-                                        android:id="@+id/groupRecyclerView"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent">
 
-                                    </android.support.v7.widget.RecyclerView>
+                                    <TextView
+                                        android:id="@+id/sharedPostCount"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textSize="17sp" />
+
+                                    <ImageView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:padding="5dp"
+                                        android:layout_marginRight="10dp"
+                                        android:src="@mipmap/icon_forward_white"
+                                        android:id="@+id/imgForward1"/>
+
 
                                 </LinearLayout>
+
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:alpha="0.5"
+                                    android:background="@color/tintColor"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:orientation="horizontal"
+                                    android:layout_weight="5"
+                                    android:id="@+id/llCatchedPosts">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center">
+
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:padding="8dp"
+                                            android:src="@mipmap/icon_catch"
+                                            android:id="@+id/img2"/>
+
+                                    </LinearLayout>
+
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="3"
+                                        android:gravity="center_vertical"
+                                        android:text="My Posts"
+                                        android:textColor="@color/black" />
+
+                                    <TextView
+                                        android:id="@+id/caughtPostCount"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textSize="17sp" />
+
+
+                                    <ImageView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:padding="5dp"
+                                        android:layout_marginRight="10dp"
+                                        android:id="@+id/imgForward2"
+                                        android:src="@mipmap/icon_forward_white"/>
+
+
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:alpha="0.5"
+                                    android:background="@color/tintColor"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginRight="20dp"/>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="50dp"
+                                    android:orientation="horizontal"
+                                    android:layout_weight="5"
+                                    android:id="@+id/llMyGroups">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="1"
+                                        android:gravity="center">
+
+                                        <ImageView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:padding="8dp"
+                                            android:src="@drawable/groups_icon_500"
+                                            android:id="@+id/img3"/>
+
+                                    </LinearLayout>
+
+
+                                    <TextView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="3"
+                                        android:gravity="center_vertical"
+                                        android:text="@string/groups"
+                                        android:textColor="@color/black" />
+
+
+                                    <TextView
+                                        android:id="@+id/groupsCount"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:gravity="center"
+                                        android:text="0"
+                                        android:textSize="17sp" />
+
+                                    <ImageView
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="0.5"
+                                        android:padding="5dp"
+                                        android:layout_marginRight="10dp"
+                                        android:src="@mipmap/icon_forward_white"/>
+
+
+                                </LinearLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="20dp"
+                                    android:layout_marginTop="10dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:id="@+id/llGroupsInfo"
+                                        android:orientation="vertical">
+
+
+                                        <TextView
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textSize="17sp"
+                                            android:id="@+id/txtGroupDetail"
+                                            android:text="Grouplar Yükleniyor.."/>
+
+                                    </LinearLayout>
+
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="200dp"
+                                        android:layout_marginTop="10dp"
+                                        android:orientation="vertical"
+                                        android:id="@+id/llGroupsRecycler"
+                                        android:visibility="gone">
+
+                                        <android.support.v7.widget.RecyclerView
+                                            android:id="@+id/groupRecyclerView"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="match_parent">
+
+                                        </android.support.v7.widget.RecyclerView>
+
+                                    </LinearLayout>
+                                </RelativeLayout>
+
+
+
+
+
 
                                 <LinearLayout
                                     android:layout_width="match_parent"

@@ -281,7 +281,7 @@
     <string name="ACCEPT">Onayla</string>
     <string name="REJECT">Reddet</string>
 
-    <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
+    <string name="emptyFeed">Çevrede paylaşım bulunamadı..</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfen Ayarlar\'dan konum izinlerini aktifleştirin.</string>
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
@@ -340,4 +340,10 @@
         <item>Kasım</item>
         <item>Aralık</item>
     </array>
+
+    <!-- Exception mesajları -->
+    <string name="opps">Hoppala!</string>
+    <string name="needLocationPermission2">Catchu\yu kullanabilmek için konumunu etkinleştirmelisin.</string>
+    <string name="locationSettings">Şuraya git: Ayarlar > Bağlantılar > Konum servisini açık hale getir.</string>
+
 </resources>

@@ -28,11 +28,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:gravity="center"
             android:layout_margin="20dp"
             android:layout_marginTop="30dp"
             android:text="@string/emptyFeed"
-            android:textColor="@color/gray"
-            android:textSize="20sp" />
+            android:textColor="@color/tintColor"
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -67,7 +68,7 @@
             android:layout_marginTop="30dp"
             android:text="Yenilemek için tıklayın"
             android:textColor="@color/tintColor"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -90,7 +91,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/locationError"
             android:textColor="@color/tintColor"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -113,7 +114,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/needLocationPermission"
             android:textColor="@color/tintColor"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
 
     </LinearLayout>
 
@@ -136,7 +137,7 @@
             android:layout_marginTop="30dp"
             android:text="@string/serverError"
             android:textColor="@color/tintColor"
-            android:textSize="20sp" />
+            android:textSize="17sp" />
 
     </LinearLayout>
 

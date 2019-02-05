@@ -103,7 +103,7 @@
                             android:layout_marginBottom="5dp"
                             android:layout_marginLeft="10dp"
                             android:gravity="bottom"
-                            android:text="@string/PERSONAL_INFORMATION   "
+                            android:text="@string/PERSONAL_INFORMATION"
                             android:textStyle="bold" />
 
                         <View
