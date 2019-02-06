@@ -288,6 +288,7 @@
     <string name="loading">Yükleniyor...</string>
     <string name="checkingAround">Etrafınızdaki paylaşımlar aranıyor...</string>
     <string name="locationError">Konumunuza erişim sağlanamıyor, lütfen lokasyon ayarlarınızı kontrol ediniz...</string>
+    <string name="swipeDownForRefresh">Yenilemek için aşağı sürükleyin.</string>
     <string name="noLikesYet">Henüz beğeni yok!</string>
     <string name="unfollow">Takibi bırak</string>
     <string name="disableComment">Yorum yapmayı kapat</string>

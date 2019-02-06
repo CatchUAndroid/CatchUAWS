@@ -21,7 +21,8 @@
             android:id="@+id/imgNoPostFound"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/icon_sad" />
+            android:src="@mipmap/icon_sad"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/txtNoPostFound"
@@ -47,11 +48,6 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnClick"
-            android:text="Click"/>
 
         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
             android:id="@+id/imgRetry"
@@ -66,7 +62,7 @@
             android:layout_gravity="center"
             android:layout_margin="20dp"
             android:layout_marginTop="30dp"
-            android:text="Yenilemek için tıklayın"
+            android:text="@string/swipeDownForRefresh"
             android:textColor="@color/tintColor"
             android:textSize="17sp" />
 

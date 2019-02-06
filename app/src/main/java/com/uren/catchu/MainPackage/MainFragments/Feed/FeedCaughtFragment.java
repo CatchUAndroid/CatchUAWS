@@ -509,7 +509,7 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
             serverError.setVisibility(View.GONE);
 
             if (viewType == VIEW_RETRY) {
-                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.tintColor), android.graphics.PorterDuff.Mode.SRC_IN);
                 retryLayout.setVisibility(View.VISIBLE);
             } else if (viewType == VIEW_NO_POST_FOUND) {
                 noPostFoundLayout.setVisibility(View.VISIBLE);

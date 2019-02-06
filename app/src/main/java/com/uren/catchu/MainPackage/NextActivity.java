@@ -104,6 +104,7 @@ public class NextActivity extends FragmentActivity implements
                 .build();
 
         switchTab(0);
+        updateTabSelection(0);
 
         bottomTabLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -282,7 +283,6 @@ public class NextActivity extends FragmentActivity implements
 
         super.onResume();
     }
-
 
     @Override
     protected void onPause() {

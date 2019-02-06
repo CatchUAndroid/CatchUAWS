@@ -129,6 +129,8 @@ dependencies {
     implementation 'com.github.castorflex.smoothprogressbar:library:1.1.0'
     //gradient button
     implementation 'com.dagang:gradient-button:1.0.1'
+    //rounded button
+    implementation 'com.lai:buttonStyle:1.0.2'
 
 }
 

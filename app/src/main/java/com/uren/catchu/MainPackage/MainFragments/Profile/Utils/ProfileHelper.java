@@ -23,7 +23,7 @@ public class ProfileHelper {
             return instance;
         }
 
-        public static void setProfileRefreshCallback(ProfileRefreshCallback profileRefreshCallback) {
+        public void setProfileRefreshCallback(ProfileRefreshCallback profileRefreshCallback) {
             profileRefreshCallbackList.add(profileRefreshCallback);
         }
 

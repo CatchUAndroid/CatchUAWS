@@ -138,7 +138,6 @@ public class FeedPublicFragment extends BaseFragment {
             initRecyclerView();
             checkLocationAndRetrievePosts();
 
-
             loadingView.show();
         }
 
@@ -496,12 +495,8 @@ public class FeedPublicFragment extends BaseFragment {
             serverError.setVisibility(View.GONE);
 
             if (viewType == VIEW_RETRY) {
-                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.tintColor), android.graphics.PorterDuff.Mode.SRC_IN);
                 retryLayout.setVisibility(View.VISIBLE);
-
-                ((Button) mView.findViewById(R.id.btnClick)).setOnClickListener(screenshotOnClickListener);
-
-
             } else if (viewType == VIEW_NO_POST_FOUND) {
                 noPostFoundLayout.setVisibility(View.VISIBLE);
             } else if (viewType == VIEW_LOCATION_SERVICE_ERROR) {

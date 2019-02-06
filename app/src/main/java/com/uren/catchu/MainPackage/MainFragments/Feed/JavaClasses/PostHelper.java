@@ -830,7 +830,7 @@ public class PostHelper {
             return instance;
         }
 
-        public static void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
+        public void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
             feedRefreshCallbackList.add(feedRefreshCallback);
         }
 
