@@ -180,7 +180,7 @@ public class PendingRequestsFragment extends BaseFragment {
 
     private void startFollowingInfoProcess(User user, int clickedPosition) {
         try {
-            if (mFragmentNavigation != null) {
+            if (mFragmentNavigation != null && user != null) {
                 UserInfoListItem userInfoListItem = new UserInfoListItem(user);
                 userInfoListItem.setAdapter(pendingRequestAdapter);
                 userInfoListItem.setClickedPosition(clickedPosition);

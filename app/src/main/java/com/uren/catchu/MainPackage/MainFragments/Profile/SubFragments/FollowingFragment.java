@@ -29,6 +29,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.FollowingAdapter;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -290,11 +291,17 @@ public class FollowingFragment extends BaseFragment {
 
     private void startFollowingInfoProcess(User user, int clickedPosition) {
 
-        if (mFragmentNavigation != null) {
-            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-            userInfoListItem.setAdapter(followingAdapter);
-            userInfoListItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+        if (mFragmentNavigation != null && user != null) {
+            if(user.getUserid() != null && !user.getUserid().trim().isEmpty()){
+                if(user.getUserid().equals(AccountHolderInfo.getUserID()))
+                    mFragmentNavigation.pushFragment(new ProfileFragment(false), ANIMATE_RIGHT_TO_LEFT);
+                else if(followingAdapter != null ){
+                    UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                    userInfoListItem.setAdapter(followingAdapter);
+                    userInfoListItem.setClickedPosition(clickedPosition);
+                    mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                }
+            }
         }
     }
 

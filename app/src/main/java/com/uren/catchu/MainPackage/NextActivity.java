@@ -425,7 +425,7 @@ public class NextActivity extends FragmentActivity implements
                 sharePostFragment = new SharePostFragment();
                 return sharePostFragment;
             case FragNavController.TAB3:
-                return new ProfileFragment();
+                return new ProfileFragment(true);
 
         }
         throw new IllegalStateException("Need to send an index that we know");

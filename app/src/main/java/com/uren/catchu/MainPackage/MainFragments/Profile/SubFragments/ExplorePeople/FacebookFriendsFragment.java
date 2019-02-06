@@ -31,6 +31,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Adapters.FacebookFriendsAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -188,11 +189,18 @@ public class FacebookFriendsFragment extends BaseFragment {
     }
 
     private void displayUserProfile(User user, int clickedPosition) {
-        if (mFragmentNavigation != null && facebookFriendsAdapter != null) {
-            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-            userInfoListItem.setAdapter(facebookFriendsAdapter);
-            userInfoListItem.setClickedPosition(clickedPosition);
-            mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+        if (mFragmentNavigation != null && user != null) {
+
+            if(user.getUserid() != null && !user.getUserid().trim().isEmpty()){
+                if(user.getUserid().equals(AccountHolderInfo.getUserID()))
+                    mFragmentNavigation.pushFragment(new ProfileFragment(false), ANIMATE_RIGHT_TO_LEFT);
+                else if(facebookFriendsAdapter != null ){
+                    UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+                    userInfoListItem.setAdapter(facebookFriendsAdapter);
+                    userInfoListItem.setClickedPosition(clickedPosition);
+                    mFragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);
+                }
+            }
         }
     }
 

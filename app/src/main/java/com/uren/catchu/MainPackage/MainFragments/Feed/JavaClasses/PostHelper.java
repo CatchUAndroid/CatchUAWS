@@ -286,7 +286,7 @@ public class PostHelper {
             if (fragmentNavigation != null) {
                 if (userInfoListItem.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {
                     //clicked own profile
-                    fragmentNavigation.pushFragment(ProfileFragment.newInstance(false), ANIMATE_RIGHT_TO_LEFT);
+                    fragmentNavigation.pushFragment(new ProfileFragment(false), ANIMATE_RIGHT_TO_LEFT);
                 } else {
                     //clicked others profile
                     fragmentNavigation.pushFragment(new OtherProfileFragment(userInfoListItem), ANIMATE_RIGHT_TO_LEFT);

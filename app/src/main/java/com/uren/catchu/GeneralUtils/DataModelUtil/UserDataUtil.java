@@ -127,7 +127,7 @@ public class UserDataUtil {
                 } else {
                     shortNameTv.setVisibility(View.GONE);
                     Glide.with(context)
-                            .load(context.getResources().getIdentifier("icon_user_profile", "mipmap", context.getPackageName()))
+                            .load(R.mipmap.icon_user_profile)
                             .apply(RequestOptions.circleCropTransform())
                             .into(profilePicImgView);
                 }

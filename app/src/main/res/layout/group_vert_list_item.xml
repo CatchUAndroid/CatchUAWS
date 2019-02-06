@@ -4,18 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/groupRootCardView">
+    android:id="@+id/groupRootCardView"
+    android:background="@color/White">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/White">
 
         <LinearLayout
             android:id="@+id/groupSelectMainLinLay"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/white"
+            android:background="@color/White"
             android:orientation="horizontal"
             android:gravity="center">
 

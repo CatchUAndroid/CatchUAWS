@@ -446,7 +446,7 @@ public class NotifyProblemFragment extends BaseFragment {
                     problemNotifyModel.setPhotoSelectUtil(null);
                     setViewPadding(chosenImgv, problemNotifyModel);
                     Glide.with(NextActivity.thisActivity)
-                            .load(getResources().getIdentifier("icon_add_white", "mipmap", getActivity().getPackageName()))
+                            .load(R.mipmap.icon_add_white)
                             .apply(RequestOptions.centerInsideTransform())
                             .into(chosenImgv);
                     break;

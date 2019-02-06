@@ -298,7 +298,7 @@ public class UserEditFragment extends BaseFragment
                 photoExist = false;
                 shortUserNameTv.setVisibility(View.GONE);
                 Glide.with(getActivity())
-                        .load(getActivity().getResources().getIdentifier("icon_user_profile", "mipmap", getActivity().getPackageName()))
+                        .load(R.mipmap.icon_user_profile)
                         .apply(RequestOptions.circleCropTransform())
                         .into(imgProfile);
             }
