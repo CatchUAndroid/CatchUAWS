@@ -19,7 +19,9 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.util.Pair;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -44,11 +46,13 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.lai.library.ButtonStyle;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -60,8 +64,10 @@ import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.GeneralUtils.TransitionHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
+import com.uren.catchu.InfoActivity;
 import com.uren.catchu.Interfaces.PermissionCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -132,15 +138,15 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     TextView selectedDescTv;
 
     @BindView(R.id.photoSelectImgv)
-    ImageView photoSelectImgv;
+    ClickableImageView photoSelectImgv;
     @BindView(R.id.videoSelectImgv)
-    ImageView videoSelectImgv;
+    ClickableImageView videoSelectImgv;
     @BindView(R.id.textSelectImgv)
     ImageView textSelectImgv;
     @BindView(R.id.showMapImgv)
-    ImageView showMapImgv;
+    ClickableImageView showMapImgv;
     @BindView(R.id.moreSettingsImgv)
-    ImageView moreSettingsImgv;
+    ClickableImageView moreSettingsImgv;
 
     @BindView(R.id.shareMsgEditText)
     EditText shareMsgEditText;
@@ -164,9 +170,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     ImageView textCheckedImgv;
 
     @BindView(R.id.cancelButton)
-    Button cancelButton;
+    ButtonStyle cancelButton;
     @BindView(R.id.shareButton)
-    Button shareButton;
+    ButtonStyle shareButton;
 
     @BindView(R.id.mapLayout)
     RelativeLayout mapLayout;
@@ -373,11 +379,11 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
 
     private void setShapes() {
-        cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
-                getResources().getColor(R.color.Red, null), GradientDrawable.RECTANGLE, 60, 3));
+        //cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+        //        getResources().getColor(R.color.Red, null), GradientDrawable.RECTANGLE, 60, 3));
 
-        shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.RoyalBlue, null),
-                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 60, 0));
+        //shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.RoyalBlue, null),
+        //        getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 60, 0));
 
         moreSettingsImgv.setColorFilter(this.getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
     }
@@ -458,7 +464,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cancelButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                //cancelButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 getActivity().onBackPressed();
             }
         });
@@ -467,7 +473,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 checkShareItems = new CheckShareItems(getContext(), shareItems);
-                shareButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                //shareButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
 
                 if (!checkShareItems.shareIsPossible()) {
                     CommonUtils.showToastShort(getContext(), checkShareItems.getErrMessage());
@@ -878,6 +884,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     public void onTokenTaken(String token) {
                         getProfileDetail(token);
                     }
+
+                    @Override
+                    public void onTokenFail(String message) {
+                    }
                 });
             }
         } catch (Exception e) {
@@ -1198,21 +1208,25 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     private void checkCanGetLocation() {
         try {
-            if (locationTrackObj != null && !locationTrackObj.canGetLocation())
-                DialogBoxUtil.showDialogWithJustPositiveButton(getContext(), getResources().getString(R.string.gpsSettings),
-                        getResources().getString(R.string.gpsSettingMessage),
-                        getResources().getString(R.string.settings), new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
-                                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
-                            }
-                        });
+            if (locationTrackObj != null && !locationTrackObj.canGetLocation()){
+                final int TYPE_XML = 1;
+                Intent i = new Intent(getActivity(), InfoActivity.class);
+                i.putExtra("EXTRA_TYPE", TYPE_XML);
+                transitionTo(i);
+            }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
                     new Object() {
                     }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    void transitionTo(Intent i) {
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+        startActivity(i, transitionActivityOptions.toBundle());
     }
 
     @Override

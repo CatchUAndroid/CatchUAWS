@@ -2,7 +2,9 @@
 <resources>
     <array name="preloaded_fonts" translatable="false">
         <item>@font/alike_angular</item>
+        <item>@font/amiko</item>
         <item>@font/capriola</item>
+        <item>@font/monda</item>
         <item>@font/pacifico</item>
         <item>@font/roboto</item>
         <item>@font/roboto_thin</item>

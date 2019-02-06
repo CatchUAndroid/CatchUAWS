@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -113,7 +114,7 @@ public class SinglePostFragment extends BaseFragment
     RelativeLayout rootLayout;
 
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    SwipeRefreshLayout refresh_layout;
 
     @BindView(R.id.rv_single_post)
     CustomRecyclerView recyclerView;
@@ -170,6 +171,7 @@ public class SinglePostFragment extends BaseFragment
     @Override
     public void onStart() {
         getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         super.onStart();
     }
 
@@ -328,7 +330,7 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void setPullToRefresh() {
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 setPaginationValues();
@@ -401,6 +403,10 @@ public class SinglePostFragment extends BaseFragment
                     //showNoFeedLayout(true, R.string.locationError );
                     refresh_layout.setRefreshing(false);
                 }
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
 
@@ -487,6 +493,10 @@ public class SinglePostFragment extends BaseFragment
                 @Override
                 public void onTokenTaken(String token) {
                     startGetCommentList(token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
                 }
             });
         } else {

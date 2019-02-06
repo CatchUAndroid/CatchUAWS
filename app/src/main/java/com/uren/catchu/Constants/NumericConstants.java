@@ -97,4 +97,19 @@ public class NumericConstants {
     //Activity request codes
     public final static int REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY = 1001;
 
+    //FEED Exceptions
+    public static final int VIEW_RETRY = 0;
+    public static final int VIEW_NO_POST_FOUND = 1;
+    public static final int VIEW_LOCATION_SERVICE_ERROR = 2;
+    public static final int VIEW_LOCATION_PERMISSION = 3;
+    public static final int VIEW_SERVER_ERROR = 4;
+
+    //Orientation constants
+    public static final int ORIENTATION_LEFT_RIGHT = 0;
+    public static final int ORIENTATION_RIGHT_LEFT = 1;
+    public static final int ORIENTATION_TOPLEFT_BOTTOMRIGHT = 2;
+    public static final int ORIENTATION_BOTTOMRIGHT_TOPLEFT = 3;
+    public static final int ORIENTATION_TOP_BOTTOM = 4;
+    public static final int ORIENTATION_BOTTOM_TOP = 5;
+
 }

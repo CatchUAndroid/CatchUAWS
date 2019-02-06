@@ -26,6 +26,11 @@ public class AccountHolderFollowProcess {
             public void onTokenTaken(String token) {
                 startGetFollowers(token, pageCount, perPageCount, completeCallback);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+
+            }
         });
     }
 
@@ -34,6 +39,10 @@ public class AccountHolderFollowProcess {
             @Override
             public void onTokenTaken(String token) {
                 startAcceptFriendRequest(userId, token, completeCallback);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }
@@ -44,6 +53,10 @@ public class AccountHolderFollowProcess {
             public void onTokenTaken(String token) {
                 startGetPendings(token, completeCallback);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -52,6 +65,10 @@ public class AccountHolderFollowProcess {
             @Override
             public void onTokenTaken(String token) {
                 startGetFollowings(token, completeCallback,requestedUserId, perPage, page );
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }
@@ -62,6 +79,10 @@ public class AccountHolderFollowProcess {
             public void onTokenTaken(String token) {
                 startFriendFollowRequest(requestType, requesterUserid, requestedUserid, token, completeCallback);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -70,6 +91,10 @@ public class AccountHolderFollowProcess {
             @Override
             public void onTokenTaken(String token) {
                 startFriendFollowRequest(requestType, requesterUserid, requestedUserid, token, completeCallback);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

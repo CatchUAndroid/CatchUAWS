@@ -135,6 +135,10 @@ public class AccountHolderFacebookFriends {
 
                 providerListRequestProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

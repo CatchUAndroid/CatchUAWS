@@ -7,19 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.dinuscxj.refresh.RecyclerRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:background="@color/Silver"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/Silver">
+            android:layout_height="match_parent">
 
             <ImageView
                 android:id="@+id/appIconImgv"
@@ -37,21 +35,34 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:text="@string/TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
-            <Button
+            <com.dagang.library.GradientButton
                 android:id="@+id/tryAgainButton"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
+                android:layout_width="200dp"
+                android:layout_height="70dp"
                 android:layout_below="@+id/networkTryDesc"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
-                android:text="@string/TRY_AGAIN"
-                android:textColor="@color/White"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:button_end_color="#2196f3"
+                app:button_gradient_orientation="LEFT_RIGHT"
+                app:button_is_shadowed="false"
+                app:button_press_end_color="#1565c0"
+                app:button_press_start_color="#0d47a1"
+                app:button_radius="30dp"
+                app:button_shadow_angle="90"
+                app:button_shadow_color="#2196f3"
+                app:button_shadow_distance="1dp"
+                app:button_shadow_radius="10dp"
+                app:button_size="10sp"
+                app:button_start_color="#1565c0"
+                app:button_text="@string/TRY_AGAIN"
+                app:button_text_color="@color/white" />
 
         </RelativeLayout>
 
-    </com.dinuscxj.refresh.RecyclerRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

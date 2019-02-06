@@ -208,6 +208,10 @@ public class SelectCountryFragment extends Fragment implements Filterable {
                         token);
                 countryListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
@@ -9,9 +8,7 @@ import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -21,7 +18,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.FragmentControllers.FragNavController;
@@ -30,7 +26,7 @@ import com.uren.catchu.FragmentControllers.FragmentHistory;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCatchedFragment;
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedCaughtFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
@@ -108,6 +104,7 @@ public class NextActivity extends FragmentActivity implements
                 .build();
 
         switchTab(0);
+        updateTabSelection(0);
 
         bottomTabLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,8 +156,8 @@ public class NextActivity extends FragmentActivity implements
 
             if (selectedTabPosition == 1) {
                 for (int i = 0; i < fragments.size(); i++) {
-                    if (fragments.get(i) instanceof FeedCatchedFragment) {
-                        ((FeedCatchedFragment) fragments.get(i)).scrollRecViewInitPosition();
+                    if (fragments.get(i) instanceof FeedCaughtFragment) {
+                        ((FeedCaughtFragment) fragments.get(i)).scrollRecViewInitPosition();
                     }
                 }
             }
@@ -286,7 +283,6 @@ public class NextActivity extends FragmentActivity implements
 
         super.onResume();
     }
-
 
     @Override
     protected void onPause() {

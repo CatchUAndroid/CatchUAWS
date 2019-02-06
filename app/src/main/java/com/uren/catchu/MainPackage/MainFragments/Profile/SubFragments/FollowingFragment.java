@@ -249,6 +249,10 @@ public class FollowingFragment extends BaseFragment {
             public void onTokenTaken(String token) {
                 startGetFollowingList(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 

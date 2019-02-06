@@ -50,10 +50,12 @@ public class CustomListAdapter extends ArrayAdapter<String> {
         }
 
         holder.txtItem.setText(optionsList.get(position));
-        if(optionsList.get(position).equals(mContext.getResources().getString(R.string.delete))){
-            holder.txtItem.setTextColor(mContext.getResources().getColor(R.color.red,null));
-        }else{
-            holder.txtItem.setTextColor(mContext.getResources().getColor(R.color.black,null));
+        if (optionsList.get(position).equals(mContext.getResources().getString(R.string.delete))) {
+            holder.txtItem.setTextColor(mContext.getResources().getColor(R.color.red, null));
+        } else if (optionsList.get(position).equals(mContext.getResources().getString(R.string.unfollow))) {
+            holder.txtItem.setTextColor(mContext.getResources().getColor(R.color.red, null));
+        } else {
+            holder.txtItem.setTextColor(mContext.getResources().getColor(R.color.black, null));
         }
 
         return view;

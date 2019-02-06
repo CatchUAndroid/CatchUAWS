@@ -3,18 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/layout_progress_bar" />
+    <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <com.dinuscxj.refresh.RecyclerRefreshLayout
-        android:id="@+id/refresh_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/layout_progress_bar" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,10 +38,10 @@
                         android:id="@+id/notification"
                         android:layout_width="0dp"
                         android:layout_height="40dp"
-                        android:clickable="true"
-                        android:gravity="center"
+                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:layout_gravity="center">
+                        android:clickable="true"
+                        android:gravity="center">
 
                         <RelativeLayout
                             android:id="@+id/menuLayout"
@@ -102,21 +99,21 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="4"
                         android:fontFamily="@font/alike_angular"
                         android:gravity="center"
                         android:text="@string/profile"
                         android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:layout_weight="4"/>
+                        android:textSize="20sp" />
 
                     <RelativeLayout
                         android:id="@+id/notification2"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
+                        android:layout_weight="1"
                         android:clickable="true"
-                        android:gravity="center"
-                        android:layout_weight="1">
+                        android:gravity="center">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgUserEdit"
@@ -133,339 +130,464 @@
                 </LinearLayout>
 
 
-
             </android.support.v7.widget.Toolbar>
 
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="match_parent"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/refresh_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/clearWhite">
+                android:background="?attr/colorPrimary"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <LinearLayout
-                    android:id="@+id/llContent"
+                <android.support.v4.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@color/White">
 
                     <LinearLayout
-                        android:id="@+id/llProfile"
+                        android:id="@+id/llContent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/colorPrimary"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:orientation="vertical"
-                        android:paddingBottom="24dp"
-                        android:paddingLeft="24dp"
-                        android:paddingRight="24dp"
-                        android:paddingTop="24dp"
-                        app:layout_collapseMode="parallax">
+                        android:descendantFocusability="blocksDescendants"
+                        android:orientation="vertical">
 
                         <LinearLayout
-                            android:id="@+id/llUserInfo"
+                            android:id="@+id/llProfile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:clipChildren="false">
-
-
-                            <RelativeLayout
-                                android:layout_width="88dp"
-                                android:layout_height="88dp"
-                                android:layout_marginRight="16dp">
-
-                                <ImageView
-                                    android:id="@+id/imgProfile"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent" />
-
-                                <TextView
-                                    android:id="@+id/txtProfile"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:gravity="center"
-                                    android:textAllCaps="true"
-                                    android:textColor="@color/White"
-                                    android:textSize="30sp"
-                                    android:textStyle="bold"
-                                    android:visibility="gone" />
-
-                            </RelativeLayout>
+                            android:background="?attr/colorPrimary"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:orientation="vertical"
+                            android:paddingBottom="24dp"
+                            android:paddingLeft="24dp"
+                            android:paddingRight="24dp"
+                            android:paddingTop="24dp"
+                            app:layout_collapseMode="parallax">
 
                             <LinearLayout
-                                android:id="@+id/llUserDetail"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical">
-
-                                <TextView
-                                    android:id="@+id/txtName"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="#ffffff"
-                                    android:textSize="24sp" />
-
-                                <TextView
-                                    android:id="@+id/txtBio"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="10dp"
-                                    android:text="Spor yapmayı severim, en sevdiğim spor Yüzme"
-                                    android:textColor="#ffffff"
-                                    android:textSize="15sp" />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp">
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/llData"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:alpha="0"
-                            android:background="@color/black" />
-
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-
-                            <LinearLayout
-                                android:id="@+id/llFollowInfo"
+                                android:id="@+id/llUserInfo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="40dp"
-                                android:layout_marginRight="40dp"
-                                android:layout_marginTop="16dp"
-                                android:orientation="vertical">
+                                android:clipChildren="false">
+
+
+                                <RelativeLayout
+                                    android:layout_width="88dp"
+                                    android:layout_height="88dp"
+                                    android:layout_marginRight="16dp">
+
+                                    <ImageView
+                                        android:id="@+id/imgProfile"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent" />
+
+                                    <TextView
+                                        android:id="@+id/txtProfile"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/White"
+                                        android:textSize="30sp"
+                                        android:textStyle="bold"
+                                        android:visibility="gone" />
+
+                                </RelativeLayout>
 
                                 <LinearLayout
-
-                                    android:layout_width="match_parent"
+                                    android:id="@+id/llUserDetail"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:gravity="center">
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
 
-                                    <LinearLayout
-                                        android:id="@+id/followersLayout"
-                                        android:layout_width="wrap_content"
+                                    <TextView
+                                        android:id="@+id/txtName"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:orientation="vertical">
+                                        android:textColor="#ffffff"
+                                        android:textSize="24sp" />
 
-                                        <TextView
-                                            android:id="@+id/txtFollowerCnt"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="?attr/colorPrimary"
-                                            android:textSize="20sp" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/followers"
-                                            android:textColor="@color/gray"
-                                            android:textSize="15sp" />
-                                    </LinearLayout>
-
-                                    <View
-                                        android:layout_width="1dp"
-                                        android:layout_height="match_parent"
-                                        android:alpha="0.5"
-                                        android:background="@color/black" />
-
-
-                                    <LinearLayout
-                                        android:id="@+id/followingsLayout"
-                                        android:layout_width="wrap_content"
+                                    <TextView
+                                        android:id="@+id/txtBio"
+                                        android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="1"
-                                        android:gravity="center"
-                                        android:orientation="vertical">
-
-                                        <TextView
-                                            android:id="@+id/txtFollowingCnt"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:textColor="?attr/colorPrimary"
-                                            android:textSize="20sp" />
-
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="@string/followings"
-                                            android:textColor="@color/gray"
-                                            android:textSize="15sp" />
-                                    </LinearLayout>
-
+                                        android:layout_marginTop="10dp"
+                                        android:text="Spor yapmayı severim, en sevdiğim spor Yüzme"
+                                        android:textColor="#ffffff"
+                                        android:textSize="15sp" />
 
                                 </LinearLayout>
 
-                                <View
-                                    android:layout_width="match_parent"
-                                    android:layout_height="1dp"
+                            </LinearLayout>
 
-                                    android:layout_marginTop="30dp"
-                                    android:alpha="0.5"
-                                    android:background="@color/black" />
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp">
 
                             </LinearLayout>
 
-                            <!-- Post layout -->
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/llData"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:alpha="0.5"
+                                android:background="@color/black" />
+
+
                             <LinearLayout
-                                android:id="@+id/llPosts"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:orientation="vertical">
 
 
                                 <LinearLayout
-                                    android:id="@+id/llMyPosts"
+                                    android:id="@+id/llFollowInfo"
                                     android:layout_width="match_parent"
-                                    android:layout_height="50dp"
+                                    android:layout_height="wrap_content"
                                     android:layout_marginLeft="20dp"
                                     android:layout_marginRight="20dp"
-                                    android:layout_marginTop="20dp"
-                                    android:background="@color/red"
+                                    android:layout_marginTop="16dp"
                                     android:orientation="vertical">
 
                                     <LinearLayout
+
                                         android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="horizontal"
-                                        android:weightSum="5">
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center">
+
+                                        <LinearLayout
+                                            android:id="@+id/followersLayout"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="20dp"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:id="@+id/txtFollowerCnt"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:textColor="?attr/colorPrimary"
+                                                android:textSize="20sp" />
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/followers"
+                                                android:textColor="@color/gray"
+                                                android:textSize="15sp" />
+                                        </LinearLayout>
+
+                                        <View
+                                            android:layout_width="1dp"
+                                            android:layout_height="match_parent"
+                                            android:alpha="0.5"
+                                            android:background="@color/tintColor" />
+
+
+                                        <LinearLayout
+                                            android:id="@+id/followingsLayout"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginRight="20dp"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:orientation="vertical">
+
+                                            <TextView
+                                                android:id="@+id/txtFollowingCnt"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:textColor="?attr/colorPrimary"
+                                                android:textSize="20sp" />
+
+                                            <TextView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="@string/followings"
+                                                android:textColor="@color/gray"
+                                                android:textSize="15sp" />
+                                        </LinearLayout>
+
+
+                                    </LinearLayout>
+
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:layout_marginTop="30dp"
+                                        android:alpha="0.5"
+                                        android:background="@color/tintColor" />
+
+                                </LinearLayout>
+
+                                <!-- Post layout -->
+                                <LinearLayout
+                                    android:id="@+id/llPosts"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:orientation="vertical">
+
+                                    <!-- Shared posts -->
+                                    <LinearLayout
+                                        android:id="@+id/llSharedPosts"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="5"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center">
+
+                                            <ImageView
+                                                android:id="@+id/imgSharedPosts"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:src="@mipmap/icon_location" />
+
+                                        </LinearLayout>
+
 
                                         <TextView
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
                                             android:layout_weight="3"
-                                            android:gravity="center"
-                                            android:text="My Posts"
-                                            android:textColor="@color/white"
-                                            android:textStyle="bold" />
+                                            android:gravity="center_vertical"
+                                            android:text="@string/sharedPosts"
+                                            android:textColor="@color/gray"
+                                            android:textSize="17sp" />
 
                                         <TextView
                                             android:id="@+id/sharedPostCount"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_weight="2"
+                                            android:layout_weight="0.5"
                                             android:gravity="center"
                                             android:text="0"
                                             android:textSize="17sp" />
 
+                                        <ImageView
+                                            android:id="@+id/imgForward1"
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginRight="10dp"
+                                            android:layout_weight="0.5"
+                                            android:padding="12dp"
+                                            android:src="@mipmap/icon_forward_white" />
+
 
                                     </LinearLayout>
 
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llCatchedPosts"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="50dp"
-                                    android:layout_marginLeft="20dp"
-                                    android:layout_marginRight="20dp"
-                                    android:layout_marginTop="10dp"
-                                    android:background="@color/green"
-                                    android:orientation="vertical">
-
-                                    <LinearLayout
+                                    <View
                                         android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:orientation="horizontal"
-                                        android:weightSum="5">
+                                        android:layout_height="1dp"
+                                        android:layout_marginLeft="20dp"
+                                        android:layout_marginRight="20dp"
+                                        android:alpha="0.5"
+                                        android:background="@color/tintColor" />
+
+
+                                    <!-- Catch posts -->
+                                    <LinearLayout
+                                        android:id="@+id/llCatchedPosts"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="5"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center">
+
+                                            <ImageView
+                                                android:id="@+id/imgCatchPosts"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:padding="8dp"
+                                                android:src="@mipmap/icon_catch" />
+
+                                        </LinearLayout>
+
 
                                         <TextView
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:gravity="center"
-                                            android:text="Caught Posts"
-                                            android:textColor="@color/white"
-                                            android:textStyle="bold"
-                                            android:layout_weight="3"/>
+                                            android:layout_weight="3"
+                                            android:gravity="center_vertical"
+                                            android:text="@string/caughtPosts"
+                                            android:textColor="@color/gray"
+                                            android:textSize="17sp" />
 
                                         <TextView
                                             android:id="@+id/caughtPostCount"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_weight="2"
+                                            android:layout_weight="0.5"
                                             android:gravity="center"
                                             android:text="0"
                                             android:textSize="17sp" />
 
+
+                                        <ImageView
+                                            android:id="@+id/imgForward2"
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_marginRight="10dp"
+                                            android:layout_weight="0.5"
+                                            android:padding="12dp"
+                                            android:src="@mipmap/icon_forward_white" />
+
+
                                     </LinearLayout>
 
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llMyGroups"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="200dp"
-                                    android:layout_marginTop="10dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
                                         android:layout_marginLeft="20dp"
-                                        android:text="@string/groups"
-                                        android:textSize="17sp"
-                                        android:textStyle="bold" />
+                                        android:layout_marginRight="20dp"
+                                        android:alpha="0.5"
+                                        android:background="@color/tintColor" />
 
-                                    <android.support.v7.widget.RecyclerView
-                                        android:id="@+id/groupRecyclerView"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="match_parent">
+                                    <!-- Group posts -->
+                                    <LinearLayout
+                                        android:id="@+id/llGroupPosts"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="5"
+                                        android:orientation="horizontal">
 
-                                    </android.support.v7.widget.RecyclerView>
+                                        <LinearLayout
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="1"
+                                            android:gravity="center">
+
+                                            <ImageView
+                                                android:id="@+id/imgGroupPosts"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:padding="8dp"
+                                                android:src="@drawable/groups_icon_500" />
+
+                                        </LinearLayout>
+
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_weight="3"
+                                            android:gravity="center_vertical"
+                                            android:text="@string/groupPosts"
+                                            android:textColor="@color/gray"
+                                            android:textSize="17sp" />
+
+
+                                        <TextView
+                                            android:id="@+id/txtEditGroup"
+                                            android:layout_width="0dp"
+                                            android:layout_height="match_parent"
+                                            android:layout_gravity="left"
+                                            android:layout_marginRight="10dp"
+                                            android:layout_weight="1"
+                                            android:gravity="center"
+                                            android:text="@string/EDIT"
+                                            android:textColor="@color/oceanBlue"
+                                            android:textSize="17sp" />
+
+
+                                    </LinearLayout>
+
+                                    <RelativeLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="20dp">
+
+                                        <LinearLayout
+                                            android:id="@+id/llGroupsInfo"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+
+                                            <TextView
+                                                android:id="@+id/txtGroupDetail"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:text="Grouplar Yükleniyor.."
+                                                android:textSize="17sp" />
+
+                                        </LinearLayout>
+
+
+                                        <LinearLayout
+                                            android:id="@+id/llGroupsRecycler"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="200dp"
+                                            android:layout_marginTop="10dp"
+                                            android:orientation="vertical"
+                                            android:visibility="gone">
+
+                                            <android.support.v7.widget.RecyclerView
+                                                android:id="@+id/groupRecyclerView"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="match_parent"
+                                                android:nestedScrollingEnabled="false">
+
+                                            </android.support.v7.widget.RecyclerView>
+
+                                        </LinearLayout>
+                                    </RelativeLayout>
+
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="50dp"
+                                        android:orientation="vertical">
+
+                                    </LinearLayout>
 
                                 </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="100dp"
-                                    android:orientation="vertical">
-
-                                </LinearLayout>
-
 
                             </LinearLayout>
 
-                        </LinearLayout>
+                        </RelativeLayout>
 
+                    </LinearLayout>
 
-                    </RelativeLayout>
+                </android.support.v4.widget.NestedScrollView>
 
-
-                </LinearLayout>
-
-
-            </android.support.v4.widget.NestedScrollView>
-
+            </android.support.v4.widget.SwipeRefreshLayout>
 
         </LinearLayout>
 
-    </com.dinuscxj.refresh.RecyclerRefreshLayout>
+    </FrameLayout>
 
-
+    <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
     <android.support.design.widget.NavigationView
         android:id="@+id/navViewLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/profile_navview_layout"

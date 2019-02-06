@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
 
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.location.Location;
@@ -10,12 +11,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,9 +33,12 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserCaughtPostListProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserGroupCaughtPostListProcess;
 import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
+import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.TransitionHelper;
+import com.uren.catchu.InfoActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.UserPostItemAnimator;
@@ -51,6 +60,11 @@ import catchu.model.PostListResponse;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_LOCATION_PERMISSION;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_LOCATION_SERVICE_ERROR;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_NO_POST_FOUND;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_RETRY;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_SERVER_ERROR;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
@@ -86,13 +100,26 @@ public class UserPostListViewFragment extends BaseFragment {
     ProgressBar progressBar;
 
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
-    @BindView(R.id.rl_no_feed)
-    RelativeLayout rl_no_feed;
-    @BindView(R.id.txtNoFeedExplanation)
-    TextView txtNoFeedExplanation;
+    SwipeRefreshLayout refresh_layout;
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.mainExceptionLayout)
+    RelativeLayout mainExceptionLayout;
+    @BindView(R.id.noPostFoundLayout)
+    LinearLayout noPostFoundLayout;
+    @BindView(R.id.retryLayout)
+    LinearLayout retryLayout;
+    @BindView(R.id.locationServiceError)
+    LinearLayout locationServiceError;
+    @BindView(R.id.needLocationPermission)
+    LinearLayout needLocationPermission;
+    @BindView(R.id.serverError)
+    LinearLayout serverError;
+    @BindView(R.id.imgRetry)
+    ClickableImageView imgRetry;
+
 
     private boolean hasLoadedOnce = false; // your boolean field
 
@@ -163,6 +190,7 @@ public class UserPostListViewFragment extends BaseFragment {
     private void initRecyclerView() {
 
         isFirstFetch = true;
+        mainExceptionLayout.setVisibility(View.GONE);
         setLayoutManager();
         setAdapter();
         setPullToRefresh();
@@ -186,7 +214,7 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void setPullToRefresh() {
 
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 pulledToRefresh = true;
@@ -212,30 +240,19 @@ public class UserPostListViewFragment extends BaseFragment {
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                //FeedContextMenuManager.getInstance().onScrolled(recyclerView, dx, dy);
-                //setScrollButtonVisibility();
-
                 if (dy > 0) //check for scroll down
                 {
                     visibleItemCount = customLinearLayoutManager.getChildCount();
                     totalItemCount = customLinearLayoutManager.getItemCount();
                     pastVisibleItems = customLinearLayoutManager.findFirstVisibleItemPosition();
 
-                    Log.i("visibleItemCount", String.valueOf(visibleItemCount));
-                    Log.i("totalItemCount", String.valueOf(totalItemCount));
-                    Log.i("pastVisibleItems", String.valueOf(pastVisibleItems));
-                    Log.i("loading", String.valueOf(loading));
-
                     if (loading) {
 
                         if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
                             loading = false;
-                            Log.v("...", "Last Item Wow !");
-                            //Do pagination.. i.e. fetch new data
                             pageCnt++;
                             userPostListViewAdapter.addProgressLoading();
                             getPosts();
-
                         }
                     }
 
@@ -243,19 +260,6 @@ public class UserPostListViewFragment extends BaseFragment {
             }
         });
 
-    }
-
-    private void setScrollButtonVisibility() {
-        int visibility;
-        int firstVisibleItemPosition = customLinearLayoutManager.findFirstVisibleItemPosition();
-        if (firstVisibleItemPosition < 3) {
-            visibility = View.GONE;
-
-        } else {
-            visibility = View.VISIBLE;
-        }
-
-        //UserPostFragment.fabScrollUp.setVisibility(visibility);
     }
 
     private void checkLocationAndRetrievePosts() {
@@ -274,11 +278,15 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void checkCanGetLocation() {
 
-        if (!locationTrackObj.canGetLocation())
+        if (!locationTrackObj.canGetLocation()) {
             //gps ve network provider olup olmadığı kontrol edilir
-            //todo NT - gps kapatıldığında case'i handle et
-            DialogBoxUtil.showSettingsAlert(getActivity());
-        else {
+            showExceptionLayout(true, VIEW_RETRY);
+
+            final int TYPE_XML = 1;
+            Intent i = new Intent(getActivity(), InfoActivity.class);
+            i.putExtra("EXTRA_TYPE", TYPE_XML);
+            transitionTo(i);
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 if (permissionModule.checkAccessFineLocationPermission()) {
@@ -293,6 +301,13 @@ public class UserPostListViewFragment extends BaseFragment {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    void transitionTo(Intent i) {
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+        startActivity(i, transitionActivityOptions.toBundle());
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -302,16 +317,11 @@ public class UserPostListViewFragment extends BaseFragment {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                     // permission was granted, yay! Do the
                     getPosts();
-
                 } else {
-
                     // permission denied, boo! Disable the
-                    showNoFeedLayout(true, R.string.needLocationPermission);
-                    refresh_layout.setRefreshing(false);
-
+                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
                 }
 
             }
@@ -338,9 +348,14 @@ public class UserPostListViewFragment extends BaseFragment {
                 if (location != null) {
                     startGetPosts(token);
                 } else {
-                    showNoFeedLayout(true, R.string.locationError);
-                    refresh_layout.setRefreshing(false);
+                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
                 }
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+                refresh_layout.setRefreshing(false);
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -378,13 +393,13 @@ public class UserPostListViewFragment extends BaseFragment {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
-                    showNoFeedLayout(true, R.string.emptyFeed);
+                    showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
                     CommonUtils.LOG_OK("UserSharedPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        showNoFeedLayout(true, R.string.emptyFeed);
+                        showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
-                        showNoFeedLayout(false, 0);
+                        showExceptionLayout(false, -1);
                     }
                     setUpRecyclerView(postListResponse.getItems());
                 }
@@ -406,13 +421,13 @@ public class UserPostListViewFragment extends BaseFragment {
                         public void okClick() {
                         }
                     });
-                    showNoFeedLayout(false, 0);
+                    showExceptionLayout(false, -1);
                     if (userPostListViewAdapter.isShowingProgressLoading()) {
                         userPostListViewAdapter.removeProgressLoading();
                     }
 
                 } else {
-                    showNoFeedLayout(true, R.string.serverError);
+                    showExceptionLayout(true, VIEW_SERVER_ERROR);
                 }
             }
 
@@ -448,12 +463,13 @@ public class UserPostListViewFragment extends BaseFragment {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserCaughtPostListProcess");
+                    showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
                     CommonUtils.LOG_OK("UserCaughtPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        showNoFeedLayout(true, R.string.emptyFeed);
+                        showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
-                        showNoFeedLayout(false, 0);
+                        showExceptionLayout(false, -1);
                     }
                     setUpRecyclerView(postListResponse.getItems());
                 }
@@ -475,13 +491,13 @@ public class UserPostListViewFragment extends BaseFragment {
                         public void okClick() {
                         }
                     });
-                    showNoFeedLayout(false, 0);
+                    showExceptionLayout(false, -1);
                     if (userPostListViewAdapter.isShowingProgressLoading()) {
                         userPostListViewAdapter.removeProgressLoading();
                     }
 
                 } else {
-                    showNoFeedLayout(true, R.string.serverError);
+                    showExceptionLayout(true, VIEW_SERVER_ERROR);
                 }
             }
 
@@ -517,12 +533,13 @@ public class UserPostListViewFragment extends BaseFragment {
 
                 if (postListResponse == null) {
                     CommonUtils.LOG_OK_BUT_NULL("UserGroupCaughtPostListProcess");
+                    showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
                     CommonUtils.LOG_OK("UserGroupCaughtPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
-                        showNoFeedLayout(true, R.string.emptyFeed);
+                        showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
-                        showNoFeedLayout(false, 0);
+                        showExceptionLayout(false, -1);
                     }
                     setUpRecyclerView(postListResponse.getItems());
                 }
@@ -544,13 +561,13 @@ public class UserPostListViewFragment extends BaseFragment {
                         public void okClick() {
                         }
                     });
-                    showNoFeedLayout(false, 0);
+                    showExceptionLayout(false, -1);
                     if (userPostListViewAdapter.isShowingProgressLoading()) {
                         userPostListViewAdapter.removeProgressLoading();
                     }
 
                 } else {
-                    showNoFeedLayout(true, R.string.serverError);
+                    showExceptionLayout(true, VIEW_SERVER_ERROR);
                 }
             }
 
@@ -633,14 +650,37 @@ public class UserPostListViewFragment extends BaseFragment {
         return itemDecoration;
     }
 
-    private void showNoFeedLayout(boolean setVisible, int textDetail) {
-        if (setVisible) {
-            rl_no_feed.setVisibility(View.VISIBLE);
-            txtNoFeedExplanation.setText(textDetail);
+    /**********************************************/
+    private void showExceptionLayout(boolean showException, int viewType) {
+
+        if (showException) {
+
+            refresh_layout.setRefreshing(false);
+            progressBar.setVisibility(View.GONE);
+            mainExceptionLayout.setVisibility(View.VISIBLE);
+            retryLayout.setVisibility(View.GONE);
+            noPostFoundLayout.setVisibility(View.GONE);
+            locationServiceError.setVisibility(View.GONE);
+            needLocationPermission.setVisibility(View.GONE);
+            serverError.setVisibility(View.GONE);
+
+            if (viewType == VIEW_RETRY) {
+                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                retryLayout.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_NO_POST_FOUND) {
+                noPostFoundLayout.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_LOCATION_SERVICE_ERROR) {
+                locationServiceError.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_LOCATION_PERMISSION) {
+                needLocationPermission.setVisibility(View.VISIBLE);
+            } else if (viewType == VIEW_SERVER_ERROR) {
+                serverError.setVisibility(View.VISIBLE);
+            }
+
         } else {
-            rl_no_feed.setVisibility(View.GONE);
-            txtNoFeedExplanation.setText("");
+            mainExceptionLayout.setVisibility(View.GONE);
         }
+
     }
 }
 

@@ -93,7 +93,7 @@
                                 android:fontFamily="@font/capriola"
                                 android:gravity="left"
                                 android:textColor="@color/White"
-                                android:textSize="15sp"/>
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/toolbarSubTitle"
@@ -105,7 +105,7 @@
                                 android:fontFamily="@font/capriola"
                                 android:gravity="left"
                                 android:textColor="@color/White"
-                                android:textSize="10sp"/>
+                                android:textSize="10sp" />
 
                         </LinearLayout>
 
@@ -113,7 +113,7 @@
 
                 </LinearLayout>
 
-                <ImageView
+                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                     android:id="@+id/moreSettingsImgv"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
@@ -166,7 +166,7 @@
                                 android:layout_height="50dp"
                                 android:layout_marginLeft="7dp">
 
-                                <ImageView
+                                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                                     android:id="@+id/photoSelectImgv"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -181,7 +181,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginRight="2dp"
                                     android:src="@mipmap/icon_green_checked"
-                                    android:visibility="gone"/>
+                                    android:visibility="gone" />
 
                             </RelativeLayout>
 
@@ -198,7 +198,7 @@
                                 android:layout_height="50dp"
                                 android:layout_marginLeft="7dp">
 
-                                <ImageView
+                                <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                                     android:id="@+id/videoSelectImgv"
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
@@ -213,7 +213,7 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginRight="2dp"
                                     android:src="@mipmap/icon_green_checked"
-                                    android:visibility="gone"/>
+                                    android:visibility="gone" />
 
                             </RelativeLayout>
 
@@ -244,13 +244,13 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginRight="2dp"
                                     android:src="@mipmap/icon_green_checked"
-                                    android:visibility="gone"/>
+                                    android:visibility="gone" />
 
                             </RelativeLayout>
 
                         </LinearLayout>
 
-                        <ImageView
+                        <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/showMapImgv"
                             android:layout_width="50dp"
                             android:layout_height="50dp"
@@ -489,10 +489,11 @@
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
-                    <Button
+
+                    <com.lai.library.ButtonStyle
                         android:id="@+id/cancelButton"
                         android:layout_width="0dp"
-                        android:layout_height="40dp"
+                        android:layout_height="30dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
@@ -500,23 +501,36 @@
                         android:textAllCaps="false"
                         android:textColor="@color/Red"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:corner="15dp"
+                        app:normal_color="@color/white"
+                        app:press_color="#eceff1"
+                        app:stroke_color="@color/red"
+                        app:stroke_width="1dp" />
 
-                    <Button
+
+
+
+
+                    <com.lai.library.ButtonStyle
                         android:id="@+id/shareButton"
                         android:layout_width="0dp"
-                        android:layout_height="40dp"
+                        android:layout_height="30dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="10dp"
                         android:layout_weight="1"
                         android:text="@string/share"
-                        android:textColor="@color/White"
                         android:textAllCaps="false"
+                        android:textColor="@color/White"
                         android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        app:corner="15dp"
+                        app:normal_color="@color/RoyalBlue"
+                        app:press_color="#448aff"
+                        app:stroke_color="@color/RoyalBlue"
+                        app:stroke_width="0dp" />
 
                 </LinearLayout>
-
 
                 <RelativeLayout
                     android:id="@+id/mapLayout"

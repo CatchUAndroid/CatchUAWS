@@ -160,19 +160,34 @@
                 android:id="@+id/llClearFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
                 android:layout_marginTop="30dp"
-                android:layout_gravity="bottom"
                 android:orientation="vertical">
 
-                <Button
+
+                <com.dagang.library.GradientButton
                     android:id="@+id/btnClearFilter"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/btn_custom"
-                    android:text="@string/clearFilter"
-                    android:textSize="20sp" />
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    app:button_end_color="#2196f3"
+                    app:button_gradient_orientation="LEFT_RIGHT"
+                    app:button_is_shadowed="false"
+                    app:button_press_end_color="#1565c0"
+                    app:button_press_start_color="#0d47a1"
+                    app:button_radius="30dp"
+                    app:button_shadow_angle="90"
+                    app:button_shadow_color="#EE799F"
+                    app:button_shadow_distance="5dp"
+                    app:button_shadow_radius="10dp"
+                    app:button_size="10sp"
+                    app:button_start_color="#1565c0"
+                    app:button_text="@string/clearFilter"
+                    app:button_text_color="@color/white" />
+
 
             </LinearLayout>
 

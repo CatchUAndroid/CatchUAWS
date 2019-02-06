@@ -310,6 +310,10 @@ public class PhoneNumEditFragment extends BaseFragment {
                             token);
                     countryListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),

@@ -69,8 +69,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service android:name=".MainPackage.MainFragments.Share.Utils.ShareUtil"/>
+        <service android:name=".MainPackage.MainFragments.Share.Utils.ShareUtil" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -140,6 +139,10 @@
         <activity android:name=".LoginPackage.AppIntroductionActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity" />
         <activity android:name=".MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity" />
+        <activity
+            android:name=".SplashScreenActivity"
+            android:theme="@style/SplashScreenTheme"/>
+        <activity android:name=".InfoActivity"/>
     </application>
 
 </manifest>

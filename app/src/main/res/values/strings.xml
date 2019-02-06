@@ -233,10 +233,13 @@
     <string name="rememberMe">Remember Me</string>
 
     <!-- User edit constants constants-->
+    <string name="PERSONAL_INFORMATION">Personal Information</string>
     <string name="NAME">Name</string>
     <string name="BIRTHDAY">Birthday</string>
     <string name="PHONE">Phone</string>
     <string name="GENDER">Gender</string>
+    <string name="WEBSITE">Website</string>
+    <string name="ABOUT_ME">About me</string>
 
     <!-- Time constants-->
     <string name="ago">ago</string>
@@ -315,7 +318,7 @@
     <string name="ACCEPT">Accept</string>
     <string name="REJECT">Reject</string>
 
-    <string name="emptyFeed">No posts yets...</string>
+    <string name="emptyFeed">No posts yet...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>
     <string name="likes">Likes</string>
     <string name="comments">Comments</string>
@@ -323,6 +326,7 @@
     <string name="checkingAround">Checking posts around...</string>
     <string name="serverError">Amazon Server Error</string>
     <string name="locationError">Can not access your location, please check your permission settings!</string>
+    <string name="swipeDownForRefresh">Swipe down for refresh</string>
     <string name="noLikesYet">There is no likes yet!</string>
     <string name="unfollow">Unfollow</string>
     <string name="disableComment">Disable comment</string>
@@ -338,11 +342,12 @@
     <string name="clearFilter">Clear</string>
     <string name="now">Just now</string>
     <string name="feedTypePublic">Public</string>
-    <string name="feedTypeCatched">Catched</string>
+    <string name="feedTypeCatched">Catch</string>
     <string name="feedViewTypeGrid">Grid</string>
     <string name="feedViewTypeList">List</string>
-    <string name="myPosts">My Posts</string>
-    <string name="caughtPosts">Caught Posts</string>
+    <string name="sharedPosts">Shared Posts</string>
+    <string name="caughtPosts">Catch Posts</string>
+    <string name="groupPosts">Group Posts</string>
     <string name="deleteThisPost">Delete this Post?</string>
     <string name="reportPostMessage">Do you want to report this post? We will check and take an action immediately.</string>
     <string name="posts">Posts</string>
@@ -391,5 +396,13 @@
 
     <string name="FCM_SERVER_KEY">AAAA168Go7o:APA91bHDsAJ8_8KZuXmdfBztNN-TSNOQOaQO_dPv6zXbRR4KzgH-83jh6NZ05imPxnUFopz8j8wOzL9jFVLCvgcJrAVuxrNDi_vz2QowCGnQxdxotXAp93tz7z7OblJkwk7GaCuc0Ebl</string>
     <string name="title_activity_message_list">MessageListActivity</string>
+
+    <!-- Exception mesajları -->
+    <string name="opps">Opps!</string>
+    <string name="needLocationPermission2">To use CathcU enable location!</string>
+    <string name="locationSettings">Go: Settings > Connections > Location enable locatin.</string>
+
+
+
 
 </resources>

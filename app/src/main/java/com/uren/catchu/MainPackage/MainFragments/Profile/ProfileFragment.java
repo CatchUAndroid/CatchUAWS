@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +44,7 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ProfileRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
@@ -55,6 +58,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFr
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.PendingRequestsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.UserEditFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.ProfileHelper;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -65,6 +69,7 @@ import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
 import java.util.Collections;
 import java.util.Comparator;
 
+import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
@@ -72,6 +77,9 @@ import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 
+import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_BOTTOM_TOP;
+import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_LEFT_RIGHT;
+import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_TOP_BOTTOM;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
@@ -136,15 +144,9 @@ public class ProfileFragment extends BaseFragment
     RelativeLayout backLayout;
 
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    SwipeRefreshLayout refresh_layout;
 
-    //posts
-    @BindView(R.id.llMyPosts)
-    LinearLayout llMyPosts;
-    @BindView(R.id.llCatchedPosts)
-    LinearLayout llCatchedPosts;
-    @BindView(R.id.llMyGroups)
-    LinearLayout llMyGroups;
+
     @BindView(R.id.followersLayout)
     LinearLayout followersLayout;
     @BindView(R.id.followingsLayout)
@@ -157,6 +159,36 @@ public class ProfileFragment extends BaseFragment
     //Groups
     @BindView(R.id.groupRecyclerView)
     RecyclerView groupRecyclerView;
+
+    @BindView(R.id.llProfile)
+    LinearLayout llProfile;
+    @BindView(R.id.llSharedPosts)
+    LinearLayout llSharedPosts;
+    @BindView(R.id.llCatchedPosts)
+    LinearLayout llCatchedPosts;
+
+
+    @BindView(R.id.imgSharedPosts)
+    ImageView imgSharedPosts;
+    @BindView(R.id.imgCatchPosts)
+    ImageView imgCatchPosts;
+    @BindView(R.id.imgGroupPosts)
+    ImageView imgGroupPosts;
+    @BindView(R.id.imgForward1)
+    ImageView imgForward1;
+    @BindView(R.id.imgForward2)
+    ImageView imgForward2;
+
+
+    @BindView(R.id.llGroupsInfo)
+    LinearLayout llGroupsInfo;
+    @BindView(R.id.llGroupsRecycler)
+    LinearLayout llGroupsRecycler;
+    @BindView(R.id.txtGroupDetail)
+    TextView txtGroupDetail;
+    @BindView(R.id.txtEditGroup)
+    TextView txtEditGroup;
+
 
     int unreadMessageCount = 0;
     int pendingRequestCount = 0;
@@ -200,6 +232,7 @@ public class ProfileFragment extends BaseFragment
             initListeners();
             updateUI();
             setPullToRefresh();
+            setPostRefreshListener();
 
         }
 
@@ -212,17 +245,42 @@ public class ProfileFragment extends BaseFragment
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
+    private void setPostRefreshListener() {
+        ProfileHelper.ProfileRefresh.getInstance().setProfileRefreshCallback(new ProfileRefreshCallback() {
+            @Override
+            public void onProfileRefresh() {
+                CommonUtils.showToastShort(getContext(), "Profile..");
+                refreshProfile();
+            }
+        });
+    }
+
     private void initListeners() {
 
         imgUserEdit.setOnClickListener(this);
         imgProfile.setOnClickListener(this);
-
-        llMyPosts.setOnClickListener(this);
-        llCatchedPosts.setOnClickListener(this);
-
         followersLayout.setOnClickListener(this);
         followingsLayout.setOnClickListener(this);
 
+        llSharedPosts.setOnClickListener(this);
+        llCatchedPosts.setOnClickListener(this);
+        txtEditGroup.setOnClickListener(this);
+
+        //Gradients
+        llProfile.setBackground(ShapeUtil.getGradientBackgroundFromLeft(getResources().getColor(R.color.style_color_primary, null),
+                getResources().getColor(R.color.fab_color_pressed, null), ORIENTATION_TOP_BOTTOM, 0));
+
+
+        imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.style_color_primary), android.graphics.PorterDuff.Mode.SRC_IN);
+        //img2.setColorFilter(ContextCompat.getColor(getContext(), R.color.style_color_primary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgGroupPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.style_color_primary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgForward1.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgForward2.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+
+
+        //group layout
+        llGroupsRecycler.setVisibility(View.GONE);
+        llGroupsInfo.setVisibility(View.VISIBLE);
     }
 
     private void updateUI() {
@@ -252,18 +310,26 @@ public class ProfileFragment extends BaseFragment
 
     private void setPullToRefresh() {
 
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                AccountHolderInfo.getToken(new TokenCallback() {
-                    @Override
-                    public void onTokenTaken(String token) {
-                        startGetProfileDetail(AccountHolderInfo.getUserID(), token);
-                    }
-                });
-                getGroupsHere();
+                refreshProfile();
             }
         });
+    }
+
+    private void refreshProfile() {
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                startGetProfileDetail(AccountHolderInfo.getUserID(), token);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
+        });
+        getGroupsHere();
     }
 
     private void checkBundle() {
@@ -274,6 +340,7 @@ public class ProfileFragment extends BaseFragment
                 //if not coming from Tab, edits disabled..
                 imgUserEdit.setVisibility(View.GONE);
                 menuLayout.setVisibility(View.GONE);
+                txtEditGroup.setVisibility(View.GONE);
                 backLayout.setVisibility(View.VISIBLE);
                 imgBackBtn.setOnClickListener(this);
             }
@@ -503,7 +570,7 @@ public class ProfileFragment extends BaseFragment
                         pendingRequestCount = friendRequestList.getResultArray().size();
                         requestWaitingCntTv.setVisibility(View.VISIBLE);
                         requestWaitingCntTv.setText(Integer.toString(pendingRequestCount));
-                    }else
+                    } else
                         pendingRequestCount = 0;
 
                     if (navPendReqCntTv != null) {
@@ -533,6 +600,11 @@ public class ProfileFragment extends BaseFragment
                 @Override
                 public void onTokenTaken(String token) {
                     startGetProfileDetail(userID, token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
+                    refresh_layout.setRefreshing(false);
                 }
             });
 
@@ -582,15 +654,14 @@ public class ProfileFragment extends BaseFragment
 
         if (groupListHolderInstance != null && groupListHolderInstance.getGroupList() != null) {
             GroupRequestResult groupRequestResult = groupListHolderInstance.getGroupList();
-            if (groupRequestResult != null && groupRequestResult.getResultArray() != null &&
-                    groupRequestResult.getResultArray().size() > 0) {
-                CommonUtils.showToastShort(getContext(), "grupları singletondan hemen aldım");
+            if (groupRequestResult != null && groupRequestResult.getResultArray() != null) {
+                //CommonUtils.showToastShort(getContext(), "grupları singletondan hemen aldım");
                 setGroupRecyclerView(groupRequestResult);
             } else {
                 GroupListHolder.setGroupListHolderCallback(new GroupListHolderCallback() {
                     @Override
                     public void onGroupListInfoTaken(GroupRequestResult groupRequestResult) {
-                        CommonUtils.showToastShort(getContext(), "grupları singletondan Callback ile aldım");
+                        //CommonUtils.showToastShort(getContext(), "grupları singletondan Callback ile aldım");
                         setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
                     }
                 });
@@ -607,7 +678,7 @@ public class ProfileFragment extends BaseFragment
                 new CompleteCallback() {
                     @Override
                     public void onComplete(Object object) {
-                        CommonUtils.showToastShort(getContext(), "grupları bu sayfadan aldım- Not singleton");
+                        //CommonUtils.showToastShort(getContext(), "grupları bu sayfadan aldım- Not singleton");
                         GroupRequestResult groupRequestResult = (GroupRequestResult) object;
                         setGroupRecyclerView(groupRequestResult);
                     }
@@ -639,6 +710,16 @@ public class ProfileFragment extends BaseFragment
         GroupsListAdapter groupsListAdapter = new GroupsListAdapter(getContext(), mFragmentNavigation, groupRequestResult);
         groupRecyclerView.setAdapter(groupsListAdapter);
 
+        //group layout
+        if (groupRequestResult.getResultArray().size() > 0) {
+            llGroupsInfo.setVisibility(View.GONE);
+            llGroupsRecycler.setVisibility(View.VISIBLE);
+        } else {
+            llGroupsInfo.setVisibility(View.VISIBLE);
+            llGroupsRecycler.setVisibility(View.GONE);
+            txtGroupDetail.setText("Henüz grubunuz bulunmamaktadır.");
+        }
+
     }
 
     private void orderGroupByName(GroupRequestResult groupRequestResult) {
@@ -664,9 +745,9 @@ public class ProfileFragment extends BaseFragment
             getActivity().onBackPressed();
         }
 
-        if (v == llMyPosts) {
+        if (v == llSharedPosts) {
             String targetUid = AccountHolderInfo.getUserID();
-            String toolbarTitle = getContext().getResources().getString(R.string.myPosts);
+            String toolbarTitle = getContext().getResources().getString(R.string.sharedPosts);
             mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
@@ -686,11 +767,15 @@ public class ProfileFragment extends BaseFragment
             followerClicked();
         }
 
-        if(v == imgProfile){
-            if(myProfile != null && myProfile.getUserInfo() != null && myProfile.getUserInfo().getProfilePhotoUrl() != null &&
-                    !myProfile.getUserInfo().getProfilePhotoUrl().isEmpty()){
+        if (v == imgProfile) {
+            if (myProfile != null && myProfile.getUserInfo() != null && myProfile.getUserInfo().getProfilePhotoUrl() != null &&
+                    !myProfile.getUserInfo().getProfilePhotoUrl().isEmpty()) {
                 mFragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(myProfile.getUserInfo().getProfilePhotoUrl()));
             }
+        }
+
+        if(v == txtEditGroup){
+            startGroupSettingFragment();
         }
     }
 

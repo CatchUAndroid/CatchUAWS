@@ -206,10 +206,13 @@
     <string name="rememberMe">Beni Hatırla</string>
 
     <!-- User edit constants constants-->
+    <string name="PERSONAL_INFORMATION">Kişisel Bilgilerim</string>
     <string name="NAME">İsim</string>
     <string name="BIRTHDAY">Doğum günü</string>
     <string name="PHONE">Telefon</string>
     <string name="GENDER">Cinsiyet</string>
+    <string name="WEBSITE">Website</string>
+    <string name="ABOUT_ME">Hakkımda</string>
 
     // Mesajlar-Uyarılar
     <string name="UNKNOWN_ERROR">İşlem tamamlanamadı!</string>
@@ -278,13 +281,14 @@
     <string name="ACCEPT">Onayla</string>
     <string name="REJECT">Reddet</string>
 
-    <string name="emptyFeed">Henüz çevrede herhangi bir paylaşım yapılmadı...</string>
+    <string name="emptyFeed">Çevrede paylaşım bulunamadı..</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfen Ayarlar\'dan konum izinlerini aktifleştirin.</string>
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
     <string name="loading">Yükleniyor...</string>
     <string name="checkingAround">Etrafınızdaki paylaşımlar aranıyor...</string>
     <string name="locationError">Konumunuza erişim sağlanamıyor, lütfen lokasyon ayarlarınızı kontrol ediniz...</string>
+    <string name="swipeDownForRefresh">Yenilemek için aşağı sürükleyin.</string>
     <string name="noLikesYet">Henüz beğeni yok!</string>
     <string name="unfollow">Takibi bırak</string>
     <string name="disableComment">Yorum yapmayı kapat</string>
@@ -303,8 +307,9 @@
     <string name="feedTypeCatched">Catched</string>
     <string name="feedViewTypeGrid">Izgara</string>
     <string name="feedViewTypeList">Liste</string>
-    <string name="myPosts">Paylaşımlarım</string>
-    <string name="caughtPosts">Yakaladığım paylaşımlar</string>
+    <string name="sharedPosts">Paylaşımlarım</string>
+    <string name="caughtPosts">Catch ettiklerim</string>
+    <string name="groupPosts">Grup paylaşımları</string>
     <string name="deleteThisPost">Bu paylaşımı sil?</string>
     <string name="reportPostMessage">Bu paylaşımı şikayet etmek istiyor musunuz? Ekibimiz değerlendirip, uygunsuzsa kaldıracaklardır.</string>
     <string name="posts">Paylaşımlar</string>
@@ -337,4 +342,10 @@
         <item>Kasım</item>
         <item>Aralık</item>
     </array>
+
+    <!-- Exception mesajları -->
+    <string name="opps">Hoppala!</string>
+    <string name="needLocationPermission2">Catchu\yu kullanabilmek için konumunu etkinleştirmelisin.</string>
+    <string name="locationSettings">Şuraya git: Ayarlar > Bağlantılar > Konum servisini açık hale getir.</string>
+
 </resources>

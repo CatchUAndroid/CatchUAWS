@@ -48,7 +48,7 @@ public class PersonListFragment extends BaseFragment
     String postId;
     String comingFor;
     String page = "1";
-    String perPage = "500";
+    String perPage = "5000";
 
     @BindView(R.id.personList_recyclerView)
     RecyclerView personList_recyclerView;
@@ -92,7 +92,7 @@ public class PersonListFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void getItemsFromBundle() {
@@ -119,12 +119,9 @@ public class PersonListFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == commonToolbarbackImgv) {
-
             ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
-
         }
-
 
     }
 
@@ -145,6 +142,10 @@ public class PersonListFragment extends BaseFragment
 
                 }
 
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
 
         });

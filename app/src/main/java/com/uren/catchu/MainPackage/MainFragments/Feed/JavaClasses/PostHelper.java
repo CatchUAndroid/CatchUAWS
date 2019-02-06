@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.arsy.maps_library.MapRipple;
 import com.bumptech.glide.Glide;
+import com.fasterxml.jackson.databind.ser.Serializers;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -32,11 +33,17 @@ import com.uren.catchu.ApiGatewayFunctions.PostDeleteProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
 import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
+import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
@@ -48,6 +55,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFra
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -70,6 +78,13 @@ import catchu.model.User;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
+import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
@@ -99,6 +114,10 @@ public class PostHelper {
                 @Override
                 public void onTokenTaken(String token) {
                     startPostLikeClickedProcess(context, token);
+                }
+
+                @Override
+                public void onTokenFail(String message) {
                 }
             });
 
@@ -433,6 +452,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startPostAddCommentProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -501,6 +524,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startPostCommentPermissionProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -568,6 +595,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startDeletePostProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -630,6 +661,10 @@ public class PostHelper {
                 public void onTokenTaken(String token) {
                     startDeletePostProcess(context, token);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         }
 
@@ -666,6 +701,49 @@ public class PostHelper {
 
     }
 
+    public static class UpdateFollowStatus {
+
+        static String userId;
+        static String requestedUserId;
+        static String requestTYpe;
+
+        public static final void startProcess(Context context, String userId, String requestedUserId, String requestTYpe) {
+
+            UpdateFollowStatus.userId = userId;
+            UpdateFollowStatus.requestedUserId = requestedUserId;
+            UpdateFollowStatus.requestTYpe = requestTYpe;
+
+            UpdateFollowStatus updateFollowStatus = new UpdateFollowStatus(context);
+        }
+
+        private UpdateFollowStatus(final Context context) {
+
+            try {
+                AccountHolderFollowProcess.friendFollowRequest(requestTYpe, userId
+                        , requestedUserId, new CompleteCallback() {
+                            @Override
+                            public void onComplete(Object object) {
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+                                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                    @Override
+                                    public void okClick() {
+                                    }
+                                });
+                            }
+                        });
+            } catch (Exception e) {
+                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
+                        new Object() {
+                        }.getClass().getEnclosingMethod().getName(), e.toString());
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
     public static class SinglePostClicked {
 
@@ -752,7 +830,7 @@ public class PostHelper {
             return instance;
         }
 
-        public static void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
+        public void setFeedRefreshCallback(FeedRefreshCallback feedRefreshCallback) {
             feedRefreshCallbackList.add(feedRefreshCallback);
         }
 
@@ -766,6 +844,23 @@ public class PostHelper {
 
     }
 
+    public static class InitFeed {
+
+        private static FeedFragment feedFragment = null;
+        private static List<FeedRefreshCallback> feedRefreshCallbackList;
+
+        public InitFeed() {
+        }
+
+        public static void setFeedFragment(FeedFragment fragment) {
+            feedFragment = fragment;
+        }
+
+        public static FeedFragment getFeedFragment() {
+           return feedFragment;
+        }
+
+    }
 
     public static class Utils {
 

@@ -19,6 +19,7 @@ import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.Constants.Error;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.LoginPackage.LoginActivity;
@@ -81,6 +82,10 @@ public class AccountHolderInfo {
             public void onTokenTaken(String token) {
                 startGetProfileDetail(userid, token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -138,6 +143,7 @@ public class AccountHolderInfo {
             if (NextActivity.thisActivity != null) {
                 if (!CommonUtils.isNetworkConnected(NextActivity.thisActivity)) {
                     CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
+                    tokenCallback.onTokenFail(Error.NO_NETWORK_CONN.toString());
                     return;
                 }
             }

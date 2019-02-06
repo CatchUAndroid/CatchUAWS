@@ -40,6 +40,10 @@ import static com.uren.catchu.Constants.NumericConstants.CODE_PLAY_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.CODE_SCREENSHOT_POSITION;
 import static com.uren.catchu.Constants.NumericConstants.CODE_VIDEO_REMOVE;
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_ENABLE_LOCATION;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_OWN;
+import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
 import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 
 public class DialogBoxUtil {
@@ -514,17 +518,17 @@ public class DialogBoxUtil {
 
         String followElement = "notValid";
         String currentFollowStatus = post.getUser().getFollowStatus();
- /*
- if(currentFollowStatus.equals(FOLLOW_STATUS_FOLLOWING)){
- followElement = context.getResources().getString(R.string.unfollow);
- }else if(currentFollowStatus.equals(FOLLOW_STATUS_PENDING)){
- followElement = "notValid";
- } else if(currentFollowStatus.equals(FOLLOW_STATUS_OWN)){
- followElement = "notValid";
- }else if(currentFollowStatus.equals(FOLLOW_STATUS_NONE)){
- followElement = context.getResources().getString(R.string.follow);
- }
- */
+/*
+        if (currentFollowStatus.equals(FOLLOW_STATUS_FOLLOWING)) {
+            followElement = context.getResources().getString(R.string.unfollow);
+        } else if (currentFollowStatus.equals(FOLLOW_STATUS_PENDING)) {
+            followElement = "notValid";
+        } else if (currentFollowStatus.equals(FOLLOW_STATUS_OWN)) {
+            followElement = "notValid";
+        } else if (currentFollowStatus.equals(FOLLOW_STATUS_NONE)) {
+            followElement = context.getResources().getString(R.string.follow);
+        }
+*/
         return followElement;
 
     }

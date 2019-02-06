@@ -77,6 +77,10 @@ public class GroupListHolder {
             public void onTokenTaken(String token) {
                 startGetGroupList(userid, token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
         });
     }
 
@@ -90,12 +94,17 @@ public class GroupListHolder {
 
             @Override
             public void onSuccess(GroupRequestResult groupRequestResult1) {
-                if (groupRequestResult1 != null) {
+
+                if(groupRequestResult1 == null){
+                    CommonUtils.LOG_OK_BUT_NULL("GroupResultProcess");
+                }else{
+                    CommonUtils.LOG_OK("GroupResultProcess");
                     groupRequestResult = groupRequestResult1;
                     if (groupListHolderCallback != null) {
                         groupListHolderCallback.onGroupListInfoTaken(groupRequestResult);
                     }
                 }
+
             }
 
             @Override

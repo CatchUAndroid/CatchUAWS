@@ -40,6 +40,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapter
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.ProfileHelper;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
@@ -286,6 +287,7 @@ public class AddGroupFragment extends BaseFragment {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            ProfileHelper.ProfileRefresh.profileRefreshStart(); // grup eklendikçe profil sayfası güncellenir.
                             completeCallback.onComplete(object);
                             getActivity().onBackPressed();
                         }

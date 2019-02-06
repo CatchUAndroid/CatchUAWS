@@ -3,12 +3,16 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,6 +32,8 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.TransitionHelper;
+import com.uren.catchu.InfoActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
@@ -56,6 +62,7 @@ import catchu.model.UserProfile;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
+import static com.uren.catchu.Constants.NumericConstants.VIEW_RETRY;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
@@ -75,7 +82,7 @@ public class OtherProfileFragment extends BaseFragment
 
     //Refresh layout
     @BindView(R.id.refresh_layout)
-    RecyclerRefreshLayout refresh_layout;
+    SwipeRefreshLayout refresh_layout;
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -195,7 +202,7 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setPullToRefresh() {
 
-        refresh_layout.setOnRefreshListener(new RecyclerRefreshLayout.OnRefreshListener() {
+        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 pulledToRefreshHeader = true;
@@ -262,6 +269,11 @@ public class OtherProfileFragment extends BaseFragment
             public void onTokenTaken(String token) {
                 startGetUserInfo(token);
             }
+
+            @Override
+            public void onTokenFail(String message) {
+                refresh_layout.setRefreshing(false);
+            }
         });
     }
 
@@ -315,11 +327,13 @@ public class OtherProfileFragment extends BaseFragment
 
     private void checkCanGetLocation() {
 
-        if (!locationTrackObj.canGetLocation())
-            //gps ve network provider olup olmadığı kontrol edilir
-            //todo NT - gps kapatıldığında case'i handle et
-            DialogBoxUtil.showSettingsAlert(getActivity());
-        else {
+        if (!locationTrackObj.canGetLocation()) {
+            refresh_layout.setRefreshing(false);
+            final int TYPE_XML = 1;
+            Intent i = new Intent(getActivity(), InfoActivity.class);
+            i.putExtra("EXTRA_TYPE", TYPE_XML);
+            transitionTo(i);
+        } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
                 if (permissionModule.checkAccessFineLocationPermission()) {
@@ -332,6 +346,13 @@ public class OtherProfileFragment extends BaseFragment
                 getPosts();
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    void transitionTo(Intent i) {
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
+        startActivity(i, transitionActivityOptions.toBundle());
     }
 
     @Override
@@ -381,6 +402,10 @@ public class OtherProfileFragment extends BaseFragment
                     });
                     refresh_layout.setRefreshing(false);
                 }
+            }
+
+            @Override
+            public void onTokenFail(String message) {
             }
         });
     }

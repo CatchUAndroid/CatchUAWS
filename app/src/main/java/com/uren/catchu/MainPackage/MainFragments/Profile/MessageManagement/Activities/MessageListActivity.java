@@ -283,6 +283,10 @@ public class MessageListActivity extends AppCompatActivity {
 
                     loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
+
+                @Override
+                public void onTokenFail(String message) {
+                }
             });
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
