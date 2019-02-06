@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -87,6 +88,7 @@ import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
 
+@SuppressLint("ValidFragment")
 public class ProfileFragment extends BaseFragment
         implements View.OnClickListener {
 
@@ -194,15 +196,18 @@ public class ProfileFragment extends BaseFragment
     int pendingRequestCount = 0;
     int waitingRequestCount = 0;
 
-    public static ProfileFragment newInstance(Boolean comingFromTab) {
+    private boolean comingFromTab;
+
+    /*public static ProfileFragment newInstance(Boolean comingFromTab) {
         Bundle args = new Bundle();
         args.putBoolean(ARGS_INSTANCE, comingFromTab);
         ProfileFragment fragment = new ProfileFragment();
         fragment.setArguments(args);
         return fragment;
-    }
+    }*/
 
-    public ProfileFragment() {
+    public ProfileFragment(boolean comingFromTab) {
+        this.comingFromTab = comingFromTab;
     }
 
     @Override
@@ -223,7 +228,7 @@ public class ProfileFragment extends BaseFragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_profile, container, false);
             ButterKnife.bind(this, mView);
-            checkBundle();
+            checkComingFrom();
 
             //Menu Layout
             setNavViewItems();
@@ -332,21 +337,16 @@ public class ProfileFragment extends BaseFragment
         getGroupsHere();
     }
 
-    private void checkBundle() {
-        Bundle args = getArguments();
-        if (args != null) {
-            Boolean comingFromTab = (Boolean) args.getBoolean(ARGS_INSTANCE);
-            if (!comingFromTab) {
-                //if not coming from Tab, edits disabled..
-                imgUserEdit.setVisibility(View.GONE);
-                menuLayout.setVisibility(View.GONE);
-                txtEditGroup.setVisibility(View.GONE);
-                backLayout.setVisibility(View.VISIBLE);
-                imgBackBtn.setOnClickListener(this);
-            }
+    private void checkComingFrom() {
+        if (!comingFromTab) {
+            //if not coming from Tab, edits disabled..
+            imgUserEdit.setVisibility(View.GONE);
+            menuLayout.setVisibility(View.GONE);
+            txtEditGroup.setVisibility(View.GONE);
+            backLayout.setVisibility(View.VISIBLE);
+            imgBackBtn.setOnClickListener(this);
         }
     }
-
 
     private void setNavViewItems() {
         View v = navViewLayout.getHeaderView(0);
