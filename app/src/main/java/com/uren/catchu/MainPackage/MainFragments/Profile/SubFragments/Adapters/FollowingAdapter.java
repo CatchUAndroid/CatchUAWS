@@ -4,6 +4,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +49,7 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 
 public class FollowingAdapter extends RecyclerView.Adapter implements Filterable {
 
+    View view;
     private Context mContext;
     private ListItemClickListener listItemClickListener;
     private List<User> userList;
@@ -94,11 +96,11 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         try {
-            if (holder instanceof FollowingAdapter.FollowingViewHolder) {
+            if (holder instanceof FollowingViewHolder) {
                 User user = userList.get(position);
-                ((FollowingAdapter.FollowingViewHolder) holder).setData(user, position);
+                ((FollowingViewHolder) holder).setData(user, position);
             } else {
-                ((FollowingAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
+                ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
             }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
@@ -119,9 +121,10 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
         User user;
         int position;
 
-        public FollowingViewHolder(View view) {
-            super(view);
+        public FollowingViewHolder(View itemView) {
+            super(itemView);
 
+            view = itemView;
             profileName = (TextView) view.findViewById(R.id.profile_name);
             profileUserName = (TextView) view.findViewById(R.id.profile_user_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
@@ -188,31 +191,17 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
 
         private void openDialogBox() {
 
-            new CustomDialogBox.Builder((Activity) mContext)
-                    .setMessage(mContext.getResources().getString(R.string.ASKING_STOP_FOLLOWING))
-                    .setTitle(mContext.getResources().getString(R.string.cancel_following))
-                    .setUser(user)
-                    .setNegativeBtnVisibility(View.VISIBLE)
-                    .setNegativeBtnText(mContext.getResources().getString(R.string.upperNo))
-                    .setNegativeBtnBackground(mContext.getResources().getColor(R.color.Silver, null))
-                    .setPositiveBtnVisibility(View.VISIBLE)
-                    .setPositiveBtnText(mContext.getResources().getString(R.string.upperYes))
-                    .setPositiveBtnBackground(mContext.getResources().getColor(R.color.DodgerBlue, null))
-                    .setTitleVisibility(View.VISIBLE)
-                    .setDurationTime(0)
-                    .isCancellable(true)
-                    .OnPositiveClicked(new CustomDialogListener() {
-                        @Override
-                        public void OnClick() {
-                            updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                        }
-                    })
-                    .OnNegativeClicked(new CustomDialogListener() {
-                        @Override
-                        public void OnClick() {
-                            btnFollowStatus.setEnabled(true);
-                        }
-                    }).build();
+            DialogBoxUtil.removeFromFollowingsDialog(mContext, user, new YesNoDialogBoxCallback() {
+                @Override
+                public void yesClick() {
+                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                }
+
+                @Override
+                public void noClick() {
+                    btnFollowStatus.setEnabled(true);
+                }
+            });
         }
 
         private void updateFollowStatus(final String requestType) {
@@ -374,7 +363,6 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
                         searchResultCallback.onReturn(userList.size());
                     else
                         searchResultCallback.onReturn(0);
-
                 } catch (Exception e) {
                     ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
                             new Object() {

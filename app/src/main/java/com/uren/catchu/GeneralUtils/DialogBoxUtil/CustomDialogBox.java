@@ -10,14 +10,17 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.uren.catchu.GeneralUtils.DataModelUtil.GroupDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.GifDialogListener;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.R;
 
+import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.User;
 
 
@@ -30,12 +33,12 @@ public class CustomDialogBox {
     private int nBtnColor;
     private int pBtnVisibleType;
     private int nBtnVisibleType;
-    private int titleVisibleType;
     private Activity activity;
     private CustomDialogListener pListener;
     private CustomDialogListener nListener;
     private boolean cancel;
     private User user;
+    private GroupRequestResultResultArrayItem group;
     private long durationTime;
 
     private CustomDialogBox(CustomDialogBox.Builder builder) {
@@ -48,10 +51,10 @@ public class CustomDialogBox {
         this.nBtnColor = builder.nBtnColor;
         this.pBtnVisibleType = builder.pBtnVisibleType;
         this.nBtnVisibleType = builder.nBtnVisibleType;
-        this.titleVisibleType = builder.titleVisibleType;
         this.positiveBtnText = builder.positiveBtnText;
         this.negativeBtnText = builder.negativeBtnText;
         this.user = builder.user;
+        this.group = builder.group;
         this.cancel = builder.cancel;
         this.durationTime = builder.durationTime;
     }
@@ -65,12 +68,12 @@ public class CustomDialogBox {
         private int nBtnColor;
         private int pBtnVisibleType;
         private int nBtnVisibleType;
-        private int titleVisibleType;
         private Activity activity;
         private CustomDialogListener pListener;
         private CustomDialogListener nListener;
         private boolean cancel;
         private User user;
+        private GroupRequestResultResultArrayItem group;
         private long durationTime;
 
         public Builder(Activity activity) {
@@ -117,11 +120,6 @@ public class CustomDialogBox {
             return this;
         }
 
-        public CustomDialogBox.Builder setTitleVisibility(int visibleType) {
-            this.titleVisibleType = visibleType;
-            return this;
-        }
-
         public CustomDialogBox.Builder setDurationTime(long durationTime) {
             this.durationTime = durationTime;
             return this;
@@ -147,6 +145,11 @@ public class CustomDialogBox {
             return this;
         }
 
+        public CustomDialogBox.Builder setGroup(GroupRequestResultResultArrayItem group) {
+            this.group = group;
+            return this;
+        }
+
         public CustomDialogBox build() {
             try {
                 final Dialog dialog = new Dialog(this.activity);
@@ -161,15 +164,35 @@ public class CustomDialogBox {
                 TextView usernameTextView = dialog.findViewById(R.id.usernameTextView);
                 Button nBtn = (Button) dialog.findViewById(R.id.negativeBtn);
                 Button pBtn = (Button) dialog.findViewById(R.id.positiveBtn);
+                RelativeLayout relativelayout1 = dialog.findViewById(R.id.relativelayout1);
 
                 nBtn.setVisibility(nBtnVisibleType);
                 pBtn.setVisibility(pBtnVisibleType);
-                title1.setText(this.title);
-                message1.setText(this.message);
 
-                UserDataUtil.setProfilePicture(this.activity, user.getProfilePhotoUrl(),
-                        user.getName(), user.getUsername(), shortUserNameTv, profilePicImgView);
-                UserDataUtil.setNameOrUserName(user.getName(), user.getUsername(), usernameTextView);
+                if (message != null && !message.isEmpty())
+                    message1.setText(this.message);
+                else
+                    message1.setVisibility(View.GONE);
+
+                if (title != null && !title.isEmpty())
+                    title1.setText(this.title);
+                else
+                    title1.setVisibility(View.GONE);
+
+                if (user != null) {
+                    UserDataUtil.setProfilePicture(this.activity, user.getProfilePhotoUrl(),
+                            user.getName(), user.getUsername(), shortUserNameTv, profilePicImgView);
+                    UserDataUtil.setNameOrUserName(user.getName(), user.getUsername(), usernameTextView);
+                } else if (group != null) {
+                    GroupDataUtil.setGroupPicture(this.activity, group.getGroupPhotoUrl(),
+                            group.getName(), shortUserNameTv, profilePicImgView);
+
+                    if (group.getName() != null && !group.getName().isEmpty())
+                        usernameTextView.setText(group.getName());
+                    else
+                        usernameTextView.setVisibility(View.GONE);
+                } else
+                    relativelayout1.setVisibility(View.GONE);
 
                 if (pBtnColor != 0) {
                     GradientDrawable bgShape = (GradientDrawable) pBtn.getBackground();

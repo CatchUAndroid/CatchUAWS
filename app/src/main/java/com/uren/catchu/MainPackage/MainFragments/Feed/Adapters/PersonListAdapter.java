@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.CardView;
@@ -14,7 +15,9 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -39,15 +42,11 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
     private Context context;
     private UserListResponse personList;
     private PersonListItemClickListener personListItemClickListener;
-    GradientDrawable imageShape;
-    GradientDrawable buttonShape;
 
     public PersonListAdapter(Context context, UserListResponse personList, PersonListItemClickListener personListItemClickListener) {
         this.context = context;
         this.personList = personList;
         this.personListItemClickListener = personListItemClickListener;
-        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                0, GradientDrawable.OVAL, 50, 0);
     }
 
     @Override
@@ -78,7 +77,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
             profileImage = (ImageView) view.findViewById(R.id.profile_image);
             btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
             cardView = (CardView) view.findViewById(R.id.card_view);
-            profileImage.setBackground(imageShape);
+            setShapes();
 
             btnFollowStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -96,6 +95,11 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
                     personListItemClickListener.onPersonListItemClicked(v, person, position);
                 }
             });
+        }
+
+        private void setShapes(){
+            profileImage.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                    0, GradientDrawable.OVAL, 50, 0));
         }
 
         public void manageFollowStatus() {
@@ -134,7 +138,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
 
         private void openDialogBox() {
 
-            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
+            DialogBoxUtil.removeFromFollowingsDialog(context, person, new YesNoDialogBoxCallback() {
                 @Override
                 public void yesClick() {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
@@ -144,9 +148,7 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
                 public void noClick() {
 
                 }
-            };
-
-            DialogBoxUtil.showYesNoDialog(context, "", context.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            });
         }
 
         private void updateFollowStatus(final String requestType) {

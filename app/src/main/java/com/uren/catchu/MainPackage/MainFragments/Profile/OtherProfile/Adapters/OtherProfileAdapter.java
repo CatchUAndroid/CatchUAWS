@@ -20,7 +20,9 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
@@ -633,7 +635,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private void openDialogBox() {
-            YesNoDialogBoxCallback yesNoDialogBoxCallback = new YesNoDialogBoxCallback() {
+
+            DialogBoxUtil.removeFromFollowingsDialog(mContext, selectedUser, new YesNoDialogBoxCallback() {
                 @Override
                 public void yesClick() {
                     updateFollowStatus(FRIEND_DELETE_FOLLOW);
@@ -641,9 +644,9 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
                 @Override
                 public void noClick() {
+
                 }
-            };
-            DialogBoxUtil.showYesNoDialog(mContext, "", mContext.getString(R.string.cancel_following), yesNoDialogBoxCallback);
+            });
         }
 
         private void informFragmentFollowStatusChanged() {
