@@ -490,6 +490,15 @@ public class CommonUtils {
         }
     }
 
+    public static void snackbarShow(View view, Context context, String message, int colorId) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(colorId, null));
+        TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(context.getResources().getColor(R.color.White, null));
+        snackbar.show();
+    }
+
     public static int getRandomColor(Context context) {
 
         Resources resources = context.getResources();

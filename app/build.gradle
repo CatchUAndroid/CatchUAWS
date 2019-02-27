@@ -131,6 +131,8 @@ dependencies {
     //rounded button
     implementation 'com.lai:buttonStyle:1.0.2'
 
+    implementation 'ja.burhanrashid52:photoeditor:0.3.3'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

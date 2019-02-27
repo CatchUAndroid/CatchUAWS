@@ -113,12 +113,16 @@
     <string name="addGroup">Yeni Grup</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
+    <string name="discard">Çıkar</string>
     <string name="giveNewName">Yeni Isim Girin</string>
     <string name="groupPhotoChanging">Değiştiriliyor...</string>
     <string name="ok">TAMAM</string>
     <string name="next">İleri</string>
     <string name="close">Kapat</string>
-
+    <string name="sure_exit_not_saving_image">resmi kaydetmeden çıkmak ister misiniz?</string>
+    <string name="image_saved_successfully">Görüntü başarıyla kaydedildi</string>
+    <string name="failed_to_save_image">Resim kaydedilemedi</string>
+    <string name="an_error_during_process">Işlem sırasında bir hata oluştu</string>
 
     <!-- Whose for will be shared -->
     <string name="publicShareText">Herkese Açik</string>
@@ -347,5 +351,13 @@
     <string name="opps">Hoppala!</string>
     <string name="needLocationPermission2">Catchu\yu kullanabilmek için konumunu etkinleştirmelisin.</string>
     <string name="locationSettings">Şuraya git: Ayarlar > Bağlantılar > Konum servisini açık hale getir.</string>
+
+    <string name="label_brush">Fırça</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Silgi</string>
+    <string name="label_text">Text</string>
+    <string name="label_filter">Filtre</string>
+    <string name="label_adjust">Hizala</string>
 
 </resources>

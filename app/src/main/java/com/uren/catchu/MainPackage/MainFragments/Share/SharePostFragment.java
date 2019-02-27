@@ -29,8 +29,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,7 +54,6 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.VideoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
@@ -75,6 +72,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupMa
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.VideoTrimmedCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.PhotoEditorFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoRecordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoTrimmerFragment;
@@ -84,7 +82,6 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
-import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.PhotoSelectedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.CheckShareItems;
@@ -1261,7 +1258,17 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void startPhotoSelectedFragment() {
         try {
             if (mFragmentNavigation != null) {
-                mFragmentNavigation.pushFragment(new PhotoSelectedFragment(photoSelectUtil, new ReturnCallback() {
+                /*mFragmentNavigation.pushFragment(new PhotoSelectedFragment(photoSelectUtil, new ReturnCallback() {
+                    @Override
+                    public void onReturn(Object object) {
+                        photoSelectUtil = (PhotoSelectUtil) object;
+                        isPhotoSelected = true;
+                        setPhotoSelectImgvFilled();
+                        fillImageShareItemBox();
+                    }
+                }));*/
+
+                mFragmentNavigation.pushFragment(new PhotoEditorFragment(photoSelectUtil, new ReturnCallback() {
                     @Override
                     public void onReturn(Object object) {
                         photoSelectUtil = (PhotoSelectUtil) object;
@@ -1270,6 +1277,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         fillImageShareItemBox();
                     }
                 }));
+
             }
         } catch (Exception e) {
             ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),

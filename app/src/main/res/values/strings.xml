@@ -138,12 +138,17 @@
     <string name="addGroup">New Group</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="discard">Discard</string>
     <string name="giveNewName">Write New Name</string>
     <string name="groupPhotoChanging">Photo is changing...</string>
     <string name="title_activity_maps">Map</string>
     <string name="ok">OK</string>
     <string name="next">Next</string>
     <string name="close">Close</string>
+    <string name="sure_exit_not_saving_image">Are you want to exit without saving image?</string>
+    <string name="image_saved_successfully">Image Saved Successfully</string>
+    <string name="failed_to_save_image">Failed to save Image</string>
+    <string name="an_error_during_process">An error occurred during the process</string>
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Settings</string>
@@ -402,6 +407,14 @@
     <string name="needLocationPermission2">To use CathcU enable location!</string>
     <string name="locationSettings">Go: Settings > Connections > Location enable locatin.</string>
 
+
+    <string name="label_brush">Brush</string>
+    <string name="label_emoji">Emoji</string>
+    <string name="label_sticker">Sticker</string>
+    <string name="label_eraser">Eraser</string>
+    <string name="label_text">Text</string>
+    <string name="label_filter">Filter</string>
+    <string name="label_adjust">Adjust</string>
 
 
 
