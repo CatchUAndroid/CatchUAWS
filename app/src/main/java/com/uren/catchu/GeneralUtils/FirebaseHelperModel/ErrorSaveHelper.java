@@ -20,6 +20,11 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_ERRORS;
 
 public class ErrorSaveHelper {
 
+    //Call like this
+    /*ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
+                    new Object() {
+    }.getClass().getEnclosingMethod().getName(), e.getMessage());*/
+
     public static void writeErrorToDB(Context context, String className, String methodName, String errMessage) {
 
         Context mContext = null;

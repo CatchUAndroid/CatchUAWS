@@ -57,7 +57,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.VideoChosenForShareCallback;
 import com.uren.catchu.GeneralUtils.FileAdapter;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -374,14 +373,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         });
     }
 
-
     private void setShapes() {
-        //cancelButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
-        //        getResources().getColor(R.color.Red, null), GradientDrawable.RECTANGLE, 60, 3));
-
-        //shareButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.RoyalBlue, null),
-        //        getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 60, 0));
-
         moreSettingsImgv.setColorFilter(this.getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
     }
 
@@ -597,12 +589,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             public void run() {
                 ShareUtil shareUtil = new ShareUtil(shareItems);
                 shareUtil.startToShare();
-
-                /*Intent intent = new Intent(getContext(), ShareUtil.class);
-                intent.putExtra("ShareItems", shareItems);
-                getContext().startService(intent);*/
-
-
             }
         }, 300);
     }
@@ -766,132 +752,96 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public String getSelectedFriendsText() {
         String returnText = "";
-        try {
-            if (SelectedFriendList.getInstance().getSize() > 1) {
+        if (SelectedFriendList.getInstance().getSize() > 1) {
 
-                if (SelectedFriendList.getInstance().getFriend(0) != null) {
+            if (SelectedFriendList.getInstance().getFriend(0) != null) {
 
-                    if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
-                            !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
-                        returnText = SelectedFriendList.getInstance().getFriend(0).getName() + " +" +
-                                Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
-                    } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
-                            !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
-                        returnText = SelectedFriendList.getInstance().getFriend(0).getUsername() + " +" +
-                                Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
-                    }
-                }
-            } else {
-                if (SelectedFriendList.getInstance().getFriend(0) != null) {
-
-                    if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
-                            !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
-                        returnText = SelectedFriendList.getInstance().getFriend(0).getName();
-                    } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
-                            !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
-                        returnText = SelectedFriendList.getInstance().getFriend(0).getUsername();
-                    }
+                if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
+                        !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
+                    returnText = SelectedFriendList.getInstance().getFriend(0).getName() + " +" +
+                            Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
+                } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
+                        !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
+                    returnText = SelectedFriendList.getInstance().getFriend(0).getUsername() + " +" +
+                            Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
                 }
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        } else {
+            if (SelectedFriendList.getInstance().getFriend(0) != null) {
+
+                if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
+                        !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
+                    returnText = SelectedFriendList.getInstance().getFriend(0).getName();
+                } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
+                        !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
+                    returnText = SelectedFriendList.getInstance().getFriend(0).getUsername();
+                }
+            }
         }
 
         return returnText;
     }
 
     private void checkGalleryProcess() {
-        try {
-            if (permissionModule.checkWriteExternalStoragePermission()) {
-                if (selectedShareType.equals(IMAGE_TYPE))
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                            getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
-                else if (selectedShareType.equals(VIDEO_TYPE))
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
-                            getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
-            } else
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (permissionModule.checkWriteExternalStoragePermission()) {
+            if (selectedShareType.equals(IMAGE_TYPE))
+                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                        getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
+            else if (selectedShareType.equals(VIDEO_TYPE))
+                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
+                        getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
+        } else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     private void checkCameraProcess() {
-        try {
-            if (!CommonUtils.checkCameraHardware(getContext())) {
-                CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
-                return;
-            }
-
-            if (permissionModule.checkCameraPermission() && permissionModule.checkWriteExternalStoragePermission())
-                openCameraForPhotoSelect();
-            else if (permissionModule.checkCameraPermission())
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-            else if (permissionModule.checkWriteExternalStoragePermission())
-                requestPermissions(new String[]{Manifest.permission.CAMERA},
-                        permissionModule.PERMISSION_CAMERA);
-            else
-                requestPermissions(new String[]{Manifest.permission.CAMERA},
-                        permissionModule.PERMISSION_CAMERA);
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (!CommonUtils.checkCameraHardware(getContext())) {
+            CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
+            return;
         }
+
+        if (permissionModule.checkCameraPermission() && permissionModule.checkWriteExternalStoragePermission())
+            openCameraForPhotoSelect();
+        else if (permissionModule.checkCameraPermission())
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+        else if (permissionModule.checkWriteExternalStoragePermission())
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    permissionModule.PERMISSION_CAMERA);
+        else
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    permissionModule.PERMISSION_CAMERA);
     }
 
     public void openCameraForPhotoSelect() {
-        try {
-            photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
-                    FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
+        photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
+                FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
 
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) MAX_IMAGE_SIZE_1MB);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-            startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) MAX_IMAGE_SIZE_1MB);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        startActivityForResult(intent, REQUEST_CODE_PHOTO_CAMERA_SELECT);
     }
 
     private void getUserInfo() {
 
-        try {
-            if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
-                    AccountHolderInfo.getInstance().getUser().getUserInfo() != null)
-                setToolbarInfo(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
-                        AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
-                        AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
-            else {
-                AccountHolderInfo.getToken(new TokenCallback() {
-                    @Override
-                    public void onTokenTaken(String token) {
-                        getProfileDetail(token);
-                    }
+        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getInstance().getUser() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo() != null)
+            setToolbarInfo(AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
+                    AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername());
+        else {
+            AccountHolderInfo.getToken(new TokenCallback() {
+                @Override
+                public void onTokenTaken(String token) {
+                    getProfileDetail(token);
+                }
 
-                    @Override
-                    public void onTokenFail(String message) {
-                    }
-                });
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+                @Override
+                public void onTokenFail(String message) {
+                }
+            });
         }
     }
 
@@ -924,63 +874,42 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setToolbarInfo(String url, String name, String username) {
-        try {
-            UserDataUtil.setProfilePicture(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
+        UserDataUtil.setProfilePicture(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
 
-            if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
-                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
-                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
-                    UserDataUtil.setName(AccountHolderInfo.getInstance().getUser().getUserInfo().getName(), toolbarTitle);
-                }
-
-                if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
-                        !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
-                    UserDataUtil.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
-                }
+        if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
+            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getName().isEmpty()) {
+                UserDataUtil.setName(AccountHolderInfo.getInstance().getUser().getUserInfo().getName(), toolbarTitle);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+
+            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername().isEmpty()) {
+                UserDataUtil.setUsername(AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(), toolbarSubTitle);
+            }
         }
     }
 
     public void setMapView() {
-        try {
-            if (mapView != null) {
-                mapView.onCreate(null);
-                mapView.onResume();
-                mapView.getMapAsync(this);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (mapView != null) {
+            mapView.onCreate(null);
+            mapView.onResume();
+            mapView.getMapAsync(this);
         }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        try {
-            mMap = googleMap;
+        mMap = googleMap;
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (permissionModule.checkAccessFineLocationPermission())
-                    initializeMap(mMap);
-                else
-                    requestPermissions(
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
-            } else
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (permissionModule.checkAccessFineLocationPermission())
                 initializeMap(mMap);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+            else
+                requestPermissions(
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
+        } else
+            initializeMap(mMap);
     }
 
     @Override
@@ -1041,27 +970,20 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void checkVideoDuration(Intent data) {
         if (data == null) return;
-        try {
-            Uri uri = data.getData();
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(UriAdapter.getPathFromGalleryUri((Activity) getContext(), uri));
-            String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
-            long timeInMillisec = Long.parseLong(time);
+        Uri uri = data.getData();
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(UriAdapter.getPathFromGalleryUri((Activity) getContext(), uri));
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInMillisec = Long.parseLong(time);
 
-            if (timeInMillisec > ((MAX_VIDEO_DURATION + 1) * 1000)) {
-                startVideoTrimmerFragment(data.getData());
-            } else {
-                isVideoSelected = true;
-                videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, false);
-                addVideoShareItemList();
-                setVideoSelectImgvFilled();
-                startVideoViewFragment();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            CommonUtils.showToastShort(getContext(), getResources().getString(R.string.SOMETHING_WENT_WRONG));
+        if (timeInMillisec > ((MAX_VIDEO_DURATION + 1) * 1000)) {
+            startVideoTrimmerFragment(data.getData());
+        } else {
+            isVideoSelected = true;
+            videoSelectUtil = new VideoSelectUtil(getActivity(), data.getData(), null, false);
+            addVideoShareItemList();
+            setVideoSelectImgvFilled();
+            startVideoViewFragment();
         }
     }
 
@@ -1078,144 +1000,95 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void addVideoShareItemList() {
-        try {
-            shareItems.clearVideoShareItemBox();
-            VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
-            shareItems.addVideoShareItemBox(videoShareItemBox);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        shareItems.clearVideoShareItemBox();
+        VideoShareItemBox videoShareItemBox = new VideoShareItemBox(videoSelectUtil);
+        shareItems.addVideoShareItemBox(videoShareItemBox);
     }
 
     public void startVideoViewFragment() {
-        try {
-            if (mFragmentNavigation != null) {
-                mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri(),
-                        new PermissionCallback() {
-                            @Override
-                            public void OnPermGranted() {
+        if (mFragmentNavigation != null) {
+            mFragmentNavigation.pushFragment(new VideoViewFragment(videoSelectUtil.getVideoUri(),
+                    new PermissionCallback() {
+                        @Override
+                        public void OnPermGranted() {
 
-                            }
+                        }
 
-                            @Override
-                            public void OnPermNotAllowed() {
-                                ShareDeleteProcess.deleteSharedVideo(getContext(), permissionModule, shareItems);
-                                videoSelectUtil = null;
-                                isVideoSelected = false;
-                                shareItems.clearVideoShareItemBox();
-                                clearVideoSelectImgvFilled();
-                            }
-                        }), ANIMATE_RIGHT_TO_LEFT);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+                        @Override
+                        public void OnPermNotAllowed() {
+                            ShareDeleteProcess.deleteSharedVideo(getContext(), permissionModule, shareItems);
+                            videoSelectUtil = null;
+                            isVideoSelected = false;
+                            shareItems.clearVideoShareItemBox();
+                            clearVideoSelectImgvFilled();
+                        }
+                    }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
     private void initializeMap(final GoogleMap mMap) {
-        try {
-            if (mMap != null) {
-                mMap.getUiSettings().setScrollGesturesEnabled(true);
-                mMap.getUiSettings().setAllGesturesEnabled(true);
+        if (mMap != null) {
+            mMap.getUiSettings().setScrollGesturesEnabled(true);
+            mMap.getUiSettings().setAllGesturesEnabled(true);
 
-                if (permissionModule.checkAccessFineLocationPermission())
-                    mMap.setMyLocationEnabled(true);
+            if (permissionModule.checkAccessFineLocationPermission())
+                mMap.setMyLocationEnabled(true);
 
-                Location location = locationTrackObj.getLocation();
-                if (location != null) {
-                    setShareItemsLocation(location);
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            Location location = locationTrackObj.getLocation();
+            if (location != null) {
+                setShareItemsLocation(location);
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                    MarkerOptions options = new MarkerOptions().position(latLng);
-                    Bitmap bitmap = BitmapConversion.createUserMapBitmap(getContext(), profilePicImgView);
+                MarkerOptions options = new MarkerOptions().position(latLng);
+                Bitmap bitmap = BitmapConversion.createUserMapBitmap(getContext(), profilePicImgView);
 
-                    if (bitmap != null) {
-                        options.title(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-                        options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
-                        options.anchor(0.5f, 0.907f);
-                        mMap.addMarker(options);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    } else
-                        mapRipple = new MapRipple(mMap, latLng, getContext());
+                if (bitmap != null) {
+                    options.title(AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+                    options.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                    options.anchor(0.5f, 0.907f);
+                    mMap.addMarker(options);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                } else
+                    mapRipple = new MapRipple(mMap, latLng, getContext());
 
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
-                            LatLng(location.getLatitude(),
-                            location.getLongitude()), 12));
-                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
+                        LatLng(location.getLatitude(),
+                        location.getLongitude()), 12));
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     public void setShareItemsLocation(Location location) {
-        try {
-            catchu.model.Location tempLoc = new catchu.model.Location();
-            tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-            tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-            shareItems.getPost().setLocation(tempLoc);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        catchu.model.Location tempLoc = new catchu.model.Location();
+        tempLoc.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+        tempLoc.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+        shareItems.getPost().setLocation(tempLoc);
     }
 
     public void fillImageShareItemBox() {
-        try {
-            ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
-            shareItems.clearImageShareItemBox();
-            shareItems.addImageShareItemBox(imageShareItemBox);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        ImageShareItemBox imageShareItemBox = new ImageShareItemBox(photoSelectUtil);
+        shareItems.clearImageShareItemBox();
+        shareItems.addImageShareItemBox(imageShareItemBox);
     }
 
     private void initLocationTracker() {
-        try {
-            locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    catchu.model.Location locationModel = new catchu.model.Location();
-                    locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
-                    locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
-                    shareItems.getPost().setLocation(locationModel);
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        locationTrackObj = new LocationTrackerAdapter(getContext(), new LocationCallback() {
+            @Override
+            public void onLocationChanged(Location location) {
+                catchu.model.Location locationModel = new catchu.model.Location();
+                locationModel.setLatitude(BigDecimal.valueOf(location.getLatitude()));
+                locationModel.setLongitude(BigDecimal.valueOf(location.getLongitude()));
+                shareItems.getPost().setLocation(locationModel);
+            }
+        });
     }
 
     private void checkCanGetLocation() {
-        try {
-            if (locationTrackObj != null && !locationTrackObj.canGetLocation()){
-                final int TYPE_XML = 1;
-                Intent i = new Intent(getActivity(), InfoActivity.class);
-                i.putExtra("EXTRA_TYPE", TYPE_XML);
-                transitionTo(i);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (locationTrackObj != null && !locationTrackObj.canGetLocation()) {
+            final int TYPE_XML = 1;
+            Intent i = new Intent(getActivity(), InfoActivity.class);
+            i.putExtra("EXTRA_TYPE", TYPE_XML);
+            transitionTo(i);
         }
     }
 
@@ -1229,35 +1102,20 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onStop() {
         super.onStop();
-        try {
-            if (locationManager != null)
-                locationManager.removeUpdates(locationTrackObj);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (locationManager != null)
+            locationManager.removeUpdates(locationTrackObj);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        try {
-            keyboardHeightProvider.setKeyboardHeightObserver(null);
-            if (locationManager != null)
-                locationManager.removeUpdates(locationTrackObj);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        keyboardHeightProvider.setKeyboardHeightObserver(null);
+        if (locationManager != null)
+            locationManager.removeUpdates(locationTrackObj);
     }
 
     public void startPhotoSelectedFragment() {
-        try {
-            if (mFragmentNavigation != null) {
+        if (mFragmentNavigation != null) {
                 /*mFragmentNavigation.pushFragment(new PhotoSelectedFragment(photoSelectUtil, new ReturnCallback() {
                     @Override
                     public void onReturn(Object object) {
@@ -1268,149 +1126,80 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     }
                 }));*/
 
-                mFragmentNavigation.pushFragment(new PhotoEditorFragment(photoSelectUtil, new ReturnCallback() {
-                    @Override
-                    public void onReturn(Object object) {
-                        photoSelectUtil = (PhotoSelectUtil) object;
-                        isPhotoSelected = true;
-                        setPhotoSelectImgvFilled();
-                        fillImageShareItemBox();
-                    }
-                }));
+            mFragmentNavigation.pushFragment(new PhotoEditorFragment(photoSelectUtil, new ReturnCallback() {
+                @Override
+                public void onReturn(Object object) {
+                    photoSelectUtil = (PhotoSelectUtil) object;
+                    isPhotoSelected = true;
+                    setPhotoSelectImgvFilled();
+                    fillImageShareItemBox();
+                }
+            }));
 
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
 
     private void setWhomItemsImgvFilled() {
-        try {
-            publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-            allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-            specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-            groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-            justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
     }
 
     public void setPhotoSelectImgvFilled() {
-        try {
-            photoSelectImgv.setBackground(ShapeUtil.getShape(0,
-                    getContext().getResources().getColor(R.color.RoyalBlue, null),
-                    GradientDrawable.OVAL, 50, 3));
-            photoCheckedImgv.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        photoSelectImgv.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                GradientDrawable.OVAL, 50, 3));
+        photoCheckedImgv.setVisibility(View.VISIBLE);
     }
 
     public void setVideoSelectImgvFilled() {
-        try {
-            videoSelectImgv.setBackground(ShapeUtil.getShape(0,
-                    getContext().getResources().getColor(R.color.RoyalBlue, null),
-                    GradientDrawable.OVAL, 50, 3));
-            videoCheckedImgv.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        videoSelectImgv.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                GradientDrawable.OVAL, 50, 3));
+        videoCheckedImgv.setVisibility(View.VISIBLE);
     }
 
     public void setTextSelectImgvFilled() {
-        try {
-            textSelectImgv.setBackground(ShapeUtil.getShape(0,
-                    getContext().getResources().getColor(R.color.RoyalBlue, null),
-                    GradientDrawable.OVAL, 50, 3));
-            textCheckedImgv.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        textSelectImgv.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                GradientDrawable.OVAL, 50, 3));
+        textCheckedImgv.setVisibility(View.VISIBLE);
     }
 
     public void clearPhotoSelectImgvFilled() {
-        try {
-            photoSelectImgv.setBackground(null);
-            photoCheckedImgv.setVisibility(View.GONE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        photoSelectImgv.setBackground(null);
+        photoCheckedImgv.setVisibility(View.GONE);
     }
 
     public void clearVideoSelectImgvFilled() {
-        try {
-            videoSelectImgv.setBackground(null);
-            videoCheckedImgv.setVisibility(View.GONE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        videoSelectImgv.setBackground(null);
+        videoCheckedImgv.setVisibility(View.GONE);
     }
 
     public void clearTextSelectImgvFilled() {
-        try {
-            textSelectImgv.setBackground(null);
-            textCheckedImgv.setVisibility(View.GONE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        textSelectImgv.setBackground(null);
+        textCheckedImgv.setVisibility(View.GONE);
     }
 
     @Override
     public void onKeyboardHeightChanged(int height, int orientation) {
-        try {
-            String or = orientation == Configuration.ORIENTATION_PORTRAIT ? "portrait" : "landscape";
+        String or = orientation == Configuration.ORIENTATION_PORTRAIT ? "portrait" : "landscape";
 
-            if (height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
-                params.height = height;
-                mapLayout.setLayoutParams(params);
-                keyboardResized = true;
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
+            params.height = height;
+            mapLayout.setLayoutParams(params);
+            keyboardResized = true;
         }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            if (keyboardHeightProvider != null)
-                keyboardHeightProvider.close();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (keyboardHeightProvider != null)
+            keyboardHeightProvider.close();
     }
 }

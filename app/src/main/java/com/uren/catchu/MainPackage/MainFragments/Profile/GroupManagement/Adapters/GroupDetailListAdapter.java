@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
@@ -62,56 +61,35 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
 
     public GroupDetailListAdapter(Context context, List<UserProfileProperties> groupParticipantList, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem,
                                   ItemClickListener itemClickListener) {
-        try {
-            layoutInflater = LayoutInflater.from(context);
-            initVariables();
-            this.groupParticipantList.addAll(groupParticipantList);
-            this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
-            this.itemClickListener = itemClickListener;
-            this.context = context;
-            activity = (Activity) context;
-            imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.OVAL, 50, 0);
-            adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                    context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        layoutInflater = LayoutInflater.from(context);
+        initVariables();
+        this.groupParticipantList.addAll(groupParticipantList);
+        this.groupRequestResultResultArrayItem = groupRequestResultResultArrayItem;
+        this.itemClickListener = itemClickListener;
+        this.context = context;
+        activity = (Activity) context;
+        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        adminButtonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2);
     }
 
     public void initVariables() {
-        try {
-            this.groupParticipantList = new ArrayList<UserProfileProperties>();
-            this.groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.groupParticipantList = new ArrayList<UserProfileProperties>();
+        this.groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
     }
 
     @Override
     public GroupDetailListAdapter.GroupDetailListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         GroupDetailListHolder holder = null;
-        try {
-            view = layoutInflater.inflate(R.layout.group_detail_list, parent, false);
-            holder = new GroupDetailListHolder(view);
+        view = layoutInflater.inflate(R.layout.group_detail_list, parent, false);
+        holder = new GroupDetailListHolder(view);
 
-            textview = activity.findViewById(R.id.personCntTv);
-            textview.setText(Integer.toString(groupParticipantList.size()));
+        textview = activity.findViewById(R.id.personCntTv);
+        textview.setText(Integer.toString(groupParticipantList.size()));
 
-            addFriendCardView = activity.findViewById(R.id.addFriendCardView);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        addFriendCardView = activity.findViewById(R.id.addFriendCardView);
 
         return holder;
     }
@@ -142,188 +120,133 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 @Override
                 public void onClick(View v) {
                     if (!AccountHolderInfo.getUserID().equals(userProfile.getUserid())) {
-                        try {
-                            final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
 
-                            adapter.add(context.getResources().getString(R.string.viewTheProfile));
+                        adapter.add(context.getResources().getString(R.string.viewTheProfile));
 
-                            if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
-                                adapter.add(context.getResources().getString(R.string.removeFromGroup));
+                        if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
+                            adapter.add(context.getResources().getString(R.string.removeFromGroup));
 
-                            if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
-                                adapter.add(context.getResources().getString(R.string.changeAsAdmin));
+                        if (AccountHolderInfo.getUserID().equals(groupRequestResultResultArrayItem.getGroupAdmin()))
+                            adapter.add(context.getResources().getString(R.string.changeAsAdmin));
 
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-                            builder.setTitle(getAlertDialogTitle());
+                        builder.setTitle(getAlertDialogTitle());
 
-                            builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int item) {
+                        builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int item) {
 
-                                    if (item == CODE_DISPLAY_PROFILE) {
+                                if (item == CODE_DISPLAY_PROFILE) {
 
-                                        Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
-                                        User user = getFollowProperties();
-                                        itemClickListener.onClick(user, CODE_DISPLAY_PROFILE);
+                                    Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
+                                    User user = getFollowProperties();
+                                    itemClickListener.onClick(user, CODE_DISPLAY_PROFILE);
 
-                                    } else if (item == CODE_REMOVE_FROM_GROUP)
-                                        exitFromGroup(userProfile.getUserid());
-                                    else if (item == CODE_CHANGE_AS_ADMIN)
-                                        changeAdministrator(userProfile.getUserid());
-                                }
-                            });
+                                } else if (item == CODE_REMOVE_FROM_GROUP)
+                                    exitFromGroup(userProfile.getUserid());
+                                else if (item == CODE_CHANGE_AS_ADMIN)
+                                    changeAdministrator(userProfile.getUserid());
+                            }
+                        });
 
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                        } catch (Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.toString());
-                            e.printStackTrace();
-                        }
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     }
                 }
             });
         }
 
-        public String getAlertDialogTitle(){
+        public String getAlertDialogTitle() {
             String title = "";
-            if(userProfile.getName() != null && !userProfile.getName().isEmpty())
+            if (userProfile.getName() != null && !userProfile.getName().isEmpty())
                 title = userProfile.getName();
-            else if(userProfile.getUsername() != null && !userProfile.getUsername().isEmpty())
+            else if (userProfile.getUsername() != null && !userProfile.getUsername().isEmpty())
                 title = CHAR_AMPERSAND + userProfile.getUsername();
             return title;
         }
 
         public User getFollowProperties() {
             User user = null;
-            try {
-                user = new User();
-                user.setEmail(userProfile.getUsername());
-                user.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());
-                user.setUserid(userProfile.getUserid());
-                user.setIsPrivateAccount(userProfile.getIsPrivateAccount());
-                user.setName(userProfile.getName());
-                user.setUsername(userProfile.getUsername());
-                user.setProvider(userProfile.getProvider());
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            user = new User();
+            user.setEmail(userProfile.getUsername());
+            user.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());
+            user.setUserid(userProfile.getUserid());
+            user.setIsPrivateAccount(userProfile.getIsPrivateAccount());
+            user.setName(userProfile.getName());
+            user.setUsername(userProfile.getUsername());
+            user.setProvider(userProfile.getProvider());
             return user;
         }
 
         public void setData(UserProfileProperties userProfile, int position) {
-            try {
-                this.position = position;
-                this.userProfile = userProfile;
-                UserDataUtil.setName(userProfile.getName(), profileName);
-                UserDataUtil.setUsername(userProfile.getUsername(), profileUserName);
-                setGroupAdmin();
-                UserDataUtil.setProfilePicture(context, userProfile.getProfilePhotoUrl(),
-                        userProfile.getName(), userProfile.getUsername(), shortUsernameTv, specialProfileImgView);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.position = position;
+            this.userProfile = userProfile;
+            UserDataUtil.setName(userProfile.getName(), profileName);
+            UserDataUtil.setUsername(userProfile.getUsername(), profileUserName);
+            setGroupAdmin();
+            UserDataUtil.setProfilePicture(context, userProfile.getProfilePhotoUrl(),
+                    userProfile.getName(), userProfile.getUsername(), shortUsernameTv, specialProfileImgView);
         }
 
         public void setGroupAdmin() {
-            try {
-                if (groupRequestResultResultArrayItem.getGroupAdmin() != null && !groupRequestResultResultArrayItem.getGroupAdmin().trim().isEmpty() &&
-                        userProfile.getUserid() != null && !userProfile.getUserid().trim().isEmpty()) {
-                    if (groupRequestResultResultArrayItem.getGroupAdmin().equals(userProfile.getUserid())) {
-                        adminDisplayBtn.setVisibility(View.VISIBLE);
-                        groupAdminPosition = position;
-                    } else
-                        adminDisplayBtn.setVisibility(View.GONE);
+            if (groupRequestResultResultArrayItem.getGroupAdmin() != null && !groupRequestResultResultArrayItem.getGroupAdmin().trim().isEmpty() &&
+                    userProfile.getUserid() != null && !userProfile.getUserid().trim().isEmpty()) {
+                if (groupRequestResultResultArrayItem.getGroupAdmin().equals(userProfile.getUserid())) {
+                    adminDisplayBtn.setVisibility(View.VISIBLE);
+                    groupAdminPosition = position;
                 } else
                     adminDisplayBtn.setVisibility(View.GONE);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            } else
+                adminDisplayBtn.setVisibility(View.GONE);
         }
 
         public void exitFromGroup(final String userid) {
 
-            try {
-                UserGroupsProcess.exitFromGroup(userid, groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
-                    @Override
-                    public void onComplete(Object object) {
-                        groupParticipantList.remove(position);
-                        itemClickListener.onClick(groupParticipantList, CODE_REMOVE_FROM_GROUP);
-                        notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, getItemCount());
-                        textview.setText(Integer.toString(getItemCount()));
-                    }
+            UserGroupsProcess.exitFromGroup(userid, groupRequestResultResultArrayItem.getGroupid(), new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    groupParticipantList.remove(position);
+                    itemClickListener.onClick(groupParticipantList, CODE_REMOVE_FROM_GROUP);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, getItemCount());
+                    textview.setText(Integer.toString(getItemCount()));
+                }
 
-                    @Override
-                    public void onFailed(Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                                new Object() {
-                                }.getClass().getEnclosingMethod().getName(), e.toString());
-                        CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) +
-                                context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
-                    }
-                });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                @Override
+                public void onFailed(Exception e) {
+                    CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) +
+                            context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
+                }
+            });
         }
 
         public void changeAdministrator(final String userid) {
 
-            try {
-                UserGroupsProcess.changeGroupAdmin(userid, AccountHolderInfo.getUserID(), groupRequestResultResultArrayItem.getGroupid(),
-                        new CompleteCallback() {
-                            @Override
-                            public void onComplete(Object object) {
-                                addFriendCardView.setVisibility(View.GONE);
-                                groupRequestResultResultArrayItem.setGroupAdmin(userid);
-                                notifyItemChanged(position);
-                                notifyItemChanged(groupAdminPosition);
-                                itemClickListener.onClick(groupRequestResultResultArrayItem, CODE_CHANGE_AS_ADMIN);
-                            }
+            UserGroupsProcess.changeGroupAdmin(userid, AccountHolderInfo.getUserID(), groupRequestResultResultArrayItem.getGroupid(),
+                    new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                            addFriendCardView.setVisibility(View.GONE);
+                            groupRequestResultResultArrayItem.setGroupAdmin(userid);
+                            notifyItemChanged(position);
+                            notifyItemChanged(groupAdminPosition);
+                            itemClickListener.onClick(groupRequestResultResultArrayItem, CODE_CHANGE_AS_ADMIN);
+                        }
 
-                            @Override
-                            public void onFailed(Exception e) {
-                                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                                        new Object() {
-                                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                                CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) +
-                                        context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
-                            }
-                        });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                        @Override
+                        public void onFailed(Exception e) {
+                            CommonUtils.showToastShort(context, context.getResources().getString(R.string.error) +
+                                    context.getResources().getString(R.string.SOMETHING_WENT_WRONG));
+                        }
+                    });
         }
     }
 
     @Override
     public void onBindViewHolder(GroupDetailListAdapter.GroupDetailListHolder holder, int position) {
-        try {
-            UserProfileProperties selectedFriend = groupParticipantList.get(position);
-            holder.setData(selectedFriend, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        UserProfileProperties selectedFriend = groupParticipantList.get(position);
+        holder.setData(selectedFriend, position);
     }
 
     public long getItemId(int position) {

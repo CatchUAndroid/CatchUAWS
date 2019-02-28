@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.GroupMessageBox;
@@ -36,17 +35,10 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
 
     public MessageWithGroupAdapter(Context context, ArrayList<GroupMessageBox> messageBoxArrayList,
                                    MessageDeleteCallback messageDeleteCallback, TextView deleteMsgCntTv) {
-        try {
-            this.context = context;
-            this.messageBoxArrayList = messageBoxArrayList;
-            this.messageDeleteCallback = messageDeleteCallback;
-            this.deleteMsgCntTv = deleteMsgCntTv;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.context = context;
+        this.messageBoxArrayList = messageBoxArrayList;
+        this.messageDeleteCallback = messageDeleteCallback;
+        this.deleteMsgCntTv = deleteMsgCntTv;
     }
 
     @Override
@@ -69,157 +61,115 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
         public MessageWithGroupHolder(View view) {
             super(view);
 
-            try {
-                messageTv = view.findViewById(R.id.messageTv);
-                createAtTv = view.findViewById(R.id.createAtTv);
-                senderNameTv = view.findViewById(R.id.senderNameTv);
-                messageCardview = view.findViewById(R.id.messageCardview);
-                mainRelLayout = view.findViewById(R.id.mainRelLayout);
+            messageTv = view.findViewById(R.id.messageTv);
+            createAtTv = view.findViewById(R.id.createAtTv);
+            senderNameTv = view.findViewById(R.id.senderNameTv);
+            messageCardview = view.findViewById(R.id.messageCardview);
+            mainRelLayout = view.findViewById(R.id.mainRelLayout);
 
-                messageCardview.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        if (groupMessageBox != null && groupMessageBox.getSenderUser() != null &&
-                                groupMessageBox.getSenderUser().getUserid() != null &&
-                                groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                            deleteActivated = true;
-                            messageDeleteCallback.OnDeleteActivated(deleteActivated);
-                        }
-                        return false;
+            messageCardview.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (groupMessageBox != null && groupMessageBox.getSenderUser() != null &&
+                            groupMessageBox.getSenderUser().getUserid() != null &&
+                            groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+                        deleteActivated = true;
+                        messageDeleteCallback.OnDeleteActivated(deleteActivated);
                     }
-                });
+                    return false;
+                }
+            });
 
-                messageCardview.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (groupMessageBox != null && groupMessageBox.getSenderUser() != null &&
-                                groupMessageBox.getSenderUser().getUserid() != null &&
-                                groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                            if (deleteActivated) {
-                                if (groupMessageBox.isSelectedForDelete()) {
-                                    groupMessageBox.setSelectedForDelete(false);
-                                    setSelectedDeleteValues();
-                                } else {
-                                    groupMessageBox.setSelectedForDelete(true);
-                                    setSelectedDeleteValues();
-                                }
-                                checkDeletedMessages();
+            messageCardview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (groupMessageBox != null && groupMessageBox.getSenderUser() != null &&
+                            groupMessageBox.getSenderUser().getUserid() != null &&
+                            groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+                        if (deleteActivated) {
+                            if (groupMessageBox.isSelectedForDelete()) {
+                                groupMessageBox.setSelectedForDelete(false);
+                                setSelectedDeleteValues();
+                            } else {
+                                groupMessageBox.setSelectedForDelete(true);
+                                setSelectedDeleteValues();
                             }
+                            checkDeletedMessages();
                         }
                     }
-                });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                }
+            });
         }
 
         public void setData(GroupMessageBox groupMessageBox, int position) {
-            try {
-                this.groupMessageBox = groupMessageBox;
-                this.position = position;
-                setMessageDetails();
-                setCardViewPosition();
-                setSelectedDeleteValues();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.groupMessageBox = groupMessageBox;
+            this.position = position;
+            setMessageDetails();
+            setCardViewPosition();
+            setSelectedDeleteValues();
         }
 
         public void setMessageDetails() {
-            try {
-                if (groupMessageBox != null) {
-                    if (groupMessageBox.getMessageText() != null)
-                        messageTv.setText(groupMessageBox.getMessageText());
+            if (groupMessageBox != null) {
+                if (groupMessageBox.getMessageText() != null)
+                    messageTv.setText(groupMessageBox.getMessageText());
 
-                    if (groupMessageBox.getDate() != 0) {
-                        Date date = new Date(groupMessageBox.getDate());
-                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-                        format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
-                        String formatted = format.format(date);
-                        System.out.println("formatted:" + formatted);
-                        createAtTv.setText(formatted.substring(11, 16));
-                    }
-
-                    if (groupMessageBox.getSenderUser() != null && groupMessageBox.getSenderUser().getName() != null) {
-                        senderNameTv.setText(groupMessageBox.getSenderUser().getName());
-                    }
+                if (groupMessageBox.getDate() != 0) {
+                    Date date = new Date(groupMessageBox.getDate());
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+                    format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
+                    String formatted = format.format(date);
+                    System.out.println("formatted:" + formatted);
+                    createAtTv.setText(formatted.substring(11, 16));
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+
+                if (groupMessageBox.getSenderUser() != null && groupMessageBox.getSenderUser().getName() != null) {
+                    senderNameTv.setText(groupMessageBox.getSenderUser().getName());
+                }
             }
         }
 
         public void setCardViewPosition() {
-            try {
-                if (groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
-                    params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    messageCardview.setLayoutParams(params);
-                    messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.PowderBlue, null),
-                            0, GradientDrawable.RECTANGLE, 15, 0));
-                } else {
-                    RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
-                    params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
-                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    messageCardview.setLayoutParams(params);
-                    messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
-                            0, GradientDrawable.RECTANGLE, 15, 0));
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+            if (groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
+                params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                messageCardview.setLayoutParams(params);
+                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.PowderBlue, null),
+                        0, GradientDrawable.RECTANGLE, 15, 0));
+            } else {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
+                params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                messageCardview.setLayoutParams(params);
+                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
+                        0, GradientDrawable.RECTANGLE, 15, 0));
             }
         }
 
         public void setSelectedDeleteValues() {
-            try {
-                if (groupMessageBox.isSelectedForDelete())
-                    mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
-                else
-                    mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            if (groupMessageBox.isSelectedForDelete())
+                mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
+            else
+                mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
         }
 
         public void checkDeletedMessages() {
-            try {
-                int deleteCount = 0;
-                for (GroupMessageBox groupMessageBox : messageBoxArrayList) {
-                    if (groupMessageBox.isSelectedForDelete()) {
-                        deleteCount++;
-                    }
+            int deleteCount = 0;
+            for (GroupMessageBox groupMessageBox : messageBoxArrayList) {
+                if (groupMessageBox.isSelectedForDelete()) {
+                    deleteCount++;
                 }
+            }
 
-                if (deleteCount == 0) {
-                    deleteActivated = false;
-                    messageDeleteCallback.OnDeleteActivated(deleteActivated);
-                    deleteMsgCntTv.setText("");
-                } else {
-                    deleteMsgCntTv.setText(Integer.toString(deleteCount));
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+            if (deleteCount == 0) {
+                deleteActivated = false;
+                messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                deleteMsgCntTv.setText("");
+            } else {
+                deleteMsgCntTv.setText(Integer.toString(deleteCount));
             }
         }
     }
@@ -230,29 +180,15 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
 
     @Override
     public void onBindViewHolder(final MessageWithGroupAdapter.MessageWithGroupHolder holder, final int position) {
-        try {
-            GroupMessageBox groupMessageBox = messageBoxArrayList.get(position);
-            holder.setData(groupMessageBox, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        GroupMessageBox groupMessageBox = messageBoxArrayList.get(position);
+        holder.setData(groupMessageBox, position);
     }
 
     @Override
     public int getItemCount() {
         int listSize = 0;
-        try {
-            if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
-                listSize = messageBoxArrayList.size();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
+            listSize = messageBoxArrayList.size();
         return listSize;
     }
 }

@@ -18,11 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.firebase.client.ServerValue;
-import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
@@ -46,17 +42,10 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 
     public MessageWithPersonAdapter(Context context, ArrayList<MessageBox> messageBoxArrayList,
                                     MessageDeleteCallback messageDeleteCallback, TextView deleteMsgCntTv) {
-        try {
-            this.context = context;
-            this.messageBoxArrayList = messageBoxArrayList;
-            this.messageDeleteCallback = messageDeleteCallback;
-            this.deleteMsgCntTv = deleteMsgCntTv;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.context = context;
+        this.messageBoxArrayList = messageBoxArrayList;
+        this.messageDeleteCallback = messageDeleteCallback;
+        this.deleteMsgCntTv = deleteMsgCntTv;
     }
 
     @Override
@@ -93,19 +82,11 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        try {
-            if (holder instanceof MessageWithPersonAdapter.MessageWithPersonHolder) {
-                MessageBox messageBox = messageBoxArrayList.get(position);
-                ((MessageWithPersonAdapter.MessageWithPersonHolder) holder).setData(messageBox, position);
-            } else {
-                ((MessageWithPersonAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-            }
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (holder instanceof MessageWithPersonAdapter.MessageWithPersonHolder) {
+            MessageBox messageBox = messageBoxArrayList.get(position);
+            ((MessageWithPersonAdapter.MessageWithPersonHolder) holder).setData(messageBox, position);
+        } else {
+            ((MessageWithPersonAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
     }
 
@@ -155,127 +136,83 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(MessageBox messageBox, int position) {
-            try {
-                this.messageBox = messageBox;
-                this.position = position;
-                setMessageDetails();
-                setCardViewPosition();
-                setRelLayoutWidth();
-                setSelectedDeleteValues();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.messageBox = messageBox;
+            this.position = position;
+            setMessageDetails();
+            setCardViewPosition();
+            setRelLayoutWidth();
+            setSelectedDeleteValues();
         }
 
         public void setMessageDetails() {
-            try {
-                if (messageBox != null) {
-                    if (messageBox.getMessageText() != null)
-                        messageTv.setText(messageBox.getMessageText());
+            if (messageBox != null) {
+                if (messageBox.getMessageText() != null)
+                    messageTv.setText(messageBox.getMessageText());
 
-                    if (messageBox.getDate() != 0) {
+                if (messageBox.getDate() != 0) {
 
-                        createAtTv.setText(CommonUtils.getMessageTime(context, messageBox.getDate()));
+                    createAtTv.setText(CommonUtils.getMessageTime(context, messageBox.getDate()));
                         /*Date date = new Date(messageBox.getDate());
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
                         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
                         String formatted = format.format(date);
                         System.out.println("formatted:" + formatted);
                         createAtTv.setText(formatted.substring(11, 16));*/
-                    }
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
             }
         }
 
         public void setCardViewPosition() {
-            try {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
-                params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) messageCardview.getLayoutParams();
+            params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
 
-                if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
-                    params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.PowderBlue, null),
-                            0, GradientDrawable.RECTANGLE, 15, 0));
+            if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+                params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.PowderBlue, null),
+                        0, GradientDrawable.RECTANGLE, 15, 0));
 
-                } else {
-                    params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                    params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                    messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
-                            0, GradientDrawable.RECTANGLE, 15, 0));
-                }
-
-                messageCardview.setLayoutParams(params);
-
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+            } else {
+                params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+                params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
+                        0, GradientDrawable.RECTANGLE, 15, 0));
             }
+
+            messageCardview.setLayoutParams(params);
         }
 
         public void setRelLayoutWidth() {
-            try {
-                RecyclerView.LayoutParams paramsRel = (RecyclerView.LayoutParams) mainRelLayout.getLayoutParams();
-                if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID()))
-                    mainRelLayout.setPadding(120, 0, 0, 0);
-                else
-                    mainRelLayout.setPadding(0, 0, 120, 0);
+            RecyclerView.LayoutParams paramsRel = (RecyclerView.LayoutParams) mainRelLayout.getLayoutParams();
+            if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID()))
+                mainRelLayout.setPadding(120, 0, 0, 0);
+            else
+                mainRelLayout.setPadding(0, 0, 120, 0);
 
-                mainRelLayout.setLayoutParams(paramsRel);
-
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            mainRelLayout.setLayoutParams(paramsRel);
         }
 
         public void setSelectedDeleteValues() {
-            try {
-                if (messageBox.isSelectedForDelete())
-                    mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
-                else
-                    mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            if (messageBox.isSelectedForDelete())
+                mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
+            else
+                mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
         }
 
         public void checkDeletedMessages() {
-            try {
-                int deleteCount = 0;
-                for (MessageBox messageBox : messageBoxArrayList) {
-                    if (messageBox.isSelectedForDelete()) {
-                        deleteCount++;
-                    }
+            int deleteCount = 0;
+            for (MessageBox messageBox : messageBoxArrayList) {
+                if (messageBox.isSelectedForDelete()) {
+                    deleteCount++;
                 }
+            }
 
-                if (deleteCount == 0) {
-                    deleteActivated = false;
-                    messageDeleteCallback.OnDeleteActivated(deleteActivated);
-                    deleteMsgCntTv.setText("");
-                } else {
-                    deleteMsgCntTv.setText(Integer.toString(deleteCount));
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+            if (deleteCount == 0) {
+                deleteActivated = false;
+                messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                deleteMsgCntTv.setText("");
+            } else {
+                deleteMsgCntTv.setText(Integer.toString(deleteCount));
             }
         }
     }
@@ -304,15 +241,8 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
     @Override
     public int getItemCount() {
         int listSize = 0;
-        try {
-            if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
-                listSize = messageBoxArrayList.size();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
+            listSize = messageBoxArrayList.size();
         return listSize;
     }
 }
