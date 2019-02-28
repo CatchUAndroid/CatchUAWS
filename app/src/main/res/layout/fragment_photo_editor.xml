@@ -85,13 +85,13 @@
         android:layout_height="wrap_content"
         android:background="@color/tool_bg"
         android:orientation="horizontal"
-        android:paddingBottom="4dp"
-        android:paddingTop="4dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         app:layoutManager="android.support.v7.widget.LinearLayoutManager"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:listitem="@layout/row_editing_tools"/>
+        tools:listitem="@layout/row_editing_tools" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rvFilterView"

@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.tools;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,14 +18,26 @@ public class EditingToolsAdapter extends RecyclerView.Adapter<EditingToolsAdapte
 
     private List<ToolModel> mToolList = new ArrayList<>();
     private OnItemSelected mOnItemSelected;
+    private Context mContext;
 
-    public EditingToolsAdapter(OnItemSelected onItemSelected) {
+    public EditingToolsAdapter(OnItemSelected onItemSelected, Context context) {
         mOnItemSelected = onItemSelected;
-        mToolList.add(new ToolModel("Brush", R.drawable.ic_brush, ToolType.BRUSH));
+        mContext = context;
+        setToolList();
+
+        /*mToolList.add(new ToolModel("Brush", R.drawable.ic_brush, ToolType.BRUSH));
         mToolList.add(new ToolModel("Text", R.drawable.ic_text, ToolType.TEXT));
         mToolList.add(new ToolModel("Eraser", R.drawable.ic_eraser, ToolType.ERASER));
         mToolList.add(new ToolModel("Filter", R.drawable.ic_photo_filter, ToolType.FILTER));
-        mToolList.add(new ToolModel("Emoji", R.drawable.ic_insert_emoticon, ToolType.EMOJI));
+        mToolList.add(new ToolModel("Emoji", R.drawable.ic_insert_emoticon, ToolType.EMOJI));*/
+    }
+
+    private void setToolList(){
+        mToolList.add(new ToolModel(mContext.getResources().getString(R.string.label_brush), R.drawable.ic_brush, ToolType.BRUSH));
+        mToolList.add(new ToolModel(mContext.getResources().getString(R.string.label_text), R.drawable.ic_text, ToolType.TEXT));
+        mToolList.add(new ToolModel(mContext.getResources().getString(R.string.label_eraser), R.drawable.ic_eraser, ToolType.ERASER));
+        mToolList.add(new ToolModel(mContext.getResources().getString(R.string.label_filter), R.drawable.ic_photo_filter, ToolType.FILTER));
+        mToolList.add(new ToolModel(mContext.getResources().getString(R.string.label_emoji), R.drawable.ic_insert_emoticon, ToolType.EMOJI));
     }
 
     public interface OnItemSelected {
