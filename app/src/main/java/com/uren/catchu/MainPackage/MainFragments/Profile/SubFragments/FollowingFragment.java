@@ -23,7 +23,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
@@ -148,7 +147,6 @@ public class FollowingFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
                     if (s != null && s.toString() != null) {
                         if (!s.toString().trim().isEmpty()) {
                             searchCancelImgv.setVisibility(View.VISIBLE);
@@ -170,12 +168,6 @@ public class FollowingFragment extends BaseFragment {
                             });
                     } else
                         searchCancelImgv.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    e.printStackTrace();
-                }
             }
         });
     }

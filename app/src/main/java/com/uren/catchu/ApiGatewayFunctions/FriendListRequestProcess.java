@@ -5,13 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FriendList;
-import catchu.model.FriendRequestList;
-import catchu.model.GroupRequest;
-import catchu.model.GroupRequestResult;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 
@@ -48,9 +43,6 @@ public class FriendListRequestProcess extends AsyncTask<Void, Void, FriendList> 
             }
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

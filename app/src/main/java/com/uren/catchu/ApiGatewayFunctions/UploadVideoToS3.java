@@ -1,26 +1,14 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
@@ -82,9 +70,6 @@ public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             dos.flush();
             dos.close();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

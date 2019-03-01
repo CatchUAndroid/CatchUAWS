@@ -23,7 +23,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.R;
@@ -84,21 +83,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private boolean checkMessagingPageIsOpen(RemoteMessage remoteMessage) {
-        try {
-            if(MessageWithPersonActivity.thisActivity != null){
+        if (MessageWithPersonActivity.thisActivity != null) {
 
-                User chattedUser = MessageWithPersonActivity.chattedUser;
-                String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
-                String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
+            User chattedUser = MessageWithPersonActivity.chattedUser;
+            String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
+            String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
 
-                if(senderId.equals(chattedUser.getUserid()) && receiptId.equals(AccountHolderInfo.getUserID()))
-                    return true;
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, MyFirebaseMessagingService.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+            if (senderId.equals(chattedUser.getUserid()) && receiptId.equals(AccountHolderInfo.getUserID()))
+                return true;
         }
         return false;
     }
@@ -110,116 +102,91 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      */
     @Override
     public void onNewToken(String token) {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String userid = firebaseAuth.getCurrentUser().getUid();
 
-        try {
-            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            String userid = firebaseAuth.getCurrentUser().getUid();
-
-            if (!userid.isEmpty())
-                sendRegistrationToServer(token, userid);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, MyFirebaseMessagingService.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (!userid.isEmpty())
+            sendRegistrationToServer(token, userid);
     }
 
     public static void sendRegistrationToServer(String token, String userid) {
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
+                .child(userid);
 
-        try {
-            DatabaseReference database = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
-                    .child(userid);
+        final Map<String, Object> values = new HashMap<>();
+        values.put(FB_CHILD_TOKEN, token);
 
-            final Map<String, Object> values = new HashMap<>();
-            values.put(FB_CHILD_TOKEN, token);
-
-            database.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    System.out.println("Token saved to DB");
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    System.out.println("Token save to DB Error !!!");
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, MyFirebaseMessagingService.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        database.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                System.out.println("Token saved to DB");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                System.out.println("Token save to DB Error !!!");
+            }
+        });
     }
 
     private void sendNotification(RemoteMessage remoteMessage, Bitmap bitmap) {
-        try {
+        String messageBody = remoteMessage.getNotification().getBody();
+        String messageTitle = remoteMessage.getNotification().getTitle();
+        String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
+        String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
+        String messageType = (String) remoteMessage.getData().get(FCM_MESSAGE_TYPE);
 
-            String messageBody = remoteMessage.getNotification().getBody();
-            String messageTitle = remoteMessage.getNotification().getTitle();
-            String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
-            String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
-            String messageType = (String) remoteMessage.getData().get(FCM_MESSAGE_TYPE);
+        Intent intent = new Intent(this, MainActivity.class);
 
-            Intent intent = new Intent(this, MainActivity.class);
+        if (senderId != null && !senderId.isEmpty())
+            intent.putExtra(FCM_CODE_SENDER_USERID, senderId);
 
-            if (senderId != null && !senderId.isEmpty())
-                intent.putExtra(FCM_CODE_SENDER_USERID, senderId);
+        if (receiptId != null && !receiptId.isEmpty())
+            intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptId);
 
-            if (receiptId != null && !receiptId.isEmpty())
-                intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptId);
+        if (messageType != null && !messageType.isEmpty())
+            intent.putExtra(FCM_MESSAGE_TYPE, messageType);
 
-            if (messageType != null && !messageType.isEmpty())
-                intent.putExtra(FCM_MESSAGE_TYPE, messageType);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);
 
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT);
+        String channelId = getString(R.string.default_notification_channel_id);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent)
+                .setDeleteIntent(getDeleteIntent());
 
-            String channelId = getString(R.string.default_notification_channel_id);
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
-                    .setAutoCancel(true)
-                    .setSound(defaultSoundUri)
-                    .setContentIntent(pendingIntent)
-                    .setDeleteIntent(getDeleteIntent());
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
-                notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
-            } else {
-                notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
-            }
-
-            if (messageTitle != null && !messageTitle.isEmpty())
-                notificationBuilder.setContentTitle(messageTitle);
-
-            if (messageBody != null && !messageBody.isEmpty())
-                notificationBuilder.setContentText(messageBody);
-
-            if (bitmap != null)
-                notificationBuilder.setLargeIcon(bitmap);
-
-            NotificationManager notificationManager =
-                    (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            // Since android Oreo notification channel is needed.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel(channelId,
-                        "Channel human readable title",
-                        NotificationManager.IMPORTANCE_DEFAULT);
-                notificationManager.createNotificationChannel(channel);
-            }
-
-            notificationManager.notify(NotificationID.getID(), notificationBuilder.build());
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
+            notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
+        } else {
+            notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
         }
+
+        if (messageTitle != null && !messageTitle.isEmpty())
+            notificationBuilder.setContentTitle(messageTitle);
+
+        if (messageBody != null && !messageBody.isEmpty())
+            notificationBuilder.setContentText(messageBody);
+
+        if (bitmap != null)
+            notificationBuilder.setLargeIcon(bitmap);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(NotificationID.getID(), notificationBuilder.build());
     }
 
     protected PendingIntent getDeleteIntent() {
@@ -255,9 +222,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 sendNotification(remoteMessage, myBitmap);
 
             } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
                 e.printStackTrace();
             }
             return null;

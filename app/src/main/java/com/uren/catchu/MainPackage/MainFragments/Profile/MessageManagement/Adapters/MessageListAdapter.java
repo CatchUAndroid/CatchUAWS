@@ -18,7 +18,6 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
@@ -43,17 +42,10 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
 
     public MessageListAdapter(Context context, ArrayList<MessageListBox> messageBoxArrayList,
                               ItemClickListener itemClickListener) {
-        try {
-            this.context = context;
-            this.messageBoxArrayList = messageBoxArrayList;
-            this.orgMessageBoxArrayList = messageBoxArrayList;
-            this.itemClickListener = itemClickListener;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.context = context;
+        this.messageBoxArrayList = messageBoxArrayList;
+        this.orgMessageBoxArrayList = messageBoxArrayList;
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -90,19 +82,11 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        try {
-            if (holder instanceof MessageListAdapter.MessageListHolder) {
-                MessageListBox messageListBox = messageBoxArrayList.get(position);
-                ((MessageListAdapter.MessageListHolder) holder).setData(messageListBox, position);
-            } else {
-                ((MessageListAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-            }
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (holder instanceof MessageListAdapter.MessageListHolder) {
+            MessageListBox messageListBox = messageBoxArrayList.get(position);
+            ((MessageListAdapter.MessageListHolder) holder).setData(messageListBox, position);
+        } else {
+            ((MessageListAdapter.ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
     }
 
@@ -120,96 +104,60 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
         public MessageListHolder(View view) {
             super(view);
 
-            try {
-                profilePicImgView = view.findViewById(R.id.profilePicImgView);
-                shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-                profileNameTv = view.findViewById(R.id.profileNameTv);
-                messageTextTv = view.findViewById(R.id.messageTextTv);
-                messageDateTv = view.findViewById(R.id.messageDateTv);
-                messageRelLayout = view.findViewById(R.id.messageRelLayout);
+            profilePicImgView = view.findViewById(R.id.profilePicImgView);
+            shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
+            profileNameTv = view.findViewById(R.id.profileNameTv);
+            messageTextTv = view.findViewById(R.id.messageTextTv);
+            messageDateTv = view.findViewById(R.id.messageDateTv);
+            messageRelLayout = view.findViewById(R.id.messageRelLayout);
 
-                messageRelLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        itemClickListener.onClick(messageListBox, position);
-                    }
-                });
-
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            messageRelLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    itemClickListener.onClick(messageListBox, position);
+                }
+            });
         }
 
         public void setData(MessageListBox messageListBox, int position) {
-            try {
-                this.messageListBox = messageListBox;
-                this.position = position;
-                setUserInfo();
-                setMessageText();
-                setMessageDate();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.messageListBox = messageListBox;
+            this.position = position;
+            setUserInfo();
+            setMessageText();
+            setMessageDate();
         }
 
         private void setUserInfo() {
-            try {
-                if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
+            if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
 
-                    if (messageListBox.getUserProfileProperties().getName() != null &&
-                            !messageListBox.getUserProfileProperties().getName().isEmpty())
-                        UserDataUtil.setName(messageListBox.getUserProfileProperties().getName(), profileNameTv);
-                    else if (messageListBox.getUserProfileProperties().getUsername() != null &&
-                            !messageListBox.getUserProfileProperties().getUsername().isEmpty())
-                        UserDataUtil.setUsername(messageListBox.getUserProfileProperties().getUsername(), profileNameTv);
+                if (messageListBox.getUserProfileProperties().getName() != null &&
+                        !messageListBox.getUserProfileProperties().getName().isEmpty())
+                    UserDataUtil.setName(messageListBox.getUserProfileProperties().getName(), profileNameTv);
+                else if (messageListBox.getUserProfileProperties().getUsername() != null &&
+                        !messageListBox.getUserProfileProperties().getUsername().isEmpty())
+                    UserDataUtil.setUsername(messageListBox.getUserProfileProperties().getUsername(), profileNameTv);
 
-                    UserDataUtil.setProfilePicture(context, messageListBox.getUserProfileProperties().getProfilePhotoUrl(),
-                            messageListBox.getUserProfileProperties().getName(),
-                            messageListBox.getUserProfileProperties().getUsername(), shortUserNameTv, profilePicImgView);
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+                UserDataUtil.setProfilePicture(context, messageListBox.getUserProfileProperties().getProfilePhotoUrl(),
+                        messageListBox.getUserProfileProperties().getName(),
+                        messageListBox.getUserProfileProperties().getUsername(), shortUserNameTv, profilePicImgView);
             }
         }
 
         private void setMessageDate() {
-            try {
-                if (messageListBox != null && messageListBox.getDate() != 0)
-                    messageDateTv.setText(CommonUtils.getMessageTime(context, messageListBox.getDate()));
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            if (messageListBox != null && messageListBox.getDate() != 0)
+                messageDateTv.setText(CommonUtils.getMessageTime(context, messageListBox.getDate()));
         }
 
         private void setMessageText() {
-            try {
-                if (messageListBox.getMessageText() != null)
-                    messageTextTv.setText(messageListBox.getMessageText());
+            if (messageListBox.getMessageText() != null)
+                messageTextTv.setText(messageListBox.getMessageText());
 
-                if (messageListBox.isIamReceipt() && !messageListBox.isSeen()) {
-                    messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.BOLD);
-                    messageTextTv.setTextColor(context.getResources().getColor(R.color.Red, null));
-                } else {
-                    messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.NORMAL);
-                    messageTextTv.setTextColor(context.getResources().getColor(R.color.DarkGray, null));
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+            if (messageListBox.isIamReceipt() && !messageListBox.isSeen()) {
+                messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.BOLD);
+                messageTextTv.setTextColor(context.getResources().getColor(R.color.Red, null));
+            } else {
+                messageTextTv.setTypeface(messageTextTv.getTypeface(), Typeface.NORMAL);
+                messageTextTv.setTextColor(context.getResources().getColor(R.color.DarkGray, null));
             }
         }
     }
@@ -233,17 +181,10 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
 
     @Override
     public int getItemCount() {
-        int listSize = 0;
-        try {
-            if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
-                listSize = messageBoxArrayList.size();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-        return listSize;
+        if (messageBoxArrayList != null && messageBoxArrayList.size() > 0)
+            return messageBoxArrayList.size();
+        else
+            return 0;
     }
 
     public void updateAdapter(String searchText) {
@@ -257,59 +198,47 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
             protected FilterResults performFiltering(CharSequence charSequence) {
 
                 FilterResults filterResults = null;
-                try {
-                    String searchString = charSequence.toString();
 
-                    if (searchString.trim().isEmpty())
-                        messageBoxArrayList = orgMessageBoxArrayList;
-                    else {
-                        ArrayList<MessageListBox> tempList = new ArrayList<>();
+                String searchString = charSequence.toString();
 
-                        for (MessageListBox messageListBox : orgMessageBoxArrayList) {
-                            if (messageListBox != null) {
+                if (searchString.trim().isEmpty())
+                    messageBoxArrayList = orgMessageBoxArrayList;
+                else {
+                    ArrayList<MessageListBox> tempList = new ArrayList<>();
 
-                                if (messageListBox.getMessageText() != null &&
-                                        messageListBox.getMessageText().toLowerCase().contains(searchString.toLowerCase())) {
+                    for (MessageListBox messageListBox : orgMessageBoxArrayList) {
+                        if (messageListBox != null) {
+
+                            if (messageListBox.getMessageText() != null &&
+                                    messageListBox.getMessageText().toLowerCase().contains(searchString.toLowerCase())) {
+                                tempList.add(messageListBox);
+                            } else if (messageListBox.getUserProfileProperties() != null) {
+
+                                UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
+
+                                if (userProfileProperties.getName() != null &&
+                                        userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase())) {
                                     tempList.add(messageListBox);
-                                } else if (messageListBox.getUserProfileProperties() != null) {
-
-                                    UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
-
-                                    if (userProfileProperties.getName() != null &&
-                                            userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase())) {
-                                        tempList.add(messageListBox);
-                                    } else if (userProfileProperties.getUsername() != null &&
-                                            userProfileProperties.getUsername().toLowerCase().contains(searchString.toLowerCase())) {
-                                        tempList.add(messageListBox);
-                                    }
+                                } else if (userProfileProperties.getUsername() != null &&
+                                        userProfileProperties.getUsername().toLowerCase().contains(searchString.toLowerCase())) {
+                                    tempList.add(messageListBox);
                                 }
                             }
                         }
-                        messageBoxArrayList = tempList;
                     }
-
-                    filterResults = new FilterResults();
-                    filterResults.values = messageBoxArrayList;
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
+                    messageBoxArrayList = tempList;
                 }
+
+                filterResults = new FilterResults();
+                filterResults.values = messageBoxArrayList;
+
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                try {
-                    messageBoxArrayList = (ArrayList<MessageListBox>) filterResults.values;
-                    notifyDataSetChanged();
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+                messageBoxArrayList = (ArrayList<MessageListBox>) filterResults.values;
+                notifyDataSetChanged();
             }
         };
     }

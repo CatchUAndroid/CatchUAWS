@@ -5,9 +5,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
-import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
 import catchu.model.PostListResponse;
 
@@ -59,9 +57,6 @@ public class PostLikeProcess extends AsyncTask<Void, Void, BaseResponse> {
             }
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

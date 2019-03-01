@@ -23,7 +23,6 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.FriendVerticalListAdapter;
@@ -104,27 +103,20 @@ public class SelectFriendFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        try {
-            if (mView == null) {
-                mView = inflater.inflate(R.layout.fragment_select_friend, container, false);
-                ButterKnife.bind(this, mView);
-                addListeners();
-                setShapes();
-                setPaginationValues();
-                setAdapter();
-                setRecyclerViewScroll();
-                initFollowerList();
-                getFriendSelectionPage();
-                SelectedFriendList.setInstance(null);
-                progressDialogUtil = new ProgressDialogUtil(getContext(), null, false);
-                progressDialogUtil.dialogShow();
-                searchToolbarAddItemImgv.setVisibility(View.GONE);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_select_friend, container, false);
+            ButterKnife.bind(this, mView);
+            addListeners();
+            setShapes();
+            setPaginationValues();
+            setAdapter();
+            setRecyclerViewScroll();
+            initFollowerList();
+            getFriendSelectionPage();
+            SelectedFriendList.setInstance(null);
+            progressDialogUtil = new ProgressDialogUtil(getContext(), null, false);
+            progressDialogUtil.dialogShow();
+            searchToolbarAddItemImgv.setVisibility(View.GONE);
         }
         return mView;
     }
@@ -175,55 +167,34 @@ public class SelectFriendFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    if (s != null && s.toString() != null) {
-                        if (!s.toString().trim().isEmpty()) {
-                            imgCancelSearch.setVisibility(View.VISIBLE);
-                            searchToolbarBackImgv.setVisibility(View.GONE);
-                        } else {
-                            imgCancelSearch.setVisibility(View.GONE);
-                            searchToolbarBackImgv.setVisibility(View.VISIBLE);
-                        }
-
-
-                        if (adapter != null)
-                            adapter.updateAdapter(s.toString());
-                    } else
+                if (s != null && s.toString() != null) {
+                    if (!s.toString().trim().isEmpty()) {
+                        imgCancelSearch.setVisibility(View.VISIBLE);
+                        searchToolbarBackImgv.setVisibility(View.GONE);
+                    } else {
                         imgCancelSearch.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    e.printStackTrace();
-                }
+                        searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    }
+
+
+                    if (adapter != null)
+                        adapter.updateAdapter(s.toString());
+                } else
+                    imgCancelSearch.setVisibility(View.GONE);
             }
         });
     }
 
     public void initFollowerList() {
-        try {
-            followerList = new FriendList();
-            followerList.setResultArray(new ArrayList<UserProfileProperties>());
-            followerList.setError(new Error());
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        followerList = new FriendList();
+        followerList.setResultArray(new ArrayList<UserProfileProperties>());
+        followerList.setError(new Error());
     }
 
     private void setShapes() {
-        try {
-            GradientDrawable shape = ShapeUtil.getShape(getResources().getColor(R.color.LightSeaGreen, null),
-                    0, GradientDrawable.OVAL, 50, 0);
-            nextFab.setBackground(shape);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        GradientDrawable shape = ShapeUtil.getShape(getResources().getColor(R.color.LightSeaGreen, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        nextFab.setBackground(shape);
     }
 
     private void setRecyclerViewScroll() {
@@ -288,56 +259,42 @@ public class SelectFriendFragment extends BaseFragment {
     }
 
     public void setAdapter() {
-        try {
-            linearLayoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            adapter = new FriendVerticalListAdapter(getContext(), groupParticipantList);
-            recyclerView.setAdapter(adapter);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        adapter = new FriendVerticalListAdapter(getContext(), groupParticipantList);
+        recyclerView.setAdapter(adapter);
     }
 
     public void checkSelectedPerson() {
 
-        try {
-            if (SelectedFriendList.getInstance().getSelectedFriendList().getResultArray().size() == 0) {
-                Toast.makeText(getContext(), getResources().getString(R.string.selectLeastOneFriend), Toast.LENGTH_SHORT).show();
-                return;
-            }
+        if (SelectedFriendList.getInstance().getSelectedFriendList().getResultArray().size() == 0) {
+            Toast.makeText(getContext(), getResources().getString(R.string.selectLeastOneFriend), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            if (pendingName != null) {
-                if (pendingName.equals(ViewGroupDetailFragment.class.getName())) {
-                    startAddParticipantToGroup();
-                } else if (pendingName.equals(SharePostFragment.class.getName())) {
-                    getActivity().onBackPressed();
-                    returnCallback.onReturn(null);
-                } else if (pendingName.equals(GroupManagementFragment.class.getName())) {
+        if (pendingName != null) {
+            if (pendingName.equals(ViewGroupDetailFragment.class.getName())) {
+                startAddParticipantToGroup();
+            } else if (pendingName.equals(SharePostFragment.class.getName())) {
+                getActivity().onBackPressed();
+                returnCallback.onReturn(null);
+            } else if (pendingName.equals(GroupManagementFragment.class.getName())) {
 
-                    if (mFragmentNavigation != null) {
-                        mFragmentNavigation.pushFragment(new AddGroupFragment(new CompleteCallback() {
-                            @Override
-                            public void onComplete(Object object) {
-                                getActivity().onBackPressed();
-                                returnCallback.onReturn(object);
-                            }
+                if (mFragmentNavigation != null) {
+                    mFragmentNavigation.pushFragment(new AddGroupFragment(new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                            getActivity().onBackPressed();
+                            returnCallback.onReturn(object);
+                        }
 
-                            @Override
-                            public void onFailed(Exception e) {
+                        @Override
+                        public void onFailed(Exception e) {
 
-                            }
-                        }), ANIMATE_RIGHT_TO_LEFT);
-                    }
+                        }
+                    }), ANIMATE_RIGHT_TO_LEFT);
                 }
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
@@ -360,22 +317,14 @@ public class SelectFriendFragment extends BaseFragment {
 
     public List<GroupRequestGroupParticipantArrayItem> fillSelectedFriendList() {
 
-        try {
-            List<GroupRequestGroupParticipantArrayItem> selectedFriendList = new ArrayList<>();
+        List<GroupRequestGroupParticipantArrayItem> selectedFriendList = new ArrayList<>();
 
-            for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
-                GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
-                groupRequestGroupParticipantArrayItem.setParticipantUserid(userProfileProperties.getUserid());
-                selectedFriendList.add(groupRequestGroupParticipantArrayItem);
-            }
-
-            return selectedFriendList;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        for (UserProfileProperties userProfileProperties : SelectedFriendList.getInstance().getSelectedFriendList().getResultArray()) {
+            GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
+            groupRequestGroupParticipantArrayItem.setParticipantUserid(userProfileProperties.getUserid());
+            selectedFriendList.add(groupRequestGroupParticipantArrayItem);
         }
-        return null;
+
+        return selectedFriendList;
     }
 }

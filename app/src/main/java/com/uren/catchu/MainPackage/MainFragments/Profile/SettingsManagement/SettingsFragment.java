@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.DynamicLinkUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -71,19 +70,12 @@ public class SettingsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        try {
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-            mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
-            ButterKnife.bind(this, mView);
-            init();
-            setDefaultUIValues();
-            addListeners();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
+        ButterKnife.bind(this, mView);
+        init();
+        setDefaultUIValues();
+        addListeners();
         return mView;
     }
 
@@ -99,95 +91,81 @@ public class SettingsFragment extends BaseFragment {
     }
 
     public void setDefaultUIValues() {
-        try {
-            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
+        toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
 
-            if (AccountHolderInfo.getInstance().getUser() != null &&
-                    AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
-                    AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount())
-                privateAccSwitch.setChecked(true);
-            else
-                privateAccSwitch.setChecked(false);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (AccountHolderInfo.getInstance().getUser() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
+                AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount())
+            privateAccSwitch.setChecked(true);
+        else
+            privateAccSwitch.setChecked(false);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     public void addListeners() {
 
-        try {
-            commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().onBackPressed();
-                }
-            });
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
-            logoutLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    signOutClicked();
-                }
-            });
+        logoutLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                signOutClicked();
+            }
+        });
 
-            addFromFacebookLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startFacebookFriendsFragment();
-                }
-            });
+        addFromFacebookLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startFacebookFriendsFragment();
+            }
+        });
 
-            addFromContactLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startContactFriendsFragment();
-                }
-            });
+        addFromContactLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startContactFriendsFragment();
+            }
+        });
 
-            inviteForInstallLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    DynamicLinkUtil.setAppInvitationLink(getContext(), fragment);
-                }
-            });
+        inviteForInstallLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DynamicLinkUtil.setAppInvitationLink(getContext(), fragment);
+            }
+        });
 
-            changePasswordLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startChangePasswordFragment();
-                }
-            });
+        changePasswordLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startChangePasswordFragment();
+            }
+        });
 
-            problemInformLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startNotifyProblemFragment();
-                }
-            });
+        problemInformLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startNotifyProblemFragment();
+            }
+        });
 
-            privateAccSwitch.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    switch (event.getAction()) {
-                        case MotionEvent.ACTION_DOWN:
-                            SettingOperation.changeUserPrivacy(getContext(), privateAccSwitch);
-                            break;
-                        default:
-                            break;
-                    }
-                    return false;
+        privateAccSwitch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        SettingOperation.changeUserPrivacy(getContext(), privateAccSwitch);
+                        break;
+                    default:
+                        break;
                 }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+                return false;
+            }
+        });
     }
 
     public void startFacebookFriendsFragment() {
@@ -208,7 +186,7 @@ public class SettingsFragment extends BaseFragment {
         }
     }
 
-    public void startNotifyProblemFragment(){
+    public void startNotifyProblemFragment() {
         if (mFragmentNavigation != null) {
             getActivity().findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;
@@ -217,15 +195,8 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void signOutClicked() {
-        try {
-            SettingOperation.userSignOut();
-            getActivity().finish();
-            startActivity(new Intent(getActivity(), MainActivity.class));
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        SettingOperation.userSignOut();
+        getActivity().finish();
+        startActivity(new Intent(getActivity(), MainActivity.class));
     }
 }

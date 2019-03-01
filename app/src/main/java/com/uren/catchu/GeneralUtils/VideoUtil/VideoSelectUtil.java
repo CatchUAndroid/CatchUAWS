@@ -5,14 +5,9 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
-import com.deep.videotrimmer.utils.FileUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
-import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
 public class VideoSelectUtil {
     Context context;
@@ -30,41 +25,26 @@ public class VideoSelectUtil {
     }
 
     public void videoUriProcess() {
-        try {
-            if (videoRealPath == null || videoRealPath.isEmpty())
-                videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
+        if (videoRealPath == null || videoRealPath.isEmpty())
+            videoRealPath = UriAdapter.getPathFromGalleryUri(context, videoUri);
 
-            if (videoRealPath == null || videoRealPath.isEmpty())
-                videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
+        if (videoRealPath == null || videoRealPath.isEmpty())
+            videoRealPath = UriAdapter.getRealPathFromURI(videoUri, context);
 
-            if (videoRealPath == null || videoRealPath.isEmpty())
-                videoRealPath = UriAdapter.getFilePathFromURI(context, videoUri, MEDIA_TYPE_VIDEO);
+        if (videoRealPath == null || videoRealPath.isEmpty())
+            videoRealPath = UriAdapter.getFilePathFromURI(context, videoUri, MEDIA_TYPE_VIDEO);
 
-            if (videoRealPath == null || videoRealPath.isEmpty())
-                videoRealPath = videoUri.getPath();
+        if (videoRealPath == null || videoRealPath.isEmpty())
+            videoRealPath = videoUri.getPath();
 
-            if (videoRealPath != null && !videoRealPath.isEmpty())
-                setBitmapFromUriForVideo();
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (videoRealPath != null && !videoRealPath.isEmpty())
+            setBitmapFromUriForVideo();
     }
 
     public void setBitmapFromUriForVideo() {
-        try {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(videoRealPath);
-            videoBitmap = retriever.getFrameAtTime(100);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(videoRealPath);
+        videoBitmap = retriever.getFrameAtTime(100);
     }
 
     public Uri getVideoUri() {

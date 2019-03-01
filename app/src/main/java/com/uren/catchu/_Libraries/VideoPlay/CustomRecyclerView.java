@@ -14,9 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -101,96 +98,83 @@ public class CustomRecyclerView extends RecyclerView {
                     boolean foundFirstVideo = false;
                     for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
                         final RecyclerView.ViewHolder holder = findViewHolderForAdapterPosition(i);
-                        try {
-                            CustomViewHolder cvh = (CustomViewHolder) holder;
-                            if (i >= 0 && cvh != null && cvh.getVideoUrl() != null && !cvh.getVideoUrl().equalsIgnoreCase("null") && (cvh.getVideoUrl().endsWith(".mp4") || !checkForMp4)) {
-                                int[] location = new int[2];
-                                cvh.getAah_vi().getLocationOnScreen(location);
-                                Rect rect_child = new Rect(location[0], location[1], location[0] + cvh.getAah_vi().getWidth(), location[1] + cvh.getAah_vi().getHeight());
+                        CustomViewHolder cvh = (CustomViewHolder) holder;
+                        if (i >= 0 && cvh != null && cvh.getVideoUrl() != null && !cvh.getVideoUrl().equalsIgnoreCase("null") && (cvh.getVideoUrl().endsWith(".mp4") || !checkForMp4)) {
+                            int[] location = new int[2];
+                            cvh.getAah_vi().getLocationOnScreen(location);
+                            Rect rect_child = new Rect(location[0], location[1], location[0] + cvh.getAah_vi().getWidth(), location[1] + cvh.getAah_vi().getHeight());
 //                                        Log.d("k9pos", "x: " + location[0] + " | x right: " + (location[0] + cvh.getAah_vi().getWidth()) + " | y: " + location[1] + " | y bottom: " + (location[1] + cvh.getAah_vi().getHeight()));
 //                                Log.d("trace", i + " contains: " + rect_parent.contains(rect_child));
-                                float rect_parent_area = (rect_child.right - rect_child.left) * (rect_child.bottom - rect_child.top);
-                                float x_overlap = Math.max(0, Math.min(rect_child.right, rect_parent.right) - Math.max(rect_child.left, rect_parent.left));
-                                float y_overlap = Math.max(0, Math.min(rect_child.bottom, rect_parent.bottom) - Math.max(rect_child.top, rect_parent.top));
-                                float overlapArea = x_overlap * y_overlap;
-                                float percent = (overlapArea / rect_parent_area) * 100.0f;
-                                if (!foundFirstVideo && percent >= visiblePercent) {
+                            float rect_parent_area = (rect_child.right - rect_child.left) * (rect_child.bottom - rect_child.top);
+                            float x_overlap = Math.max(0, Math.min(rect_child.right, rect_parent.right) - Math.max(rect_child.left, rect_parent.left));
+                            float y_overlap = Math.max(0, Math.min(rect_child.bottom, rect_parent.bottom) - Math.max(rect_child.top, rect_parent.top));
+                            float overlapArea = x_overlap * y_overlap;
+                            float percent = (overlapArea / rect_parent_area) * 100.0f;
+                            if (!foundFirstVideo && percent >= visiblePercent) {
 //                                    Log.d("trace", i + " foundFirstVideo: " + cvh.getVideoUrl());
-                                    foundFirstVideo = true;
-                                    if (getString(_act, cvh.getVideoUrl()) != null && new File(getString(_act, cvh.getVideoUrl())).exists()) {
-                                        ((CustomViewHolder) holder).initVideoView(getString(_act, cvh.getVideoUrl()), _act);
-                                    } else {
-                                        ((CustomViewHolder) holder).initVideoView(cvh.getVideoUrl(), _act);
-                                    }
-                                    if (downloadVideos) {
-                                        startDownloadInBackground(cvh.getVideoUrl());
-                                    }
-                                    Runnable myRunnable = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (!((CustomViewHolder) holder).isPaused())
-                                                ((CustomViewHolder) holder).playVideo();
-                                        }
-                                    };
-                                    handler.post(myRunnable);
-                                    runnables.add(myRunnable);
+                                foundFirstVideo = true;
+                                if (getString(_act, cvh.getVideoUrl()) != null && new File(getString(_act, cvh.getVideoUrl())).exists()) {
+                                    ((CustomViewHolder) holder).initVideoView(getString(_act, cvh.getVideoUrl()), _act);
                                 } else {
-//                                    Log.d("trace", i + " not foundFirstVideo: ");
-                                    ((CustomViewHolder) holder).pauseVideo();
+                                    ((CustomViewHolder) holder).initVideoView(cvh.getVideoUrl(), _act);
                                 }
+                                if (downloadVideos) {
+                                    startDownloadInBackground(cvh.getVideoUrl());
+                                }
+                                Runnable myRunnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!((CustomViewHolder) holder).isPaused())
+                                            ((CustomViewHolder) holder).playVideo();
+                                    }
+                                };
+                                handler.post(myRunnable);
+                                runnables.add(myRunnable);
+                            } else {
+//                                    Log.d("trace", i + " not foundFirstVideo: ");
+                                ((CustomViewHolder) holder).pauseVideo();
                             }
-                        } catch (Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.toString());
                         }
                     }
                 } else {
                     for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
                         final RecyclerView.ViewHolder holder = findViewHolderForAdapterPosition(i);
-                        try {
 
-                            CustomViewHolder cvh = (CustomViewHolder) holder;
+                        CustomViewHolder cvh = (CustomViewHolder) holder;
 
-                            if (i >= 0 && cvh != null && (cvh.getVideoUrl().endsWith(".mp4") || !checkForMp4)) {
-                                int[] location = new int[2];
-                                cvh.getAah_vi().getLocationOnScreen(location);
-                                Rect rect_child = new Rect(location[0], location[1], location[0] + cvh.getAah_vi().getWidth(), location[1] + cvh.getAah_vi().getHeight());
+                        if (i >= 0 && cvh != null && (cvh.getVideoUrl().endsWith(".mp4") || !checkForMp4)) {
+                            int[] location = new int[2];
+                            cvh.getAah_vi().getLocationOnScreen(location);
+                            Rect rect_child = new Rect(location[0], location[1], location[0] + cvh.getAah_vi().getWidth(), location[1] + cvh.getAah_vi().getHeight());
 //                                        Log.d("k9pos", "x: " + location[0] + " | x right: " + (location[0] + cvh.getAah_vi().getWidth()) + " | y: " + location[1] + " | y bottom: " + (location[1] + cvh.getAah_vi().getHeight()));
 //                                Log.d("trace", i + " contains: " + rect_parent.contains(rect_child));
-                                float rect_parent_area = (rect_child.right - rect_child.left) * (rect_child.bottom - rect_child.top);
-                                float x_overlap = Math.max(0, Math.min(rect_child.right, rect_parent.right) - Math.max(rect_child.left, rect_parent.left));
-                                float y_overlap = Math.max(0, Math.min(rect_child.bottom, rect_parent.bottom) - Math.max(rect_child.top, rect_parent.top));
-                                float overlapArea = x_overlap * y_overlap;
-                                float percent = (overlapArea / rect_parent_area) * 100.0f;
-                                if (percent >= visiblePercent) {
-                                    if (getString(_act, cvh.getVideoUrl()) != null && new File(getString(_act, cvh.getVideoUrl())).exists()) {
-                                        ((CustomViewHolder) holder).initVideoView(getString(_act, cvh.getVideoUrl()), _act);
-                                    } else {
-                                        ((CustomViewHolder) holder).initVideoView(cvh.getVideoUrl(), _act);
-                                    }
-                                    if (downloadVideos) {
-                                        startDownloadInBackground(cvh.getVideoUrl());
-                                    }
-                                    Runnable myRunnable = new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (!((CustomViewHolder) holder).isPaused())
-                                                ((CustomViewHolder) holder).playVideo();
-                                        }
-                                    };
-                                    handler.post(myRunnable);
-                                    runnables.add(myRunnable);
+                            float rect_parent_area = (rect_child.right - rect_child.left) * (rect_child.bottom - rect_child.top);
+                            float x_overlap = Math.max(0, Math.min(rect_child.right, rect_parent.right) - Math.max(rect_child.left, rect_parent.left));
+                            float y_overlap = Math.max(0, Math.min(rect_child.bottom, rect_parent.bottom) - Math.max(rect_child.top, rect_parent.top));
+                            float overlapArea = x_overlap * y_overlap;
+                            float percent = (overlapArea / rect_parent_area) * 100.0f;
+                            if (percent >= visiblePercent) {
+                                if (getString(_act, cvh.getVideoUrl()) != null && new File(getString(_act, cvh.getVideoUrl())).exists()) {
+                                    ((CustomViewHolder) holder).initVideoView(getString(_act, cvh.getVideoUrl()), _act);
                                 } else {
-                                    ((CustomViewHolder) holder).pauseVideo();
+                                    ((CustomViewHolder) holder).initVideoView(cvh.getVideoUrl(), _act);
                                 }
+                                if (downloadVideos) {
+                                    startDownloadInBackground(cvh.getVideoUrl());
+                                }
+                                Runnable myRunnable = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!((CustomViewHolder) holder).isPaused())
+                                            ((CustomViewHolder) holder).playVideo();
+                                    }
+                                };
+                                handler.post(myRunnable);
+                                runnables.add(myRunnable);
+                            } else {
+                                ((CustomViewHolder) holder).pauseVideo();
                             }
-                        } catch (Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
                         }
-
                     }
                 }
             }
@@ -218,7 +202,7 @@ public class CustomRecyclerView extends RecyclerView {
         /* Starting Download Service */
         if ((getString(_act, url) == null || !(new File(getString(_act, url)).exists())) && url != null && !url.equalsIgnoreCase("null")) {
             Intent intent = new Intent(Intent.ACTION_SYNC, null, _act, DownloadService.class);
-        /* Send optional extras to Download IntentService */
+            /* Send optional extras to Download IntentService */
             intent.putExtra("url", url);
             intent.putExtra("path", downloadPath);
             intent.putExtra("requestId", 101);

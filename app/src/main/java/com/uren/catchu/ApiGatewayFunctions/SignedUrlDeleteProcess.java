@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import catchu.model.BaseResponse;
 import catchu.model.BucketUploadResponse;
@@ -42,9 +41,6 @@ public class SignedUrlDeleteProcess extends AsyncTask<Void, Void, BaseResponse> 
                 return null;
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

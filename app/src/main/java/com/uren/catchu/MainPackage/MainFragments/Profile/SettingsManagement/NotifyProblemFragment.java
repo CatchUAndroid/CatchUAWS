@@ -30,7 +30,6 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenForReportCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -122,20 +121,13 @@ public class NotifyProblemFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
-            if (mView == null) {
-                mView = inflater.inflate(R.layout.fragment_notify_problem, container, false);
-                ButterKnife.bind(this, mView);
-                initVariables();
-                addListeners();
-                setShapes();
-                initProblemList();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_notify_problem, container, false);
+            ButterKnife.bind(this, mView);
+            initVariables();
+            addListeners();
+            setShapes();
+            initProblemList();
         }
         return mView;
     }
@@ -147,224 +139,175 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     private void initVariables() {
-        try {
-            toolbarTitleTv.setText(getResources().getString(R.string.REPORT_PROBLEM_OR_COMMENT));
-            permissionModule = new PermissionModule(getContext());
-            NextActivity.notifyProblemFragment = this;
-            commonToolbarTickImgv.setVisibility(View.VISIBLE);
-            screenShotApproveBtn = getActivity().findViewById(R.id.screenShotApproveBtn);
-            screenShotCancelBtn = getActivity().findViewById(R.id.screenShotCancelBtn);
-            screenShotMainLayout = getActivity().findViewById(R.id.screenShotMainLayout);
-            profilePageMainLayout = getActivity().findViewById(R.id.profilePageMainLayout);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        toolbarTitleTv.setText(getResources().getString(R.string.REPORT_PROBLEM_OR_COMMENT));
+        permissionModule = new PermissionModule(getContext());
+        NextActivity.notifyProblemFragment = this;
+        commonToolbarTickImgv.setVisibility(View.VISIBLE);
+        screenShotApproveBtn = getActivity().findViewById(R.id.screenShotApproveBtn);
+        screenShotCancelBtn = getActivity().findViewById(R.id.screenShotCancelBtn);
+        screenShotMainLayout = getActivity().findViewById(R.id.screenShotMainLayout);
+        profilePageMainLayout = getActivity().findViewById(R.id.profilePageMainLayout);
     }
 
     public void setShapes() {
-        try {
-            GradientDrawable shape = ShapeUtil.getShape(getResources().getColor(R.color.White, null),
-                    getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
-            addPhotoImgv1.setBackground(shape);
-            addPhotoImgv2.setBackground(shape);
-            addPhotoImgv3.setBackground(shape);
-            addPhotoImgv4.setBackground(shape);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        GradientDrawable shape = ShapeUtil.getShape(getResources().getColor(R.color.White, null),
+                getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
+        addPhotoImgv1.setBackground(shape);
+        addPhotoImgv2.setBackground(shape);
+        addPhotoImgv3.setBackground(shape);
+        addPhotoImgv4.setBackground(shape);
     }
 
     public void addListeners() {
-        try {
-            commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getActivity().onBackPressed();
-                }
-            });
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
-            commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (noteTextEditText != null && noteTextEditText.getText() != null &&
-                            noteTextEditText.getText().toString().isEmpty()) {
-                        CommonUtils.showToastShort(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
-                        return;
-                    }
-                    saveReport();
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (noteTextEditText != null && noteTextEditText.getText() != null &&
+                        noteTextEditText.getText().toString().isEmpty()) {
+                    CommonUtils.showToastShort(getContext(), getResources().getString(R.string.CAN_YOU_SPECIFY_THE_PROBLEM));
+                    return;
                 }
-            });
+                saveReport();
+            }
+        });
 
-            addPhotoImgv1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv1;
-                    managePhotoChosen();
-                }
-            });
+        addPhotoImgv1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv1;
+                managePhotoChosen();
+            }
+        });
 
-            addPhotoImgv2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv2;
-                    managePhotoChosen();
-                }
-            });
+        addPhotoImgv2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv2;
+                managePhotoChosen();
+            }
+        });
 
-            addPhotoImgv3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv3;
-                    managePhotoChosen();
-                }
-            });
+        addPhotoImgv3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv3;
+                managePhotoChosen();
+            }
+        });
 
-            addPhotoImgv4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv4;
-                    managePhotoChosen();
-                }
-            });
+        addPhotoImgv4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv4;
+                managePhotoChosen();
+            }
+        });
 
-            imgDelete1.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv1;
-                    removePhoto();
-                }
-            });
+        imgDelete1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv1;
+                removePhoto();
+            }
+        });
 
-            imgDelete2.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv2;
-                    removePhoto();
-                }
-            });
+        imgDelete2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv2;
+                removePhoto();
+            }
+        });
 
-            imgDelete3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv3;
-                    removePhoto();
-                }
-            });
+        imgDelete3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv3;
+                removePhoto();
+            }
+        });
 
-            imgDelete4.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chosenImgv = addPhotoImgv4;
-                    removePhoto();
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        imgDelete4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chosenImgv = addPhotoImgv4;
+                removePhoto();
+            }
+        });
     }
 
     public void initProblemList() {
-        try {
-            problemListBox = new ArrayList<>();
+        problemListBox = new ArrayList<>();
 
-            ProblemNotifyModel p1 = new ProblemNotifyModel();
-            p1.setImageView(addPhotoImgv1);
-            p1.setDeleteImgv(imgDelete1);
-            problemListBox.add(p1);
-            setViewPadding(addPhotoImgv1, p1);
+        ProblemNotifyModel p1 = new ProblemNotifyModel();
+        p1.setImageView(addPhotoImgv1);
+        p1.setDeleteImgv(imgDelete1);
+        problemListBox.add(p1);
+        setViewPadding(addPhotoImgv1, p1);
 
-            ProblemNotifyModel p2 = new ProblemNotifyModel();
-            p2.setImageView(addPhotoImgv2);
-            p2.setDeleteImgv(imgDelete2);
-            problemListBox.add(p2);
-            setViewPadding(addPhotoImgv2, p2);
+        ProblemNotifyModel p2 = new ProblemNotifyModel();
+        p2.setImageView(addPhotoImgv2);
+        p2.setDeleteImgv(imgDelete2);
+        problemListBox.add(p2);
+        setViewPadding(addPhotoImgv2, p2);
 
-            ProblemNotifyModel p3 = new ProblemNotifyModel();
-            p3.setImageView(addPhotoImgv3);
-            p3.setDeleteImgv(imgDelete3);
-            problemListBox.add(p3);
-            setViewPadding(addPhotoImgv3, p3);
+        ProblemNotifyModel p3 = new ProblemNotifyModel();
+        p3.setImageView(addPhotoImgv3);
+        p3.setDeleteImgv(imgDelete3);
+        problemListBox.add(p3);
+        setViewPadding(addPhotoImgv3, p3);
 
-            ProblemNotifyModel p4 = new ProblemNotifyModel();
-            p4.setImageView(addPhotoImgv4);
-            p4.setDeleteImgv(imgDelete4);
-            problemListBox.add(p4);
-            setViewPadding(addPhotoImgv4, p4);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        ProblemNotifyModel p4 = new ProblemNotifyModel();
+        p4.setImageView(addPhotoImgv4);
+        p4.setDeleteImgv(imgDelete4);
+        problemListBox.add(p4);
+        setViewPadding(addPhotoImgv4, p4);
     }
 
     public void setViewPadding(ImageView view, ProblemNotifyModel problemNotifyModel) {
-        try {
-            problemNotifyModel.getImageView().setPadding(70, 70, 70, 70);
-            problemNotifyModel.getImageView().setColorFilter(getActivity().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
-            problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_CENTER);
-            problemNotifyModel.getDeleteImgv().setVisibility(View.GONE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        problemNotifyModel.getImageView().setPadding(70, 70, 70, 70);
+        problemNotifyModel.getImageView().setColorFilter(getActivity().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
+        problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_CENTER);
+        problemNotifyModel.getDeleteImgv().setVisibility(View.GONE);
     }
 
     public void clearViewPadding(ProblemNotifyModel problemNotifyModel) {
-        try {
-            problemNotifyModel.getImageView().setPadding(0, 0, 0, 0);
-            problemNotifyModel.getImageView().setColorFilter(null);
-            problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_XY);
-            problemNotifyModel.getDeleteImgv().setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        problemNotifyModel.getImageView().setPadding(0, 0, 0, 0);
+        problemNotifyModel.getImageView().setColorFilter(null);
+        problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_XY);
+        problemNotifyModel.getDeleteImgv().setVisibility(View.VISIBLE);
     }
 
     public void managePhotoChosen() {
-        try {
-            for (final ProblemNotifyModel problemNotifyModel : problemListBox) {
+        for (final ProblemNotifyModel problemNotifyModel : problemListBox) {
 
-                if (problemNotifyModel.getImageView() == chosenImgv) {
-                    if (problemNotifyModel.getPhotoSelectUtil() != null) {
+            if (problemNotifyModel.getImageView() == chosenImgv) {
+                if (problemNotifyModel.getPhotoSelectUtil() != null) {
 
-                        if (mFragmentNavigation != null) {
-                            mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil(), new ReturnCallback() {
-                                        @Override
-                                        public void onReturn(Object object) {
-                                            PhotoSelectUtil util = (PhotoSelectUtil) object;
-                                            problemNotifyModel.setPhotoSelectUtil(util);
-                                            setPhotoSelectUtil(util);
-                                        }
-                                    }),
-                                    ANIMATE_RIGHT_TO_LEFT);
-                        }
-                        return;
+                    if (mFragmentNavigation != null) {
+                        mFragmentNavigation.pushFragment(new MarkProblemFragment(problemNotifyModel.getPhotoSelectUtil(), new ReturnCallback() {
+                                    @Override
+                                    public void onReturn(Object object) {
+                                        PhotoSelectUtil util = (PhotoSelectUtil) object;
+                                        problemNotifyModel.setPhotoSelectUtil(util);
+                                        setPhotoSelectUtil(util);
+                                    }
+                                }),
+                                ANIMATE_RIGHT_TO_LEFT);
                     }
+                    return;
                 }
             }
-
-            startPhotoChosen();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
+
+        startPhotoChosen();
     }
 
     public void startPhotoChosen() {
@@ -382,218 +325,143 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     private void screenShotStart() {
-        try {
-            getActivity().onBackPressed();
+        getActivity().onBackPressed();
 
-            screenShotMainLayout.setVisibility(View.VISIBLE);
+        screenShotMainLayout.setVisibility(View.VISIBLE);
 
-            screenShotApproveBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Bitmap bitmap = BitmapConversion.getScreenShot(profilePageMainLayout);
-                    PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil();
-                    photoSelectUtil.setBitmap(bitmap);
-                    setPhotoSelectUtil(photoSelectUtil);
-                    returnNotifyFragment();
-                }
-            });
+        screenShotApproveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bitmap bitmap = BitmapConversion.getScreenShot(profilePageMainLayout);
+                PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil();
+                photoSelectUtil.setBitmap(bitmap);
+                setPhotoSelectUtil(photoSelectUtil);
+                returnNotifyFragment();
+            }
+        });
 
-            screenShotCancelBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    returnNotifyFragment();
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        screenShotCancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                returnNotifyFragment();
+            }
+        });
     }
 
     public void returnNotifyFragment() {
-        try {
-            screenShotMainLayout.setVisibility(View.GONE);
-            screenShotApproveBtn.setOnClickListener(null);
-            screenShotCancelBtn.setOnClickListener(null);
+        screenShotMainLayout.setVisibility(View.GONE);
+        screenShotApproveBtn.setOnClickListener(null);
+        screenShotCancelBtn.setOnClickListener(null);
 
-            if (getActivity() != null)
-                //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
-                ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
-            else {
-                //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+        if (getActivity() != null)
+            //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
+            ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
+        else {
+            //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
 
-                //System.out.println("((NextActivity) getActivity()):" + getActivity());
+            //System.out.println("((NextActivity) getActivity()):" + getActivity());
 
-                //((NextActivity) getContext()).switchAndUpdateTabSelection(FragNavController.TAB3);
-                if (mFragmentNavigation != null) {
-                    mFragmentNavigation.pushFragment(NextActivity.notifyProblemFragment, ANIMATE_RIGHT_TO_LEFT);
-                }
+            //((NextActivity) getContext()).switchAndUpdateTabSelection(FragNavController.TAB3);
+            if (mFragmentNavigation != null) {
+                mFragmentNavigation.pushFragment(NextActivity.notifyProblemFragment, ANIMATE_RIGHT_TO_LEFT);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     public void removePhoto() {
-        try {
-            for (ProblemNotifyModel problemNotifyModel : problemListBox) {
-                if (problemNotifyModel.getImageView() == chosenImgv) {
-                    problemNotifyModel.setPhotoSelectUtil(null);
-                    setViewPadding(chosenImgv, problemNotifyModel);
-                    Glide.with(NextActivity.thisActivity)
-                            .load(R.mipmap.icon_add_white)
-                            .apply(RequestOptions.centerInsideTransform())
-                            .into(chosenImgv);
-                    break;
-                }
+        for (ProblemNotifyModel problemNotifyModel : problemListBox) {
+            if (problemNotifyModel.getImageView() == chosenImgv) {
+                problemNotifyModel.setPhotoSelectUtil(null);
+                setViewPadding(chosenImgv, problemNotifyModel);
+                Glide.with(NextActivity.thisActivity)
+                        .load(R.mipmap.icon_add_white)
+                        .apply(RequestOptions.centerInsideTransform())
+                        .into(chosenImgv);
+                break;
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     private void startGalleryProcess() {
-        try {
-            if (permissionModule.checkWriteExternalStoragePermission())
-                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                        getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
-            else
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (permissionModule.checkWriteExternalStoragePermission())
+            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                    getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
+        else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        try {
-            if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                            getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
-                }
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                        getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        try {
-            if (resultCode == Activity.RESULT_OK) {
-                if (requestCode == CODE_GALLERY_REQUEST) {
-                    PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
-                    setPhotoSelectUtil(photoSelectUtil);
-                }
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == CODE_GALLERY_REQUEST) {
+                PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil(getActivity(), data, GALLERY_TEXT);
+                setPhotoSelectUtil(photoSelectUtil);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     public void setPhotoSelectUtil(PhotoSelectUtil photoSelectUtil) {
-        try {
-            for (ProblemNotifyModel problemNotifyModel : problemListBox) {
-                if (problemNotifyModel.getImageView() == chosenImgv) {
-                    problemNotifyModel.setPhotoSelectUtil(photoSelectUtil);
-                    clearViewPadding(problemNotifyModel);
+        for (ProblemNotifyModel problemNotifyModel : problemListBox) {
+            if (problemNotifyModel.getImageView() == chosenImgv) {
+                problemNotifyModel.setPhotoSelectUtil(photoSelectUtil);
+                clearViewPadding(problemNotifyModel);
 
-                    if (photoSelectUtil.getBitmap() != null)
-                        Glide.with(NextActivity.thisActivity)
-                                .load(photoSelectUtil.getBitmap())
-                                .apply(RequestOptions.fitCenterTransform())
-                                .into(chosenImgv);
-                    break;
-                }
+                if (photoSelectUtil.getBitmap() != null)
+                    Glide.with(NextActivity.thisActivity)
+                            .load(photoSelectUtil.getBitmap())
+                            .apply(RequestOptions.fitCenterTransform())
+                            .into(chosenImgv);
+                break;
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     public void saveReport() {
-        try {
-            final String methodName = new Object() {
-            }.getClass().getEnclosingMethod().getName();
-            setFinalReportBox();
-            DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
-                    getResources().getString(R.string.THANKS_FOR_FEEDBACK), 3000, new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                            try {
-                                getActivity().onBackPressed();
-                                ((NextActivity) getActivity()).clearStackGivenIndex(FragNavController.TAB1);
-                                ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
+        setFinalReportBox();
+        DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
+                getResources().getString(R.string.THANKS_FOR_FEEDBACK), 3000, new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                        getActivity().onBackPressed();
+                        ((NextActivity) getActivity()).clearStackGivenIndex(FragNavController.TAB1);
+                        ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
 
-                                new SaveReportProblemProcess(photoSelectUtilList,
-                                        noteTextEditText.getText().toString(),
-                                        AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
-                                        new CompleteCallback() {
-                                            @Override
-                                            public void onComplete(Object object) {
+                        new SaveReportProblemProcess(photoSelectUtilList,
+                                noteTextEditText.getText().toString(),
+                                AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                                new CompleteCallback() {
+                                    @Override
+                                    public void onComplete(Object object) {
 
-                                            }
+                                    }
 
-                                            @Override
-                                            public void onFailed(Exception e) {
+                                    @Override
+                                    public void onFailed(Exception e) {
 
-                                            }
-                                        });
-                            } catch (Exception e) {
-                                ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                                        methodName + CHAR_HYPHEN + new Object() {
-                                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+                                    }
+                                });
+                    }
+                });
     }
 
     private void setFinalReportBox() {
-        try {
-            for (ProblemNotifyModel problemNotifyModel : problemListBox) {
-                if (problemNotifyModel != null && problemNotifyModel.getPhotoSelectUtil() != null &&
-                        problemNotifyModel.getPhotoSelectUtil().getBitmap() != null) {
-                    photoSelectUtilList.add(problemNotifyModel.getPhotoSelectUtil());
-                }
+        for (ProblemNotifyModel problemNotifyModel : problemListBox) {
+            if (problemNotifyModel != null && problemNotifyModel.getPhotoSelectUtil() != null &&
+                    problemNotifyModel.getPhotoSelectUtil().getBitmap() != null) {
+                photoSelectUtilList.add(problemNotifyModel.getPhotoSelectUtil());
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
-
-
 }

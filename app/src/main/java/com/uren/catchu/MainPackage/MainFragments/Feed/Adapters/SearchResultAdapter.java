@@ -22,7 +22,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -80,23 +79,17 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         RecyclerView.ViewHolder viewHolder = null;
-        try {
-            if (viewType == VIEW_ITEM) {
-                View itemView = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.follow_vert_list_item, parent, false);
 
-                viewHolder = new MyViewHolder(itemView);
-            } else {
-                View v = LayoutInflater.from(parent.getContext()).inflate(
-                        R.layout.progressbar_item, parent, false);
+        if (viewType == VIEW_ITEM) {
+            View itemView = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.follow_vert_list_item, parent, false);
 
-                viewHolder = new ProgressViewHolder(v);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+            viewHolder = new MyViewHolder(itemView);
+        } else {
+            View v = LayoutInflater.from(parent.getContext()).inflate(
+                    R.layout.progressbar_item, parent, false);
+
+            viewHolder = new ProgressViewHolder(v);
         }
         return viewHolder;
 
@@ -105,20 +98,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
-        try {
-            if (holder instanceof MyViewHolder) {
-                User user = userList.get(position);
-                ((MyViewHolder) holder).setData(user, position);
-            } else {
-                ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (holder instanceof MyViewHolder) {
+            User user = userList.get(position);
+            ((MyViewHolder) holder).setData(user, position);
+        } else {
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
-
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -278,30 +263,16 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     }
 
     public void addProgressLoading() {
-        try {
-            if (getItemViewType(userList.size() - 1) != VIEW_PROG) {
-                userList.add(null);
-                notifyItemInserted(userList.size() - 1);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (getItemViewType(userList.size() - 1) != VIEW_PROG) {
+            userList.add(null);
+            notifyItemInserted(userList.size() - 1);
         }
     }
 
     public void removeProgressLoading() {
-        try {
-            if (getItemViewType(userList.size() - 1) == VIEW_PROG) {
-                userList.remove(userList.size() - 1);
-                notifyItemRemoved(userList.size());
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (getItemViewType(userList.size() - 1) == VIEW_PROG) {
+            userList.remove(userList.size() - 1);
+            notifyItemRemoved(userList.size());
         }
     }
 
@@ -319,45 +290,24 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     }
 
     public void addAll(UserListResponse userListResponse) {
-        try {
-            if (userListResponse != null) {
-                userList.addAll(userListResponse.getItems());
-                notifyItemRangeInserted(userList.size(), userList.size() + userListResponse.getItems().size());
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (userListResponse != null) {
+            userList.addAll(userListResponse.getItems());
+            notifyItemRangeInserted(userList.size(), userList.size() + userListResponse.getItems().size());
         }
     }
 
     public void updateListItems(List<User> newUserList) {
-        try {
-            final SearchResultDiffCallback diffCallback = new SearchResultDiffCallback(this.getPersonList(), newUserList);
-            final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
+        final SearchResultDiffCallback diffCallback = new SearchResultDiffCallback(this.getPersonList(), newUserList);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(diffCallback);
 
-            this.userList.clear();
-            this.userList.addAll(newUserList);
-            diffResult.dispatchUpdatesTo(this);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        this.userList.clear();
+        this.userList.addAll(newUserList);
+        diffResult.dispatchUpdatesTo(this);
     }
 
     public void clearList() {
-        try {
-            userList.clear();
-            notifyDataSetChanged();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext,this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        userList.clear();
+        notifyDataSetChanged();
     }
 
     public void setListItemClickListener(ListItemClickListener listItemClickListener) {

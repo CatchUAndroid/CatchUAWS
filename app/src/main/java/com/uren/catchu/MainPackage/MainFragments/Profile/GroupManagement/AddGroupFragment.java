@@ -32,7 +32,6 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -116,21 +115,15 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        try {
-            toolbarTitleTv.setText(getResources().getString(R.string.addGroupName));
-            addListeners();
-            setGroupTextSize();
-            openPersonSelectionPage();
-            permissionModule = new PermissionModule(getContext());
-            imageShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
-                    0, GradientDrawable.OVAL, 50, 0);
-            groupPictureImgv.setBackground(imageShape);
-            participantSize.setText(Integer.toString(SelectedFriendList.getInstance().getSize()));
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        toolbarTitleTv.setText(getResources().getString(R.string.addGroupName));
+        addListeners();
+        setGroupTextSize();
+        openPersonSelectionPage();
+        permissionModule = new PermissionModule(getContext());
+        imageShape = ShapeUtil.getShape(getResources().getColor(R.color.LightGrey, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        groupPictureImgv.setBackground(imageShape);
+        participantSize.setText(Integer.toString(SelectedFriendList.getInstance().getSize()));
     }
 
     public void addListeners() {
@@ -179,18 +172,12 @@ public class AddGroupFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
+                groupNameSize = GROUP_NAME_MAX_LENGTH - s.toString().length();
 
-                    if (groupNameSize >= 0)
-                        textSizeCntTv.setText(Integer.toString(groupNameSize));
-                    else
-                        textSizeCntTv.setText(Integer.toString(0));
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                            new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    e.printStackTrace();
-                }
+                if (groupNameSize >= 0)
+                    textSizeCntTv.setText(Integer.toString(groupNameSize));
+                else
+                    textSizeCntTv.setText(Integer.toString(0));
             }
         });
     }
@@ -216,37 +203,25 @@ public class AddGroupFragment extends BaseFragment {
     }
 
     private void startGalleryProcess() {
-        try {
-            if (permissionModule.checkWriteExternalStoragePermission())
-                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                        getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
-            else
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (permissionModule.checkWriteExternalStoragePermission())
+            startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                    getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
+        else
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     public void startCameraProcess() {
 
-        try {
-            if (!CommonUtils.checkCameraHardware(getContext())) {
-                CommonUtils.showToastShort(getContext(), getResources().getString(R.string.deviceHasNoCamera));
-                return;
-            }
-
-            if (!permissionModule.checkCameraPermission())
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
-            else
-                startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (!CommonUtils.checkCameraHardware(getContext())) {
+            CommonUtils.showToastShort(getContext(), getResources().getString(R.string.deviceHasNoCamera));
+            return;
         }
+
+        if (!permissionModule.checkCameraPermission())
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
+        else
+            startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
     }
 
     private void setGroupTextSize() {
@@ -255,27 +230,21 @@ public class AddGroupFragment extends BaseFragment {
     }
 
     private void openPersonSelectionPage() {
-        try {
-            adapter = new FriendGridListAdapter(getContext(), SelectedFriendList.getInstance().getSelectedFriendList(), new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
+        adapter = new FriendGridListAdapter(getContext(), SelectedFriendList.getInstance().getSelectedFriendList(), new ReturnCallback() {
+            @Override
+            public void onReturn(Object object) {
 
-                    int itemCount = (int) object;
+                int itemCount = (int) object;
 
-                    if (itemCount == 0)
-                        getActivity().onBackPressed();
-                    else
-                        participantSize.setText(Integer.toString(itemCount));
-                }
-            });
-            recyclerView.setAdapter(adapter);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
-            recyclerView.setLayoutManager(gridLayoutManager);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+                if (itemCount == 0)
+                    getActivity().onBackPressed();
+                else
+                    participantSize.setText(Integer.toString(itemCount));
+            }
+        });
+        recyclerView.setAdapter(adapter);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 4);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 
     public void saveGroup() {
@@ -297,9 +266,6 @@ public class AddGroupFragment extends BaseFragment {
 
             @Override
             public void onFailed(Exception e) {
-                ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
                 DialogBoxUtil.showErrorDialog(getContext(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
@@ -312,70 +278,51 @@ public class AddGroupFragment extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        try {
-            if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
 
-                if (requestCode == permissionModule.PERMISSION_CAMERA) {
-                    photoSelectUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
-                    setGroupPhoto(photoSelectUtil.getMediaUri());
-                } else if (requestCode == CODE_GALLERY_REQUEST) {
-                    photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
-                    setGroupPhoto(photoSelectUtil.getMediaUri());
-                }
+            if (requestCode == permissionModule.PERMISSION_CAMERA) {
+                photoSelectUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
+                setGroupPhoto(photoSelectUtil.getMediaUri());
+            } else if (requestCode == CODE_GALLERY_REQUEST) {
+                photoSelectUtil = new PhotoSelectUtil(getContext(), data, GALLERY_TEXT);
+                setGroupPhoto(photoSelectUtil.getMediaUri());
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
     }
 
     public void setGroupPhoto(Uri groupPhotoUri) {
-        try {
-            if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
-                groupPhotoExist = true;
-                groupPictureImgv.setPadding(0, 0, 0, 0);
-                Glide.with(getContext())
-                        .load(groupPhotoUri)
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(groupPictureImgv);
-            } else {
-                groupPhotoExist = false;
-                photoSelectUtil = null;
-                int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
-                groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
-                Glide.with(this)
-                        .load(R.drawable.photo_camera)
-                        .into(groupPictureImgv);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
+            groupPhotoExist = true;
+            groupPictureImgv.setPadding(0, 0, 0, 0);
+            Glide.with(getContext())
+                    .load(groupPhotoUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(groupPictureImgv);
+        } else {
+            groupPhotoExist = false;
+            photoSelectUtil = null;
+            int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
+            groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+            Glide.with(this)
+                    .load(R.drawable.photo_camera)
+                    .into(groupPictureImgv);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        try {
-            if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
 
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                            getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
-                }
-            } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
-
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
-                }
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
+                        getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {}.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
+            }
         }
     }
 }

@@ -21,9 +21,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.Constants.Error;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.LoginPackage.LoginActivity;
-import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
@@ -121,15 +118,8 @@ public class AccountHolderInfo {
 
     public static String getUserIdFromFirebase() {
         String FBuserId = "";
-        try {
-            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-            FBuserId = currentUser.getUid();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        FBuserId = currentUser.getUid();
         return FBuserId;
     }
 
@@ -139,91 +129,70 @@ public class AccountHolderInfo {
 
     public static void getToken(final TokenCallback tokenCallback) {
 
-        try {
-            if (NextActivity.thisActivity != null) {
-                if (!CommonUtils.isNetworkConnected(NextActivity.thisActivity)) {
-                    CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
-                    tokenCallback.onTokenFail(Error.NO_NETWORK_CONN.toString());
-                    return;
+        if (NextActivity.thisActivity != null) {
+            if (!CommonUtils.isNetworkConnected(NextActivity.thisActivity)) {
+                CommonUtils.connectionErrSnackbarShow(NextActivity.contentFrame, NextActivity.thisActivity);
+                tokenCallback.onTokenFail(Error.NO_NETWORK_CONN.toString());
+                return;
+            }
+        }
+
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
+        tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
+            @Override
+            public void onComplete(@NonNull Task<GetTokenResult> task) {
+                if (task.isSuccessful()) {
+                    tokenCallback.onTokenTaken(task.getResult().getToken());
+                } else {
+                    Log.i("info", "Token task operation fail");
                 }
             }
-
-            final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-            Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
-            tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-                @Override
-                public void onComplete(@NonNull Task<GetTokenResult> task) {
-                    if (task.isSuccessful()) {
-                        tokenCallback.onTokenTaken(task.getResult().getToken());
-                    } else {
-                        Log.i("info", "Token task operation fail");
-                    }
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        });
     }
 
     public static void updateAccountHolderFollowCnt(String requestType) {
-        try {
-            int followingCnt = 0, followerCnt = 0;
-            String followingCount, followerCount;
+        int followingCnt = 0, followerCnt = 0;
+        String followingCount, followerCount;
 
-            followingCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount();
-            followerCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount();
+        followingCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowingCount();
+        followerCount = AccountHolderInfo.getInstance().getUser().getRelationInfo().getFollowerCount();
 
-            if (!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)) {
-                followingCnt = Integer.parseInt(followingCount);
-            }
+        if (!TextUtils.isEmpty(followingCount) && TextUtils.isDigitsOnly(followingCount)) {
+            followingCnt = Integer.parseInt(followingCount);
+        }
 
-            if (!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)) {
-                followerCnt = Integer.parseInt(followerCount);
-            }
+        if (!TextUtils.isEmpty(followerCount) && TextUtils.isDigitsOnly(followerCount)) {
+            followerCnt = Integer.parseInt(followerCount);
+        }
 
-            switch (requestType) {
-                case FRIEND_CREATE_FOLLOW_DIRECTLY:
-                    followingCnt = followingCnt + 1;
-                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
-                    break;
+        switch (requestType) {
+            case FRIEND_CREATE_FOLLOW_DIRECTLY:
+                followingCnt = followingCnt + 1;
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
+                break;
 
-                case FRIEND_DELETE_FOLLOW:
-                    followingCnt = followingCnt - 1;
-                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
-                    break;
+            case FRIEND_DELETE_FOLLOW:
+                followingCnt = followingCnt - 1;
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowingCount(Integer.toString(followingCnt));
+                break;
 
-                case FRIEND_ACCEPT_REQUEST:
-                    followerCnt = followerCnt + 1;
-                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
-                    break;
+            case FRIEND_ACCEPT_REQUEST:
+                followerCnt = followerCnt + 1;
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
+                break;
 
-                case FRIEND_REMOVE_FROM_FOLLOWER_REQUEST:
-                    followerCnt = followerCnt - 1;
-                    AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
+            case FRIEND_REMOVE_FROM_FOLLOWER_REQUEST:
+                followerCnt = followerCnt - 1;
+                AccountHolderInfo.getInstance().getUser().getRelationInfo().setFollowerCount(Integer.toString(followerCnt));
 
-                default:
-                    break;
-            }
-        } catch (NumberFormatException e) {
-            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+            default:
+                break;
         }
     }
 
     public static void setAccountHolderInfoCallback(AccountHolderInfoCallback accountHolderInfoCallback) {
-        try {
-            accountHolderInfoInstance.accountHolderInfoCallback = accountHolderInfoCallback;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, AccountHolderInfo.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        accountHolderInfoInstance.accountHolderInfoCallback = accountHolderInfoCallback;
     }
 
     public static synchronized void reset() {

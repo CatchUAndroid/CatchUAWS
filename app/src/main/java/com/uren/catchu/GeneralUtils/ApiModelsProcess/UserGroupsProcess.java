@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.SaveGroupProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.UpdateGroupProcess;
@@ -115,7 +114,7 @@ public class UserGroupsProcess {
     }
 
     public static void updateGroup(Context context, PhotoSelectUtil photoSelectUtil, GroupRequestResultResultArrayItem groupRequestResultResultArrayItem,
-                                   final UpdateGroupCallback updateGroupCallback){
+                                   final UpdateGroupCallback updateGroupCallback) {
 
         new UpdateGroupProcess(context, photoSelectUtil, groupRequestResultResultArrayItem, new UpdateGroupCallback() {
             @Override
@@ -131,114 +130,72 @@ public class UserGroupsProcess {
     }
 
     public static void startGetGroups(String userId, String token, final CompleteCallback completeCallback) {
-        try {
-            GroupRequest groupRequest = new GroupRequest();
-            groupRequest.setUserid(userId);
-            groupRequest.setRequestType(GET_AUTHENTICATED_USER_GROUP_LIST);
-            startAsyncTask(groupRequest, token, completeCallback);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UserGroupsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        GroupRequest groupRequest = new GroupRequest();
+        groupRequest.setUserid(userId);
+        groupRequest.setRequestType(GET_AUTHENTICATED_USER_GROUP_LIST);
+        startAsyncTask(groupRequest, token, completeCallback);
     }
 
     public static void startAddParticipantsToGroup(String groupId, List<GroupRequestGroupParticipantArrayItem> groupParticipantArray, String token,
                                                    final CompleteCallback completeCallback) {
-        try {
-            GroupRequest groupRequest = new GroupRequest();
-            groupRequest.setGroupid(groupId);
-            groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
-            groupRequest.setGroupParticipantArray(groupParticipantArray);
-            startAsyncTask(groupRequest, token, completeCallback);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UserGroupsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        GroupRequest groupRequest = new GroupRequest();
+        groupRequest.setGroupid(groupId);
+        groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
+        groupRequest.setGroupParticipantArray(groupParticipantArray);
+        startAsyncTask(groupRequest, token, completeCallback);
     }
 
     public static void startGetGroupParticipants(String groupId, String token, final CompleteCallback completeCallback) {
-        try {
-            GroupRequest groupRequest = new GroupRequest();
-            groupRequest.setGroupid(groupId);
-            groupRequest.setRequestType(GET_GROUP_PARTICIPANT_LIST);
-            startAsyncTask(groupRequest, token, completeCallback);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UserGroupsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        GroupRequest groupRequest = new GroupRequest();
+        groupRequest.setGroupid(groupId);
+        groupRequest.setRequestType(GET_GROUP_PARTICIPANT_LIST);
+        startAsyncTask(groupRequest, token, completeCallback);
     }
 
     public static void startExitFromGroup(String userId, String groupId, String token, final CompleteCallback completeCallback) {
-        try {
-            final GroupRequest groupRequest = new GroupRequest();
-            groupRequest.setRequestType(EXIT_GROUP);
-            groupRequest.setUserid(userId);
-            groupRequest.setGroupid(groupId);
-            startAsyncTask(groupRequest, token, completeCallback);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UserGroupsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        final GroupRequest groupRequest = new GroupRequest();
+        groupRequest.setRequestType(EXIT_GROUP);
+        groupRequest.setUserid(userId);
+        groupRequest.setGroupid(groupId);
+        startAsyncTask(groupRequest, token, completeCallback);
     }
 
     public static void startChangeGroupAdmin(String adminUserid, String userId, String groupId, String token, CompleteCallback completeCallback) {
-        try {
-            GroupRequest groupRequest = new GroupRequest();
+        GroupRequest groupRequest = new GroupRequest();
 
-            List<GroupRequestGroupParticipantArrayItem> list = new ArrayList<GroupRequestGroupParticipantArrayItem>();
-            GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
-            groupRequestGroupParticipantArrayItem.setParticipantUserid(adminUserid);
-            list.add(groupRequestGroupParticipantArrayItem);
+        List<GroupRequestGroupParticipantArrayItem> list = new ArrayList<GroupRequestGroupParticipantArrayItem>();
+        GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
+        groupRequestGroupParticipantArrayItem.setParticipantUserid(adminUserid);
+        list.add(groupRequestGroupParticipantArrayItem);
 
-            groupRequest.setRequestType(CHANGE_GROUP_ADMIN);
-            groupRequest.setUserid(userId);
-            groupRequest.setGroupParticipantArray(list);
-            groupRequest.setGroupid(groupId);
-            startAsyncTask(groupRequest, token, completeCallback);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UserGroupsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        groupRequest.setRequestType(CHANGE_GROUP_ADMIN);
+        groupRequest.setUserid(userId);
+        groupRequest.setGroupParticipantArray(list);
+        groupRequest.setGroupid(groupId);
+        startAsyncTask(groupRequest, token, completeCallback);
     }
 
     public static void startAsyncTask(GroupRequest groupRequest, String token, final CompleteCallback completeCallback) {
-        try {
-            GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
-                @Override
-                public void onSuccess(Object object) {
-                    if (object != null)
-                        completeCallback.onComplete((GroupRequestResult) object);
-                    else
-                        completeCallback.onFailed(new Exception(""));
-                }
+        GroupResultProcess groupResultProcess = new GroupResultProcess(new OnEventListener() {
+            @Override
+            public void onSuccess(Object object) {
+                if (object != null)
+                    completeCallback.onComplete((GroupRequestResult) object);
+                else
+                    completeCallback.onFailed(new Exception(""));
+            }
 
-                @Override
-                public void onFailure(Exception e) {
-                    completeCallback.onFailed(e);
-                }
+            @Override
+            public void onFailure(Exception e) {
+                completeCallback.onFailed(e);
+            }
 
-                @Override
-                public void onTaskContinue() {
+            @Override
+            public void onTaskContinue() {
 
-                }
-            }, groupRequest, token);
+            }
+        }, groupRequest, token);
 
-            groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, UserGroupsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        groupResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 }

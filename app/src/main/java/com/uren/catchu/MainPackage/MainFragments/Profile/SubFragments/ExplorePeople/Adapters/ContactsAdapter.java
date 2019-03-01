@@ -20,7 +20,6 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
@@ -58,49 +57,28 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     ContactFriendSelectCallback contactFriendSelectCallback;
 
     public ContactsAdapter(Context context, List<ContactFriendModel> contactFriendModelList, ContactFriendSelectCallback contactFriendSelectCallback) {
-        try {
-            layoutInflater = LayoutInflater.from(context);
-            this.context = context;
-            this.contactFriendModelList = contactFriendModelList;
-            this.orgContactFriendModelList = contactFriendModelList;
-            this.contactFriendSelectCallback = contactFriendSelectCallback;
-            imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.OVAL, 50, 0);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        layoutInflater = LayoutInflater.from(context);
+        this.context = context;
+        this.contactFriendModelList = contactFriendModelList;
+        this.orgContactFriendModelList = contactFriendModelList;
+        this.contactFriendSelectCallback = contactFriendSelectCallback;
+        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
     }
 
     @NonNull
     @Override
     public ContactsAdapter.ContactsHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         ContactsAdapter.ContactsHolder holder = null;
-        try {
-            view = layoutInflater.inflate(R.layout.person_vert_list_item, viewGroup, false);
-            holder = new ContactsHolder(view);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        view = layoutInflater.inflate(R.layout.person_vert_list_item, viewGroup, false);
+        holder = new ContactsHolder(view);
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ContactsAdapter.ContactsHolder myViewHolder, int position) {
-        try {
-            ContactFriendModel contactFriendModel = contactFriendModelList.get(position);
-            myViewHolder.setData(contactFriendModel, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        ContactFriendModel contactFriendModel = contactFriendModelList.get(position);
+        myViewHolder.setData(contactFriendModel, position);
     }
 
 
@@ -120,212 +98,153 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
         public ContactsHolder(final View itemView) {
             super(itemView);
 
-            try {
-                profilePicImgView = view.findViewById(R.id.profilePicImgView);
-                usernameTextView = view.findViewById(R.id.usernameTextView);
-                nameTextView = view.findViewById(R.id.nameTextView);
-                phoneNumTextView = view.findViewById(R.id.phoneNumTextView);
-                statuDisplayBtn = view.findViewById(R.id.statuDisplayBtn);
-                shortenTextView = view.findViewById(R.id.shortenTextView);
-                personRootCardView = view.findViewById(R.id.personRootCardView);
-                usernameTextView.setVisibility(View.GONE);
-                phoneNumTextView.setVisibility(View.VISIBLE);
-                profilePicImgView.setBackground(imageShape);
-                statuDisplayBtn.setBackground(buttonShape);
+            profilePicImgView = view.findViewById(R.id.profilePicImgView);
+            usernameTextView = view.findViewById(R.id.usernameTextView);
+            nameTextView = view.findViewById(R.id.nameTextView);
+            phoneNumTextView = view.findViewById(R.id.phoneNumTextView);
+            statuDisplayBtn = view.findViewById(R.id.statuDisplayBtn);
+            shortenTextView = view.findViewById(R.id.shortenTextView);
+            personRootCardView = view.findViewById(R.id.personRootCardView);
+            usernameTextView.setVisibility(View.GONE);
+            phoneNumTextView.setVisibility(View.VISIBLE);
+            profilePicImgView.setBackground(imageShape);
+            statuDisplayBtn.setBackground(buttonShape);
 
-                statuDisplayBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        statuDisplayBtn.setEnabled(false);
-                        statuDisplayBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
+            statuDisplayBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    statuDisplayBtn.setEnabled(false);
+                    statuDisplayBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
 
-                        if (contactFriendModel != null) {
-                            if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
-                                    !contactFriendModel.getUser().getUserid().isEmpty()) {
-                                checkFriendRelation();
-                            } else if (contactFriendModel.getContact() != null) {
-                                contactFriendSelectCallback.contactSelected(contactFriendModel.getContact());
-                            }
+                    if (contactFriendModel != null) {
+                        if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
+                                !contactFriendModel.getUser().getUserid().isEmpty()) {
+                            checkFriendRelation();
+                        } else if (contactFriendModel.getContact() != null) {
+                            contactFriendSelectCallback.contactSelected(contactFriendModel.getContact());
                         }
                     }
-                });
+                }
+            });
 
-                personRootCardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (contactFriendModel != null) {
-                            if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
-                                    !contactFriendModel.getUser().getUserid().isEmpty()) {
-                                contactFriendSelectCallback.appUserSelected(contactFriendModel.getUser());
-                            }
+            personRootCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (contactFriendModel != null) {
+                        if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
+                                !contactFriendModel.getUser().getUserid().isEmpty()) {
+                            contactFriendSelectCallback.appUserSelected(contactFriendModel.getUser());
                         }
                     }
-                });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                }
+            });
         }
 
         public void checkFriendRelation() {
 
-            try {
-                if (contactFriendModel.getUser().getFollowStatus() != null) {
-                    if (contactFriendModel.getUser().getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING))
-                        processFriendRequest(FRIEND_DELETE_FOLLOW);
-                    else if (contactFriendModel.getUser().getFollowStatus().equals(FOLLOW_STATUS_PENDING))
-                        processFriendRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-                    else {
-                        if (contactFriendModel.getUser().getIsPrivateAccount() != null && contactFriendModel.getUser().getIsPrivateAccount())
-                            processFriendRequest(FRIEND_FOLLOW_REQUEST);
-                        else
-                            processFriendRequest(FRIEND_CREATE_FOLLOW_DIRECTLY);
-                    }
+            if (contactFriendModel.getUser().getFollowStatus() != null) {
+                if (contactFriendModel.getUser().getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING))
+                    processFriendRequest(FRIEND_DELETE_FOLLOW);
+                else if (contactFriendModel.getUser().getFollowStatus().equals(FOLLOW_STATUS_PENDING))
+                    processFriendRequest(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
+                else {
+                    if (contactFriendModel.getUser().getIsPrivateAccount() != null && contactFriendModel.getUser().getIsPrivateAccount())
+                        processFriendRequest(FRIEND_FOLLOW_REQUEST);
+                    else
+                        processFriendRequest(FRIEND_CREATE_FOLLOW_DIRECTLY);
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
             }
         }
 
         public void processFriendRequest(final String requestType) {
 
-            try {
-                AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid,
-                        new CompleteCallback() {
-                            @Override
-                            public void onComplete(Object object) {
-                                RelationProperties relationProperties = ((FriendRequestList) object).getUpdatedUserRelationInfo();
+            AccountHolderFollowProcess.friendFollowRequest(requestType, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(), requestedUserid,
+                    new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                            RelationProperties relationProperties = ((FriendRequestList) object).getUpdatedUserRelationInfo();
 
-                                if (relationProperties.getFriendRelation())
-                                    contactFriendModel.getUser().setFollowStatus(FOLLOW_STATUS_FOLLOWING);
-                                else if (relationProperties.getPendingFriendRequest())
-                                    contactFriendModel.getUser().setFollowStatus(FOLLOW_STATUS_PENDING);
-                                else
-                                    contactFriendModel.getUser().setFollowStatus(FOLLOW_STATUS_NONE);
+                            if (relationProperties.getFriendRelation())
+                                contactFriendModel.getUser().setFollowStatus(FOLLOW_STATUS_FOLLOWING);
+                            else if (relationProperties.getPendingFriendRequest())
+                                contactFriendModel.getUser().setFollowStatus(FOLLOW_STATUS_PENDING);
+                            else
+                                contactFriendModel.getUser().setFollowStatus(FOLLOW_STATUS_NONE);
 
-                                contactFriendModelList.remove(position);
-                                contactFriendModelList.add(position, contactFriendModel);
+                            contactFriendModelList.remove(position);
+                            contactFriendModelList.add(position, contactFriendModel);
 
-                                UserDataUtil.updateFollowButton(context, relationProperties.getFriendRelation(), relationProperties.getPendingFriendRequest(), statuDisplayBtn, true);
-                                AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
-                                statuDisplayBtn.setEnabled(true);
-                            }
+                            UserDataUtil.updateFollowButton(context, relationProperties.getFriendRelation(), relationProperties.getPendingFriendRequest(), statuDisplayBtn, true);
+                            AccountHolderInfo.getInstance().updateAccountHolderFollowCnt(requestType);
+                            statuDisplayBtn.setEnabled(true);
+                        }
 
-                            @Override
-                            public void onFailed(Exception e) {
-                                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                                        new Object() {
-                                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                                statuDisplayBtn.setEnabled(true);
-                                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                    @Override
-                                    public void okClick() {
-                                    }
-                                });
-                            }
-                        });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                        @Override
+                        public void onFailed(Exception e) {
+                            statuDisplayBtn.setEnabled(true);
+                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
+                        }
+                    });
         }
 
         public void setData(ContactFriendModel contactFriendModel, int position) {
-            try {
-                this.position = position;
-                this.contactFriendModel = contactFriendModel;
-                setRequestedUserid();
-                setPhoneNum();
-                setNameAndProfilePicture();
-                setDisplayButton();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.position = position;
+            this.contactFriendModel = contactFriendModel;
+            setRequestedUserid();
+            setPhoneNum();
+            setNameAndProfilePicture();
+            setDisplayButton();
         }
 
         public void setRequestedUserid() {
-            try {
-                if (contactFriendModel != null) {
-                    if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
-                            !contactFriendModel.getUser().getUserid().isEmpty()) {
-                        this.requestedUserid = contactFriendModel.getUser().getUserid();
-                    }
+            if (contactFriendModel != null) {
+                if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
+                        !contactFriendModel.getUser().getUserid().isEmpty()) {
+                    this.requestedUserid = contactFriendModel.getUser().getUserid();
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
             }
         }
 
         public void setPhoneNum() {
-            try {
-                if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null) {
-                    if (contactFriendModel.getUser().getProvider() != null && contactFriendModel.getUser().getProvider().getProviderid() != null &&
-                            contactFriendModel.getUser().getProvider().getProviderType() != null) {
-                        if (contactFriendModel.getUser().getProvider().getProviderType().equals(PROVIDER_TYPE_PHONE)) {
-                            this.phoneNumTextView.setText(contactFriendModel.getUser().getProvider().getProviderid());
-                        }
+            if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null) {
+                if (contactFriendModel.getUser().getProvider() != null && contactFriendModel.getUser().getProvider().getProviderid() != null &&
+                        contactFriendModel.getUser().getProvider().getProviderType() != null) {
+                    if (contactFriendModel.getUser().getProvider().getProviderType().equals(PROVIDER_TYPE_PHONE)) {
+                        this.phoneNumTextView.setText(contactFriendModel.getUser().getProvider().getProviderid());
                     }
-                } else if (contactFriendModel.getContact() != null &&
-                        contactFriendModel.getContact().getPhoneNumber() != null && !contactFriendModel.getContact().getPhoneNumber().isEmpty())
-                    this.phoneNumTextView.setText(contactFriendModel.getContact().getPhoneNumber());
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                }
+            } else if (contactFriendModel.getContact() != null &&
+                    contactFriendModel.getContact().getPhoneNumber() != null && !contactFriendModel.getContact().getPhoneNumber().isEmpty())
+                this.phoneNumTextView.setText(contactFriendModel.getContact().getPhoneNumber());
         }
 
         public void setNameAndProfilePicture() {
-            try {
-                if (contactFriendModel != null) {
-                    if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
-                            !contactFriendModel.getUser().getUserid().isEmpty()) {
-                        UserDataUtil.setName(contactFriendModel.getUser().getName(), nameTextView);
-                        UserDataUtil.setProfilePicture(context, contactFriendModel.getUser().getProfilePhotoUrl(), contactFriendModel.getUser().getName(), contactFriendModel.getUser().getUsername(), shortenTextView, profilePicImgView);
-                    } else if (contactFriendModel.getContact() != null) {
-                        UserDataUtil.setName(contactFriendModel.getContact().getName(), nameTextView);
-                        UserDataUtil.setProfilePicture(context, null, contactFriendModel.getContact().getName(), contactFriendModel.getContact().getName(), shortenTextView, profilePicImgView);
-                    }
+            if (contactFriendModel != null) {
+                if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
+                        !contactFriendModel.getUser().getUserid().isEmpty()) {
+                    UserDataUtil.setName(contactFriendModel.getUser().getName(), nameTextView);
+                    UserDataUtil.setProfilePicture(context, contactFriendModel.getUser().getProfilePhotoUrl(), contactFriendModel.getUser().getName(), contactFriendModel.getUser().getUsername(), shortenTextView, profilePicImgView);
+                } else if (contactFriendModel.getContact() != null) {
+                    UserDataUtil.setName(contactFriendModel.getContact().getName(), nameTextView);
+                    UserDataUtil.setProfilePicture(context, null, contactFriendModel.getContact().getName(), contactFriendModel.getContact().getName(), shortenTextView, profilePicImgView);
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
             }
         }
 
         public void setDisplayButton() {
-            try {
-                if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null) {
-                    if (contactFriendModel.getUser().getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
-                        statuDisplayBtn.setVisibility(View.GONE);
-                    else {
-                        statuDisplayBtn.setVisibility(View.VISIBLE);
-                        UserDataUtil.updateFollowButton2(context, contactFriendModel.getUser().getFollowStatus(), statuDisplayBtn, false);
-                    }
-                } else if (contactFriendModel.getContact() != null) {
-                    UserDataUtil.updateInviteButton(context, statuDisplayBtn, false);
+            if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null) {
+                if (contactFriendModel.getUser().getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
+                    statuDisplayBtn.setVisibility(View.GONE);
+                else {
+                    statuDisplayBtn.setVisibility(View.VISIBLE);
+                    UserDataUtil.updateFollowButton2(context, contactFriendModel.getUser().getFollowStatus(), statuDisplayBtn, false);
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
+            } else if (contactFriendModel.getContact() != null) {
+                UserDataUtil.updateInviteButton(context, statuDisplayBtn, false);
             }
         }
     }
@@ -341,82 +260,54 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             protected FilterResults performFiltering(CharSequence charSequence) {
 
                 FilterResults filterResults = null;
-                try {
-                    String searchString = charSequence.toString();
+                String searchString = charSequence.toString();
 
-                    if (searchString.trim().isEmpty())
-                        contactFriendModelList = orgContactFriendModelList;
-                    else {
-                        List<ContactFriendModel> tempList = new ArrayList<>();
+                if (searchString.trim().isEmpty())
+                    contactFriendModelList = orgContactFriendModelList;
+                else {
+                    List<ContactFriendModel> tempList = new ArrayList<>();
 
-                        for (ContactFriendModel contactFriendModel : orgContactFriendModelList) {
-                            if (contactFriendModel != null) {
-                                if (contactFriendModel.getContact() != null && contactFriendModel.getContact().getName() != null &&
-                                        contactFriendModel.getContact().getName().toLowerCase().contains(searchString.toLowerCase())) {
-                                    tempList.add(contactFriendModel);
-                                } else if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getName() != null &&
-                                        contactFriendModel.getUser().getName().toLowerCase().contains(searchString.toLowerCase())) {
-                                    tempList.add(contactFriendModel);
-                                }
+                    for (ContactFriendModel contactFriendModel : orgContactFriendModelList) {
+                        if (contactFriendModel != null) {
+                            if (contactFriendModel.getContact() != null && contactFriendModel.getContact().getName() != null &&
+                                    contactFriendModel.getContact().getName().toLowerCase().contains(searchString.toLowerCase())) {
+                                tempList.add(contactFriendModel);
+                            } else if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getName() != null &&
+                                    contactFriendModel.getUser().getName().toLowerCase().contains(searchString.toLowerCase())) {
+                                tempList.add(contactFriendModel);
                             }
                         }
-                        contactFriendModelList = tempList;
                     }
-
-                    filterResults = new FilterResults();
-                    filterResults.values = contactFriendModelList;
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
+                    contactFriendModelList = tempList;
                 }
+
+                filterResults = new FilterResults();
+                filterResults.values = contactFriendModelList;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                try {
-                    contactFriendModelList = (List<ContactFriendModel>) filterResults.values;
-                    notifyDataSetChanged();
+                contactFriendModelList = (List<ContactFriendModel>) filterResults.values;
+                notifyDataSetChanged();
 
-                    if (contactFriendModelList != null && contactFriendModelList.size() > 0)
-                        returnCallback.onReturn(contactFriendModelList.size());
-                    else
-                        returnCallback.onReturn(0);
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+                if (contactFriendModelList != null && contactFriendModelList.size() > 0)
+                    returnCallback.onReturn(contactFriendModelList.size());
+                else
+                    returnCallback.onReturn(0);
             }
         };
     }
 
     public void updateAdapter(String searchText, ReturnCallback returnCallback) {
-        try {
-            this.returnCallback = returnCallback;
-            getFilter().filter(searchText);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.returnCallback = returnCallback;
+        getFilter().filter(searchText);
     }
 
     @Override
     public int getItemCount() {
         int size = 0;
-        try {
-            size = contactFriendModelList.size();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        size = contactFriendModelList.size();
         return size;
     }
 }

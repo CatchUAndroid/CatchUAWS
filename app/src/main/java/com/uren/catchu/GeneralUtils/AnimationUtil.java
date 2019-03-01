@@ -8,7 +8,6 @@ import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.view.animation.TranslateAnimation;
 
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.R;
 
 public class AnimationUtil {
@@ -27,14 +26,7 @@ public class AnimationUtil {
     }
 
     public static void blink(Context context, View view) {
-        try {
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.blink);
-            view.startAnimation(animation);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, AnimationUtil.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.blink);
+        view.startAnimation(animation);
     }
 }

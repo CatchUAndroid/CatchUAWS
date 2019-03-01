@@ -10,7 +10,6 @@ import android.support.v4.graphics.BitmapCompat;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -74,9 +73,6 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
                 Log.i("Info", "getErrorStream error:" + is.toString());
             }
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

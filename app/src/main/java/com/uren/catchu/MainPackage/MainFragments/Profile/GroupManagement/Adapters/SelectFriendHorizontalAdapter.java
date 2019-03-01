@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.ClickCallback;
 import com.uren.catchu.R;
@@ -35,7 +34,6 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
     GradientDrawable deleteImgvShape;
 
     public SelectFriendHorizontalAdapter(Context context, ClickCallback clickCallback) {
-        try {
             layoutInflater = LayoutInflater.from(context);
             this.context = context;
             this.clickCallback = clickCallback;
@@ -44,12 +42,6 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
                     0, GradientDrawable.OVAL, 50, 0);
             deleteImgvShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     context.getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 0);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
     }
 
     @NonNull
@@ -79,7 +71,6 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
         public SelectFriendHorizontalHolder(final View itemView) {
             super(itemView);
 
-            try {
                 specialPictureImgView = view.findViewById(R.id.specialPictureImgView);
                 deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
                 specialNameTextView = view.findViewById(R.id.specialNameTextView);
@@ -102,54 +93,27 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
                         clickCallback.onItemClick();
                     }
                 });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
         }
 
         private void removeItem(int position) {
-            try {
                 SelectedFriendList.getInstance().removeFriend(selectedFriend);
                 notifyItemRemoved(position);
                 notifyItemRangeChanged(position, getItemCount());
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {
-            try {
                 this.position = position;
                 this.selectedFriend = selectedFriend;
                 setProfileName();
                 UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
                         selectedFriend.getName(), selectedFriend.getUsername(), shortenTextView, specialPictureImgView);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
         }
 
         public void setProfileName(){
-            try {
                 if(selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
                     UserDataUtil.setName(selectedFriend.getName(), specialNameTextView);
                 else if(selectedFriend.getUsername() != null && !selectedFriend.getUsername().isEmpty())
                     UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), specialNameTextView);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
         }
     }
 
@@ -159,9 +123,6 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
         try {
             size = SelectedFriendList.getInstance().getSize();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return size;

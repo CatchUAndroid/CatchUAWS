@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import catchu.model.CommentListResponse;
 import catchu.model.PostListResponse;
@@ -65,9 +64,6 @@ public class UserSharedPostListProcess extends AsyncTask<Void, Void, PostListRes
             }
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

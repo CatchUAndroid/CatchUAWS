@@ -80,9 +80,6 @@ public class PostImageViewFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        //imgFeedItem.getImageMatrix();
-        //imgFeedItem.setOnTouchListener(new ImageZoomListener(initMatrix));
-
         //yeni
         PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(imgFeedItem);
         photoViewAttacher.update();

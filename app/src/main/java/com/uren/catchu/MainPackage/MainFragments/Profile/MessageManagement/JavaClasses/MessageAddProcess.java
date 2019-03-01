@@ -13,7 +13,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageSentFCMCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.FCMItems;
@@ -71,240 +70,205 @@ public class MessageAddProcess {
     }
 
     public void addMessage() {
-        try {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                    .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(FB_CHILD_MESSAGE_CONTENT);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                .child(AccountHolderInfo.getUserID()).child(chattedUser.getUserid()).child(FB_CHILD_MESSAGE_CONTENT);
 
-            if (messageContentId == null)
-                messageContentId = databaseReference.push().getKey();
+        if (messageContentId == null)
+            messageContentId = databaseReference.push().getKey();
 
-            if (messageContentId == null) return;
+        if (messageContentId == null) return;
 
-            final Map<String, Object> values = new HashMap<>();
-            //final long messageTime = System.currentTimeMillis();
-            values.put(FB_CHILD_CONTENT_ID, messageContentId);
-            values.put(FB_CHILD_LAST_MESSAGE_DATE, ServerValue.TIMESTAMP);
+        final Map<String, Object> values = new HashMap<>();
+        //final long messageTime = System.currentTimeMillis();
+        values.put(FB_CHILD_CONTENT_ID, messageContentId);
+        values.put(FB_CHILD_LAST_MESSAGE_DATE, ServerValue.TIMESTAMP);
 
-            databaseReference.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
+        databaseReference.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
 
-                    FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                            .child(chattedUser.getUserid()).child(AccountHolderInfo.getUserID()).child(FB_CHILD_MESSAGE_CONTENT)
-                            .updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            saveMessageContent();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            enableUIItems();
-                            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.toString());
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    enableUIItems();
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                }
-            });
-        } catch (Exception e) {
-            enableUIItems();
-            ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+                FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                        .child(chattedUser.getUserid()).child(AccountHolderInfo.getUserID()).child(FB_CHILD_MESSAGE_CONTENT)
+                        .updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        saveMessageContent();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        enableUIItems();
+
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                enableUIItems();
+
+            }
+        });
     }
 
-    public void enableUIItems(){
+    public void enableUIItems() {
         sendMessageBtn.setEnabled(true);
         messageEdittext.setText("");
     }
 
     public void saveMessageContent() {
-        try {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
-                    .child(messageContentId);
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                .child(messageContentId);
 
-            final String messageId = databaseReference.push().getKey();
-            databaseReference = databaseReference.child(messageId);
+        final String messageId = databaseReference.push().getKey();
+        databaseReference = databaseReference.child(messageId);
 
-            Map<String, Object> values = new HashMap<>();
+        Map<String, Object> values = new HashMap<>();
 
-            System.out.println("messageEdittext.getText().toString():" +
-                    messageEdittext.getText().toString());
+        System.out.println("messageEdittext.getText().toString():" +
+                messageEdittext.getText().toString());
 
-            values.put(FB_CHILD_DATE, ServerValue.TIMESTAMP);
-            values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString().trim());
+        values.put(FB_CHILD_DATE, ServerValue.TIMESTAMP);
+        values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString().trim());
 
-            Map<String, String> sender = new HashMap<>();
-            sender.put(FB_CHILD_NAME, AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
-            sender.put(FB_CHILD_USERID, AccountHolderInfo.getUserID());
+        Map<String, String> sender = new HashMap<>();
+        sender.put(FB_CHILD_NAME, AccountHolderInfo.getInstance().getUser().getUserInfo().getName());
+        sender.put(FB_CHILD_USERID, AccountHolderInfo.getUserID());
 
-            Map<String, Object> receipt = new HashMap<>();
-            receipt.put(FB_CHILD_NAME, chattedUser.getName());
-            receipt.put(FB_CHILD_USERID, chattedUser.getUserid());
-            receipt.put(FB_CHILD_IS_SEEN, false);
+        Map<String, Object> receipt = new HashMap<>();
+        receipt.put(FB_CHILD_NAME, chattedUser.getName());
+        receipt.put(FB_CHILD_USERID, chattedUser.getUserid());
+        receipt.put(FB_CHILD_IS_SEEN, false);
 
-            values.put(FB_CHILD_SENDER, sender);
-            values.put(FB_CHILD_RECEIPT, receipt);
+        values.put(FB_CHILD_SENDER, sender);
+        values.put(FB_CHILD_RECEIPT, receipt);
 
-            databaseReference.setValue(values, new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                    sendMessageToCloudFunction(messageId);
-                    enableUIItems();
-                }
-            });
-        } catch (Exception e) {
-            enableUIItems();
-            ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        databaseReference.setValue(values, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
+                sendMessageToCloudFunction(messageId);
+                enableUIItems();
+            }
+        });
     }
 
     public void sendMessageToCloudFunction(String messageId) {
 
         String body;
         String title;
-        try {
 
-            if (notificationSendCount > MAX_ALLOWED_NOTIFICATION_SIZE) {
-                sendClusterMessage();
-                return;
-            }
-
-            if(otherUserNotificationStatus != null &&
-                    otherUserNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) return;
-
-            UserProfileProperties userProfileProperties =
-                    AccountHolderInfo.getInstance().getUser().getUserInfo();
-
-            if (userProfileProperties != null) {
-                if (userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
-                    title = userProfileProperties.getName();
-                else if (userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
-                    title = CHAR_AMPERSAND + userProfileProperties.getUsername();
-                else return;
-
-                if (userProfileProperties.getUserid() == null || userProfileProperties.getUserid().isEmpty())
-                    return;
-            } else return;
-
-            System.out.println("messageEdittext.getText().toString():" +
-                    messageEdittext.getText().toString());
-
-            if (messageEdittext != null && messageEdittext.getText() != null &&
-                    !messageEdittext.getText().toString().isEmpty()) {
-
-                if (messageEdittext.getText().toString().trim().length() < FCM_MAX_MESSAGE_LEN)
-                    body = messageEdittext.getText().toString().trim();
-                else
-                    body = messageEdittext.getText().toString().trim().substring(0, FCM_MAX_MESSAGE_LEN) + "...";
-            } else
-                return;
-
-            if (messageId == null || messageId.isEmpty())
-                return;
-
-            if (chattedUserDeviceToken == null || chattedUserDeviceToken.isEmpty())
-                return;
-
-            FCMItems fcmItems = new FCMItems();
-            fcmItems.setBody(body);
-            fcmItems.setOtherUserDeviceToken(chattedUserDeviceToken);
-            fcmItems.setTitle(title);
-            fcmItems.setPhotoUrl(userProfileProperties.getProfilePhotoUrl());
-            fcmItems.setMessageid(messageId);
-            fcmItems.setSenderUserid(userProfileProperties.getUserid());
-            fcmItems.setReceiptUserid(chattedUser.getUserid());
-
-            SendMessageToFCM.sendMessage(context,
-                    fcmItems,
-                    new MessageSentFCMCallback() {
-                        @Override
-                        public void onSuccess() {
-                            MessageUpdateProcess.updateNotificationStatus(chattedUser.getUserid(), AccountHolderInfo.getUserID()
-                                    , FB_VALUE_NOTIFICATION_SEND);
-                        }
-
-                        @Override
-                        public void onFailed(Exception e) {
-
-                        }
-                    });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (notificationSendCount > MAX_ALLOWED_NOTIFICATION_SIZE) {
+            sendClusterMessage();
+            return;
         }
+
+        if (otherUserNotificationStatus != null &&
+                otherUserNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) return;
+
+        UserProfileProperties userProfileProperties =
+                AccountHolderInfo.getInstance().getUser().getUserInfo();
+
+        if (userProfileProperties != null) {
+            if (userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
+                title = userProfileProperties.getName();
+            else if (userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
+                title = CHAR_AMPERSAND + userProfileProperties.getUsername();
+            else return;
+
+            if (userProfileProperties.getUserid() == null || userProfileProperties.getUserid().isEmpty())
+                return;
+        } else return;
+
+        System.out.println("messageEdittext.getText().toString():" +
+                messageEdittext.getText().toString());
+
+        if (messageEdittext != null && messageEdittext.getText() != null &&
+                !messageEdittext.getText().toString().isEmpty()) {
+
+            if (messageEdittext.getText().toString().trim().length() < FCM_MAX_MESSAGE_LEN)
+                body = messageEdittext.getText().toString().trim();
+            else
+                body = messageEdittext.getText().toString().trim().substring(0, FCM_MAX_MESSAGE_LEN) + "...";
+        } else
+            return;
+
+        if (messageId == null || messageId.isEmpty())
+            return;
+
+        if (chattedUserDeviceToken == null || chattedUserDeviceToken.isEmpty())
+            return;
+
+        FCMItems fcmItems = new FCMItems();
+        fcmItems.setBody(body);
+        fcmItems.setOtherUserDeviceToken(chattedUserDeviceToken);
+        fcmItems.setTitle(title);
+        fcmItems.setPhotoUrl(userProfileProperties.getProfilePhotoUrl());
+        fcmItems.setMessageid(messageId);
+        fcmItems.setSenderUserid(userProfileProperties.getUserid());
+        fcmItems.setReceiptUserid(chattedUser.getUserid());
+
+        SendMessageToFCM.sendMessage(context,
+                fcmItems,
+                new MessageSentFCMCallback() {
+                    @Override
+                    public void onSuccess() {
+                        MessageUpdateProcess.updateNotificationStatus(chattedUser.getUserid(), AccountHolderInfo.getUserID()
+                                , FB_VALUE_NOTIFICATION_SEND);
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+
+                    }
+                });
     }
 
     public void sendClusterMessage() {
-        try {
-            if (clusterNotificationStatus != null &&
-                    clusterNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) return;
+        if (clusterNotificationStatus != null &&
+                clusterNotificationStatus.equals(FB_VALUE_NOTIFICATION_SEND)) return;
 
-            String body;
-            String title;
+        String body;
+        String title;
 
-            UserProfileProperties userProfileProperties =
-                    AccountHolderInfo.getInstance().getUser().getUserInfo();
+        UserProfileProperties userProfileProperties =
+                AccountHolderInfo.getInstance().getUser().getUserInfo();
 
-            title = APP_NAME;
-            body = context.getResources().getString(R.string.YOU_HAVE_NEW_MESSAGES);
+        title = APP_NAME;
+        body = context.getResources().getString(R.string.YOU_HAVE_NEW_MESSAGES);
 
-            if (chattedUserDeviceToken == null || chattedUserDeviceToken.isEmpty())
-                return;
+        if (chattedUserDeviceToken == null || chattedUserDeviceToken.isEmpty())
+            return;
 
-            FCMItems fcmItems = new FCMItems();
-            fcmItems.setBody(body);
-            fcmItems.setOtherUserDeviceToken(chattedUserDeviceToken);
-            fcmItems.setTitle(title);
-            fcmItems.setSenderUserid(userProfileProperties.getUserid());
-            fcmItems.setReceiptUserid(chattedUser.getUserid());
+        FCMItems fcmItems = new FCMItems();
+        fcmItems.setBody(body);
+        fcmItems.setOtherUserDeviceToken(chattedUserDeviceToken);
+        fcmItems.setTitle(title);
+        fcmItems.setSenderUserid(userProfileProperties.getUserid());
+        fcmItems.setReceiptUserid(chattedUser.getUserid());
 
-            SendClusterMessageToFCM.sendMessage(context,
-                    fcmItems,
-                    new MessageSentFCMCallback() {
-                        @Override
-                        public void onSuccess() {
-                            MessageUpdateProcess.updateClusterStatus(chattedUser.getUserid(),
-                                    FB_VALUE_NOTIFICATION_SEND, new MessageUpdateCallback() {
-                                        @Override
-                                        public void onComplete() {
+        SendClusterMessageToFCM.sendMessage(context,
+                fcmItems,
+                new MessageSentFCMCallback() {
+                    @Override
+                    public void onSuccess() {
+                        MessageUpdateProcess.updateClusterStatus(chattedUser.getUserid(),
+                                FB_VALUE_NOTIFICATION_SEND, new MessageUpdateCallback() {
+                                    @Override
+                                    public void onComplete() {
 
-                                        }
+                                    }
 
-                                        @Override
-                                        public void onFailed(String errMessage) {
+                                    @Override
+                                    public void onFailed(String errMessage) {
 
-                                        }
-                                    });
-                        }
+                                    }
+                                });
+                    }
 
-                        @Override
-                        public void onFailed(Exception e) {
+                    @Override
+                    public void onFailed(Exception e) {
 
-                        }
-                    });
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageAddProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+                    }
+                });
     }
 }

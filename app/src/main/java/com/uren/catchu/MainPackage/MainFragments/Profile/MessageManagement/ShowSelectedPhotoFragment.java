@@ -14,7 +14,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -26,7 +25,6 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 
 @SuppressLint("ValidFragment")
 public class ShowSelectedPhotoFragment extends BaseFragment {
-
 
     View mView;
 
@@ -55,17 +53,10 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        try {
-            mView = inflater.inflate(R.layout.fragment_show_selected_photo, container, false);
-            ButterKnife.bind(this, mView);
-            initVariables();
-            setImage();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        mView = inflater.inflate(R.layout.fragment_show_selected_photo, container, false);
+        ButterKnife.bind(this, mView);
+        initVariables();
+        setImage();
         return mView;
     }
 
@@ -75,29 +66,14 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        try {
-            PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoSelectImgv);
-            photoViewAttacher.update();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        PhotoViewAttacher photoViewAttacher = new PhotoViewAttacher(photoSelectImgv);
+        photoViewAttacher.update();
     }
 
     private void setImage() {
-
-        try {
-            Glide.with(getContext())
-                    .load(photoUrl)
-                    .apply(RequestOptions.fitCenterTransform())
-                    .into(photoSelectImgv);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        Glide.with(getContext())
+                .load(photoUrl)
+                .apply(RequestOptions.fitCenterTransform())
+                .into(photoSelectImgv);
     }
 }

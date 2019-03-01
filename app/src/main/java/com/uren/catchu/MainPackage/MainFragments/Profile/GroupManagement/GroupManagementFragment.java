@@ -25,7 +25,6 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
@@ -103,19 +102,12 @@ public class GroupManagementFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        try {
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-            if (mView == null) {
-                mView = inflater.inflate(R.layout.fragment_group_management, container, false);
-                ButterKnife.bind(this, mView);
-                addListeners();
-                initValues();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.fragment_group_management, container, false);
+            ButterKnife.bind(this, mView);
+            addListeners();
+            initValues();
         }
         return mView;
     }
@@ -126,109 +118,87 @@ public class GroupManagementFragment extends BaseFragment {
     }
 
     public void initValues() {
-        try {
-            searchToolbarLayout.setVisibility(View.VISIBLE);
-            searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
-            warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
-            setFloatButtonVisibility();
-            getGroups();
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        searchToolbarLayout.setVisibility(View.VISIBLE);
+        searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
+        warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+        setFloatButtonVisibility();
+        getGroups();
     }
 
     public void setFloatButtonVisibility() {
-        try {
-            if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
-                nextFab.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
+            nextFab.setVisibility(View.VISIBLE);
     }
 
     public void addListeners() {
-        try {
-            searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
+        nextFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
+                    if (selectedGroupItem == null) {
+                        CommonUtils.showToastShort(getContext(), getResources().getString(R.string.selectLeastOneGroup));
+                        return;
+                    }
+                    returnCallback.onReturn(selectedGroupItem);
                     getActivity().onBackPressed();
                 }
-            });
+            }
+        });
 
-            nextFab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                    if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
-                        if (selectedGroupItem == null) {
-                            CommonUtils.showToastShort(getContext(), getResources().getString(R.string.selectLeastOneGroup));
-                            return;
-                        }
-                        returnCallback.onReturn(selectedGroupItem);
-                        getActivity().onBackPressed();
-                    }
-                }
-            });
+        searchToolbarAddItemImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtils.hideKeyBoard(getContext());
+                searchToolbarAddItemImgv.setEnabled(false);
+                searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+                addNewGroup();
+            }
+        });
 
-            searchToolbarAddItemImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CommonUtils.hideKeyBoard(getContext());
-                    searchToolbarAddItemImgv.setEnabled(false);
-                    searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                    addNewGroup();
-                }
-            });
+        editTextSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            editTextSearch.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-                }
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    if (s != null && s.toString() != null && !s.toString().isEmpty()) {
-                        imgCancelSearch.setVisibility(View.VISIBLE);
-                        searchToolbarBackImgv.setVisibility(View.GONE);
-                        searchItemInList(s.toString());
-                    } else {
-                        imgCancelSearch.setVisibility(View.GONE);
-                        searchToolbarBackImgv.setVisibility(View.VISIBLE);
-                        searchItemInList("");
-                    }
-                }
-            });
-
-            imgCancelSearch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CommonUtils.hideKeyBoard(getContext());
-                    editTextSearch.setText("");
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s != null && s.toString() != null && !s.toString().isEmpty()) {
+                    imgCancelSearch.setVisibility(View.VISIBLE);
+                    searchToolbarBackImgv.setVisibility(View.GONE);
+                    searchItemInList(s.toString());
+                } else {
                     imgCancelSearch.setVisibility(View.GONE);
-                    searchResultTv.setVisibility(View.GONE);
-                    setMessageWarning(groupRequestResult);
-
+                    searchToolbarBackImgv.setVisibility(View.VISIBLE);
+                    searchItemInList("");
                 }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+            }
+        });
+
+        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CommonUtils.hideKeyBoard(getContext());
+                editTextSearch.setText("");
+                imgCancelSearch.setVisibility(View.GONE);
+                searchResultTv.setVisibility(View.GONE);
+                setMessageWarning(groupRequestResult);
+
+            }
+        });
     }
 
     public void searchItemInList(final String groupName) {
@@ -254,43 +224,33 @@ public class GroupManagementFragment extends BaseFragment {
 
     public void getGroups() {
 
-        try {
-            progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
 
-            UserGroupsProcess.getGroups(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
-                    new CompleteCallback() {
-                        @Override
-                        public void onComplete(Object object) {
-                            groupRequestResult = (GroupRequestResult) object;
+        UserGroupsProcess.getGroups(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                new CompleteCallback() {
+                    @Override
+                    public void onComplete(Object object) {
+                        groupRequestResult = (GroupRequestResult) object;
 
-                            if (getContext() != null) {
-                                setMessageWarning(groupRequestResult);
-                                setGroupsListAdapter();
-                            }
-                            progressBar.setVisibility(View.GONE);
+                        if (getContext() != null) {
+                            setMessageWarning(groupRequestResult);
+                            setGroupsListAdapter();
                         }
+                        progressBar.setVisibility(View.GONE);
+                    }
 
-                        @Override
-                        public void onFailed(Exception e) {
-                            progressBar.setVisibility(View.GONE);
-                            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                            if (getContext() != null) {
-                                DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                    @Override
-                                    public void okClick() {
-                                    }
-                                });
-                            }
+                    @Override
+                    public void onFailed(Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                        if (getContext() != null) {
+                            DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
                         }
-                    });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+                    }
+                });
     }
 
     private void setMessageWarning(GroupRequestResult groupRequestResult) {
@@ -348,75 +308,58 @@ public class GroupManagementFragment extends BaseFragment {
     }
 
     public void localGroupOperation(int opType, GroupRequestResultResultArrayItem arrayItem) {
-        try {
-            if (arrayItem == null) {
-                int index = 0;
-                for (GroupRequestResultResultArrayItem resultArrayItem : groupRequestResult.getResultArray()) {
+        if (arrayItem == null) {
+            int index = 0;
+            for (GroupRequestResultResultArrayItem resultArrayItem : groupRequestResult.getResultArray()) {
 
-                    if (opType == ITEM_CHANGED) {
-                        if (selectedGroupItem.getGroupid().equals(resultArrayItem.getGroupid())) {
-                            groupRequestResult.getResultArray().remove(index);
-                            groupRequestResult.getResultArray().add(index, selectedGroupItem);
-                            break;
-                        }
-                    } else if (opType == ITEM_REMOVED) {
-                        if (selectedGroupItem.getGroupid().equals(resultArrayItem.getGroupid())) {
-                            groupRequestResult.getResultArray().remove(index);
-                            break;
-                        }
+                if (opType == ITEM_CHANGED) {
+                    if (selectedGroupItem.getGroupid().equals(resultArrayItem.getGroupid())) {
+                        groupRequestResult.getResultArray().remove(index);
+                        groupRequestResult.getResultArray().add(index, selectedGroupItem);
+                        break;
                     }
-
-                    index++;
+                } else if (opType == ITEM_REMOVED) {
+                    if (selectedGroupItem.getGroupid().equals(resultArrayItem.getGroupid())) {
+                        groupRequestResult.getResultArray().remove(index);
+                        break;
+                    }
                 }
-            } else if (opType == ITEM_INSERTED)
-                groupRequestResult.getResultArray().add(arrayItem);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+
+                index++;
+            }
+        } else if (opType == ITEM_INSERTED)
+            groupRequestResult.getResultArray().add(arrayItem);
     }
 
     public void addNewGroup() {
 
-        try {
-            AccountHolderFollowProcess.getFollowers(1, 1, new CompleteCallback() {
-                @Override
-                public void onComplete(Object object) {
-                    if (object != null) {
-                        FriendList friendList = (FriendList) object;
-                        if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0 &&
-                                getContext() != null)
-                            CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
-                        else
-                            startSelectFriendFragment();
+        AccountHolderFollowProcess.getFollowers(1, 1, new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                if (object != null) {
+                    FriendList friendList = (FriendList) object;
+                    if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0 &&
+                            getContext() != null)
+                        CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
+                    else
+                        startSelectFriendFragment();
 
-                    }
-                    searchToolbarAddItemImgv.setEnabled(true);
                 }
+                searchToolbarAddItemImgv.setEnabled(true);
+            }
 
-                @Override
-                public void onFailed(Exception e) {
-                    searchToolbarAddItemImgv.setEnabled(true);
-                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    if (getContext() != null) {
-                        DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                            @Override
-                            public void okClick() {
-                            }
-                        });
-                    }
+            @Override
+            public void onFailed(Exception e) {
+                searchToolbarAddItemImgv.setEnabled(true);
+                if (getContext() != null) {
+                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                        @Override
+                        public void okClick() {
+                        }
+                    });
                 }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+            }
+        });
     }
 
     private void startSelectFriendFragment() {

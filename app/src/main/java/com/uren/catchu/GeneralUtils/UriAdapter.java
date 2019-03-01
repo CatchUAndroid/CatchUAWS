@@ -1,12 +1,9 @@
 package com.uren.catchu.GeneralUtils;
 
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -14,11 +11,8 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.common.util.IOUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.Interfaces.FileSaveCallback;
 
 import java.io.BufferedInputStream;
@@ -30,9 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class UriAdapter extends AppCompatActivity {
 
@@ -40,71 +31,63 @@ public class UriAdapter extends AppCompatActivity {
 
         final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
 
-        // DocumentProvider
-        try {
-            if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-                // ExternalStorageProvider
-                if (isExternalStorageDocument(uri)) {
-                    final String docId = DocumentsContract.getDocumentId(uri);
-                    final String[] split = docId.split(":");
-                    final String type = split[0];
+        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+            // ExternalStorageProvider
+            if (isExternalStorageDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
 
-                    if ("primary".equalsIgnoreCase(type)) {
-                        return Environment.getExternalStorageDirectory() + "/" + split[1];
-                    }
-
-                    // TODO handle non-primary volumes
+                if ("primary".equalsIgnoreCase(type)) {
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
-                // DownloadsProvider
-                else if (isDownloadsDocument(uri)) {
 
-                    final String id = DocumentsContract.getDocumentId(uri);
-                    final Uri contentUri = ContentUris.withAppendedId(
-                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                // TODO handle non-primary volumes
+            }
+            // DownloadsProvider
+            else if (isDownloadsDocument(uri)) {
 
-                    return getDataColumn(context, contentUri, null, null);
+                final String id = DocumentsContract.getDocumentId(uri);
+                final Uri contentUri = ContentUris.withAppendedId(
+                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+                return getDataColumn(context, contentUri, null, null);
+            }
+            // MediaProvider
+            else if (isMediaDocument(uri)) {
+                final String docId = DocumentsContract.getDocumentId(uri);
+                final String[] split = docId.split(":");
+                final String type = split[0];
+
+                Uri contentUri = null;
+                if ("image".equals(type)) {
+                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                } else if ("video".equals(type)) {
+                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                } else if ("audio".equals(type)) {
+                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
                 }
-                // MediaProvider
-                else if (isMediaDocument(uri)) {
-                    final String docId = DocumentsContract.getDocumentId(uri);
-                    final String[] split = docId.split(":");
-                    final String type = split[0];
 
-                    Uri contentUri = null;
-                    if ("image".equals(type)) {
-                        contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("video".equals(type)) {
-                        contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("audio".equals(type)) {
-                        contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                    }
+                final String selection = "_id=?";
+                final String[] selectionArgs = new String[]{
+                        split[1]
+                };
 
-                    final String selection = "_id=?";
-                    final String[] selectionArgs = new String[] {
-                            split[1]
-                    };
-
-                    return getDataColumn(context, contentUri, selection, selectionArgs);
-                }
+                return getDataColumn(context, contentUri, selection, selectionArgs);
             }
-            // MediaStore (and general)
-            else if ("content".equalsIgnoreCase(uri.getScheme())) {
+        }
+        // MediaStore (and general)
+        else if ("content".equalsIgnoreCase(uri.getScheme())) {
 
-                // Return the remote address
-                if (isGooglePhotosUri(uri))
-                    return uri.getLastPathSegment();
+            // Return the remote address
+            if (isGooglePhotosUri(uri))
+                return uri.getLastPathSegment();
 
-                return getDataColumn(context, uri, null, null);
-            }
-            // File
-            else if ("file".equalsIgnoreCase(uri.getScheme())) {
-                return uri.getPath();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+            return getDataColumn(context, uri, null, null);
+        }
+        // File
+        else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            return uri.getPath();
         }
 
         return null;
@@ -114,28 +97,22 @@ public class UriAdapter extends AppCompatActivity {
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
         Cursor cursor = null;
-        try {
-            final String column = "_data";
-            final String[] projection = {
-                    column
-            };
 
-            try {
-                cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                        null);
-                if (cursor != null && cursor.moveToFirst()) {
-                    final int index = cursor.getColumnIndexOrThrow(column);
-                    return cursor.getString(index);
-                }
-            } finally {
-                if (cursor != null)
-                    cursor.close();
+        final String column = "_data";
+        final String[] projection = {
+                column
+        };
+
+        try {
+            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                    null);
+            if (cursor != null && cursor.moveToFirst()) {
+                final int index = cursor.getColumnIndexOrThrow(column);
+                return cursor.getString(index);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        } finally {
+            if (cursor != null)
+                cursor.close();
         }
         return null;
     }
@@ -204,19 +181,10 @@ public class UriAdapter extends AppCompatActivity {
     }
 
     public static Uri getImageUri(Context inContext, Bitmap inImage) {
-        try {
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
-
-            return Uri.parse(path);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(inContext, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     public static String getRealPathFromURI(Uri contentUri, Context context) {
@@ -225,33 +193,25 @@ public class UriAdapter extends AppCompatActivity {
             String[] proj = {MediaStore.Images.Media.DATA};
             Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
 
-            if(cursor == null){
+            if (cursor == null) {
                 res = contentUri.getPath();
-            }else if (cursor.moveToFirst()) {
+            } else if (cursor.moveToFirst()) {
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 res = cursor.getString(column_index);
             }
             cursor.close();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return res;
     }
 
     public static String getFilePathFromURI(Context context, Uri contentUri, int mediaType) {
-        //copy file and send new file path
-        try {
-            String fileName = getFileName(context, contentUri);
-            if (!TextUtils.isEmpty(fileName)) {
-                File copyFile = FileAdapter.getOutputMediaFile(mediaType);
-                copy(context, contentUri, copyFile);
-                return copyFile.getAbsolutePath();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        String fileName = getFileName(context, contentUri);
+        if (!TextUtils.isEmpty(fileName)) {
+            File copyFile = FileAdapter.getOutputMediaFile(mediaType);
+            copy(context, contentUri, copyFile);
+            return copyFile.getAbsolutePath();
         }
         return null;
     }
@@ -259,18 +219,11 @@ public class UriAdapter extends AppCompatActivity {
     public static String getFileName(Context context, Uri uri) {
         String fileName = null;
 
-        try {
-            if (uri == null) return null;
-            String path = uri.getPath();
-            int cut = path.lastIndexOf('/');
-            if (cut != -1) {
-                fileName = path.substring(cut + 1);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (uri == null) return null;
+        String path = uri.getPath();
+        int cut = path.lastIndexOf('/');
+        if (cut != -1) {
+            fileName = path.substring(cut + 1);
         }
         return fileName;
     }
@@ -284,9 +237,6 @@ public class UriAdapter extends AppCompatActivity {
             inputStream.close();
             outputStream.close();
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, UriAdapter.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
         }
     }

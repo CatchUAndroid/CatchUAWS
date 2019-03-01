@@ -39,7 +39,6 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 
@@ -249,13 +248,13 @@ public class PostHelper {
 
             if (media.getType().equals(IMAGE_TYPE)) {
 
-                if(mfragmentNavigation != null){
+                if (mfragmentNavigation != null) {
                     mfragmentNavigation.pushFragment(new PostImageViewFragment(media));
                 }
 
             } else if (media.getType().equals(VIDEO_TYPE)) {
 
-                if(mfragmentNavigation != null){
+                if (mfragmentNavigation != null) {
                     mfragmentNavigation.pushFragment(new PostVideoPlayFragment(media));
                     //mfragmentNavigation.pushFragment(new PostVideoPlay2Fragment(media));
                 }
@@ -557,7 +556,7 @@ public class PostHelper {
                 public void onTaskContinue() {
 
                 }
-            }, userId, postId,postRequest, token);
+            }, userId, postId, postRequest, token);
 
             postPatchProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -693,7 +692,7 @@ public class PostHelper {
                 public void onTaskContinue() {
 
                 }
-            }, userId, token,report, postId);
+            }, userId, token, report, postId);
 
             reportProblemProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 
@@ -718,29 +717,21 @@ public class PostHelper {
 
         private UpdateFollowStatus(final Context context) {
 
-            try {
-                AccountHolderFollowProcess.friendFollowRequest(requestTYpe, userId
-                        , requestedUserId, new CompleteCallback() {
-                            @Override
-                            public void onComplete(Object object) {
-                            }
+            AccountHolderFollowProcess.friendFollowRequest(requestTYpe, userId
+                    , requestedUserId, new CompleteCallback() {
+                        @Override
+                        public void onComplete(Object object) {
+                        }
 
-                            @Override
-                            public void onFailed(Exception e) {
-                                DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                    @Override
-                                    public void okClick() {
-                                    }
-                                });
-                            }
-                        });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
-
+                        @Override
+                        public void onFailed(Exception e) {
+                            DialogBoxUtil.showErrorDialog(context, context.getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                @Override
+                                public void okClick() {
+                                }
+                            });
+                        }
+                    });
         }
 
     }
@@ -799,15 +790,19 @@ public class PostHelper {
         public void setPostFeaturesCallback(PostFeaturesCallback postFeaturesCallback) {
             postFeaturesCallbackList.add(postFeaturesCallback);
         }
+
         public static void postLikeStatusChanged(boolean isPostLiked, int newLikeCount, int position, int _numberOfCallback) {
             postFeaturesCallbackList.get(_numberOfCallback).onPostLikeClicked(isPostLiked, newLikeCount, position);
         }
+
         public static void postCommentCountChanged(int position, int newCommentCount, int _numberOfCallback) {
             postFeaturesCallbackList.get(_numberOfCallback).onCommentAdd(position, newCommentCount);
         }
+
         public static void postCommentAllowedStatusChanged(int position, boolean newCommentAllowed, int _numberOfCallback) {
             postFeaturesCallbackList.get(_numberOfCallback).onCommentAllowedStatusChanged(position, newCommentAllowed);
         }
+
         public static void postDeleted(int position, int _numberOfCallback) {
             postFeaturesCallbackList.get(_numberOfCallback).onPostDeleted(position);
         }
@@ -857,7 +852,7 @@ public class PostHelper {
         }
 
         public static FeedFragment getFeedFragment() {
-           return feedFragment;
+            return feedFragment;
         }
 
     }

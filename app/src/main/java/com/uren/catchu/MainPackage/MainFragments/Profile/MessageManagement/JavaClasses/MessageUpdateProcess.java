@@ -7,7 +7,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.FirebaseDatabase;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -27,48 +26,38 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
 public class MessageUpdateProcess {
 
     public static void updateReceiptIsSeenValue(final Context context, int lastVisibleItemPosition, final ArrayList<MessageBox> messageBoxList,
-                                                 String messageContentId) {
+                                                String messageContentId) {
+        for (int index = lastVisibleItemPosition; index >= 0; index--) {
+            final MessageBox messageBox = messageBoxList.get(index);
 
-        try {
-            for (int index = lastVisibleItemPosition; index >= 0; index--) {
-                final MessageBox messageBox = messageBoxList.get(index);
+            if (messageBox != null && messageBox.isReceiptIsSeen() == false && messageContentId != null) {
 
-                if (messageBox != null && messageBox.isReceiptIsSeen() == false && messageContentId != null) {
+                if (messageBox.getReceiptUser() != null && messageBox.getReceiptUser().getUserid() != null &&
+                        !messageBox.getReceiptUser().getUserid().isEmpty()) {
 
-                    if (messageBox.getReceiptUser() != null && messageBox.getReceiptUser().getUserid() != null &&
-                            !messageBox.getReceiptUser().getUserid().isEmpty()) {
+                    if (messageBox.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())) {
 
-                        if (messageBox.getReceiptUser().getUserid().equals(AccountHolderInfo.getUserID())) {
+                        final Map<String, Object> values = new HashMap<>();
+                        values.put(FB_CHILD_IS_SEEN, true);
 
-                            final Map<String, Object> values = new HashMap<>();
-                            values.put(FB_CHILD_IS_SEEN, true);
+                        FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                                .child(messageContentId)
+                                .child(messageBox.getMessageId())
+                                .child(FB_CHILD_RECEIPT)
+                                .updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                messageBox.setReceiptIsSeen(true);
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
 
-                            FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
-                                    .child(messageContentId)
-                                    .child(messageBox.getMessageId())
-                                    .child(FB_CHILD_RECEIPT)
-                                    .updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    messageBox.setReceiptIsSeen(true);
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                                            new Object() {
-                                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                                }
-                            });
-                        }
+                            }
+                        });
                     }
                 }
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageUpdateProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
         }
     }
 

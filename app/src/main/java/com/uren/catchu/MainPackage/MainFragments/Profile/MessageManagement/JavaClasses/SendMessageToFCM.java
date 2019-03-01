@@ -12,7 +12,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageSentFCMCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.FCMItems;
 import com.uren.catchu.R;
@@ -70,9 +69,6 @@ public class SendMessageToFCM {
                     return result;
                 } catch (Exception e) {
                     messageSentFCMCallback.onFailed(e);
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
                     e.printStackTrace();
                 }
                 return null;
@@ -94,9 +90,6 @@ public class SendMessageToFCM {
 
                 } catch (Exception e) {
                     messageSentFCMCallback.onFailed(e);
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
                     e.printStackTrace();
                     Toast.makeText(context, "Message Failed, Unknown error occurred.", Toast.LENGTH_LONG).show();
                 }
@@ -118,9 +111,6 @@ public class SendMessageToFCM {
             return response.body().string();
         } catch (Exception e) {
             messageSentFCMCallback.onFailed(e);
-            ErrorSaveHelper.writeErrorToDB(context, SendMessageToFCM.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
         return "";

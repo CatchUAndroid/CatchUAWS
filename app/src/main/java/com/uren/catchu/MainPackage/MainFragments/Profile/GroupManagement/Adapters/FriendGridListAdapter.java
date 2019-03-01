@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
@@ -33,21 +32,14 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
     ReturnCallback returnCallback;
 
     public FriendGridListAdapter(Context context, FriendList friendList, ReturnCallback returnCallback) {
-        try {
-            layoutInflater = LayoutInflater.from(context);
-            this.friendList = friendList;
-            this.context = context;
-            this.returnCallback = returnCallback;
-            imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.OVAL, 50, 0);
-            deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                    0, GradientDrawable.OVAL, 50, 0);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        layoutInflater = LayoutInflater.from(context);
+        this.friendList = friendList;
+        this.context = context;
+        this.returnCallback = returnCallback;
+        imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                0, GradientDrawable.OVAL, 50, 0);
+        deleteShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                0, GradientDrawable.OVAL, 50, 0);
     }
 
     public Object getItem(int position) {
@@ -74,71 +66,43 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
         public FriendGridListHolder(View itemView) {
             super(itemView);
 
-            try {
-                specialProfileImgView = view.findViewById(R.id.specialPictureImgView);
-                userNameSurname = view.findViewById(R.id.specialNameTextView);
-                deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
-                shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-                specialProfileImgView.setBackground(imageShape);
-                deletePersonImgv.setBackground(deleteShape);
+            specialProfileImgView = view.findViewById(R.id.specialPictureImgView);
+            userNameSurname = view.findViewById(R.id.specialNameTextView);
+            deletePersonImgv = view.findViewById(R.id.deletePersonImgv);
+            shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
+            specialProfileImgView.setBackground(imageShape);
+            deletePersonImgv.setBackground(deleteShape);
 
-                deletePersonImgv.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+            deletePersonImgv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-                        removeItem(position);
-                        returnCallback.onReturn(getItemCount());
-                    }
-                });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+                    removeItem(position);
+                    returnCallback.onReturn(getItemCount());
+                }
+            });
         }
 
         private void removeItem(int position) {
-            try {
-                friendList.getResultArray().remove(selectedFriend);
-                SelectedFriendList.updateFriendList(friendList.getResultArray());
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, getItemCount());
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            friendList.getResultArray().remove(selectedFriend);
+            SelectedFriendList.updateFriendList(friendList.getResultArray());
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, getItemCount());
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {
-            try {
-                this.position = position;
-                this.selectedFriend = selectedFriend;
-                setProfileName();
-                UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                        selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, specialProfileImgView);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.position = position;
+            this.selectedFriend = selectedFriend;
+            setProfileName();
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, specialProfileImgView);
         }
 
-        public void setProfileName(){
-            try {
-                if(selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
-                    UserDataUtil.setName(selectedFriend.getName(), userNameSurname);
-                else if(selectedFriend.getUsername() != null && !selectedFriend.getUsername().isEmpty())
-                    UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), userNameSurname);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+        public void setProfileName() {
+            if (selectedFriend.getName() != null && !selectedFriend.getName().isEmpty())
+                UserDataUtil.setName(selectedFriend.getName(), userNameSurname);
+            else if (selectedFriend.getUsername() != null && !selectedFriend.getUsername().isEmpty())
+                UserDataUtil.setName(CHAR_AMPERSAND + selectedFriend.getUsername(), userNameSurname);
         }
     }
 

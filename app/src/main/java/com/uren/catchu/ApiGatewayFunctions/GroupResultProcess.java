@@ -2,15 +2,8 @@ package com.uren.catchu.ApiGatewayFunctions;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
-import android.util.Log;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
@@ -45,9 +38,6 @@ public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult
                 return null;
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

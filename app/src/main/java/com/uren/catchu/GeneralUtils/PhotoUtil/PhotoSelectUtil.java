@@ -4,28 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.graphics.BitmapCompat;
 
-import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.ExifUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
-import java.io.File;
+import java.io.IOException;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
-import static com.uren.catchu.Constants.NumericConstants.IMAGE_RESOLUTION_480;
-import static com.uren.catchu.Constants.NumericConstants.IMAGE_RESOLUTION_640;
-import static com.uren.catchu.Constants.NumericConstants.IMAGE_RESOLUTION_800;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_2ANDHALFMB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_2MB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_5MB;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
@@ -77,110 +64,91 @@ public class PhotoSelectUtil {
     }
 
     private void onSelectFromFileResult() {
+        if (mediaUri == null) return;
+        imageRealPath = UriAdapter.getRealPathFromURI(mediaUri, context);
+
         try {
-            if (mediaUri == null) return;
-            imageRealPath = UriAdapter.getRealPathFromURI(mediaUri, context);
-
-            try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                bitmap = BitmapFactory.decodeFile(imageRealPath, options);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (bitmap == null)
-                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-
-            if (imageRealPath != null && !imageRealPath.isEmpty())
-                bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-            else {
-                imageRealPath = UriAdapter.getFilePathFromURI(context, mediaUri, MEDIA_TYPE_IMAGE);
-                bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-            }
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            bitmap = BitmapFactory.decodeFile(imageRealPath, options);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+            return;
+        }
+
+        if (bitmap == null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+            } catch (IOException e) {
+                return;
+            }
+        }
+
+        if (imageRealPath != null && !imageRealPath.isEmpty())
+            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+        else {
+            imageRealPath = UriAdapter.getFilePathFromURI(context, mediaUri, MEDIA_TYPE_IMAGE);
+            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
         }
     }
 
     public void onSelectFromGalleryResult() {
+        if (data == null) return;
+        mediaUri = data.getData();
+
+        if (mediaUri == null) return;
+        imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+
         try {
-            if (data == null) return;
-            mediaUri = data.getData();
-
-            if (mediaUri == null) return;
-            imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-
-            try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                bitmap = BitmapFactory.decodeFile(imageRealPath, options);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (bitmap == null)
-                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
-
-            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            bitmap = BitmapFactory.decodeFile(imageRealPath, options);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+            return;
         }
+
+        if (bitmap == null) {
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), mediaUri);
+            } catch (IOException e) {
+                return;
+            }
+        }
+
+        bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
     public void onSelectFromCameraResult() {
+        if (data == null) return;
+        mediaUri = data.getData();
+
+        if (mediaUri == null) return;
+        imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
+
         try {
-            if (data == null) return;
-            mediaUri = data.getData();
-
-            if (mediaUri == null) return;
-            imageRealPath = UriAdapter.getPathFromGalleryUri(context, mediaUri);
-
-            try {
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                bitmap = BitmapFactory.decodeFile(imageRealPath, options);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (bitmap == null)
-                bitmap = (Bitmap) data.getExtras().get("data");
-
-            bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
-
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            bitmap = BitmapFactory.decodeFile(imageRealPath, options);
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             e.printStackTrace();
         }
+
+        if (bitmap == null)
+            bitmap = (Bitmap) data.getExtras().get("data");
+
+        bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }
 
     public void setPortraitMode() {
-        try {
-            if (bitmap == null)
-                return;
+        if (bitmap == null)
+            return;
 
-            int width = bitmap.getWidth();
-            int heigth = bitmap.getHeight();
+        int width = bitmap.getWidth();
+        int heigth = bitmap.getHeight();
 
-            if (heigth > width)
-                portraitMode = true;
-            else
-                portraitMode = false;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (heigth > width)
+            portraitMode = true;
+        else
+            portraitMode = false;
     }
 
     public Bitmap getBitmap() {

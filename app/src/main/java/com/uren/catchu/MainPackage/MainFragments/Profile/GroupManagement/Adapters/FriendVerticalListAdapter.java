@@ -20,7 +20,6 @@ import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.ClickCallback;
 import com.uren.catchu.R;
@@ -51,19 +50,12 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
     public static final int CODE_REMOVE_ITEM = 1;
 
     public FriendVerticalListAdapter(Context context, List<UserProfileProperties> groupParticipantList) {
-        try {
-            this.context = context;
-            this.friendList = new FriendList();
-            this.friendList.setResultArray(new ArrayList<UserProfileProperties>());
-            this.orginalFriendList = new FriendList();
-            this.orginalFriendList.setResultArray(new ArrayList<UserProfileProperties>());
-            this.groupParticipantList = groupParticipantList;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.context = context;
+        this.friendList = new FriendList();
+        this.friendList.setResultArray(new ArrayList<UserProfileProperties>());
+        this.orginalFriendList = new FriendList();
+        this.orginalFriendList.setResultArray(new ArrayList<UserProfileProperties>());
+        this.groupParticipantList = groupParticipantList;
     }
 
     @Override
@@ -100,45 +92,24 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        try {
-            if (holder instanceof SelectFriendHolder) {
-                UserProfileProperties userProfileProperties = friendList.getResultArray().get(position);
-                ((SelectFriendHolder) holder).setData(userProfileProperties, position);
-            } else {
-                ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (holder instanceof SelectFriendHolder) {
+            UserProfileProperties userProfileProperties = friendList.getResultArray().get(position);
+            ((SelectFriendHolder) holder).setData(userProfileProperties, position);
+        } else {
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
     }
 
     private void setHorizontalAdapter() {
-        try {
-            selectFriendHorizontalAdapter = new SelectFriendHorizontalAdapter(context, new ClickCallback() {
-                @Override
-                public void onItemClick() {
-                    try {
-                        FriendVerticalListAdapter.this.notifyDataSetChanged();
+        selectFriendHorizontalAdapter = new SelectFriendHorizontalAdapter(context, new ClickCallback() {
+            @Override
+            public void onItemClick() {
+                FriendVerticalListAdapter.this.notifyDataSetChanged();
 
-                        if (SelectedFriendList.getInstance().getSize() == 0)
-                            horRecyclerView.setVisibility(View.GONE);
-                    } catch (Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                                new Object() {
-                                }.getClass().getEnclosingMethod().getName(), e.toString());
-                        e.printStackTrace();
-                    }
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+                if (SelectedFriendList.getInstance().getSize() == 0)
+                    horRecyclerView.setVisibility(View.GONE);
+            }
+        });
     }
 
     class SelectFriendHolder extends RecyclerView.ViewHolder {
@@ -190,29 +161,22 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
         }
 
         public void setData(UserProfileProperties selectedFriend, int position) {
-            try {
-                this.position = position;
-                this.selectedFriend = selectedFriend;
-                UserDataUtil.setName(selectedFriend.getName(), nameTextView);
-                UserDataUtil.setUsername(selectedFriend.getUsername(), usernameTextView);
-                UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                        selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView);
-                updateTickImgv();
-                updateItemEnableValue();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.position = position;
+            this.selectedFriend = selectedFriend;
+            UserDataUtil.setName(selectedFriend.getName(), nameTextView);
+            UserDataUtil.setUsername(selectedFriend.getUsername(), usernameTextView);
+            UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
+                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView);
+            updateTickImgv();
+            updateItemEnableValue();
         }
 
-        private void updateItemEnableValue(){
-            if(isInParticipantList(selectedFriend)){
+        private void updateItemEnableValue() {
+            if (isInParticipantList(selectedFriend)) {
                 specialListLinearLayout.setEnabled(false);
                 specialListLinearLayout.setBackgroundColor(context.getResources().getColor(R.color.AliceBlue, null));
                 inGroupTv.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 specialListLinearLayout.setEnabled(true);
                 specialListLinearLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
                 inGroupTv.setVisibility(View.GONE);
@@ -220,27 +184,19 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
         }
 
         public void updateTickImgv() {
-            try {
-                if (SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid()))
-                    tickImgv.setVisibility(View.VISIBLE);
-                else
-                    tickImgv.setVisibility(View.GONE);
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            if (SelectedFriendList.getInstance().isUserInList(selectedFriend.getUserid()))
+                tickImgv.setVisibility(View.VISIBLE);
+            else
+                tickImgv.setVisibility(View.GONE);
         }
 
         public void checkHorizontalAdapter(int type) {
-            try {
-                if (horAdapterUpdateChk == false) {
-                    horRecyclerView.setVisibility(View.VISIBLE);
-                    horRecyclerView.setAdapter(selectFriendHorizontalAdapter);
-                    horAdapterUpdateChk = true;
-                } else {
-                    horRecyclerView.setAdapter(selectFriendHorizontalAdapter);
+            if (horAdapterUpdateChk == false) {
+                horRecyclerView.setVisibility(View.VISIBLE);
+                horRecyclerView.setAdapter(selectFriendHorizontalAdapter);
+                horAdapterUpdateChk = true;
+            } else {
+                horRecyclerView.setAdapter(selectFriendHorizontalAdapter);
 
                     /*if (type == CODE_ADD_ITEM) {
                         selectFriendHorizontalAdapter.notifyItemInserted(SelectedFriendList.getInstance().getSize() - 1);
@@ -249,35 +205,21 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
                         selectFriendHorizontalAdapter.notifyDataSetChanged();
                     }*/
 
-                    if (SelectedFriendList.getInstance().getSize() == 0) {
-                        horRecyclerView.setVisibility(View.GONE);
-                    } else if (horRecyclerView.getVisibility() == View.GONE) {
-                        horRecyclerView.setVisibility(View.VISIBLE);
-                    }
+                if (SelectedFriendList.getInstance().getSize() == 0) {
+                    horRecyclerView.setVisibility(View.GONE);
+                } else if (horRecyclerView.getVisibility() == View.GONE) {
+                    horRecyclerView.setVisibility(View.VISIBLE);
                 }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
             }
         }
     }
 
     public boolean isInParticipantList(UserProfileProperties userProfileProperties) {
-
-        try {
-            if(groupParticipantList != null) {
-                for (UserProfileProperties userProfileProperties1 : groupParticipantList) {
-                    if (userProfileProperties.getUserid().equals(userProfileProperties1.getUserid()))
-                        return true;
-                }
+        if (groupParticipantList != null) {
+            for (UserProfileProperties userProfileProperties1 : groupParticipantList) {
+                if (userProfileProperties.getUserid().equals(userProfileProperties1.getUserid()))
+                    return true;
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
         }
         return false;
     }
@@ -292,47 +234,34 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults filterResults = new FilterResults();
-                try {
-                    String searchString = charSequence.toString();
-                    if (searchString.trim().isEmpty())
-                        friendList.setResultArray(orginalFriendList.getResultArray());
-                    else {
-                        FriendList tempFriendList = new FriendList();
-                        List<UserProfileProperties> userList = new ArrayList<>();
-                        tempFriendList.setResultArray(userList);
 
-                        for (UserProfileProperties userProfileProperties : orginalFriendList.getResultArray()) {
-                            if (userProfileProperties.getName() != null &&
-                                    userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase()))
-                                tempFriendList.getResultArray().add(userProfileProperties);
-                            else if (userProfileProperties.getUsername() != null &&
-                                    userProfileProperties.getUsername().toLowerCase().contains(searchString.toLowerCase()))
-                                tempFriendList.getResultArray().add(userProfileProperties);
-                        }
-                        friendList.setResultArray(tempFriendList.getResultArray());
+                String searchString = charSequence.toString();
+                if (searchString.trim().isEmpty())
+                    friendList.setResultArray(orginalFriendList.getResultArray());
+                else {
+                    FriendList tempFriendList = new FriendList();
+                    List<UserProfileProperties> userList = new ArrayList<>();
+                    tempFriendList.setResultArray(userList);
+
+                    for (UserProfileProperties userProfileProperties : orginalFriendList.getResultArray()) {
+                        if (userProfileProperties.getName() != null &&
+                                userProfileProperties.getName().toLowerCase().contains(searchString.toLowerCase()))
+                            tempFriendList.getResultArray().add(userProfileProperties);
+                        else if (userProfileProperties.getUsername() != null &&
+                                userProfileProperties.getUsername().toLowerCase().contains(searchString.toLowerCase()))
+                            tempFriendList.getResultArray().add(userProfileProperties);
                     }
-
-                    filterResults.values = friendList;
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
+                    friendList.setResultArray(tempFriendList.getResultArray());
                 }
+
+                filterResults.values = friendList;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                try {
-                    friendList = (FriendList) filterResults.values;
-                    notifyDataSetChanged();
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+                friendList = (FriendList) filterResults.values;
+                notifyDataSetChanged();
             }
         };
     }

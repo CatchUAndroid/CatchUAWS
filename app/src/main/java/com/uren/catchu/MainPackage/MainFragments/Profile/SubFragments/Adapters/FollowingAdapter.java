@@ -26,7 +26,6 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
@@ -95,18 +94,11 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        try {
-            if (holder instanceof FollowingViewHolder) {
-                User user = userList.get(position);
-                ((FollowingViewHolder) holder).setData(user, position);
-            } else {
-                ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (holder instanceof FollowingViewHolder) {
+            User user = userList.get(position);
+            ((FollowingViewHolder) holder).setData(user, position);
+        } else {
+            ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);
         }
     }
 
@@ -150,7 +142,7 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
             });
         }
 
-        public void setShapes(){
+        public void setShapes() {
             profileImage.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.DodgerBlue, null),
                     0, GradientDrawable.OVAL, 50, 0));
         }
@@ -185,7 +177,7 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
             UserDataUtil.setName(user.getName(), profileName);
             UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
-                    user.getName(), user.getUsername(),  shortUserNameTv, profileImage);
+                    user.getName(), user.getUsername(), shortUserNameTv, profileImage);
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
         }
 
@@ -322,53 +314,40 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
                 FilterResults filterResults = new FilterResults();
-                try {
-                    String searchString = charSequence.toString();
 
-                    if (searchString.trim().isEmpty()) {
-                        userList.clear();
-                        userList.addAll(orgUserList);
-                    }else {
-                        List<User> tempUserList = new ArrayList<>();
+                String searchString = charSequence.toString();
 
-                        for (User user : orgUserList) {
-                            if (user.getName() != null &&
-                                    user.getName().toLowerCase().contains(searchString.toLowerCase()))
-                                tempUserList.add(user);
-                            else if (user.getUsername() != null &&
-                                    user.getUsername().toLowerCase().contains(searchString.toLowerCase()))
-                                tempUserList.add(user);
-                        }
-                        userList.clear();
-                        userList.addAll(tempUserList);
+                if (searchString.trim().isEmpty()) {
+                    userList.clear();
+                    userList.addAll(orgUserList);
+                } else {
+                    List<User> tempUserList = new ArrayList<>();
+
+                    for (User user : orgUserList) {
+                        if (user.getName() != null &&
+                                user.getName().toLowerCase().contains(searchString.toLowerCase()))
+                            tempUserList.add(user);
+                        else if (user.getUsername() != null &&
+                                user.getUsername().toLowerCase().contains(searchString.toLowerCase()))
+                            tempUserList.add(user);
                     }
-
-                    filterResults.values = userList;
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
+                    userList.clear();
+                    userList.addAll(tempUserList);
                 }
+
+                filterResults.values = userList;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                try {
-                    userList = (ArrayList<User>) filterResults.values;
-                    notifyDataSetChanged();
+                userList = (ArrayList<User>) filterResults.values;
+                notifyDataSetChanged();
 
-                    if (userList != null && userList.size() > 0)
-                        searchResultCallback.onReturn(userList.size());
-                    else
-                        searchResultCallback.onReturn(0);
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+                if (userList != null && userList.size() > 0)
+                    searchResultCallback.onReturn(userList.size());
+                else
+                    searchResultCallback.onReturn(0);
             }
         };
     }

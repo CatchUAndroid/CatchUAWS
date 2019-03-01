@@ -19,7 +19,6 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
@@ -140,7 +139,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
                         verifyCodeEt.getText().toString().trim(), getContext(), new PhoneVerifyCallback() {
                             @Override
                             public void onReturn(boolean isVerified) {
-                                if(isVerified)
+                                if (isVerified)
                                     saveUserPhoneAndCountry();
                                 else
                                     DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.INVALID_VERIFICATION_CODE_ENTERED), new InfoDialogBoxCallback() {
@@ -167,33 +166,19 @@ public class VerifyPhoneNumberFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    if (s.toString().length() == 6) {
-                        commonToolbarTickImgv.setVisibility(View.VISIBLE);
-                    } else
-                        commonToolbarTickImgv.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+                if (s.toString().length() == 6) {
+                    commonToolbarTickImgv.setVisibility(View.VISIBLE);
+                } else
+                    commonToolbarTickImgv.setVisibility(View.GONE);
             }
         });
 
         sendCodeAgainBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    warningMessageTv.setVisibility(View.GONE);
-                    phoneVerification.resendVerificationCode(phone.getDialCode().trim() + phone.getPhoneNumber().toString().trim(), phoneVerification.getmResendToken());
-                    setTimer();
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                            ((Button) v).getText().toString() + " - " + new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.toString());
-                    e.printStackTrace();
-                }
+                warningMessageTv.setVisibility(View.GONE);
+                phoneVerification.resendVerificationCode(phone.getDialCode().trim() + phone.getPhoneNumber().toString().trim(), phoneVerification.getmResendToken());
+                setTimer();
             }
         });
 
@@ -236,30 +221,23 @@ public class VerifyPhoneNumberFragment extends Fragment {
     }
 
     public void setTimer() {
-        try {
-            sendCodeAgainBtn.setEnabled(false);
+        sendCodeAgainBtn.setEnabled(false);
 
-            new CountDownTimer(VERIFY_PHONE_NUM_DURATION * 1000, 1000) {
+        new CountDownTimer(VERIFY_PHONE_NUM_DURATION * 1000, 1000) {
 
-                int duration = VERIFY_PHONE_NUM_DURATION;
+            int duration = VERIFY_PHONE_NUM_DURATION;
 
-                public void onTick(long millisUntilFinished) {
-                    remainingTimeTv.setText(checkDigit(duration));
-                    duration--;
-                }
+            public void onTick(long millisUntilFinished) {
+                remainingTimeTv.setText(checkDigit(duration));
+                duration--;
+            }
 
-                public void onFinish() {
-                    remainingTimeTv.setText(checkDigit(0));
-                    sendCodeAgainBtn.setEnabled(true);
-                    warningMessageTv.setVisibility(View.VISIBLE);
-                }
-            }.start();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+            public void onFinish() {
+                remainingTimeTv.setText(checkDigit(0));
+                sendCodeAgainBtn.setEnabled(true);
+                warningMessageTv.setVisibility(View.VISIBLE);
+            }
+        }.start();
     }
 
     public String checkDigit(int number) {

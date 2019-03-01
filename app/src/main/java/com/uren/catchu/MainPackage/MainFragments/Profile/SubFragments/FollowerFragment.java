@@ -26,7 +26,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
@@ -154,56 +153,42 @@ public class FollowerFragment extends BaseFragment
 
             @Override
             public void afterTextChanged(Editable s) {
-                try {
-                    if (s != null && s.toString() != null) {
-                        if (!s.toString().trim().isEmpty()) {
-                            searchCancelImgv.setVisibility(View.VISIBLE);
-                        } else {
-                            searchCancelImgv.setVisibility(View.GONE);
-                        }
-
-                        if (followerAdapter != null)
-                            followerAdapter.updateAdapter(s.toString(), new ReturnCallback() {
-                                @Override
-                                public void onReturn(Object object) {
-                                    int itemSize = (int) object;
-
-                                    if (itemSize == 0)
-                                        searchResultTv.setVisibility(View.VISIBLE);
-                                    else
-                                        searchResultTv.setVisibility(View.GONE);
-                                }
-                            });
-                    } else
+                if (s != null && s.toString() != null) {
+                    if (!s.toString().trim().isEmpty()) {
+                        searchCancelImgv.setVisibility(View.VISIBLE);
+                    } else {
                         searchCancelImgv.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    ErrorSaveHelper.writeErrorToDB(getContext(), this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                    e.printStackTrace();
-                }
+                    }
+
+                    if (followerAdapter != null)
+                        followerAdapter.updateAdapter(s.toString(), new ReturnCallback() {
+                            @Override
+                            public void onReturn(Object object) {
+                                int itemSize = (int) object;
+
+                                if (itemSize == 0)
+                                    searchResultTv.setVisibility(View.VISIBLE);
+                                else
+                                    searchResultTv.setVisibility(View.GONE);
+                            }
+                        });
+                } else
+                    searchCancelImgv.setVisibility(View.GONE);
             }
         });
     }
 
     private void showKeyboard(boolean showKeyboard) {
 
-        try {
-            if (showKeyboard) {
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            } else {
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchEdittext.getWindowToken(), 0);
-                searchEdittext.setFocusable(false);
-                searchEdittext.setFocusableInTouchMode(true);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (showKeyboard) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        } else {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(searchEdittext.getWindowToken(), 0);
+            searchEdittext.setFocusable(false);
+            searchEdittext.setFocusableInTouchMode(true);
         }
     }
 
@@ -328,10 +313,10 @@ public class FollowerFragment extends BaseFragment
     private void startFollowerInfoProcess(User user, int clickedPosition) {
 
         if (mFragmentNavigation != null) {
-            if(user.getUserid() != null && !user.getUserid().trim().isEmpty()){
-                if(user.getUserid().equals(AccountHolderInfo.getUserID()))
+            if (user.getUserid() != null && !user.getUserid().trim().isEmpty()) {
+                if (user.getUserid().equals(AccountHolderInfo.getUserID()))
                     mFragmentNavigation.pushFragment(new ProfileFragment(false), ANIMATE_RIGHT_TO_LEFT);
-                else if(followerAdapter != null ){
+                else if (followerAdapter != null) {
                     UserInfoListItem userInfoListItem = new UserInfoListItem(user);
                     userInfoListItem.setAdapter(followerAdapter);
                     userInfoListItem.setClickedPosition(clickedPosition);

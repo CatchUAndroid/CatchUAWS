@@ -3,10 +3,7 @@ package com.uren.catchu.GeneralUtils.ApiModelsProcess;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
-import android.util.Log;
 
-import com.uren.catchu.Adapters.LocationTrackerAdapter;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 
@@ -18,7 +15,6 @@ import java.util.List;
 public class AccountHolderContactsProcess {
 
     public static void getContactList(Context context, CompleteCallback completeCallback) {
-        try {
             List<Contact> contactList = new ArrayList<>();
             String previousPhoneNum = "";
 
@@ -48,12 +44,6 @@ public class AccountHolderContactsProcess {
             phones.close();
             Collections.sort(contactList, new CustomComparator());
             completeCallback.onComplete(contactList);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, AccountHolderContactsProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
     }
 
     public static class CustomComparator implements Comparator<Contact> {

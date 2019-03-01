@@ -17,7 +17,6 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.GroupDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.GifDialogListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.R;
 
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -151,107 +150,100 @@ public class CustomDialogBox {
         }
 
         public CustomDialogBox build() {
-            try {
-                final Dialog dialog = new Dialog(this.activity);
-                dialog.requestWindowFeature(1);
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-                dialog.setCancelable(this.cancel);
-                dialog.setContentView(R.layout.layout_custom_dialog_box);
-                TextView title1 = (TextView) dialog.findViewById(R.id.title);
-                TextView message1 = (TextView) dialog.findViewById(R.id.message);
-                TextView shortUserNameTv = dialog.findViewById(R.id.shortUserNameTv);
-                ImageView profilePicImgView = dialog.findViewById(R.id.profilePicImgView);
-                TextView usernameTextView = dialog.findViewById(R.id.usernameTextView);
-                Button nBtn = (Button) dialog.findViewById(R.id.negativeBtn);
-                Button pBtn = (Button) dialog.findViewById(R.id.positiveBtn);
-                RelativeLayout relativelayout1 = dialog.findViewById(R.id.relativelayout1);
+            final Dialog dialog = new Dialog(this.activity);
+            dialog.requestWindowFeature(1);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            dialog.setCancelable(this.cancel);
+            dialog.setContentView(R.layout.layout_custom_dialog_box);
+            TextView title1 = (TextView) dialog.findViewById(R.id.title);
+            TextView message1 = (TextView) dialog.findViewById(R.id.message);
+            TextView shortUserNameTv = dialog.findViewById(R.id.shortUserNameTv);
+            ImageView profilePicImgView = dialog.findViewById(R.id.profilePicImgView);
+            TextView usernameTextView = dialog.findViewById(R.id.usernameTextView);
+            Button nBtn = (Button) dialog.findViewById(R.id.negativeBtn);
+            Button pBtn = (Button) dialog.findViewById(R.id.positiveBtn);
+            RelativeLayout relativelayout1 = dialog.findViewById(R.id.relativelayout1);
 
-                nBtn.setVisibility(nBtnVisibleType);
-                pBtn.setVisibility(pBtnVisibleType);
+            nBtn.setVisibility(nBtnVisibleType);
+            pBtn.setVisibility(pBtnVisibleType);
 
-                if (message != null && !message.isEmpty())
-                    message1.setText(this.message);
+            if (message != null && !message.isEmpty())
+                message1.setText(this.message);
+            else
+                message1.setVisibility(View.GONE);
+
+            if (title != null && !title.isEmpty())
+                title1.setText(this.title);
+            else
+                title1.setVisibility(View.GONE);
+
+            if (user != null) {
+                UserDataUtil.setProfilePicture(this.activity, user.getProfilePhotoUrl(),
+                        user.getName(), user.getUsername(), shortUserNameTv, profilePicImgView);
+                UserDataUtil.setNameOrUserName(user.getName(), user.getUsername(), usernameTextView);
+            } else if (group != null) {
+                GroupDataUtil.setGroupPicture(this.activity, group.getGroupPhotoUrl(),
+                        group.getName(), shortUserNameTv, profilePicImgView);
+
+                if (group.getName() != null && !group.getName().isEmpty())
+                    usernameTextView.setText(group.getName());
                 else
-                    message1.setVisibility(View.GONE);
+                    usernameTextView.setVisibility(View.GONE);
+            } else
+                relativelayout1.setVisibility(View.GONE);
 
-                if (title != null && !title.isEmpty())
-                    title1.setText(this.title);
-                else
-                    title1.setVisibility(View.GONE);
+            if (pBtnColor != 0) {
+                GradientDrawable bgShape = (GradientDrawable) pBtn.getBackground();
+                bgShape.setColor(pBtnColor);
+            }
+            if (nBtnColor != 0) {
+                GradientDrawable bgShape = (GradientDrawable) nBtn.getBackground();
+                bgShape.setColor(nBtnColor);
+            }
 
-                if (user != null) {
-                    UserDataUtil.setProfilePicture(this.activity, user.getProfilePhotoUrl(),
-                            user.getName(), user.getUsername(), shortUserNameTv, profilePicImgView);
-                    UserDataUtil.setNameOrUserName(user.getName(), user.getUsername(), usernameTextView);
-                } else if (group != null) {
-                    GroupDataUtil.setGroupPicture(this.activity, group.getGroupPhotoUrl(),
-                            group.getName(), shortUserNameTv, profilePicImgView);
+            if (this.positiveBtnText != null) {
+                pBtn.setText(this.positiveBtnText);
+            }
 
-                    if (group.getName() != null && !group.getName().isEmpty())
-                        usernameTextView.setText(group.getName());
-                    else
-                        usernameTextView.setVisibility(View.GONE);
-                } else
-                    relativelayout1.setVisibility(View.GONE);
+            if (this.negativeBtnText != null) {
+                nBtn.setText(this.negativeBtnText);
+            }
 
-                if (pBtnColor != 0) {
-                    GradientDrawable bgShape = (GradientDrawable) pBtn.getBackground();
-                    bgShape.setColor(pBtnColor);
-                }
-                if (nBtnColor != 0) {
-                    GradientDrawable bgShape = (GradientDrawable) nBtn.getBackground();
-                    bgShape.setColor(nBtnColor);
-                }
+            if (this.pListener != null) {
+                pBtn.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        Builder.this.pListener.OnClick();
+                        dialog.dismiss();
+                    }
+                });
+            } else {
+                pBtn.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+            }
 
-                if (this.positiveBtnText != null) {
-                    pBtn.setText(this.positiveBtnText);
-                }
+            if (this.nListener != null) {
+                nBtn.setVisibility(View.VISIBLE);
+                nBtn.setOnClickListener(new View.OnClickListener() {
+                    public void onClick(View view) {
+                        Builder.this.nListener.OnClick();
+                        dialog.dismiss();
+                    }
+                });
+            }
 
-                if (this.negativeBtnText != null) {
-                    nBtn.setText(this.negativeBtnText);
-                }
+            dialog.show();
 
-                if (this.pListener != null) {
-                    pBtn.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            Builder.this.pListener.OnClick();
+            if (this.durationTime > 0) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (dialog.isShowing())
                             dialog.dismiss();
-                        }
-                    });
-                } else {
-                    pBtn.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            dialog.dismiss();
-                        }
-                    });
-                }
-
-                if (this.nListener != null) {
-                    nBtn.setVisibility(View.VISIBLE);
-                    nBtn.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            Builder.this.nListener.OnClick();
-                            dialog.dismiss();
-                        }
-                    });
-                }
-
-                dialog.show();
-
-                if (this.durationTime > 0) {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (dialog.isShowing())
-                                dialog.dismiss();
-                        }
-                    }, this.durationTime);
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(this.activity, CustomDialogBox.class.getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                e.printStackTrace();
+                    }
+                }, this.durationTime);
             }
             return new CustomDialogBox(this);
         }

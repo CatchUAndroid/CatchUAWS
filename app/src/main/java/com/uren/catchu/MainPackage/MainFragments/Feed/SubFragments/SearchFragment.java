@@ -25,7 +25,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
@@ -90,26 +89,18 @@ public class SearchFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
-            if (mView == null) {
-                mView = inflater.inflate(R.layout.search_person_fragment, container, false);
-                ButterKnife.bind(this, mView);
+        if (mView == null) {
+            mView = inflater.inflate(R.layout.search_person_fragment, container, false);
+            ButterKnife.bind(this, mView);
 
-                showResultView(true,getString(R.string.searchUser));
-                initListeners();
-                initRecyclerView();
-                //getPersonList();
-            }
-
-            edtSearch.requestFocus();
-            showKeyboard(true);
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+            showResultView(true, getString(R.string.searchUser));
+            initListeners();
+            initRecyclerView();
+            //getPersonList();
         }
+
+        edtSearch.requestFocus();
+        showKeyboard(true);
 
         return mView;
     }
@@ -161,35 +152,28 @@ public class SearchFragment extends BaseFragment
                     @Override
                     public void run() {
 
-                        try {
-                            // do your actual work here
-                            tempSearchText = edtSearch.getText().toString();
+                        // do your actual work here
+                        tempSearchText = edtSearch.getText().toString();
 
-                            if (tempSearchText.matches("")) {
+                        if (tempSearchText.matches("")) {
 
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        searchText = tempSearchText;
-                                        searchResultAdapter.addProgressLoading();
-                                        searchResultAdapter.clearList();
-                                        searchResultAdapter.removeProgressLoading();
-                                        showResultView(true,getString(R.string.searchUser));
-                                    }
-                                });
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    searchText = tempSearchText;
+                                    searchResultAdapter.addProgressLoading();
+                                    searchResultAdapter.clearList();
+                                    searchResultAdapter.removeProgressLoading();
+                                    showResultView(true, getString(R.string.searchUser));
+                                }
+                            });
 
-                                return;
-                            }
+                            return;
+                        }
 
-                            if (!tempSearchText.matches(searchText)) {
-                                searchText = tempSearchText;
-                                getSearchResult();
-                            }
-                        } catch (Exception e) {
-                            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                            e.printStackTrace();
+                        if (!tempSearchText.matches(searchText)) {
+                            searchText = tempSearchText;
+                            getSearchResult();
                         }
                     }
                 }, 800);
@@ -218,41 +202,27 @@ public class SearchFragment extends BaseFragment
 
     private void showKeyboard(boolean showKeyboard) {
 
-        try {
-            if (showKeyboard) {
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-            } else {
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
-                        Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
-                edtSearch.setFocusable(false);
-                edtSearch.setFocusableInTouchMode(true);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (showKeyboard) {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+        } else {
+            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+            edtSearch.setFocusable(false);
+            edtSearch.setFocusableInTouchMode(true);
         }
     }
 
     private void showResultView(boolean isShowResult, @Nullable String msg) {
-        try {
-            if(isShowResult){
-                if(msg!= null){
-                    txtResult.setText(msg);
-                    txtResult.setVisibility(View.VISIBLE);
-                }
-            }else{
-                txtResult.setText("");
-                txtResult.setVisibility(View.GONE);
+        if (isShowResult) {
+            if (msg != null) {
+                txtResult.setText(msg);
+                txtResult.setVisibility(View.VISIBLE);
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        } else {
+            txtResult.setText("");
+            txtResult.setVisibility(View.GONE);
         }
     }
 
@@ -269,7 +239,7 @@ public class SearchFragment extends BaseFragment
             showKeyboard(false);
         }
 
-        if(v == edtSearch){
+        if (v == edtSearch) {
             edtSearch.requestFocus();
             showKeyboard(true);
         }
@@ -325,36 +295,22 @@ public class SearchFragment extends BaseFragment
 
     private void setUpRecyclerView(UserListResponse userListResponse) {
 
-        try {
-            searchResultAdapter.removeProgressLoading();
-            searchResultAdapter.updateListItems(userListResponse.getItems());
+        searchResultAdapter.removeProgressLoading();
+        searchResultAdapter.updateListItems(userListResponse.getItems());
 
-            if(userListResponse.getItems().size() > 0){
-                showResultView(false,null);
-            }else{
-                showResultView(true, getString(R.string.THERE_IS_NO_SEARCH_RESULT));
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (userListResponse.getItems().size() > 0) {
+            showResultView(false, null);
+        } else {
+            showResultView(true, getString(R.string.THERE_IS_NO_SEARCH_RESULT));
         }
     }
 
     @Override
     public void onClick(View view, User user, int clickedPosition) {
-        try {
-            showKeyboard(false);
-            UserInfoListItem userInfoListItem = new UserInfoListItem(user);
-            userInfoListItem.setAdapter(searchResultAdapter);
-            userInfoListItem.setClickedPosition(clickedPosition);
-            PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        showKeyboard(false);
+        UserInfoListItem userInfoListItem = new UserInfoListItem(user);
+        userInfoListItem.setAdapter(searchResultAdapter);
+        userInfoListItem.setClickedPosition(clickedPosition);
+        PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
     }
 }

@@ -16,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
-import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.LoginPackage.Adapters.AppIntroductionAdapter;
 import com.uren.catchu.LoginPackage.Models.AppIntroSession;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -75,77 +73,63 @@ public class AppIntroductionActivity extends AppCompatActivity {
     }
 
     private void initVariables() {
-        try {
-            viewPager = (ViewPager) findViewById(R.id.view_pager);
-            dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-            btnSkip = (Button) findViewById(R.id.btn_skip);
-            btnNext = (Button) findViewById(R.id.btn_next);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
+        btnSkip = (Button) findViewById(R.id.btn_skip);
+        btnNext = (Button) findViewById(R.id.btn_next);
 
-            layouts = new int[]{
-                    R.layout.welcome_slide1,
-                    R.layout.welcome_slide2,
-                    R.layout.welcome_slide3,
-                    R.layout.welcome_slide4};
+        layouts = new int[]{
+                R.layout.welcome_slide1,
+                R.layout.welcome_slide2,
+                R.layout.welcome_slide3,
+                R.layout.welcome_slide4};
 
-            // adding bottom dots
-            addBottomDots(0);
+        // adding bottom dots
+        addBottomDots(0);
 
-            // making notification bar transparent
-            changeStatusBarColor();
+        // making notification bar transparent
+        changeStatusBarColor();
 
-            appIntroductionAdapter = new AppIntroductionAdapter(AppIntroductionActivity.this, layouts);
-            viewPager.setAdapter(appIntroductionAdapter);
-            viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+        appIntroductionAdapter = new AppIntroductionAdapter(AppIntroductionActivity.this, layouts);
+        viewPager.setAdapter(appIntroductionAdapter);
+        viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-            btnSkip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        btnSkip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchHomeScreen();
+            }
+        });
+
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int current = getItem(+1);
+                if (current < layouts.length)
+                    viewPager.setCurrentItem(current);
+                else
                     launchHomeScreen();
-                }
-            });
-
-            btnNext.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int current = getItem(+1);
-                    if (current < layouts.length)
-                        viewPager.setCurrentItem(current);
-                    else
-                        launchHomeScreen();
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(AppIntroductionActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+            }
+        });
     }
 
     private void addBottomDots(int currentPage) {
-        try {
-            dots = new TextView[layouts.length];
+        dots = new TextView[layouts.length];
 
-            int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
-            int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
+        int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
+        int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
 
-            dotsLayout.removeAllViews();
-            for (int i = 0; i < dots.length; i++) {
-                dots[i] = new TextView(this);
-                dots[i].setText(Html.fromHtml("&#8226;"));
-                dots[i].setTextSize(35);
-                dots[i].setTextColor(colorsInactive[currentPage]);
-                dotsLayout.addView(dots[i]);
-            }
-
-            if (dots.length > 0)
-                dots[currentPage].setTextColor(colorsActive[currentPage]);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(AppIntroductionActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        dotsLayout.removeAllViews();
+        for (int i = 0; i < dots.length; i++) {
+            dots[i] = new TextView(this);
+            dots[i].setText(Html.fromHtml("&#8226;"));
+            dots[i].setTextSize(35);
+            dots[i].setTextColor(colorsInactive[currentPage]);
+            dotsLayout.addView(dots[i]);
         }
+
+        if (dots.length > 0)
+            dots[currentPage].setTextColor(colorsActive[currentPage]);
     }
 
     private int getItem(int i) {
@@ -153,22 +137,15 @@ public class AppIntroductionActivity extends AppCompatActivity {
     }
 
     private void launchHomeScreen() {
-        try {
-            //appIntroSession.setFirstTimeLaunch(false);
-            LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
+        //appIntroSession.setFirstTimeLaunch(false);
+        LoginUser loginUser = (LoginUser) getIntent().getSerializableExtra("LoginUser");
 
-            if (loginUser != null) {
-                Intent intent = new Intent(AppIntroductionActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("LoginUser", loginUser);
-                startActivity(intent);
-                finish();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(AppIntroductionActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (loginUser != null) {
+            Intent intent = new Intent(AppIntroductionActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.putExtra("LoginUser", loginUser);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -177,24 +154,17 @@ public class AppIntroductionActivity extends AppCompatActivity {
 
         @Override
         public void onPageSelected(int position) {
-            try {
-                addBottomDots(position);
+            addBottomDots(position);
 
-                // changing the next button text 'NEXT' / 'GOT IT'
-                if (position == layouts.length - 1) {
-                    // last page. make button text to GOT IT
-                    btnNext.setText(getString(R.string.GOT_IT));
-                    btnSkip.setVisibility(View.GONE);
-                } else {
-                    // still pages are left
-                    btnNext.setText(getString(R.string.next));
-                    btnSkip.setVisibility(View.VISIBLE);
-                }
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(AppIntroductionActivity.this, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                e.printStackTrace();
+            // changing the next button text 'NEXT' / 'GOT IT'
+            if (position == layouts.length - 1) {
+                // last page. make button text to GOT IT
+                btnNext.setText(getString(R.string.GOT_IT));
+                btnSkip.setVisibility(View.GONE);
+            } else {
+                // still pages are left
+                btnNext.setText(getString(R.string.next));
+                btnSkip.setVisibility(View.VISIBLE);
             }
         }
 
@@ -210,17 +180,10 @@ public class AppIntroductionActivity extends AppCompatActivity {
     };
 
     private void changeStatusBarColor() {
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                Window window = getWindow();
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.TRANSPARENT);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(AppIntroductionActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.TRANSPARENT);
         }
     }
 }

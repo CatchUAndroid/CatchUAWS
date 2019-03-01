@@ -10,7 +10,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetContentIdCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetDeviceTokenCallback;
@@ -88,38 +87,23 @@ public class MessageGetProcess {
 
     public static void getMyNotificationStatus(final Context context, String myUserId, String chattedUserid,
                                                final NotificationStatusCallback notificationStatusCallback) {
-        try {
-            notificationStatusReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_NOTIFICATIONS)
-                    .child(myUserId)
-                    .child(chattedUserid)
-                    .child(FB_CHILD_NOTIFICATION_STATUS);
+        notificationStatusReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_NOTIFICATIONS)
+                .child(myUserId)
+                .child(chattedUserid)
+                .child(FB_CHILD_NOTIFICATION_STATUS);
 
-            notificationStatusListener = notificationStatusReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        notificationStatusListener = notificationStatusReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null)
+                    notificationStatusCallback.onReturn((String) dataSnapshot.getValue());
+            }
 
-                    try {
-                        if (dataSnapshot != null && dataSnapshot.getValue() != null)
-                            notificationStatusCallback.onReturn((String) dataSnapshot.getValue());
-                    } catch (Exception e) {
-                        ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                                new Object() {
-                                }.getClass().getEnclosingMethod().getName(), e.toString());
-                        e.printStackTrace();
-                    }
-                }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageGetProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+            }
+        });
     }
 
     public static void getOtherUserNotificationCount(final String senderUserid, String chattedUserId,
@@ -189,33 +173,24 @@ public class MessageGetProcess {
     public static void getOtherUserDeviceToken(final Context context, User chattedUser,
                                                final GetDeviceTokenCallback getDeviceTokenCallback) {
 
-        try {
-            tokenReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
-                    .child(chattedUser.getUserid()).child(FB_CHILD_TOKEN);
+        tokenReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
+                .child(chattedUser.getUserid()).child(FB_CHILD_TOKEN);
 
-            tokenListener = tokenReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+        tokenListener = tokenReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    if (dataSnapshot != null)
-                        getDeviceTokenCallback.onSuccess((String) dataSnapshot.getValue());
+                if (dataSnapshot != null)
+                    getDeviceTokenCallback.onSuccess((String) dataSnapshot.getValue());
 
-                    tokenReference.removeEventListener(tokenListener);
-                }
+                tokenReference.removeEventListener(tokenListener);
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                    ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                            new Object() {
-                            }.getClass().getEnclosingMethod().getName(), databaseError.toString());
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, MessageGetProcess.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static void getUnreadMessageCount(final UnreadMessageCallback unreadMessageCallback) {

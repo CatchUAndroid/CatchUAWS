@@ -13,7 +13,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.util.Pair;
 import android.view.View;
 
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import org.json.JSONArray;
 
@@ -542,9 +541,7 @@ public class FragNavController {
             try {
                 dialogFragment.show(fragmentManager, dialogFragment.getClass().getName());
             } catch (IllegalStateException e) {
-                ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
+                e.printStackTrace();
                 // Activity was likely destroyed before we had a chance to show, nothing can be done here.
             }
         }
@@ -859,9 +856,6 @@ public class FragNavController {
 
             outState.putString(EXTRA_FRAGMENT_STACK, stackArrays.toString());
         } catch (Throwable t) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), t.getMessage());
             // Nothing we can do
         }
     }
@@ -942,9 +936,6 @@ public class FragNavController {
             //Successfully restored state
             return true;
         } catch (Throwable t) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), t.getMessage());
             return false;
         }
     }

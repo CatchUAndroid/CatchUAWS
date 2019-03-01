@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.internal.service.Common;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.R;
@@ -39,16 +38,9 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
 
     public GroupsListAdapter(Context context,
                              BaseFragment.FragmentNavigation fragmentNavigation, GroupRequestResult groupRequestResult) {
-        try {
-            this.mContext = context;
-            this.fragmentNavigation = fragmentNavigation;
-            this.groupRequestResult = groupRequestResult;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        this.mContext = context;
+        this.fragmentNavigation = fragmentNavigation;
+        this.groupRequestResult = groupRequestResult;
     }
 
     @Override
@@ -70,72 +62,47 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
         public GroupsListHolder(View view) {
             super(view);
 
-            try {
-                imgGroupPic = (ImageView) view.findViewById(R.id.imgGroupPic);
-                txtGroupName = (TextView) view.findViewById(R.id.txtGroupName);
-                cardView = (CardView) view.findViewById(R.id.cardView);
+            imgGroupPic = (ImageView) view.findViewById(R.id.imgGroupPic);
+            txtGroupName = (TextView) view.findViewById(R.id.txtGroupName);
+            cardView = (CardView) view.findViewById(R.id.cardView);
 
-                setListeners();
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
-
+            setListeners();
         }
 
         private void setListeners() {
 
-            try {
-                //Card view
-                cardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        String targetUid = group.getGroupid();
-                        String toolbarTitle = group.getName();
-                        fragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_GROUP, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
-                    }
-                });
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
-
+            //Card view
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String targetUid = group.getGroupid();
+                    String toolbarTitle = group.getName();
+                    fragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_GROUP, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+                }
+            });
         }
 
         public void setData(GroupRequestResultResultArrayItem group, int position) {
-
-            try {
-                this.group = group;
-                this.position = position;
-                setGroupName();
-                setGroupPhoto();
-
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.toString());
-                e.printStackTrace();
-            }
+            this.group = group;
+            this.position = position;
+            setGroupName();
+            setGroupPhoto();
         }
 
-        private void setGroupName(){
-            if(group.getName() != null && !group.getName().isEmpty()){
+        private void setGroupName() {
+            if (group.getName() != null && !group.getName().isEmpty()) {
                 txtGroupName.setText(group.getName());
             }
         }
 
-        private void setGroupPhoto(){
-            if(group.getGroupPhotoUrl()!= null && !group.getGroupPhotoUrl().isEmpty()){
+        private void setGroupPhoto() {
+            if (group.getGroupPhotoUrl() != null && !group.getGroupPhotoUrl().isEmpty()) {
                 imgGroupPic.setPadding(0, 0, 0, 0);
                 Glide.with(mContext)
                         .load(group.getGroupPhotoUrl())
                         .apply(RequestOptions.centerCropTransform())
                         .into(imgGroupPic);
-            }else {
+            } else {
                 imgGroupPic.setPadding(30, 30, 30, 30);
                 Glide.with(mContext)
                         .load(R.drawable.groups_icon_500)
@@ -147,29 +114,16 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
 
     @Override
     public void onBindViewHolder(GroupsListHolder holder, final int position) {
-        try {
-            GroupRequestResultResultArrayItem group = groupRequestResult.getResultArray().get(position);
-            holder.setData(group, position);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        GroupRequestResultResultArrayItem group = groupRequestResult.getResultArray().get(position);
+        holder.setData(group, position);
     }
 
     @Override
     public int getItemCount() {
-        int size = 0;
-        try {
-            size = groupRequestResult.getResultArray().size();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-        return size;
+        if (groupRequestResult != null && groupRequestResult.getResultArray() != null)
+            return groupRequestResult.getResultArray().size();
+        else
+            return 0;
     }
 }
 

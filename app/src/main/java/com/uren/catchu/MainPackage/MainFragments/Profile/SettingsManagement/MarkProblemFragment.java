@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.ReturnCallback;
@@ -66,37 +65,23 @@ public class MarkProblemFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        try {
-            mView = inflater.inflate(R.layout.fragment_mark_problem, container, false);
-            ButterKnife.bind(this, mView);
-            initVariables();
-            addListeners();
-            setCanvas();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        mView = inflater.inflate(R.layout.fragment_mark_problem, container, false);
+        ButterKnife.bind(this, mView);
+        initVariables();
+        addListeners();
+        setCanvas();
         return mView;
     }
 
     private void setCanvas() {
-        try {
-            paintView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    paintView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    paintView.init(paintView.getWidth(), paintView.getHeight(), photoSelectUtil.getBitmap());
-                    paintView.normal();
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        paintView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                paintView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                paintView.init(paintView.getWidth(), paintView.getHeight(), photoSelectUtil.getBitmap());
+                paintView.normal();
+            }
+        });
     }
 
     @Override
@@ -105,44 +90,30 @@ public class MarkProblemFragment extends BaseFragment {
     }
 
     private void initVariables() {
-        try {
-            toolbarTitleTv.setText(getResources().getString(R.string.CIRCLE_THE_PROBLEM));
-            commonToolbarTickImgv.setVisibility(View.VISIBLE);
-            markProblemLayout.setBackground(ShapeUtil.getShape(0,
-                    getResources().getColor(R.color.DodgerBlue, null), GradientDrawable.RECTANGLE, 0, 2));
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        toolbarTitleTv.setText(getResources().getString(R.string.CIRCLE_THE_PROBLEM));
+        commonToolbarTickImgv.setVisibility(View.VISIBLE);
+        markProblemLayout.setBackground(ShapeUtil.getShape(0,
+                getResources().getColor(R.color.DodgerBlue, null), GradientDrawable.RECTANGLE, 0, 2));
     }
 
     public void addListeners() {
-        try {
-            commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-                    getActivity().onBackPressed();
-                }
-            });
+        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                getActivity().onBackPressed();
+            }
+        });
 
-            commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    photoSelectUtil.setBitmap(paintView.getmBitmap());
-                    returnCallback.onReturn(photoSelectUtil);
-                    ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-                    getActivity().onBackPressed();
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(),this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                photoSelectUtil.setBitmap(paintView.getmBitmap());
+                returnCallback.onReturn(photoSelectUtil);
+                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                getActivity().onBackPressed();
+            }
+        });
     }
 
 }

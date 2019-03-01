@@ -453,15 +453,8 @@ public class MessageWithPersonFragment extends BaseFragment {
     }
 
     /*private void setDateValue(int position) {
-        try {
             MessageBox messageBox = messageBoxList.get(position);
             dateValueTv.setText(CommonUtils.getMessageTime(getContext(), messageBox.getDate()));
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(getContext(), MessageWithPersonFragment.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
     }*/
 
     public void deleteCompleted() {

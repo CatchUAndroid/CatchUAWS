@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 
 import java.math.BigDecimal;
 
@@ -48,9 +47,6 @@ public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
             }
 
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(mContext, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
             mException = e;
             e.printStackTrace();
         }

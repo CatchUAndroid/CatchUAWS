@@ -36,11 +36,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import org.joda.time.Days;
@@ -78,7 +74,6 @@ public class CommonUtils {
 
     /*public static final void showCustomToast(Context context, String message) {
 
-        try {
             if (context == null) return;
             if (message == null || message.isEmpty()) return;
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -97,12 +92,7 @@ public class CommonUtils {
             toast.setDuration(Toast.LENGTH_SHORT);
             toast.setView(layout);
             toast.show();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+
     }*/
 
     public static final String getDeviceID(Context context) {
@@ -159,36 +149,29 @@ public class CommonUtils {
 
         StateListDrawable drawable = null;
 
-        try {
-            Drawable state_normal = ContextCompat.getDrawable(context, normal);
-            Drawable state_pressed = ContextCompat.getDrawable(context, selected);
+        Drawable state_normal = ContextCompat.getDrawable(context, normal);
+        Drawable state_pressed = ContextCompat.getDrawable(context, selected);
 
-            Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
+        Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
 
-            // Setting alpha directly just didn't work, so we draw a new bitmap!
-            Bitmap disabledBitmap = Bitmap.createBitmap(
-                    state_normal.getIntrinsicWidth(),
-                    state_normal.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(disabledBitmap);
+        // Setting alpha directly just didn't work, so we draw a new bitmap!
+        Bitmap disabledBitmap = Bitmap.createBitmap(
+                state_normal.getIntrinsicWidth(),
+                state_normal.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(disabledBitmap);
 
-            Paint paint = new Paint();
-            paint.setAlpha(126);
-            canvas.drawBitmap(state_normal_bitmap, 0, 0, paint);
+        Paint paint = new Paint();
+        paint.setAlpha(126);
+        canvas.drawBitmap(state_normal_bitmap, 0, 0, paint);
 
-            BitmapDrawable state_normal_drawable = new BitmapDrawable(context.getResources(), disabledBitmap);
+        BitmapDrawable state_normal_drawable = new BitmapDrawable(context.getResources(), disabledBitmap);
 
-            drawable = new StateListDrawable();
+        drawable = new StateListDrawable();
 
-            drawable.addState(new int[]{android.R.attr.state_selected},
-                    state_pressed);
-            drawable.addState(new int[]{android.R.attr.state_enabled},
-                    state_normal_drawable);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        drawable.addState(new int[]{android.R.attr.state_selected},
+                state_pressed);
+        drawable.addState(new int[]{android.R.attr.state_enabled},
+                state_normal_drawable);
 
         return drawable;
     }
@@ -272,16 +255,9 @@ public class CommonUtils {
     }
 
     public static boolean checkCameraHardware(Context context) {
-        try {
-            if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-                // this device has a camera
-                return true;
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
+            // this device has a camera
+            return true;
         }
         return false;
     }
@@ -319,17 +295,10 @@ public class CommonUtils {
     }
 
     public static void hideKeyBoard(Context context) {
-        try {
-            Activity activity = (Activity) context;
-            InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
-            if (activity.getCurrentFocus() != null) {
-                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        Activity activity = (Activity) context;
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (activity.getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -344,40 +313,32 @@ public class CommonUtils {
         //String suffix = resources.getString(R.string.ago);
         String suffix = "";
 
+        Date nowTime = new Date();
+        Date date = CommonUtils.fromISO8601UTC(createAt);
 
-        try {
-            Date nowTime = new Date();
-            Date date = CommonUtils.fromISO8601UTC(createAt);
+        long dateDiff = nowTime.getTime() - date.getTime();
 
-            long dateDiff = nowTime.getTime() - date.getTime();
+        long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
+        long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
+        long hour = TimeUnit.MILLISECONDS.toHours(dateDiff);
+        long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
 
-            long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
-            long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
-            long hour = TimeUnit.MILLISECONDS.toHours(dateDiff);
-            long day = TimeUnit.MILLISECONDS.toDays(dateDiff);
-
-            if (second < 60) {
-                convTime = second + " " + resources.getString(R.string.seconds) + " " + suffix;
-            } else if (minute < 60) {
-                convTime = minute + " " + resources.getString(R.string.minutes) + " " + suffix;
-            } else if (hour < 24) {
-                convTime = hour + " " + resources.getString(R.string.hours) + " " + suffix;
-            } else if (day >= 7) {
-                if (day > 30) {
-                    convTime = (day / 30) + " " + resources.getString(R.string.months) + " " + suffix;
-                } else if (day > 360) {
-                    convTime = (day / 360) + " " + resources.getString(R.string.years) + " " + suffix;
-                } else {
-                    convTime = (day / 7) + " " + resources.getString(R.string.weeks) + " " + suffix;
-                }
-            } else if (day < 7) {
-                convTime = day + " " + resources.getString(R.string.days) + " " + suffix;
+        if (second < 60) {
+            convTime = second + " " + resources.getString(R.string.seconds) + " " + suffix;
+        } else if (minute < 60) {
+            convTime = minute + " " + resources.getString(R.string.minutes) + " " + suffix;
+        } else if (hour < 24) {
+            convTime = hour + " " + resources.getString(R.string.hours) + " " + suffix;
+        } else if (day >= 7) {
+            if (day > 30) {
+                convTime = (day / 30) + " " + resources.getString(R.string.months) + " " + suffix;
+            } else if (day > 360) {
+                convTime = (day / 360) + " " + resources.getString(R.string.years) + " " + suffix;
+            } else {
+                convTime = (day / 7) + " " + resources.getString(R.string.weeks) + " " + suffix;
             }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        } else if (day < 7) {
+            convTime = day + " " + resources.getString(R.string.days) + " " + suffix;
         }
 
         return convTime;
@@ -387,34 +348,27 @@ public class CommonUtils {
         String dateValueStr = null;
         String hour = null;
 
-        try {
-            Date date = new Date(time);
+        Date date = new Date(time);
 
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
-            format.setTimeZone(TimeZone.getDefault());
-            String formatted = format.format(date);
-            hour = formatted.substring(11, 16);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        format.setTimeZone(TimeZone.getDefault());
+        String formatted = format.format(date);
+        hour = formatted.substring(11, 16);
 
-            Date todayDate = new Date(System.currentTimeMillis());
-            String formattedTodayDate = format.format(todayDate);
+        Date todayDate = new Date(System.currentTimeMillis());
+        String formattedTodayDate = format.format(todayDate);
 
-            if (formatted.substring(0, 10).equals(formattedTodayDate.substring(0, 10)))
-                dateValueStr = context.getResources().getString(R.string.TODAY);
-            else if (isYesterday(date))
-                dateValueStr = context.getResources().getString(R.string.YESTERDAY);
-            else {
-                String[] monthArray = context.getResources().getStringArray(R.array.months);
-                String monthValue = monthArray[Integer.parseInt(formatted.substring(5, 7)) - 1];
+        if (formatted.substring(0, 10).equals(formattedTodayDate.substring(0, 10)))
+            dateValueStr = context.getResources().getString(R.string.TODAY);
+        else if (isYesterday(date))
+            dateValueStr = context.getResources().getString(R.string.YESTERDAY);
+        else {
+            String[] monthArray = context.getResources().getStringArray(R.array.months);
+            String monthValue = monthArray[Integer.parseInt(formatted.substring(5, 7)) - 1];
 
-                dateValueStr = formatted.substring(8, 10) + " "
-                        + monthValue.substring(0, 3) +
-                        " " + formatted.substring(0, 4);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+            dateValueStr = formatted.substring(8, 10) + " "
+                    + monthValue.substring(0, 3) +
+                    " " + formatted.substring(0, 4);
         }
 
         return dateValueStr + "  " + hour;
@@ -442,52 +396,31 @@ public class CommonUtils {
     }
 
     public static void setImageScaleType(PhotoSelectUtil photoSelectUtil, ImageView imageView) {
-        try {
-            if (photoSelectUtil.isPortraitMode())
-                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            else
-                imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (photoSelectUtil.isPortraitMode())
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        else
+            imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
     }
 
     public static boolean isNetworkConnected(Context context) {
-        try {
-            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                    connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-                return true;
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            return true;
         }
 
         return false;
     }
 
     public static void connectionErrSnackbarShow(View view, Context context) {
-        try {
-            Snackbar snackbar = Snackbar.make(view,
-                    context.getResources().getString(R.string.CHECK_YOUR_INTERNET_CONNECTION),
-                    Snackbar.LENGTH_SHORT);
-            View snackBarView = snackbar.getView();
-            snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
-            TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
-            tv.setTextColor(context.getResources().getColor(R.color.White, null));
-            snackbar.show();
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(context, CommonUtils.class.getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        Snackbar snackbar = Snackbar.make(view,
+                context.getResources().getString(R.string.CHECK_YOUR_INTERNET_CONNECTION),
+                Snackbar.LENGTH_SHORT);
+        View snackBarView = snackbar.getView();
+        snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
+        TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setTextColor(context.getResources().getColor(R.color.White, null));
+        snackbar.show();
     }
 
     public static void snackbarShow(View view, Context context, String message, int colorId) {

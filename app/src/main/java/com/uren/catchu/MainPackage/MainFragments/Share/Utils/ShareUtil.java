@@ -9,7 +9,6 @@ import com.uren.catchu.ApiGatewayFunctions.SignedUrlDeleteProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.GifDialogBox;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
@@ -22,7 +21,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import static com.uren.catchu.Constants.NumericConstants.SHARE_TRY_COUNT;
 
-public class ShareUtil{
+public class ShareUtil {
 
     ShareItems shareItems;
     PermissionModule permissionModule;
@@ -129,81 +128,55 @@ public class ShareUtil{
                 }
             });
         } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
             e.printStackTrace();
-
-            //Stop progressbar in FeedFragment
             PostHelper.InitFeed.getFeedFragment().stopProgressBar();
         }
     }
 
     public void showShareSuccessView() {
         if (NextActivity.thisActivity != null) {
-            try {
-                new GifDialogBox.Builder(NextActivity.thisActivity)
-                        .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
-                        .setGifResource(R.drawable.gif16)
-                        .setNegativeBtnVisibility(View.GONE)
-                        .setPositiveBtnVisibility(View.GONE)
-                        .setTitleVisibility(View.GONE)
-                        .setDurationTime(3000)
-                        .isCancellable(true)
-                        .build();
+            new GifDialogBox.Builder(NextActivity.thisActivity)
+                    .setMessage(NextActivity.thisActivity.getResources().getString(R.string.SHARE_IS_SUCCESSFUL))
+                    .setGifResource(R.drawable.gif16)
+                    .setNegativeBtnVisibility(View.GONE)
+                    .setPositiveBtnVisibility(View.GONE)
+                    .setTitleVisibility(View.GONE)
+                    .setDurationTime(3000)
+                    .isCancellable(true)
+                    .build();
 
-                PostHelper.FeedRefresh.feedRefreshStart();
-
-            } catch (Exception e) {
-                ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                        new Object() {
-                        }.getClass().getEnclosingMethod().getName(), e.getMessage());
-                e.printStackTrace();
-            }
+            PostHelper.FeedRefresh.feedRefreshStart();
         }
     }
 
     public void deleteUploadedItems() {
-        try {
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    if (shareItems != null && shareItems.getBucketUploadResponse() != null) {
-                        SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
-                            @Override
-                            public void onSuccess(Object object) {
-                            }
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                if (shareItems != null && shareItems.getBucketUploadResponse() != null) {
+                    SignedUrlDeleteProcess signedUrlDeleteProcess = new SignedUrlDeleteProcess(new OnEventListener() {
+                        @Override
+                        public void onSuccess(Object object) {
+                        }
 
-                            @Override
-                            public void onFailure(Exception e) {
-                            }
+                        @Override
+                        public void onFailure(Exception e) {
+                        }
 
-                            @Override
-                            public void onTaskContinue() {
+                        @Override
+                        public void onTaskContinue() {
 
-                            }
-                        }, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
-                                token,
-                                shareItems.getBucketUploadResponse());
-                        signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                    }
+                        }
+                    }, AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                            token,
+                            shareItems.getBucketUploadResponse());
+                    signedUrlDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
+            }
 
-                @Override
-                public void onTokenFail(String message) {
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(null, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.getMessage());
-            e.printStackTrace();
-        }
+            @Override
+            public void onTokenFail(String message) {
+            }
+        });
     }
-
-    /*@Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }*/
 }

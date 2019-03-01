@@ -27,7 +27,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.ErrorSaveHelper;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
@@ -104,18 +103,11 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     public void initVariables() {
-        try {
-            initUIValues();
-            messageListBoxes = new ArrayList<>();
-            searchToolbarAddItemImgv.setVisibility(View.GONE);
-            setRecyclerViewScroll();
-            limitValue = REC_MAXITEM_LIMIT_COUNT;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        initUIValues();
+        messageListBoxes = new ArrayList<>();
+        searchToolbarAddItemImgv.setVisibility(View.GONE);
+        setRecyclerViewScroll();
+        limitValue = REC_MAXITEM_LIMIT_COUNT;
     }
 
     private void initUIValues() {
@@ -128,24 +120,17 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     private void checkMyInformation() {
-        try {
-            if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty())
-                updateClusterStatus();
-            else if (receiptUserId != null && !receiptUserId.isEmpty()) {
-                AccountHolderInfo.getInstance();
-                AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
-                    @Override
-                    public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                        if (receiptUserId.equals(userProfile.getUserInfo().getUserid()))
-                            updateClusterStatus();
-                    }
-                });
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty())
+            updateClusterStatus();
+        else if (receiptUserId != null && !receiptUserId.isEmpty()) {
+            AccountHolderInfo.getInstance();
+            AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
+                @Override
+                public void onAccountHolderIfoTaken(UserProfile userProfile) {
+                    if (receiptUserId.equals(userProfile.getUserInfo().getUserid()))
+                        updateClusterStatus();
+                }
+            });
         }
     }
 
@@ -214,28 +199,90 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     public void getMessages() {
-        try {
-            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
-                    .child(AccountHolderInfo.getUserID());
+        databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGES).child(FB_CHILD_WITH_PERSON)
+                .child(AccountHolderInfo.getUserID());
 
-            Query query = databaseReference
-                    .orderByChild(FB_CHILD_MESSAGE_CONTENT + "/" + FB_CHILD_LAST_MESSAGE_DATE)
-                    .limitToLast(limitValue);
+        Query query = databaseReference
+                .orderByChild(FB_CHILD_MESSAGE_CONTENT + "/" + FB_CHILD_LAST_MESSAGE_DATE)
+                .limitToLast(limitValue);
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
+
+                    if (!dataLoaded) {
+                        dataLoaded = true;
+                        if (messageListAdapter.isShowingProgressLoading())
+                            messageListAdapter.removeProgressLoading();
+                    }
+
+                    for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren())
+                        if (outboundSnapshot != null)
+                            getUserDetail(outboundSnapshot);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getUserDetail(final DataSnapshot outboundSnapshot) {
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+                UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
+                    @Override
+                    public void onSuccess(UserProfile userProfile) {
+
+                        if (userProfile != null && userProfile.getUserInfo() != null) {
+                            Map<String, Object> map = (Map) outboundSnapshot.getValue();
+                            Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
+
+                            String contentId = (String) contentMap.get(FB_CHILD_CONTENT_ID);
+                            if (contentId != null && !contentId.isEmpty())
+                                getLastMessage(userProfile.getUserInfo(), contentId);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+                    }
+                }, AccountHolderInfo.getUserID(), outboundSnapshot.getKey(), "true", token);
+
+                loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+            }
+        });
+    }
+
+    private void getLastMessage(final UserProfileProperties userProfileProperties, final String messageContentId) {
+        if (userProfileProperties.getUserid() != null) {
+            databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
+                    .child(messageContentId);
+
+            Query query = databaseReference.orderByChild(FB_CHILD_DATE).limitToLast(1);
 
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
+
                     if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
-
-                        if (!dataLoaded) {
-                            dataLoaded = true;
-                            if (messageListAdapter.isShowingProgressLoading())
-                                messageListAdapter.removeProgressLoading();
+                        for (DataSnapshot child : dataSnapshot.getChildren()) {
+                            messageBoxListCheck(child, userProfileProperties);
+                            adapterLoadCheck();
                         }
-
-                        for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren())
-                            if (outboundSnapshot != null)
-                                getUserDetail(outboundSnapshot);
                     }
                 }
 
@@ -244,93 +291,6 @@ public class MessageListActivity extends AppCompatActivity {
 
                 }
             });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    private void getUserDetail(final DataSnapshot outboundSnapshot) {
-        try {
-            AccountHolderInfo.getToken(new TokenCallback() {
-                @Override
-                public void onTokenTaken(String token) {
-                    UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
-                        @Override
-                        public void onSuccess(UserProfile userProfile) {
-
-                            if (userProfile != null && userProfile.getUserInfo() != null) {
-                                Map<String, Object> map = (Map) outboundSnapshot.getValue();
-                                Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
-
-                                String contentId = (String) contentMap.get(FB_CHILD_CONTENT_ID);
-                                if (contentId != null && !contentId.isEmpty())
-                                    getLastMessage(userProfile.getUserInfo(), contentId);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Exception e) {
-
-                        }
-
-                        @Override
-                        public void onTaskContinue() {
-                        }
-                    }, AccountHolderInfo.getUserID(), outboundSnapshot.getKey(), "true", token);
-
-                    loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-
-                @Override
-                public void onTokenFail(String message) {
-                }
-            });
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    private void getLastMessage(final UserProfileProperties userProfileProperties, final String messageContentId) {
-        try {
-            if (userProfileProperties.getUserid() != null) {
-                databaseReference = FirebaseDatabase.getInstance().getReference(FB_CHILD_MESSAGE_CONTENT)
-                        .child(messageContentId);
-
-                Query query = databaseReference.orderByChild(FB_CHILD_DATE).limitToLast(1);
-
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
-
-                        if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
-                            for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                messageBoxListCheck(child, userProfileProperties);
-                                adapterLoadCheck();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        if (databaseError != null) {
-                            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                                    new Object() {
-                                    }.getClass().getEnclosingMethod().getName(), databaseError.toString());
-                        }
-                    }
-                });
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
         }
     }
 
@@ -361,169 +321,118 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     private void messageBoxListCheck(DataSnapshot mDataSnapshot, UserProfileProperties userProfileProperties) {
-        try {
-            boolean notInList = false;
-            for (MessageListBox messageListBox : messageListBoxes) {
-                if (messageListBox != null && messageListBox.getUserProfileProperties() != null &&
-                        messageListBox.getUserProfileProperties().getUserid() != null) {
+        boolean notInList = false;
+        for (MessageListBox messageListBox : messageListBoxes) {
+            if (messageListBox != null && messageListBox.getUserProfileProperties() != null &&
+                    messageListBox.getUserProfileProperties().getUserid() != null) {
 
-                    if (messageListBox.getUserProfileProperties().getUserid().equals(userProfileProperties.getUserid())) {
-                        notInList = true;
-                        break;
-                    }
+                if (messageListBox.getUserProfileProperties().getUserid().equals(userProfileProperties.getUserid())) {
+                    notInList = true;
+                    break;
                 }
             }
+        }
 
-            if (!notInList) {
-                fillMessageBoxList(mDataSnapshot, userProfileProperties);
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (!notInList) {
+            fillMessageBoxList(mDataSnapshot, userProfileProperties);
         }
     }
 
     private void adapterLoadCheck() {
-        try {
-            if (!setAdapterVal) {
-                adapterLoaded = true;
-                setAdapter();
-            } else {
-                if (messageListAdapter != null)
-                    messageListAdapter.notifyDataSetChanged();
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (!setAdapterVal) {
+            adapterLoaded = true;
+            setAdapter();
+        } else {
+            if (messageListAdapter != null)
+                messageListAdapter.notifyDataSetChanged();
         }
     }
 
     public void setAdapter() {
-        try {
-            messageListAdapter = new MessageListAdapter(MessageListActivity.this, messageListBoxes, new ItemClickListener() {
-                @Override
-                public void onClick(Object object, int clickedItem) {
-                    MessageListBox messageListBox = (MessageListBox) object;
-                    startMessageWithPersonActivity(messageListBox);
-                }
-            });
+        messageListAdapter = new MessageListAdapter(MessageListActivity.this, messageListBoxes, new ItemClickListener() {
+            @Override
+            public void onClick(Object object, int clickedItem) {
+                MessageListBox messageListBox = (MessageListBox) object;
+                startMessageWithPersonActivity(messageListBox);
+            }
+        });
 
-            recyclerView.setAdapter(messageListAdapter);
-            linearLayoutManager = new LinearLayoutManager(MessageListActivity.this);
-            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            setAdapterVal = true;
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        recyclerView.setAdapter(messageListAdapter);
+        linearLayoutManager = new LinearLayoutManager(MessageListActivity.this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        setAdapterVal = true;
     }
 
     private void startMessageWithPersonActivity(MessageListBox messageListBox) {
-
-        try {
-            if (MessageWithPersonActivity.thisActivity != null) {
-                MessageWithPersonActivity.thisActivity.finish();
-            }
-
-            Intent intent = new Intent(this, MessageWithPersonActivity.class);
-            intent.putExtra(FCM_CODE_CHATTED_USER, getChattedUserInfo(messageListBox));
-            intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
-            startActivity(intent);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+        if (MessageWithPersonActivity.thisActivity != null) {
+            MessageWithPersonActivity.thisActivity.finish();
         }
+
+        Intent intent = new Intent(this, MessageWithPersonActivity.class);
+        intent.putExtra(FCM_CODE_CHATTED_USER, getChattedUserInfo(messageListBox));
+        intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+        startActivity(intent);
     }
 
     public LoginUser getChattedUserInfo(MessageListBox messageListBox) {
         LoginUser user = null;
-        try {
-            user = new LoginUser();
-            if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
-                UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
 
-                if (userProfileProperties.getEmail() != null && !userProfileProperties.getEmail().isEmpty())
-                    user.setEmail(userProfileProperties.getEmail());
+        user = new LoginUser();
+        if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
+            UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
 
-                if (userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
-                    user.setName(userProfileProperties.getName());
+            if (userProfileProperties.getEmail() != null && !userProfileProperties.getEmail().isEmpty())
+                user.setEmail(userProfileProperties.getEmail());
 
-                if (userProfileProperties.getProfilePhotoUrl() != null && !userProfileProperties.getProfilePhotoUrl().isEmpty())
-                    user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
+            if (userProfileProperties.getName() != null && !userProfileProperties.getName().isEmpty())
+                user.setName(userProfileProperties.getName());
 
-                if (userProfileProperties.getUserid() != null && !userProfileProperties.getUserid().isEmpty())
-                    user.setUserId(userProfileProperties.getUserid());
+            if (userProfileProperties.getProfilePhotoUrl() != null && !userProfileProperties.getProfilePhotoUrl().isEmpty())
+                user.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
 
-                if (userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
-                    user.setUsername(userProfileProperties.getUsername());
-            }
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
+            if (userProfileProperties.getUserid() != null && !userProfileProperties.getUserid().isEmpty())
+                user.setUserId(userProfileProperties.getUserid());
+
+            if (userProfileProperties.getUsername() != null && !userProfileProperties.getUsername().isEmpty())
+                user.setUsername(userProfileProperties.getUsername());
         }
         return user;
     }
 
     public void fillMessageBoxList(DataSnapshot outboundSnapshot, UserProfileProperties userProfileProperties) {
-        try {
+        System.out.println("fillMessageBoxList.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
+        System.out.println("fillMessageBoxList.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
 
-            System.out.println("fillMessageBoxList.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-            System.out.println("fillMessageBoxList.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
+        MessageListBox messageListBox = new MessageListBox();
 
-            MessageListBox messageListBox = new MessageListBox();
+        messageListBox.setUserProfileProperties(userProfileProperties);
 
-            messageListBox.setUserProfileProperties(userProfileProperties);
+        Map<String, Object> map = (Map) outboundSnapshot.getValue();
+        messageListBox.setMessageText((String) map.get(FB_CHILD_MESSAGE));
+        messageListBox.setDate((long) map.get(FB_CHILD_DATE));
 
-            Map<String, Object> map = (Map) outboundSnapshot.getValue();
-            messageListBox.setMessageText((String) map.get(FB_CHILD_MESSAGE));
-            messageListBox.setDate((long) map.get(FB_CHILD_DATE));
+        Map<String, Object> senderMap = (Map) map.get(FB_CHILD_SENDER);
+        String senderUserid = (String) senderMap.get(FB_CHILD_USERID);
 
-            Map<String, Object> senderMap = (Map) map.get(FB_CHILD_SENDER);
-            String senderUserid = (String) senderMap.get(FB_CHILD_USERID);
+        Map<String, Object> receiptMap = (Map) map.get(FB_CHILD_RECEIPT);
+        String receiptUserid = (String) receiptMap.get(FB_CHILD_USERID);
 
-            Map<String, Object> receiptMap = (Map) map.get(FB_CHILD_RECEIPT);
-            String receiptUserid = (String) receiptMap.get(FB_CHILD_USERID);
+        if (receiptUserid.equals(AccountHolderInfo.getUserID()))
+            messageListBox.setIamReceipt(true);
+        else
+            messageListBox.setIamReceipt(false);
 
-            if (receiptUserid.equals(AccountHolderInfo.getUserID()))
-                messageListBox.setIamReceipt(true);
-            else
-                messageListBox.setIamReceipt(false);
+        messageListBox.setSeen((boolean) receiptMap.get(FB_CHILD_IS_SEEN));
 
-            messageListBox.setSeen((boolean) receiptMap.get(FB_CHILD_IS_SEEN));
-
-            messageListBoxes.add(messageListBox);
-
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        messageListBoxes.add(messageListBox);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        try {
-            if (databaseReference != null && valueEventListener != null)
-                databaseReference.removeEventListener(valueEventListener);
-        } catch (Exception e) {
-            ErrorSaveHelper.writeErrorToDB(MessageListActivity.this, this.getClass().getSimpleName(),
-                    new Object() {
-                    }.getClass().getEnclosingMethod().getName(), e.toString());
-            e.printStackTrace();
-        }
+        if (databaseReference != null && valueEventListener != null)
+            databaseReference.removeEventListener(valueEventListener);
     }
 
     @Override
