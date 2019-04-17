@@ -10,7 +10,7 @@ import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 
 public class BaseFragment extends Fragment {
 
-    public static final String ARGS_INSTANCE = "com.f22labs.instalikefragmenttransaction";
+    public static final String ARGS_INSTANCE = "ARGS_INSTANCE";
 
     public FragmentNavigation mFragmentNavigation;
 
