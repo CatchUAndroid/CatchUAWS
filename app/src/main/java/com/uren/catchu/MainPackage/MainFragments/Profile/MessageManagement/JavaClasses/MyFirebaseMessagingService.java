@@ -103,10 +103,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(String token) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        String userid = firebaseAuth.getCurrentUser().getUid();
 
-        if (!userid.isEmpty())
-            sendRegistrationToServer(token, userid);
+        if(firebaseAuth != null && firebaseAuth.getCurrentUser() != null &&
+                firebaseAuth.getCurrentUser().getUid() != null) {
+            String userid = firebaseAuth.getCurrentUser().getUid();
+            if (!userid.isEmpty())
+                sendRegistrationToServer(token, userid);
+        }
     }
 
     public static void sendRegistrationToServer(String token, String userid) {
