@@ -51,7 +51,7 @@
                 android:layout_alignEnd="@+id/frameLayout"
                 android:layout_alignParentTop="true"
                 android:padding="1dp"
-                android:src="@drawable/cancel_gray" />
+                android:src="@mipmap/icon_cancel_gray2" />
         </RelativeLayout>
 
         <TextView

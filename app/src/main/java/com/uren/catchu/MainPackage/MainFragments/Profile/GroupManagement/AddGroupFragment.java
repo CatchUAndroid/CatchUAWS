@@ -304,7 +304,7 @@ public class AddGroupFragment extends BaseFragment {
             int paddingPx = getResources().getDimensionPixelSize(R.dimen.ADD_GROUP_IMGV_SIZE);
             groupPictureImgv.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
             Glide.with(this)
-                    .load(R.drawable.photo_camera)
+                    .load(R.mipmap.icon_photo_camera)
                     .into(groupPictureImgv);
         }
     }

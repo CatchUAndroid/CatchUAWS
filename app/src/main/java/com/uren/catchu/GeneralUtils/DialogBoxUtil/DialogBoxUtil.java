@@ -174,7 +174,7 @@ public class DialogBoxUtil {
     public static void showInfoDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback) {
         CommonUtils.hideKeyBoard(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setIcon(context.getResources().getDrawable(R.drawable.info_icon_512, null));
+        builder.setIcon(context.getResources().getDrawable(R.mipmap.icon_information, null));
         builder.setMessage(message);
 
         if (title != null && !title.trim().isEmpty())
@@ -195,7 +195,7 @@ public class DialogBoxUtil {
     public static void showSuccessDialogBox(Context context, String message, String title, final InfoDialogBoxCallback infoDialogBoxCallback) {
         CommonUtils.hideKeyBoard(context);
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-        alertDialog.setIcon(R.drawable.success_icon_480);
+        alertDialog.setIcon(R.mipmap.icon_green_checked);
 
         if (title != null && !title.isEmpty())
             alertDialog.setTitle(title);
@@ -275,7 +275,7 @@ public class DialogBoxUtil {
         if (title != null && !title.isEmpty())
             builder.setTitle(title);
 
-        builder.setIcon(R.drawable.success_icon_480);
+        builder.setIcon(R.mipmap.icon_green_checked);
         builder.setMessage(message);
         builder.setCancelable(false);
         final AlertDialog alert = builder.create();

@@ -39,7 +39,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_margin="10dp"
-            android:src="@drawable/right_arrow" />
+            android:src="@mipmap/icon_right_arrow" />
 
     </RelativeLayout>
 

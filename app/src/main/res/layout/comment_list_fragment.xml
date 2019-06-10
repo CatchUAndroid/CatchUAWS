@@ -34,7 +34,7 @@
                 android:layout_weight="0.7"
                 android:gravity="left"
                 android:padding="5dp"
-                android:src="@drawable/back_arrow2" />
+                android:src="@mipmap/icon_left_arrow" />
 
             <TextView
                 android:id="@+id/toolbarTitle"

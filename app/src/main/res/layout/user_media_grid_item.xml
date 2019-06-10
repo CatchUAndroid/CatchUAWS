@@ -55,7 +55,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_margin="10dp"
-                    android:background="#11000000"
                     android:src="@mipmap/icon_video_camera"
                     android:visibility="gone" />
 
@@ -66,8 +65,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:layout_margin="10dp"
-                    android:background="#11000000"
-                    android:src="@mipmap/icon_grid_more2"
+                    android:src="@mipmap/icon_grid_more"
                     android:visibility="gone" />
 
             </RelativeLayout>

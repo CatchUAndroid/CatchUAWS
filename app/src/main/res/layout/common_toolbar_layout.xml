@@ -25,12 +25,12 @@
             android:layout_height="match_parent">
 
             <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
-            android:id="@+id/commonToolbarbackImgv"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="?attr/actionBarSize"
-            android:padding="17dp"
-            android:src="@mipmap/icon_back_white"
-            android:visibility="visible"/>
+                android:id="@+id/commonToolbarbackImgv"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="?attr/actionBarSize"
+                android:padding="15dp"
+                android:src="@mipmap/icon_left_arrow"
+                android:visibility="visible" />
 
         </RelativeLayout>
 
@@ -76,16 +76,16 @@
                 android:id="@+id/commonToolbarNextImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:padding="17dp"
-                android:src="@mipmap/icon_forward_white"
-                android:visibility="gone"/>
+                android:padding="15dp"
+                android:src="@mipmap/icon_right_arrow"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/commonToolbarTickImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:padding="17dp"
-                android:src="@mipmap/icon_tick_white"
+                android:src="@mipmap/icon_tick"
                 android:visibility="gone" />
 
         </RelativeLayout>

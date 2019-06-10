@@ -48,7 +48,7 @@
                     android:layout_height="20dp"
                     android:layout_gravity="right|bottom"
                     android:padding="4dp"
-                    android:src="@mipmap/icon_tick_white"
+                    android:src="@mipmap/icon_tick"
                     android:visibility="gone"/>
 
             </FrameLayout>

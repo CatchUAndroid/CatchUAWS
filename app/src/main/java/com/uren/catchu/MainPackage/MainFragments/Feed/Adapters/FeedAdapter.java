@@ -470,13 +470,13 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
         private void setTargetImage() {
 
-            int targetIcon = R.drawable.world_icon_96;
+            int targetIcon = R.mipmap.icon_world;
 
             if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
-                targetIcon = R.drawable.world_icon_96;
+                targetIcon = R.mipmap.icon_world;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
-                targetIcon = R.drawable.friends;
+                targetIcon = R.mipmap.icon_friends;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
                 targetIcon = R.drawable.groups_icon_500;

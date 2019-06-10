@@ -43,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="?attr/actionBarSize"
                         android:padding="7dp"
-                        android:src="@mipmap/icon_back_white"
+                        android:src="@mipmap/icon_left_arrow"
                         android:visibility="visible" />
 
                 </RelativeLayout>
@@ -142,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="?attr/actionBarSize"
                     android:padding="7dp"
-                    android:src="@mipmap/icon_back_white"
+                    android:src="@mipmap/icon_left_arrow"
                     android:visibility="visible" />
 
             </RelativeLayout>

@@ -29,7 +29,7 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:padding="17dp"
-                android:src="@mipmap/icon_back_white"
+                android:src="@mipmap/icon_left_arrow"
                 android:visibility="visible"/>
 
             <ImageView
@@ -88,7 +88,7 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
                 android:padding="10dp"
-                android:src="@drawable/baseline_add_white_48"
+                android:src="@mipmap/icon_add_white"
                 android:visibility="visible" />
 
         </RelativeLayout>

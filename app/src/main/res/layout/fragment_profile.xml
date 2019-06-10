@@ -50,8 +50,8 @@
 
                             <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                                 android:id="@+id/menuImgv"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
                                 android:layout_centerHorizontal="true"
                                 android:layout_centerVertical="true"
                                 android:layout_gravity="end"
@@ -87,7 +87,7 @@
                                 android:paddingBottom="8dp"
                                 android:paddingRight="20dp"
                                 android:paddingTop="8dp"
-                                android:src="@mipmap/icon_back_white" />
+                                android:src="@mipmap/icon_left_arrow" />
 
                         </RelativeLayout>
 
@@ -117,13 +117,13 @@
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgUserEdit"
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
+                            android:layout_width="28dp"
+                            android:layout_height="28dp"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:layout_gravity="right"
                             android:layout_marginRight="10dp"
-                            android:src="@mipmap/user_edit" />
+                            android:src="@mipmap/icon_user_edit" />
 
                     </RelativeLayout>
 
@@ -388,7 +388,7 @@
                                             android:layout_marginRight="10dp"
                                             android:layout_weight="0.5"
                                             android:padding="12dp"
-                                            android:src="@mipmap/icon_forward_white" />
+                                            android:src="@mipmap/icon_right_arrow" />
 
 
                                     </LinearLayout>
@@ -455,7 +455,7 @@
                                             android:layout_marginRight="10dp"
                                             android:layout_weight="0.5"
                                             android:padding="12dp"
-                                            android:src="@mipmap/icon_forward_white" />
+                                            android:src="@mipmap/icon_right_arrow" />
 
 
                                     </LinearLayout>

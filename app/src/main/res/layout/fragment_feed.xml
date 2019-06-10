@@ -58,7 +58,7 @@
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:padding="2dp"
-                            android:src="@mipmap/icon_filterr" />
+                            android:src="@mipmap/icon_filter" />
                     </RelativeLayout>
 
                     <LinearLayout

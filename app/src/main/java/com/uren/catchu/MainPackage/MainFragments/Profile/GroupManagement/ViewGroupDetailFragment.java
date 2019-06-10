@@ -94,8 +94,6 @@ public class ViewGroupDetailFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.addFriendImgv)
     ImageView addFriendImgv;
-    @BindView(R.id.sendMessageImgv)
-    ImageView sendMessageImgv;
     @BindView(R.id.changePicImgv)
     ImageView changePicImgv;
     @BindView(R.id.exitGroupImgv)
@@ -161,8 +159,6 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     public void setShapes() {
         addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LimeGreen, null),
-                0, GradientDrawable.OVAL, 50, 0));
-        sendMessageImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumTurquoise, null),
                 0, GradientDrawable.OVAL, 50, 0));
         exitGroupImgv.setColorFilter(getContext().getResources().getColor(R.color.likeButtonColor, null), PorterDuff.Mode.SRC_IN);
     }
@@ -239,18 +235,10 @@ public class ViewGroupDetailFragment extends BaseFragment {
     }
 
     public void addListeners() {
-
         backImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
-            }
-        });
-        sendMessageImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessageImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                mFragmentNavigation.pushFragment(new MessageWithGroupFragment(groupRequestResultResultArrayItem), ANIMATE_LEFT_TO_RIGHT);
             }
         });
 

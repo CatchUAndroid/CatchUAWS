@@ -8,13 +8,13 @@
         <item
             android:id="@+id/searchItem"
             android:checkable="true"
-            android:icon="@drawable/tab_search"
+            android:icon="@mipmap/icon_search_gray"
             android:title="@string/EXPLORE_PEOPLE" />
 
         <item
             android:id="@+id/viewItem"
             android:checkable="true"
-            android:icon="@drawable/view"
+            android:icon="@mipmap/icon_view"
             android:title="@string/VIEW_PENDING_REQUEST"
             app:actionLayout="@layout/navmenu_action_layout" />
 
@@ -45,7 +45,7 @@
         <item
             android:id="@+id/settingsItem"
             android:checkable="true"
-            android:icon="@mipmap/settings"
+            android:icon="@mipmap/icon_settings"
             android:title="@string/settings" />
     </group>
 

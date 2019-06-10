@@ -18,7 +18,7 @@
             android:id="@+id/imgFeedPublic"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/world_icon_96" />
+            android:src="@mipmap/icon_world" />
 
         <TextView
             android:id="@+id/txtFeedTypePublic"

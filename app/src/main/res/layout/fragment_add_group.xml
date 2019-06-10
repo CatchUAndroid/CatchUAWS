@@ -31,7 +31,7 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:padding="@dimen/ADD_GROUP_IMGV_SIZE"
-                    android:src="@drawable/photo_camera" />
+                    android:src="@mipmap/icon_photo_camera" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

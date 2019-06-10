@@ -90,7 +90,7 @@
                         android:layout_height="15dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/cancel_gray"
+                        android:src="@mipmap/icon_cancel_gray2"
                         android:visibility="gone" />
                 </RelativeLayout>
 
@@ -113,7 +113,7 @@
                         android:layout_height="15dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/cancel_gray"
+                        android:src="@mipmap/icon_cancel_gray2"
                         android:visibility="gone" />
                 </RelativeLayout>
 
@@ -135,7 +135,7 @@
                         android:layout_height="15dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/cancel_gray"
+                        android:src="@mipmap/icon_cancel_gray2"
                         android:visibility="gone" />
                 </RelativeLayout>
 
@@ -157,7 +157,7 @@
                         android:layout_height="15dp"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:src="@drawable/cancel_gray"
+                        android:src="@mipmap/icon_cancel_gray2"
                         android:visibility="gone" />
                 </RelativeLayout>
 

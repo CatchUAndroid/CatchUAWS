@@ -18,7 +18,7 @@
             android:id="@+id/imgViewGrid"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@mipmap/icon_grid2" />
+            android:src="@mipmap/icon_grid_item" />
 
         <TextView
             android:id="@+id/txtViewGrid"
@@ -44,7 +44,7 @@
             android:id="@+id/imgViewList"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@mipmap/icon_list3" />
+            android:src="@mipmap/icon_list_item" />
 
         <TextView
             android:id="@+id/txtViewList"

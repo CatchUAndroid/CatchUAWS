@@ -407,7 +407,7 @@
                                 android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
-                                android:src="@drawable/friends" />
+                                android:src="@mipmap/icon_friends" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -464,7 +464,7 @@
                                 android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
-                                android:src="@drawable/world_icon_96" />
+                                android:src="@mipmap/icon_world" />
 
                             <TextView
                                 android:layout_width="wrap_content"

@@ -19,7 +19,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_margin="10dp"
-        android:src="@drawable/black_cancel_icon" />
+        android:src="@mipmap/icon_black_cancel" />
 
 
 </RelativeLayout>
