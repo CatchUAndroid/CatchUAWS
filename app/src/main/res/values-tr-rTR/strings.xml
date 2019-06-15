@@ -185,10 +185,15 @@
     <string name="ACCOUNT">Hesap</string>
     <string name="CHANGE_PASSWORD">Şifreyi Değiştir</string>
     <string name="SUPPORT">Destek</string>
-    <string name="HELP_CENTER">Yardım Merkezi</string>
+    <string name="HELP_CENTER">Uygulama Hakkında</string>
     <string name="REPORT_PROBLEM">Sorun Bildir</string>
     <string name="CONTACT_FRIENDS">Rehber Kişileri</string>
     <string name="PRIVATE_ACCOUNT">Gizli Hesap</string>
+    <string name="VERSION">Versiyon</string> 
+    <string name="ABOUT_APP">CatchU: Uygulama hakkında herhangi
+        bir sorunuz yada öneriniz var ise lütfen bize yazın.
+    </string>
+    <string name="authoremail">catchuren@gmail.com</string> 
 
     <!-- Change Password variables-->
     <string name="CURRENT_PASSWORD">Mevcut şifre</string>
@@ -320,6 +325,8 @@
     <string name="postsInfo">Kişinin civarda ve herkese açık yaptığı paylaşımlar burada gösterilir. Paylaşım detayı için paylaşıma tıklayabilirsiniz. </string>
     <string name="emptyFeed2">Herhangi bir paylaşım yakalanamadı.</string>
     <string name="notFound">Bulunamadı</string>
+    <string name="rateus">Bizi Değerlendir</string>
+    <string name="commentFailed">Google Play kurulu değil</string> 
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>

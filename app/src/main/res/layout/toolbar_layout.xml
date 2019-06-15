@@ -4,7 +4,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
+    android:background="@color/colorPrimary"
     android:gravity="center"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
@@ -28,9 +28,9 @@
                 android:id="@+id/searchToolbarBackImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:padding="17dp"
+                android:padding="14dp"
                 android:src="@mipmap/icon_left_arrow"
-                android:visibility="visible"/>
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/imgCancelSearch"
@@ -71,7 +71,8 @@
                         android:background="@drawable/search_edittext"
                         android:hint="@string/search"
                         android:paddingLeft="30dp"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        android:textColorHint="@color/White"/>
 
                 </FrameLayout>
 
@@ -87,8 +88,9 @@
                 android:id="@+id/searchToolbarAddItemImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:padding="10dp"
-                android:src="@mipmap/icon_add_white"
+                android:padding="12dp"
+                android:paddingRight="5dp"
+                android:src="@mipmap/icon_add_group"
                 android:visibility="visible" />
 
         </RelativeLayout>

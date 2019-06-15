@@ -92,8 +92,8 @@ public class UserEditFragment extends BaseFragment
     EditText edtUserName;
     @BindView(R.id.edtWebsite)
     EditText edtWebsite;
-    @BindView(R.id.edtBio)
-    EditText edtBio;
+    /*@BindView(R.id.edtBio)
+    EditText edtBio;*/
     @BindView(R.id.edtBirthDay)
     EditText edtBirthDay;
     @BindView(R.id.edtEmail)

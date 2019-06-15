@@ -226,7 +226,8 @@
                     </LinearLayout>
 
                     <!-- Bio /-->
-                    <LinearLayout
+                    <!--<LinearLayout
+                        android:id="@+id/xxxx"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
@@ -258,16 +259,16 @@
                                 android:id="@+id/edtBio"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="5dp"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginRight="10dp"
+                                android:layout_marginTop="5dp"
                                 android:background="@android:color/transparent"
                                 android:maxLength="150" />
 
                         </LinearLayout>
 
 
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     <!-- BirthDay /-->
                     <LinearLayout

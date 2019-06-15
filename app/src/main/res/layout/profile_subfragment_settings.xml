@@ -159,23 +159,6 @@
                         android:text="@string/CHANGE_PASSWORD" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/likedPostLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="10dp"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/YOU_LIKED_POSTS" />
-                </LinearLayout>
-
                 <RelativeLayout
                     android:id="@+id/privateAccountLayout"
                     android:layout_width="match_parent"

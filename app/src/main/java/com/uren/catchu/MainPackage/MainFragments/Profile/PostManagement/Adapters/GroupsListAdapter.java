@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters;
 
 import android.content.Context;
+import android.graphics.drawable.GradientDrawable;
 import android.media.Image;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.common.internal.service.Common;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.R;
@@ -109,6 +111,8 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
                         .apply(RequestOptions.centerInsideTransform())
                         .into(imgGroupPic);
             }
+            imgGroupPic.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.colorPrimary, null),
+                    0, GradientDrawable.RECTANGLE, 15, 0));
         }
     }
 

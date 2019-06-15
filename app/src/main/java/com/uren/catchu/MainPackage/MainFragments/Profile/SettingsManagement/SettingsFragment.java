@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
+import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.DynamicLinkUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.MainActivity;
@@ -55,6 +59,8 @@ public class SettingsFragment extends BaseFragment {
     LinearLayout changePasswordLayout;
     @BindView(R.id.problemInformLayout)
     LinearLayout problemInformLayout;
+    @BindView(R.id.helpCenterLayout)
+    LinearLayout helpCenterLayout;
     @BindView(R.id.privateAccSwitch)
     Switch privateAccSwitch;
 
@@ -164,6 +170,31 @@ public class SettingsFragment extends BaseFragment {
                         break;
                 }
                 return false;
+            }
+        });
+
+        helpCenterLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String message = getContext().getString(R.string.VERSION) + ":" + CommonUtils.getVersion(getContext()) + "\n\n" +
+                        getContext().getString(R.string.ABOUT_APP) + "\n\n" +
+                        getContext().getString(R.string.email) + ":" + getContext().getString(R.string.authoremail) + "\n";
+
+                new CustomDialogBox.Builder((Activity) getContext())
+                        .setMessage(message)
+                        .setNegativeBtnVisibility(View.GONE)
+                        .setPositiveBtnVisibility(View.VISIBLE)
+                        .setPositiveBtnText(getContext().getResources().getString(R.string.ok))
+                        .setPositiveBtnBackground(getContext().getResources().getColor(R.color.DodgerBlue, null))
+                        .setDurationTime(0)
+                        .isCancellable(true)
+                        .OnPositiveClicked(new CustomDialogListener() {
+                            @Override
+                            public void OnClick() {
+
+                            }
+                        }).build();
             }
         });
     }

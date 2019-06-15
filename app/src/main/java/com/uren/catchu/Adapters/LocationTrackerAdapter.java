@@ -132,4 +132,9 @@ public class LocationTrackerAdapter implements LocationListener {
             }
         }
     }
+
+    public void removeUpdates() {
+        if (locationManager != null)
+            locationManager.removeUpdates(this);
+    }
 }

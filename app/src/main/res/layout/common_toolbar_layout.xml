@@ -4,7 +4,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
+    android:background="@color/colorPrimary"
     android:gravity="center"
     app:contentInsetLeft="0dp"
     app:contentInsetStart="0dp"
@@ -28,7 +28,7 @@
                 android:id="@+id/commonToolbarbackImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:padding="15dp"
+                android:padding="14dp"
                 android:src="@mipmap/icon_left_arrow"
                 android:visibility="visible" />
 
@@ -76,7 +76,7 @@
                 android:id="@+id/commonToolbarNextImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:padding="15dp"
+                android:padding="14dp"
                 android:src="@mipmap/icon_right_arrow"
                 android:visibility="gone" />
 

@@ -193,7 +193,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     GoogleMap mMap;
     LocationTrackerAdapter locationTrackObj;
     MapRipple mapRipple;
-    LocationManager locationManager;
+    //LocationManager locationManager;
     private KeyboardHeightProvider keyboardHeightProvider;
 
     ResizeAnimation publicAnimationShow;
@@ -292,7 +292,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         setShapes();
         setViewsDefaultValues();
         setAnimations();
-        locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
+        //locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         photoSelectUtil = new PhotoSelectUtil();
         keyboardHeightProvider = new KeyboardHeightProvider((Activity) getContext());
 
@@ -1102,16 +1102,18 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onStop() {
         super.onStop();
-        if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);
+       /* if (locationManager != null)
+            locationManager.removeUpdates(locationTrackObj);*/
+       locationTrackObj.removeUpdates();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         keyboardHeightProvider.setKeyboardHeightObserver(null);
-        if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);
+        /*if (locationManager != null)
+            locationManager.removeUpdates(locationTrackObj);*/
+        locationTrackObj.removeUpdates();
     }
 
     public void startPhotoSelectedFragment() {

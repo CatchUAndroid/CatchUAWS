@@ -32,6 +32,7 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemC
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostDeletedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 
+import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SingleMapDetailFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -321,7 +322,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             imgBtnLocationDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PostHelper.LocatonDetailClicked.startProcess(mActivity, mContext, fragmentNavigation, post, txtProfilePic, imgProfilePic);
+                    if (fragmentNavigation != null)
+                        fragmentNavigation.pushFragment(new SingleMapDetailFragment(post, imgProfilePic));
                 }
             });
 

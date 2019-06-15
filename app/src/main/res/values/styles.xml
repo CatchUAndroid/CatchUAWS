@@ -12,8 +12,8 @@
     </style>
 
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/style_color_primary</item>
-        <item name="colorPrimaryDark">@color/style_color_primary_dark</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/style_color_accent</item>
         <item name="colorControlHighlight">@color/fab_color_pressed</item>
     </style>
@@ -80,6 +80,15 @@
         <item name="android:interpolator">@android:anim/accelerate_interpolator</item>
         <item name="spb_colors">@array/gplus_colors</item>
         <item name="spb_gradients">true</item>
+    </style>
+
+    <style name="MyDialogPop" parent="@android:style/Theme.Dialog">
+        <item name="android:windowAnimationStyle">@style/MyDialogAnimationPop</item>
+    </style>
+
+    <style name="MyDialogAnimationPop">
+        <item name="android:windowEnterAnimation">@anim/pop_show_overshoot</item>
+        <item name="android:windowExitAnimation">@anim/pop_dismiss_interpolator</item>
     </style>
 
 </resources>

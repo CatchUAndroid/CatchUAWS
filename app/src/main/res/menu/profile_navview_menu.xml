@@ -47,6 +47,13 @@
             android:checkable="true"
             android:icon="@mipmap/icon_settings"
             android:title="@string/settings" />
+
+        <item
+            android:id="@+id/rateUs"
+            android:checkable="true"
+            android:icon="@mipmap/icon_rateus"
+            android:title="@string/rateus" />
+
     </group>
 
 </menu>

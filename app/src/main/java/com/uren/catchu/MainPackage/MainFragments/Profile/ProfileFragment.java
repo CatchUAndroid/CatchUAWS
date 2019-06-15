@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -83,6 +84,7 @@ import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_LEFT_RIGHT;
 import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_TOP_BOTTOM;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
@@ -119,8 +121,8 @@ public class ProfileFragment extends BaseFragment
 
     @BindView(R.id.txtName)
     TextView txtName;
-    @BindView(R.id.txtBio)
-    TextView txtBio;
+    /*@BindView(R.id.txtBio)
+    TextView txtBio;*/
 
     @BindView(R.id.txtFollowerCnt)
     TextView txtFollowerCnt;
@@ -198,14 +200,6 @@ public class ProfileFragment extends BaseFragment
 
     private boolean comingFromTab;
 
-    /*public static ProfileFragment newInstance(Boolean comingFromTab) {
-        Bundle args = new Bundle();
-        args.putBoolean(ARGS_INSTANCE, comingFromTab);
-        ProfileFragment fragment = new ProfileFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }*/
-
     public ProfileFragment(boolean comingFromTab) {
         this.comingFromTab = comingFromTab;
     }
@@ -272,15 +266,24 @@ public class ProfileFragment extends BaseFragment
         txtEditGroup.setOnClickListener(this);
 
         //Gradients
-        llProfile.setBackground(ShapeUtil.getGradientBackgroundFromLeft(getResources().getColor(R.color.style_color_primary, null),
-                getResources().getColor(R.color.fab_color_pressed, null), ORIENTATION_TOP_BOTTOM, 0));
+        llProfile.setBackground(ShapeUtil.getGradientBackgroundFromLeft(getResources().getColor(R.color.colorPrimary, null),
+                getResources().getColor(R.color.profile_open_color, null), ORIENTATION_TOP_BOTTOM, 0));
 
 
-        imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.style_color_primary), android.graphics.PorterDuff.Mode.SRC_IN);
-        //img2.setColorFilter(ContextCompat.getColor(getContext(), R.color.style_color_primary), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgGroupPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.style_color_primary), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgForward1.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgForward2.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgSharedPosts.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.colorPrimary, null), GradientDrawable.OVAL, 15, 2));
+
+        imgCatchPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgCatchPosts.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.colorPrimary, null), GradientDrawable.OVAL, 15, 2));
+
+        imgGroupPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgGroupPosts.setBackground(ShapeUtil.getShape(0,
+                getContext().getResources().getColor(R.color.colorPrimary, null), GradientDrawable.OVAL, 15, 2));
+
+        imgForward1.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgForward2.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
 
 
         //group layout
@@ -354,9 +357,9 @@ public class ProfileFragment extends BaseFragment
         navViewEmailTv = v.findViewById(R.id.navViewEmailTv);
         navImgProfile = v.findViewById(R.id.navImgProfile);
         navViewShortenTextView = v.findViewById(R.id.navViewShortenTextView);
-        profileNavViewLayout = v.findViewById(R.id.profileNavViewLayout);
-        profileNavViewLayout.setBackground(ShapeUtil.getGradientBackground(getResources().getColor(R.color.Chocolate, null),
-                getResources().getColor(R.color.DarkBlue, null)));
+        //profileNavViewLayout = v.findViewById(R.id.profileNavViewLayout);
+        //profileNavViewLayout.setBackground(ShapeUtil.getGradientBackground(getResources().getColor(R.color.Chocolate, null),
+        //        getResources().getColor(R.color.DarkBlue, null)));
     }
 
     public void setDrawerListeners() {
@@ -434,6 +437,11 @@ public class ProfileFragment extends BaseFragment
                         startNotifyProblemFragment();
                         break;
 
+                    case  R.id.rateUs:
+                        drawerLayout.closeDrawer(Gravity.START);
+                        CommonUtils.commentApp(getContext());
+                        break;
+
                     default:
                         break;
                 }
@@ -460,7 +468,7 @@ public class ProfileFragment extends BaseFragment
             }
             //Username
             if (user.getUserInfo().getUsername() != null && !user.getUserInfo().getUsername().trim().isEmpty()) {
-                toolbarTitle.setText(user.getUserInfo().getUsername());
+                toolbarTitle.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername());
                 navViewEmailTv.setText(user.getUserInfo().getEmail().trim());
             }
             //profile picture

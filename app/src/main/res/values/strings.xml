@@ -149,6 +149,8 @@
     <string name="image_saved_successfully">Image Saved Successfully</string>
     <string name="failed_to_save_image">Failed to save Image</string>
     <string name="an_error_during_process">An error occurred during the process</string>
+    <string name="rateus">Rate Us</string>
+    <string name="commentFailed">Install an application market</string> 
 
     <!-- Location Settings constants-->
     <string name="gpsSettings">GPS Settings</string>
@@ -195,10 +197,15 @@
     <string name="ACCOUNT">Account</string>
     <string name="CHANGE_PASSWORD">Change Password</string>
     <string name="SUPPORT">Support</string>
-    <string name="HELP_CENTER">Help Center</string>
+    <string name="HELP_CENTER">About App</string>
     <string name="REPORT_PROBLEM">Report a Problem</string>
     <string name="CONTACT_FRIENDS">Contact Friends</string>
     <string name="PRIVATE_ACCOUNT">Private Account</string>
+    <string name="VERSION">Version</string> 
+    <string name="ABOUT_APP">CatchU: If you have any questions
+        or suggestions about the application, please write to us.
+    </string>
+    <string name="authoremail">catchuren@gmail.com</string> 
 
     <!-- Change Password variables-->
     <string name="CURRENT_PASSWORD">Current password</string>

@@ -23,7 +23,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="top"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorPrimary"
                 android:minHeight="?attr/actionBarSize"
                 app:elevation="@dimen/default_elevation"
                 app:layout_collapseMode="pin"
@@ -136,7 +136,7 @@
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
+                android:background="@color/colorPrimary"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <android.support.v4.widget.NestedScrollView
@@ -155,7 +155,7 @@
                             android:id="@+id/llProfile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="?attr/colorPrimary"
+                            android:background="@color/colorPrimary"
                             android:clipChildren="false"
                             android:clipToPadding="false"
                             android:orientation="vertical"
@@ -169,6 +169,7 @@
                                 android:id="@+id/llUserInfo"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
                                 android:clipChildren="false">
 
 
@@ -198,8 +199,9 @@
                                 <LinearLayout
                                     android:id="@+id/llUserDetail"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_weight="1"
+                                    android:gravity="center"
                                     android:orientation="vertical">
 
                                     <TextView
@@ -207,16 +209,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:textColor="#ffffff"
-                                        android:textSize="24sp" />
-
-                                    <TextView
-                                        android:id="@+id/txtBio"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="10dp"
-                                        android:text="Spor yapmayı severim, en sevdiğim spor Yüzme"
-                                        android:textColor="#ffffff"
-                                        android:textSize="15sp" />
+                                        android:textSize="20sp" />
 
                                 </LinearLayout>
 
@@ -224,7 +217,7 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="50dp">
+                                android:layout_height="30dp">
 
                             </LinearLayout>
 
@@ -276,7 +269,7 @@
                                                 android:id="@+id/txtFollowerCnt"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:textColor="?attr/colorPrimary"
+                                                android:textColor="@color/colorPrimary"
                                                 android:textSize="20sp" />
 
                                             <TextView
@@ -307,7 +300,7 @@
                                                 android:id="@+id/txtFollowingCnt"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:textColor="?attr/colorPrimary"
+                                                android:textColor="@color/colorPrimary"
                                                 android:textSize="20sp" />
 
                                             <TextView
@@ -356,8 +349,9 @@
 
                                             <ImageView
                                                 android:id="@+id/imgSharedPosts"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
+                                                android:layout_width="40dp"
+                                                android:layout_height="40dp"
+                                                android:padding="8dp"
                                                 android:src="@mipmap/icon_location" />
 
                                         </LinearLayout>
@@ -379,14 +373,15 @@
                                             android:layout_weight="0.5"
                                             android:gravity="center"
                                             android:text="0"
-                                            android:textSize="17sp" />
+                                            android:textSize="17sp"
+                                            android:visibility="gone"/>
 
                                         <ImageView
                                             android:id="@+id/imgForward1"
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
                                             android:layout_marginRight="10dp"
-                                            android:layout_weight="0.5"
+                                            android:layout_weight="1"
                                             android:padding="12dp"
                                             android:src="@mipmap/icon_right_arrow" />
 
@@ -421,9 +416,8 @@
 
                                             <ImageView
                                                 android:id="@+id/imgCatchPosts"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
-                                                android:padding="8dp"
+                                                android:layout_width="40dp"
+                                                android:layout_height="40dp"
                                                 android:src="@mipmap/icon_catch" />
 
                                         </LinearLayout>
@@ -445,7 +439,8 @@
                                             android:layout_weight="0.5"
                                             android:gravity="center"
                                             android:text="0"
-                                            android:textSize="17sp" />
+                                            android:textSize="17sp"
+                                            android:visibility="gone"/>
 
 
                                         <ImageView
@@ -453,7 +448,7 @@
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
                                             android:layout_marginRight="10dp"
-                                            android:layout_weight="0.5"
+                                            android:layout_weight="1"
                                             android:padding="12dp"
                                             android:src="@mipmap/icon_right_arrow" />
 
@@ -486,8 +481,8 @@
 
                                             <ImageView
                                                 android:id="@+id/imgGroupPosts"
-                                                android:layout_width="wrap_content"
-                                                android:layout_height="wrap_content"
+                                                android:layout_width="40dp"
+                                                android:layout_height="40dp"
                                                 android:padding="8dp"
                                                 android:src="@drawable/groups_icon_500" />
 

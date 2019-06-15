@@ -3,6 +3,7 @@ package com.uren.catchu.GeneralUtils;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -17,6 +18,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.design.widget.Snackbar;
@@ -119,29 +121,26 @@ public class CommonUtils {
 
     }
 
-    public static void setEnableOrDisableAllItemsOfLinearLayout(LinearLayout layout, boolean enableType) {
-        for (int i = 0; i < layout.getChildCount(); i++) {
-            View child = layout.getChildAt(i);
-            child.setEnabled(enableType);
+    public static String getVersion(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packInfo = packageManager.getPackageInfo(context.getPackageName(), 0);
+            String version = packInfo.versionName;
+            return version;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return "0";
         }
     }
 
-    public static void setButtonBackgroundColor(Context context, Button button, int color) {
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            button.setBackgroundColor(context.getResources().getColor(color, null));
-        } else {
-            button.setBackgroundColor(context.getResources().getColor(color));
-        }
-    }
-
-
-    public static void setButtonBackgroundColor(Context context, TextView textView, int color) {
-
-        if (Build.VERSION.SDK_INT >= 23) {
-            textView.setBackgroundColor(context.getResources().getColor(color, null));
-        } else {
-            textView.setBackgroundColor(context.getResources().getColor(color));
+    public static void commentApp(Context context) {
+        try {
+            String mAddress = "market://details?id=" + context.getPackageName();
+            Intent marketIntent = new Intent("android.intent.action.VIEW");
+            marketIntent.setData(Uri.parse(mAddress));
+            context.startActivity(marketIntent);
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.commentFailed), Toast.LENGTH_SHORT).show();
         }
     }
 
