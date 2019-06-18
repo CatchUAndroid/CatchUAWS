@@ -23,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,6 +79,7 @@ import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
+import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_BOTTOM_TOP;
 import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_LEFT_RIGHT;
@@ -266,8 +268,8 @@ public class ProfileFragment extends BaseFragment
         txtEditGroup.setOnClickListener(this);
 
         //Gradients
-        llProfile.setBackground(ShapeUtil.getGradientBackgroundFromLeft(getResources().getColor(R.color.colorPrimary, null),
-                getResources().getColor(R.color.profile_open_color, null), ORIENTATION_TOP_BOTTOM, 0));
+        //llProfile.setBackground(ShapeUtil.getGradientBackgroundFromLeft(getResources().getColor(R.color.colorPrimary, null),
+        //        getResources().getColor(R.color.profile_open_color, null), ORIENTATION_TOP_BOTTOM, 0));
 
 
         imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -437,7 +439,7 @@ public class ProfileFragment extends BaseFragment
                         startNotifyProblemFragment();
                         break;
 
-                    case  R.id.rateUs:
+                    case R.id.rateUs:
                         drawerLayout.closeDrawer(Gravity.START);
                         CommonUtils.commentApp(getContext());
                         break;
@@ -478,8 +480,13 @@ public class ProfileFragment extends BaseFragment
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), navViewShortenTextView, navImgProfile);
-            //Biography
-            // todo NT - biography usera beslenmiyor.düzenlenecek
+
+            // Animations
+            Animation fadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+            Animation moveUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.move_up);
+            imgProfile.startAnimation(moveUpAnimation); //Set animation to your ImageView
+            //llProfile.startAnimation(fadeInAnimation);
+            imgProfile.setPadding(3, 3, 3, 3);
 
             setWaitingRequestsCount(user);
         }
@@ -782,7 +789,7 @@ public class ProfileFragment extends BaseFragment
             }
         }
 
-        if(v == txtEditGroup){
+        if (v == txtEditGroup) {
             startGroupSettingFragment();
         }
     }
@@ -796,14 +803,18 @@ public class ProfileFragment extends BaseFragment
     private void followerClicked() {
         if (mFragmentNavigation != null) {
             String requestedUserId = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(new FollowerFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            UserProfileProperties user = AccountHolderInfo.getInstance().getUser().getUserInfo();
+            mFragmentNavigation.pushFragment(new FollowerFragment(requestedUserId,
+                    UserDataUtil.getNameOrUsername(user.getName(), user.getUsername())), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 
     private void followingClicked() {
         if (mFragmentNavigation != null) {
             String requestedUserId = AccountHolderInfo.getUserID();
-            mFragmentNavigation.pushFragment(new FollowingFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+            UserProfileProperties user = AccountHolderInfo.getInstance().getUser().getUserInfo();
+            mFragmentNavigation.pushFragment(new FollowingFragment(requestedUserId,
+                    UserDataUtil.getNameOrUsername(user.getName(), user.getUsername())), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 

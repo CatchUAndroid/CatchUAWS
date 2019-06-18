@@ -17,11 +17,13 @@ import java.util.Map;
 
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CLUSTER_MESSAGE_NOTIFICATION;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CLUSTER_STATUS;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATIONS;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATION_STATUS;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_RECEIPT;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_SIGNIN;
 
 public class MessageUpdateProcess {
 
@@ -96,4 +98,19 @@ public class MessageUpdateProcess {
         });
     }
 
+    public static void updateTokenSigninValue(String userid, String value) {
+        FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
+                .child(userid).child(FB_CHILD_SIGNIN).setValue((Object) value)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+    }
 }

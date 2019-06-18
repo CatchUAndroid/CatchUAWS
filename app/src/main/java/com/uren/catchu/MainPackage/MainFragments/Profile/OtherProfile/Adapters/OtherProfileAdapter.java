@@ -249,7 +249,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     startMessageWithPersonFragment();
-                    //fragmentNavigation.pushFragment(new MessageWithPersonFragment(selectedUser), ANIMATE_LEFT_TO_RIGHT);
                 }
             });
 
@@ -315,14 +314,16 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         private void followerClicked() {
             if (fragmentNavigation != null) {
                 String requestedUserId = selectedUser.getUserid();
-                fragmentNavigation.pushFragment(new FollowerFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(new FollowerFragment(requestedUserId,
+                        UserDataUtil.getNameOrUsername(selectedUser.getName(), selectedUser.getUsername())), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 
         private void followingClicked() {
             if (fragmentNavigation != null) {
                 String requestedUserId = selectedUser.getUserid();
-                fragmentNavigation.pushFragment(new FollowingFragment(requestedUserId), ANIMATE_RIGHT_TO_LEFT);
+                fragmentNavigation.pushFragment(new FollowingFragment(requestedUserId,
+                        UserDataUtil.getNameOrUsername(selectedUser.getName(), selectedUser.getUsername())), ANIMATE_RIGHT_TO_LEFT);
             }
         }
 

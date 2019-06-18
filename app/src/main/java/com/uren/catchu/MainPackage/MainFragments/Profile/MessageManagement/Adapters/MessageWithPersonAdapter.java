@@ -169,14 +169,14 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
             if (messageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
                 params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 params.removeRule(RelativeLayout.ALIGN_PARENT_LEFT);
-                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.PowderBlue, null),
-                        0, GradientDrawable.RECTANGLE, 15, 0));
+                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Gold, null),
+                        context.getResources().getColor(R.color.DarkOrange, null), GradientDrawable.RECTANGLE, 20, 2));
 
             } else {
                 params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
                 params.removeRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
-                        0, GradientDrawable.RECTANGLE, 15, 0));
+                messageCardview.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.LightSkyBlue, null),
+                        context.getResources().getColor(R.color.RoyalBlue, null), GradientDrawable.RECTANGLE, 20, 2));
             }
 
             messageCardview.setLayoutParams(params);
@@ -194,7 +194,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 
         public void setSelectedDeleteValues() {
             if (messageBox.isSelectedForDelete())
-                mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.transparentBlack, null));
+                mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.Khaki, null));
             else
                 mainRelLayout.setBackgroundColor(context.getResources().getColor(R.color.White, null));
         }

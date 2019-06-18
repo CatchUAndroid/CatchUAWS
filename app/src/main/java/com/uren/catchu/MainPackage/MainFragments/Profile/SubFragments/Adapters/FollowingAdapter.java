@@ -178,7 +178,7 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
             UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
                     user.getName(), user.getUsername(), shortUserNameTv, profileImage);
-            UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
+            UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, false);
         }
 
         private void openDialogBox() {

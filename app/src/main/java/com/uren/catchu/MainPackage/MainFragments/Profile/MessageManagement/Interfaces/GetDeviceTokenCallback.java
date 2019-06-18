@@ -1,5 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces;
 
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.TokenInfo;
+
 public interface GetDeviceTokenCallback {
-    void onSuccess(String token);
+    void onSuccess(TokenInfo tokenInfo);
 }

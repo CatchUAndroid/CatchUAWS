@@ -51,8 +51,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaC
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageDeleteProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.MessageWithPersonFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.TokenInfo;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
@@ -127,6 +127,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     String messageContentId = null;
     //long lastChattedTime;
     String chattedUserDeviceToken = null;
+    private String chattedUserSignInValue = null;
 
     boolean setAdapterVal = false;
     boolean itemAdded = false;
@@ -374,8 +375,11 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         MessageGetProcess.getOtherUserDeviceToken(context,
                 chattedUser, new GetDeviceTokenCallback() {
                     @Override
-                    public void onSuccess(String token) {
-                        chattedUserDeviceToken = token;
+                    public void onSuccess(TokenInfo tokenInfo) {
+                        if(tokenInfo != null) {
+                            chattedUserDeviceToken = tokenInfo.getToken();
+                            chattedUserSignInValue = tokenInfo.getSigninValue();
+                        }
                     }
                 });
     }
@@ -482,7 +486,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                 MessageAddProcess messageAddProcess = new MessageAddProcess(context,
                         chattedUser, messageContentId, messageEdittext, sendMessageBtn,
                         notificationSendCount, chattedUserDeviceToken, clusterNotificationStatus,
-                        otherUserNotificationStatus);
+                        otherUserNotificationStatus, chattedUserSignInValue);
                 messageAddProcess.addMessage();
             }
         });

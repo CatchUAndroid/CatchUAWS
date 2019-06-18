@@ -15,6 +15,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
@@ -53,15 +54,17 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
     private List<User> userList;
     private List<User> orgUserList;
     private ReturnCallback searchResultCallback;
+    private String userid;
 
     public static final int VIEW_PROG = 0;
     public static final int VIEW_ITEM = 1;
     public static final int VIEW_NULL = 2;
 
-    public FollowerAdapter(Context context) {
+    public FollowerAdapter(Context context, String userid) {
         this.mContext = context;
         this.userList = new ArrayList<>();
         this.orgUserList = new ArrayList<>();
+        this.userid = userid;
     }
 
     @Override
@@ -109,7 +112,8 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
         ImageView profileImage;
         Button btnFollowStatus;
         CardView cardView;
-        ImageView settingsImgv;
+        //ImageView settingsImgv;
+        RelativeLayout rlsettings;
         User user;
         int position;
 
@@ -123,8 +127,12 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
             profileImage = mView.findViewById(R.id.profile_image);
             btnFollowStatus = mView.findViewById(R.id.btnFollowStatus);
             cardView = mView.findViewById(R.id.card_view);
-            settingsImgv = mView.findViewById(R.id.settingsImgv);
+            //settingsImgv = mView.findViewById(R.id.settingsImgv);
+            rlsettings = mView.findViewById(R.id.rlsettings);
             setShapes();
+
+            if(!userid.trim().equals(AccountHolderInfo.getUserID()))
+                rlsettings.setVisibility(View.GONE);
 
             btnFollowStatus.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,7 +150,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
                 }
             });
 
-            settingsImgv.setOnClickListener(new View.OnClickListener() {
+            rlsettings.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     showCustomDialog();
@@ -233,7 +241,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
             UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
                     user.getName(), user.getUsername(), shortUserNameTv, profileImage);
-            UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
+            UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, false);
         }
 
         private void openDialogBox() {

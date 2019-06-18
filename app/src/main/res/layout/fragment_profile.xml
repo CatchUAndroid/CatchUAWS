@@ -154,7 +154,7 @@
                         <LinearLayout
                             android:id="@+id/llProfile"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="150dp"
                             android:background="@color/colorPrimary"
                             android:clipChildren="false"
                             android:clipToPadding="false"
@@ -165,61 +165,54 @@
                             android:paddingTop="24dp"
                             app:layout_collapseMode="parallax">
 
-                            <LinearLayout
-                                android:id="@+id/llUserInfo"
+
+                        </LinearLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/xxx"
+                            android:layout_width="140dp"
+                            android:layout_height="140dp"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="-70dp">
+
+                            <ImageView
+                                android:id="@+id/imgProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                            <TextView
+                                android:id="@+id/txtProfile"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center"
+                                android:textAllCaps="true"
+                                android:textColor="@color/White"
+                                android:textSize="30sp"
+                                android:textStyle="bold"
+                                android:visibility="gone" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llUserDetail"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtName"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:clipChildren="false">
-
-
-                                <RelativeLayout
-                                    android:layout_width="88dp"
-                                    android:layout_height="88dp"
-                                    android:layout_marginRight="16dp">
-
-                                    <ImageView
-                                        android:id="@+id/imgProfile"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent" />
-
-                                    <TextView
-                                        android:id="@+id/txtProfile"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:gravity="center"
-                                        android:textAllCaps="true"
-                                        android:textColor="@color/White"
-                                        android:textSize="30sp"
-                                        android:textStyle="bold"
-                                        android:visibility="gone" />
-
-                                </RelativeLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/llUserDetail"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/txtName"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:textColor="#ffffff"
-                                        android:textSize="20sp" />
-
-                                </LinearLayout>
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="30dp">
-
-                            </LinearLayout>
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="Ugur Gogebakan"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="20sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -374,7 +367,7 @@
                                             android:gravity="center"
                                             android:text="0"
                                             android:textSize="17sp"
-                                            android:visibility="gone"/>
+                                            android:visibility="gone" />
 
                                         <ImageView
                                             android:id="@+id/imgForward1"
@@ -440,7 +433,7 @@
                                             android:gravity="center"
                                             android:text="0"
                                             android:textSize="17sp"
-                                            android:visibility="gone"/>
+                                            android:visibility="gone" />
 
 
                                         <ImageView

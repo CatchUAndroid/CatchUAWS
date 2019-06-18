@@ -159,7 +159,6 @@ public class MainActivity extends AppCompatActivity {
             provider.setProviderid(loginUser.getProviderId());
             provider.setProviderType(loginUser.getProviderType());
             user.setProvider(provider);
-            displayUserInfo(user);
             loginProcess();
 
         } else {
@@ -173,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
             provider.setProviderid("");
             provider.setProviderType("");
             user.setProvider(provider);
-            displayUserInfo(user);
             loginProcess();
         }
     }
@@ -277,22 +275,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
-    private void displayUserInfo(User user) {
-
-        if (user != null) {
-            Log.i("*******", "currentUser *******");
-            Log.i("-> userId", user.getUserid());
-            Log.i("-> Email", user.getEmail());
-            if (user.getName() != null)
-                Log.i("-> Name", user.getName());
-            if (user.getUsername() != null)
-                Log.i("-> UserName", user.getUsername());
-            if (user.getProfilePhotoUrl() != null)
-                Log.i("-> ProfilePicUrl", user.getProfilePhotoUrl());
-        }
-
-    }
-
-
 }

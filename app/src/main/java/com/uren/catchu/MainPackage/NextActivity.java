@@ -92,7 +92,7 @@ public class NextActivity extends FragmentActivity implements
         thisActivity = this;
 
         unSelectedTabColor = this.getResources().getColor(R.color.DarkGray, null);
-        selectedTabColor = this.getResources().getColor(R.color.OrangeRed, null);
+        selectedTabColor = this.getResources().getColor(R.color.DodgerBlue, null);
 
         initValues();
 

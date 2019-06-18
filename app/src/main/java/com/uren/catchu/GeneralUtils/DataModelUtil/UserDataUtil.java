@@ -38,6 +38,25 @@ public class UserDataUtil {
             textView.setVisibility(View.GONE);
     }
 
+    public static String getNameOrUsername(String name, String username) {
+        int nameMaxLen = 25;
+
+        if (name != null && !name.isEmpty()) {
+            if (name.length() > nameMaxLen)
+                return  name.trim().substring(0, nameMaxLen) + "...";
+            else
+                return name;
+        } else if (username != null && !username.isEmpty()) {
+            if (username.length() > nameMaxLen)
+                return  CHAR_AMPERSAND + username.trim().substring(0, nameMaxLen) + "...";
+            else
+                return CHAR_AMPERSAND + username;
+        }
+
+        return null;
+    }
+
+
     public static void setName(String name, TextView nameTextView) {
         int nameMaxLen = 25;
         if (name != null && nameTextView != null && !name.isEmpty()) {

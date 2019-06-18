@@ -76,6 +76,7 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -91,6 +92,7 @@ import io.fabric.sdk.android.Fabric;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_E;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_TWITTER;
 
@@ -510,6 +512,8 @@ public class LoginActivity extends AppCompatActivity
                 MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, mAuth.getCurrentUser().getUid());
             }
         });
+
+        MessageUpdateProcess.updateTokenSigninValue(mAuth.getCurrentUser().getUid(), CHAR_E);
     }
 
     private void startMainPage() {

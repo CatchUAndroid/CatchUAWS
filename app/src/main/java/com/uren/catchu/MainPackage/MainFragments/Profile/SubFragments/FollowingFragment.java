@@ -75,13 +75,15 @@ public class FollowingFragment extends BaseFragment {
     int perPage, page;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private boolean loading = true;
+    private String toolbarTitle;
 
     private static final int CODE_FIRST_LOAD = 0;
     private static final int CODE_MORE_LOAD = 1;
     private int loadCode = CODE_FIRST_LOAD;
 
-    public FollowingFragment(String requestedUserId) {
+    public FollowingFragment(String requestedUserId, String toolbarTitle) {
         this.requestedUserId = requestedUserId;
+        this.toolbarTitle = toolbarTitle;
     }
 
     @Nullable
@@ -113,7 +115,7 @@ public class FollowingFragment extends BaseFragment {
     }
 
     private void init() {
-        toolbarTitleTv.setText(getContext().getResources().getString(R.string.followings));
+        toolbarTitleTv.setText(toolbarTitle + " " + getContext().getResources().getString(R.string.followings));
         searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWINGS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
@@ -147,27 +149,27 @@ public class FollowingFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                    if (s != null && s.toString() != null) {
-                        if (!s.toString().trim().isEmpty()) {
-                            searchCancelImgv.setVisibility(View.VISIBLE);
-                        } else {
-                            searchCancelImgv.setVisibility(View.GONE);
-                        }
-
-                        if (followingAdapter != null)
-                            followingAdapter.updateAdapter(s.toString(), new ReturnCallback() {
-                                @Override
-                                public void onReturn(Object object) {
-                                    int itemSize = (int) object;
-
-                                    if (itemSize == 0)
-                                        searchResultTv.setVisibility(View.VISIBLE);
-                                    else
-                                        searchResultTv.setVisibility(View.GONE);
-                                }
-                            });
-                    } else
+                if (s != null && s.toString() != null) {
+                    if (!s.toString().trim().isEmpty()) {
+                        searchCancelImgv.setVisibility(View.VISIBLE);
+                    } else {
                         searchCancelImgv.setVisibility(View.GONE);
+                    }
+
+                    if (followingAdapter != null)
+                        followingAdapter.updateAdapter(s.toString(), new ReturnCallback() {
+                            @Override
+                            public void onReturn(Object object) {
+                                int itemSize = (int) object;
+
+                                if (itemSize == 0)
+                                    searchResultTv.setVisibility(View.VISIBLE);
+                                else
+                                    searchResultTv.setVisibility(View.GONE);
+                            }
+                        });
+                } else
+                    searchCancelImgv.setVisibility(View.GONE);
             }
         });
     }
@@ -284,10 +286,10 @@ public class FollowingFragment extends BaseFragment {
     private void startFollowingInfoProcess(User user, int clickedPosition) {
 
         if (mFragmentNavigation != null && user != null) {
-            if(user.getUserid() != null && !user.getUserid().trim().isEmpty()){
-                if(user.getUserid().equals(AccountHolderInfo.getUserID()))
+            if (user.getUserid() != null && !user.getUserid().trim().isEmpty()) {
+                if (user.getUserid().equals(AccountHolderInfo.getUserID()))
                     mFragmentNavigation.pushFragment(new ProfileFragment(false), ANIMATE_RIGHT_TO_LEFT);
-                else if(followingAdapter != null ){
+                else if (followingAdapter != null) {
                     UserInfoListItem userInfoListItem = new UserInfoListItem(user);
                     userInfoListItem.setAdapter(followingAdapter);
                     userInfoListItem.setClickedPosition(clickedPosition);

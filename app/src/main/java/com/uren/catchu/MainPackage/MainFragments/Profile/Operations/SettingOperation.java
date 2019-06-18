@@ -14,6 +14,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListene
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
@@ -25,6 +26,9 @@ import com.uren.catchu.Singleton.SelectedFriendList;
 
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_E;
+import static com.uren.catchu.Constants.StringConstants.CHAR_H;
+
 public class SettingOperation {
 
     private static final int CODE_REMOVE_PRIVACY = 0;
@@ -34,6 +38,7 @@ public class SettingOperation {
 
         //Normal users
         FirebaseAuth firebaseAuth = AccountHolderInfo.getFirebaseAuth();
+        MessageUpdateProcess.updateTokenSigninValue(firebaseAuth.getCurrentUser().getUid(), CHAR_H);
         firebaseAuth.signOut();
 
         facebookLogout();

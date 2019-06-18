@@ -82,13 +82,15 @@ public class FollowerFragment extends BaseFragment
     private int perPage, page;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private boolean loading = true;
+    private String toolbarTitle;
 
     private static final int CODE_FIRST_LOAD = 0;
     private static final int CODE_MORE_LOAD = 1;
     private int loadCode = CODE_FIRST_LOAD;
 
-    public FollowerFragment(String requestedUserId) {
+    public FollowerFragment(String requestedUserId, String toolbarTitle) {
         this.requestedUserId = requestedUserId;
+        this.toolbarTitle = toolbarTitle;
     }
 
     @Nullable
@@ -117,7 +119,7 @@ public class FollowerFragment extends BaseFragment
 
     private void init() {
         commonToolbarbackImgv.setOnClickListener(this);
-        toolbarTitleTv.setText(getContext().getResources().getString(R.string.followers));
+        toolbarTitleTv.setText(toolbarTitle + " " + getContext().getResources().getString(R.string.followers));
         searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWERS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
@@ -244,7 +246,7 @@ public class FollowerFragment extends BaseFragment
     }
 
     private void setAdapter() {
-        followerAdapter = new FollowerAdapter(getContext());
+        followerAdapter = new FollowerAdapter(getContext(), requestedUserId);
         recyclerView.setAdapter(followerAdapter);
 
         followerAdapter.setListItemClickListener(new ListItemClickListener() {

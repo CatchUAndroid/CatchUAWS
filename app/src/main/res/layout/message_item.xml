@@ -5,6 +5,7 @@
     android:id="@+id/mainRelLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="1dp"
     app:ignore="NamespaceTypo">
 
 
@@ -111,7 +112,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="false"
         android:layout_gravity="center"
-        android:layout_margin="4dp"
+        android:layout_margin="7dp"
+        android:padding="2dp"
         app:cardCornerRadius="5dp"
         card_view:cardBackgroundColor="#11808080"
         card_view:cardElevation="0dp"
@@ -165,11 +167,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="false"
                     android:layout_alignParentTop="false"
-                    android:layout_marginLeft="3dp"
-                    android:layout_marginRight="3dp"
                     android:allowUndo="false"
                     android:autoText="false"
                     android:gravity="right"
+                    android:padding="3dp"
                     android:textColor="@color/gray"
                     android:textSize="10sp" />
 

@@ -29,6 +29,7 @@ import static com.uren.catchu.Constants.NumericConstants.FCM_MAX_MESSAGE_LEN;
 import static com.uren.catchu.Constants.NumericConstants.MAX_ALLOWED_NOTIFICATION_SIZE;
 import static com.uren.catchu.Constants.StringConstants.APP_NAME;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.CHAR_E;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
@@ -54,10 +55,12 @@ public class MessageAddProcess {
     String chattedUserDeviceToken;
     String clusterNotificationStatus;
     String otherUserNotificationStatus;
+    private String otherUserSigninValue;
 
     public MessageAddProcess(Context context, User chattedUser, String messageContentId, EditText messageEdittext, Button sendMessageBtn,
                              int notificationSendCount, String chattedUserDeviceToken, String clusterNotificationStatus,
-                             String otherUserNotificationStatus) {
+                             String otherUserNotificationStatus,
+                             String otherUserSigninValue) {
         this.context = context;
         this.chattedUser = chattedUser;
         this.messageContentId = messageContentId;
@@ -67,6 +70,7 @@ public class MessageAddProcess {
         this.chattedUserDeviceToken = chattedUserDeviceToken;
         this.clusterNotificationStatus = clusterNotificationStatus;
         this.otherUserNotificationStatus = otherUserNotificationStatus;
+        this.otherUserSigninValue = otherUserSigninValue;
     }
 
     public void addMessage() {
@@ -146,7 +150,8 @@ public class MessageAddProcess {
         databaseReference.setValue(values, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
-                sendMessageToCloudFunction(messageId);
+                if (otherUserSigninValue != null && otherUserSigninValue.equals(CHAR_E))
+                    sendMessageToCloudFunction(messageId);
                 enableUIItems();
             }
         });

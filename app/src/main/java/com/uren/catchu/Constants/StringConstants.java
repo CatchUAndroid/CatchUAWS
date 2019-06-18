@@ -119,6 +119,8 @@ public class StringConstants {
     public static final String CHAR_AMPERSAND = "@";
     public static final String CHAR_COLON = ":";
     public static final String CHAR_HYPHEN = "-";
+    public static final String CHAR_E = "E";
+    public static final String CHAR_H = "H";
 
     public static final String GROUP_OP_CHOOSE_TYPE = "CHOOSE";
     public static final String GROUP_OP_VIEW_TYPE = "VIEW";
@@ -158,6 +160,7 @@ public class StringConstants {
     public static final String FB_CHILD_PAGE_IS_SEEN = "PageIsSeen";
     public static final String FB_CHILD_DEVICE_TOKEN = "DeviceToken";
     public static final String FB_CHILD_TOKEN = "Token";
+    public static final String FB_CHILD_SIGNIN = "SignIn";
     public static final String FB_CHILD_NOTIFICATIONS = "Notifications";
     public static final String FB_CHILD_NOTIFICATION_STATUS = "NotificationStatus";
     public static final String FB_CHILD_CLUSTER_STATUS = "ClusterStatus";

@@ -78,12 +78,12 @@
                             android:background="@drawable/search_edittext"
                             android:focusedByDefault="true"
                             android:hint="@string/search"
-                            android:textColorHint="@color/White"
                             android:inputType="text"
-                            android:textSize="17sp"
                             android:paddingEnd="20dp"
                             android:paddingStart="40dp"
-                            android:textColor="@color/white" />
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/White"
+                            android:textSize="17sp" />
 
                     </RelativeLayout>
 
