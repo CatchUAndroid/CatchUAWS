@@ -424,5 +424,13 @@
     <string name="label_adjust">Adjust</string>
 
 
+    <string name="ADMOB_APP_ID">ca-app-pub-7227467199436307~1178118713</string>
+    <!--<string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-7227467199436307/4313340521</string>
+    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-7227467199436307/9374095519</string>-->
+
+
+    <!--Test-->
+    <string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-3940256099942544/1033173712</string>
 
 </resources>
