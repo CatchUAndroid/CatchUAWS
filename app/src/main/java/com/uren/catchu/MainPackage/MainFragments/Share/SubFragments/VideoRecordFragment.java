@@ -24,9 +24,11 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
+/*import android.support.annotation.MainThread;*/
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+/*import androidx.core.app.ActivityCompat*/;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;

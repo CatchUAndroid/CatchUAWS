@@ -3,8 +3,8 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+/*import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;*/
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +24,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClic
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import catchu.model.FriendRequestList;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;

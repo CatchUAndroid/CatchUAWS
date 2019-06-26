@@ -3,8 +3,8 @@ package com.uren.catchu;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
+/*import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;*/
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +41,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaC
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
 import catchu.model.Endpoint;

@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
+/*import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;*/
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +31,8 @@ import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
 import catchu.model.Media;
 
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;

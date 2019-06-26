@@ -11,8 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,6 +34,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import androidx.core.app.NotificationCompat;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;

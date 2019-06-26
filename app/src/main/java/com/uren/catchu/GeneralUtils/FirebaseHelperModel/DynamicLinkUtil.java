@@ -8,12 +8,14 @@ import android.net.Uri;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 import com.uren.catchu.R;
 
+import androidx.fragment.app.Fragment;
+
 import static com.uren.catchu.Constants.StringConstants.APP_INVITATION_LINK;
 import static com.uren.catchu.Constants.StringConstants.DYNAMIC_LINK_DOMAIN;
 
 public class DynamicLinkUtil {
 
-    public static void setAppInvitationLink(final Context context, android.support.v4.app.Fragment fragment){
+    public static void setAppInvitationLink(final Context context, Fragment fragment){
 
             Intent intent = new Intent();
             String msg = context.getResources().getString(R.string.CONTACT_INVITE_MESSAGE) + " " + APP_INVITATION_LINK;
@@ -24,7 +26,7 @@ public class DynamicLinkUtil {
                 fragment.startActivity(Intent.createChooser(intent, "Share"));
     }
 
-    public static void setAppInvitationLinkForSms(Context context, Contact contact, android.support.v4.app.Fragment fragment) {
+    public static void setAppInvitationLinkForSms(Context context, Contact contact, Fragment fragment) {
             if (contact != null && contact.getPhoneNumber() != null) {
                 Intent sendIntent = new Intent(Intent.ACTION_VIEW);
                 sendIntent.setData(Uri.parse("sms:" + contact.getPhoneNumber()));
@@ -34,7 +36,7 @@ public class DynamicLinkUtil {
             }
     }
 
-    /*public static void shareShortDynamicLink(final Context context, final android.support.v4.app.Fragment fragment) {
+    /*public static void shareShortDynamicLink(final Context context, final androidx.fragment.app.Fragment fragment) {
             Task<ShortDynamicLink> createLinkTask = FirebaseDynamicLinks.getInstance().createDynamicLink()
                     //.setLongLink(Uri.parse(buildDynamicLink(context)))
                     //.setLongLink(Uri.parse(APP_INVITATION_LINK))

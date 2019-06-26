@@ -3,9 +3,9 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
+/*import androidx.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;*/
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +37,9 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import catchu.model.Post;
 import catchu.model.User;
 

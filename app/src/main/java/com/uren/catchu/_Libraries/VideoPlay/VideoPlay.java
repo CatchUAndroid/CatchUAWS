@@ -40,8 +40,8 @@ public class VideoPlay {
 
         this.aah_vi = (VideoImage) itemView.findViewById(R.id.videoImage);
         //this.tv = ButterKnife.findById(itemView, R.id.tv);
-        this.img_vol = ButterKnife.findById(itemView, R.id.img_vol);
-        this.img_playback = ButterKnife.findById(itemView, R.id.img_playback);
+        //this.img_vol = ButterKnife.findById(itemView, R.id.img_vol);
+        //this.img_playback = ButterKnife.findById(itemView, R.id.img_playback);
 
         setLooping(true);
 

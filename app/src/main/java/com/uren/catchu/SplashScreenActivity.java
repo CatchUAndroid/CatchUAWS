@@ -2,14 +2,16 @@ package com.uren.catchu;
 
 import android.content.Intent;
 import android.os.Handler;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AppCompatActivity;
+/*import android.support.constraint.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;*/
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 

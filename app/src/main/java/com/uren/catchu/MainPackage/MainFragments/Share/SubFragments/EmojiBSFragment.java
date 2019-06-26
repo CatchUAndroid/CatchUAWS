@@ -2,21 +2,26 @@ package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
+import androidx.annotation.NonNull;
+/*import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;*/
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 
 public class EmojiBSFragment extends BottomSheetDialogFragment {

@@ -2,11 +2,13 @@ package com.uren.catchu._Libraries.VideoPlay;
 
 import android.app.Activity;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
+/*import androidx.recyclerview.widget.RecyclerView;*/
 import android.view.View;
 import android.widget.ImageView;
 
 import java.util.concurrent.Callable;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**

@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 
 import com.google.android.gms.common.util.IOUtils;
@@ -24,6 +23,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class UriAdapter extends AppCompatActivity {
 

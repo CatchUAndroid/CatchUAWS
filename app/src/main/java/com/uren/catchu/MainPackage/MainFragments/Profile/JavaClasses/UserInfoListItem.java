@@ -1,9 +1,10 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses;
 
-import android.support.v7.widget.RecyclerView;
+/*import androidx.recyclerview.widget.RecyclerView;*/
 
 import java.io.Serializable;
 
+import androidx.recyclerview.widget.RecyclerView;
 import catchu.model.User;
 
 public class UserInfoListItem {

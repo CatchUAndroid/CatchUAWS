@@ -5,8 +5,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+/*import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;*/
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +19,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfa
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;

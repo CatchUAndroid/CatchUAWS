@@ -7,13 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import android.os.Handler;
-import android.support.design.widget.TabItem;
+/*import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.Toolbar;*/
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 
@@ -48,6 +51,8 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;

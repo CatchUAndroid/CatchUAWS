@@ -9,13 +9,13 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.SubtitleCollapsingToolbarLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+/*import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;*/
+/*import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;*/
+//import android.support.design.widget.SubtitleCollapsingToolbarLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +55,12 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.GroupRequestResult;
@@ -83,8 +89,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     CoordinatorLayout groupCoordinatorLayout;
     @BindView(R.id.personCntTv)
     TextView personCntTv;
-    @BindView(R.id.collapsing_toolbar)
-    SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
+    //@BindView(R.id.collapsing_toolbar)
+    //SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
     @BindView(R.id.addFriendCardView)
     CardView addFriendCardView;
     @BindView(R.id.deleteGroupCardView)
@@ -206,8 +212,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     }
 
     public void setGroupTitle() {
-        subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
-        subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
+        //subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
+        //subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
     }
 
     public String getToolbarSubtitle() {
@@ -219,14 +225,14 @@ public class ViewGroupDetailFragment extends BaseFragment {
         if (photoUrl != null && !photoUrl.trim().isEmpty()) {
             photoExistOnImgv = true;
             groupPictureImgV.setPadding(0, 0, 0, 0);
-            Glide.with(this)
+            Glide.with(getActivity())
                     .load(photoUrl)
                     .apply(RequestOptions.centerInsideTransform())
                     .into(groupPictureImgV);
         } else {
             photoExistOnImgv = false;
             groupPictureImgV.setPadding(200, 200, 200, 200);
-            Glide.with(this)
+            Glide.with(getActivity())
                     .load(R.drawable.groups_icon_500)
                     .apply(RequestOptions.centerInsideTransform())
                     .into(groupPictureImgV);
@@ -276,7 +282,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                                 public void onComplete(Object object) {
                                     if (object != null) {
                                         String edittedGroupName = (String) object;
-                                        subtitleCollapsingToolbarLayout.setTitle(edittedGroupName);
+                                        //subtitleCollapsingToolbarLayout.setTitle(edittedGroupName);
                                         recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
                                     }
                                 }

@@ -5,8 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,6 +27,7 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.R;
 
+import androidx.appcompat.app.AppCompatActivity;
 import io.fabric.sdk.android.Fabric;
 
 public class ForgetPasswordActivity extends AppCompatActivity implements View.OnClickListener {

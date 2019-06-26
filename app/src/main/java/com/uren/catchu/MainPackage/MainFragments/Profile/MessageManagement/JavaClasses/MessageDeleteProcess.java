@@ -1,7 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;

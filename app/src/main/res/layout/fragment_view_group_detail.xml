@@ -14,12 +14,12 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
 
-        <android.support.design.widget.SubtitleCollapsingToolbarLayout
+        <!--<android.support.design.widget.SubtitleCollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:contentScrim="@color/colorPrimary"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -85,7 +85,7 @@
 
             </android.support.v7.widget.Toolbar>
 
-        </android.support.design.widget.SubtitleCollapsingToolbarLayout>
+       <!-- </android.support.design.widget.SubtitleCollapsingToolbarLayout>-->
 
 
     </android.support.design.widget.AppBarLayout>
@@ -107,7 +107,7 @@
             android:orientation="vertical"
             android:background="@color/GhostWhite">
 
-            <!--<android.support.v7.widget.CardView
+            <!--<androidx.cardview.widget.CardView
                 android:id="@+id/deleteGroupCardView"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
@@ -134,10 +134,10 @@
                         android:textStyle="bold" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>-->
+            </androidx.cardview.widget.CardView>-->
 
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -174,9 +174,9 @@
                         android:textColor="@color/LightSeaGreen" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/addFriendCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -224,7 +224,7 @@
                         android:layout_marginLeft="7dp"
                         android:text="@string/addPersonToGroup" />
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
             <android.support.v4.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -233,14 +233,14 @@
                 android:background="@color/White"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
             </android.support.v4.widget.NestedScrollView>
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/deleteGroupCardView"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
@@ -272,7 +272,7 @@
                         android:textSize="15dp" />
 
                 </LinearLayout>
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 

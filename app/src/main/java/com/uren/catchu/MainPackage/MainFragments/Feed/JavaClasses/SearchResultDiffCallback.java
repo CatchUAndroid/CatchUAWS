@@ -1,11 +1,13 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
+/*import androidx.annotation.Nullable;
+import android.support.v7.util.DiffUtil;*/
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
 import catchu.model.Post;
 import catchu.model.User;
 
