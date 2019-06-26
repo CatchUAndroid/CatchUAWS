@@ -178,8 +178,6 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
         PostHelper.FeedRefresh.getInstance().setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
             public void onFeedRefresh() {
-                CommonUtils.showToastShort(getContext(), "Feed - Caught refreshing..");
-                Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 refreshFeed();
             }
         });

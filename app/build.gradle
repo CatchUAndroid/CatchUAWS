@@ -86,13 +86,13 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.8.0'
 
     //Firebase
-    implementation 'com.google.firebase:firebase-auth:16.0.5'
+    implementation 'com.google.firebase:firebase-auth:18.0.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.firebase:geofire-android:2.1.2'
     implementation 'com.firebase:firebase-client-android:2.5.0'
-    implementation 'com.google.firebase:firebase-invites:16.0.5'
-    implementation 'com.google.firebase:firebase-config:16.1.0'
-    implementation 'com.google.firebase:firebase-core:16.0.5'
+    implementation 'com.google.firebase:firebase-invites:17.0.0'
+    implementation 'com.google.firebase:firebase-config:18.0.0'
+    implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.google.firebase:firebase-functions:16.1.2'
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.0.4'
@@ -140,3 +140,4 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
