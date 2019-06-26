@@ -62,10 +62,7 @@ public class SendMessageToFCM {
                     root.put(FCM_CODE_DATA, data);
                     root.put(FCM_CODE_TO, fcmItems.getOtherUserDeviceToken());
 
-                    System.out.println("Normal Mesaj Json:" + root);
-
                     String result = postToFCM(root.toString(), context, messageSentFCMCallback);
-                    Log.i("Info", "Result: " + result);
                     return result;
                 } catch (Exception e) {
                     messageSentFCMCallback.onFailed(e);

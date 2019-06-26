@@ -141,7 +141,7 @@ public class GroupListHolder {
                 if (task.isSuccessful()) {
                     tokenCallback.onTokenTaken(task.getResult().getToken());
                 } else {
-                    Log.i("info", "Token task operation fail");
+
                 }
             }
         });

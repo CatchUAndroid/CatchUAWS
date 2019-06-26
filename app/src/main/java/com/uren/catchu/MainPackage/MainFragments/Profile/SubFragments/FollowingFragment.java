@@ -115,7 +115,7 @@ public class FollowingFragment extends BaseFragment {
     }
 
     private void init() {
-        toolbarTitleTv.setText(toolbarTitle + " " + getContext().getResources().getString(R.string.followings));
+        toolbarTitleTv.setText(toolbarTitle);
         searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWINGS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
@@ -268,7 +268,6 @@ public class FollowingFragment extends BaseFragment {
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("FollowInfoProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 

@@ -143,14 +143,14 @@ public class UserDataUtil {
         } else {
             if (pendingFriendRequest != null && pendingFriendRequest) {
                 displayButton.setText(context.getResources().getString(R.string.request_sended));
-                displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
-                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
-                        0, GradientDrawable.RECTANGLE, 15, 0);
+                displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
+                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DarkYellow, null),
+                        context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
             } else {
                 displayButton.setText(context.getResources().getString(R.string.follow));
                 displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
                 buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                        0, GradientDrawable.RECTANGLE, 15, 0);
+                        context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
             }
         }
         displayButton.setBackground(buttonShape);
@@ -161,7 +161,7 @@ public class UserDataUtil {
         GradientDrawable buttonShape;
         displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
         buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                0, GradientDrawable.RECTANGLE, 15, 0);
+                context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 1);
         displayButton.setBackground(buttonShape);
     }
 
@@ -196,9 +196,9 @@ public class UserDataUtil {
         } else if (followStatus.equals(FOLLOW_STATUS_PENDING)) {
             //istek gonderildi
             displayButton.setText(context.getResources().getString(R.string.request_sended));
-            displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
-            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.Silver, null),
-                    0, GradientDrawable.RECTANGLE, 15, 0);
+            displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
+            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DarkYellow, null),
+                    context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
 
         } else if (followStatus.equals(FOLLOW_STATUS_OWN)) {
             //kendisi
@@ -208,26 +208,31 @@ public class UserDataUtil {
             displayButton.setText(context.getResources().getString(R.string.follow));
             displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
             buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.RECTANGLE, 15, 0);
+                    context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
 
         } else {
             //ne olur ne olmaz durumu :)
             displayButton.setText(context.getResources().getString(R.string.follow));
             displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
             buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.RECTANGLE, 15, 0);
+                    context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
         }
 
         displayButton.setBackground(buttonShape);
     }
 
-    public static void updateMessagingButton(Context context, String followStatus, Button sendMessageBtn) {
+    public static void updateMessagingButton(Context context, String followStatus,
+                                             Boolean isPrivate, Button sendMessageBtn) {
         if (sendMessageBtn != null) {
             sendMessageBtn.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2));
 
             if (followStatus != null) {
-                if (followStatus.equals(FOLLOW_STATUS_OWN))
+                if (followStatus.equals(FOLLOW_STATUS_OWN) || followStatus.equals(FOLLOW_STATUS_PENDING))
+                    sendMessageBtn.setVisibility(View.GONE);
+                else if(followStatus.equals(FOLLOW_STATUS_FOLLOWING)){
+                    sendMessageBtn.setVisibility(View.VISIBLE);
+                }else if(followStatus.equals(FOLLOW_STATUS_NONE) && isPrivate == true)
                     sendMessageBtn.setVisibility(View.GONE);
                 else
                     sendMessageBtn.setVisibility(View.VISIBLE);

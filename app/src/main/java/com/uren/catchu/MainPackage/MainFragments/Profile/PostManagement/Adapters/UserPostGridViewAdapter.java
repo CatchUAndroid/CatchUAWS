@@ -139,7 +139,6 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     setSinglePostFragmentItems();
-                    Log.i("clickedPostId ", postList.get(position).getPostid());
                 }
             });
 

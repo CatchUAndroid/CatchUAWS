@@ -71,8 +71,8 @@
                         android:background="@drawable/search_edittext"
                         android:hint="@string/search"
                         android:paddingLeft="30dp"
-                        android:textSize="17sp"
-                        android:textColorHint="@color/White"/>
+                        android:textColorHint="@color/White"
+                        android:textSize="17sp" />
 
                 </FrameLayout>
 

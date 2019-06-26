@@ -138,8 +138,6 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                             public void onClick(DialogInterface dialog, int item) {
 
                                 if (item == CODE_DISPLAY_PROFILE) {
-
-                                    Toast.makeText(context, "View profile clicked", Toast.LENGTH_SHORT).show();
                                     User user = getFollowProperties();
                                     itemClickListener.onClick(user, CODE_DISPLAY_PROFILE);
 

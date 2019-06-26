@@ -18,10 +18,14 @@ import com.crashlytics.android.Crashlytics;
 import com.dagang.library.GradientButton;
 import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.facebook.FacebookSdk;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.uren.catchu.ApiGatewayFunctions.EndPointProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
@@ -32,15 +36,21 @@ import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
+import catchu.model.Endpoint;
 import catchu.model.Provider;
 import catchu.model.User;
 import io.fabric.sdk.android.Fabric;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_E;
+import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_IN;
+import static com.uren.catchu.Constants.StringConstants.ENDPOINT_PLATFORM_ANDROID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
@@ -69,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         CommonUtils.hideKeyBoard(this);
         initVariables();
-
-        CommonUtils.LOG_NEREDEYIZ("MainActivity");
 
         initFacebookLogin();
         initTwitterLogin();
@@ -203,12 +211,13 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(BaseResponse baseResponse) {
 
                         refresh_layout.setRefreshing(false);
-                        if (baseResponse == null) {
-                            CommonUtils.LOG_OK_BUT_NULL("LoginProcess");
-                        } else {
-                            CommonUtils.LOG_OK("LoginProcess");
 
-                            if (messagingType == null) {
+                        if (baseResponse != null) {
+                            updateDeviceTokenForFCM();
+                            startActivity(new Intent(MainActivity.this, NextActivity.class));
+                            finish();
+
+                            /*if (messagingType == null) {
                                 startActivity(new Intent(MainActivity.this, NextActivity.class));
                                 finish();
                             }else {
@@ -228,14 +237,13 @@ public class MainActivity extends AppCompatActivity {
                                         finish();
                                         break;
                                 }
-                            }
+                            }*/
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
                         refresh_layout.setRefreshing(false);
-                        CommonUtils.LOG_FAIL("LoginProcess", e.toString());
                     }
 
                     @Override
@@ -254,7 +262,60 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void startMessagePersonActivity() {
+    public void updateDeviceTokenForFCM(){
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String deviceToken = instanceIdResult.getToken();
+                MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, firebaseAuth.getCurrentUser().getUid());
+                startEndPointProcess(deviceToken);
+            }
+        });
+
+        MessageUpdateProcess.updateTokenSigninValue(firebaseAuth.getCurrentUser().getUid(), CHAR_E);
+    }
+
+    private void startEndPointProcess(final String deviceToken){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+
+                final Endpoint endpoint = new Endpoint();
+                endpoint.setDeviceToken(deviceToken);
+                endpoint.setUserid(firebaseAuth.getCurrentUser().getUid());
+                endpoint.setPlatformType(ENDPOINT_PLATFORM_ANDROID);
+                endpoint.setRequestType(ENDPOINT_LOGGED_IN);
+
+                EndPointProcess endPointProcess = new EndPointProcess(new OnEventListener<BaseResponse>() {
+
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+
+                    }
+                }, token, endpoint);
+
+                endPointProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+
+            }
+        });
+    }
+
+    /*private void startMessagePersonActivity() {
         if (MessageWithPersonActivity.thisActivity != null) {
             MessageWithPersonActivity.thisActivity.finish();
         }
@@ -274,5 +335,5 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(FCM_CODE_RECEIPT_USERID, receiptUserId);
         startActivity(intent);
         finish();
-    }
+    }*/
 }

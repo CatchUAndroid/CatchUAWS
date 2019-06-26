@@ -200,6 +200,33 @@
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/llBlock"
+        android:visibility="gone"
+        android:background="@color/White"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/blockTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:padding="3dp"
+            android:text="ckcddjcjjb dbcjdcjb jdcjbdjbc"
+            android:textColor="@color/Red" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="7dp"
+            android:background="@color/Silver"></View>
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/contentRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

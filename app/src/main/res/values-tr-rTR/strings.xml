@@ -99,6 +99,8 @@
     <string name="CIRCLE_THE_PROBLEM">Sorunu daire içine al</string>
     <string name="SCREENSHOT">Çek</string>
     <string name="detail">Detay</string>
+    <string name="searchGroup">Grup Ara</string>
+
     <string name="searchUser">Kullanıcı arayın...</string>
     <string name="IN_GROUP">Grupta</string>
     <string name="REMOVE">Çıkar</string>
@@ -107,6 +109,9 @@
     <string name="SEARCH_FOLLOWERS">Takipçileri ara...</string>
     <string name="SEARCH_FOLLOWINGS">Takip edilenleri ara...</string>
     <string name="USER_NOT_FOUND">Kullanıcı bulunamadı.</string>
+
+    <string name="REMOVE_BLOCK_PERSON">Bu kişi ile mesajlaşabilmek için engeli kaldırmalısınız!</string>
+    <string name="TO_BE_REMOVED_BLOCK_PERSON">Bu kişi ile mesajlaşabilmek için engeliniz kaldırılmalıdır!</string>
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
@@ -283,6 +288,7 @@
     <string name="TODAY">Bugün</string>
     <string name="YESTERDAY">Dün</string>
     <string name="BLOCK">Engelle</string>
+    <string name="UNBLOCK">Engeli Kaldır</string>
     <string name="REPORT_PERSON">Şikayet Et</string>
     <string name="CLEAR_CHAT">Sohbeti Temizle</string>
     <string name="YOU_HAVE_A_NEW_MESSAGE">Yeni mesajınız var</string>

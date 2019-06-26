@@ -43,7 +43,7 @@ public class ErrorSaveHelper {
 
         if (mContext == null) return;
 
-        CommonUtils.LOG_EXCEPTION_ERR(className + " - " + methodName, errMessage);
+        //CommonUtils.LOG_EXCEPTION_ERR(className + " - " + methodName, errMessage);
 
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
         Bundle bundle = new Bundle();

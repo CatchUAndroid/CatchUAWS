@@ -491,18 +491,25 @@
                                             android:textColor="@color/gray"
                                             android:textSize="17sp" />
 
-
-                                        <TextView
-                                            android:id="@+id/txtEditGroup"
+                                        <RelativeLayout
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_gravity="left"
-                                            android:layout_marginRight="10dp"
                                             android:layout_weight="1"
-                                            android:gravity="center"
-                                            android:text="@string/EDIT"
-                                            android:textColor="@color/oceanBlue"
-                                            android:textSize="17sp" />
+                                            android:layout_marginRight="10dp">
+
+                                            <TextView
+                                                android:id="@+id/txtEditGroup"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:layout_gravity="left"
+                                                android:gravity="center"
+                                                android:text="@string/EDIT"
+                                                android:textColor="@color/oceanBlue"
+                                                android:textSize="17sp" />
+
+                                        </RelativeLayout>
+
+
 
 
                                     </LinearLayout>

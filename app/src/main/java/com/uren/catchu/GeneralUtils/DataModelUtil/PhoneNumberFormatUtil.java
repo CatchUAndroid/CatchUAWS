@@ -73,15 +73,19 @@ public class PhoneNumberFormatUtil {
             for (Contact contact : contactList) {
                 if (contact != null && contact.getPhoneNumber() != null && !contact.getPhoneNumber().isEmpty()) {
 
-                    String completeNumber = "";
-                    String reverseText = new StringBuilder(contact.getPhoneNumber().trim()).reverse().toString();
-                    completeNumber = dialCode.trim() + new StringBuilder(reverseText.substring(0, 10)).reverse().toString();
+                    try {
+                        String completeNumber = "";
+                        String reverseText = new StringBuilder(contact.getPhoneNumber().trim()).reverse().toString();
+                        completeNumber = dialCode.trim() + new StringBuilder(reverseText.substring(0, 10)).reverse().toString();
 
-                    Contact contactTemp = new Contact();
-                    contactTemp.setName(contact.getName());
-                    contactTemp.setPhoneNumber(completeNumber);
+                        Contact contactTemp = new Contact();
+                        contactTemp.setName(contact.getName());
+                        contactTemp.setPhoneNumber(completeNumber);
 
-                    reformedContactList.add(contactTemp);
+                        reformedContactList.add(contactTemp);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

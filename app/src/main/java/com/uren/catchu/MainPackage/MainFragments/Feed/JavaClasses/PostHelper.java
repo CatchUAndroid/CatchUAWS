@@ -118,11 +118,6 @@ public class PostHelper {
                 @Override
                 public void onSuccess(BaseResponse resp) {
 
-                    if (resp == null) {
-                        CommonUtils.LOG_OK_BUT_NULL("PostLikeProcess");
-                    } else {
-                        CommonUtils.LOG_OK("PostLikeProcess");
-                    }
                 }
 
                 @Override
@@ -239,8 +234,6 @@ public class PostHelper {
                     mfragmentNavigation.pushFragment(new PostVideoPlayFragment(media));
                     //mfragmentNavigation.pushFragment(new PostVideoPlay2Fragment(media));
                 }
-            } else {
-                Log.e("info", "unknown media type detected");
             }
         }
     }
@@ -319,11 +312,6 @@ public class PostHelper {
             PostCommentProcess postCommentProcess = new PostCommentProcess(context, new OnEventListener<CommentResponse>() {
                 @Override
                 public void onSuccess(CommentResponse commentResponse) {
-                    if (commentResponse == null) {
-                        CommonUtils.LOG_OK_BUT_NULL("PostCommentProcess");
-                    } else {
-                        CommonUtils.LOG_OK("PostCommentProcess");
-                    }
 
                 }
 
@@ -391,11 +379,7 @@ public class PostHelper {
 
                 @Override
                 public void onSuccess(BaseResponse baseResponse) {
-                    if (baseResponse == null) {
-                        CommonUtils.LOG_OK_BUT_NULL("PostPatchProcess");
-                    } else {
-                        CommonUtils.LOG_OK("PostPatchProcess");
-                    }
+
                 }
 
                 @Override
@@ -461,11 +445,7 @@ public class PostHelper {
 
                 @Override
                 public void onSuccess(BaseResponse baseResponse) {
-                    if (baseResponse == null) {
-                        CommonUtils.LOG_OK_BUT_NULL("PostDeleteProcess");
-                    } else {
-                        CommonUtils.LOG_OK("PostDeleteProcess");
-                    }
+
                 }
 
                 @Override
@@ -527,11 +507,7 @@ public class PostHelper {
             ReportProblemProcess reportProblemProcess = new ReportProblemProcess(new OnEventListener() {
                 @Override
                 public void onSuccess(Object object) {
-                    if (object == null) {
-                        CommonUtils.LOG_OK_BUT_NULL("ReportProblemProcess");
-                    } else {
-                        CommonUtils.LOG_OK("ReportProblemProcess");
-                    }
+
                 }
 
                 @Override

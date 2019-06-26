@@ -7,7 +7,7 @@
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="4dp"
         app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="15dp"
         app:cardElevation="4dp">
@@ -104,6 +104,7 @@
                                 android:layout_height="20dp"
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="10dp"
+                                android:padding="3dp"
                                 android:scaleType="fitXY" />
 
                         </LinearLayout>
@@ -123,8 +124,8 @@
 
                     <ImageView
                         android:id="@+id/imgLike"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
                         android:layout_marginRight="10dp"
                         android:src="@mipmap/icon_like" />
 
@@ -139,8 +140,8 @@
                 android:layout_marginLeft="20dp"
                 android:fontFamily="@font/roboto"
                 android:text="contentText"
-                android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textColor="@color/Black"
+                android:textSize="14sp" />
 
             <!-- ViewPager /-->
             <android.support.v4.view.ViewPager
@@ -184,10 +185,10 @@
 
                     <ImageButton
                         android:id="@+id/imgBtnLike"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:background="@drawable/btn_feed_action"
-                        android:padding="14dp"
+                        android:padding="12dp"
                         android:scaleType="fitCenter"
                         android:src="@mipmap/icon_like_gray" />
 
@@ -216,17 +217,18 @@
 
                         <ImageButton
                             android:id="@+id/imgBtnComment"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/btn_feed_action"
-                            android:padding="14dp"
+                            android:padding="12dp"
                             android:scaleType="fitCenter"
-                            android:src="@mipmap/icon_comment_gray" />
+                            android:src="@mipmap/icon_comment_gray"
+                            android:visibility="visible"/>
 
                         <ImageView
                             android:id="@+id/imgCommentNotAllowed"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:clickable="false"
                             android:paddingBottom="12dp"
                             android:paddingLeft="10dp"
@@ -261,10 +263,10 @@
 
                     <ImageButton
                         android:id="@+id/imgBtnMore"
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:background="@drawable/btn_feed_action"
-                        android:padding="15dp"
+                        android:padding="12dp"
                         android:scaleType="fitCenter"
                         android:src="@mipmap/icon_more_gray" />
 
@@ -292,15 +294,15 @@
                             android:layout_height="30dp"
                             android:layout_marginRight="-5dp"
                             android:gravity="center"
-                            android:text="450m" />
+                            android:text="340m" />
 
 
                         <ImageButton
                             android:id="@+id/imgBtnLocationDetail"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
                             android:background="@drawable/btn_feed_action"
-                            android:padding="15dp"
+                            android:padding="10dp"
                             android:scaleType="fitCenter"
                             android:src="@mipmap/icon_location" />
 

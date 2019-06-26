@@ -64,7 +64,6 @@ public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
             serverResponseCode = connection.getResponseCode();
             String serverResponseMessage = connection.getResponseMessage();
 
-            Log.i("Upload file to server", "HTTP Response is : " + serverResponseMessage + ": " + serverResponseCode);
             // close streams
             fileInputStream.close();
             dos.flush();

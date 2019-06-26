@@ -200,7 +200,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         ImageView imgInfo;
         TextView txtProfile;
         TextView txtName;
-        TextView txtBio;
         Button btnFollowStatus;
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
@@ -222,7 +221,6 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             imgInfo = (ImageView) view.findViewById(R.id.imgInfo);
             txtProfile = (TextView) view.findViewById(R.id.txtProfile);
             txtName = (TextView) view.findViewById(R.id.txtName);
-            txtBio = (TextView) view.findViewById(R.id.txtBio);
             btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
             txtFollowerCnt = (TextView) view.findViewById(R.id.txtFollowerCnt);
             txtFollowingCnt = (TextView) view.findViewById(R.id.txtFollowingCnt);
@@ -367,7 +365,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             }
 
             //send msg button
-            UserDataUtil.updateMessagingButton(mContext, selectedUser.getFollowStatus(), sendMessageBtn);
+            UserDataUtil.updateMessagingButton(mContext, selectedUser.getFollowStatus(),
+                    selectedUser.getIsPrivateAccount(), sendMessageBtn);
         }
 
         public void updateUserProfile(UserProfile userProfile, int position) {

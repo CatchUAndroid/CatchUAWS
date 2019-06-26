@@ -250,7 +250,6 @@ public class ProfileFragment extends BaseFragment
         ProfileHelper.ProfileRefresh.getInstance().setProfileRefreshCallback(new ProfileRefreshCallback() {
             @Override
             public void onProfileRefresh() {
-                CommonUtils.showToastShort(getContext(), "Profile..");
                 refreshProfile();
             }
         });
@@ -314,12 +313,9 @@ public class ProfileFragment extends BaseFragment
         }
 
         getGroupsFromSingleton();
-
     }
 
-
     private void setPullToRefresh() {
-
         refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -458,8 +454,6 @@ public class ProfileFragment extends BaseFragment
 
         if (user != null && user.getUserInfo() != null) {
 
-            Log.i("->UserInfo", user.getUserInfo().toString());
-
             //Name
             if (user.getUserInfo().getName() != null && !user.getUserInfo().getName().trim().isEmpty()) {
                 navViewNameTv.setText(user.getUserInfo().getName());
@@ -543,7 +537,6 @@ public class ProfileFragment extends BaseFragment
                 }
             }
         });
-
     }
 
     private void setPostCounts(UserProfile user) {
@@ -556,20 +549,17 @@ public class ProfileFragment extends BaseFragment
             if (user.getRelationInfo().getCatchCount() != null && !user.getRelationInfo().getCatchCount().toString().trim().isEmpty())
                 caughtPostCount.setText(String.valueOf(user.getRelationInfo().getCatchCount()));
         }
-
     }
 
     private void setUserFollowerAndFollowingCnt(UserProfile user) {
 
         if (user != null && user.getRelationInfo() != null) {
-            Log.i("->UserRelationCountInfo", user.getRelationInfo().toString());
 
             if (user.getRelationInfo().getFollowerCount() != null && !user.getRelationInfo().getFollowerCount().trim().isEmpty())
                 txtFollowerCnt.setText(user.getRelationInfo().getFollowerCount());
 
             if (user.getRelationInfo().getFollowingCount() != null && !user.getRelationInfo().getFollowingCount().trim().isEmpty())
                 txtFollowingCnt.setText(user.getRelationInfo().getFollowingCount());
-
         }
     }
 
@@ -636,21 +626,16 @@ public class ProfileFragment extends BaseFragment
             @Override
             public void onSuccess(UserProfile up) {
 
-                if (up == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserDetail");
-                } else {
-                    CommonUtils.LOG_OK("UserDetail");
+                if (up != null) {
                     myProfile = up;
                     setProfileDetail(up);
                 }
 
                 progressBar.setVisibility(View.GONE);
-
             }
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserDetail", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -684,7 +669,6 @@ public class ProfileFragment extends BaseFragment
         } else {
             getGroupsHere();
         }
-
     }
 
     private void getGroupsHere() {
@@ -732,7 +716,7 @@ public class ProfileFragment extends BaseFragment
         } else {
             llGroupsInfo.setVisibility(View.VISIBLE);
             llGroupsRecycler.setVisibility(View.GONE);
-            txtGroupDetail.setText("Henüz grubunuz bulunmamaktadır.");
+            txtGroupDetail.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         }
 
     }

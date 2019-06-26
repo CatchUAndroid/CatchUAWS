@@ -60,7 +60,7 @@
                         android:fontFamily="@font/alike_angular"
                         android:gravity="center"
                         android:textColor="@android:color/white"
-                        android:textSize="@dimen/toolbarTextSize" />
+                        android:textSize="17sp" />
 
                 </RelativeLayout>
 

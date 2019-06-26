@@ -25,6 +25,7 @@ import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
@@ -45,8 +46,8 @@ public class ChangePasswordFragment extends BaseFragment {
     ClickableImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
     TextView toolbarTitleTv;
-    @BindView(R.id.commonToolbarNextImgv)
-    ImageView commonToolbarNextImgv;
+    @BindView(R.id.commonToolbarTickImgv)
+    ImageView commonToolbarTickImgv;
     @BindView(R.id.currPasswordEdittext)
     EditText currPasswordEdittext;
     @BindView(R.id.newPasswordEdittext)
@@ -109,7 +110,7 @@ public class ChangePasswordFragment extends BaseFragment {
             }
         });
 
-        commonToolbarNextImgv.setOnClickListener(new View.OnClickListener() {
+        commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validatePasswords();
@@ -130,12 +131,12 @@ public class ChangePasswordFragment extends BaseFragment {
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.toString().length() == 0) {
-                    commonToolbarNextImgv.setVisibility(View.GONE);
+                    commonToolbarTickImgv.setVisibility(View.GONE);
                 } else {
                     if (currPasswordEdittext.getText().length() > 0 && newPasswordEdittext.getText().length() > 0)
-                        commonToolbarNextImgv.setVisibility(View.VISIBLE);
+                        commonToolbarTickImgv.setVisibility(View.VISIBLE);
                     else
-                        commonToolbarNextImgv.setVisibility(View.GONE);
+                        commonToolbarTickImgv.setVisibility(View.GONE);
                 }
             }
         });
@@ -203,9 +204,18 @@ public class ChangePasswordFragment extends BaseFragment {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            SettingOperation.userSignOut();
-            getActivity().finish();
-            startActivity(new Intent(getActivity(), MainActivity.class));
+            SettingOperation.userSignOut(new CompleteCallback() {
+                @Override
+                public void onComplete(Object object) {
+                    getActivity().finish();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            });
         }
     };
 }

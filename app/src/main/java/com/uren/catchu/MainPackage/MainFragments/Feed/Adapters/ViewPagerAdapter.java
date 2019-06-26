@@ -103,7 +103,6 @@ public class ViewPagerAdapter extends PagerAdapter {
                     imageList.add(orderedAttachments.get(i).getUrl());
                     break;
                 default:
-                    Log.i("Warning ", "Unknown media type detected. Media type :" + orderedAttachments.get(i).getType());
                     break;
 
             }

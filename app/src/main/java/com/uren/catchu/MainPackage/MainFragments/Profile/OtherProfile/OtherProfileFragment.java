@@ -245,9 +245,6 @@ public class OtherProfileFragment extends BaseFragment
                             otherProfileAdapter.innerRecyclerPageCntChanged(innerRecyclerPageCnt);
                             otherProfileAdapter.addProgressLoading();
                             recyclerView.scrollToPosition(otherProfileAdapter.getItemCount() - 1);
-                            Log.i("1111111111111", "");
-                            Log.i("lastCompletelyVisible", String.valueOf(lastCompletelyVisibleItemPosition));
-                            Log.i("innerRecyclerPageCnt", String.valueOf(innerRecyclerPageCnt));
                             getPosts();
                         }
                     }

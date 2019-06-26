@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -18,10 +19,16 @@ import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+import com.uren.catchu.ApiGatewayFunctions.EndPointProcess;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -29,9 +36,18 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallba
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.Validation;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.R;
+import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import catchu.model.BaseResponse;
+import catchu.model.Endpoint;
 import io.fabric.sdk.android.Fabric;
+
+import static com.uren.catchu.Constants.StringConstants.CHAR_E;
+import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_IN;
+import static com.uren.catchu.Constants.StringConstants.ENDPOINT_PLATFORM_ANDROID;
 
 
 public class RegisterActivity extends AppCompatActivity
@@ -209,6 +225,7 @@ public class RegisterActivity extends AppCompatActivity
                             Log.i("Info", "CreateUser : Success");
                             progressDialog.dismiss();
                             setUserInfo(userName, userEmail);
+                            //updateDeviceTokenForFCM();
                             startAppIntroPage();
                             //startMainPage();
                         } else {
@@ -242,11 +259,9 @@ public class RegisterActivity extends AppCompatActivity
     private void setUserInfo(String userName, String userEmail) {
 
         newLoginUser = new LoginUser();
-
         newLoginUser.setUsername(userName);
         newLoginUser.setEmail(userEmail);
         newLoginUser.setUserId(mAuth.getCurrentUser().getUid());
-
     }
 
     public void startAppIntroPage() {
@@ -255,4 +270,58 @@ public class RegisterActivity extends AppCompatActivity
         intent.putExtra("LoginUser", newLoginUser);
         startActivity(intent);
     }
+
+    /*public void updateDeviceTokenForFCM(){
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+            @Override
+            public void onSuccess(InstanceIdResult instanceIdResult) {
+                String deviceToken = instanceIdResult.getToken();
+                MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, mAuth.getCurrentUser().getUid());
+                startEndPointProcess(deviceToken);
+            }
+        });
+
+        MessageUpdateProcess.updateTokenSigninValue(mAuth.getCurrentUser().getUid(), CHAR_E);
+    }
+
+    private void startEndPointProcess(final String deviceToken){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+
+                final Endpoint endpoint = new Endpoint();
+                endpoint.setDeviceToken(deviceToken);
+                endpoint.setUserid(mAuth.getCurrentUser().getUid());
+                endpoint.setPlatformType(ENDPOINT_PLATFORM_ANDROID);
+                endpoint.setRequestType(ENDPOINT_LOGGED_IN);
+
+                EndPointProcess endPointProcess = new EndPointProcess(new OnEventListener<BaseResponse>() {
+
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                        Log.i("", "");
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.i("", "");
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+
+                    }
+                }, token, endpoint);
+
+                endPointProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+
+            }
+        });
+    }*/
 }

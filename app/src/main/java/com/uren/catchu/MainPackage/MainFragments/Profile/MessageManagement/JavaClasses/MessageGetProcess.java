@@ -2,6 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Java
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
@@ -14,6 +15,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activ
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetContentIdCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetDeviceTokenCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageBlockCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.NotificationStatusCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.TokenInfo;
@@ -32,6 +34,7 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_BLOCK;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATIONS;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_NOTIFICATION_STATUS;
@@ -182,14 +185,18 @@ public class MessageGetProcess {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if(dataSnapshot != null) {
-                    Map<String, Object> map = (Map) dataSnapshot.getValue();
-
-                    TokenInfo tokenInfo = new TokenInfo();
-                    tokenInfo.setToken((String) map.get(FB_CHILD_TOKEN));
-                    tokenInfo.setSigninValue((String) map.get(FB_CHILD_SIGNIN));
-                    getDeviceTokenCallback.onSuccess(tokenInfo);
-                }else {
+                if (dataSnapshot != null) {
+                    try {
+                        Map<String, Object> map = (Map) dataSnapshot.getValue();
+                        TokenInfo tokenInfo = new TokenInfo();
+                        tokenInfo.setToken((String) map.get(FB_CHILD_TOKEN));
+                        tokenInfo.setSigninValue((String) map.get(FB_CHILD_SIGNIN));
+                        getDeviceTokenCallback.onSuccess(tokenInfo);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        getDeviceTokenCallback.onSuccess(null);
+                    }
+                } else {
                     getDeviceTokenCallback.onSuccess(null);
                 }
 

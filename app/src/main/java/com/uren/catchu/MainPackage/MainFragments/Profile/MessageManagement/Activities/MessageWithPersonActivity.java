@@ -15,12 +15,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -42,12 +45,15 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.BlockCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetContentIdCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetDeviceTokenCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.GetNotificationCountCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageBlockCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageDeleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.NotificationStatusCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageAddProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageBlockProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageDeleteProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
@@ -110,6 +116,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     TextView waitingMsgCntTv;
     ImageView waitingMsgImgv;
     View mainLinearLayout;
+    LinearLayout llBlock;
+    TextView blockTv;
 
     public static User chattedUser = new User();
     DatabaseReference databaseReference;
@@ -125,6 +133,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     Context context;
 
     String messageContentId = null;
+    boolean iblocked = false;
     //long lastChattedTime;
     String chattedUserDeviceToken = null;
     private String chattedUserSignInValue = null;
@@ -138,6 +147,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     int pastVisibleItems, visibleItemCount, totalItemCount;
     int loadCode;
     int invisibleMsgCnt = 0;
+    Menu menuOpts = null;
+    PopupMenu popupMenu = null;
 
     private static final int CODE_BOTTOM_LOADED = 0;
     private static final int CODE_TOP_LOADED = 1;
@@ -162,15 +173,15 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         initUIValues();
 
         loginUser = (LoginUser) getIntent().getSerializableExtra(FCM_CODE_CHATTED_USER);
-        senderUserId = (String) getIntent().getSerializableExtra(FCM_CODE_SENDER_USERID);
-        receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
+        //senderUserId = (String) getIntent().getSerializableExtra(FCM_CODE_SENDER_USERID);
+        //receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
         checkMyInformation();
     }
 
     private void checkMyInformation() {
-        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty())
+        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty()) {
             checkSenderInformation();
-        else if (receiptUserId != null && !receiptUserId.isEmpty()) {
+        }/*else if (receiptUserId != null && !receiptUserId.isEmpty()) {
             AccountHolderInfo.getInstance();
             AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                 @Override
@@ -179,6 +190,58 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                         checkSenderInformation();
                 }
             });
+        }*/
+    }
+
+    private void checkUserBlocked() {
+        if (chattedUser != null && chattedUser.getUserid() != null && !chattedUser.getUserid().trim().isEmpty()) {
+            MessageBlockProcess.getUserBlocked(AccountHolderInfo.getUserID(), chattedUser.getUserid(), new MessageBlockCallback() {
+                @Override
+                public void OnReturn(String userid) {
+                    if (userid != null) {
+                        if (userid.equals(AccountHolderInfo.getUserID())) {
+                            iblocked = true;
+                            setBlockedValues(0, true);
+                        } else if (userid.equals(chattedUser.getUserid())) {
+                            setBlockedValues(1, true);
+                        } else {
+                            setBlockedValues(0, false);
+                        }
+                    } else {
+                        setBlockedValues(0, false);
+                    }
+                }
+            });
+        }
+    }
+
+    private void setBlockedValues(int person, boolean blockedVal) {
+        if (blockedVal) {
+            llBlock.setVisibility(View.VISIBLE);
+            messageEdittext.setEnabled(false);
+
+            if (person == 0) {
+                blockTv.setText(getResources().getString(R.string.REMOVE_BLOCK_PERSON));
+
+                if (menuOpts != null && menuOpts.getItem(0) != null)
+                    menuOpts.getItem(0).setTitle(getResources().getString(R.string.UNBLOCK));
+            } else if (person == 1) {
+                blockTv.setText(getResources().getString(R.string.TO_BE_REMOVED_BLOCK_PERSON));
+
+                if (menuOpts != null && menuOpts.getItem(0) != null)
+                    menuOpts.getItem(0).setTitle(getResources().getString(R.string.BLOCK));
+            } else {
+                llBlock.setVisibility(View.GONE);
+                messageEdittext.setEnabled(true);
+            }
+        } else {
+            llBlock.setVisibility(View.GONE);
+            messageEdittext.setEnabled(true);
+
+            if (person == 0) {
+                if (menuOpts != null && menuOpts.getItem(0) != null)
+                    menuOpts.getItem(0).setTitle(getResources().getString(R.string.BLOCK));
+            }
         }
     }
 
@@ -186,9 +249,9 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         if (loginUser != null) {
             setChattedUserInfo(loginUser);
             initVariables();
-        } else if (senderUserId != null && !senderUserId.isEmpty()) {
+        } /*else if (senderUserId != null && !senderUserId.isEmpty()) {
             getChattedUserDetail(senderUserId);
-        }
+        }*/
     }
 
     private void setChattedUserInfo(LoginUser loginUser) {
@@ -198,7 +261,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         chattedUser.setProfilePhotoUrl(loginUser.getProfilePhotoUrl());
     }
 
-    private void getChattedUserDetail(final String chattedUserId) {
+    /*private void getChattedUserDetail(final String chattedUserId) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
@@ -230,9 +293,9 @@ public class MessageWithPersonActivity extends AppCompatActivity {
             public void onTokenFail(String message) {
             }
         });
-    }
+    }*/
 
-    public User fillChattedUser(UserProfile up) {
+    /*public User fillChattedUser(UserProfile up) {
         User chattedUser = null;
 
         UserProfile userProfile = (UserProfile) up;
@@ -247,7 +310,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         chattedUser.setProvider(userProfileProperties.getProvider());
         chattedUser.setIsPrivateAccount(userProfileProperties.getIsPrivateAccount());
         return chattedUser;
-    }
+    }*/
 
     public void initVariables() {
         messageBoxList = new ArrayList<>();
@@ -255,6 +318,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         limitValue = MESSAGE_LIMIT_COUNT;
         setChattedPersonInfo();
         setMessageMenu();
+        checkUserBlocked();
         setShapes();
         addListeners();
         getOtherUserDeviceToken();
@@ -342,6 +406,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         toolbarTitle = findViewById(R.id.toolbarTitle);
         toolbarSubTitle = findViewById(R.id.toolbarSubTitle);
         moreSettingsImgv = findViewById(R.id.moreSettingsImgv);
+        llBlock = findViewById(R.id.llBlock);
+        blockTv = findViewById(R.id.blockTv);
 
         relLayout1 = findViewById(R.id.relLayout1);
         relLayout2 = findViewById(R.id.relLayout2);
@@ -354,6 +420,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         waitingMsgCntTv = findViewById(R.id.waitingMsgCntTv);
         waitingMsgImgv = findViewById(R.id.waitingMsgImgv);
         mainLinearLayout = findViewById(R.id.mainLinearLayout);
+
+        setPopupMenu();
     }
 
     private void setChattedPersonInfo() {
@@ -376,7 +444,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                 chattedUser, new GetDeviceTokenCallback() {
                     @Override
                     public void onSuccess(TokenInfo tokenInfo) {
-                        if(tokenInfo != null) {
+                        if (tokenInfo != null) {
                             chattedUserDeviceToken = tokenInfo.getToken();
                             chattedUserSignInValue = tokenInfo.getSigninValue();
                         }
@@ -384,19 +452,43 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                 });
     }
 
+    private void setPopupMenu() {
+        popupMenu = new PopupMenu(context, moreSettingsImgv);
+        popupMenu.inflate(R.menu.message_with_person_menu);
+        menuOpts = popupMenu.getMenu();
+    }
+
     public void setMessageMenu() {
         moreSettingsImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(context, moreSettingsImgv);
-                popupMenu.inflate(R.menu.message_with_person_menu);
-
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
                             case R.id.blockPerson:
-                                System.out.println();
+
+                                if (iblocked) {
+                                    MessageBlockProcess.unBlockPerson(AccountHolderInfo.getUserID(), chattedUser.getUserid(), new BlockCompleteCallback() {
+                                        @Override
+                                        public void OnComplete(boolean value) {
+                                            if (value == true) {
+                                                iblocked = false;
+                                                checkUserBlocked();
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    MessageBlockProcess.blockPerson(AccountHolderInfo.getUserID(), chattedUser.getUserid(), new BlockCompleteCallback() {
+                                        @Override
+                                        public void OnComplete(boolean value) {
+                                            if (value == true) {
+                                                iblocked = true;
+                                                checkUserBlocked();
+                                            }
+                                        }
+                                    });
+                                }
                                 break;
                             case R.id.complainPerson:
                                 System.out.println();

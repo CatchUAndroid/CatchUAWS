@@ -65,6 +65,7 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import com.uren.catchu.ApiGatewayFunctions.EndPointProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
@@ -87,12 +88,16 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.Arrays;
 
+import catchu.model.BaseResponse;
+import catchu.model.Endpoint;
 import catchu.model.UserProfile;
 import io.fabric.sdk.android.Fabric;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import static com.uren.catchu.Constants.StringConstants.CHAR_E;
+import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_IN;
+import static com.uren.catchu.Constants.StringConstants.ENDPOINT_PLATFORM_ANDROID;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_TWITTER;
 
@@ -231,7 +236,6 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void setClickableTexts(Activity act) {
-        final Activity activity = act;
         String textRegister = getResources().getString(R.string.createAccount);
         String textForgetPssword = getResources().getString(R.string.forgetPassword);
         final SpannableString spanStringRegister = new SpannableString(textRegister);
@@ -249,8 +253,6 @@ public class LoginActivity extends AppCompatActivity
                 } else if (textView.equals(forgetPasText)) {
                     //Toast.makeText(LoginActivity.this, "Forgetpas click!", Toast.LENGTH_SHORT).show();
                     forgetPasTextClicked();
-                } else {
-                    Toast.makeText(LoginActivity.this, "sıçtık!", Toast.LENGTH_SHORT).show();
                 }
             }
         };
@@ -501,20 +503,61 @@ public class LoginActivity extends AppCompatActivity
 
         loginUser.setEmail(userEmail);
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
-        updateDeviceTokenForFCM();
+        //updateDeviceTokenForFCM();
     }
 
-    public void updateDeviceTokenForFCM(){
+    /*public void updateDeviceTokenForFCM(){
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String deviceToken = instanceIdResult.getToken();
                 MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, mAuth.getCurrentUser().getUid());
+                startEndPointProcess(deviceToken);
             }
         });
 
         MessageUpdateProcess.updateTokenSigninValue(mAuth.getCurrentUser().getUid(), CHAR_E);
     }
+
+    private void startEndPointProcess(final String deviceToken){
+
+        AccountHolderInfo.getToken(new TokenCallback() {
+            @Override
+            public void onTokenTaken(String token) {
+
+                final Endpoint endpoint = new Endpoint();
+                endpoint.setDeviceToken(deviceToken);
+                endpoint.setUserid(mAuth.getCurrentUser().getUid());
+                endpoint.setPlatformType(ENDPOINT_PLATFORM_ANDROID);
+                endpoint.setRequestType(ENDPOINT_LOGGED_IN);
+
+                EndPointProcess endPointProcess = new EndPointProcess(new OnEventListener<BaseResponse>() {
+
+                    @Override
+                    public void onSuccess(BaseResponse baseResponse) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Exception e) {
+
+                    }
+
+                    @Override
+                    public void onTaskContinue() {
+
+                    }
+                }, token, endpoint);
+
+                endPointProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+
+            @Override
+            public void onTokenFail(String message) {
+
+            }
+        });
+    }*/
 
     private void startMainPage() {
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
@@ -586,7 +629,7 @@ public class LoginActivity extends AppCompatActivity
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in loginUser's information
                                 Log.i("Info", "  >>signInWithCredential:success");
-                                updateDeviceTokenForFCM();
+                                //updateDeviceTokenForFCM();
                                 checkUserInSystem();
 
                             } else {
@@ -668,7 +711,7 @@ public class LoginActivity extends AppCompatActivity
         loginUser.setProviderId(String.valueOf(session.getUserId()));
         //providerType
         loginUser.setProviderType(PROVIDER_TYPE_TWITTER);
-        updateDeviceTokenForFCM();
+        //updateDeviceTokenForFCM();
     }
 
     public void checkUserInSystem() {

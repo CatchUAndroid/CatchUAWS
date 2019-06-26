@@ -117,10 +117,15 @@ public class AccountHolderInfo {
     }
 
     public static String getUserIdFromFirebase() {
-        String FBuserId = "";
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        FBuserId = currentUser.getUid();
-        return FBuserId;
+        try {
+            String FBuserId = "";
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            FBuserId = currentUser.getUid();
+            return FBuserId;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public static FirebaseAuth getFirebaseAuth() {
@@ -145,7 +150,7 @@ public class AccountHolderInfo {
                 if (task.isSuccessful()) {
                     tokenCallback.onTokenTaken(task.getResult().getToken());
                 } else {
-                    Log.i("info", "Token task operation fail");
+
                 }
             }
         });

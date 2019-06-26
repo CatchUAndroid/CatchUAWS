@@ -119,7 +119,7 @@ public class FollowerFragment extends BaseFragment
 
     private void init() {
         commonToolbarbackImgv.setOnClickListener(this);
-        toolbarTitleTv.setText(toolbarTitle + " " + getContext().getResources().getString(R.string.followers));
+        toolbarTitleTv.setText(toolbarTitle);
         searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWERS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
@@ -298,7 +298,6 @@ public class FollowerFragment extends BaseFragment
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("FollowInfoProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 

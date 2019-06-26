@@ -70,8 +70,6 @@ public class AccountHolderFacebookFriends {
                             try {
                                 JSONArray friendList = object.getJSONObject("friends").getJSONArray("data");
 
-                                Log.i("Info", "");
-
                                 ProviderList providerList = new ProviderList();
                                 List<Provider> list = new ArrayList<>();
 

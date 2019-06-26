@@ -49,6 +49,10 @@ public class StringConstants {
     public static final String FRIEND_DELETE_PENDING_FOLLOW_REQUEST = "deletePendingFollowRequest";
     public static final String FRIEND_REMOVE_FROM_FOLLOWER_REQUEST = "removeFromFollower";
 
+    //Endpoint variables
+    public static final String ENDPOINT_LOGGED_IN = "loggedin";
+    public static final String ENDPOINT_LOGGED_OUT = "loggedout";
+    public static final String ENDPOINT_PLATFORM_ANDROID = "android";
 
     //Share privacy types
     public static final String SHARE_TYPE_EVERYONE = "EVERYONE";
@@ -159,6 +163,7 @@ public class StringConstants {
     public static final String FB_CHILD_LAST_MESSAGE_DATE = "LastMessageDate";
     public static final String FB_CHILD_PAGE_IS_SEEN = "PageIsSeen";
     public static final String FB_CHILD_DEVICE_TOKEN = "DeviceToken";
+    public static final String FB_CHILD_MESSAGE_BLOCK = "MessageBlock";
     public static final String FB_CHILD_TOKEN = "Token";
     public static final String FB_CHILD_SIGNIN = "SignIn";
     public static final String FB_CHILD_NOTIFICATIONS = "Notifications";

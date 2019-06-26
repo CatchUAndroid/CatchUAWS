@@ -152,7 +152,6 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
                     fragmentNavigation.pushFragment(OtherProfilePostListViewFragment.newInstance(catchType, targetUid, position, userName, pageCnt));
 
                     //setSinglePostFragmentItems();
-                    Log.i("clickedPostId ", postList.get(position).getPostid());
                 }
             });
 

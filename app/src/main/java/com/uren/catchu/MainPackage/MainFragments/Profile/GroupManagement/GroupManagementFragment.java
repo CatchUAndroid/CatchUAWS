@@ -46,7 +46,7 @@ import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_CHOOSE_TYPE;
 
 @SuppressLint("ValidFragment")
-public class GroupManagementFragment extends BaseFragment {
+public class  GroupManagementFragment extends BaseFragment {
 
     View mView;
 
@@ -120,6 +120,7 @@ public class GroupManagementFragment extends BaseFragment {
     public void initValues() {
         searchToolbarLayout.setVisibility(View.VISIBLE);
         searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
+        editTextSearch.setHint(getContext().getResources().getString(R.string.searchGroup));
         warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         setFloatButtonVisibility();
         getGroups();

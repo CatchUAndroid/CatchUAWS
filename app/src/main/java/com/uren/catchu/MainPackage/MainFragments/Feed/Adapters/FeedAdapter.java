@@ -476,18 +476,19 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
                 targetIcon = R.mipmap.icon_world;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.MediumTurquoise), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
-                targetIcon = R.mipmap.icon_friends;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+                targetIcon = R.mipmap.icon_all_followers;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.LightGreen), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
-                targetIcon = R.drawable.groups_icon_500;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                targetIcon = R.mipmap.icon_friends;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.MediumOrchid), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
-                targetIcon = R.drawable.groups_icon_500;
+                targetIcon = R.mipmap.icon_lock;
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.DarkSalmon), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
                 targetIcon = R.drawable.groups_icon_500;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Red), android.graphics.PorterDuff.Mode.SRC_IN);
             }
 
             Glide.with(mContext)

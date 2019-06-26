@@ -35,11 +35,6 @@ public class SearchResultProcess extends AsyncTask<Void, Void, UserListResponse>
     protected UserListResponse doInBackground(Void... voids) {
 
         SingletonApiClient instance = SingletonApiClient.getInstance();
-        Log.i("userId", userid);
-        Log.i("searchText", searchText);
-        Log.i("token", token);
-        Log.i("perPage", perpage);
-        Log.i("page", page);
 
         try {
             UserListResponse userListResponse = instance.client.searchUsersGet(userid, searchText, token, perpage, page);

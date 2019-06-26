@@ -92,6 +92,7 @@
     <string name="finish">Finish</string>
     <string name="USE">Use</string>
     <string name="detail">Detail</string>
+    <string name="searchGroup">Search Group</string>
 
     <string name="typeToAddText">Say something...</string>
     <string name="UPDATING">Updating...</string>
@@ -129,6 +130,9 @@
     <string name="SEARCH_FOLLOWERS">Search followers...</string>
     <string name="SEARCH_FOLLOWINGS">Search followings...</string>
     <string name="USER_NOT_FOUND">User not found.</string>
+
+    <string name="REMOVE_BLOCK_PERSON">You need to unblock to be able to chat with this person!</string>
+    <string name="TO_BE_REMOVED_BLOCK_PERSON">You must be unblocked to communicate with this person!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
@@ -323,6 +327,7 @@
     <string name="TODAY">Today</string>
     <string name="YESTERDAY">Yesterday</string>
     <string name="BLOCK">Block</string>
+    <string name="UNBLOCK">Unblock</string>
     <string name="REPORT_PERSON">Report</string>
     <string name="CLEAR_CHAT">Clear Chat</string>
     <string name="YOU_HAVE_A_NEW_MESSAGE">You have a new message</string>

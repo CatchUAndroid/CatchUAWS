@@ -98,7 +98,7 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
         }
 
         private void setGroupPhoto() {
-            if (group.getGroupPhotoUrl() != null && !group.getGroupPhotoUrl().isEmpty()) {
+            if (group.getGroupPhotoUrl() != null && !group.getGroupPhotoUrl().trim().isEmpty()) {
                 imgGroupPic.setPadding(0, 0, 0, 0);
                 Glide.with(mContext)
                         .load(group.getGroupPhotoUrl())

@@ -57,10 +57,12 @@ import static com.uren.catchu.Constants.StringConstants.APP_GOOGLE_PLAY_DEFAULT_
 
 public class CommonUtils {
 
+/*
     public static String serverPrefix = "**";
     public static String infoPrefix = "++";
     public static String neredeyiz = "NEREDEYIZ";
     public static String exceptionErrPrefix = "--------->";
+*/
 
 
     public static final void showToastShort(Context context, String message) {
@@ -72,7 +74,6 @@ public class CommonUtils {
 
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
-
 
     /*public static final void showCustomToast(Context context, String message) {
 
@@ -262,35 +263,35 @@ public class CommonUtils {
     }
 
     public static void LOG_OK(String proccessName) {
-        if (proccessName.length() > 21) {
+        /*if (proccessName.length() > 21) {
             proccessName = proccessName.substring(0, 21);
         }
-        Log.i(serverPrefix + proccessName, "OK");
+        Log.i(serverPrefix + proccessName, "OK");*/
     }
 
     public static void LOG_OK_BUT_NULL(String proccessName) {
-        if (proccessName.length() > 21) {
+       /* if (proccessName.length() > 21) {
             proccessName = proccessName.substring(0, 21);
         }
-        Log.i(serverPrefix + proccessName, "SERVER:OK BUT DATA:NULL");
+        Log.i(serverPrefix + proccessName, "SERVER:OK BUT DATA:NULL");*/
     }
 
     public static void LOG_FAIL(String proccessName, String failDetail) {
-        if (proccessName.length() > 21) {
+        /*if (proccessName.length() > 21) {
             proccessName = proccessName.substring(0, 21);
         }
-        Log.i(serverPrefix + proccessName, "FAIL - " + failDetail);
+        Log.i(serverPrefix + proccessName, "FAIL - " + failDetail);*/
     }
 
     public static void LOG_EXCEPTION_ERR(String proccessName, String failDetail) {
-        Log.i(exceptionErrPrefix + proccessName, "FAIL - " + failDetail);
+        /* Log.i(exceptionErrPrefix + proccessName, "FAIL - " + failDetail);*/
     }
 
     public static void LOG_NEREDEYIZ(String konum) {
-        if (konum.length() > 21) {
+        /*if (konum.length() > 21) {
             konum = konum.substring(0, 21);
         }
-        Log.i(infoPrefix + neredeyiz, konum);
+        Log.i(infoPrefix + neredeyiz, konum);*/
     }
 
     public static void hideKeyBoard(Context context) {
@@ -436,22 +437,22 @@ public class CommonUtils {
         Resources resources = context.getResources();
 
         int colorList[] = {
-                R.color.green,
-                R.color.green,
+                R.color.yellow_green_color_picker,
+                R.color.dot_light_screen2,
                 R.color.PeachPuff,
                 R.color.Gold,
                 R.color.Pink,
                 R.color.LightPink,
-                R.color.Orange,
-                R.color.LightSalmon,
-                R.color.DarkOrange,
-                R.color.Coral,
-                R.color.HotPink,
-                R.color.Tomato,
-                R.color.OrangeRed,
-                R.color.DeepPink,
-                R.color.Fuchsia,
-                R.color.Magenta,
+                R.color.dot_light_screen3,
+                R.color.dot_light_screen4,
+                R.color.dot_light_screen1,
+                R.color.LemonChiffon,
+                R.color.PapayaWhip,
+                R.color.Wheat,
+                R.color.Azure,
+                R.color.PaleGoldenrod,
+                R.color.Thistle,
+                R.color.LightBlue,
                 R.color.LightCoral,
                 R.color.PaleGoldenrod,
                 R.color.Violet,
@@ -460,12 +461,12 @@ public class CommonUtils {
                 R.color.Yellow,
                 R.color.LightBlue,
                 R.color.DarkGray,
-                R.color.Brown,
-                R.color.Sienna,
+                R.color.SharedPostEndColor,
+                R.color.CaughtPostEndColor,
                 R.color.Yellow,
-                R.color.DarkOrchid,
+                R.color.Violet,
                 R.color.PaleGreen,
-                R.color.DarkViolet
+                R.color.LightCyan
         };
 
         Random rand = new Random();

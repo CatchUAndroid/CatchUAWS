@@ -63,14 +63,10 @@ public class UploadImageToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
 
             InputStream is;
 
-            Log.i("Info", "getResponseCode:" + connection.getResponseCode());
-
             if (connection.getResponseCode() == 200) {
                 is = connection.getInputStream();
-                Log.i("Info", "getInputStream error:" + is.toString());
             } else {
                 is = connection.getErrorStream();
-                Log.i("Info", "getErrorStream error:" + is.toString());
             }
         } catch (Exception e) {
             mException = e;

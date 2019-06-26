@@ -21,6 +21,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.FirebaseHelperModel.DynamicLinkUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Operations.SettingOperation;
@@ -226,8 +227,17 @@ public class SettingsFragment extends BaseFragment {
     }
 
     private void signOutClicked() {
-        SettingOperation.userSignOut();
-        getActivity().finish();
-        startActivity(new Intent(getActivity(), MainActivity.class));
+        SettingOperation.userSignOut(new CompleteCallback() {
+            @Override
+            public void onComplete(Object object) {
+                getActivity().finish();
+                startActivity(new Intent(getActivity(), MainActivity.class));
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+
+            }
+        });
     }
 }

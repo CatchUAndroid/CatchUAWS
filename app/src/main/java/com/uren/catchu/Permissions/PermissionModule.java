@@ -10,9 +10,6 @@ public class PermissionModule {
     public static final int PERMISSION_WRITE_EXTERNAL_STORAGE = 1001;
     public static final int PERMISSION_CAMERA = 1002;
     public static final int PERMISSION_ACCESS_FINE_LOCATION = 1003;
-    public static final int PERMISSION_RECORD_AUDIO = 1004;
-    public static final int PERMISSION_READ_PHONE_STATE = 1005;
-    public static final int PERMISSION_READ_PHONE_NUMBERS = 1006;
     public static final int PERMISSION_READ_CONTACTS = 1007;
 
     private Context mContext;

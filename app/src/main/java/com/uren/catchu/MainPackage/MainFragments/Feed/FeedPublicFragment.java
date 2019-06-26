@@ -167,8 +167,6 @@ public class FeedPublicFragment extends BaseFragment {
         PostHelper.FeedRefresh.getInstance().setFeedRefreshCallback(new FeedRefreshCallback() {
             @Override
             public void onFeedRefresh() {
-                CommonUtils.showToastShort(getContext(), "Feed - Public refreshing..");
-                Log.i("--> FilteredRa", String.valueOf(FILTERED_FEED_RADIUS));
                 refreshFeed();
             }
         });
@@ -204,7 +202,6 @@ public class FeedPublicFragment extends BaseFragment {
         perPageCnt = DEFAULT_FEED_PERPAGE_COUNT;
         pageCnt = DEFAULT_FEED_PAGE_COUNT;
         float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
-        Log.i("radiusInKm", String.valueOf(radiusInKm));
         radius = String.valueOf(radiusInKm);
     }
 
@@ -432,8 +429,6 @@ public class FeedPublicFragment extends BaseFragment {
         List<String> urls = new ArrayList<>();
         int postNum;
         for (int i = 0; i < postList.size(); i++) {
-            postNum = i + 1;
-            Log.i("=== Post-" + postNum + " :", postList.get(i).getPostid() + " === ATTACHMENT URLS");
             for (int j = 0; j < postList.get(i).getAttachments().size(); j++) {
                 Media media = postList.get(i).getAttachments().get(j);
                 urls.add(media.getUrl());
@@ -512,11 +507,4 @@ public class FeedPublicFragment extends BaseFragment {
         }
 
     }
-
-    private View.OnClickListener screenshotOnClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            CommonUtils.showToastShort(getContext(), "okkkk");
-        }
-    };
-
 }

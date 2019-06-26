@@ -31,7 +31,7 @@
             app:layout_collapseMode="parallax">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -68,10 +68,11 @@
 
                     <LinearLayout
                         android:id="@+id/llUserDetail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:gravity="center">
 
                         <TextView
                             android:id="@+id/txtName"
@@ -79,15 +80,6 @@
                             android:layout_height="wrap_content"
                             android:textColor="#ffffff"
                             android:textSize="24sp" />
-
-                        <TextView
-                            android:id="@+id/txtBio"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Spor yapmayı severim, en sevdiğim spor Yüzme"
-                            android:textColor="#ffffff"
-                            android:textSize="15sp" />
 
 
                         <!--<LinearLayout
@@ -130,7 +122,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
+                    android:layout_marginTop="10dp"
                     android:weightSum="2">
 
                     <Button
