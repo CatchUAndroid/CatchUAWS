@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
+/*import com.fasterxml.jackson.databind.ser.Serializers;*/
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseRequest;

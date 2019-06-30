@@ -1,4 +1,4 @@
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/htab_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -130,16 +130,16 @@
                 </LinearLayout>
 
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <android.support.v4.widget.NestedScrollView
+                <androidx.core.widget.NestedScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/White">
@@ -544,13 +544,13 @@
                                             android:orientation="vertical"
                                             android:visibility="gone">
 
-                                            <android.support.v7.widget.RecyclerView
+                                            <androidx.recyclerview.widget.RecyclerView
                                                 android:id="@+id/groupRecyclerView"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="match_parent"
                                                 android:nestedScrollingEnabled="false">
 
-                                            </android.support.v7.widget.RecyclerView>
+                                            </androidx.recyclerview.widget.RecyclerView>
 
                                         </LinearLayout>
                                     </RelativeLayout>
@@ -571,16 +571,16 @@
 
                     </LinearLayout>
 
-                </android.support.v4.widget.NestedScrollView>
+                </androidx.core.widget.NestedScrollView>
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </LinearLayout>
 
     </FrameLayout>
 
     <!-- Container for contents of drawer - use NavigationView to make configuration easier -->
-    <android.support.design.widget.NavigationView
+    <com.google.android.material.navigation.NavigationView
         android:id="@+id/navViewLayout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -588,4 +588,4 @@
         app:headerLayout="@layout/profile_navview_layout"
         app:menu="@menu/profile_navview_menu" />
 
-</android.support.v4.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

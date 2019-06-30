@@ -7,12 +7,12 @@ import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,6 +30,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,6 +42,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.FragmentControllers.FragNavController;
+import com.uren.catchu.GeneralUtils.AdMobUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -118,6 +121,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     View mainLinearLayout;
     LinearLayout llBlock;
     TextView blockTv;
+    AdView adView;
 
     public static User chattedUser = new User();
     DatabaseReference databaseReference;
@@ -408,6 +412,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         moreSettingsImgv = findViewById(R.id.moreSettingsImgv);
         llBlock = findViewById(R.id.llBlock);
         blockTv = findViewById(R.id.blockTv);
+        adView = findViewById(R.id.adView);
 
         relLayout1 = findViewById(R.id.relLayout1);
         relLayout2 = findViewById(R.id.relLayout2);
@@ -422,6 +427,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         mainLinearLayout = findViewById(R.id.mainLinearLayout);
 
         setPopupMenu();
+        MobileAds.initialize(MessageWithPersonActivity.this, getResources().getString(R.string.ADMOB_APP_ID));
+        AdMobUtils.loadBannerAd(adView);
     }
 
     private void setChattedPersonInfo() {
@@ -835,7 +842,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(messageWithPersonAdapter);
         linearLayoutManager = new LinearLayoutManager(context);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         setAdapterVal = true;
     }

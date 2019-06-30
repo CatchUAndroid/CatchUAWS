@@ -2,7 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;

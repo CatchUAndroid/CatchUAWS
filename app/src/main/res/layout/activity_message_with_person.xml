@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -180,16 +180,16 @@
             <RelativeLayout
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="15dp">
 
                 <ImageView
                     android:id="@+id/deleteMsgImgv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
                     android:padding="15dp"
                     android:src="@mipmap/icon_trash" />
 
@@ -197,15 +197,17 @@
 
         </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
+
+    <include layout="@layout/layout_adview" />
 
     <LinearLayout
+        android:id="@+id/llBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/llBlock"
-        android:visibility="gone"
         android:background="@color/White"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/blockTv"
@@ -221,8 +223,8 @@
             android:layout_width="match_parent"
             android:layout_height="0.8dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="7dp"
+            android:layout_marginRight="10dp"
             android:background="@color/Silver"></View>
     </LinearLayout>
 
@@ -249,7 +251,7 @@
 
                 <include layout="@layout/layout_progress_bar" />
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -257,7 +259,7 @@
                     android:paddingTop="2dp"
                     android:scrollbars="none">
 
-                </android.support.v7.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
 
                 <RelativeLayout
                     android:id="@+id/messageReachLay"

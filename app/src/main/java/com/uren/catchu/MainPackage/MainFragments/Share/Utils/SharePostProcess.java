@@ -3,7 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.support.v4.graphics.BitmapCompat;
+import androidx.core.graphics.BitmapCompat;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;

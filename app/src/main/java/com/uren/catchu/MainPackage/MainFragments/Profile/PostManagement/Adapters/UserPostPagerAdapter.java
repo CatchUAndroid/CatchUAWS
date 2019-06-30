@@ -1,8 +1,8 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostGridViewFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostListViewFragment;

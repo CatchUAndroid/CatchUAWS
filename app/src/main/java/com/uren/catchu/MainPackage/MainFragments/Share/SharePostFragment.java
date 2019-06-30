@@ -17,11 +17,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.util.Pair;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -78,6 +78,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoTrimmer
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareDeleteProcess;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
+import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -1192,7 +1193,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
         if (height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
-            params.height = height;
+            LinearLayout.LayoutParams paramsAd = (LinearLayout.LayoutParams) getActivity().findViewById(R.id.adView).getLayoutParams();
+            params.height = height - paramsAd.height;
             mapLayout.setLayoutParams(params);
             keyboardResized = true;
         }

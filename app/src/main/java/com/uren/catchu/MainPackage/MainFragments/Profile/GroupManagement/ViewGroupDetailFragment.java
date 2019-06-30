@@ -9,13 +9,14 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.SubtitleCollapsingToolbarLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+//import com.google.android.material.widget.SubtitleCollapsingToolbarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
@@ -84,7 +87,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
     @BindView(R.id.personCntTv)
     TextView personCntTv;
     @BindView(R.id.collapsing_toolbar)
-    SubtitleCollapsingToolbarLayout subtitleCollapsingToolbarLayout;
+    CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.addFriendCardView)
     CardView addFriendCardView;
     @BindView(R.id.deleteGroupCardView)
@@ -206,8 +209,8 @@ public class ViewGroupDetailFragment extends BaseFragment {
     }
 
     public void setGroupTitle() {
-        subtitleCollapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
-        subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
+        collapsingToolbarLayout.setTitle(groupRequestResultResultArrayItem.getName());
+        //subtitleCollapsingToolbarLayout.setSubtitle(getToolbarSubtitle());
     }
 
     public String getToolbarSubtitle() {
@@ -258,54 +261,42 @@ public class ViewGroupDetailFragment extends BaseFragment {
             }
         });
 
-        deleteGroupCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCustomDialog();
-            }
+        deleteGroupCardView.setOnClickListener((View v) -> {
+            showCustomDialog();
         });
 
-        editImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if (mFragmentNavigation != null) {
-                    mFragmentNavigation.pushFragment(new EditGroupNameFragment(groupRequestResultResultArrayItem,
-                            new CompleteCallback() {
-                                @Override
-                                public void onComplete(Object object) {
-                                    if (object != null) {
-                                        String edittedGroupName = (String) object;
-                                        subtitleCollapsingToolbarLayout.setTitle(edittedGroupName);
-                                        recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
+        editImageView.setOnClickListener((View v) -> {
+            editImageView.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            if (mFragmentNavigation != null) {
+                mFragmentNavigation.pushFragment(new EditGroupNameFragment(groupRequestResultResultArrayItem,
+                        new CompleteCallback() {
+                            @Override
+                            public void onComplete(Object object) {
+                                if (object != null) {
+                                    String edittedGroupName = (String) object;
+                                    collapsingToolbarLayout.setTitle(edittedGroupName);
+                                    recyclerViewAdapterCallback.OnChanged(groupRequestResultResultArrayItem);
+                                }
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+                                DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                                    @Override
+                                    public void okClick() {
                                     }
-                                }
-
-                                @Override
-                                public void onFailed(Exception e) {
-                                    DialogBoxUtil.showErrorDialog(getActivity(), getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                                        @Override
-                                        public void okClick() {
-                                        }
-                                    });
-                                }
-                            }), ANIMATE_LEFT_TO_RIGHT);
-                }
+                                });
+                            }
+                        }), ANIMATE_LEFT_TO_RIGHT);
             }
         });
 
-        groupPictureImgV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startShowSelectedPhotoFragment();
-            }
+        groupPictureImgV.setOnClickListener((View v) -> {
+            startShowSelectedPhotoFragment();
         });
 
-        changePicImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startChooseImageProc();
-            }
+        changePicImgv.setOnClickListener((View v) -> {
+            startChooseImageProc();
         });
     }
 

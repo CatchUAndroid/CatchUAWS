@@ -21,8 +21,8 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.core.content.ContextCompat;
 import android.text.Layout;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -418,7 +418,7 @@ public class CommonUtils {
                 Snackbar.LENGTH_SHORT);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
-        TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView tv = (TextView) snackBarView.findViewById(R.id.snackbar_text);
         tv.setTextColor(context.getResources().getColor(R.color.White, null));
         snackbar.show();
     }
@@ -427,7 +427,7 @@ public class CommonUtils {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(context.getResources().getColor(colorId, null));
-        TextView tv = (TextView) snackBarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView tv = (TextView) snackBarView.findViewById(R.id.snackbar_text);
         tv.setTextColor(context.getResources().getColor(R.color.White, null));
         snackbar.show();
     }

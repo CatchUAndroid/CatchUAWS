@@ -5,9 +5,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +20,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.FragmentControllers.FragNavTransactionOptions;
 import com.uren.catchu.FragmentControllers.FragmentHistory;
+import com.uren.catchu.GeneralUtils.AdMobUtils;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -39,6 +43,7 @@ import com.uren.catchu.Singleton.GroupListHolder;
 import java.util.List;
 import java.util.Stack;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
@@ -62,6 +67,7 @@ public class NextActivity extends FragmentActivity implements
     public Button screenShotApproveBtn;
     public TabLayout bottomTabLayout;
     public LinearLayout tabMainLayout;
+    AdView adView;
 
     private int selectedTabColor, unSelectedTabColor;
 
@@ -200,11 +206,14 @@ public class NextActivity extends FragmentActivity implements
         screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
         contentFrame = findViewById(R.id.content_frame);
         tabMainLayout = findViewById(R.id.tabMainLayout);
+        adView = findViewById(R.id.adView);
         TABS = getResources().getStringArray(R.array.tab_name);
         setShapes();
 
         //setStatusBarTransparent();
         initTab();
+        MobileAds.initialize(NextActivity.this, getResources().getString(R.string.ADMOB_APP_ID));
+        AdMobUtils.loadBannerAd(adView);
     }
 
     public void setShapes() {

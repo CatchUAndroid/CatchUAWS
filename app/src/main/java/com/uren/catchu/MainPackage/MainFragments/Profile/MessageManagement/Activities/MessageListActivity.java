@@ -3,11 +3,11 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Acti
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.GeneralUtils.AdMobUtils;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -71,6 +74,7 @@ public class MessageListActivity extends AppCompatActivity {
     EditText editTextSearch;
     ProgressBar progressBar;
     RecyclerView recyclerView;
+    AdView adView;
 
     DatabaseReference databaseReference;
     ValueEventListener valueEventListener;
@@ -108,6 +112,8 @@ public class MessageListActivity extends AppCompatActivity {
         searchToolbarAddItemImgv.setVisibility(View.GONE);
         setRecyclerViewScroll();
         limitValue = REC_MAXITEM_LIMIT_COUNT;
+        MobileAds.initialize(MessageListActivity.this, getResources().getString(R.string.ADMOB_APP_ID));
+        AdMobUtils.loadBannerAd(adView);
     }
 
     private void initUIValues() {
@@ -117,6 +123,7 @@ public class MessageListActivity extends AppCompatActivity {
         editTextSearch = findViewById(R.id.editTextSearch);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
+        adView = findViewById(R.id.adView);
     }
 
     private void checkMyInformation() {
@@ -359,7 +366,7 @@ public class MessageListActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(messageListAdapter);
         linearLayoutManager = new LinearLayoutManager(MessageListActivity.this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         setAdapterVal = true;
     }

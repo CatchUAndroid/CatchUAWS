@@ -2,7 +2,7 @@ package com.uren.catchu.GeneralUtils;
 
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 public class GridViewUtil {

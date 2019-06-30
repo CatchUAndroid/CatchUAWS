@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/mainLinearLayout">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarLayout"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -185,7 +185,7 @@
 
         </RelativeLayout>
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:id="@+id/contentRoot"
@@ -204,14 +204,14 @@
 
             <include layout="@layout/layout_progress_bar" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="none"
                 android:background="@color/White">
 
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
             <RelativeLayout
                 android:id="@+id/dateLayout"

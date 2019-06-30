@@ -2,8 +2,8 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.PagerAdapter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;

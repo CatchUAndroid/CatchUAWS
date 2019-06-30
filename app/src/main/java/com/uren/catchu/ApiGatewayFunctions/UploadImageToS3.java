@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
-import android.support.v4.graphics.BitmapCompat;
+import androidx.core.graphics.BitmapCompat;
 import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;

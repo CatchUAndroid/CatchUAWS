@@ -7,11 +7,11 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.squareup.okhttp.MediaType;
+/*import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+import com.squareup.okhttp.Response;*/
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageSentFCMCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.FCMItems;
 import com.uren.catchu.R;
@@ -21,6 +21,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_BODY;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_DATA;

@@ -1,12 +1,14 @@
 package com.uren.catchu._Libraries.LayoutManager;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.PointF;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSmoothScroller;
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import android.os.Build;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -48,6 +50,7 @@ public class CustomGridLayoutManager extends GridLayoutManager {
 
                     //This returns the milliseconds it takes to
                     //scroll one pixel.
+                    @TargetApi(Build.VERSION_CODES.DONUT)
                     @Override
                     protected float calculateSpeedPerPixel
                     (DisplayMetrics displayMetrics) {

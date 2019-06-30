@@ -5,11 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -151,7 +151,7 @@ public class CommentListFragment extends BaseFragment
     }
 
     private void setLayoutManager() {
-        mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         commentList_recyclerView.setLayoutManager(mLayoutManager);
     }
 
