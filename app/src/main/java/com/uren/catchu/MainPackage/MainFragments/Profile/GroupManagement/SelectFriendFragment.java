@@ -79,13 +79,15 @@ public class SelectFriendFragment extends BaseFragment {
     private ReturnCallback returnCallback;
     private int perPageCnt;
     private int pageCnt;
+    private String groupAdminUserid;
 
-    public SelectFriendFragment(String groupId, List<UserProfileProperties> groupParticipantList, String pendingName,
+    public SelectFriendFragment(String groupId, String groupAdminUserid, List<UserProfileProperties> groupParticipantList, String pendingName,
                                 ReturnCallback returnCallback) {
         this.groupId = groupId;
         this.groupParticipantList = groupParticipantList;
         this.pendingName = pendingName;
         this.returnCallback = returnCallback;
+        this.groupAdminUserid = groupAdminUserid;
     }
 
     @Override
@@ -312,7 +314,7 @@ public class SelectFriendFragment extends BaseFragment {
                 CommonUtils.showToastShort(getContext(), getResources().getString(R.string.error) +
                         getResources().getString(R.string.SOMETHING_WENT_WRONG));
             }
-        });
+        }, groupAdminUserid);
     }
 
     public List<GroupRequestGroupParticipantArrayItem> fillSelectedFriendList() {

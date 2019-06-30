@@ -43,11 +43,11 @@ public class UserGroupsProcess {
     }
 
     public static void addParticipantsToGroup(final String groupId, final List<GroupRequestGroupParticipantArrayItem> groupParticipantArray,
-                                              final CompleteCallback completeCallback) {
+                                              final CompleteCallback completeCallback, String adminUserid) {
         AccountHolderInfo.getToken(new TokenCallback() {
             @Override
             public void onTokenTaken(String token) {
-                startAddParticipantsToGroup(groupId, groupParticipantArray, token, completeCallback);
+                startAddParticipantsToGroup(groupId, groupParticipantArray, token, completeCallback, adminUserid);
             }
 
             @Override
@@ -137,11 +137,12 @@ public class UserGroupsProcess {
     }
 
     public static void startAddParticipantsToGroup(String groupId, List<GroupRequestGroupParticipantArrayItem> groupParticipantArray, String token,
-                                                   final CompleteCallback completeCallback) {
+                                                   final CompleteCallback completeCallback, String adminUserid) {
         GroupRequest groupRequest = new GroupRequest();
         groupRequest.setGroupid(groupId);
         groupRequest.setRequestType(ADD_PARTICIPANT_INTO_GROUP);
         groupRequest.setGroupParticipantArray(groupParticipantArray);
+        groupRequest.setUserid(adminUserid);
         startAsyncTask(groupRequest, token, completeCallback);
     }
 

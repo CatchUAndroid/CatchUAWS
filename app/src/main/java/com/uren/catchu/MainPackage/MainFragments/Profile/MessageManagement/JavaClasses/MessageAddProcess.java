@@ -129,9 +129,6 @@ public class MessageAddProcess {
 
         Map<String, Object> values = new HashMap<>();
 
-        System.out.println("messageEdittext.getText().toString():" +
-                messageEdittext.getText().toString());
-
         values.put(FB_CHILD_DATE, ServerValue.TIMESTAMP);
         values.put(FB_CHILD_MESSAGE, messageEdittext.getText().toString().trim());
 
@@ -183,9 +180,6 @@ public class MessageAddProcess {
             if (userProfileProperties.getUserid() == null || userProfileProperties.getUserid().isEmpty())
                 return;
         } else return;
-
-        System.out.println("messageEdittext.getText().toString():" +
-                messageEdittext.getText().toString());
 
         if (messageEdittext != null && messageEdittext.getText() != null &&
                 !messageEdittext.getText().toString().isEmpty()) {

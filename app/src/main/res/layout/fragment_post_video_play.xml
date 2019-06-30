@@ -38,7 +38,6 @@
             </com.uren.catchu._Libraries.VideoPlay.VideoImage>
 
             <ImageView
-                android:id="@+id/img_playback"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="left|bottom"
@@ -47,7 +46,6 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/img_vol"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="right|bottom"

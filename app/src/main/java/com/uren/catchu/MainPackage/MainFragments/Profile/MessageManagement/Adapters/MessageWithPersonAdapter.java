@@ -156,7 +156,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
                         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
                         format.setTimeZone(TimeZone.getTimeZone("Etc/UTC"));
                         String formatted = format.format(date);
-                        System.out.println("formatted:" + formatted);
+
                         createAtTv.setText(formatted.substring(11, 16));*/
                 }
             }

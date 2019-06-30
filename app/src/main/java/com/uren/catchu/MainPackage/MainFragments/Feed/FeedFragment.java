@@ -276,16 +276,13 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         final Intent intent = new Intent(getContext(), MessageListActivity.class);
 
         if (AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty()) {
-            intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+            //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
             startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
         } else {
             AccountHolderInfo.getInstance();
-            AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
-                @Override
-                public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                    intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
-                    startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
-                }
+            AccountHolderInfo.setAccountHolderInfoCallback(userProfile -> {
+                //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+                startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
             });
         }
     }
@@ -299,13 +296,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     }
 
     public void startProgressBar() {
-
-        //smoothProgressBar.setSmoothProgressDrawableInterpolator(new FastOutSlowInInterpolator());
-        //smoothProgressBar.setSmoothProgressDrawableColors(getResources().getIntArray(R.array.gplus_colors));
-        //smoothProgressBar.setSmoothProgressDrawableInterpolator(new DecelerateInterpolator());
-        //smoothProgressBar.setSmoothProgressDrawableMirrorMode(true);
-        //smoothProgressBar.setSmoothProgressDrawableReversed(true);
-
         llSharing.setVisibility(View.VISIBLE);
         smoothProgressBar.progressiveStart();
     }

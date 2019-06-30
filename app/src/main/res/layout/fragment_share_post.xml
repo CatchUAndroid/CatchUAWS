@@ -3,7 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/shareMainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White">
@@ -11,7 +10,6 @@
     <include layout="@layout/layout_progress_bar" />
 
     <LinearLayout
-        android:id="@+id/shareMainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
@@ -134,7 +132,6 @@
 
 
         <RelativeLayout
-            android:id="@+id/xx"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -306,7 +303,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/yyy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -314,7 +310,6 @@
                 android:orientation="vertical">
 
                 <RelativeLayout
-                    android:id="@+id/rrr"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp">
 
@@ -483,7 +478,6 @@
 
 
                 <LinearLayout
-                    android:id="@+id/buttonsLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"

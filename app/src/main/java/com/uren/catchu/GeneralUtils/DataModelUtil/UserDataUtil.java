@@ -122,7 +122,7 @@ public class UserDataUtil {
             }
         }
 
-        GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+        GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(CommonUtils.getDarkRandomColor(context), null),
                 context.getResources().getColor(R.color.White, null),
                 GradientDrawable.OVAL, 50, 3);
         profilePicImgView.setBackground(imageShape);

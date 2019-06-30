@@ -78,7 +78,6 @@
                             android:textSize="15sp" />
 
                         <LinearLayout
-                            android:id="@+id/llCreateAt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
@@ -175,7 +174,6 @@
 
                 <!-- Like layout  /-->
                 <LinearLayout
-                    android:id="@+id/layoutLike"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -203,7 +201,6 @@
 
                 <!-- Comment layout  /-->
                 <LinearLayout
-                    android:id="@+id/layoutComment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -253,7 +250,6 @@
 
                 <!-- More layout  /-->
                 <LinearLayout
-                    android:id="@+id/layoutMore"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -283,7 +279,6 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/locationDetailLayout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center">

@@ -479,7 +479,7 @@ public class ProfileFragment extends BaseFragment
                     user.getUserInfo().getName(), user.getUserInfo().getUsername(), navViewShortenTextView, navImgProfile);
 
             // Animations
-            Animation fadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
+            //Animation fadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
             Animation moveUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.move_up);
             imgProfile.startAnimation(moveUpAnimation); //Set animation to your ImageView
             //llProfile.startAnimation(fadeInAnimation);
@@ -840,7 +840,7 @@ public class ProfileFragment extends BaseFragment
             MessageListActivity.thisActivity.finish();
         }
         Intent intent = new Intent(getContext(), MessageListActivity.class);
-        intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+        //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
         startActivity(intent);
     }
 

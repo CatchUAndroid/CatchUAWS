@@ -126,42 +126,32 @@ public class  GroupManagementFragment extends BaseFragment {
         getGroups();
     }
 
+    @SuppressLint("RestrictedApi")
     public void setFloatButtonVisibility() {
         if (operationType.equals(GROUP_OP_CHOOSE_TYPE))
             nextFab.setVisibility(View.VISIBLE);
     }
 
     public void addListeners() {
-        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        searchToolbarBackImgv.setOnClickListener(v -> getActivity().onBackPressed());
+
+        nextFab.setOnClickListener(v -> {
+            nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
+                if (selectedGroupItem == null) {
+                    CommonUtils.showToastShort(getContext(), getResources().getString(R.string.selectLeastOneGroup));
+                    return;
+                }
+                returnCallback.onReturn(selectedGroupItem);
                 getActivity().onBackPressed();
             }
         });
 
-        nextFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if (operationType.equals(GROUP_OP_CHOOSE_TYPE)) {
-                    if (selectedGroupItem == null) {
-                        CommonUtils.showToastShort(getContext(), getResources().getString(R.string.selectLeastOneGroup));
-                        return;
-                    }
-                    returnCallback.onReturn(selectedGroupItem);
-                    getActivity().onBackPressed();
-                }
-            }
-        });
-
-        searchToolbarAddItemImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
-                searchToolbarAddItemImgv.setEnabled(false);
-                searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                addNewGroup();
-            }
+        searchToolbarAddItemImgv.setOnClickListener(v -> {
+            CommonUtils.hideKeyBoard(getContext());
+            searchToolbarAddItemImgv.setEnabled(false);
+            searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            addNewGroup();
         });
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
@@ -189,36 +179,30 @@ public class  GroupManagementFragment extends BaseFragment {
             }
         });
 
-        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
-                editTextSearch.setText("");
-                imgCancelSearch.setVisibility(View.GONE);
-                searchResultTv.setVisibility(View.GONE);
-                setMessageWarning(groupRequestResult);
+        imgCancelSearch.setOnClickListener(v -> {
+            CommonUtils.hideKeyBoard(getContext());
+            editTextSearch.setText("");
+            imgCancelSearch.setVisibility(View.GONE);
+            searchResultTv.setVisibility(View.GONE);
+            setMessageWarning(groupRequestResult);
 
-            }
         });
     }
 
     public void searchItemInList(final String groupName) {
         if (userGroupsListAdapter != null)
-            userGroupsListAdapter.updateAdapter(groupName, new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
-                    int itemSize = (int) object;
+            userGroupsListAdapter.updateAdapter(groupName, object -> {
+                int itemSize = (int) object;
 
-                    if (!groupName.isEmpty()) {
-                        warningMsgTv.setVisibility(View.GONE);
-                        if (itemSize == 0)
-                            searchResultTv.setVisibility(View.VISIBLE);
-                        else
-                            searchResultTv.setVisibility(View.GONE);
-                    } else {
-                        setMessageWarning(groupRequestResult);
+                if (!groupName.isEmpty()) {
+                    warningMsgTv.setVisibility(View.GONE);
+                    if (itemSize == 0)
+                        searchResultTv.setVisibility(View.VISIBLE);
+                    else
                         searchResultTv.setVisibility(View.GONE);
-                    }
+                } else {
+                    setMessageWarning(groupRequestResult);
+                    searchResultTv.setVisibility(View.GONE);
                 }
             });
     }
@@ -263,12 +247,7 @@ public class  GroupManagementFragment extends BaseFragment {
     }
 
     private void setGroupsListAdapter() {
-        userGroupsListAdapter = new UserGroupsListAdapter(getContext(), groupRequestResult, new ReturnCallback() {
-            @Override
-            public void onReturn(Object object) {
-                selectedGroupItem = (GroupRequestResultResultArrayItem) object;
-            }
-        }, new ItemClickListener() {
+        userGroupsListAdapter = new UserGroupsListAdapter(getContext(), groupRequestResult, object -> selectedGroupItem = (GroupRequestResultResultArrayItem) object, new ItemClickListener() {
             @Override
             public void onClick(Object object, final int clickedItem) {
                 selectedGroupItem = (GroupRequestResultResultArrayItem) object;
@@ -353,10 +332,7 @@ public class  GroupManagementFragment extends BaseFragment {
             public void onFailed(Exception e) {
                 searchToolbarAddItemImgv.setEnabled(true);
                 if (getContext() != null) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
+                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), () -> {
                     });
                 }
             }
@@ -365,15 +341,12 @@ public class  GroupManagementFragment extends BaseFragment {
 
     private void startSelectFriendFragment() {
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null,
-                    GroupManagementFragment.class.getName(), new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
-                    localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem) object);
-                    userGroupsListAdapter.notifyDataSetChanged();
-                    setMessageWarning(groupRequestResult);
-                }
-            }), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null, null,
+                    GroupManagementFragment.class.getName(), object -> {
+                        localGroupOperation(ITEM_INSERTED, (GroupRequestResultResultArrayItem) object);
+                        userGroupsListAdapter.notifyDataSetChanged();
+                        setMessageWarning(groupRequestResult);
+                    }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
 }

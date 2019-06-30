@@ -205,7 +205,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
 
                         @Override
                         public void onFailed(Exception e) {
-                            System.out.println("Exception e:" + e.toString());
+
                         }
                     });
         }

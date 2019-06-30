@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CatchU</string>
-    <string name="exitItem">Çıkış</string>
     <string name="search">Ara</string>
 
-    <string name="upperFriend">ARKADAŞ</string>
-    <string name="upperRequested">BEKLIYOR</string>
-    <string name="upperAddFriend">ARKADAŞ EKLE</string>
-    <string name="friends">ARKADAŞLAR</string>
-    <string name="groups">GRUPLAR</string>
     <string name="FACEBOOK">FACEBOOK</string>
     <string name="CONTACTS">BAĞLANTILAR</string>
     <string name="error">Hata:</string>
     <string name="errorUpper">HATA</string>
-    <string name="info">Bilgi:</string>
-    <string name="addNewGroup">Yeni Grup</string>
     <string name="addPersonToGroup">Katılımcı Ekle</string>
     <string name="selectLeastOneFriend">En az 1 kişi seçmelisiniz!</string>
     <string name="selectLeastOneGroup">En az 1 grup seçmelisiniz!</string>
@@ -28,7 +20,6 @@
     <string name="participant"> katılımcı</string>
     <string name="constantItem">adet</string>
     <string name="adminText">  Grup Yöneticisi  </string>
-    <string name="technicalError">Teknik Hata!</string>
     <string name="selectPicture">Resim Seçin</string>
     <string name="SELECT_VIDEO">Video Seçin</string>
     <string name="openCamera">Kamerayı Aç</string>
@@ -39,33 +30,18 @@
     <string name="PLAY">Oynat</string>
     <string name="chooseProfilePhoto">Profil fotoğrafı seçin</string>
     <string name="CHOOSE_GROUP_PHOTO">Grup fotoğrafı seçin</string>
-    <string name="groupInformation">Grup Bilgileri</string>
-    <string name="deleteGroup">Grubu Sil</string>
     <string name="exitFromGroup">Gruptan Çık</string>
     <string name="areYouSureExitFromGroup">Gruptan çıkmak istediğinize emin misiniz?</string>
     <string name="upperYes">EVET</string>
     <string name="upperNo">HAYIR</string>
-    <string name="lowerYes">Evet</string>
-    <string name="lowerNo">Hayır</string>
-    <string name="youText">Siz</string>
     <string name="removeFromGroup">  Gruptan Çikar</string>
     <string name="viewTheProfile">  Profil Görüntüle</string>
     <string name="createdAt">Oluşturuldu:</string>
     <string name="changeAsAdmin">Admin olarak değiştir</string>
-    <string name="friendsAdding">Katılımcılar ekleniyor...</string>
-    <string name="giveCameraPermission">Kamerayı kullanmak için izin gerekmektedir</string>
     <string name="pleaseAddShareItem">Paylaşım yapabilmek için video, resim yada not eklemelisiniz!</string>
-    <string name="selectGroup">Grup Seç</string>
-    <string name="selectAll">Hepsini Seç</string>
     <string name="share">Paylaş</string>
     <string name="locationIsEmpty">Paylaşım için lokasyon bilgisi zorunludur</string>
-    <string name="shareIsProcessing">Paylaşılıyor...</string>
-    <string name="videoDurationWarning">Video için max geçerli süre :</string>
     <string name="secondShort">sn</string>
-    <string name="secondLong">saniye</string>
-    <string name="photoSelectTypeUnknown">Fotoğraf seçim tipi hatalı!</string>
-    <string name="videoSelectTypeUnknown">Video seçim tipi hatalı!</string>
-    <string name="profileUpdating">Profil güncelleniyor...</string>
     <string name="profileUpdateSuccessful">Profil Güncelleme Başarılı</string>
     <string name="dragForDelete">Silmek için Sürükle</string>
     <string name="finish">Bitir</string>
@@ -76,11 +52,9 @@
     <string name="VIEW_PENDING_REQUEST">Gelen Istekleri Görüntüle</string>
     <string name="THERE_IS_NO_GROUP_CREATE_OR_INCLUDE">Oluşturduğunuz veya dahil olduğunuz bir grup bulunmamaktadır</string>
     <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">CatchU uygulamasını kullanan Facebook arkadaşınız bulunmamaktadır</string>
-    <string name="THERE_IS_NO_CONTACTFRIEND_WHO_USING_CATCHU">CatchU Uygulamasını Kullanan Rehber Arkadaşınız Bulunmamaktadır</string>
     <string name="PHONE_NUM">Telefon Numarası</string>
     <string name="SELECT_COUNTRY">Ülke Seç</string>
     <string name="COUNTRY_NAME">Ülke Adı</string>
-    <string name="COUNTRY_NAME_OR_CODE">Ülke Adı veya Kodu</string>
     <string name="WRITE_PHONE_NUMBER">Telefon numarasını yazın</string>
     <string name="PLEASE_WRITE_VERIFICATION_CODE">Şu numaraya gönderdiğimiz 6 haneli onay kodunu giriniz : </string>
     <string name="SEND_VERIFICATION_CODE_AGAIN">Kodu Tekrar Gönder</string>
@@ -91,10 +65,8 @@
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">Size verilen süre içinde kodu girmediniz. Lütfen tekrar kodu gönderiniz!</string>
     <string name="UPDATE_IS_SUCCESSFUL">Güncelendi</string>
     <string name="THERE_IS_NO_SEARCH_RESULT">Hiç bir sonuç bulunamadı.</string>
-    <string name="USERS_OF_APPLICATION">Uygulamayı Kullananlar</string>
     <string name="DEFAULT_POST_ERROR_MESSAGE">Paylaşım esnasında bir hata ile karşılaşıldı, tekrar denemek ister misiniz?</string>
     <string name="GROUP_SETTINGS">Grup Ayarları</string>
-    <string name="CHOOSE_PHOTO">Fotoğraf Seç</string>
     <string name="TAKE_SCREENSHOT">Ekran görüntüsü al</string>
     <string name="CIRCLE_THE_PROBLEM">Sorunu daire içine al</string>
     <string name="SCREENSHOT">Çek</string>
@@ -115,7 +87,6 @@
 
     <string name="profile">Profil</string>
     <string name="editProfile">Profili Düzenle</string>
-    <string name="addGroup">Yeni Grup</string>
     <string name="save">Kaydet</string>
     <string name="cancel">İptal</string>
     <string name="discard">Çıkar</string>
@@ -127,7 +98,6 @@
     <string name="sure_exit_not_saving_image">resmi kaydetmeden çıkmak ister misiniz?</string>
     <string name="image_saved_successfully">Görüntü başarıyla kaydedildi</string>
     <string name="failed_to_save_image">Resim kaydedilemedi</string>
-    <string name="an_error_during_process">Işlem sırasında bir hata oluştu</string>
 
     <!-- Whose for will be shared -->
     <string name="publicShareText">Herkese Açik</string>
@@ -146,10 +116,6 @@
     <string name="settings">Ayarlar</string>
 
     <!-- Share tab item constants-->
-    <string name="gallery">Galeri</string>
-    <string name="photo">Fotoğraf</string>
-    <string name="video">Video</string>
-    <string name="text">Text</string>
 
     <array name="gender">
         <item>Erkek</item>
@@ -158,7 +124,6 @@
     </array>
 
     <!-- Time constants-->
-    <string name="ago">önce</string>
     <string name="seconds">saniye</string>
     <string name="minutes">dakika</string>
     <string name="hours">saat</string>
@@ -174,12 +139,8 @@
     <string name="following">Takip ediliyor</string>
     <string name="invite">Davet Et</string>
     <string name="request_sended">İstek gönderildi</string>
-    <string name="ACCEPT_REQUEST">Kabul Et</string>
     <string name="cancel_following">Takip etmeyi bırak?</string>
     <string name="ASKING_STOP_FOLLOWING">Takip etmeyi bırakmak istediğine emin misin?</string>
-    <string name="yes">Evet</string>
-    <string name="no">Hayır</string>
-    <string name="feed">Paylaşımlar</string>
     <string name="PENDING_REQUESTS">Bekleyen Istekler</string>
     <string name="THERE_IS_NO_PENDING_REQUEST">Bekleyen isteğiniz bulunmamaktadır</string>
     <string name="CONTACT_INVITE_MESSAGE">CatchU\'da paylaşım yapıp arkadaşlarını takip etmek ister misin? Uygulamayı bu linkten indirebilirsin:</string>
@@ -214,7 +175,6 @@
     <string name="createAccount">Kaydol</string>
     <string name="forgetPassword">Şifremi unuttum?</string>
     <string name="register">Kaydol</string>
-    <string name="newPassword">Şifre Sıfırlama</string>
     <string name="sendLink">Link Gönder</string>
     <string name="forgetPassText">Mail adresinize göndereceğimiz link ile şifrenizi sıfırlayabilirsiniz.</string>
     <string name="rememberMe">Beni Hatırla</string>
@@ -226,7 +186,6 @@
     <string name="PHONE">Telefon</string>
     <string name="GENDER">Cinsiyet</string>
     <string name="WEBSITE">Website</string>
-    <string name="ABOUT_ME">Hakkımda</string>
 
     // Mesajlar-Uyarılar
     <string name="UNKNOWN_ERROR">İşlem tamamlanamadı!</string>
@@ -245,35 +204,24 @@
     <string name="PASSWORD_LINK_SEND_SUCCESS">Şifre sıfırlama linki e-mail adresinize gönderildi.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Şifre gönderme başarısız, lütfen tekrar deneyiniz.</string>
     <string name="SHARE_IS_SUCCESSFUL">Biraz önce yapmış olduğunuz paylaşım başarılı sonuçlandı :) </string>
-    <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Doğrulama Başarılı</string>
     <string name="PASSWORD_IS_CHANGED">Şifre değiştirildi</string>
     <string name="CURRENT_PASSWORD_INCORRECT">Mevcut şifre hatalı</string>
     <string name="ASK_FOR_REMOVE_ACCOUNT_PRIVACY">Hesabınızın gizliliğini kaldırmak istiyor musunuz?</string>
     <string name="ASK_FOR_MAKE_ACCOUNT_PRIVACY">Hesabınızı gizli yapmak istiyor musunuz?</string>
-    <string name="YOU_LIKED_POSTS">Beğendiğin Gönderiler</string>
-    <string name="POST_DETAIL">Paylaşım Detayı</string>
-    <string name="THERE_IS_NO_MEDIA_TO_POST">Paylaşım için herhangi bir medya seçilmedi</string>
-    <string name="SHOW_IN_LIST_MODE">Liste Şeklinde Göster</string>
-    <string name="SHOW_IN_NORMAL_MODE">Normal Göster</string>
-    <string name="BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG">Biraz önce yapmış olduğunuz paylaşım henüz sonlanmadı. Lütfen biraz bekleyin.</string>
     <string name="SHARE_IS_UNSUCCESSFUL">Maalesef yaptığınız paylaşım başarılı sonuçlanmadı :(</string>
     <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Problemi kısaca belirtebilir misiniz?</string>
     <string name="PROBLEM_NOTIFY_DESCRIPTION">Karşılaşmış olduğunuz problemi yada geliştirmemizi istediklerinizi bildirerek bize yardımcı olabilirsiniz.</string>
-    <string name="WHO_WILL_YOU_SHARE">Kime paylaşacaksın?</string>
-    <string name="SENDING">Gönderiliyor...</string>
     <string name="serverError">Teknik Hata !</string>
     <string name="FIND_FACEBOOK_FRIENDS">Facebook Arkadaşlarını Bul</string>
     <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">Catchu kullanan facebook arkadaşlarını bulabilirsin</string>
     <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">Arkadaşlarınızı görmek için kişilere erişim izni vermelisiniz</string>
     <string name="SOMETHING_WENT_WRONG">Bir Hata Oluştu!</string>
-    <string name="MY_GROUPS_POSTS">Grup Paylaşımlarım</string>
     <string name="GOT_IT">ANLADIM</string>
     <string name="CHECK_YOUR_INTERNET_CONNECTION">Lütfen internet bağlantınızı kontrol ediniz!</string>
     <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Internet baglantınızı kontrol ettikten sonra tekrar deneyiniz.</string>
     <string name="TRY_AGAIN">Tekrar Deneyin</string>
     <string name="SKIP">GEÇ</string>
     <string name="FORGOT_YOUR_PASSWORD">Şifreni mi unuttun?</string>
-    <string name="COMMENTS">Yorumlar</string>
     <string name="ADVANCED_SETTINGS">Gelişmiş Seçenekler</string>
     <string name="SEND">Gönder</string>
     <string name="LET_POST_COMMENT">Yorum yapılmasına izin ver</string>
@@ -291,7 +239,6 @@
     <string name="UNBLOCK">Engeli Kaldır</string>
     <string name="REPORT_PERSON">Şikayet Et</string>
     <string name="CLEAR_CHAT">Sohbeti Temizle</string>
-    <string name="YOU_HAVE_A_NEW_MESSAGE">Yeni mesajınız var</string>
     <string name="YOU_HAVE_NEW_MESSAGES">Yeni mesajlarınız var</string>
     <string name="ACCEPT">Onayla</string>
     <string name="REJECT">Reddet</string>
@@ -301,10 +248,8 @@
     <string name="likes">Beğeni</string>
     <string name="comments">Yorum</string>
     <string name="loading">Yükleniyor...</string>
-    <string name="checkingAround">Etrafınızdaki paylaşımlar aranıyor...</string>
     <string name="locationError">Konumunuza erişim sağlanamıyor, lütfen lokasyon ayarlarınızı kontrol ediniz...</string>
     <string name="swipeDownForRefresh">Yenilemek için aşağı sürükleyin.</string>
-    <string name="noLikesYet">Henüz beğeni yok!</string>
     <string name="unfollow">Takibi bırak</string>
     <string name="disableComment">Yorum yapmayı kapat</string>
     <string name="enableComment">Yorum yapılmasına izin ver</string>
@@ -367,10 +312,8 @@
 
     <string name="label_brush">Fırça</string>
     <string name="label_emoji">Emoji</string>
-    <string name="label_sticker">Sticker</string>
     <string name="label_eraser">Silgi</string>
     <string name="label_text">Text</string>
     <string name="label_filter">Filtre</string>
-    <string name="label_adjust">Hizala</string>
 
 </resources>

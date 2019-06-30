@@ -498,10 +498,8 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                                 }
                                 break;
                             case R.id.complainPerson:
-                                System.out.println();
                                 break;
                             case R.id.clearConversion:
-                                System.out.println();
                                 break;
                         }
                         return false;
@@ -603,8 +601,6 @@ public class MessageWithPersonActivity extends AppCompatActivity {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
-                System.out.println("dy:" + dy);
 
                 pastVisibleItems = linearLayoutManager.findLastVisibleItemPosition();
 

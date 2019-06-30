@@ -23,7 +23,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.uren.catchu.GeneralUtils.FirebaseHelperModel.CrashlyticsHelper;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.R;
@@ -130,8 +129,6 @@ public class BitmapConversion extends AppCompatActivity {
 
         if (mBitmap == null) return null;
 
-        //System.out.println("BitmapCompat.getAllocationByteCount(mBitmap):" + BitmapCompat.getAllocationByteCount(mBitmap));
-
         if (BitmapCompat.getAllocationByteCount(mBitmap) > MAX_IMAGE_SIZE_5MB)
             maxByteValue = MAX_IMAGE_SIZE_2ANDHALFMB;
         else
@@ -140,12 +137,9 @@ public class BitmapConversion extends AppCompatActivity {
         if (BitmapCompat.getAllocationByteCount(mBitmap) > maxByteValue) {
 
             for (float i = 0.9f; i > 0; i = i - 0.05f) {
-                System.out.println("i_1:" + i);
                 resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
                         (int) (mBitmap.getWidth() * i),
                         (int) (mBitmap.getHeight() * i), true);
-
-                //System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
                 if (BitmapCompat.getAllocationByteCount(resizedBitmap) < maxByteValue)
                     break;
@@ -153,12 +147,9 @@ public class BitmapConversion extends AppCompatActivity {
         } else {
             if (!photoSelectUtil.getType().equals(GALLERY_TEXT)) {
                 for (float i = 1.2f; i < 20f; i = i + 1.2f) {
-                    System.out.println("i_2:" + i);
                     resizedBitmap = Bitmap.createScaledBitmap(mBitmap,
                             (int) (mBitmap.getWidth() * i),
                             (int) (mBitmap.getHeight() * i), true);
-
-                    //System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
                     if (BitmapCompat.getAllocationByteCount(resizedBitmap) > maxByteValue)
                         break;
@@ -166,8 +157,6 @@ public class BitmapConversion extends AppCompatActivity {
             } else
                 resizedBitmap = mBitmap;
         }
-
-        //System.out.println("BitmapCompat.getAllocationByteCount(resizedBitmap):" + BitmapCompat.getAllocationByteCount(resizedBitmap));
 
         return resizedBitmap;
     }

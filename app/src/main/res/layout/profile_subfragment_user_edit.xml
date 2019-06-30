@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/rlUserEdit"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/White">
@@ -96,7 +95,6 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/txtPersonalInfo"
                             style="@style/customTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -203,7 +201,6 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtWebsite"
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -285,7 +282,6 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtBirthday"
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -321,7 +317,6 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtEmail"
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -357,7 +352,6 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtPhone"
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -393,7 +387,6 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/txtGender"
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

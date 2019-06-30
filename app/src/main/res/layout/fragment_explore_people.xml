@@ -19,7 +19,6 @@
             app:tabMode="fixed" />
 
         <RelativeLayout
-            android:id="@+id/viewPagerLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

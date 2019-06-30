@@ -91,7 +91,7 @@ public class MessageListActivity extends AppCompatActivity {
     int limitValue;
     int pastVisibleItems, visibleItemCount, totalItemCount;
 
-    String receiptUserId; // Bu benim
+    //String receiptUserId; // Bu benim
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +100,7 @@ public class MessageListActivity extends AppCompatActivity {
         thisActivity = this;
         Fabric.with(this, new Crashlytics());
 
-        receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
+        //receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
         initVariables();
         addListeners();
         checkMyInformation();
@@ -129,7 +129,7 @@ public class MessageListActivity extends AppCompatActivity {
     private void checkMyInformation() {
         if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty())
             updateClusterStatus();
-        else if (receiptUserId != null && !receiptUserId.isEmpty()) {
+        /*else if (receiptUserId != null && !receiptUserId.isEmpty()) {
             AccountHolderInfo.getInstance();
             AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
                 @Override
@@ -138,7 +138,7 @@ public class MessageListActivity extends AppCompatActivity {
                         updateClusterStatus();
                 }
             });
-        }
+        }*/
     }
 
     private void updateClusterStatus() {
@@ -158,12 +158,7 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     public void addListeners() {
-        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        searchToolbarBackImgv.setOnClickListener(v -> onBackPressed());
 
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -192,16 +187,13 @@ public class MessageListActivity extends AppCompatActivity {
             }
         });
 
-        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (editTextSearch != null)
-                    editTextSearch.setText("");
-                imgCancelSearch.setVisibility(View.GONE);
-                CommonUtils.hideKeyBoard(MessageListActivity.this);
-                searchToolbarBackImgv.setVisibility(View.VISIBLE);
+        imgCancelSearch.setOnClickListener(v -> {
+            if (editTextSearch != null)
+                editTextSearch.setText("");
+            imgCancelSearch.setVisibility(View.GONE);
+            CommonUtils.hideKeyBoard(MessageListActivity.this);
+            searchToolbarBackImgv.setVisibility(View.VISIBLE);
 
-            }
         });
     }
 
@@ -245,13 +237,17 @@ public class MessageListActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(UserProfile userProfile) {
 
-                        if (userProfile != null && userProfile.getUserInfo() != null) {
-                            Map<String, Object> map = (Map) outboundSnapshot.getValue();
-                            Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
+                        try {
+                            if (userProfile != null && userProfile.getUserInfo() != null) {
+                                Map<String, Object> map = (Map) outboundSnapshot.getValue();
+                                Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
 
-                            String contentId = (String) contentMap.get(FB_CHILD_CONTENT_ID);
-                            if (contentId != null && !contentId.isEmpty())
-                                getLastMessage(userProfile.getUserInfo(), contentId);
+                                String contentId = (String) contentMap.get(FB_CHILD_CONTENT_ID);
+                                if (contentId != null && !contentId.isEmpty())
+                                    getLastMessage(userProfile.getUserInfo(), contentId);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
 
@@ -372,20 +368,19 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     private void startMessageWithPersonActivity(MessageListBox messageListBox) {
-        if (MessageWithPersonActivity.thisActivity != null) {
+        /*if (MessageWithPersonActivity.thisActivity != null) {
             MessageWithPersonActivity.thisActivity.finish();
-        }
+        }*/
 
         Intent intent = new Intent(this, MessageWithPersonActivity.class);
         intent.putExtra(FCM_CODE_CHATTED_USER, getChattedUserInfo(messageListBox));
-        intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
+        //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
         startActivity(intent);
     }
 
     public LoginUser getChattedUserInfo(MessageListBox messageListBox) {
-        LoginUser user = null;
+        LoginUser user = new LoginUser();
 
-        user = new LoginUser();
         if (messageListBox != null && messageListBox.getUserProfileProperties() != null) {
             UserProfileProperties userProfileProperties = messageListBox.getUserProfileProperties();
 
@@ -408,9 +403,6 @@ public class MessageListActivity extends AppCompatActivity {
     }
 
     public void fillMessageBoxList(DataSnapshot outboundSnapshot, UserProfileProperties userProfileProperties) {
-        System.out.println("fillMessageBoxList.outboundSnapshot.getKey():" + outboundSnapshot.getKey());
-        System.out.println("fillMessageBoxList.outboundSnapshot.getValue():" + outboundSnapshot.getValue());
-
         MessageListBox messageListBox = new MessageListBox();
 
         messageListBox.setUserProfileProperties(userProfileProperties);
@@ -446,9 +438,9 @@ public class MessageListActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        if (NextActivity.thisActivity == null)
+        /*if (NextActivity.thisActivity == null)
             this.startActivity(new Intent(MessageListActivity.this, NextActivity.class));
-
+*/
         this.finish();
     }
 }

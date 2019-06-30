@@ -75,7 +75,6 @@
                 android:layout_below="@+id/relativelayout1">
 
             <LinearLayout
-                android:id="@+id/xxxx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/relativelayout1"

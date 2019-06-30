@@ -239,12 +239,12 @@ public class FacebookFriendsFragment extends BaseFragment {
 
             @Override
             public void onCancel() {
-                System.out.println("facebook:onCancel");
+
             }
 
             @Override
             public void onError(FacebookException error) {
-                System.out.println("facebook:onError:" + error.toString());
+
             }
         });
 

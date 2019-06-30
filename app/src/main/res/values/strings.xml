@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">CatchU</string>
-    <string name="title_activity_authenticator">AuthenticatorActivity</string>
 
     <string name="facebook_app_id">1429718627133451</string>
     <string name="fb_login_protocol_scheme">fb1429718627133451</string>
@@ -23,19 +22,11 @@
         <item>unspecified</item>
     </array>
 
-    <string name="exitItem">Log Out</string>
     <string name="search">Search</string>
-    <string name="upperFriend">FRIEND</string>
-    <string name="upperRequested">REQUESTED</string>
-    <string name="upperAddFriend">ADD FRIEND</string>
-    <string name="friends">FRIENDS</string>
-    <string name="groups">GROUPS</string>
     <string name="FACEBOOK">FACEBOOK</string>
     <string name="CONTACTS">CONTACTS</string>
     <string name="error">Error:</string>
     <string name="errorUpper">ERROR</string>
-    <string name="info">Info:</string>
-    <string name="addNewGroup">New Group</string>
     <string name="addPersonToGroup">Add Friend to Group</string>
     <string name="selectLeastOneFriend">You must choose at least 1 person!</string>
     <string name="selectLeastOneGroup">You must choose at least 1 group!</string>
@@ -49,7 +40,6 @@
     <string name="participant"> participants</string>
     <string name="constantItem">item</string>
     <string name="adminText">  Administrator  </string>
-    <string name="technicalError">Technical Error!</string>
     <string name="selectPicture">Select Picture</string>
     <string name="SELECT_VIDEO">Select Video</string>
     <string name="openCamera">Open Camera</string>
@@ -60,33 +50,18 @@
     <string name="PLAY">Play</string>
     <string name="chooseProfilePhoto">Choose a profile photo</string>
     <string name="CHOOSE_GROUP_PHOTO">Choose a group photo</string>
-    <string name="groupInformation">Group Information</string>
-    <string name="deleteGroup">Delete Group</string>
     <string name="exitFromGroup">Exit From Group</string>
     <string name="areYouSureExitFromGroup">Are you sure you want to leave the group?</string>
     <string name="upperYes">YES</string>
     <string name="upperNo">NO</string>
-    <string name="lowerYes">Yes</string>
-    <string name="lowerNo">No</string>
-    <string name="youText">You</string>
     <string name="removeFromGroup">  Remove from the group</string>
     <string name="viewTheProfile">  View the profile</string>
     <string name="createdAt">Created at:</string>
     <string name="changeAsAdmin">Make Group Admin</string>
-    <string name="friendsAdding">Participants adding...</string>
-    <string name="giveCameraPermission">You have to give permission to use the camera</string>
     <string name="pleaseAddShareItem">You must add video, picture or text to share!</string>
-    <string name="selectGroup">Select Group</string>
-    <string name="selectAll">Select All</string>
     <string name="share">Share</string>
     <string name="locationIsEmpty">Location information is required to share</string>
-    <string name="shareIsProcessing">Sharing...</string>
-    <string name="videoDurationWarning">Maximum duration for video :</string>
     <string name="secondShort">sec</string>
-    <string name="secondLong">second(s)</string>
-    <string name="photoSelectTypeUnknown">Photo Select Type is Unknown!</string>
-    <string name="videoSelectTypeUnknown">Video Select Type is Unknown!</string>
-    <string name="profileUpdating">Profile updating...</string>
     <string name="profileUpdateSuccessful">Profile Update is Successful</string>
     <string name="dragForDelete">Drag for Delete</string>
     <string name="finish">Finish</string>
@@ -100,11 +75,9 @@
     <string name="VIEW_PENDING_REQUEST">View Pending Requests</string>
     <string name="THERE_IS_NO_GROUP_CREATE_OR_INCLUDE">There is no group you created or included</string>
     <string name="THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU">There is no Facebook friend who using CatchU</string>
-    <string name="THERE_IS_NO_CONTACTFRIEND_WHO_USING_CATCHU">There is no Contact friend who using CatchU</string>
     <string name="PHONE_NUM">Phone Number</string>
     <string name="SELECT_COUNTRY">Select Country</string>
     <string name="COUNTRY_NAME">Country Name</string>
-    <string name="COUNTRY_NAME_OR_CODE">Country Name or Code</string>
     <string name="WRITE_PHONE_NUMBER">Write phone number</string>
     <string name="PLEASE_WRITE_VERIFICATION_CODE">Enter the 6 digit confirmation code that we send this number : </string>
     <string name="SEND_VERIFICATION_CODE_AGAIN">Send Code Again</string>
@@ -115,10 +88,8 @@
     <string name="NOT_ENTERED_VERIFY_CODE_IN_TIME">You did not enter the code within the given time. Please send the code again!</string>
     <string name="UPDATE_IS_SUCCESSFUL">Update is Successful</string>
     <string name="THERE_IS_NO_SEARCH_RESULT">No results found.</string>
-    <string name="USERS_OF_APPLICATION">Users of the application</string>
     <string name="DEFAULT_POST_ERROR_MESSAGE">There was an error during the sharing, would you like to try again?</string>
     <string name="GROUP_SETTINGS">Group Settings</string>
-    <string name="CHOOSE_PHOTO">Choose Photo</string>
     <string name="TAKE_SCREENSHOT">Take screenshot</string>
     <string name="CIRCLE_THE_PROBLEM">Take the problem round</string>
     <string name="SCREENSHOT">Take</string>
@@ -135,24 +106,20 @@
     <string name="TO_BE_REMOVED_BLOCK_PERSON">You must be unblocked to communicate with this person!</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="profile">Profile</string>
     <string name="editProfile">Edit Profile</string>
-    <string name="addGroup">New Group</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="discard">Discard</string>
     <string name="giveNewName">Write New Name</string>
     <string name="groupPhotoChanging">Photo is changing...</string>
-    <string name="title_activity_maps">Map</string>
     <string name="ok">OK</string>
     <string name="next">Next</string>
     <string name="close">Close</string>
     <string name="sure_exit_not_saving_image">Are you want to exit without saving image?</string>
     <string name="image_saved_successfully">Image Saved Successfully</string>
     <string name="failed_to_save_image">Failed to save Image</string>
-    <string name="an_error_during_process">An error occurred during the process</string>
     <string name="rateus">Rate Us</string>
     <string name="commentFailed">Install an application market</string> 
 
@@ -162,10 +129,6 @@
     <string name="settings">Settings</string>
 
     <!-- Share tab item constants-->
-    <string name="gallery">Gallery</string>
-    <string name="photo">Photo</string>
-    <string name="video">Video</string>
-    <string name="text">Text</string>
 
     <!-- Whose for will be shared -->
     <string name="publicShareText">Public</string>
@@ -185,12 +148,8 @@
     <string name="following">Following</string>
     <string name="invite">Invite</string>
     <string name="request_sended">Request sent</string>
-    <string name="ACCEPT_REQUEST">Accept Request</string>
     <string name="cancel_following">Remove from followings?</string>
     <string name="ASKING_STOP_FOLLOWING">Are you sure you want to stop following?</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="feed">Feeds</string>
     <string name="PENDING_REQUESTS">Pending Requests</string>
     <string name="THERE_IS_NO_PENDING_REQUEST">There is no pending request</string>
     <string name="CONTACT_INVITE_MESSAGE">Do you want to share in CatchU and follow your friends? You can download the application from this link:</string>
@@ -217,21 +176,7 @@
     <string name="NEW_PASSWORD_AGAIN">New password, again</string>
 
 
-    <string name="red">Red</string>
-    <string name="blue">Blue</string>
-    <string name="green">Green</string>
-
-
-    <string name="record">Record</string>
-    <string name="stop">Stop</string>
-    <string name="description_info">Info</string>
-    <string name="permission_request">This sample needs permission for camera and audio recording.</string>
-    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
-
     <!-- Flash options-->
-    <string name="flash_auto">Flash auto</string>
-    <string name="flash_off">Flash off</string>
-    <string name="flash_on">Flash on</string>
 
 
     <!-- LoginActivity constants-->
@@ -243,7 +188,6 @@
     <string name="createAccount">Create Account</string>
     <string name="forgetPassword">Forget Password?</string>
     <string name="register">Register</string>
-    <string name="newPassword">New Password</string>
     <string name="sendLink">Send Link</string>
     <string name="forgetPassText">We will send a link to your mail address. You can renew your password.</string>
     <string name="rememberMe">Remember Me</string>
@@ -255,10 +199,8 @@
     <string name="PHONE">Phone</string>
     <string name="GENDER">Gender</string>
     <string name="WEBSITE">Website</string>
-    <string name="ABOUT_ME">About me</string>
 
     <!-- Time constants-->
-    <string name="ago">ago</string>
     <string name="seconds">seconds</string>
     <string name="minutes">minutes</string>
     <string name="hours">hours</string>
@@ -284,35 +226,24 @@
     <string name="PASSWORD_LINK_SEND_SUCCESS">Renew password link has sent to your email address.</string>
     <string name="PASSWORD_LINK_SEND_FAIL">Fail to send link, please tyr again.</string>
     <string name="SHARE_IS_SUCCESSFUL">The share you just made was successful :) </string>
-    <string name="PHONE_VERIFICATION_IS_SUCCESSFUL">Verification is Successful</string>
     <string name="PASSWORD_IS_CHANGED">Password is changed</string>
     <string name="CURRENT_PASSWORD_INCORRECT">Current password is incorrect</string>
     <string name="ASK_FOR_REMOVE_ACCOUNT_PRIVACY">Do you want to remove the privacy of the account?</string>
     <string name="ASK_FOR_MAKE_ACCOUNT_PRIVACY">Do you want to make your account private?</string>
-    <string name="POST_DETAIL">Post Detail</string>
-    <string name="YOU_LIKED_POSTS">Liked Posts</string>
-    <string name="THERE_IS_NO_MEDIA_TO_POST">There is no media to post</string>
-    <string name="SHOW_IN_LIST_MODE">View in List Mode</string>
-    <string name="SHOW_IN_NORMAL_MODE">View in Normal Mode </string>
-    <string name="BEFORE_SHARE_NOT_COMPLETED_WARNING_MSG">The share you have just made has not ended. Please wait a moment.</string>
     <string name="SHARE_IS_UNSUCCESSFUL">Sorry, your share has not been successfully concluded :(</string>
     <string name="CAN_YOU_SPECIFY_THE_PROBLEM">Can you specify the problem briefly?</string>
     <string name="PROBLEM_NOTIFY_DESCRIPTION">You can help us by notifying us about the problem you have encountered or whether you want us to improve.</string>
     <string name="REPORT_PROBLEM_OR_COMMENT">Report or comment</string>
-    <string name="WHO_WILL_YOU_SHARE">Who will you share?</string>
-    <string name="SENDING">Sending...</string>
     <string name="FIND_FACEBOOK_FRIENDS">Find Facebook Friends</string>
     <string name="YOU_CAN_FIND_FACEBOOK_FRIENDS">You can find facebook friends who are using Catchu</string>
     <string name="GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS">You must grant access to your contacts to see your friends</string>
     <string name="SOMETHING_WENT_WRONG">Something Went Wrong!</string>
     <string name="GOT_IT">GOT IT</string>
-    <string name="MY_GROUPS_POSTS">My Groups Posts</string>
     <string name="CHECK_YOUR_INTERNET_CONNECTION">Please check your network connection!</string>
     <string name="TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK">Try again after checking your internet connection.</string>
     <string name="TRY_AGAIN">Try Again</string>
     <string name="SKIP">SKIP</string>
     <string name="FORGOT_YOUR_PASSWORD">Forgot Your Password?</string>
-    <string name="COMMENTS">Comments</string>
     <string name="ADVANCED_SETTINGS">Advanced Settings</string>
     <string name="SEND">Send</string>
     <string name="LET_POST_COMMENT">Allow comment</string>
@@ -330,7 +261,6 @@
     <string name="UNBLOCK">Unblock</string>
     <string name="REPORT_PERSON">Report</string>
     <string name="CLEAR_CHAT">Clear Chat</string>
-    <string name="YOU_HAVE_A_NEW_MESSAGE">You have a new message</string>
     <string name="YOU_HAVE_NEW_MESSAGES">You have new messages</string>
     <string name="ACCEPT">Accept</string>
     <string name="REJECT">Reject</string>
@@ -340,11 +270,9 @@
     <string name="likes">Likes</string>
     <string name="comments">Comments</string>
     <string name="loading">Loading...</string>
-    <string name="checkingAround">Checking posts around...</string>
     <string name="serverError">Amazon Server Error</string>
     <string name="locationError">Can not access your location, please check your permission settings!</string>
     <string name="swipeDownForRefresh">Swipe down for refresh</string>
-    <string name="noLikesYet">There is no likes yet!</string>
     <string name="unfollow">Unfollow</string>
     <string name="disableComment">Disable comment</string>
     <string name="enableComment">Enable comment</string>
@@ -399,20 +327,9 @@
     </array>
 
     <!-- silinecek -->
-    <string name="quickstart_message">Click the SUBSCRIBE TO WEATHER button below to subscribe to the
-        weather topic. Messages sent to the weather topic will be received. The LOG TOKEN button logs the
-        InstanceID token to logcat.</string>
-    <string name="subscribe_to_weather">Subscribe To Weather</string>
-    <string name="log_token">Log Token</string>
-    <string name="msg_subscribed">Subscribed to weather topic</string>
-    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
-    <string name="default_notification_channel_name" translatable="true">Weather</string>
-    <string name="msg_subscribe_failed">Failed to subscribe to weather topic</string>
-    <string name="fcm_message">FCM Message</string>
 
     <string name="FCM_SERVER_KEY">AAAA168Go7o:APA91bHDsAJ8_8KZuXmdfBztNN-TSNOQOaQO_dPv6zXbRR4KzgH-83jh6NZ05imPxnUFopz8j8wOzL9jFVLCvgcJrAVuxrNDi_vz2QowCGnQxdxotXAp93tz7z7OblJkwk7GaCuc0Ebl</string>
-    <string name="title_activity_message_list">MessageListActivity</string>
 
     <!-- Exception mesajları -->
     <string name="opps">Opps!</string>
@@ -422,11 +339,9 @@
 
     <string name="label_brush">Brush</string>
     <string name="label_emoji">Emoji</string>
-    <string name="label_sticker">Sticker</string>
     <string name="label_eraser">Eraser</string>
     <string name="label_text">Text</string>
     <string name="label_filter">Filter</string>
-    <string name="label_adjust">Adjust</string>
 
 
     <string name="ADMOB_APP_ID">ca-app-pub-7227467199436307~1178118713</string>

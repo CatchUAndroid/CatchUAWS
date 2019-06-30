@@ -523,60 +523,45 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         });
 
 
-        publicSelectLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedWhomType = SHARE_TYPE_EVERYONE;
-                openWhomSelection();
-                shareItems.setSelectedShareType(selectedWhomType);
-                selectedDescTv.setText(getResources().getString(R.string.PUBLIC_SHARE_DESC));
-            }
+        publicSelectLayout.setOnClickListener(v -> {
+            selectedWhomType = SHARE_TYPE_EVERYONE;
+            openWhomSelection();
+            shareItems.setSelectedShareType(selectedWhomType);
+            selectedDescTv.setText(getResources().getString(R.string.PUBLIC_SHARE_DESC));
         });
 
-        allFollowersSelectLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedWhomType = SHARE_TYPE_ALL_FOLLOWERS;
-                openWhomSelection();
-                shareItems.setSelectedShareType(selectedWhomType);
-                selectedDescTv.setText(getResources().getString(R.string.ALL_FOLLOWERS_SHARE_DESC));
-            }
+        allFollowersSelectLayout.setOnClickListener(v -> {
+            selectedWhomType = SHARE_TYPE_ALL_FOLLOWERS;
+            openWhomSelection();
+            shareItems.setSelectedShareType(selectedWhomType);
+            selectedDescTv.setText(getResources().getString(R.string.ALL_FOLLOWERS_SHARE_DESC));
         });
 
-        specialSelectLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedWhomType = SHARE_TYPE_CUSTOM;
+        specialSelectLayout.setOnClickListener(v -> {
+            selectedWhomType = SHARE_TYPE_CUSTOM;
 
-                if (!shareWhomOpened) {
-                    setShowAnimations();
-                    shareWhomOpened = true;
-                } else
-                    startSelectFriendFragment();
-            }
+            if (!shareWhomOpened) {
+                setShowAnimations();
+                shareWhomOpened = true;
+            } else
+                startSelectFriendFragment();
         });
 
-        groupsSelectLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedWhomType = SHARE_TYPE_GROUP;
+        groupsSelectLayout.setOnClickListener(v -> {
+            selectedWhomType = SHARE_TYPE_GROUP;
 
-                if (!shareWhomOpened) {
-                    setShowAnimations();
-                    shareWhomOpened = true;
-                } else
-                    startGroupManagementFragment();
-            }
+            if (!shareWhomOpened) {
+                setShowAnimations();
+                shareWhomOpened = true;
+            } else
+                startGroupManagementFragment();
         });
 
-        justMeSelectLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectedWhomType = SHARE_TYPE_SELF;
-                openWhomSelection();
-                shareItems.setSelectedShareType(selectedWhomType);
-                selectedDescTv.setText(getResources().getString(R.string.JUSTME_SHARE_DESC));
-            }
+        justMeSelectLayout.setOnClickListener(v -> {
+            selectedWhomType = SHARE_TYPE_SELF;
+            openWhomSelection();
+            shareItems.setSelectedShareType(selectedWhomType);
+            selectedDescTv.setText(getResources().getString(R.string.JUSTME_SHARE_DESC));
         });
     }
 
@@ -704,18 +689,15 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         CommonUtils.hideKeyBoard(getContext());
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new GroupManagementFragment(GROUP_OP_CHOOSE_TYPE,
-                            new ReturnCallback() {
-                                @Override
-                                public void onReturn(Object object) {
-                                    GroupRequestResultResultArrayItem selectedGroup = (GroupRequestResultResultArrayItem) object;
+                            object -> {
+                                GroupRequestResultResultArrayItem selectedGroup = (GroupRequestResultResultArrayItem) object;
 
-                                    if (selectedGroup != null) {
-                                        selectedWhomType = SHARE_TYPE_GROUP;
-                                        shareItems.setSelectedShareType(selectedWhomType);
-                                        shareItems.setSelectedGroup(selectedGroup);
-                                        selectedDescTv.setText(selectedGroup.getName());
-                                        setHideAnimations();
-                                    }
+                                if (selectedGroup != null) {
+                                    selectedWhomType = SHARE_TYPE_GROUP;
+                                    shareItems.setSelectedShareType(selectedWhomType);
+                                    shareItems.setSelectedGroup(selectedGroup);
+                                    selectedDescTv.setText(selectedGroup.getName());
+                                    setHideAnimations();
                                 }
                             }),
                     ANIMATE_RIGHT_TO_LEFT);
@@ -725,16 +707,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     private void startSelectFriendFragment() {
         CommonUtils.hideKeyBoard(getContext());
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null,
+            mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null, null,
                     SharePostFragment.class.getName(),
-                    new ReturnCallback() {
-                        @Override
-                        public void onReturn(Object object) {
-                            selectedWhomType = SHARE_TYPE_CUSTOM;
-                            shareItems.setSelectedShareType(selectedWhomType);
-                            selectedDescTv.setText(getSelectedFriendsText());
-                            setHideAnimations();
-                        }
+                    object -> {
+                        selectedWhomType = SHARE_TYPE_CUSTOM;
+                        shareItems.setSelectedShareType(selectedWhomType);
+                        selectedDescTv.setText(getSelectedFriendsText());
+                        setHideAnimations();
                     }), ANIMATE_RIGHT_TO_LEFT);
         }
     }
@@ -742,12 +721,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void startAdvancedSettingsFragment() {
         CommonUtils.hideKeyBoard(getContext());
         if (mFragmentNavigation != null) {
-            mFragmentNavigation.pushFragment(new ShareAdvanceSettingsFragment(shareItems, new ReturnCallback() {
-                @Override
-                public void onReturn(Object object) {
-                    shareItems = (ShareItems) object;
-                }
-            }), ANIMATE_LEFT_TO_RIGHT);
+            mFragmentNavigation.pushFragment(new ShareAdvanceSettingsFragment(shareItems, object -> shareItems = (ShareItems) object), ANIMATE_LEFT_TO_RIGHT);
         }
     }
 

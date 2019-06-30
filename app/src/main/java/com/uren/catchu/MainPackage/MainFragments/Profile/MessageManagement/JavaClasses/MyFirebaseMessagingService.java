@@ -122,12 +122,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         database.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                System.out.println("Token saved to DB");
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                System.out.println("Token save to DB Error !!!");
+
             }
         });
     }

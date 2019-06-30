@@ -29,7 +29,6 @@ public class GroupResultProcess extends AsyncTask<Void, Void, GroupRequestResult
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-
             GroupRequestResult groupRequestResult = instance.client.groupsPost(token, groupRequest);
 
             if (groupRequestResult.getError().getCode().intValue() == RESPONSE_OK)

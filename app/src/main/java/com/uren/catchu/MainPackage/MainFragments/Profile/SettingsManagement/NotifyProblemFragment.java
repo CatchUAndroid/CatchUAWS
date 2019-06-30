@@ -358,9 +358,6 @@ public class NotifyProblemFragment extends BaseFragment {
             ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
         else {
             //NextActivity.switchAndUpdateTabSelection(FragNavController.TAB3);
-
-            //System.out.println("((NextActivity) getActivity()):" + getActivity());
-
             //((NextActivity) getContext()).switchAndUpdateTabSelection(FragNavController.TAB3);
             if (mFragmentNavigation != null) {
                 mFragmentNavigation.pushFragment(NextActivity.notifyProblemFragment, ANIMATE_RIGHT_TO_LEFT);

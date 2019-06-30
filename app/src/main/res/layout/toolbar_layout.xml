@@ -14,13 +14,11 @@
 
 
     <LinearLayout
-        android:id="@+id/l2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:id="@+id/rl"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent">
 

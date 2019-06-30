@@ -250,6 +250,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
                 if (mFragmentNavigation != null) {
                     mFragmentNavigation.pushFragment(new SelectFriendFragment(groupRequestResultResultArrayItem.getGroupid(),
+                            groupRequestResultResultArrayItem.getGroupAdmin(),
                             groupParticipantList, ViewGroupDetailFragment.class.getName(),
                             new ReturnCallback() {
                                 @Override

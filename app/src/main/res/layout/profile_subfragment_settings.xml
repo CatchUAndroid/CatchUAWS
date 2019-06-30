@@ -160,7 +160,6 @@
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:id="@+id/privateAccountLayout"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginLeft="10dp"
