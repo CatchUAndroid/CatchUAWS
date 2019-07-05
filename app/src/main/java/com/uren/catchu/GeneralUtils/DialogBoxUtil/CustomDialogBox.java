@@ -3,7 +3,6 @@ package com.uren.catchu.GeneralUtils.DialogBoxUtil;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.DataModelUtil.GroupDataUtil;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.GifDialogListener;
 import com.uren.catchu.R;
 
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -155,13 +153,13 @@ public class CustomDialogBox {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             dialog.setCancelable(this.cancel);
             dialog.setContentView(R.layout.layout_custom_dialog_box);
-            TextView title1 = (TextView) dialog.findViewById(R.id.title);
-            TextView message1 = (TextView) dialog.findViewById(R.id.message);
+            TextView title1 = dialog.findViewById(R.id.title);
+            TextView message1 = dialog.findViewById(R.id.message);
             TextView shortUserNameTv = dialog.findViewById(R.id.shortUserNameTv);
             ImageView profilePicImgView = dialog.findViewById(R.id.profilePicImgView);
             TextView usernameTextView = dialog.findViewById(R.id.usernameTextView);
-            Button nBtn = (Button) dialog.findViewById(R.id.negativeBtn);
-            Button pBtn = (Button) dialog.findViewById(R.id.positiveBtn);
+            Button nBtn = dialog.findViewById(R.id.negativeBtn);
+            Button pBtn = dialog.findViewById(R.id.positiveBtn);
             RelativeLayout relativelayout1 = dialog.findViewById(R.id.relativelayout1);
 
             nBtn.setVisibility(nBtnVisibleType);
@@ -179,7 +177,7 @@ public class CustomDialogBox {
 
             if (user != null) {
                 UserDataUtil.setProfilePicture(this.activity, user.getProfilePhotoUrl(),
-                        user.getName(), user.getUsername(), shortUserNameTv, profilePicImgView);
+                        user.getName(), user.getUsername(), shortUserNameTv, profilePicImgView, false);
                 UserDataUtil.setNameOrUserName(user.getName(), user.getUsername(), usernameTextView);
             } else if (group != null) {
                 GroupDataUtil.setGroupPicture(this.activity, group.getGroupPhotoUrl(),

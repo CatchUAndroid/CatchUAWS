@@ -54,7 +54,7 @@ public class VideoTrimmerFragment extends BaseFragment implements com.deep.video
     }
 
     public void initValues() {
-        mVideoTrimmer = ((DeepVideoTrimmer) mView.findViewById(R.id.mVideoTrimmer));
+        mVideoTrimmer = mView.findViewById(R.id.mVideoTrimmer);
     }
 
     private void setVideoTrimmer() {

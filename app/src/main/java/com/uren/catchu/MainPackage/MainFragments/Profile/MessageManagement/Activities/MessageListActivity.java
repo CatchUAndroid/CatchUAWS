@@ -1,20 +1,19 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdView;
@@ -32,15 +31,12 @@ import com.uren.catchu.GeneralUtils.AdMobUtils;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
-import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedContextMenuManager;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageUpdateCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -49,7 +45,6 @@ import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 import io.fabric.sdk.android.Fabric;
 
-import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.REC_MAXITEM_LIMIT_COUNT;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
@@ -64,7 +59,6 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 
 public class MessageListActivity extends AppCompatActivity {
 
@@ -82,7 +76,7 @@ public class MessageListActivity extends AppCompatActivity {
     ArrayList<MessageListBox> messageListBoxes;
     MessageListAdapter messageListAdapter;
     LinearLayoutManager linearLayoutManager;
-    public static Activity thisActivity;
+    ///public static Activity thisActivity;
 
     boolean setAdapterVal = false;
     boolean adapterLoaded = false;
@@ -97,7 +91,7 @@ public class MessageListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_list);
-        thisActivity = this;
+        //thisActivity = this;
         Fabric.with(this, new Crashlytics());
 
         //receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
@@ -124,6 +118,7 @@ public class MessageListActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
         adView = findViewById(R.id.adView);
+        progressBar.setVisibility(View.VISIBLE);
     }
 
     private void checkMyInformation() {
@@ -152,7 +147,10 @@ public class MessageListActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailed(String errMessage) {
-
+                        progressBar.setVisibility(View.GONE);
+                        CommonUtils.showToastShort(MessageListActivity.this,
+                                getResources().getString(R.string.SOMETHING_WENT_WRONG) + " : " +
+                                errMessage);
                     }
                 });
     }
@@ -216,15 +214,19 @@ public class MessageListActivity extends AppCompatActivity {
                             messageListAdapter.removeProgressLoading();
                     }
 
-                    for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren())
+                    for (DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
                         if (outboundSnapshot != null)
                             getUserDetail(outboundSnapshot);
+                    }
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                progressBar.setVisibility(View.GONE);
+                CommonUtils.showToastShort(MessageListActivity.this,
+                        getResources().getString(R.string.SOMETHING_WENT_WRONG) + " : " +
+                                databaseError.getMessage());
             }
         });
     }
@@ -248,12 +250,19 @@ public class MessageListActivity extends AppCompatActivity {
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
+                            progressBar.setVisibility(View.GONE);
+                            CommonUtils.showToastShort(MessageListActivity.this,
+                                    getResources().getString(R.string.SOMETHING_WENT_WRONG) + " : " +
+                                            e.getMessage());
                         }
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-
+                        progressBar.setVisibility(View.GONE);
+                        /*CommonUtils.showToastShort(MessageListActivity.this,
+                                getResources().getString(R.string.SOMETHING_WENT_WRONG) + " : " +
+                                        e.getMessage());*/
                     }
 
                     @Override
@@ -291,7 +300,10 @@ public class MessageListActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.GONE);
+                    CommonUtils.showToastShort(MessageListActivity.this,
+                            getResources().getString(R.string.SOMETHING_WENT_WRONG) + " : " +
+                                    databaseError.getMessage());
                 }
             });
         }
@@ -365,16 +377,12 @@ public class MessageListActivity extends AppCompatActivity {
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         setAdapterVal = true;
+        progressBar.setVisibility(View.GONE);
     }
 
     private void startMessageWithPersonActivity(MessageListBox messageListBox) {
-        /*if (MessageWithPersonActivity.thisActivity != null) {
-            MessageWithPersonActivity.thisActivity.finish();
-        }*/
-
         Intent intent = new Intent(this, MessageWithPersonActivity.class);
         intent.putExtra(FCM_CODE_CHATTED_USER, getChattedUserInfo(messageListBox));
-        //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
         startActivity(intent);
     }
 
@@ -437,10 +445,6 @@ public class MessageListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
-        /*if (NextActivity.thisActivity == null)
-            this.startActivity(new Intent(MessageListActivity.this, NextActivity.class));
-*/
         this.finish();
     }
 }

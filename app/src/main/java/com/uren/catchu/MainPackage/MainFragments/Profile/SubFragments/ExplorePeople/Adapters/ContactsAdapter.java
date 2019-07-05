@@ -3,9 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePe
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +12,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -227,10 +228,12 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                 if (contactFriendModel.getUser() != null && contactFriendModel.getUser().getUserid() != null &&
                         !contactFriendModel.getUser().getUserid().isEmpty()) {
                     UserDataUtil.setName(contactFriendModel.getUser().getName(), nameTextView);
-                    UserDataUtil.setProfilePicture(context, contactFriendModel.getUser().getProfilePhotoUrl(), contactFriendModel.getUser().getName(), contactFriendModel.getUser().getUsername(), shortenTextView, profilePicImgView);
+                    UserDataUtil.setProfilePicture(context, contactFriendModel.getUser().getProfilePhotoUrl(), contactFriendModel.getUser().getName(), contactFriendModel.getUser().getUsername(),
+                            shortenTextView, profilePicImgView, false);
                 } else if (contactFriendModel.getContact() != null) {
                     UserDataUtil.setName(contactFriendModel.getContact().getName(), nameTextView);
-                    UserDataUtil.setProfilePicture(context, null, contactFriendModel.getContact().getName(), contactFriendModel.getContact().getName(), shortenTextView, profilePicImgView);
+                    UserDataUtil.setProfilePicture(context, null, contactFriendModel.getContact().getName(),
+                            contactFriendModel.getContact().getName(), shortenTextView, profilePicImgView, false);
                 }
             }
         }

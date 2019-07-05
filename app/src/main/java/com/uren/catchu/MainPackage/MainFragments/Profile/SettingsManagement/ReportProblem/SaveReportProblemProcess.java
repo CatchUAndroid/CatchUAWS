@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.Rep
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;

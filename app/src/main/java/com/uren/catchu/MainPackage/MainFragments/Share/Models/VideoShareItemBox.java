@@ -1,12 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Models;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-
-import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
-
-import catchu.model.Media;
 
 public class VideoShareItemBox {
 

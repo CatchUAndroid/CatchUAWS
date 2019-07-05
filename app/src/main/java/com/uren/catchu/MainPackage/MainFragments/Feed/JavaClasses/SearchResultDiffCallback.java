@@ -1,12 +1,12 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
 import java.util.List;
 
-import catchu.model.Post;
 import catchu.model.User;
 
 public class SearchResultDiffCallback extends DiffUtil.Callback {

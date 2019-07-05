@@ -2,16 +2,15 @@ package com.uren.catchu.ApiGatewayFunctions;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
-/*import com.fasterxml.jackson.databind.ser.Serializers;*/
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
-import catchu.model.UserProfile;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
+
+/*import com.fasterxml.jackson.databind.ser.Serializers;*/
 
 public class LoginProcess extends AsyncTask<Void, Void, BaseResponse> {
 

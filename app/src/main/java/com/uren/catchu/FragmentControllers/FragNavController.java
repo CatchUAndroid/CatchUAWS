@@ -1,6 +1,7 @@
 package com.uren.catchu.FragmentControllers;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.CheckResult;
 import androidx.annotation.IdRes;
@@ -12,9 +13,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.view.View;
-
 
 import org.json.JSONArray;
 

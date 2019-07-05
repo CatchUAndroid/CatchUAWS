@@ -1,11 +1,8 @@
 package com.uren.catchu.LoginPackage;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
-import androidx.viewpager.widget.ViewPager;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
@@ -15,15 +12,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.crashlytics.android.Crashlytics;
 import com.uren.catchu.LoginPackage.Adapters.AppIntroductionAdapter;
-import com.uren.catchu.LoginPackage.Models.AppIntroSession;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainActivity;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
-import catchu.model.Provider;
 import io.fabric.sdk.android.Fabric;
 
 public class AppIntroductionActivity extends AppCompatActivity {
@@ -73,10 +70,10 @@ public class AppIntroductionActivity extends AppCompatActivity {
     }
 
     private void initVariables() {
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
-        btnSkip = (Button) findViewById(R.id.btn_skip);
-        btnNext = (Button) findViewById(R.id.btn_next);
+        viewPager = findViewById(R.id.view_pager);
+        dotsLayout = findViewById(R.id.layoutDots);
+        btnSkip = findViewById(R.id.btn_skip);
+        btnNext = findViewById(R.id.btn_next);
 
         layouts = new int[]{
                 R.layout.welcome_slide1,

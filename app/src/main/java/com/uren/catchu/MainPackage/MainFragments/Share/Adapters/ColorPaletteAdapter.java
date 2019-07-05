@@ -2,8 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.PagerAdapter;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,10 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.PagerAdapter;
+
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.R;
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.ColorPaletteModel;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.ColorSelectCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ColorPaletteModel;
+import com.uren.catchu.R;
 
 public class ColorPaletteAdapter extends PagerAdapter {
     private Context context;

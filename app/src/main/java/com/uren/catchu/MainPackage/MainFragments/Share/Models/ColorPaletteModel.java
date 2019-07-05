@@ -1,11 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Models;
 
-import android.graphics.Color;
-
 import com.uren.catchu.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ColorPaletteModel {
 

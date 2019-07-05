@@ -1,6 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models;
 
-import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
 public class MessageListBox {

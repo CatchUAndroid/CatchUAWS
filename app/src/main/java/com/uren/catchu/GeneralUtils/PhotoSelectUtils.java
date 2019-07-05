@@ -1,20 +1,5 @@
 package com.uren.catchu.GeneralUtils;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentUris;
-import android.content.Context;
-import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import androidx.fragment.app.Fragment;
-
-
 public class PhotoSelectUtils {
     /*private static final String TAG = "PhotoUtils";
 

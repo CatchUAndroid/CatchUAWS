@@ -5,10 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,18 +14,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
-import com.uren.catchu.ApiGatewayFunctions.EndPointProcess;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -36,18 +30,9 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallba
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.Validation;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import catchu.model.BaseResponse;
-import catchu.model.Endpoint;
 import io.fabric.sdk.android.Fabric;
-
-import static com.uren.catchu.Constants.StringConstants.CHAR_E;
-import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_IN;
-import static com.uren.catchu.Constants.StringConstants.ENDPOINT_PLATFORM_ANDROID;
 
 
 public class RegisterActivity extends AppCompatActivity
@@ -94,11 +79,11 @@ public class RegisterActivity extends AppCompatActivity
     }
 
     private void init() {
-        registerLayout = (RelativeLayout) findViewById(R.id.registerLayout);
-        usernameET = (EditText) findViewById(R.id.input_username);
-        emailET = (EditText) findViewById(R.id.input_email);
-        passwordET = (EditText) findViewById(R.id.input_password);
-        btnRegister = (Button) findViewById(R.id.btnRegister);
+        registerLayout = findViewById(R.id.registerLayout);
+        usernameET = findViewById(R.id.input_username);
+        emailET = findViewById(R.id.input_email);
+        passwordET = findViewById(R.id.input_password);
+        btnRegister = findViewById(R.id.btnRegister);
         registerLayout.setOnClickListener(this);
         usernameET.setOnClickListener(this);
         emailET.setOnClickListener(this);

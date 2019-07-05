@@ -2,10 +2,11 @@ package com.uren.catchu._Libraries.LayoutManager;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.DisplayMetrics;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.DisplayMetrics;
 
 public class CustomLinearLayoutManager extends LinearLayoutManager {
     private static final float MILLISECONDS_PER_INCH = 4f;

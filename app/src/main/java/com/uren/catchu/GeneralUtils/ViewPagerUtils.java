@@ -1,14 +1,15 @@
 package com.uren.catchu.GeneralUtils;
 
 import android.content.Context;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
 
 import com.uren.catchu.R;
 
@@ -27,8 +28,8 @@ public class ViewPagerUtils {
 
         dotscount = totalDots;
         dots = new ImageView[dotscount];
-        viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-        sliderDotspanel = (LinearLayout) view.findViewById(R.id.SliderDots);
+        viewPager = view.findViewById(R.id.viewPager);
+        sliderDotspanel = view.findViewById(R.id.SliderDots);
 
         sliderDotspanel.removeAllViews();
 

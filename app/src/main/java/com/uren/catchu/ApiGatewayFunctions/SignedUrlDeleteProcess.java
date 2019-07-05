@@ -2,7 +2,6 @@ package com.uren.catchu.ApiGatewayFunctions;
 
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
@@ -10,8 +9,6 @@ import catchu.model.BaseResponse;
 import catchu.model.BucketUploadResponse;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
-import static com.uren.catchu.Constants.StringConstants.JPG_TYPE;
-import static com.uren.catchu.Constants.StringConstants.MP4_TYPE;
 
 public class SignedUrlDeleteProcess extends AsyncTask<Void, Void, BaseResponse> {
 

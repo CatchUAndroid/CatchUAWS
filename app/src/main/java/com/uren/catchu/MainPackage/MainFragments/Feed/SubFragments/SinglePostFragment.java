@@ -8,63 +8,47 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.EditText;
-;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentListProcess;
-
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SinglePostAdapter;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAllowedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostDeletedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SinglePostItemAnimator;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu._Libraries.SendCommentButton.SendCommentButton;
 import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
@@ -74,10 +58,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import catchu.model.Comment;
 import catchu.model.CommentListResponse;
-
 import catchu.model.Post;
 import catchu.model.PostListResponse;
 import catchu.model.User;
@@ -88,11 +70,6 @@ import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_EVERYONE;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_GROUP;
-import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_SELF;
 
 
 public class SinglePostFragment extends BaseFragment
@@ -200,10 +177,10 @@ public class SinglePostFragment extends BaseFragment
     private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            toolbarTitle = (String) args.getString("toolbarTitle");
-            postId = (String) args.getString("postId");
-            position = (Integer) args.getInt("position");
-            numberOfCallback = (Integer) args.getInt("numberOfCallback");
+            toolbarTitle = args.getString("toolbarTitle");
+            postId = args.getString("postId");
+            position = args.getInt("position");
+            numberOfCallback = args.getInt("numberOfCallback");
         }
     }
 
@@ -272,11 +249,7 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private boolean validOperation() {
-        if (post == null && postId == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return post != null || postId != null;
     }
 
     private void setVariables() {

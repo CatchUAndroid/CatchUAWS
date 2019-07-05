@@ -1,35 +1,27 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
-import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.DataModelUtil.GroupDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,8 +107,6 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
                     context.getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3));
             adminDisplayButton.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
                     context.getResources().getColor(R.color.MediumSeaGreen, null), GradientDrawable.RECTANGLE, 15, 2));
-            groupPicImgView.setBackground(ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    0, GradientDrawable.OVAL, 50, 0));
         }
 
         public void manageSelectedItem() {
@@ -137,6 +127,8 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
             setGroupPhoto();
             setAdminButtonValues();
             updateTickImgv();
+            GroupDataUtil.setGroupPicture(context, groupRequestResultResultArrayItem.getGroupPhotoUrl(),
+                    groupRequestResultResultArrayItem.getName(), shortGroupNameTv, groupPicImgView);
         }
 
         public void setGroupName() {

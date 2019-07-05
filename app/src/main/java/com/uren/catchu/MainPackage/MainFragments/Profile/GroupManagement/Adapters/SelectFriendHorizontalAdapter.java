@@ -3,15 +3,15 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapte
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -106,7 +106,8 @@ public class SelectFriendHorizontalAdapter extends RecyclerView.Adapter<SelectFr
                 this.selectedFriend = selectedFriend;
                 setProfileName();
                 UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                        selectedFriend.getName(), selectedFriend.getUsername(), shortenTextView, specialPictureImgView);
+                        selectedFriend.getName(), selectedFriend.getUsername(),
+                        shortenTextView, specialPictureImgView, false);
         }
 
         public void setProfileName(){

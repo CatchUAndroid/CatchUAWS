@@ -10,22 +10,14 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.BlockCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageBlockCallback;
-import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_CONTENT_ID;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_LAST_MESSAGE_DATE;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGES;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_BLOCK;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_CONTENT;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_WITH_PERSON;
 
 public class MessageBlockProcess {
 

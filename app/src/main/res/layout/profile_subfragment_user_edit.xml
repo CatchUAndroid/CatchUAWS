@@ -54,7 +54,8 @@
                                 android:layout_width="100dp"
                                 android:layout_height="100dp"
                                 android:layout_centerVertical="true"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:contentDescription="TODO" />
 
                             <TextView
                                 android:id="@+id/shortUserNameTv"
@@ -99,7 +100,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:gravity="bottom"
                             android:text="@string/PERSONAL_INFORMATION"
                             android:textStyle="bold" />
@@ -223,7 +224,7 @@
                     </LinearLayout>
 
                     <!-- Bio /-->
-                    <!--<LinearLayout
+                    <LinearLayout
                         android:id="@+id/xxxx"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -260,12 +261,12 @@
                                 android:layout_marginRight="10dp"
                                 android:layout_marginTop="5dp"
                                 android:background="@android:color/transparent"
-                                android:maxLength="150" />
+                                android:maxLength="250" />
 
                         </LinearLayout>
 
 
-                    </LinearLayout>-->
+                    </LinearLayout>
 
                     <!-- BirthDay /-->
                     <LinearLayout

@@ -7,8 +7,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
+import com.uren.catchu.Permissions.PermissionModule;
 
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -19,8 +19,6 @@ public class LocationTrackerAdapter implements LocationListener {
     private boolean isNetworkEnabled = false;
     private Location location;
     LocationCallback locationCallback;
-    private double latitude;
-    private double longitude;
 
     // The minimum distance to change Updates in meters
     private static final float MIN_DISTANCE_CHANGE_FOR_UPDATES = 1; // 1 meters
@@ -59,16 +57,16 @@ public class LocationTrackerAdapter implements LocationListener {
     }
 
     public boolean canGetLocation() {
+        try {
+            locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-
-        isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (!isGPSEnabled && !isNetworkEnabled)
-            return false;
-        else
-            return true;
+            return isGPSEnabled || isNetworkEnabled;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public Location getLocation() {
@@ -86,14 +84,9 @@ public class LocationTrackerAdapter implements LocationListener {
                         MIN_TIME_BW_UPDATES,
                         MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-                if (locationManager != null) {
+                if (locationManager != null)
                     location = locationManager
                             .getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    if (location != null) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                    }
-                }
             }
         }
     }
@@ -106,15 +99,9 @@ public class LocationTrackerAdapter implements LocationListener {
                         MIN_TIME_BW_UPDATES,
                         MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
-                if (locationManager != null) {
+                if (locationManager != null)
                     location = locationManager
                             .getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                    if (location != null) {
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                    }
-                }
             }
         }
     }

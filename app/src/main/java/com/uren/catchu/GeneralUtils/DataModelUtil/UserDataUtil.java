@@ -13,6 +13,8 @@ import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.R;
 
+import java.util.Calendar;
+
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
 import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
@@ -43,12 +45,12 @@ public class UserDataUtil {
 
         if (name != null && !name.isEmpty()) {
             if (name.length() > nameMaxLen)
-                return  name.trim().substring(0, nameMaxLen) + "...";
+                return name.trim().substring(0, nameMaxLen) + "...";
             else
                 return name;
         } else if (username != null && !username.isEmpty()) {
             if (username.length() > nameMaxLen)
-                return  CHAR_AMPERSAND + username.trim().substring(0, nameMaxLen) + "...";
+                return CHAR_AMPERSAND + username.trim().substring(0, nameMaxLen) + "...";
             else
                 return CHAR_AMPERSAND + username;
         }
@@ -94,16 +96,19 @@ public class UserDataUtil {
         return returnValue;
     }
 
-    public static void setProfilePicture(Context context, String url, String name, String username, TextView shortNameTv, ImageView profilePicImgView) {
-        if (context == null) return;
+    public static int setProfilePicture(Context context, String url, String name, String username, TextView shortNameTv,
+                                        ImageView profilePicImgView, boolean circleColorVal) {
+        if (context == null) return 0;
 
+        boolean picExist = false;
         if (url != null && !url.trim().isEmpty()) {
             shortNameTv.setVisibility(View.GONE);
             Glide.with(context)
                     .load(url)
                     .apply(RequestOptions.circleCropTransform())
                     .into(profilePicImgView);
-            profilePicImgView.setPadding(1, 1, 1, 1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
+            picExist = true;
+            //profilePicImgView.setPadding(1, 1, 1, 1); // degerler asagidaki imageShape strokeWidth ile aynı tutulmalı
         } else {
             if (name != null && !name.trim().isEmpty()) {
                 shortNameTv.setVisibility(View.VISIBLE);
@@ -122,10 +127,29 @@ public class UserDataUtil {
             }
         }
 
-        GradientDrawable imageShape = ShapeUtil.getShape(context.getResources().getColor(CommonUtils.getDarkRandomColor(context), null),
-                context.getResources().getColor(R.color.White, null),
-                GradientDrawable.OVAL, 50, 3);
+        GradientDrawable imageShape;
+        int colorCode = CommonUtils.getDarkRandomColor(context);
+
+        if (circleColorVal) {
+            if (picExist) {
+                imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                        context.getResources().getColor(colorCode, null),
+                        GradientDrawable.OVAL, 50, 7);
+            } else {
+                imageShape = ShapeUtil.getShape(context.getResources().getColor(colorCode, null),
+                        context.getResources().getColor(colorCode, null),
+                        GradientDrawable.OVAL, 50, 7);
+            }
+        } else
+            imageShape = ShapeUtil.getShape(context.getResources().getColor(colorCode, null),
+                    context.getResources().getColor(R.color.White, null),
+                    GradientDrawable.OVAL, 50, 3);
+
         profilePicImgView.setBackground(imageShape);
+
+        if (!picExist)
+            return colorCode;
+        else return 0;
     }
 
     public static void updateFollowButton(Context context, Boolean friendRelation, Boolean pendingFriendRequest, Button displayButton,
@@ -230,12 +254,17 @@ public class UserDataUtil {
             if (followStatus != null) {
                 if (followStatus.equals(FOLLOW_STATUS_OWN) || followStatus.equals(FOLLOW_STATUS_PENDING))
                     sendMessageBtn.setVisibility(View.GONE);
-                else if(followStatus.equals(FOLLOW_STATUS_FOLLOWING)){
+                else if (followStatus.equals(FOLLOW_STATUS_FOLLOWING)) {
                     sendMessageBtn.setVisibility(View.VISIBLE);
-                }else if(followStatus.equals(FOLLOW_STATUS_NONE) && isPrivate == true)
+                } else if (followStatus.equals(FOLLOW_STATUS_NONE) && isPrivate == true)
                     sendMessageBtn.setVisibility(View.GONE);
                 else
                     sendMessageBtn.setVisibility(View.VISIBLE);
+            } else {
+                if (!isPrivate)
+                    sendMessageBtn.setVisibility(View.VISIBLE);
+                else
+                    sendMessageBtn.setVisibility(View.GONE);
             }
         }
     }
@@ -251,5 +280,28 @@ public class UserDataUtil {
                 context.getResources().getColor(R.color.Coral, null), GradientDrawable.RECTANGLE, 15, 3);
 
         displayButton.setBackground(buttonShape);
+    }
+
+    public static int getAge(String birthday) {
+        final String[] split = birthday.split("/");
+        int month = Integer.parseInt(split[0]);
+        int day = Integer.parseInt(split[1]);
+        int year = Integer.parseInt(split[2]);
+
+        Calendar dob = Calendar.getInstance();
+        Calendar today = Calendar.getInstance();
+
+        dob.set(year, month, day);
+
+        int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+
+        if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+            age--;
+        }
+
+        Integer ageInt = new Integer(age);
+        //String ageS = ageInt.toString();
+
+        return age;
     }
 }

@@ -2,12 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapter
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +11,10 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -35,7 +34,6 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import catchu.model.Post;
 
@@ -118,17 +116,17 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             super(view);
 
             mView = view;
-            imgPost = (ImageView) view.findViewById(R.id.imgPost);
-            progressLoading = (ProgressBar) view.findViewById(R.id.progressLoading);
-            llProgress = (LinearLayout) view.findViewById(R.id.llProgress);
-            llError = (LinearLayout) view.findViewById(R.id.llError);
-            llExplanation = (LinearLayout) view.findViewById(R.id.llExplanation);
-            llPostImage = (LinearLayout) view.findViewById(R.id.llPostImage);
-            imgRetry = (ClickableImageView) view.findViewById(R.id.imgRetry);
-            txtExplanation = (TextView) view.findViewById(R.id.txtExplanation);
-            rlContent = (RelativeLayout) view.findViewById(R.id.rlContent);
-            imgVideoIcon = (ImageView) view.findViewById(R.id.imgVideoCamera);
-            imgGridMore = (ImageView) view.findViewById(R.id.imgGridMore);
+            imgPost = view.findViewById(R.id.imgPost);
+            progressLoading = view.findViewById(R.id.progressLoading);
+            llProgress = view.findViewById(R.id.llProgress);
+            llError = view.findViewById(R.id.llError);
+            llExplanation = view.findViewById(R.id.llExplanation);
+            llPostImage = view.findViewById(R.id.llPostImage);
+            imgRetry = view.findViewById(R.id.imgRetry);
+            txtExplanation = view.findViewById(R.id.txtExplanation);
+            rlContent = view.findViewById(R.id.rlContent);
+            imgVideoIcon = view.findViewById(R.id.imgVideoCamera);
+            imgGridMore = view.findViewById(R.id.imgGridMore);
 
             setListeners();
 
@@ -258,7 +256,6 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
                                 llError.setVisibility(View.VISIBLE);
                                 llProgress.setVisibility(View.GONE);
                                 progressLoading.setVisibility(View.GONE);
-                                ;
                                 return false;
                             }
 
@@ -313,10 +310,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(postList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(postList.size() - 1) == VIEW_PROG;
     }
 
 
@@ -336,7 +330,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 

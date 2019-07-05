@@ -3,6 +3,7 @@ package com.uren.catchu.Permissions;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+
 import androidx.core.app.ActivityCompat;
 
 public class PermissionModule {
@@ -21,70 +22,42 @@ public class PermissionModule {
     //camera permission =================================================
     public boolean checkCameraPermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) !=
-                PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
     //WriteExternalStorage permission =================================================
     public boolean checkWriteExternalStoragePermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     //RecordAudio permission =================================================
     public boolean checkRecordAudioPermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.RECORD_AUDIO)
-                != PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED;
     }
 
     //AccessFineLocation permission =================================================
     public boolean checkAccessFineLocationPermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     //READ_PHONE_STATE permission =================================================
     public boolean checkReadPhoneStatePermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) !=
-                PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
     }
 
     //READ_PHONE_NUMBERS permission =================================================
     public boolean checkReadPhoneNumbersPermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_NUMBERS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED;
     }
 
     //READ_CONTACTS permission =================================================
     public boolean checkReadContactsPermission(){
 
-        if (ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            return false;
-        }else
-            return true;
+        return ActivityCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
     }
 }

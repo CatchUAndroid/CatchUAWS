@@ -3,20 +3,19 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapte
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -166,7 +165,8 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
             UserDataUtil.setName(selectedFriend.getName(), nameTextView);
             UserDataUtil.setUsername(selectedFriend.getUsername(), usernameTextView);
             UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView);
+                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, profilePicImgView
+                    , false);
             updateTickImgv();
             updateItemEnableValue();
         }
@@ -298,10 +298,7 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(friendList.getResultArray().size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(friendList.getResultArray().size() - 1) == VIEW_PROG;
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
@@ -309,7 +306,7 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 }

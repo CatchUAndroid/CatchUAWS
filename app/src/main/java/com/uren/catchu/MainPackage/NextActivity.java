@@ -5,9 +5,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +15,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.ads.AdView;
@@ -35,15 +35,14 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedPublicFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.NotifyProblemFragment;
-import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.SharePostFragment;
+import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.GroupListHolder;
 
 import java.util.List;
 import java.util.Stack;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
@@ -269,7 +268,7 @@ public class NextActivity extends FragmentActivity implements
 
     private View getTabView(int position) {
         View view = LayoutInflater.from(NextActivity.this).inflate(R.layout.tab_item_bottom, null);
-        ImageView icon = (ImageView) view.findViewById(R.id.tab_icon);
+        ImageView icon = view.findViewById(R.id.tab_icon);
         icon.setImageDrawable(CommonUtils.setDrawableSelector(NextActivity.this, mTabIconsSelected[position], mTabIconsSelected[position]));
         return view;
     }

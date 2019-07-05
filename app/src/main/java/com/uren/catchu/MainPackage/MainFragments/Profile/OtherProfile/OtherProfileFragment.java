@@ -9,25 +9,23 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.util.Pair;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
-import com.uren.catchu.Adapters.LocationTrackerAdapter;
-import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
+import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -54,7 +52,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
 import catchu.model.PostListResponse;
 import catchu.model.User;
 import catchu.model.UserProfile;
@@ -62,7 +59,6 @@ import catchu.model.UserProfile;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
-import static com.uren.catchu.Constants.NumericConstants.VIEW_RETRY;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
@@ -145,13 +141,6 @@ public class OtherProfileFragment extends BaseFragment
         if (mView == null) {
             mView = inflater.inflate(R.layout.profile_subfragment_other_profile, container, false);
             ButterKnife.bind(this, mView);
-
-            /*Bundle args = getArguments();
-            if (args != null) {
-                userInfoListItem = (UserInfoListItem) args.getSerializable(ARGS_INSTANCE);
-                selectedUser = userInfoListItem.getUser();
-            }*/
-
             setInitialValues();
             initRecyclerView();
             getData();
@@ -171,7 +160,6 @@ public class OtherProfileFragment extends BaseFragment
                 toolbarTitleTv.setText(selectedUser.getUsername());
             }
         }
-
     }
 
     private void initRecyclerView() {
@@ -182,7 +170,6 @@ public class OtherProfileFragment extends BaseFragment
         setAdapter();
         setPullToRefresh();
         setRecyclerViewScroll();
-
     }
 
     private void setLayoutManager() {
@@ -197,7 +184,6 @@ public class OtherProfileFragment extends BaseFragment
 
         otherProfileAdapter.addHeader(userInfoListItem);
         otherProfileAdapter.setFollowClickCallback(this);
-
     }
 
     private void setPullToRefresh() {
@@ -213,7 +199,6 @@ public class OtherProfileFragment extends BaseFragment
                 getData();
             }
         });
-
     }
 
     private void setPaginationValues() {
@@ -224,7 +209,6 @@ public class OtherProfileFragment extends BaseFragment
         float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
         radius = String.valueOf(radiusInKm);
     }
-
 
     private void setRecyclerViewScroll() {
 
@@ -281,10 +265,7 @@ public class OtherProfileFragment extends BaseFragment
             @Override
             public void onSuccess(UserProfile userProfile) {
 
-                if (userProfile == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserDetail");
-                } else {
-                    CommonUtils.LOG_OK("UserDetail");
+                if (userProfile != null) {
                     fetchedUser = userProfile;
                     setHeaderInRecyclerView(fetchedUser);
                 }
@@ -292,7 +273,7 @@ public class OtherProfileFragment extends BaseFragment
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserDetail", e.toString());
+
             }
 
             @Override
@@ -433,11 +414,7 @@ public class OtherProfileFragment extends BaseFragment
                 } else {
                     CommonUtils.LOG_OK("UserSharedPostListProcess");
 
-                    if (postListResponse.getItems().size() != 0) {
-                        isMoreItemAvailable = true;
-                    } else {
-                        isMoreItemAvailable = false;
-                    }
+                    isMoreItemAvailable = postListResponse.getItems().size() != 0;
 
                     setPostsInRecyclerView(postListResponse);
 
@@ -546,11 +523,7 @@ public class OtherProfileFragment extends BaseFragment
     /*****************************************************************************/
 
     private boolean isValid(String name) {
-        if (name != null && !name.isEmpty()) {
-            return true;
-        } else {
-            return false;
-        }
+        return name != null && !name.isEmpty();
     }
 
 

@@ -2,14 +2,8 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Java
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
 
-/*import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;*/
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.MessageSentFCMCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.FCMItems;
 import com.uren.catchu.R;
@@ -26,17 +20,20 @@ import okhttp3.Response;
 
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_BODY;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_DATA;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_MESSAGE_ID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_NOTIFICATION;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_PHOTO_URL;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_TITLE;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_TO;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON;
-import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_URL;
+
+/*import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;*/
 
 public class SendClusterMessageToFCM {
 

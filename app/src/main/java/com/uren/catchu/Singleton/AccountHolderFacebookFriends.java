@@ -2,7 +2,6 @@ package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
@@ -19,11 +18,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-
 import catchu.model.Provider;
 import catchu.model.ProviderList;
 import catchu.model.User;
 import catchu.model.UserListResponse;
+
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 
 public class AccountHolderFacebookFriends {

@@ -1,7 +1,6 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
@@ -29,7 +28,7 @@ public class ShareRequestProcess extends AsyncTask<Void, Void, PostResponse> {
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            PostResponse postResponse = (PostResponse) instance.client.postsPostidPost(" ", token, postRequest);
+            PostResponse postResponse = instance.client.postsPostidPost(" ", token, postRequest);
 
             if (postResponse.getError().getCode().intValue() == RESPONSE_OK)
                 return postResponse;

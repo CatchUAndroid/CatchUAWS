@@ -4,11 +4,6 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +13,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -31,7 +32,6 @@ import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.CommentAllowedC
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostDeletedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SingleMapDetailFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.R;
@@ -44,6 +44,7 @@ import catchu.model.Comment;
 import catchu.model.Post;
 import catchu.model.Report;
 
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.CREATE_AT_NOW;
 import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_INAPPROPIATE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_ALL_FOLLOWERS;
@@ -138,7 +139,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             for (Object payload : payloads) {
                 if (payload instanceof String) {
 
-                    String loadType = (String) payload.toString();
+                    String loadType = payload.toString();
                     if (loadType.equals(PARTIAL_DATA_LOADING)) {
                         if (holder instanceof PostViewHolder) {
                             post = postList.get(position);
@@ -196,25 +197,25 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             super(view);
 
             mView = view;
-            cardView = (CardView) view.findViewById(R.id.card_view);
-            imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
-            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
+            cardView = view.findViewById(R.id.card_view);
+            imgProfilePic = view.findViewById(R.id.imgProfilePic);
+            txtProfilePic = view.findViewById(R.id.txtProfilePic);
             //txtName = (TextView) view.findViewById(R.id.txtName);
-            txtUserName = (TextView) view.findViewById(R.id.txtUserName);
-            txtDetail = (TextView) view.findViewById(R.id.txtDetail);
-            viewPager = (ViewPager) view.findViewById(R.id.viewPager);
-            imgLike = (ImageView) view.findViewById(R.id.imgLike);
-            txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
-            txtCommentCount = (TextView) view.findViewById(R.id.txtCommentCount);
-            profileMainLayout = (LinearLayout) view.findViewById(R.id.profileMainLayout);
-            txtLocationDistance = (TextView) view.findViewById(R.id.txtLocationDistance);
-            imgBtnLike = (ImageButton) view.findViewById(R.id.imgBtnLike);
-            imgBtnComment = (ImageButton) view.findViewById(R.id.imgBtnComment);
-            imgCommentNotAllowed = (ImageView) view.findViewById(R.id.imgCommentNotAllowed);
-            imgBtnMore = (ImageButton) view.findViewById(R.id.imgBtnMore);
-            imgBtnLocationDetail = (ImageButton) view.findViewById(R.id.imgBtnLocationDetail);
-            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
-            imgTarget = (ImageView) view.findViewById(R.id.imgTarget);
+            txtUserName = view.findViewById(R.id.txtUserName);
+            txtDetail = view.findViewById(R.id.txtDetail);
+            viewPager = view.findViewById(R.id.viewPager);
+            imgLike = view.findViewById(R.id.imgLike);
+            txtLikeCount = view.findViewById(R.id.txtLikeCount);
+            txtCommentCount = view.findViewById(R.id.txtCommentCount);
+            profileMainLayout = view.findViewById(R.id.profileMainLayout);
+            txtLocationDistance = view.findViewById(R.id.txtLocationDistance);
+            imgBtnLike = view.findViewById(R.id.imgBtnLike);
+            imgBtnComment = view.findViewById(R.id.imgBtnComment);
+            imgCommentNotAllowed = view.findViewById(R.id.imgCommentNotAllowed);
+            imgBtnMore = view.findViewById(R.id.imgBtnMore);
+            imgBtnLocationDetail = view.findViewById(R.id.imgBtnLocationDetail);
+            txtCreateAt = view.findViewById(R.id.txtCreateAt);
+            imgTarget = view.findViewById(R.id.imgTarget);
             likeCount = 0;
             commentCount = 0;
 
@@ -340,14 +341,15 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //profile picture
             UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
-                    post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic);
+                    post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic
+                    , true);
             //Name
             if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
                 //this.txtName.setText(post.getUser().getName());
             }
             //Username
             if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
-                this.txtUserName.setText(post.getUser().getUsername());
+                this.txtUserName.setText(CHAR_AMPERSAND + post.getUser().getUsername());
             }
             //Text
             if (post.getMessage() != null && !post.getMessage().isEmpty()) {
@@ -501,18 +503,18 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         public CommentViewHolder(View view) {
             super(view);
 
-            profileName = (TextView) view.findViewById(R.id.profile_name);
-            txtUsername = (TextView) view.findViewById(R.id.txtUsername);
-            imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
-            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
-            cardView = (CardView) view.findViewById(R.id.card_view);
+            profileName = view.findViewById(R.id.profile_name);
+            txtUsername = view.findViewById(R.id.txtUsername);
+            imgProfilePic = view.findViewById(R.id.imgProfilePic);
+            txtProfilePic = view.findViewById(R.id.txtProfilePic);
+            cardView = view.findViewById(R.id.card_view);
             imgProfilePic.setBackground(imageShape);
-            commentMessage = (TextView) view.findViewById(R.id.commentMessage);
-            llProfile = (LinearLayout) view.findViewById(R.id.llProfile);
-            txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
-            txtLike = (TextView) view.findViewById(R.id.txtLike);
-            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
-            imgLike = (ImageView) view.findViewById(R.id.imgLike);
+            commentMessage = view.findViewById(R.id.commentMessage);
+            llProfile = view.findViewById(R.id.llProfile);
+            txtLikeCount = view.findViewById(R.id.txtLikeCount);
+            txtLike = view.findViewById(R.id.txtLike);
+            txtCreateAt = view.findViewById(R.id.txtCreateAt);
+            imgLike = view.findViewById(R.id.imgLike);
 
             setListeners();
 
@@ -569,7 +571,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             //profile picture
             UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
+                    comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic
+                    , true);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
                 this.txtUsername.setText(comment.getUser().getUsername());
@@ -663,10 +666,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(postList.size() + commentList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(postList.size() + commentList.size() - 1) == VIEW_PROG;
     }
 
     public void updatePostListItems(List<Post> newPostList) {
@@ -740,7 +740,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 

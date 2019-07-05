@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 

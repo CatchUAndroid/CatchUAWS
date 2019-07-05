@@ -1,12 +1,8 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
-import android.util.Log;
-
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -16,29 +12,23 @@ import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
 import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.FeedFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.FeedRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PostFeaturesCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.CommentListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PersonListFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostImageViewFragment;
-import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlay2Fragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.PostVideoPlayFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SinglePostFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
-import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
-import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.Permissions.PermissionModule;
+import com.uren.catchu.MainPackage.MainFragments.Profile.ProfileFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
@@ -58,13 +48,6 @@ import catchu.model.User;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.AWS_EMPTY;
 import static com.uren.catchu.Constants.StringConstants.COMING_FOR_LIKE_LIST;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_FOLLOWING;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_NONE;
-import static com.uren.catchu.Constants.StringConstants.FOLLOW_STATUS_PENDING;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_PENDING_FOLLOW_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_FOLLOW_REQUEST;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
@@ -211,16 +194,14 @@ public class PostHelper {
         public static final void startProcess(Activity activity, Context context, Media m, BaseFragment.FragmentNavigation fragmentNavigation) {
             mfragmentNavigation = fragmentNavigation;
             media = m;
-            ViewPagerItemClicked viewPagerItemClicked = new ViewPagerItemClicked(activity, context);
+            new ViewPagerItemClicked();
         }
 
-        private ViewPagerItemClicked(Activity activity, Context context) {
-
-            showItemInFullView(activity, media);
-
+        private ViewPagerItemClicked() {
+            showItemInFullView(media);
         }
 
-        private void showItemInFullView(Activity activity, Media media) {
+        private void showItemInFullView(Media media) {
 
             if (media.getType().equals(IMAGE_TYPE)) {
 
@@ -305,7 +286,7 @@ public class PostHelper {
         private void startPostAddCommentProcess(Context context, String token) {
 
             String userId = AccountHolderInfo.getUserID();
-            final String postId = this.postId;
+            final String postId = AddComment.postId;
             String commentId = AWS_EMPTY;
             CommentRequest commentRequest = getCommentRequest();
 

@@ -3,9 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +14,10 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -240,7 +241,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
             UserDataUtil.setName(user.getName(), profileName);
             UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
-                    user.getName(), user.getUsername(), shortUserNameTv, profileImage);
+                    user.getName(), user.getUsername(), shortUserNameTv, profileImage, false);
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, false);
         }
 
@@ -347,10 +348,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(userList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(userList.size() - 1) == VIEW_PROG;
     }
 
     public static class ProgressViewHolder extends RecyclerView.ViewHolder {
@@ -358,7 +356,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 

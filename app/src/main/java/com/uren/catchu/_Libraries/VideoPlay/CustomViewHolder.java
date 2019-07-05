@@ -2,9 +2,10 @@ package com.uren.catchu._Libraries.VideoPlay;
 
 import android.app.Activity;
 import android.net.Uri;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.concurrent.Callable;
 
@@ -23,7 +24,7 @@ public class CustomViewHolder extends RecyclerView.ViewHolder {
 
     public CustomViewHolder(View x) {
         super(x);
-        videoImage = (VideoImage) x.findViewWithTag("videoImage");
+        videoImage = x.findViewWithTag("videoImage");
     }
 
     public void playVideo() {

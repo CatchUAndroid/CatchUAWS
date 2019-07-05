@@ -1,7 +1,6 @@
 package com.uren.catchu.GeneralUtils.DataModelUtil;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.ImageView;

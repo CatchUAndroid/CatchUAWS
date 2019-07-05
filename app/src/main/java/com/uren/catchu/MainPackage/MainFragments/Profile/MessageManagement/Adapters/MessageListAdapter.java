@@ -2,10 +2,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adap
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Typeface;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +13,16 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.Interfaces.ItemClickListener;
-import com.uren.catchu.Interfaces.ReturnCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageListBox;
-import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople.Models.ContactFriendModel;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import catchu.model.UserProfileProperties;
 
@@ -76,7 +72,7 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 
@@ -139,7 +135,8 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
 
                 UserDataUtil.setProfilePicture(context, messageListBox.getUserProfileProperties().getProfilePhotoUrl(),
                         messageListBox.getUserProfileProperties().getName(),
-                        messageListBox.getUserProfileProperties().getUsername(), shortUserNameTv, profilePicImgView);
+                        messageListBox.getUserProfileProperties().getUsername(),
+                        shortUserNameTv, profilePicImgView, false);
             }
         }
 
@@ -173,10 +170,7 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG;
     }
 
     @Override

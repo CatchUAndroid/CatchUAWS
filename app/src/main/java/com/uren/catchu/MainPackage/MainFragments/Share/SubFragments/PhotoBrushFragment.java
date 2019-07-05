@@ -1,30 +1,26 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.SubFragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
@@ -32,15 +28,11 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Adapters.ColorPaletteAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.BrushCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.ColorSelectCallback;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TextCompleteCallback;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.ModelViews.PaintView;
 import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 @SuppressLint("ValidFragment")
 public class PhotoBrushFragment extends BaseFragment {

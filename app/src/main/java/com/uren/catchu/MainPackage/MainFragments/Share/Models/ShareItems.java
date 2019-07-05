@@ -1,6 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

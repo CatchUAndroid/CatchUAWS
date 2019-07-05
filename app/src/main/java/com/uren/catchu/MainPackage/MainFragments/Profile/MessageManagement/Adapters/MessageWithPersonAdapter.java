@@ -1,22 +1,17 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
@@ -76,7 +71,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 
@@ -232,10 +227,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(messageBoxArrayList.size() - 1) == VIEW_PROG;
     }
 
     @Override

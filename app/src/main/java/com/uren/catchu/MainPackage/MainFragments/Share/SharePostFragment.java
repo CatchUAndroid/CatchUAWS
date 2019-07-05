@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
-import android.location.LocationManager;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -17,11 +16,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.FileProvider;
-import androidx.core.util.Pair;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -35,6 +29,12 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.util.Pair;
 
 import com.arsy.maps_library.MapRipple;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -70,26 +70,25 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.VideoTrimmedCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.PhotoEditorFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoRecordFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoTrimmerFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoViewFragment;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.CheckShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
+import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ResizeAnimation;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareDeleteProcess;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ShareUtil;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
-import com.uren.catchu.MainPackage.MainFragments.Share.Utils.CheckShareItems;
-import com.uren.catchu.MainPackage.MainFragments.Share.Utils.ResizeAnimation;
-import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoViewFragment;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 
 import java.math.BigDecimal;
 
@@ -98,7 +97,6 @@ import butterknife.ButterKnife;
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 
-import static android.content.Context.LOCATION_SERVICE;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.uren.catchu.Constants.NumericConstants.KEYBOARD_CHECK_VALUE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
@@ -194,7 +192,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     GoogleMap mMap;
     LocationTrackerAdapter locationTrackObj;
     MapRipple mapRipple;
-    //LocationManager locationManager;
     private KeyboardHeightProvider keyboardHeightProvider;
 
     ResizeAnimation publicAnimationShow;
@@ -216,6 +213,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     boolean isVideoSelected;
     boolean shareWhomOpened;
     boolean keyboardResized;
+    private int colorCode = 0;
 
     private static final int REQUEST_CODE_ENABLE_LOCATION = 407;
 
@@ -293,15 +291,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         setShapes();
         setViewsDefaultValues();
         setAnimations();
-        //locationManager = (LocationManager) getContext().getSystemService(LOCATION_SERVICE);
         photoSelectUtil = new PhotoSelectUtil();
         keyboardHeightProvider = new KeyboardHeightProvider((Activity) getContext());
-
-        view.post(new Runnable() {
-            public void run() {
-                keyboardHeightProvider.start();
-            }
-        });
+        view.post(() -> keyboardHeightProvider.start());
     }
 
     private void setSelectedWhomType() {
@@ -500,7 +492,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                                 videoSelectUtil = (VideoSelectUtil) object;
                                 isVideoSelected = true;
                                 addVideoShareItemList();
-                                setVideoSelectImgvFilled();
+                                //setVideoSelectImgvFilled();
                             }
                         }));
                     }
@@ -570,12 +562,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         getActivity().onBackPressed();
 
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ShareUtil shareUtil = new ShareUtil(shareItems);
-                shareUtil.startToShare();
-            }
+        handler.postDelayed(() -> {
+            ShareUtil shareUtil = new ShareUtil(shareItems);
+            shareUtil.startToShare();
         }, 300);
     }
 
@@ -734,11 +723,11 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 if (SelectedFriendList.getInstance().getFriend(0).getName() != null &&
                         !SelectedFriendList.getInstance().getFriend(0).getName().isEmpty()) {
                     returnText = SelectedFriendList.getInstance().getFriend(0).getName() + " +" +
-                            Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
+                            (SelectedFriendList.getInstance().getSize() - 1) + " others";
                 } else if (SelectedFriendList.getInstance().getFriend(0).getUsername() != null &&
                         !SelectedFriendList.getInstance().getFriend(0).getUsername().isEmpty()) {
                     returnText = SelectedFriendList.getInstance().getFriend(0).getUsername() + " +" +
-                            Integer.toString(SelectedFriendList.getInstance().getSize() - 1) + " others";
+                            (SelectedFriendList.getInstance().getSize() - 1) + " others";
                 }
             }
         } else {
@@ -767,7 +756,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
         } else
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                    PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     private void checkCameraProcess() {
@@ -780,13 +769,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             openCameraForPhotoSelect();
         else if (permissionModule.checkCameraPermission())
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                    PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         else if (permissionModule.checkWriteExternalStoragePermission())
             requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.PERMISSION_CAMERA);
+                    PermissionModule.PERMISSION_CAMERA);
         else
             requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.PERMISSION_CAMERA);
+                    PermissionModule.PERMISSION_CAMERA);
     }
 
     public void openCameraForPhotoSelect() {
@@ -849,7 +838,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void setToolbarInfo(String url, String name, String username) {
-        UserDataUtil.setProfilePicture(getContext(), url, name, username, shortUserNameTv, profilePicImgView);
+        colorCode = UserDataUtil.setProfilePicture(getContext(), url, name, username,
+                shortUserNameTv, profilePicImgView, false);
 
         if (AccountHolderInfo.getInstance().getUser() != null && AccountHolderInfo.getInstance().getUser().getUserInfo() != null) {
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getName() != null &&
@@ -882,7 +872,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             else
                 requestPermissions(
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        permissionModule.PERMISSION_ACCESS_FINE_LOCATION);
+                        PermissionModule.PERMISSION_ACCESS_FINE_LOCATION);
         } else
             initializeMap(mMap);
     }
@@ -891,11 +881,11 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
 
-        if (requestCode == permissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 initializeMap(mMap);
             }
-        } else if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+        } else if (requestCode == PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 if (galleryOrCameraSelect.equals(CAMERA_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
@@ -903,7 +893,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                         openCameraForPhotoSelect();
                     else
                         requestPermissions(new String[]{Manifest.permission.CAMERA},
-                                permissionModule.PERMISSION_CAMERA);
+                                PermissionModule.PERMISSION_CAMERA);
                 } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                             getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
@@ -912,14 +902,14 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                             getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
             }
-        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+        } else if (requestCode == PermissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 if (permissionModule.checkWriteExternalStoragePermission())
                     openCameraForPhotoSelect();
                 else
                     requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                            permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                            PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
             }
         }
     }
@@ -935,7 +925,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 photoSelectUtil = new PhotoSelectUtil(getContext(), photoUri, FROM_FILE_TEXT);
                 startPhotoSelectedFragment();
             } else if (requestCode == REQUEST_CODE_VIDEO_GALLERY_SELECT) {
-                checkVideoDuration(data);
+                //checkVideoDuration(data);
             }
         } else if (requestCode == REQUEST_CODE_ENABLE_LOCATION) {
             if (locationTrackObj.canGetLocation())
@@ -943,11 +933,11 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    public void checkVideoDuration(Intent data) {
+    /*public void checkVideoDuration(Intent data) {
         if (data == null) return;
         Uri uri = data.getData();
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(UriAdapter.getPathFromGalleryUri((Activity) getContext(), uri));
+        retriever.setDataSource(UriAdapter.getPathFromGalleryUri(getContext(), uri));
         String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
         long timeInMillisec = Long.parseLong(time);
 
@@ -960,9 +950,9 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             setVideoSelectImgvFilled();
             startVideoViewFragment();
         }
-    }
+    }*/
 
-    public void startVideoTrimmerFragment(Uri uri) {
+    /*public void startVideoTrimmerFragment(Uri uri) {
         mFragmentNavigation.pushFragment(new VideoTrimmerFragment(uri, new VideoTrimmedCallback() {
             @Override
             public void onTrimmed(Uri uri, String realPath) {
@@ -972,7 +962,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                 setVideoSelectImgvFilled();
             }
         }));
-    }
+    }*/
 
     public void addVideoShareItemList() {
         shareItems.clearVideoShareItemBox();
@@ -1077,17 +1067,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     @Override
     public void onStop() {
         super.onStop();
-       /* if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);*/
-       locationTrackObj.removeUpdates();
+        locationTrackObj.removeUpdates();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         keyboardHeightProvider.setKeyboardHeightObserver(null);
-        /*if (locationManager != null)
-            locationManager.removeUpdates(locationTrackObj);*/
         locationTrackObj.removeUpdates();
     }
 
@@ -1112,17 +1098,24 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     fillImageShareItemBox();
                 }
             }));
-
         }
     }
 
 
     private void setWhomItemsImgvFilled() {
-        publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
-        justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        if(colorCode != 0){
+            publicImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
+            allFollowersImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
+            specialImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
+            groupsImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
+            justMeImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
+        }else {
+            publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            justMeImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+        }
     }
 
     public void setPhotoSelectImgvFilled() {
@@ -1132,12 +1125,12 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         photoCheckedImgv.setVisibility(View.VISIBLE);
     }
 
-    public void setVideoSelectImgvFilled() {
+    /*public void setVideoSelectImgvFilled() {
         videoSelectImgv.setBackground(ShapeUtil.getShape(0,
                 getContext().getResources().getColor(R.color.RoyalBlue, null),
                 GradientDrawable.OVAL, 50, 3));
         videoCheckedImgv.setVisibility(View.VISIBLE);
-    }
+    }*/
 
     public void setTextSelectImgvFilled() {
         textSelectImgv.setBackground(ShapeUtil.getShape(0,
@@ -1167,8 +1160,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
         if (height > KEYBOARD_CHECK_VALUE && mapLayout != null && !keyboardResized) {
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mapLayout.getLayoutParams();
-            LinearLayout.LayoutParams paramsAd = (LinearLayout.LayoutParams) getActivity().findViewById(R.id.adView).getLayoutParams();
-            params.height = height - paramsAd.height;
+            //LinearLayout.LayoutParams paramsAd = (LinearLayout.LayoutParams) getActivity().findViewById(R.id.adView).getLayoutParams();
+            params.height = height;
             mapLayout.setLayoutParams(params);
             keyboardResized = true;
         }

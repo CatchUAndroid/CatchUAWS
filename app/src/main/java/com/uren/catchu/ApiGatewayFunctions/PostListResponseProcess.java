@@ -2,13 +2,10 @@ package com.uren.catchu.ApiGatewayFunctions;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
-import catchu.model.BaseRequest;
 import catchu.model.PostListResponse;
-import catchu.model.PostResponse;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 

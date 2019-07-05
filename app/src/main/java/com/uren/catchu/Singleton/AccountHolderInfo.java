@@ -1,14 +1,9 @@
 package com.uren.catchu.Singleton;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
-import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -22,7 +17,6 @@ import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.Constants.Error;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.R;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
 import catchu.model.UserProfile;

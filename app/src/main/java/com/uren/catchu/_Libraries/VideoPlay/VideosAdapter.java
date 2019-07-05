@@ -1,8 +1,9 @@
 package com.uren.catchu._Libraries.VideoPlay;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class VideosAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 

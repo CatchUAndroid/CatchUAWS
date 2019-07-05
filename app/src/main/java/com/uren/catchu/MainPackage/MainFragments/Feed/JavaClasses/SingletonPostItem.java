@@ -1,7 +1,5 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
-import catchu.model.Media;
-
 public class SingletonPostItem {
 
    /* private static SingletonPostItem ourInstance ;

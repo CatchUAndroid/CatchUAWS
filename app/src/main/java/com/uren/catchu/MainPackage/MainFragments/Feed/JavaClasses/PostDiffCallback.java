@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
@@ -30,8 +31,13 @@ public class PostDiffCallback extends DiffUtil.Callback {
 
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-        return mOldPostList.get(oldItemPosition).getPostid() == mNewPostList.get(
-                newItemPosition).getPostid();
+        try {
+            return mOldPostList.get(oldItemPosition).getPostid() == mNewPostList.get(
+                    newItemPosition).getPostid();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override

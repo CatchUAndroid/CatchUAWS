@@ -299,6 +299,10 @@
     <string name="postsInfo">Public and posted around posts of user is shown here. Click post for details. </string>
     <string name="emptyFeed2">No posts caught.</string>
     <string name="notFound">Not Found.</string>
+    <string name="ABOUT_ME">About me</string>
+    <string name="ABOUT_ME_BIO">About me</string>
+    <string name="AGE">Age,</string>
+
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Social Interaction</string>

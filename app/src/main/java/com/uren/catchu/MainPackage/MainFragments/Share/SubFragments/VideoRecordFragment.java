@@ -24,9 +24,6 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.HandlerThread;
-import androidx.annotation.MainThread;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -39,6 +36,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -59,7 +60,6 @@ import java.util.concurrent.Semaphore;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
-import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 
 @SuppressLint("ValidFragment")
 public class VideoRecordFragment extends BaseFragment implements View.OnClickListener, MediaRecorder.OnInfoListener {
@@ -245,11 +245,11 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
-        mTextureView = (AutoFitTextureView) view.findViewById(R.id.texture);
-        toggleRecordingButton = (ToggleButton) view.findViewById(R.id.toggleRecordingButton);
-        flashModeImgv = (ImageView) view.findViewById(R.id.flashModeImgv);
-        switchCamImgv = (ImageView) view.findViewById(R.id.switchCamImgv);
-        remainingTimeTv = (TextView) view.findViewById(R.id.remainingTimeTv);
+        mTextureView = view.findViewById(R.id.texture);
+        toggleRecordingButton = view.findViewById(R.id.toggleRecordingButton);
+        flashModeImgv = view.findViewById(R.id.flashModeImgv);
+        switchCamImgv = view.findViewById(R.id.switchCamImgv);
+        remainingTimeTv = view.findViewById(R.id.remainingTimeTv);
         toggleRecordingButton.setOnClickListener(this);
         flashModeImgv.setOnClickListener(this);
         switchCamImgv.setOnClickListener(this);
@@ -596,9 +596,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    final String methodName = new Object() {
-                    }.getClass().getEnclosingMethod().getName();
-
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
                     getActivity().runOnUiThread(new Runnable() {

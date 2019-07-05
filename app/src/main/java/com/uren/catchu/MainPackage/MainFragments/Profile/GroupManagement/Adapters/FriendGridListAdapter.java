@@ -2,7 +2,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapte
 
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,7 +95,8 @@ public class FriendGridListAdapter extends RecyclerView.Adapter<FriendGridListAd
             this.selectedFriend = selectedFriend;
             setProfileName();
             UserDataUtil.setProfilePicture(context, selectedFriend.getProfilePhotoUrl(),
-                    selectedFriend.getName(), selectedFriend.getUsername(), shortUserNameTv, specialProfileImgView);
+                    selectedFriend.getName(), selectedFriend.getUsername(),
+                    shortUserNameTv, specialProfileImgView, false);
         }
 
         public void setProfileName() {

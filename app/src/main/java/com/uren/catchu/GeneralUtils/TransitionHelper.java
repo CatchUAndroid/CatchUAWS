@@ -17,10 +17,11 @@
 package com.uren.catchu.GeneralUtils;
 
 import android.app.Activity;
+import android.view.View;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
-import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Arrays;

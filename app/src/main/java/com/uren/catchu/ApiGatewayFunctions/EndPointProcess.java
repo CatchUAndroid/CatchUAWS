@@ -6,7 +6,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseResponse;
 import catchu.model.Endpoint;
-import catchu.model.FollowInfoListResponse;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 

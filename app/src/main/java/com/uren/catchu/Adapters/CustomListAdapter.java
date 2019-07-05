@@ -1,7 +1,5 @@
 package com.uren.catchu.Adapters;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.uren.catchu.R;
+
+import java.util.List;
 
 public class CustomListAdapter extends ArrayAdapter<String> {
 
@@ -42,7 +42,7 @@ public class CustomListAdapter extends ArrayAdapter<String> {
             holder = new ViewHolder();
             view = inflater.inflate(resource, null);
 
-            holder.txtItem = (TextView) view.findViewById(R.id.txtItem);
+            holder.txtItem = view.findViewById(R.id.txtItem);
             view.setTag(holder);
 
         } else {

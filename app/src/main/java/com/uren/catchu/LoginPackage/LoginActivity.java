@@ -7,15 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -31,7 +26,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
@@ -45,7 +42,6 @@ import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -54,8 +50,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.TwitterAuthProvider;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
@@ -65,20 +59,16 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-import com.uren.catchu.ApiGatewayFunctions.EndPointProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
-import com.uren.catchu.GeneralUtils.BlurBuilder;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.ClickableImageView;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.MainActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
@@ -88,16 +78,11 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import catchu.model.BaseResponse;
-import catchu.model.Endpoint;
 import catchu.model.UserProfile;
 import io.fabric.sdk.android.Fabric;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-import static com.uren.catchu.Constants.StringConstants.CHAR_E;
-import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_IN;
-import static com.uren.catchu.Constants.StringConstants.ENDPOINT_PLATFORM_ANDROID;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_FACEBOOK;
 import static com.uren.catchu.Constants.StringConstants.PROVIDER_TYPE_TWITTER;
 
@@ -213,14 +198,14 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void initUIValues(){
-        backgroundLayout = (RelativeLayout) findViewById(R.id.loginLayout);
-        emailET = (EditText) findViewById(R.id.input_email);
-        passwordET = (EditText) findViewById(R.id.input_password);
-        registerText = (TextView) findViewById(R.id.btnRegister);
-        forgetPasText = (TextView) findViewById(R.id.btnForgetPassword);
-        imgFacebook = (ClickableImageView) findViewById(R.id.clickImageFB);
-        imgTwitter = (ClickableImageView) findViewById(R.id.clickImageTwitter);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
+        backgroundLayout = findViewById(R.id.loginLayout);
+        emailET = findViewById(R.id.input_email);
+        passwordET = findViewById(R.id.input_password);
+        registerText = findViewById(R.id.btnRegister);
+        forgetPasText = findViewById(R.id.btnForgetPassword);
+        imgFacebook = findViewById(R.id.clickImageFB);
+        imgTwitter = findViewById(R.id.clickImageTwitter);
+        btnLogin = findViewById(R.id.btnLogin);
         rememberMeCheckBox = findViewById(R.id.rememberMeCb);
         forgetPasswordBtn = findViewById(R.id.forgetPasswordBtn);
         createAccBtn = findViewById(R.id.createAccBtn);
@@ -355,7 +340,7 @@ public class LoginActivity extends AppCompatActivity
         // Initialize Facebook LoginActivity button
         mCallbackManager = CallbackManager.Factory.create();
 
-        LoginButton loginButton = (LoginButton) findViewById(R.id.facebookLoginButton);
+        LoginButton loginButton = findViewById(R.id.facebookLoginButton);
 
         loginButton.setReadPermissions(Arrays.asList(
                 "public_profile",

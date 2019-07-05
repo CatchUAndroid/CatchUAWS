@@ -14,40 +14,29 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.Settings;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.content.ContextCompat;
-import android.text.Layout;
 import android.text.format.DateUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.R;
-
-import org.joda.time.Days;
-import org.joda.time.ReadableInstant;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 import java.util.TimeZone;
@@ -255,11 +244,8 @@ public class CommonUtils {
     }
 
     public static boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
-            // this device has a camera
-            return true;
-        }
-        return false;
+        // this device has a camera
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     public static void LOG_OK(String proccessName) {
@@ -404,12 +390,9 @@ public class CommonUtils {
 
     public static boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            return true;
-        }
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
 
-        return false;
     }
 
     public static void connectionErrSnackbarShow(View view, Context context) {
@@ -418,7 +401,7 @@ public class CommonUtils {
                 Snackbar.LENGTH_SHORT);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(context.getResources().getColor(R.color.Red, null));
-        TextView tv = (TextView) snackBarView.findViewById(R.id.snackbar_text);
+        TextView tv = snackBarView.findViewById(R.id.snackbar_text);
         tv.setTextColor(context.getResources().getColor(R.color.White, null));
         snackbar.show();
     }
@@ -427,14 +410,14 @@ public class CommonUtils {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_SHORT);
         View snackBarView = snackbar.getView();
         snackBarView.setBackgroundColor(context.getResources().getColor(colorId, null));
-        TextView tv = (TextView) snackBarView.findViewById(R.id.snackbar_text);
+        TextView tv = snackBarView.findViewById(R.id.snackbar_text);
         tv.setTextColor(context.getResources().getColor(R.color.White, null));
         snackbar.show();
     }
 
     public static int getRandomColor(Context context) {
 
-        int colorList[] = {
+        int[] colorList = {
                 R.color.yellow_green_color_picker,
                 R.color.dot_light_screen2,
                 R.color.PeachPuff,
@@ -473,7 +456,7 @@ public class CommonUtils {
 
     public static int getDarkRandomColor(Context context) {
 
-        int colorList[] = {
+        int[] colorList = {
                 R.color.style_color_primary,
                 R.color.style_color_accent,
                 R.color.fab_color_pressed,

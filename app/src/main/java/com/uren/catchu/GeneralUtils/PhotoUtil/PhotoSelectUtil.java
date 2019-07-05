@@ -145,10 +145,7 @@ public class PhotoSelectUtil {
         int width = bitmap.getWidth();
         int heigth = bitmap.getHeight();
 
-        if (heigth > width)
-            portraitMode = true;
-        else
-            portraitMode = false;
+        portraitMode = heigth > width;
     }
 
     public Bitmap getBitmap() {

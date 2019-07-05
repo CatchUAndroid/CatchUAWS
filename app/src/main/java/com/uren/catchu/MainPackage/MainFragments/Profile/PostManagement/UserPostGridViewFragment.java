@@ -8,26 +8,22 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -156,14 +152,14 @@ public class UserPostGridViewFragment extends BaseFragment {
     }
 
     private void initItems() {
-        gridRecyclerView = (RecyclerView) mView.findViewById(R.id.gridRecyclerView);
+        gridRecyclerView = mView.findViewById(R.id.gridRecyclerView);
     }
 
     private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            catchType = (String) args.getString("catchType");
-            targetUid = (String) args.getString("targetUid");
+            catchType = args.getString("catchType");
+            targetUid = args.getString("targetUid");
         }
     }
 

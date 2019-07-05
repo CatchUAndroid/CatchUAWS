@@ -4,10 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +15,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.ViewPagerUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Adapters.ColorPaletteAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TextCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.ColorSelectCallback;
+import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TextCompleteCallback;
+import com.uren.catchu.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

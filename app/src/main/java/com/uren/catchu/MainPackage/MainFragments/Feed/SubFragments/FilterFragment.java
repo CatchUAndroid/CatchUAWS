@@ -1,26 +1,27 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
+
 import com.dagang.library.GradientButton;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfileProperties;
+
 import static com.uren.catchu.Constants.NumericConstants.DEFAULT_FEED_RADIUS;
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 
@@ -89,7 +90,7 @@ public class FilterFragment extends BaseFragment
         //profile picture
         UserProfileProperties user = AccountHolderInfo.getInstance().getUser().getUserInfo();
         UserDataUtil.setProfilePicture(getContext(), user.getProfilePhotoUrl(),
-                user.getName(), user.getUsername(), txtProfilePic, imgProfilePic);
+                user.getName(), user.getUsername(), txtProfilePic, imgProfilePic, false);
     }
 
 
@@ -118,7 +119,7 @@ public class FilterFragment extends BaseFragment
         suffix = " " + getContext().getResources().getString(R.string.meter);
         radius = FILTERED_FEED_RADIUS;
         seekBar.setMax(10000);
-        txtRadius.setText(String.valueOf(radius) + suffix);
+        txtRadius.setText(radius + suffix);
         seekBar.setProgress(radius);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -133,7 +134,7 @@ public class FilterFragment extends BaseFragment
                     seekBar.setProgress(100);
                 }
                 radius = pval;
-                txtRadius.setText(String.valueOf(pval) + suffix);
+                txtRadius.setText(pval + suffix);
 
             }
 
@@ -149,7 +150,7 @@ public class FilterFragment extends BaseFragment
                     seekBar.setProgress(100);
                 }
                 radius = pval;
-                txtRadius.setText(String.valueOf(pval) + suffix);
+                txtRadius.setText(pval + suffix);
             }
 
 

@@ -3,10 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +14,13 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.GridViewUtil;
@@ -30,10 +28,10 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.FollowClickCallback;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
-import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
+import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.R;
@@ -153,7 +151,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 if (payload instanceof UserProfile) {
                     if (holder instanceof ProfileHeaderViewHolder) {
                         UserProfile userProfile = (UserProfile) payload;
-                        ((ProfileHeaderViewHolder) holder).updateUserProfile(userProfile, position);
+                        ((ProfileHeaderViewHolder) holder).updateUserProfile(userProfile);
                     }
                 }
 
@@ -180,7 +178,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         if (holder instanceof ProfileHeaderViewHolder) {
             UserInfoListItem userInfoListItem = (UserInfoListItem) objectList.get(position);
-            ((ProfileHeaderViewHolder) holder).setData(userInfoListItem, position);
+            ((ProfileHeaderViewHolder) holder).setData(userInfoListItem);
         } else if (holder instanceof PostViewHolder) {
             Post post = (Post) objectList.get(position);
             ((PostViewHolder) holder).setData(post, position);
@@ -200,11 +198,14 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         ImageView imgInfo;
         TextView txtProfile;
         TextView txtName;
+        TextView txtBio;
+        TextView txtAge;
         Button btnFollowStatus;
         TextView txtFollowerCnt;
         TextView txtFollowingCnt;
         LinearLayout followersLayout;
         LinearLayout followingsLayout;
+        LinearLayout bioll;
 
         UserProfile fetchedUser;
         String followStatus;
@@ -217,16 +218,19 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
             mView = view;
             profilePicLayout = view.findViewById(R.id.profilePicLayout);
-            imgProfile = (ImageView) view.findViewById(R.id.imgProfile);
-            imgInfo = (ImageView) view.findViewById(R.id.imgInfo);
-            txtProfile = (TextView) view.findViewById(R.id.txtProfile);
-            txtName = (TextView) view.findViewById(R.id.txtName);
-            btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
-            txtFollowerCnt = (TextView) view.findViewById(R.id.txtFollowerCnt);
-            txtFollowingCnt = (TextView) view.findViewById(R.id.txtFollowingCnt);
-            sendMessageBtn = (Button) view.findViewById(R.id.sendMessageBtn);
-            followersLayout = (LinearLayout) view.findViewById(R.id.followersLayout);
-            followingsLayout = (LinearLayout) view.findViewById(R.id.followingsLayout);
+            imgProfile = view.findViewById(R.id.imgProfile);
+            imgInfo = view.findViewById(R.id.imgInfo);
+            txtProfile = view.findViewById(R.id.txtProfile);
+            txtName = view.findViewById(R.id.txtName);
+            txtBio = view.findViewById(R.id.txtBio);
+            txtAge = view.findViewById(R.id.txtAge);
+            bioll = view.findViewById(R.id.bioll);
+            btnFollowStatus = view.findViewById(R.id.btnFollowStatus);
+            txtFollowerCnt = view.findViewById(R.id.txtFollowerCnt);
+            txtFollowingCnt = view.findViewById(R.id.txtFollowingCnt);
+            sendMessageBtn = view.findViewById(R.id.sendMessageBtn);
+            followersLayout = view.findViewById(R.id.followersLayout);
+            followingsLayout = view.findViewById(R.id.followingsLayout);
 
             //txtFollowerCnt.setClickable(false);
             //txtFollowingCnt.setClickable(false);
@@ -300,12 +304,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                     selectedUser.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
                 return true;
             } else {
-                if (selectedUser != null && selectedUser.getIsPrivateAccount() != null &&
-                        selectedUser.getIsPrivateAccount()) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return selectedUser == null || selectedUser.getIsPrivateAccount() == null ||
+                        !selectedUser.getIsPrivateAccount();
             }
         }
 
@@ -351,12 +351,12 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             return user;
         }
 
-        public void setData(UserInfoListItem userInfoListItem, int position) {
+        public void setData(UserInfoListItem userInfoListItem) {
             selectedUser = userInfoListItem.getUser();
 
             //profil fotografi varsa set edilir.
             UserDataUtil.setProfilePicture(mContext, selectedUser.getProfilePhotoUrl(), selectedUser.getName(),
-                    selectedUser.getUsername(), txtProfile, imgProfile);
+                    selectedUser.getUsername(), txtProfile, imgProfile, false);
             imgProfile.setPadding(3, 3, 3, 3);
 
             //Name
@@ -369,12 +369,12 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                     selectedUser.getIsPrivateAccount(), sendMessageBtn);
         }
 
-        public void updateUserProfile(UserProfile userProfile, int position) {
+        public void updateUserProfile(UserProfile userProfile) {
             fetchedUser = userProfile;
 
             //profil fotografi varsa set edilir.
             UserDataUtil.setProfilePicture(mContext, userProfile.getUserInfo().getProfilePhotoUrl(), userProfile.getUserInfo().getName(),
-                    userProfile.getUserInfo().getUsername(), txtProfile, imgProfile);
+                    userProfile.getUserInfo().getUsername(), txtProfile, imgProfile, false);
             imgProfile.setPadding(3, 3, 3, 3);
             //Name
             if (isValid(userProfile.getUserInfo().getName())) {
@@ -382,8 +382,32 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             } else if (isValid(userProfile.getUserInfo().getUsername())) {
                 txtName.setText(userProfile.getUserInfo().getUsername());
             }
+
             //Biography
-            // todo NT - biography usera beslenmiyor.düzenlenecek
+            if (isValid(userProfile.getUserInfo().getBio())) {
+                txtBio.setText(userProfile.getUserInfo().getBio());
+                bioll.setVisibility(View.VISIBLE);
+            }else {
+                txtBio.setText("");
+                bioll.setVisibility(View.GONE);
+            }
+
+            //Age
+            if(isValid(userProfile.getUserInfo().getBirthday())){
+                int age = UserDataUtil.getAge(userProfile.getUserInfo().getBirthday());
+
+                if(age <= 0){
+                    txtAge.setText("");
+                    txtAge.setVisibility(View.GONE);
+                }else {
+                    Integer ageInt = new Integer(age);
+                    txtAge.setText(mContext.getResources().getString(R.string.AGE) + " " + ageInt.toString());
+                    txtAge.setVisibility(View.VISIBLE);
+                }
+            }else {
+                txtAge.setText("");
+                txtAge.setVisibility(View.GONE);
+            }
 
             //FollowStatus
             UserDataUtil.updateFollowButton2(mContext, userProfile.getRelationInfo().getFollowStatus(), btnFollowStatus, true);
@@ -392,11 +416,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         private boolean isValid(String name) {
-            if (name != null && !name.isEmpty()) {
-                return true;
-            } else {
-                return false;
-            }
+            return name != null && !name.isEmpty();
         }
 
         private void setUserFollowerAndFollowingCnt(UserProfile user) {
@@ -558,11 +578,11 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             super(view);
 
             mView = view;
-            gridRecyclerView = (RecyclerView) view.findViewById(R.id.gridRecyclerView);
-            mainExceptionLayout = (RelativeLayout) view.findViewById(R.id.mainExceptionLayout);
-            noPostFoundLayout = (LinearLayout) view.findViewById(R.id.noPostFoundLayout);
-            imgNoPostFound = (ImageView) view.findViewById(R.id.imgNoPostFound);
-            txtNoPostFound = (TextView) view.findViewById(R.id.txtNoPostFound);
+            gridRecyclerView = view.findViewById(R.id.gridRecyclerView);
+            mainExceptionLayout = view.findViewById(R.id.mainExceptionLayout);
+            noPostFoundLayout = view.findViewById(R.id.noPostFoundLayout);
+            imgNoPostFound = view.findViewById(R.id.imgNoPostFound);
+            txtNoPostFound = view.findViewById(R.id.txtNoPostFound);
 
             setListeners();
             setLayoutManager();
@@ -642,7 +662,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 
@@ -651,7 +671,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
 
         public LastItemViewHolder(View v) {
             super(v);
-            textView = (TextView) v.findViewById(R.id.tvRv);
+            textView = v.findViewById(R.id.tvRv);
         }
 
         public void setData(String s, int position) {
@@ -748,10 +768,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     }
 
     public boolean isShowingProgressLoading() {
-        if (getItemViewType(objectList.size() - 1) == VIEW_PROG)
-            return true;
-        else
-            return false;
+        return getItemViewType(objectList.size() - 1) == VIEW_PROG;
     }
 
     public void innerRecyclerPageCntChanged(int pageCnt) {

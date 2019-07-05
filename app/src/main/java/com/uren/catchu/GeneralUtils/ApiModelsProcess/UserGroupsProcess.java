@@ -7,10 +7,10 @@ import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.SaveGroupProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.UpdateGroupProcess;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.SaveGroupProcess;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Utils.UpdateGroupProcess;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestGroupParticipantArrayItem;
-import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
 
 import static com.uren.catchu.Constants.StringConstants.ADD_PARTICIPANT_INTO_GROUP;
@@ -181,7 +180,7 @@ public class UserGroupsProcess {
             @Override
             public void onSuccess(Object object) {
                 if (object != null)
-                    completeCallback.onComplete((GroupRequestResult) object);
+                    completeCallback.onComplete(object);
                 else
                     completeCallback.onFailed(new Exception(""));
             }

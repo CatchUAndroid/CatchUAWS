@@ -1,11 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +11,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SearchResultDiffCallback;
-
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ListItemClickListener;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -119,12 +117,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         public MyViewHolder(View view) {
             super(view);
 
-            profileName = (TextView) view.findViewById(R.id.profile_name);
-            profileUserName = (TextView) view.findViewById(R.id.profile_user_name);
+            profileName = view.findViewById(R.id.profile_name);
+            profileUserName = view.findViewById(R.id.profile_user_name);
             shortUserNameTv = view.findViewById(R.id.shortUserNameTv);
-            profileImage = (ImageView) view.findViewById(R.id.profile_image);
-            btnFollowStatus = (Button) view.findViewById(R.id.btnFollowStatus);
-            cardView = (CardView) view.findViewById(R.id.card_view);
+            profileImage = view.findViewById(R.id.profile_image);
+            btnFollowStatus = view.findViewById(R.id.btnFollowStatus);
+            cardView = view.findViewById(R.id.card_view);
             profileImage.setBackground(imageShape);
             setListeners();
         }
@@ -179,7 +177,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
             UserDataUtil.setName(user.getName(), profileName);
             UserDataUtil.setUsername(user.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(mContext, user.getProfilePhotoUrl(),
-                    user.getName(), user.getUsername(), shortUserNameTv, profileImage);
+                    user.getName(), user.getUsername(), shortUserNameTv, profileImage, false);
 
             UserDataUtil.updateFollowButton2(mContext, user.getFollowStatus(), btnFollowStatus, true);
         }
@@ -257,7 +255,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
 
         public ProgressViewHolder(View v) {
             super(v);
-            progressBar = (ProgressBar) v.findViewById(R.id.progressBarLoading);
+            progressBar = v.findViewById(R.id.progressBarLoading);
         }
     }
 

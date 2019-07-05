@@ -2,12 +2,8 @@ package com.uren.catchu.ApiGatewayFunctions;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
-import com.uren.catchu.ApiGatewayFunctions.SingletonApiClient;
-
-import java.math.BigDecimal;
 
 import catchu.model.BaseResponse;
 import catchu.model.UserProfile;

@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.BaseResponse;
-import catchu.model.BucketUploadResponse;
 import catchu.model.Report;
 
 import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;

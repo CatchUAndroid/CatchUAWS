@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Share.Utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import androidx.core.graphics.BitmapCompat;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -14,12 +13,12 @@ import com.uren.catchu.ApiGatewayFunctions.UploadVideoToS3;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
-import com.uren.catchu.R;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
+import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
+import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
-import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +33,6 @@ import catchu.model.PostRequest;
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.CHAR_HYPHEN;
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
 import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
@@ -86,8 +84,6 @@ public class SharePostProcess {
     }
 
     private void startUploadMediaToS3(String token) {
-        final String methodName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
 
         signedUrlGetProcess = new SignedUrlGetProcess(new OnEventListener() {
             @Override
@@ -102,13 +98,13 @@ public class SharePostProcess {
                     counter++;
                 }
 
-                counter = 0;
+                /*counter = 0;
                 for (final VideoShareItemBox videoShareItemBox : shareItems.getVideoShareItemBoxes()) {
                     BucketUpload bucketUpload = commonS3BucketResult.getVideos().get(counter);
                     uploadVideos(bucketUpload, videoShareItemBox);
                     uploadThumbnailImage(bucketUpload, videoShareItemBox);
                     counter++;
-                }
+                }*/
             }
 
             @Override
@@ -128,9 +124,6 @@ public class SharePostProcess {
     }
 
     public void uploadImages(final BucketUpload bucketUpload, final ImageShareItemBox imageShareItemBox) {
-        final String methodName = new Object() {
-        }.getClass().getEnclosingMethod().getName();
-
         if (imageShareItemBox != null && imageShareItemBox.getPhotoSelectUtil() != null) {
 
             photoBitmap = BitmapConversion.compressImage(context, imageShareItemBox.getPhotoSelectUtil());
@@ -217,7 +210,7 @@ public class SharePostProcess {
         }
     }
 
-    private void uploadVideos(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
+    /*private void uploadVideos(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
         uploadVideoToS3 = new UploadVideoToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -265,9 +258,9 @@ public class SharePostProcess {
             }
         }, bucketUpload.getUploadUrl(), videoShareItemBox.getVideoSelectUtil().getVideoRealPath());
         uploadVideoToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    }*/
 
-    public void uploadThumbnailImage(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
+    /*public void uploadThumbnailImage(final BucketUpload bucketUpload, final VideoShareItemBox videoShareItemBox) {
         uploadThumbnailToS3 = new UploadImageToS3(new OnEventListener() {
             @Override
             public void onSuccess(Object object) {
@@ -308,15 +301,15 @@ public class SharePostProcess {
             }
         }, videoShareItemBox.getVideoSelectUtil().getVideoBitmap(), bucketUpload.getThumbnailUploadUrl());
         uploadThumbnailToS3.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-    }
+    }*/
 
-    private void recycleVideoBitmaps(VideoShareItemBox videoShareItemBox) {
+    /*private void recycleVideoBitmaps(VideoShareItemBox videoShareItemBox) {
         if (videoShareItemBox != null && videoShareItemBox.getVideoSelectUtil() != null &&
                 videoShareItemBox.getVideoSelectUtil().getVideoBitmap() != null && !videoShareItemBox.getVideoSelectUtil().getVideoBitmap().isRecycled()) {
             videoShareItemBox.getVideoSelectUtil().getVideoBitmap().recycle();
             videoShareItemBox.getVideoSelectUtil().setVideoBitmap(null);
         }
-    }
+    }*/
 
     public void checkAllItemsUploaded() {
         if (shareItems != null && shareItems.getImageShareItemBoxes() != null && shareItems.getImageShareItemBoxes().size() > 0) {

@@ -4,14 +4,15 @@ import android.annotation.SuppressLint;
 import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -27,8 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
 import uk.co.senab.photoview.PhotoViewAttacher;
-
-import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 
 @SuppressLint("ValidFragment")
 public class PostImageViewFragment extends BaseFragment {

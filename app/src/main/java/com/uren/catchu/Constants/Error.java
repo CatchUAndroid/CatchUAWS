@@ -7,7 +7,7 @@ public enum Error {
 
     private String stringValue;
     private int intValue;
-    private Error(String toString, int value) {
+    Error(String toString, int value) {
         stringValue = toString;
         intValue = value;
     }

@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.github.hani-momanii:SuperNova-Emoji:1.1'
     implementation 'net.danlew:android.joda:2.10.1'
     //implementation 'com.github.Shashank02051997:FancyGifDialog-Android:1.1'
-    //**************** MY DEPENDENCIES *******************//
+    //**************** MY DEPENDENCIES ******************//
     /*=======UTILS=========*/
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'

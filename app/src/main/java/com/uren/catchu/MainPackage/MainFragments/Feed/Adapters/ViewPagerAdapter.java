@@ -5,15 +5,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.Nullable;
-import androidx.viewpager.widget.PagerAdapter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -195,13 +195,13 @@ public class ViewPagerAdapter extends PagerAdapter {
                     .into(videoPlay.getImageView());
                     */
 
-            ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
-            ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
+            ImageView imgFeedItem = itemView.findViewById(R.id.imgFeedItem);
+            ImageView iconPlay = itemView.findViewById(R.id.iconPlay);
             iconPlay.setVisibility(View.VISIBLE);
             iconPlay.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.transparentBlack, null),
                     0, GradientDrawable.OVAL, 50, 0));
-            final LinearLayout llProgress = (LinearLayout) itemView.findViewById(R.id.llProgress);
-            final ProgressBar progressLoading = (ProgressBar) itemView.findViewById(R.id.progressLoading);
+            final LinearLayout llProgress = itemView.findViewById(R.id.llProgress);
+            final ProgressBar progressLoading = itemView.findViewById(R.id.progressLoading);
 
             Glide.with(mContext)
                     .load(loadUrl)
@@ -224,11 +224,11 @@ public class ViewPagerAdapter extends PagerAdapter {
 
         } else if (TAG.equals(VIEWPAGER_IMAGE)) {
 
-            ImageView imgFeedItem = (ImageView) itemView.findViewById(R.id.imgFeedItem);
-            ImageView iconPlay = (ImageView) itemView.findViewById(R.id.iconPlay);
+            ImageView imgFeedItem = itemView.findViewById(R.id.imgFeedItem);
+            ImageView iconPlay = itemView.findViewById(R.id.iconPlay);
             iconPlay.setVisibility(View.GONE);
-            final LinearLayout llProgress = (LinearLayout) itemView.findViewById(R.id.llProgress);
-            final ProgressBar progressLoading = (ProgressBar) itemView.findViewById(R.id.progressLoading);
+            final LinearLayout llProgress = itemView.findViewById(R.id.llProgress);
+            final ProgressBar progressLoading = itemView.findViewById(R.id.progressLoading);
 
 
             if (imageList.get(imageCounter) != null && !imageList.get(imageCounter).isEmpty()) {

@@ -5,8 +5,6 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +13,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -60,8 +61,8 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
     }
 
     private void init() {
-        emailET = (EditText) findViewById(R.id.input_email);
-        btnSendLink = (Button) findViewById(R.id.btnSendLink);
+        emailET = findViewById(R.id.input_email);
+        btnSendLink = findViewById(R.id.btnSendLink);
         forgetPasswordLayout = findViewById(R.id.forgetPasswordLayout);
         lockImgv = findViewById(R.id.lockImgv);
         forgetPasswordLayout.setOnClickListener(this);

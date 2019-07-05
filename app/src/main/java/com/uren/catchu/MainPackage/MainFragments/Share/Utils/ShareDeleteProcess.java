@@ -14,7 +14,6 @@ import com.uren.catchu.Permissions.PermissionModule;
 
 import java.io.File;
 
-import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
 import static com.uren.catchu.Constants.StringConstants.FROM_FILE_TEXT;
 
 public class ShareDeleteProcess {

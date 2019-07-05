@@ -3,22 +3,10 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,14 +21,23 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.android.material.navigation.NavigationView;
+import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
@@ -75,7 +72,6 @@ import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
 import java.util.Collections;
 import java.util.Comparator;
 
-import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
@@ -84,13 +80,9 @@ import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_BOTTOM_TOP;
-import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_LEFT_RIGHT;
-import static com.uren.catchu.Constants.NumericConstants.ORIENTATION_TOP_BOTTOM;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.GROUP_OP_VIEW_TYPE;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_SHARED;
@@ -107,7 +99,6 @@ public class ProfileFragment extends BaseFragment
     TextView navViewEmailTv;
     ImageView navImgProfile;
     TextView navViewShortenTextView;
-    RelativeLayout profileNavViewLayout;
     TextView navPendReqCntTv;
     TextView navMessageCntTv;
 
@@ -118,6 +109,8 @@ public class ProfileFragment extends BaseFragment
     Toolbar toolbar;
     @BindView(R.id.toolbar_title)
     TextView toolbarTitle;
+    @BindView(R.id.txtBio)
+    TextView txtBio;
 
     @BindView(R.id.imgProfile)
     ImageView imgProfile;
@@ -197,6 +190,8 @@ public class ProfileFragment extends BaseFragment
     TextView txtGroupDetail;
     @BindView(R.id.txtEditGroup)
     TextView txtEditGroup;
+    @BindView(R.id.bioll)
+    LinearLayout bioll;
 
 
     int unreadMessageCount = 0;
@@ -274,20 +269,20 @@ public class ProfileFragment extends BaseFragment
         //        getResources().getColor(R.color.profile_open_color, null), ORIENTATION_TOP_BOTTOM, 0));
 
 
-        imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.gplus_color_1), android.graphics.PorterDuff.Mode.SRC_IN);
         imgSharedPosts.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.colorPrimary, null), GradientDrawable.OVAL, 15, 2));
+                getContext().getResources().getColor(R.color.gplus_color_1, null), GradientDrawable.OVAL, 15, 2));
 
-        imgCatchPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgCatchPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.OrangeRed), android.graphics.PorterDuff.Mode.SRC_IN);
         imgCatchPosts.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.colorPrimary, null), GradientDrawable.OVAL, 15, 2));
+                getContext().getResources().getColor(R.color.OrangeRed, null), GradientDrawable.OVAL, 15, 2));
 
-        imgGroupPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgGroupPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.gplus_color_3), android.graphics.PorterDuff.Mode.SRC_IN);
         imgGroupPosts.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.colorPrimary, null), GradientDrawable.OVAL, 15, 2));
+                getContext().getResources().getColor(R.color.gplus_color_3, null), GradientDrawable.OVAL, 15, 2));
 
-        imgForward1.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgForward2.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimaryDark), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgForward1.setColorFilter(ContextCompat.getColor(getContext(), R.color.gplus_color_1), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgForward2.setColorFilter(ContextCompat.getColor(getContext(), R.color.OrangeRed), android.graphics.PorterDuff.Mode.SRC_IN);
 
 
         //group layout
@@ -470,22 +465,36 @@ public class ProfileFragment extends BaseFragment
                 toolbarTitle.setText(CHAR_AMPERSAND + user.getUserInfo().getUsername());
                 navViewEmailTv.setText(user.getUserInfo().getEmail().trim());
             }
+
+            //Bio
+            if (user.getUserInfo().getBio() != null && !user.getUserInfo().getBio().trim().isEmpty()) {
+                txtBio.setText(user.getUserInfo().getBio());
+                bioll.setVisibility(View.VISIBLE);
+            }else {
+                txtBio.setText("");
+                bioll.setVisibility(View.GONE);
+            }
+
             //profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile);
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), txtProfile, imgProfile, false);
             imgProfile.setPadding(3, 3, 3, 3);
             //navigation profile picture
             UserDataUtil.setProfilePicture(getContext(), user.getUserInfo().getProfilePhotoUrl(),
-                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), navViewShortenTextView, navImgProfile);
+                    user.getUserInfo().getName(), user.getUserInfo().getUsername(), navViewShortenTextView, navImgProfile, false);
 
             // Animations
-            //Animation fadeInAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.fade_in);
-            Animation moveUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.move_up);
-            imgProfile.startAnimation(moveUpAnimation); //Set animation to your ImageView
-            //llProfile.startAnimation(fadeInAnimation);
-            imgProfile.setPadding(3, 3, 3, 3);
+            try {
+                if(getContext() != null) {
+                    Animation moveUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.move_up);
+                    imgProfile.startAnimation(moveUpAnimation);
+                    imgProfile.setPadding(3, 3, 3, 3);
+                }
 
-            setWaitingRequestsCount(user);
+                setWaitingRequestsCount(user);
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         setUserFollowerAndFollowingCnt(user);
@@ -836,9 +845,9 @@ public class ProfileFragment extends BaseFragment
     }
 
     public void startMessageListActivity() {
-        if (MessageListActivity.thisActivity != null) {
+       /* if (MessageListActivity.thisActivity != null) {
             MessageListActivity.thisActivity.finish();
-        }
+        }*/
         Intent intent = new Intent(getContext(), MessageListActivity.class);
         //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
         startActivity(intent);

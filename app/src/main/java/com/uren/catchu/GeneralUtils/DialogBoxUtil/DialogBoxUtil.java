@@ -323,12 +323,12 @@ public class DialogBoxUtil {
         final ArrayList<String> myList = getItemList(context, post);
 
         LayoutInflater inflater = activity.getLayoutInflater();
-        View convertView = (View) inflater.inflate(R.layout.post_settings_list_items, null);
+        View convertView = inflater.inflate(R.layout.post_settings_list_items, null);
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
         alertDialog.setView(convertView);
 
-        ListView listView = (ListView) convertView.findViewById(R.id.mylistview);
+        ListView listView = convertView.findViewById(R.id.mylistview);
 
         final AlertDialog alert = alertDialog.create();
         final CustomListAdapter myadapter = new CustomListAdapter(context, R.layout.list_view_item, myList);

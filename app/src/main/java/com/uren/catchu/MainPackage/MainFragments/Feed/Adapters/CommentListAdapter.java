@@ -4,9 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.core.content.ContextCompat;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +12,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -82,18 +83,18 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
         public MyViewHolder(View view) {
             super(view);
 
-            profileName = (TextView) view.findViewById(R.id.profile_name);
-            txtUsername = (TextView) view.findViewById(R.id.txtUsername);
-            imgProfilePic = (ImageView) view.findViewById(R.id.imgProfilePic);
-            txtProfilePic = (TextView) view.findViewById(R.id.txtProfilePic);
-            cardView = (CardView) view.findViewById(R.id.card_view);
+            profileName = view.findViewById(R.id.profile_name);
+            txtUsername = view.findViewById(R.id.txtUsername);
+            imgProfilePic = view.findViewById(R.id.imgProfilePic);
+            txtProfilePic = view.findViewById(R.id.txtProfilePic);
+            cardView = view.findViewById(R.id.card_view);
             imgProfilePic.setBackground(imageShape);
-            commentMessage = (TextView) view.findViewById(R.id.commentMessage);
-            llProfile = (LinearLayout) view.findViewById(R.id.llProfile);
-            txtLikeCount = (TextView) view.findViewById(R.id.txtLikeCount);
-            txtLike = (TextView) view.findViewById(R.id.txtLike);
-            txtCreateAt = (TextView) view.findViewById(R.id.txtCreateAt);
-            imgLike = (ImageView) view.findViewById(R.id.imgLike);
+            commentMessage = view.findViewById(R.id.commentMessage);
+            llProfile = view.findViewById(R.id.llProfile);
+            txtLikeCount = view.findViewById(R.id.txtLikeCount);
+            txtLike = view.findViewById(R.id.txtLike);
+            txtCreateAt = view.findViewById(R.id.txtCreateAt);
+            imgLike = view.findViewById(R.id.imgLike);
 
             setListeners();
 
@@ -146,7 +147,8 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
 
             //profile picture
             UserDataUtil.setProfilePicture(mContext, comment.getUser().getProfilePhotoUrl(),
-                    comment.getUser().getName(), comment.getUser().getUsername(), txtProfilePic, imgProfilePic);
+                    comment.getUser().getName(), comment.getUser().getUsername(),
+                    txtProfilePic, imgProfilePic, false);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
                 this.txtUsername.setText(comment.getUser().getUsername());

@@ -1,10 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Share.Models;
 
-import android.net.Uri;
-
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-
-import catchu.model.Media;
 
 public class ImageShareItemBox {
 

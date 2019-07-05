@@ -3,9 +3,10 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.Operations;
 import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
-import androidx.annotation.NonNull;
 import android.view.View;
 import android.widget.Switch;
+
+import androidx.annotation.NonNull;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,7 +26,6 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.SingletonSinglePost;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.JavaClasses.OtherProfilePostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.JavaClasses.SingletonPostList;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
@@ -39,9 +39,7 @@ import catchu.model.BaseResponse;
 import catchu.model.Endpoint;
 import catchu.model.UserProfileProperties;
 
-import static com.uren.catchu.Constants.StringConstants.CHAR_E;
 import static com.uren.catchu.Constants.StringConstants.CHAR_H;
-import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_IN;
 import static com.uren.catchu.Constants.StringConstants.ENDPOINT_LOGGED_OUT;
 import static com.uren.catchu.Constants.StringConstants.ENDPOINT_PLATFORM_ANDROID;
 

@@ -1,6 +1,5 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;

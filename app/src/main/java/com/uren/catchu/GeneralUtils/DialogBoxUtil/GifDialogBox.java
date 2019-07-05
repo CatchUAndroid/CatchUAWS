@@ -146,11 +146,11 @@ public class GifDialogBox {
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
             dialog.setCancelable(this.cancel);
             dialog.setContentView(R.layout.layout_gif_dialog_box);
-            TextView title1 = (TextView) dialog.findViewById(R.id.title);
-            TextView message1 = (TextView) dialog.findViewById(R.id.message);
-            Button nBtn = (Button) dialog.findViewById(R.id.negativeBtn);
-            Button pBtn = (Button) dialog.findViewById(R.id.positiveBtn);
-            GifImageView gifImageView = (GifImageView) dialog.findViewById(R.id.gifImageView);
+            TextView title1 = dialog.findViewById(R.id.title);
+            TextView message1 = dialog.findViewById(R.id.message);
+            Button nBtn = dialog.findViewById(R.id.negativeBtn);
+            Button pBtn = dialog.findViewById(R.id.positiveBtn);
+            GifImageView gifImageView = dialog.findViewById(R.id.gifImageView);
 
             gifImageView.setImageResource(this.gifImageResource);
             nBtn.setVisibility(nBtnVisibleType);

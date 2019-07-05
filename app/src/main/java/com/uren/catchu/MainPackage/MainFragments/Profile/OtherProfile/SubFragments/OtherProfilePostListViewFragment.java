@@ -8,15 +8,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityOptionsCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +16,15 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.dinuscxj.refresh.RecyclerRefreshLayout;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
@@ -168,7 +167,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
     }
 
     private void initItems() {
-        listRecyclerView = (RecyclerView) mView.findViewById(R.id.listRecyclerView);
+        listRecyclerView = mView.findViewById(R.id.listRecyclerView);
         commonToolbarbackImgv.setOnClickListener(this);
         if (userName != null && !userName.isEmpty()) {
             toolbarTitleTv.setText(userName);
@@ -181,11 +180,11 @@ public class OtherProfilePostListViewFragment extends BaseFragment
     private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            catchType = (String) args.getString("catchType");
-            targetUid = (String) args.getString("targetUid");
-            position = (Integer) args.getInt("position");
-            userName = (String) args.getString("userName");
-            comingPageCnt = (Integer) args.getInt("comingPageCnt");
+            catchType = args.getString("catchType");
+            targetUid = args.getString("targetUid");
+            position = args.getInt("position");
+            userName = args.getString("userName");
+            comingPageCnt = args.getInt("comingPageCnt");
         }
     }
 

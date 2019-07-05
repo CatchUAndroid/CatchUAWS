@@ -1,7 +1,6 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 

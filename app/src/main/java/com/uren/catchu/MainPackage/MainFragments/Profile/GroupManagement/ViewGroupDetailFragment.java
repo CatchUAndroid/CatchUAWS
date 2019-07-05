@@ -9,14 +9,6 @@ import android.content.pm.PackageManager;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +16,15 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-//import com.google.android.material.widget.SubtitleCollapsingToolbarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -39,14 +37,13 @@ import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ProgressDialogUtil.ProgressDialogUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ItemClickListener;
 import com.uren.catchu.Interfaces.RecyclerViewAdapterCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfaces.UpdateGroupCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoListItem;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.OtherProfileFragment;
@@ -72,6 +69,8 @@ import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 import static com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter.CODE_CHANGE_AS_ADMIN;
 import static com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter.CODE_DISPLAY_PROFILE;
 import static com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.GroupDetailListAdapter.CODE_REMOVE_FROM_GROUP;
+
+//import com.google.android.material.widget.SubtitleCollapsingToolbarLayout;
 
 @SuppressLint("ValidFragment")
 public class ViewGroupDetailFragment extends BaseFragment {
@@ -199,7 +198,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
     }
 
     public void setParticipantCount() {
-        String participantText = Integer.toString(groupParticipantList.size()) + " ";
+        String participantText = groupParticipantList.size() + " ";
         personCntTv.setText(participantText);
     }
 
@@ -351,7 +350,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
                     groupParticipantList.clear();
                     groupParticipantList.addAll(groupParticipantList1);
                 } else if (clickedItem == CODE_CHANGE_AS_ADMIN) {
-                    recyclerViewAdapterCallback.OnChanged((GroupRequestResultResultArrayItem) object);
+                    recyclerViewAdapterCallback.OnChanged(object);
                 }
             }
         });
@@ -416,14 +415,14 @@ public class ViewGroupDetailFragment extends BaseFragment {
         }
 
         if (!permissionModule.checkWriteExternalStoragePermission())
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         else
             checkCameraPermission();
     }
 
     public void checkCameraPermission() {
         if (!permissionModule.checkCameraPermission())
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PermissionModule.PERMISSION_CAMERA);
         else {
             startActivityForResult(IntentSelectUtil.getCameraIntent(), REQUEST_CODE_PHOTO_CAMERA_SELECT);
         }
@@ -432,7 +431,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
     private void startGalleryProcess() {
         if (!permissionModule.checkWriteExternalStoragePermission()) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                    PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else
             startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                     getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
@@ -455,14 +454,14 @@ public class ViewGroupDetailFragment extends BaseFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+        if (requestCode == PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (selectedType.equals(CAMERA_TEXT))
                     checkCameraPermission();
                 else if (selectedType.equals(GALLERY_TEXT))
                     startGalleryProcess();
             }
-        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+        } else if (requestCode == PermissionModule.PERMISSION_CAMERA) {
             checkCameraPermission();
         }
     }

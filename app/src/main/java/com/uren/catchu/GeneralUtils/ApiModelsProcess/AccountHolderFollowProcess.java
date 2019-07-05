@@ -11,7 +11,6 @@ import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import catchu.model.FollowInfoListResponse;
-import catchu.model.FriendList;
 import catchu.model.FriendRequestList;
 
 import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
@@ -106,7 +105,7 @@ public class AccountHolderFollowProcess {
             @Override
             public void onSuccess(Object object) {
                 if (object != null)
-                    completeCallback.onComplete((FriendList) object);
+                    completeCallback.onComplete(object);
             }
 
             @Override
@@ -184,7 +183,7 @@ public class AccountHolderFollowProcess {
             @Override
             public void onSuccess(FollowInfoListResponse followInfoListResponse) {
                 if(followInfoListResponse != null)
-                    completeCallback.onComplete((FollowInfoListResponse) followInfoListResponse);
+                    completeCallback.onComplete(followInfoListResponse);
             }
 
             @Override
@@ -211,7 +210,7 @@ public class AccountHolderFollowProcess {
             @Override
             public void onSuccess(FriendRequestList object) {
                 if(object != null)
-                    completeCallback.onComplete((FriendRequestList) object);
+                    completeCallback.onComplete(object);
             }
 
             @Override

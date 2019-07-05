@@ -1,7 +1,6 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
@@ -31,7 +30,7 @@ public class ProviderListRequestProcess extends AsyncTask<Void, Void, UserListRe
         SingletonApiClient instance = SingletonApiClient.getInstance();
 
         try {
-            UserListResponse userListResponse = (UserListResponse) instance.client.usersProvidersPost(userid, token, providerList);
+            UserListResponse userListResponse = instance.client.usersProvidersPost(userid, token, providerList);
 
             if (userListResponse.getError().getCode().intValue() == RESPONSE_OK)
                 return userListResponse;

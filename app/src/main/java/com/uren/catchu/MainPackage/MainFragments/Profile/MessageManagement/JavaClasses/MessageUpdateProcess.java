@@ -1,6 +1,7 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -68,7 +69,7 @@ public class MessageUpdateProcess {
         FirebaseDatabase.getInstance().getReference(FB_CHILD_NOTIFICATIONS)
                 .child(chattedUserId)
                 .child(FB_CHILD_CLUSTER_MESSAGE_NOTIFICATION)
-                .child(FB_CHILD_CLUSTER_STATUS).setValue((Object) value)
+                .child(FB_CHILD_CLUSTER_STATUS).setValue(value)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -84,7 +85,7 @@ public class MessageUpdateProcess {
 
     public static void updateNotificationStatus(String senderUserid, String chattedUserId, String value) {
         FirebaseDatabase.getInstance().getReference(FB_CHILD_NOTIFICATIONS)
-                .child(senderUserid).child(chattedUserId).child(FB_CHILD_NOTIFICATION_STATUS).setValue((Object) value)
+                .child(senderUserid).child(chattedUserId).child(FB_CHILD_NOTIFICATION_STATUS).setValue(value)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -100,7 +101,7 @@ public class MessageUpdateProcess {
 
     public static void updateTokenSigninValue(String userid, String value) {
         FirebaseDatabase.getInstance().getReference(FB_CHILD_DEVICE_TOKEN)
-                .child(userid).child(FB_CHILD_SIGNIN).setValue((Object) value)
+                .child(userid).child(FB_CHILD_SIGNIN).setValue(value)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {

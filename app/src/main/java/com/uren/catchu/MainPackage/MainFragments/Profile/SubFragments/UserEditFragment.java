@@ -11,9 +11,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,9 +22,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -40,11 +39,9 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ServiceCompleteCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.ProfileHelper;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfileProcess;
 import com.uren.catchu.MainPackage.NextActivity;
@@ -92,8 +89,8 @@ public class UserEditFragment extends BaseFragment
     EditText edtUserName;
     @BindView(R.id.edtWebsite)
     EditText edtWebsite;
-    /*@BindView(R.id.edtBio)
-    EditText edtBio;*/
+    @BindView(R.id.edtBio)
+    EditText edtBio;
     @BindView(R.id.edtBirthDay)
     EditText edtBirthDay;
     @BindView(R.id.edtEmail)
@@ -168,13 +165,10 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void setBirthDayDataSetListener() {
-        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String date = month + "/" + day + "/" + year;
-                edtBirthDay.setText(date);
-            }
+        mDateSetListener = (datePicker, year, month, day) -> {
+            month = month + 1;
+            String date = month + "/" + day + "/" + year;
+            edtBirthDay.setText(date);
         };
     }
 
@@ -220,6 +214,11 @@ public class UserEditFragment extends BaseFragment
                 edtWebsite.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getWebsite());
             }
 
+            if (AccountHolderInfo.getInstance().getUser().getUserInfo().getBio() != null &&
+                    !AccountHolderInfo.getInstance().getUser().getUserInfo().getBio().isEmpty()) {
+                edtBio.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getBio());
+            }
+
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail() != null &&
                     !AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail().isEmpty()) {
                 edtEmail.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail());
@@ -255,7 +254,7 @@ public class UserEditFragment extends BaseFragment
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getProfilePhotoUrl(),
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getName(),
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getUsername(),
-                shortUserNameTv, imgProfile);
+                shortUserNameTv, imgProfile, false);
     }
 
     private void setUserPhoto(Uri photoUri) {
@@ -374,6 +373,12 @@ public class UserEditFragment extends BaseFragment
             userProfileProperties.setWebsite(edtWebsite.getText().toString());
         }
 
+        if (edtBio.getText().toString().isEmpty()) {
+            userProfileProperties.setBio("");
+        } else {
+            userProfileProperties.setBio(edtBio.getText().toString());
+        }
+
         if (edtBirthDay.getText().toString().isEmpty()) {
             userProfileProperties.setBirthday("");
         } else {
@@ -454,7 +459,7 @@ public class UserEditFragment extends BaseFragment
     private void getGalleryPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!permissionModule.checkWriteExternalStoragePermission())
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
             else
                 startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                         getResources().getString(R.string.selectPicture)), ACTIVITY_REQUEST_CODE_OPEN_GALLERY);
@@ -473,18 +478,18 @@ public class UserEditFragment extends BaseFragment
             startActivityForResult(IntentSelectUtil.getCameraIntent(), ACTIVITY_REQUEST_CODE_OPEN_CAMERA);
         } else
             requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    permissionModule.PERMISSION_CAMERA);
+                    PermissionModule.PERMISSION_CAMERA);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+        if (requestCode == PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                         getResources().getString(R.string.selectPicture)), ACTIVITY_REQUEST_CODE_OPEN_GALLERY);
             }
-        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+        } else if (requestCode == PermissionModule.PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivityForResult(IntentSelectUtil.getCameraIntent(), ACTIVITY_REQUEST_CODE_OPEN_CAMERA);
             }

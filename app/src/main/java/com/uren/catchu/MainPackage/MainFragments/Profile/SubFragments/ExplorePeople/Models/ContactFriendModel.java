@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePe
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Models.Contact;
 
 import catchu.model.User;
-import catchu.model.UserListResponse;
 
 public class ContactFriendModel {
 

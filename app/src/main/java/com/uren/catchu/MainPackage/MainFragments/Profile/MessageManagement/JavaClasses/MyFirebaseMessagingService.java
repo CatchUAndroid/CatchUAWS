@@ -11,6 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
@@ -26,7 +27,6 @@ import com.uren.catchu.GeneralUtils.BitmapConversion;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.R;
-
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.io.InputStream;
@@ -73,7 +73,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // [END_EXCLUDE]
 
         if (remoteMessage.getData().size() > 0 && remoteMessage.getNotification() != null) {
-            String photoUrl = (String) remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
+            String photoUrl = remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
 
             if (photoUrl == null) photoUrl = "";
 
@@ -86,11 +86,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (MessageWithPersonActivity.thisActivity != null) {
 
             User chattedUser = MessageWithPersonActivity.chattedUser;
-            String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
-            String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
+            String senderId = remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
+            String receiptId = remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
 
-            if (senderId.equals(chattedUser.getUserid()) && receiptId.equals(AccountHolderInfo.getUserID()))
-                return true;
+            return senderId.equals(chattedUser.getUserid()) && receiptId.equals(AccountHolderInfo.getUserID());
         }
         return false;
     }
@@ -135,9 +134,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(RemoteMessage remoteMessage, Bitmap bitmap) {
         String messageBody = remoteMessage.getNotification().getBody();
         String messageTitle = remoteMessage.getNotification().getTitle();
-        String senderId = (String) remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
-        String receiptId = (String) remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
-        String messageType = (String) remoteMessage.getData().get(FCM_MESSAGE_TYPE);
+        String senderId = remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
+        String receiptId = remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
+        String messageType = remoteMessage.getData().get(FCM_MESSAGE_TYPE);
 
         Intent intent = new Intent(this, MainActivity.class);
 

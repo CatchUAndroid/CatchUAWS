@@ -1,6 +1,7 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
 import com.amazonaws.mobileconnectors.apigateway.ApiClientFactory;
+
 import catchu.CatchUMobileAPIClient;
 
 public class SingletonApiClient {

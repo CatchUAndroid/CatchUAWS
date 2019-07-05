@@ -78,12 +78,12 @@ public class FeedContextMenu extends LinearLayout {
     }
 
     public interface OnFeedContextMenuItemClickListener {
-        public void onReportClick(int feedItem);
+        void onReportClick(int feedItem);
 
-        public void onSharePhotoClick(int feedItem);
+        void onSharePhotoClick(int feedItem);
 
-        public void onCopyShareUrlClick(int feedItem);
+        void onCopyShareUrlClick(int feedItem);
 
-        public void onCancelClick(int feedItem);
+        void onCancelClick(int feedItem);
     }
 }

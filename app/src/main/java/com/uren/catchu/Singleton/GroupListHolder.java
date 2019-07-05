@@ -1,9 +1,8 @@
 package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
+
 import androidx.annotation.NonNull;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -13,21 +12,13 @@ import com.google.firebase.auth.GetTokenResult;
 import com.uren.catchu.ApiGatewayFunctions.GroupResultProcess;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
-import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.NextActivity;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
-import catchu.model.UserProfile;
-import catchu.model.UserProfileProperties;
-import catchu.model.UserProfileRelationInfo;
 
-import static com.uren.catchu.Constants.StringConstants.FRIEND_ACCEPT_REQUEST;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_CREATE_FOLLOW_DIRECTLY;
-import static com.uren.catchu.Constants.StringConstants.FRIEND_DELETE_FOLLOW;
 import static com.uren.catchu.Constants.StringConstants.GET_AUTHENTICATED_USER_GROUP_LIST;
 
 public class GroupListHolder {

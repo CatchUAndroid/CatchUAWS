@@ -15,25 +15,17 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.Environment;
-import androidx.core.graphics.BitmapCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.BitmapCompat;
+
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
-import com.uren.catchu.LoginPackage.RegisterActivity;
 import com.uren.catchu.R;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_2ANDHALFMB;
@@ -233,6 +225,9 @@ public class BitmapConversion extends AppCompatActivity {
 
         String filePath = UriAdapter.getRealPathFromURI(photoSelectUtil.getMediaUri(), context);
 
+        if(filePath == null || filePath.trim().isEmpty())
+            return null;
+
         BitmapFactory.Options options = new BitmapFactory.Options();
 
         //by setting this field as true, the actual bitmap pixels are not loaded in the memory. Just the bounds are loaded. If
@@ -242,6 +237,9 @@ public class BitmapConversion extends AppCompatActivity {
 
         int actualHeight = options.outHeight;
         int actualWidth = options.outWidth;
+
+        if(actualHeight == 0 || actualWidth == 0)
+            return null;
 
         //max Height and width values of the compressed image is taken as 816x612
         float maxHeight = 816.0f;

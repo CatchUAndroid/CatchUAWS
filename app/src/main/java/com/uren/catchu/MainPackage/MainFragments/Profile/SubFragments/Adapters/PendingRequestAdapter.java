@@ -3,8 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +10,9 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -168,7 +169,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
             UserDataUtil.setUsername(userProfileProperties.getUsername(), profileUserName);
             UserDataUtil.setProfilePicture(context, userProfileProperties.getProfilePhotoUrl(),
                     userProfileProperties.getName(),
-                    userProfileProperties.getUsername(), shortUserNameTv, profileImage);
+                    userProfileProperties.getUsername(), shortUserNameTv, profileImage, false);
             UserDataUtil.updatePendingApproveButton(context, btnApprove);
             UserDataUtil.updatePendingRejectButton(context, btnReject);
         }

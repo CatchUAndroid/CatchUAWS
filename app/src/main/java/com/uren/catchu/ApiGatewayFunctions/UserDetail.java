@@ -1,8 +1,7 @@
 package com.uren.catchu.ApiGatewayFunctions;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
+
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 
 import catchu.model.UserProfile;
@@ -24,6 +23,7 @@ public class UserDetail extends AsyncTask<Void, Void, UserProfile> {
         this.requestedUserId = requestedUserId;
         this.shortInfo = shortInfo;
         this.token = token;
+        System.out.println("userid:" + userid + "  ---  requestedUserId:" + requestedUserId);
     }
 
 

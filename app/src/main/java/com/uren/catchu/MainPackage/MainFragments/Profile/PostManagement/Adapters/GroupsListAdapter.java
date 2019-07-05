@@ -2,33 +2,27 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapter
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import android.media.Image;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.common.internal.service.Common;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.UserPostFragment;
 import com.uren.catchu.R;
-import com.uren.catchu.Singleton.AccountHolderInfo;
-
-import java.util.List;
 
 import catchu.model.GroupRequestResult;
 import catchu.model.GroupRequestResultResultArrayItem;
-import catchu.model.Post;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_CAUGHT;
 import static com.uren.catchu.Constants.StringConstants.PROFILE_POST_TYPE_GROUP;
 
 
@@ -64,9 +58,9 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
         public GroupsListHolder(View view) {
             super(view);
 
-            imgGroupPic = (ImageView) view.findViewById(R.id.imgGroupPic);
-            txtGroupName = (TextView) view.findViewById(R.id.txtGroupName);
-            cardView = (CardView) view.findViewById(R.id.cardView);
+            imgGroupPic = view.findViewById(R.id.imgGroupPic);
+            txtGroupName = view.findViewById(R.id.txtGroupName);
+            cardView = view.findViewById(R.id.cardView);
 
             setListeners();
         }
@@ -111,8 +105,10 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
                         .apply(RequestOptions.centerInsideTransform())
                         .into(imgGroupPic);
             }
-            imgGroupPic.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.colorPrimary, null),
+            int groupColor = CommonUtils.getDarkRandomColor(mContext);
+            imgGroupPic.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(groupColor, null),
                     0, GradientDrawable.RECTANGLE, 15, 0));
+            txtGroupName.setTextColor(mContext.getResources().getColor(groupColor, null));
         }
     }
 

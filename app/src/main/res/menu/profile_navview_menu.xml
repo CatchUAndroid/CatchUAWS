@@ -30,7 +30,7 @@
             app:actionLayout="@layout/navmenu_message_layout"/>
     </group>
 
-    <group android:checkableBehavior="none">
+    <group android:checkableBehavior="single">
 
         <item
             android:id="@+id/reportProblemItem"

@@ -36,10 +36,10 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
-import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.FriendGridListAdapter;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.Interfaces.ReturnCallback;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
+import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Adapters.FriendGridListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.ProfileHelper;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
@@ -209,7 +209,7 @@ public class AddGroupFragment extends BaseFragment {
                     getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
         else
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
+                    PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     public void startCameraProcess() {
@@ -220,7 +220,7 @@ public class AddGroupFragment extends BaseFragment {
         }
 
         if (!permissionModule.checkCameraPermission())
-            requestPermissions(new String[]{Manifest.permission.CAMERA}, permissionModule.PERMISSION_CAMERA);
+            requestPermissions(new String[]{Manifest.permission.CAMERA}, PermissionModule.PERMISSION_CAMERA);
         else
             startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);
     }
@@ -281,7 +281,7 @@ public class AddGroupFragment extends BaseFragment {
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == permissionModule.PERMISSION_CAMERA) {
+            if (requestCode == PermissionModule.PERMISSION_CAMERA) {
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
                 setGroupPhoto(photoSelectUtil.getMediaUri());
             } else if (requestCode == CODE_GALLERY_REQUEST) {
@@ -313,13 +313,13 @@ public class AddGroupFragment extends BaseFragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 
-        if (requestCode == permissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
+        if (requestCode == PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE) {
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
                         getResources().getString(R.string.selectPicture)), CODE_GALLERY_REQUEST);
             }
-        } else if (requestCode == permissionModule.PERMISSION_CAMERA) {
+        } else if (requestCode == PermissionModule.PERMISSION_CAMERA) {
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startActivityForResult(IntentSelectUtil.getCameraIntent(), CODE_CAMERA_REQUEST);

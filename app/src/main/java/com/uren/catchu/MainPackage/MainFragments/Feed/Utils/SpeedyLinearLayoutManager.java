@@ -2,11 +2,12 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.Utils;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 
 public class SpeedyLinearLayoutManager extends LinearLayoutManager {
 

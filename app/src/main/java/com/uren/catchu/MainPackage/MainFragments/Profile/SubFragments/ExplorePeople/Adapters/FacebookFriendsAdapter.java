@@ -3,9 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePe
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;
-import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +12,10 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
@@ -191,7 +192,8 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             this.requestedUserid = user.getUserid();
             setUserName();
             UserDataUtil.setName(user.getName(), nameTextView);
-            UserDataUtil.setProfilePicture(context, user.getProfilePhotoUrl(), user.getName(), user.getUsername(), shortenTextView, profilePicImgView);
+            UserDataUtil.setProfilePicture(context, user.getProfilePhotoUrl(), user.getName(), user.getUsername(),
+                    shortenTextView, profilePicImgView, false);
 
             if (user.getUserid().equals(AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid()))
                 statuDisplayBtn.setVisibility(View.GONE);

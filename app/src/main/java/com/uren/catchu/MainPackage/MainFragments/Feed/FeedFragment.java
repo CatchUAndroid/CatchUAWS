@@ -1,62 +1,43 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
 import android.os.Handler;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
-import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
-
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.viewpager.widget.ViewPager;
+
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
 import com.uren.catchu.GeneralUtils.CommonUtils;
-
-import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
-
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.FilterFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments.SearchFragment;
-
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
-import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
 
-import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import catchu.model.UserProfile;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
-import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 
 
 public class FeedFragment extends BaseFragment implements View.OnClickListener {
@@ -132,8 +113,8 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void initItems() {
-        tabChats = (TabItem) mView.findViewById(R.id.tabChats);
-        tabCalls = (TabItem) mView.findViewById(R.id.tabCalls);
+        tabChats = mView.findViewById(R.id.tabChats);
+        tabCalls = mView.findViewById(R.id.tabCalls);
     }
 
     private void initListeners() {
@@ -157,12 +138,12 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         View headerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                 .inflate(R.layout.feed_custom_tab, null, false);
 
-        LinearLayout linearLayout1 = (LinearLayout) headerView.findViewById(R.id.ll);
-        LinearLayout linearLayout2 = (LinearLayout) headerView.findViewById(R.id.ll2);
-        imgFeedPublic = (ImageView) headerView.findViewById(R.id.imgFeedPublic);
-        imgFeedCatched = (ImageView) headerView.findViewById(R.id.imgFeedCatched);
-        txtFeedTypePublic = (TextView) headerView.findViewById(R.id.txtFeedTypePublic);
-        txtFeedTypeCatched = (TextView) headerView.findViewById(R.id.txtFeedTypeCatched);
+        LinearLayout linearLayout1 = headerView.findViewById(R.id.ll);
+        LinearLayout linearLayout2 = headerView.findViewById(R.id.ll2);
+        imgFeedPublic = headerView.findViewById(R.id.imgFeedPublic);
+        imgFeedCatched = headerView.findViewById(R.id.imgFeedCatched);
+        txtFeedTypePublic = headerView.findViewById(R.id.txtFeedTypePublic);
+        txtFeedTypeCatched = headerView.findViewById(R.id.txtFeedTypeCatched);
 
         //intial values
         imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -269,9 +250,9 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void startMessageListActivity() {
-        if (MessageListActivity.thisActivity != null) {
+        /*if (MessageListActivity.thisActivity != null) {
             MessageListActivity.thisActivity.finish();
-        }
+        }*/
 
         final Intent intent = new Intent(getContext(), MessageListActivity.class);
 
