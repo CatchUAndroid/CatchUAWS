@@ -41,6 +41,9 @@ public class UserPostFragment extends BaseFragment
     TabItem tabGridView, tabListView;
     int selectedTabPosition = 0;
 
+    private int selectedColor = 0;
+    private int unSelectedColor = 0;
+
     @BindView(R.id.commonToolbarbackImgv)
     ImageView commonToolbarbackImgv;
     @BindView(R.id.toolbarTitleTv)
@@ -117,6 +120,9 @@ public class UserPostFragment extends BaseFragment
         tabListView = mView.findViewById(R.id.tabListView);
         fabScrollUp = mView.findViewById(R.id.fabScrollUp);
 
+        selectedColor = R.color.DodgerBlue;
+        unSelectedColor = R.color.Gray;
+
         SingletonPostList.reset();
     }
 
@@ -150,15 +156,14 @@ public class UserPostFragment extends BaseFragment
         txtViewList = headerView.findViewById(R.id.txtViewList);
 
         //intial values
-        imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), R.color.Red), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgViewList.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), selectedColor), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgViewList.setColorFilter(ContextCompat.getColor(getContext(), unSelectedColor), android.graphics.PorterDuff.Mode.SRC_IN);
 
-        txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
-        txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+        txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), selectedColor));
+        txtViewList.setTextColor(ContextCompat.getColor(getContext(), unSelectedColor));
 
         tabLayout.getTabAt(0).setCustomView(linearLayout1);
         tabLayout.getTabAt(1).setCustomView(linearLayout2);
-
     }
 
     private void setTabListener() {
@@ -168,20 +173,20 @@ public class UserPostFragment extends BaseFragment
             public void onTabSelected(TabLayout.Tab tab) {
                 viewPager.setCurrentItem(tab.getPosition());
                 if (tab.getPosition() == 0) {
-                    imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), R.color.Red), android.graphics.PorterDuff.Mode.SRC_IN);
-                    imgViewList.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), selectedColor), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imgViewList.setColorFilter(ContextCompat.getColor(getContext(), unSelectedColor), android.graphics.PorterDuff.Mode.SRC_IN);
 
-                    txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
-                    txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
+                    txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), selectedColor));
+                    txtViewList.setTextColor(ContextCompat.getColor(getContext(), unSelectedColor));
 
                     selectedTabPosition = USER_POST_VIEW_TYPE_GRID;
 
                 } else if (tab.getPosition() == 1) {
-                    imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                    imgViewList.setColorFilter(ContextCompat.getColor(getContext(), R.color.Red), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imgViewGrid.setColorFilter(ContextCompat.getColor(getContext(), unSelectedColor), android.graphics.PorterDuff.Mode.SRC_IN);
+                    imgViewList.setColorFilter(ContextCompat.getColor(getContext(), selectedColor), android.graphics.PorterDuff.Mode.SRC_IN);
 
-                    txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-                    txtViewList.setTextColor(ContextCompat.getColor(getContext(), R.color.Red));
+                    txtViewGrid.setTextColor(ContextCompat.getColor(getContext(), unSelectedColor));
+                    txtViewList.setTextColor(ContextCompat.getColor(getContext(), selectedColor));
 
                     selectedTabPosition = USER_POST_VIEW_TYPE_LIST;
 

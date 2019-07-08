@@ -1,9 +1,11 @@
 package com.uren.catchu;
 
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -27,6 +29,7 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.LoginProcess;
 import com.uren.catchu.GeneralUtils.AnimationUtil;
 import com.uren.catchu.GeneralUtils.CommonUtils;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.LoginActivity;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
@@ -53,7 +56,8 @@ public class MainActivity extends AppCompatActivity {
     RelativeLayout mainActLayout;
     ImageView appIconImgv;
     SwipeRefreshLayout refresh_layout;
-    GradientButton tryAgainButton;
+    //GradientButton tryAgainButton;
+    Button tryAgainButton;
     TextView networkTryDesc;
 
     private FirebaseAuth firebaseAuth;
@@ -90,14 +94,24 @@ public class MainActivity extends AppCompatActivity {
         networkTryDesc = findViewById(R.id.networkTryDesc);
         AnimationUtil.blink(MainActivity.this, appIconImgv);
 
+        tryAgainButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 50, 2));
+
         setPullToRefresh();
         addListeners();
     }
 
     private void addListeners() {
-        tryAgainButton.getButton().setOnClickListener(new View.OnClickListener() {
+       /* tryAgainButton.getButton().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                loginProcess();
+            }
+        });*/
+
+        tryAgainButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 loginProcess();
             }
         });

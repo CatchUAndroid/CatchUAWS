@@ -164,7 +164,7 @@
                 android:orientation="vertical">
 
 
-                <com.dagang.library.GradientButton
+                <!--<com.dagang.library.GradientButton
                     android:id="@+id/btnClearFilter"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
@@ -183,7 +183,18 @@
                     app:button_size="10sp"
                     app:button_start_color="#1565c0"
                     app:button_text="@string/clearFilter"
-                    app:button_text_color="@color/white" />
+                    app:button_text_color="@color/white" />-->
+
+                <Button
+                    android:id="@+id/btnClearFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="20dp"
+                    android:visibility="visible"
+                    android:text="@string/clearFilter"
+                    android:textColor="@color/White"/>
 
 
             </LinearLayout>

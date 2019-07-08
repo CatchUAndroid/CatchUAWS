@@ -110,15 +110,12 @@ public class TextEditorDialogFragment extends DialogFragment {
         mInputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
 
         //Make a callback on activity when user is done with text editing
-        mAddTextDoneTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mInputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                dismiss();
-                String inputText = mAddTextEditText.getText().toString();
-                if (!TextUtils.isEmpty(inputText) && mTextEditor != null) {
-                    mTextEditor.onDone(inputText, mColorCode);
-                }
+        mAddTextDoneTextView.setOnClickListener(view1 -> {
+            mInputMethodManager.hideSoftInputFromWindow(view1.getWindowToken(), 0);
+            dismiss();
+            String inputText = mAddTextEditText.getText().toString();
+            if (!TextUtils.isEmpty(inputText) && mTextEditor != null) {
+                mTextEditor.onDone(inputText, mColorCode);
             }
         });
 

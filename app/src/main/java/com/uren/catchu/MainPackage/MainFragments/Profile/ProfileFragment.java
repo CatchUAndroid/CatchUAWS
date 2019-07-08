@@ -232,7 +232,6 @@ public class ProfileFragment extends BaseFragment
             updateUI();
             setPullToRefresh();
             setPostRefreshListener();
-
         }
 
         return mView;

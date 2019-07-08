@@ -2,6 +2,7 @@ package com.uren.catchu;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,12 +11,14 @@ import android.transition.Transition;
 import android.transition.TransitionInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dagang.library.GradientButton;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 
 import butterknife.BindView;
@@ -27,7 +30,8 @@ public class InfoActivity extends AppCompatActivity
         implements View.OnClickListener {
 
     @BindView(R.id.btnSettings)
-    GradientButton btnSettings;
+    Button btnSettings;
+    //GradientButton btnSettings;
 
     @BindView(R.id.progressBar)
     ProgressBar progressBar;
@@ -46,7 +50,11 @@ public class InfoActivity extends AppCompatActivity
 
     private void initVariables() {
 
-        btnSettings.getButton().setOnClickListener(this);
+        //btnSettings.getButton().setOnClickListener(this);
+
+        btnSettings.setOnClickListener(this);
+        btnSettings.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 50, 2));
     }
 
     private void setupWindowAnimations() {
@@ -80,7 +88,11 @@ public class InfoActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
 
-        if (view == btnSettings.getButton()) {
+        /*if (view == btnSettings.getButton()) {
+            this.startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
+        }*/
+
+        if(view.getId() == R.id.btnSettings){
             this.startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), REQUEST_CODE_ENABLE_LOCATION);
         }
     }
@@ -97,13 +109,13 @@ public class InfoActivity extends AppCompatActivity
 
         if (locationTrackObj.canGetLocation()) {
             progressBar.setVisibility(View.VISIBLE);
-            btnSettings.getButton().setClickable(false);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //PostHelper.FeedRefresh.getInstance().feedRefreshStart();
-                    finishAfterTransition();
-                }
+            //btnSettings.getButton().setClickable(false);
+
+            btnSettings.setClickable(false);
+
+            new Handler().postDelayed(() -> {
+                //PostHelper.FeedRefresh.getInstance().feedRefreshStart();
+                finishAfterTransition();
             }, 1000);
         } else {
             progressBar.setVisibility(View.GONE);

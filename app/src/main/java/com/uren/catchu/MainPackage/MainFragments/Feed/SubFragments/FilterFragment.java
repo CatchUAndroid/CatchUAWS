@@ -1,9 +1,11 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed.SubFragments;
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -13,6 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.dagang.library.GradientButton;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
@@ -55,7 +58,9 @@ public class FilterFragment extends BaseFragment
     TextView txtProfilePic;
 
     @BindView(R.id.btnClearFilter)
-    GradientButton btnClearFilter;
+    Button btnClearFilter;
+    //GradientButton btnClearFilter;
+
 
     /*
     @BindView(R.id.imgCancel)
@@ -77,7 +82,7 @@ public class FilterFragment extends BaseFragment
             mView = inflater.inflate(R.layout.filter_fragment, container, false);
             ButterKnife.bind(this, mView);
 
-            initListeners();
+            initValues();
             setProfilePic();
             setSeekbar();
             //getPersonList();
@@ -105,12 +110,16 @@ public class FilterFragment extends BaseFragment
         super.onStart();
     }
 
-    private void initListeners() {
+    private void initValues() {
 
         //imgCancel.setOnClickListener(this);
         txtCancel.setOnClickListener(this);
         txtApply.setOnClickListener(this);
-        btnClearFilter.getButton().setOnClickListener(this);
+        btnClearFilter.setOnClickListener(this);
+        //btnClearFilter.getButton().setOnClickListener(this);
+
+        btnClearFilter.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 50, 2));
 
     }
 
@@ -175,10 +184,15 @@ public class FilterFragment extends BaseFragment
 
         }
 
-        if (v == btnClearFilter.getButton()) {
+        if(v == btnClearFilter){
             radius = DEFAULT_FEED_RADIUS;
             seekBar.setProgress(radius);
         }
+
+        /*if (v == btnClearFilter.getButton()) {
+            radius = DEFAULT_FEED_RADIUS;
+            seekBar.setProgress(radius);
+        }*/
 
     }
 

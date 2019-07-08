@@ -38,7 +38,7 @@
                 android:text="@string/TRY_AGAIN_AFTER_CHECK_YOUR_NETWORK"
                 android:visibility="gone" />
 
-            <com.dagang.library.GradientButton
+            <!--<com.dagang.library.GradientButton
                 android:id="@+id/tryAgainButton"
                 android:layout_width="200dp"
                 android:layout_height="70dp"
@@ -46,7 +46,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:button_end_color="#2196f3"
                 app:button_gradient_orientation="LEFT_RIGHT"
                 app:button_is_shadowed="false"
@@ -60,7 +60,19 @@
                 app:button_size="10sp"
                 app:button_start_color="#1565c0"
                 app:button_text="@string/TRY_AGAIN"
-                app:button_text_color="@color/white" />
+                app:button_text_color="@color/white" />-->
+
+            <Button
+                android:id="@+id/tryAgainButton"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/networkTryDesc"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:visibility="visible"
+                android:text="@string/TRY_AGAIN"
+                android:textColor="@color/White"/>
 
         </RelativeLayout>
 
