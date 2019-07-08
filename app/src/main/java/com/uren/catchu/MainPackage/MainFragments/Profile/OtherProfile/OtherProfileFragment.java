@@ -409,31 +409,21 @@ public class OtherProfileFragment extends BaseFragment
                     otherProfileAdapter.removeProgressLoading();
                 }
 
-                if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
-                } else {
-                    CommonUtils.LOG_OK("UserSharedPostListProcess");
-
+                if (postListResponse != null) {
                     isMoreItemAvailable = postListResponse.getItems().size() != 0;
-
                     setPostsInRecyclerView(postListResponse);
-
                 }
-
                 refresh_layout.setRefreshing(false);
-
             }
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
 
                 if (otherProfileAdapter.isShowingProgressLoading()) {
                     otherProfileAdapter.removeProgressLoading();
                 }
 
                 refresh_layout.setRefreshing(false);
-
             }
 
             @Override

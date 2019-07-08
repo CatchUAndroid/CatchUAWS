@@ -237,7 +237,6 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
                                 mMediaPlayer.prepare();
                                 if (mMediaPlayer != null) mMediaPlayer.start();
                             } catch (Exception e) {
-                                Log.e("k9exception", "run: " + e.getMessage());
                                 e.printStackTrace();
                             } finally {
                                 handlerThread.quit();

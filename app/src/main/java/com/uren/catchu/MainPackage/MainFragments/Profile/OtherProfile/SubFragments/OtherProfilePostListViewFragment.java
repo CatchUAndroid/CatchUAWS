@@ -396,10 +396,8 @@ public class OtherProfilePostListViewFragment extends BaseFragment
             public void onSuccess(final PostListResponse postListResponse) {
 
                 if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
                     showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
-                    CommonUtils.LOG_OK("UserSharedPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                         showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
@@ -415,7 +413,6 @@ public class OtherProfilePostListViewFragment extends BaseFragment
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
 

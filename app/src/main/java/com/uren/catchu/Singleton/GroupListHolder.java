@@ -86,10 +86,7 @@ public class GroupListHolder {
             @Override
             public void onSuccess(GroupRequestResult groupRequestResult1) {
 
-                if(groupRequestResult1 == null){
-                    CommonUtils.LOG_OK_BUT_NULL("GroupResultProcess");
-                }else{
-                    CommonUtils.LOG_OK("GroupResultProcess");
+                if(groupRequestResult1 != null){
                     groupRequestResult = groupRequestResult1;
                     if (groupListHolderCallback != null) {
                         groupListHolderCallback.onGroupListInfoTaken(groupRequestResult);
@@ -101,7 +98,6 @@ public class GroupListHolder {
             @Override
             public void onFailure(Exception e) {
                 GroupListHolder.setInstance(null);
-                CommonUtils.LOG_FAIL("GroupResultProcess", e.toString());
             }
 
             @Override
@@ -126,14 +122,11 @@ public class GroupListHolder {
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
-        tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-            @Override
-            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                if (task.isSuccessful()) {
-                    tokenCallback.onTokenTaken(task.getResult().getToken());
-                } else {
+        tokenTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                tokenCallback.onTokenTaken(task.getResult().getToken());
+            } else {
 
-                }
             }
         });
     }

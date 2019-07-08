@@ -248,38 +248,6 @@ public class CommonUtils {
         return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
-    public static void LOG_OK(String proccessName) {
-        /*if (proccessName.length() > 21) {
-            proccessName = proccessName.substring(0, 21);
-        }
-        Log.i(serverPrefix + proccessName, "OK");*/
-    }
-
-    public static void LOG_OK_BUT_NULL(String proccessName) {
-       /* if (proccessName.length() > 21) {
-            proccessName = proccessName.substring(0, 21);
-        }
-        Log.i(serverPrefix + proccessName, "SERVER:OK BUT DATA:NULL");*/
-    }
-
-    public static void LOG_FAIL(String proccessName, String failDetail) {
-        /*if (proccessName.length() > 21) {
-            proccessName = proccessName.substring(0, 21);
-        }
-        Log.i(serverPrefix + proccessName, "FAIL - " + failDetail);*/
-    }
-
-    public static void LOG_EXCEPTION_ERR(String proccessName, String failDetail) {
-        /* Log.i(exceptionErrPrefix + proccessName, "FAIL - " + failDetail);*/
-    }
-
-    public static void LOG_NEREDEYIZ(String konum) {
-        /*if (konum.length() > 21) {
-            konum = konum.substring(0, 21);
-        }
-        Log.i(infoPrefix + neredeyiz, konum);*/
-    }
-
     public static void hideKeyBoard(Context context) {
         Activity activity = (Activity) context;
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -374,7 +342,6 @@ public class CommonUtils {
         try {
             return df.parse(dateStr);
         } catch (ParseException e) {
-            Log.e("dateError", "Date Parse error");
             e.printStackTrace();
         }
 

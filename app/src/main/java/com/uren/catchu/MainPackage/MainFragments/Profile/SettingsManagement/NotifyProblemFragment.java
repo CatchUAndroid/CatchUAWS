@@ -52,6 +52,7 @@ import butterknife.ButterKnife;
 
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
+import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_BUG;
 
 public class NotifyProblemFragment extends BaseFragment {
 
@@ -438,6 +439,7 @@ public class NotifyProblemFragment extends BaseFragment {
                         new SaveReportProblemProcess(photoSelectUtilList,
                                 noteTextEditText.getText().toString(),
                                 AccountHolderInfo.getInstance().getUser().getUserInfo().getUserid(),
+                                REPORT_PROBLEM_TYPE_BUG,
                                 new CompleteCallback() {
                                     @Override
                                     public void onComplete(Object object) {

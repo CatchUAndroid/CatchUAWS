@@ -254,6 +254,7 @@ public class DialogBoxUtil {
                 .setPositiveBtnBackground(context.getResources().getColor(R.color.DodgerBlue, null))
                 .setDurationTime(0)
                 .isCancellable(true)
+                .setEditTextVisibility(View.GONE)
                 .OnPositiveClicked(new CustomDialogListener() {
                     @Override
                     public void OnClick() {

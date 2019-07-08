@@ -150,7 +150,6 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
     }
 
     private void loadData() {
-        CommonUtils.LOG_NEREDEYIZ("FeedFragment");
         initListeners();
         initRecyclerView();
         checkLocationAndRetrievePosts();
@@ -362,7 +361,6 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
                 loadingView.hide();
                 refresh_layout.setRefreshing(false);
 
@@ -400,10 +398,7 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
             loadingView.smoothToHide();
         }
 
-        if (postListResponse == null) {
-            CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
-        } else {
-            CommonUtils.LOG_OK("PostListResponseProcess");
+        if (postListResponse != null) {
             if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                 showExceptionLayout(true, VIEW_NO_POST_FOUND);
             } else {
@@ -413,15 +408,13 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
         }
 
         refresh_layout.setRefreshing(false);
-
     }
-
 
     private void setUpRecyclerView(PostListResponse postListResponse) {
 
         loading = true;
         postList.addAll(postListResponse.getItems());
-        preDownloadUrls(postListResponse.getItems());
+        preDownloadUrls();
 
         if (pageCnt != 1) {
             feedAdapter.removeProgressLoading();
@@ -433,17 +426,15 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
         } else {
             feedAdapter.addAll(postListResponse.getItems());
         }
-
     }
 
-    private void preDownloadUrls(List<Post> items) {
+    private void preDownloadUrls() {
 
         //extra - start downloading all videos in background before loading RecyclerView
         List<String> urls = new ArrayList<>();
         int postNum;
         for (int i = 0; i < postList.size(); i++) {
             postNum = i + 1;
-            Log.i("=== Post-" + postNum + " :", postList.get(i).getPostid() + " === ATTACHMENT URLS");
             for (int j = 0; j < postList.get(i).getAttachments().size(); j++) {
                 Media media = postList.get(i).getAttachments().get(j);
                 urls.add(media.getUrl());
@@ -452,7 +443,6 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
         }
 
         recyclerView.preDownload(urls);
-
     }
 
     private void setRecyclerViewProperties() {

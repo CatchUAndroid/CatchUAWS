@@ -310,19 +310,12 @@ public class ViewGroupDetailFragment extends BaseFragment {
                 .setPositiveBtnVisibility(View.VISIBLE)
                 .setPositiveBtnText(getContext().getResources().getString(R.string.upperYes))
                 .setPositiveBtnBackground(getContext().getResources().getColor(R.color.DodgerBlue, null))
+                .setEditTextVisibility(View.GONE)
                 .setDurationTime(0)
                 .isCancellable(true)
-                .OnPositiveClicked(new CustomDialogListener() {
-                    @Override
-                    public void OnClick() {
-                        exitFromGroup(AccountHolderInfo.getUserID());
-                    }
-                })
-                .OnNegativeClicked(new CustomDialogListener() {
-                    @Override
-                    public void OnClick() {
+                .OnPositiveClicked(() -> exitFromGroup(AccountHolderInfo.getUserID()))
+                .OnNegativeClicked(() -> {
 
-                    }
                 }).build();
     }
 

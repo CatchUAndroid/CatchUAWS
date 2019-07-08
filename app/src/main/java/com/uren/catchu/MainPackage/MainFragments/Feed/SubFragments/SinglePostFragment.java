@@ -398,10 +398,7 @@ public class SinglePostFragment extends BaseFragment
         PostListResponseProcess postListResponseProcess = new PostListResponseProcess(getContext(), new OnEventListener<PostListResponse>() {
             @Override
             public void onSuccess(final PostListResponse postListResponse) {
-                if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("PostListResponseProcess");
-                } else {
-                    CommonUtils.LOG_OK("PostListResponseProcess");
+                if (postListResponse != null) {
                     if (postListResponse.getItems().size() == 0) {
                         //no such data - post bulunamadi
                         CommonUtils.showToastShort(getContext(), getString(R.string.notFound));
@@ -418,10 +415,8 @@ public class SinglePostFragment extends BaseFragment
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("PostListResponseProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
-
             }
 
             @Override
@@ -485,17 +480,13 @@ public class SinglePostFragment extends BaseFragment
 
             @Override
             public void onSuccess(CommentListResponse commentListResponse) {
-                if (commentListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("PostCommentListProcess");
-                } else {
-                    CommonUtils.LOG_OK("PostCommentListProcess");
+                if (commentListResponse != null) {
                     setRecyclerViewComments(commentListResponse);
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("PostCommentListProcess", e.toString());
                 singlePostAdapter.removeProgressLoading();
             }
 
@@ -510,7 +501,6 @@ public class SinglePostFragment extends BaseFragment
         }, userId, postID, commentId, token);
 
         postCommentListProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void setRecyclerViewComments(CommentListResponse commentListResponse) {

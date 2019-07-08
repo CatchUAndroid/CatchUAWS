@@ -381,10 +381,8 @@ public class UserPostGridViewFragment extends BaseFragment {
             public void onSuccess(final PostListResponse postListResponse) {
 
                 if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserSharedPostListProcess");
                     showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
-                    CommonUtils.LOG_OK("UserSharedPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                         showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
@@ -400,7 +398,6 @@ public class UserPostGridViewFragment extends BaseFragment {
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserSharedPostListProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
 
@@ -451,10 +448,8 @@ public class UserPostGridViewFragment extends BaseFragment {
             public void onSuccess(final PostListResponse postListResponse) {
 
                 if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserCaughtPostListProcess");
                     showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
-                    CommonUtils.LOG_OK("UserCaughtPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                         showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
@@ -470,7 +465,6 @@ public class UserPostGridViewFragment extends BaseFragment {
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserCaughtPostListProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
 
@@ -521,10 +515,8 @@ public class UserPostGridViewFragment extends BaseFragment {
             public void onSuccess(final PostListResponse postListResponse) {
 
                 if (postListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("UserGroupCaughtPostListProcess");
                     showExceptionLayout(true, VIEW_NO_POST_FOUND);
                 } else {
-                    CommonUtils.LOG_OK("UserGroupCaughtPostListProcess");
                     if (postListResponse.getItems().size() == 0 && pageCnt == 1) {
                         showExceptionLayout(true, VIEW_NO_POST_FOUND);
                     } else {
@@ -540,7 +532,6 @@ public class UserPostGridViewFragment extends BaseFragment {
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("UserGroupCaughtPostListProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
                 refresh_layout.setRefreshing(false);
 

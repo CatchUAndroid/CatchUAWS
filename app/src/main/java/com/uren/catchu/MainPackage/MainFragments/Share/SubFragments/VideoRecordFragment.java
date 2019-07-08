@@ -212,7 +212,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
                 return size;
             }
         }
-        Log.e(TAG, "Couldn't find any suitable video size");
         return choices[choices.length - 1];
     }
 

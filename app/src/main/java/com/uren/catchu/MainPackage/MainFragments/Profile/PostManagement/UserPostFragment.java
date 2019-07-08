@@ -76,9 +76,6 @@ public class UserPostFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        CommonUtils.LOG_NEREDEYIZ("FeedFragment");
-
         if (mView == null) {
             mView = inflater.inflate(R.layout.profile_post_fragment, container, false);
             ButterKnife.bind(this, mView);
@@ -89,10 +86,7 @@ public class UserPostFragment extends BaseFragment
                 initListeners();
                 setUpPager();
             }
-
         }
-
-
         return mView;
     }
 

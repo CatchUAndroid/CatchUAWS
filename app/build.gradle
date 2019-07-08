@@ -146,6 +146,9 @@ dependencies {
 
     implementation 'ja.burhanrashid52:photoeditor:0.3.3'
 
+    //implementation 'eu.long1:spacetablayout:1.0.4'
+    //implementation 'com.github.florent37:bubbletab:1.0.0'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

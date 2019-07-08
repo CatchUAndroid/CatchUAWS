@@ -197,7 +197,7 @@ public class LoginActivity extends AppCompatActivity
         }
     }
 
-    private void initUIValues(){
+    private void initUIValues() {
         backgroundLayout = findViewById(R.id.loginLayout);
         emailET = findViewById(R.id.input_email);
         passwordET = findViewById(R.id.input_password);
@@ -211,7 +211,7 @@ public class LoginActivity extends AppCompatActivity
         createAccBtn = findViewById(R.id.createAccBtn);
     }
 
-    private void initUIListeners(){
+    private void initUIListeners() {
         backgroundLayout.setOnClickListener(this);
         emailET.setOnClickListener(this);
         passwordET.setOnClickListener(this);
@@ -351,19 +351,17 @@ public class LoginActivity extends AppCompatActivity
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                CommonUtils.LOG_NEREDEYIZ("loginButton.registerCallback");
                 getFacebookuserInfo(loginResult);
             }
 
             @Override
             public void onCancel() {
-                CommonUtils.LOG_NEREDEYIZ("facebook:onCancel");
-                Log.i("Info", "facebook:onCancel");
+
             }
 
             @Override
             public void onError(FacebookException error) {
-                CommonUtils.LOG_FAIL("facebook:onError:", error.toString());
+
             }
         });
 
@@ -562,8 +560,6 @@ public class LoginActivity extends AppCompatActivity
 
     public void getFacebookuserInfo(final LoginResult loginResult) {
 
-        CommonUtils.LOG_NEREDEYIZ("getFacebookuserInfo");
-
         GraphRequest graphRequest = GraphRequest.newMeRequest(loginResult.getAccessToken(),
                 new GraphRequest.GraphJSONObjectCallback() {
                     @Override
@@ -585,10 +581,9 @@ public class LoginActivity extends AppCompatActivity
 
                             handleFacebookAccessToken(loginResult.getAccessToken());
 
-                        } catch (JSONException e) {
-                            Log.i("Info", "  >>JSONException error:" + e.toString());
                         } catch (Exception e) {
-                            Log.i("Info", "  >>Profile error:" + e.toString());
+                            CommonUtils.showToastShort(LoginActivity.this,
+                                    getResources().getString(R.string.UNEXPECTED_ERROR));
                         }
                     }
                 });
@@ -601,8 +596,6 @@ public class LoginActivity extends AppCompatActivity
 
     private void handleFacebookAccessToken(AccessToken token) {
 
-        Log.i("Info", "handleFacebookAccessToken starts:" + token);
-
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
 
         try {
@@ -613,50 +606,39 @@ public class LoginActivity extends AppCompatActivity
 
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in loginUser's information
-                                Log.i("Info", "  >>signInWithCredential:success");
                                 //updateDeviceTokenForFCM();
                                 checkUserInSystem();
 
                             } else {
-                                // If sign in fails, display a message to the loginUser.
-                                Log.i("Info", "  >>signInWithCredential:failure:" + task.getException());
+                                CommonUtils.showToastShort(LoginActivity.this,
+                                        getResources().getString(R.string.UNEXPECTED_ERROR));
                             }
                         }
                     });
         } catch (Exception e) {
-            Log.i("Info", "  >>handleFacebookAccessToken error:" + e.toString());
+            CommonUtils.showToastShort(LoginActivity.this,
+                    getResources().getString(R.string.UNEXPECTED_ERROR));
         }
     }
 
 
     private void handleTwitterSession(final TwitterSession session) {
 
-        Log.i("Info", "handleTwitterSession:" + session);
-
         AuthCredential credential = TwitterAuthProvider.getCredential(
                 session.getAuthToken().token,
                 session.getAuthToken().secret);
 
         mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        getTwitterUserInfo(session);
+                        checkUserInSystem();
 
-                            Log.i("Info", "signInWithCredential Twitter:success");
-                            getTwitterUserInfo(session);
-                            checkUserInSystem();
-
-                        } else {
-                            Log.i("Info", "  >>signInWithCredential:failure:" + task.getException());
-                        }
+                    } else {
+                        CommonUtils.showToastShort(LoginActivity.this,
+                                getResources().getString(R.string.UNEXPECTED_ERROR));
                     }
-                }).addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("Info", "  >>signInWithCredential:onFailure:" + e.toString());
-            }
-        });
+                }).addOnFailureListener(this, e -> CommonUtils.showToastShort(LoginActivity.this, getResources().getString(R.string.UNEXPECTED_ERROR)));
     }
 
     private void getTwitterUserInfo(TwitterSession session) {
@@ -674,12 +656,12 @@ public class LoginActivity extends AppCompatActivity
             @Override
             public void success(Result<String> result) {
                 loginUser.setEmail(result.data);
-                Log.i("twitterEmail :", result.data);
             }
 
             @Override
             public void failure(TwitterException exception) {
-
+                CommonUtils.showToastShort(LoginActivity.this, getResources().getString(R.string.UNEXPECTED_ERROR) +
+                        exception.getMessage());
             }
         });
 
@@ -688,7 +670,7 @@ public class LoginActivity extends AppCompatActivity
         //profile picture
         String profilePicture = mAuth.getCurrentUser().getProviderData().get(0).getPhotoUrl().toString();
         profilePicture = profilePicture.replaceFirst("_normal", "");
-        Log.i("pr", profilePicture);
+
         loginUser.setProfilePhotoUrl(profilePicture);
         //username
         loginUser.setUsername(session.getUserName());
@@ -709,7 +691,6 @@ public class LoginActivity extends AppCompatActivity
 
                     @Override
                     public void onSuccess(UserProfile up) {
-                        Log.i("userDetail", "successful");
                         if (up != null && up.getUserInfo() != null && up.getUserInfo().getUserid() != null) {
                             startMainPage();
                         } else
@@ -719,7 +700,6 @@ public class LoginActivity extends AppCompatActivity
                     @Override
                     public void onFailure(Exception e) {
                         startAppIntroPage();
-                        CommonUtils.showToastShort(LoginActivity.this, e.toString());
                     }
 
                     @Override
@@ -741,8 +721,6 @@ public class LoginActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.i("*-*-*-* NEREDEYIZ", "onActivityResult");
-
         try {
 
             if (fbLoginClicked) {
@@ -756,7 +734,8 @@ public class LoginActivity extends AppCompatActivity
             }
 
         } catch (Exception e) {
-            Log.i("Info", "onActivityResult error:" + e.toString());
+            CommonUtils.showToastShort(LoginActivity.this, getResources().getString(R.string.UNEXPECTED_ERROR) +
+                    e.getMessage());
         }
     }
 

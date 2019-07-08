@@ -105,7 +105,7 @@ public class PostHelper {
 
                 @Override
                 public void onFailure(Exception e) {
-                    CommonUtils.LOG_FAIL("PostLikeProcess", e.toString());
+
                 }
 
                 @Override
@@ -298,7 +298,7 @@ public class PostHelper {
 
                 @Override
                 public void onFailure(Exception e) {
-                    CommonUtils.LOG_FAIL("PostCommentProcess", e.toString());
+
                 }
 
                 @Override
@@ -316,7 +316,6 @@ public class PostHelper {
             commentRequest.setComment(comment);
             return commentRequest;
         }
-
     }
 
     public static class PostCommentPermission {
@@ -329,7 +328,7 @@ public class PostHelper {
             PostCommentPermission.userId = userId;
             PostCommentPermission.post = post;
 
-            PostCommentPermission addComment = new PostCommentPermission(context);
+            new PostCommentPermission(context);
         }
 
         private PostCommentPermission(Context context) {
@@ -365,7 +364,7 @@ public class PostHelper {
 
                 @Override
                 public void onFailure(Exception e) {
-                    CommonUtils.LOG_FAIL("PostPatchProcess", e.toString());
+
                 }
 
                 @Override
@@ -383,7 +382,6 @@ public class PostHelper {
             postRequest.setPost(post);
             return postRequest;
         }
-
     }
 
     public static class DeletePost {
@@ -395,8 +393,7 @@ public class PostHelper {
 
             DeletePost.userId = userId;
             DeletePost.postId = postId;
-
-            DeletePost deletePost = new DeletePost(context);
+            new DeletePost(context);
         }
 
         private DeletePost(Context context) {
@@ -431,7 +428,7 @@ public class PostHelper {
 
                 @Override
                 public void onFailure(Exception e) {
-                    CommonUtils.LOG_FAIL("PostDeleteProcess", e.toString());
+
                 }
 
                 @Override
@@ -441,9 +438,7 @@ public class PostHelper {
             }, userId, postId, token);
 
             postDeleteProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         }
-
     }
 
     public static class ReportPost {
@@ -457,8 +452,7 @@ public class PostHelper {
             ReportPost.userId = userId;
             ReportPost.postId = postId;
             ReportPost.report = report;
-
-            ReportPost reportPost = new ReportPost(context);
+            new ReportPost(context);
         }
 
         private ReportPost(Context context) {
@@ -470,7 +464,7 @@ public class PostHelper {
             AccountHolderInfo.getToken(new TokenCallback() {
                 @Override
                 public void onTokenTaken(String token) {
-                    startDeletePostProcess(context, token);
+                    startDeletePostProcess(token);
                 }
 
                 @Override
@@ -479,7 +473,7 @@ public class PostHelper {
             });
         }
 
-        private void startDeletePostProcess(Context context, String token) {
+        private void startDeletePostProcess(String token) {
 
             String userId = ReportPost.userId;
             String postId = ReportPost.postId;
@@ -493,7 +487,7 @@ public class PostHelper {
 
                 @Override
                 public void onFailure(Exception e) {
-                    CommonUtils.LOG_FAIL("ReportProblemProcess", e.toString());
+
                 }
 
                 @Override
@@ -503,9 +497,7 @@ public class PostHelper {
             }, userId, token, report, postId);
 
             reportProblemProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
         }
-
     }
 
     public static class UpdateFollowStatus {
@@ -519,8 +511,7 @@ public class PostHelper {
             UpdateFollowStatus.userId = userId;
             UpdateFollowStatus.requestedUserId = requestedUserId;
             UpdateFollowStatus.requestTYpe = requestTYpe;
-
-            UpdateFollowStatus updateFollowStatus = new UpdateFollowStatus(context);
+            new UpdateFollowStatus(context);
         }
 
         private UpdateFollowStatus(final Context context) {
@@ -644,13 +635,11 @@ public class PostHelper {
                 }
             }
         }
-
     }
 
     public static class InitFeed {
 
         private static FeedFragment feedFragment = null;
-        private static List<FeedRefreshCallback> feedRefreshCallbackList;
 
         public InitFeed() {
         }

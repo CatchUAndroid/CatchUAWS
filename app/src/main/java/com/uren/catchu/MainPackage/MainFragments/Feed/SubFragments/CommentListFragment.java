@@ -200,10 +200,7 @@ public class CommentListFragment extends BaseFragment
 
             @Override
             public void onSuccess(CommentListResponse commentListResponse) {
-                if (commentListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("PostCommentListProcess");
-                } else {
-                    CommonUtils.LOG_OK("PostCommentListProcess");
+                if (commentListResponse != null) {
                     setUpRecyclerView(commentListResponse);
                 }
 
@@ -212,7 +209,6 @@ public class CommentListFragment extends BaseFragment
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("PostCommentListProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -231,7 +227,6 @@ public class CommentListFragment extends BaseFragment
         commentListAdapter.setPersonListItemClickListener(this);
         commentListAdapter.addAll(commentList.getItems());
 
-
         contentRoot.animate()
                 .scaleY(1)
                 .setDuration(200)
@@ -245,8 +240,6 @@ public class CommentListFragment extends BaseFragment
                     }
                 })
                 .start();
-
-
     }
 
     private void animateContent() {
@@ -261,7 +254,6 @@ public class CommentListFragment extends BaseFragment
         UserInfoListItem userInfoListItem = new UserInfoListItem(user);
         PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
     }
-
 
     private Comment createCommentBody() {
 
@@ -279,7 +271,6 @@ public class CommentListFragment extends BaseFragment
         comment.setUser(user);
         return comment;
     }
-
 
     private boolean validateComment() {
         if (TextUtils.isEmpty(edtAddComment.getText())) {

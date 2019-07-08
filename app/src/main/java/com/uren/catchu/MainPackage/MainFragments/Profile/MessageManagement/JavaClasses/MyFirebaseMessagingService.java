@@ -118,16 +118,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         final Map<String, Object> values = new HashMap<>();
         values.put(FB_CHILD_TOKEN, token);
 
-        database.updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
+        database.updateChildren(values).addOnCompleteListener(task -> {
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
+        }).addOnFailureListener(e -> {
 
-            }
         });
     }
 
@@ -161,10 +155,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentIntent(pendingIntent);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
+            notificationBuilder.setSmallIcon(R.mipmap.app_notif_icon);
             notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
         } else {
-            notificationBuilder.setSmallIcon(R.drawable.app_notif_icon);
+            notificationBuilder.setSmallIcon(R.mipmap.app_notif_icon);
         }
 
         if (messageTitle != null && !messageTitle.isEmpty())

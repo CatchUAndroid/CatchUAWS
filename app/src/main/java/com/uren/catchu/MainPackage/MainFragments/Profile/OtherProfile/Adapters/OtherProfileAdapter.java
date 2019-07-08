@@ -255,46 +255,32 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             });
 
             //imgInfo
-            imgInfo.setOnClickListener(new View.OnClickListener() {
+            imgInfo.setOnClickListener(v -> DialogBoxUtil.showInfoDialogBox(mContext, mContext.getResources().getString(R.string.postsInfo), "", new InfoDialogBoxCallback() {
                 @Override
-                public void onClick(View v) {
-                    DialogBoxUtil.showInfoDialogBox(mContext, mContext.getResources().getString(R.string.postsInfo), "", new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
+                public void okClick() {
                 }
-            });
+            }));
 
-            profilePicLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (selectedUser != null && selectedUser.getProfilePhotoUrl() != null &&
-                            !selectedUser.getProfilePhotoUrl().isEmpty()) {
-                        fragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(selectedUser.getProfilePhotoUrl()));
-                    }
+            profilePicLayout.setOnClickListener(v -> {
+                if (selectedUser != null && selectedUser.getProfilePhotoUrl() != null &&
+                        !selectedUser.getProfilePhotoUrl().isEmpty()) {
+                    fragmentNavigation.pushFragment(new ShowSelectedPhotoFragment(selectedUser.getProfilePhotoUrl()));
                 }
             });
 
             //followersLayout
-            followersLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isSelectedUserFollowInfoClickable()) {
-                        followersLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
-                        followerClicked();
-                    }
+            followersLayout.setOnClickListener(v -> {
+                if (isSelectedUserFollowInfoClickable()) {
+                    followersLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+                    followerClicked();
                 }
             });
 
             //followingsLayout
-            followingsLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (isSelectedUserFollowInfoClickable()) {
-                        followingsLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
-                        followingClicked();
-                    }
+            followingsLayout.setOnClickListener(v -> {
+                if (isSelectedUserFollowInfoClickable()) {
+                    followingsLayout.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
+                    followingClicked();
                 }
             });
         }
@@ -332,8 +318,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         }
 
         public LoginUser getChattedUserInfo() {
-            LoginUser user = null;
-            user = new LoginUser();
+            LoginUser user = new LoginUser();
             if (selectedUser.getEmail() != null && !selectedUser.getEmail().isEmpty())
                 user.setEmail(selectedUser.getEmail());
 
@@ -387,24 +372,24 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             if (isValid(userProfile.getUserInfo().getBio())) {
                 txtBio.setText(userProfile.getUserInfo().getBio());
                 bioll.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 txtBio.setText("");
                 bioll.setVisibility(View.GONE);
             }
 
             //Age
-            if(isValid(userProfile.getUserInfo().getBirthday())){
+            if (isValid(userProfile.getUserInfo().getBirthday())) {
                 int age = UserDataUtil.getAge(userProfile.getUserInfo().getBirthday());
 
-                if(age <= 0){
+                if (age <= 0) {
                     txtAge.setText("");
                     txtAge.setVisibility(View.GONE);
-                }else {
+                } else {
                     Integer ageInt = new Integer(age);
                     txtAge.setText(mContext.getResources().getString(R.string.AGE) + " " + ageInt.toString());
                     txtAge.setVisibility(View.VISIBLE);
                 }
-            }else {
+            } else {
                 txtAge.setText("");
                 txtAge.setVisibility(View.GONE);
             }

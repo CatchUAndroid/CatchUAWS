@@ -210,6 +210,7 @@
     <string name="years">years</string>
 
     //Messages-Warnings
+    <string name="UNEXPECTED_ERROR">An unexpected error has occurred!</string>
     <string name="UNKNOWN_ERROR">Operation failed!</string>
     <string name="EMAIL_ERR_REQUIRED">Email can not be empty!</string>
     <string name="EMAIL_ERR_INVALID">Please type a valid email address!</string>
@@ -264,6 +265,8 @@
     <string name="YOU_HAVE_NEW_MESSAGES">You have new messages</string>
     <string name="ACCEPT">Accept</string>
     <string name="REJECT">Reject</string>
+    <string name="COMPLAIN_PERSON_TEXT">Can you briefly complain about this person?</string>
+    <string name="COMPLAIN_FEEDBACK">Action will be taken as soon as possible after reviewing your complaint.</string>
 
     <string name="emptyFeed">No posts yet...</string>
     <string name="needLocationPermission">To see posts CatchU should access your location. Please give location permission from Settings.</string>

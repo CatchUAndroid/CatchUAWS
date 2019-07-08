@@ -34,9 +34,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.AdMobUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogReturnListener;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
+import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Adapters.MessageWithPersonAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.BlockCompleteCallback;
@@ -53,6 +60,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaC
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageUpdateProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.MessageBox;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Models.TokenInfo;
+import com.uren.catchu.MainPackage.MainFragments.Profile.SettingsManagement.ReportProblem.SaveReportProblemProcess;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
@@ -67,6 +75,7 @@ import io.fabric.sdk.android.Fabric;
 
 import static com.uren.catchu.Constants.NumericConstants.MESSAGE_LIMIT_COUNT;
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.CHAR_COLON;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DATE;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_IS_SEEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE;
@@ -77,6 +86,7 @@ import static com.uren.catchu.Constants.StringConstants.FB_CHILD_SENDER;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_USERID;
 import static com.uren.catchu.Constants.StringConstants.FB_VALUE_NOTIFICATION_READ;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_CHATTED_USER;
+import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_PERSON;
 
 public class MessageWithPersonActivity extends AppCompatActivity {
 
@@ -481,8 +491,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                                 }
                                 break;
                             case R.id.complainPerson:
-                                break;
-                            case R.id.clearConversion:
+                                startComplain();
                                 break;
                         }
                         return false;
@@ -493,49 +502,65 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         });
     }
 
+    private void startComplain() {
+        new CustomDialogBox.Builder(MessageWithPersonActivity.this)
+                .setMessage(getResources().getString(R.string.COMPLAIN_PERSON_TEXT))
+                .setTitle(getResources().getString(R.string.REPORT_PERSON))
+                .setUser(chattedUser)
+                .setNegativeBtnVisibility(View.VISIBLE)
+                .setNegativeBtnText(getResources().getString(R.string.cancel))
+                .setNegativeBtnBackground(getResources().getColor(R.color.Silver, null))
+                .setPositiveBtnVisibility(View.VISIBLE)
+                .setPositiveBtnText(getResources().getString(R.string.SEND))
+                .setPositiveBtnBackground(getResources().getColor(R.color.bg_screen1, null))
+                .setDurationTime(0)
+                .isCancellable(true)
+                .setEditTextVisibility(View.VISIBLE)
+                .OnNegativeClicked(() -> {
+
+                }).OnPositiveClicked(() -> {
+
+                }).OnReturnListenerSet(val -> {
+                   reportPerson(val);
+
+                 }).build();
+    }
+
+    private void reportPerson(String message){
+        DialogBoxUtil.showInfoDialogWithLimitedTime(MessageWithPersonActivity.this, null,
+                getResources().getString(R.string.COMPLAIN_FEEDBACK), 3000, () -> new SaveReportProblemProcess(null,
+                        chattedUser.getUserid() + CHAR_COLON + message, AccountHolderInfo.getUserID(),
+                        REPORT_PROBLEM_TYPE_PERSON,
+                        new CompleteCallback() {
+                            @Override
+                            public void onComplete(Object object) {
+
+                            }
+
+                            @Override
+                            public void onFailed(Exception e) {
+
+                            }
+                        }));
+    }
+
     public void addListeners() {
-        profilePicImgView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (chattedUser != null && chattedUser.getProfilePhotoUrl() != null &&
-                        !chattedUser.getProfilePhotoUrl().isEmpty()) {
-                    //mNavController.pushFragment(new ShowSelectedPhotoFragment(chattedUser.getProfilePhotoUrl()));
-                }
-            }
+        waitingMsgImgv.setOnClickListener(v -> {
+            if (recyclerView != null && messageBoxList != null)
+                recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
         });
 
-        waitingMsgImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (recyclerView != null && messageBoxList != null)
-                    recyclerView.smoothScrollToPosition(messageBoxList.size() - 1);
-            }
+        deleteMsgImgv.setOnClickListener(v -> {
+            loadCode = CODE_TOP_LOADED;
+            MessageDeleteProcess.deleteSelectedMessages(context, messageBoxList,
+                    messageContentId, messageWithPersonAdapter, chattedUser.getUserid(),
+                    relLayout1, relLayout2, deleteMsgCntTv);
         });
 
-        deleteMsgImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadCode = CODE_TOP_LOADED;
-                MessageDeleteProcess.deleteSelectedMessages(context, messageBoxList,
-                        messageContentId, messageWithPersonAdapter, chattedUser.getUserid(),
-                        relLayout1, relLayout2, deleteMsgCntTv);
-            }
-        });
+        commonToolbarbackImgv2.setOnClickListener(v -> deleteCompleted());
 
-        commonToolbarbackImgv2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteCompleted();
-            }
-        });
-
-        commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MessageWithPersonActivity.this.onBackPressed();
-            }
-        });
+        commonToolbarbackImgv.setOnClickListener(v -> MessageWithPersonActivity.this.onBackPressed());
 
         messageEdittext.addTextChangedListener(new TextWatcher() {
             @Override
@@ -557,18 +582,15 @@ public class MessageWithPersonActivity extends AppCompatActivity {
             }
         });
 
-        sendMessageBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessageBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
-                sendMessageBtn.setEnabled(false);
-                loadCode = CODE_BOTTOM_LOADED;
-                MessageAddProcess messageAddProcess = new MessageAddProcess(context,
-                        chattedUser, messageContentId, messageEdittext, sendMessageBtn,
-                        notificationSendCount, chattedUserDeviceToken, clusterNotificationStatus,
-                        otherUserNotificationStatus, chattedUserSignInValue);
-                messageAddProcess.addMessage();
-            }
+        sendMessageBtn.setOnClickListener(v -> {
+            sendMessageBtn.startAnimation(AnimationUtils.loadAnimation(context, R.anim.image_click));
+            sendMessageBtn.setEnabled(false);
+            loadCode = CODE_BOTTOM_LOADED;
+            MessageAddProcess messageAddProcess = new MessageAddProcess(context,
+                    chattedUser, messageContentId, messageEdittext, sendMessageBtn,
+                    notificationSendCount, chattedUserDeviceToken, clusterNotificationStatus,
+                    otherUserNotificationStatus, chattedUserSignInValue);
+            messageAddProcess.addMessage();
         });
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {

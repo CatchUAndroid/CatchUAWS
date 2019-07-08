@@ -98,7 +98,6 @@ public class AccountHolderInfo {
             @Override
             public void onFailure(Exception e) {
                 AccountHolderInfo.setInstance(null);
-                CommonUtils.LOG_FAIL("UserDetailProcess", e.toString());
             }
 
             @Override
@@ -138,14 +137,11 @@ public class AccountHolderInfo {
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
-        tokenTask.addOnCompleteListener(new OnCompleteListener<GetTokenResult>() {
-            @Override
-            public void onComplete(@NonNull Task<GetTokenResult> task) {
-                if (task.isSuccessful()) {
-                    tokenCallback.onTokenTaken(task.getResult().getToken());
-                } else {
+        tokenTask.addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                tokenCallback.onTokenTaken(task.getResult().getToken());
+            } else {
 
-                }
             }
         });
     }

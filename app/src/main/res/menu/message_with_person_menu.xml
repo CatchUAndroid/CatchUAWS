@@ -14,11 +14,11 @@
         android:title="@string/REPORT_PERSON"
         app:showAsAction="never" />
 
-    <item
+    <!--<item
         android:id="@+id/clearConversion"
         android:orderInCategory="100"
         app:showAsAction="never"
-        android:title="@string/CLEAR_CHAT"/>
+        android:title="@string/CLEAR_CHAT"/>-->
 
 </menu>
 

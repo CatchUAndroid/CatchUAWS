@@ -75,7 +75,7 @@
                             android:layout_marginBottom="3dp"
                             android:fontFamily="@font/capriola"
                             android:text="'@'username"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/colorPrimaryDark"
                             android:textSize="15sp" />
 
                         <LinearLayout

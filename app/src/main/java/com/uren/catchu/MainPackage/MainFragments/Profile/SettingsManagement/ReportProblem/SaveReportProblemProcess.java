@@ -45,15 +45,19 @@ public class SaveReportProblemProcess {
     int bucketIndex = 0;
     UploadImageToS3 uploadImageToS3 = null;
     SignedUrlGetProcess signedUrlGetProcess = null;
+    private String reportType;
 
     public SaveReportProblemProcess(List<PhotoSelectUtil> photoSelectUtilList,
-                                    String message, String userid, CompleteCallback completeCallback) {
+                                    String message, String userid, String reportType,  CompleteCallback completeCallback) {
         this.context = NextActivity.thisActivity;
         this.photoSelectUtilList = photoSelectUtilList;
         this.message = message;
         this.userid = userid;
+        this.reportType = reportType;
         this.completeCallback = completeCallback;
-        imageCount = photoSelectUtilList.size();
+
+        if (photoSelectUtilList != null)
+            imageCount = photoSelectUtilList.size();
 
         if (imageCount > 0)
             saveReportImagesToS3();
@@ -154,7 +158,7 @@ public class SaveReportProblemProcess {
     }
 
     private void saveReportProblem() {
-        report.setType(REPORT_PROBLEM_TYPE_BUG);
+        report.setType(reportType);
         report.setMessage(message);
         report.setPlatform(REPORT_PLATFORM_ANDROID);
 

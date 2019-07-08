@@ -66,6 +66,22 @@
                 android:background="@color/GhostWhite"
                 app:tabTextAppearance="@style/MainTabLayoutTextAppearance" />
 
+            <!--<eu.long1.spacetablayout.SpaceTabLayout
+                android:id="@+id/spaceTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:number_of_tabs="five"
+                app:starting_position="three"
+                app:tab_color="@color/colorPrimary"
+                app:button_color="@color/colorAccent"
+                app:text_color="#61FFFFFF"
+                app:icon_one="@drawable/ic_hotel_black_24dp"
+                app:icon_two="@drawable/design_ic_visibility"
+                app:icon_three="@drawable/ic_content_cut_black_24dp"
+                app:icon_four="@drawable/ic_check_black_24dp"
+                app:icon_five="@drawable/ic_fingerprint_black_24dp"/>-->
+
+
         </LinearLayout>
 
     </LinearLayout>

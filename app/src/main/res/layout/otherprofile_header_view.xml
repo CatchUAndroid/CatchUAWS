@@ -21,10 +21,10 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="vertical"
-            android:paddingBottom="24dp"
             android:paddingLeft="24dp"
-            android:paddingRight="24dp"
             android:paddingTop="24dp"
+            android:paddingRight="24dp"
+            android:paddingBottom="10dp"
             app:layout_collapseMode="parallax">
 
             <LinearLayout
@@ -66,26 +66,26 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/txtName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="Erkut Bas"
                             android:textColor="#ffffff"
-                            android:textSize="24sp"
-                            android:text="Erkut Bas"/>
+                            android:textSize="24sp" />
 
                         <TextView
                             android:id="@+id/txtAge"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="Yaş, 30"
                             android:textColor="#ffffff"
                             android:textSize="18sp"
-                            android:text="Yaş, 30"
-                            android:visibility="gone"
-                            android:textStyle="italic" />
+                            android:textStyle="italic"
+                            android:visibility="gone" />
 
 
                         <!--<LinearLayout
@@ -160,8 +160,6 @@
             </LinearLayout>
 
 
-
-
         </LinearLayout>
 
         <RelativeLayout
@@ -176,17 +174,20 @@
 
 
             <LinearLayout
+                android:id="@+id/fff"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@color/White">
 
                 <LinearLayout
+                    android:id="@+id/bioll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@color/Azure"
-                    android:id="@+id/bioll"
-                    android:orientation="vertical">
+                    android:background="@color/White"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -201,6 +202,14 @@
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:alpha="0.5"
+                        android:background="@color/tintColor" />
+
 
                     <TextView
                         android:id="@+id/txtBio"
@@ -208,10 +217,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="25dp"
                         android:layout_marginRight="25dp"
+                        android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:textColor="@color/Black"
                         android:textSize="18sp"
                         android:textStyle="italic" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="25dp"
+                        android:layout_marginRight="25dp"
+                        android:alpha="0.5"
+                        android:background="@color/tintColor" />
 
                 </LinearLayout>
 
@@ -219,8 +237,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginRight="40dp"
                     android:orientation="vertical">
 
                     <LinearLayout

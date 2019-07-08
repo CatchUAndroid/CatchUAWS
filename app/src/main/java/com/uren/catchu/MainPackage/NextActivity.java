@@ -111,12 +111,12 @@ public class NextActivity extends FragmentActivity implements
         switchTab(0);
         updateTabSelection(0);
 
-        bottomTabLayout.setOnClickListener(new View.OnClickListener() {
+        /*bottomTabLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
             }
-        });
+        });*/
 
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -322,8 +322,8 @@ public class NextActivity extends FragmentActivity implements
     }
 
     public void switchAndUpdateTabSelection(int position) {
-        if (position != FragNavController.TAB2)
-            bottomTabLayout.setVisibility(View.VISIBLE);
+        /*if (position != FragNavController.TAB2)
+            bottomTabLayout.setVisibility(View.VISIBLE);*/
         switchTab(position);
         updateTabSelection(position);
     }

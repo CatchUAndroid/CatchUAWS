@@ -117,6 +117,7 @@ public class StringConstants {
     public static final String REPORT_PROBLEM_TYPE_INAPPROPIATE = "inappropiate ";
     public static final String REPORT_PROBLEM_TYPE_SPAM = "spam ";
     public static final String REPORT_PROBLEM_TYPE_FEEDBACK = "feedback ";
+    public static final String REPORT_PROBLEM_TYPE_PERSON = "complainperson";
 
 
     //Character constants

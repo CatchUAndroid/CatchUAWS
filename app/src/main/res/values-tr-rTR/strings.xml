@@ -188,6 +188,7 @@
     <string name="WEBSITE">Website</string>
 
     // Mesajlar-Uyarılar
+    <string name="UNEXPECTED_ERROR">Beklenmeyen bir hata oluştu!</string>
     <string name="UNKNOWN_ERROR">İşlem tamamlanamadı!</string>
     <string name="EMAIL_ERR_REQUIRED">Email boş olamaz!</string>
     <string name="EMAIL_ERR_INVALID">Geçerli bir email adresi giriniz</string>
@@ -243,6 +244,8 @@
     <string name="YOU_HAVE_NEW_MESSAGES">Yeni mesajlarınız var</string>
     <string name="ACCEPT">Onayla</string>
     <string name="REJECT">Reddet</string>
+    <string name="COMPLAIN_PERSON_TEXT">Bu kişi hakkında şikayetinizi kısaca belirtebilir misiniz?</string>
+    <string name="COMPLAIN_FEEDBACK">Şikayetiniz incelendikten sonra en kısa sürede aksiyon alınacaktır.</string>
 
     <string name="emptyFeed">Çevrede paylaşım bulunamadı..</string>
     <string name="needLocationPermission">Paylaşımları görüntüleyebilmek için konumunuza erişmemiz gerekiyor. Lütfen Ayarlar\'dan konum izinlerini aktifleştirin.</string>

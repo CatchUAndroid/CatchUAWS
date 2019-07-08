@@ -190,6 +190,7 @@ public class SettingsFragment extends BaseFragment {
                         .setPositiveBtnBackground(getContext().getResources().getColor(R.color.DodgerBlue, null))
                         .setDurationTime(0)
                         .isCancellable(true)
+                        .setEditTextVisibility(View.GONE)
                         .OnPositiveClicked(new CustomDialogListener() {
                             @Override
                             public void OnClick() {

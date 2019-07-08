@@ -261,10 +261,13 @@ public class UserDataUtil {
                 else
                     sendMessageBtn.setVisibility(View.VISIBLE);
             } else {
-                if (!isPrivate)
+                if(isPrivate != null){
+                    if (!isPrivate)
+                        sendMessageBtn.setVisibility(View.VISIBLE);
+                    else
+                        sendMessageBtn.setVisibility(View.GONE);
+                }else
                     sendMessageBtn.setVisibility(View.VISIBLE);
-                else
-                    sendMessageBtn.setVisibility(View.GONE);
             }
         }
     }

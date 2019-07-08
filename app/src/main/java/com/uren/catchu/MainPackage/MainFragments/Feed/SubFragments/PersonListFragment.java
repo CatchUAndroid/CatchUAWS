@@ -162,10 +162,7 @@ public class PersonListFragment extends BaseFragment
             @Override
             public void onSuccess(UserListResponse userListResponse) {
 
-                if (userListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("PostLikeListProcess");
-                } else {
-                    CommonUtils.LOG_OK("PostLikeListProcess");
+                if (userListResponse != null) {
                     setUpRecyclerView(userListResponse);
                 }
 
@@ -174,7 +171,6 @@ public class PersonListFragment extends BaseFragment
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("PostLikeListProcess", e.toString());
                 progressBar.setVisibility(View.GONE);
             }
 
@@ -210,10 +206,6 @@ public class PersonListFragment extends BaseFragment
         UserInfoListItem userInfoListItem = new UserInfoListItem(user);
         userInfoListItem.setAdapter(personListAdapter);
         userInfoListItem.setClickedPosition(clickedPosition);
-
         PostHelper.ProfileClicked.startProcess(getContext(), mFragmentNavigation, userInfoListItem);
-
     }
-
-
 }

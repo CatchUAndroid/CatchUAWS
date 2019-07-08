@@ -266,17 +266,13 @@ public class SearchFragment extends BaseFragment
 
             @Override
             public void onSuccess(UserListResponse userListResponse) {
-                if (userListResponse == null) {
-                    CommonUtils.LOG_OK_BUT_NULL("SearchResultProcess");
-                } else {
-                    CommonUtils.LOG_OK("SearchResultProcess");
+                if (userListResponse != null) {
                     setUpRecyclerView(userListResponse);
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                CommonUtils.LOG_FAIL("SearchResultProcess", e.toString());
                 searchResultAdapter.removeProgressLoading();
             }
 
@@ -287,7 +283,6 @@ public class SearchFragment extends BaseFragment
         }, userId, searchText, perPage, page, token);
 
         searchResultProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-
     }
 
     private void setUpRecyclerView(UserListResponse userListResponse) {

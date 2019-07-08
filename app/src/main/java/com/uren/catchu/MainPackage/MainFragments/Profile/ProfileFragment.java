@@ -297,12 +297,7 @@ public class ProfileFragment extends BaseFragment
         if (instance != null) {
             myProfile = instance.getUser();
             if (myProfile.getUserInfo().getUsername() == null) {
-                AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
-                    @Override
-                    public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                        setProfileDetail(userProfile);
-                    }
-                });
+                AccountHolderInfo.setAccountHolderInfoCallback(userProfile -> setProfileDetail(userProfile));
             } else {
                 setProfileDetail(myProfile);
             }
@@ -314,12 +309,7 @@ public class ProfileFragment extends BaseFragment
     }
 
     private void setPullToRefresh() {
-        refresh_layout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshProfile();
-            }
-        });
+        refresh_layout.setOnRefreshListener(() -> refreshProfile());
     }
 
     private void refreshProfile() {
@@ -377,73 +367,67 @@ public class ProfileFragment extends BaseFragment
             }
         });
 
-        menuImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                menuImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                if (requestWaitingCntTv != null)
-                    requestWaitingCntTv.setVisibility(View.GONE);
+        menuImgv.setOnClickListener(v -> {
+            menuImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            if (requestWaitingCntTv != null)
+                requestWaitingCntTv.setVisibility(View.GONE);
 
-                if (mDrawerState) {
-                    drawerLayout.closeDrawer(Gravity.START);
-                } else {
-                    drawerLayout.openDrawer(Gravity.START);
-                }
+            if (mDrawerState) {
+                drawerLayout.closeDrawer(Gravity.START);
+            } else {
+                drawerLayout.openDrawer(Gravity.START);
             }
         });
 
-        navViewLayout.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        navViewLayout.setNavigationItemSelectedListener(item -> {
 
-                switch (item.getItemId()) {
-                    case R.id.searchItem:
-                        drawerLayout.closeDrawer(Gravity.START);
-                        startExplorePeopleFragment();
-                        break;
+            switch (item.getItemId()) {
+                case R.id.searchItem:
+                    drawerLayout.closeDrawer(Gravity.START);
+                    startExplorePeopleFragment();
+                    break;
 
-                    case R.id.viewItem:
-                        if (navPendReqCntTv != null)
-                            navPendReqCntTv.setVisibility(View.GONE);
+                case R.id.viewItem:
+                    if (navPendReqCntTv != null)
+                        navPendReqCntTv.setVisibility(View.GONE);
 
-                        drawerLayout.closeDrawer(Gravity.START);
-                        startPendingRequestFragment();
-                        break;
+                    drawerLayout.closeDrawer(Gravity.START);
+                    startPendingRequestFragment();
+                    break;
 
-                    case R.id.manageGroupsItem:
-                        drawerLayout.closeDrawer(Gravity.START);
-                        startGroupSettingFragment();
-                        break;
+                case R.id.manageGroupsItem:
+                    drawerLayout.closeDrawer(Gravity.START);
+                    startGroupSettingFragment();
+                    break;
 
-                    case R.id.messagesItem:
-                        if (navMessageCntTv != null)
-                            navMessageCntTv.setVisibility(View.GONE);
+                case R.id.messagesItem:
+                    if (navMessageCntTv != null)
+                        navMessageCntTv.setVisibility(View.GONE);
 
-                        drawerLayout.closeDrawer(Gravity.START);
-                        startMessageListActivity();
-                        break;
+                    drawerLayout.closeDrawer(Gravity.START);
+                    startMessageListActivity();
+                    break;
 
-                    case R.id.settingsItem:
-                        drawerLayout.closeDrawer(Gravity.START);
-                        startSettingsFragment();
-                        break;
+                case R.id.settingsItem:
+                    drawerLayout.closeDrawer(Gravity.START);
+                    startSettingsFragment();
+                    break;
 
-                    case R.id.reportProblemItem:
-                        drawerLayout.closeDrawer(Gravity.START);
-                        startNotifyProblemFragment();
-                        break;
+                case R.id.reportProblemItem:
+                    drawerLayout.closeDrawer(Gravity.START);
+                    startNotifyProblemFragment();
+                    break;
 
-                    case R.id.rateUs:
-                        drawerLayout.closeDrawer(Gravity.START);
-                        CommonUtils.commentApp(getContext());
-                        break;
+                case R.id.rateUs:
+                    drawerLayout.closeDrawer(Gravity.START);
+                    CommonUtils.commentApp(getContext());
+                    break;
 
-                    default:
-                        break;
-                }
-
-                return false;
+                default:
+                    break;
             }
+
+            return false;
         });
 
     }
@@ -488,13 +472,13 @@ public class ProfileFragment extends BaseFragment
                 if(getContext() != null) {
                     Animation moveUpAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.move_up);
                     imgProfile.startAnimation(moveUpAnimation);
-                    imgProfile.setPadding(3, 3, 3, 3);
                 }
-
-                setWaitingRequestsCount(user);
-            } catch (Resources.NotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            imgProfile.setPadding(3, 3, 3, 3);
+            setWaitingRequestsCount(user);
         }
 
         setUserFollowerAndFollowingCnt(user);
@@ -528,25 +512,22 @@ public class ProfileFragment extends BaseFragment
 
     public void getUserUnreadMsgCount() {
 
-        MessageGetProcess.getUnreadMessageCount(new UnreadMessageCallback() {
-            @Override
-            public void onReturn(int listSize) {
-                unreadMessageCount = listSize;
-                waitingRequestCount = unreadMessageCount + pendingRequestCount;
+        MessageGetProcess.getUnreadMessageCount(listSize -> {
+            unreadMessageCount = listSize;
+            waitingRequestCount = unreadMessageCount + pendingRequestCount;
 
-                if (requestWaitingCntTv.getVisibility() == View.GONE && waitingRequestCount > 0)
-                    requestWaitingCntTv.setVisibility(View.VISIBLE);
+            if (requestWaitingCntTv.getVisibility() == View.GONE && waitingRequestCount > 0)
+                requestWaitingCntTv.setVisibility(View.VISIBLE);
 
-                requestWaitingCntTv.setText(Integer.toString(waitingRequestCount));
+            requestWaitingCntTv.setText(Integer.toString(waitingRequestCount));
 
-                if (navMessageCntTv != null) {
-                    if (unreadMessageCount > 0) {
-                        if (navMessageCntTv.getVisibility() == View.GONE)
-                            navMessageCntTv.setVisibility(View.VISIBLE);
-                        navMessageCntTv.setText(Integer.toString(unreadMessageCount));
-                    } else
-                        navMessageCntTv.setVisibility(View.GONE);
-                }
+            if (navMessageCntTv != null) {
+                if (unreadMessageCount > 0) {
+                    if (navMessageCntTv.getVisibility() == View.GONE)
+                        navMessageCntTv.setVisibility(View.VISIBLE);
+                    navMessageCntTv.setText(Integer.toString(unreadMessageCount));
+                } else
+                    navMessageCntTv.setVisibility(View.GONE);
             }
         });
     }
@@ -598,7 +579,6 @@ public class ProfileFragment extends BaseFragment
                             navPendReqCntTv.setVisibility(View.GONE);
                     }
                 }
-
                 getUserUnreadMsgCount();
             }
 
@@ -628,7 +608,6 @@ public class ProfileFragment extends BaseFragment
         } else {
             setProfileDetail(myProfile);
         }
-
     }
 
     private void startGetProfileDetail(final String userID, String token) {
@@ -670,12 +649,9 @@ public class ProfileFragment extends BaseFragment
                 //CommonUtils.showToastShort(getContext(), "grupları singletondan hemen aldım");
                 setGroupRecyclerView(groupRequestResult);
             } else {
-                GroupListHolder.setGroupListHolderCallback(new GroupListHolderCallback() {
-                    @Override
-                    public void onGroupListInfoTaken(GroupRequestResult groupRequestResult) {
-                        //CommonUtils.showToastShort(getContext(), "grupları singletondan Callback ile aldım");
-                        setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
-                    }
+                GroupListHolder.setGroupListHolderCallback(groupRequestResult1 -> {
+                    //CommonUtils.showToastShort(getContext(), "grupları singletondan Callback ile aldım");
+                    setGroupRecyclerView(GroupListHolder.getInstance().getGroupList());
                 });
             }
         } else {
@@ -735,13 +711,7 @@ public class ProfileFragment extends BaseFragment
 
     private void orderGroupByName(GroupRequestResult groupRequestResult) {
         //order
-        Collections.sort(groupRequestResult.getResultArray(), new Comparator<GroupRequestResultResultArrayItem>() {
-            @Override
-            public int compare(GroupRequestResultResultArrayItem o1, GroupRequestResultResultArrayItem o2) {
-                return o1.getName().compareToIgnoreCase(o2.getName());
-            }
-
-        });
+        Collections.sort(groupRequestResult.getResultArray(), (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName()));
     }
 
     @Override

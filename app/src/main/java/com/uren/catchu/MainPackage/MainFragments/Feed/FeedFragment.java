@@ -88,8 +88,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        CommonUtils.LOG_NEREDEYIZ("FeedFragment");
-
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_feed, container, false);
             PostHelper.InitFeed.setFeedFragment(this);
@@ -99,9 +97,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
             setUpPager();
             initListeners();
             getUserUnreadMsgCount();
-
         }
-
         return mView;
     }
 
