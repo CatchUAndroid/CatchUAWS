@@ -29,7 +29,6 @@ public class GroupListHolder {
 
     //Firebase
     private static FirebaseAuth firebaseAuth;
-    private static String FBuserId;
 
     public static GroupListHolder getInstance() {
         if (groupListHolderInstance == null) {
@@ -46,7 +45,7 @@ public class GroupListHolder {
 
     public static String getUserIdFromFirebase() {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        FBuserId = currentUser.getUid();
+        String FBuserId = currentUser.getUid();
         return FBuserId;
     }
 

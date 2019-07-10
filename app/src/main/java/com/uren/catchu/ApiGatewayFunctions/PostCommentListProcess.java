@@ -12,7 +12,6 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class PostCommentListProcess extends AsyncTask<Void, Void, CommentListResponse> {
 
     private OnEventListener<CommentListResponse> mCallBack;
-    private Context mContext;
     private Exception mException;
     private String userId;
     private String postId;
@@ -24,7 +23,7 @@ public class PostCommentListProcess extends AsyncTask<Void, Void, CommentListRes
                                   String commentId,
                                   String token) {
         mCallBack = callback;
-        mContext = context;
+        Context mContext = context;
         this.userId = userId;
         this.postId = postId;
         this.commentId = commentId;

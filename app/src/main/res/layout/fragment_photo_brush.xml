@@ -34,31 +34,28 @@
                 android:id="@+id/pencilImgv"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/addTextImgv"
                 android:layout_marginLeft="10dp"
                 android:padding="5dp"
-                android:src="@mipmap/icon_pencil" />
+                android:src="@mipmap/icon_pencil"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/blurImgv"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/addTextImgv"
                 android:layout_marginLeft="25dp"
                 android:padding="5dp"
-                android:src="@mipmap/icon_blur" />
+                android:src="@mipmap/icon_blur"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/trashImgv"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/addTextImgv"
                 android:layout_marginLeft="25dp"
                 android:padding="5dp"
-                android:src="@mipmap/icon_clean" />
+                android:src="@mipmap/icon_clean"
+                android:contentDescription="TODO" />
 
         </LinearLayout>
 
@@ -105,7 +102,7 @@
             android:layout_marginBottom="10dp"
             android:orientation="vertical">
 
-            <include layout="@layout/color_palette_layout"></include>
+            <include layout="@layout/color_palette_layout" />
 
         </LinearLayout>
 

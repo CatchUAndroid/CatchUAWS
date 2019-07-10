@@ -38,7 +38,8 @@
                 android:layout_gravity="left|bottom"
                 android:layout_margin="12dp"
                 android:src="@drawable/ic_play"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:layout_width="35dp"
@@ -46,7 +47,8 @@
                 android:layout_gravity="right|bottom"
                 android:layout_margin="12dp"
                 android:src="@drawable/ic_unmute"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:contentDescription="TODO" />
 
         </FrameLayout>
 

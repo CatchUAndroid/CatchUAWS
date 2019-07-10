@@ -35,7 +35,8 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_gravity="center"
-                    android:background="@color/colorPrimary" />
+                    android:background="@color/colorPrimary"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/txtGroupName"
@@ -49,7 +50,6 @@
                     android:fontFamily="@font/capriola"
                     android:gravity="center"
                     android:maxLines="1"
-                    android:text="asdasdasdasd"
                     android:textColor="@color/colorPrimaryDark"
                     android:textSize="15sp"
                     android:textStyle="bold" />

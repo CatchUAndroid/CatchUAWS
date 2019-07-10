@@ -35,7 +35,8 @@
         android:padding="8dp"
         android:src="@drawable/ic_undo"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintEnd_toStartOf="@+id/imgRedo" />
+        app:layout_constraintEnd_toStartOf="@+id/imgRedo"
+        android:contentDescription="TODO" />
 
     <ImageView
         android:id="@+id/imgRedo"
@@ -45,7 +46,8 @@
         android:padding="8dp"
         android:src="@drawable/ic_redo"
         app:layout_constraintBottom_toTopOf="@+id/rvConstraintTools"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="TODO" />
 
     <!--<ImageView
         android:id="@+id/imgGallery"
@@ -77,7 +79,8 @@
         android:src="@drawable/ic_close"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        android:contentDescription="TODO" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvConstraintTools"
@@ -126,6 +129,7 @@
         android:src="@mipmap/icon_tick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline"
+        android:contentDescription="TODO" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -24,7 +24,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <FrameLayout
                         android:id="@+id/frameLayout"
@@ -40,7 +41,8 @@
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:layout_gravity="center"
-                            android:scaleType="fitXY" />
+                            android:scaleType="fitXY"
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:id="@+id/shortUserNameTv"
@@ -67,7 +69,6 @@
                                 android:id="@+id/profile_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_marginLeft="5dp"
                                 android:textSize="15sp" />
 
@@ -75,7 +76,6 @@
                                 android:id="@+id/profile_user_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
                                 android:layout_marginLeft="5dp"
                                 android:textSize="12sp" />
 
@@ -98,7 +98,7 @@
                             android:layout_centerVertical="true"
                             android:text="@string/ACCEPT"
                             android:textAllCaps="false"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -116,7 +116,7 @@
                             android:layout_centerVertical="true"
                             android:text="@string/REJECT"
                             android:textAllCaps="false"
-                            android:textSize="10sp" />
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -129,12 +129,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="match_parent">
-
-                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

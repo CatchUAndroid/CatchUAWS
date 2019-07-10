@@ -31,12 +31,6 @@ import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE_NORMAL_TO_PERSON;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_URL;
 
-/*import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;*/
-
 public class SendMessageToFCM {
 
     static OkHttpClient mClient = new OkHttpClient();

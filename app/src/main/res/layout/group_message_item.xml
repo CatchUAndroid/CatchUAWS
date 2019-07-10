@@ -37,7 +37,6 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="2dp"
-                    android:text="Ugur Gogebakan"
                     android:textColor="@color/black"
                     android:textSize="15sp"
                     android:textStyle="bold"/>
@@ -92,7 +91,6 @@
                     android:allowUndo="false"
                     android:autoText="false"
                     android:gravity="right"
-                    android:text="3dakikacik"
                     android:textColor="@color/gray" />
 
             </RelativeLayout>

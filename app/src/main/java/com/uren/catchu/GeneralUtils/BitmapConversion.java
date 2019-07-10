@@ -1,5 +1,6 @@
 package com.uren.catchu.GeneralUtils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -32,6 +33,7 @@ import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_2ANDHALF
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_5MB;
 import static com.uren.catchu.Constants.StringConstants.GALLERY_TEXT;
 
+@SuppressLint("Registered")
 public class BitmapConversion extends AppCompatActivity {
 
     public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int Width, int Height) {

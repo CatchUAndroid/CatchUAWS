@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView
+        <com.uren.catchu.Libraries.VideoPlay.CustomRecyclerView
             android:id="@+id/rv_feed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -22,7 +22,7 @@
             android:scrollbars="vertical"
             android:clickable="false">
 
-        </com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView>
+        </com.uren.catchu.Libraries.VideoPlay.CustomRecyclerView>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -27,9 +27,7 @@ public class AppIntroductionActivity extends AppCompatActivity {
 
 
     private ViewPager viewPager;
-    private AppIntroductionAdapter appIntroductionAdapter;
     private LinearLayout dotsLayout;
-    private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
     //private AppIntroSession appIntroSession;
@@ -60,9 +58,7 @@ public class AppIntroductionActivity extends AppCompatActivity {
         }*/
 
         // Making notification bar transparent
-        if (Build.VERSION.SDK_INT >= 21) {
-            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
-        }
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
         setContentView(R.layout.activity_app_introduction);
         Fabric.with(this, new Crashlytics());
@@ -87,7 +83,7 @@ public class AppIntroductionActivity extends AppCompatActivity {
         // making notification bar transparent
         changeStatusBarColor();
 
-        appIntroductionAdapter = new AppIntroductionAdapter(AppIntroductionActivity.this, layouts);
+        AppIntroductionAdapter appIntroductionAdapter = new AppIntroductionAdapter(AppIntroductionActivity.this, layouts);
         viewPager.setAdapter(appIntroductionAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
@@ -111,7 +107,7 @@ public class AppIntroductionActivity extends AppCompatActivity {
     }
 
     private void addBottomDots(int currentPage) {
-        dots = new TextView[layouts.length];
+        TextView[] dots = new TextView[layouts.length];
 
         int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
         int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
@@ -177,10 +173,8 @@ public class AppIntroductionActivity extends AppCompatActivity {
     };
 
     private void changeStatusBarColor() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.TRANSPARENT);
-        }
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
     }
 }

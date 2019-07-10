@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.LayoutManager;
+package com.uren.catchu.Libraries.LayoutManager;
 
 import android.annotation.TargetApi;
 import android.content.Context;

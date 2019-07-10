@@ -14,7 +14,8 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -28,7 +29,8 @@
                     android:id="@+id/profilePicImgView"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/shortUserNameTv"
@@ -45,7 +47,8 @@
                     android:layout_height="20dp"
                     android:layout_gravity="right|bottom"
                     android:padding="4dp"
-                    android:src="@mipmap/icon_tick" />
+                    android:src="@mipmap/icon_tick"
+                    android:contentDescription="TODO" />
 
             </FrameLayout>
 
@@ -64,7 +67,6 @@
                         android:id="@+id/nameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
                         android:textSize="15sp" />
 
@@ -72,7 +74,6 @@
                         android:id="@+id/usernameTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
                         android:textSize="12sp" />
 
@@ -108,10 +109,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="70dp"
-                android:layout_height="match_parent"></LinearLayout>
 
             <View
                 android:layout_width="match_parent"

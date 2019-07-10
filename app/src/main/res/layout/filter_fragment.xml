@@ -98,7 +98,6 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:background="@color/PowderBlue"
-                android:text="asdasdasd"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -124,7 +123,8 @@
                         <ImageView
                             android:id="@+id/imgProfilePic"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:id="@+id/txtProfilePic"
@@ -189,7 +189,6 @@
                     android:id="@+id/btnClearFilter"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="20dp"
                     android:visibility="visible"

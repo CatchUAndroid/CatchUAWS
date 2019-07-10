@@ -25,14 +25,13 @@ public class PhoneVerification {
     private boolean mVerificationInProgress = false;
     private String mVerificationId;
     private String phoneNum;
-    private Context context;
     private CompleteCallback completeCallback;
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private Activity activity;
     //private PhoneAuthCredential mCredential;
 
     public PhoneVerification(Context context, String phoneNum, CompleteCallback completeCallback) {
-        this.context = context;
+        Context context1 = context;
         this.phoneNum = phoneNum;
         this.completeCallback = completeCallback;
         activity = (Activity) context;

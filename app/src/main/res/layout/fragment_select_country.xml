@@ -54,7 +54,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@mipmap/search"
-                android:tint="@color/Gray" />
+                android:tint="@color/Gray"
+                android:contentDescription="TODO" />
 
             <EditText
                 android:id="@+id/selectCountryEt"

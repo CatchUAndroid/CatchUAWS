@@ -73,7 +73,7 @@ public class GroupsListAdapter extends RecyclerView.Adapter<GroupsListAdapter.Gr
                 public void onClick(View v) {
                     String targetUid = group.getGroupid();
                     String toolbarTitle = group.getName();
-                    fragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_GROUP, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+                    fragmentNavigation.pushFragment(new UserPostFragment(PROFILE_POST_TYPE_GROUP, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
                 }
             });
         }

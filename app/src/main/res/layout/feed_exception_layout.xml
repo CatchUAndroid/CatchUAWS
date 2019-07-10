@@ -21,7 +21,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@mipmap/icon_sad"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:contentDescription="TODO" />
 
         <TextView
             android:id="@+id/txtNoPostFound"

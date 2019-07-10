@@ -163,13 +163,13 @@ public class UserGroupsListAdapter extends RecyclerView.Adapter<UserGroupsListAd
         }
 
         public String getShortGroupName() {
-            String returnValue = "";
+            StringBuilder returnValue = new StringBuilder();
             String[] seperatedName = groupRequestResultResultArrayItem.getName().trim().split(" ");
             for (String word : seperatedName) {
                 if (returnValue.length() < 3)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+                    returnValue.append(word.substring(0, 1).toUpperCase());
             }
-            return returnValue;
+            return returnValue.toString();
         }
 
         public void updateTickImgv() {

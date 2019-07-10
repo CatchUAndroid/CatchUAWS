@@ -42,8 +42,7 @@
                     <!-- Profile Picture /-->
                     <LinearLayout
                         android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_centerHorizontal="true">
+                        android:layout_height="40dp">
 
                         <RelativeLayout
                             android:layout_width="match_parent"
@@ -53,7 +52,8 @@
                                 android:id="@+id/imgProfilePic"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:contentDescription="TODO" />
 
                             <TextView
                                 android:id="@+id/txtProfilePic"
@@ -150,7 +150,8 @@
                             android:layout_width="15dp"
                             android:layout_height="15dp"
                             android:layout_marginRight="5dp"
-                            android:src="@mipmap/icon_like" />
+                            android:src="@mipmap/icon_like"
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:id="@+id/txtLikeCount"
@@ -165,7 +166,8 @@
                             android:background="@drawable/btn_feed_action"
                             android:clickable="true"
                             android:gravity="center"
-                            android:text="@string/like" />
+                            android:text="@string/like"
+                            android:focusable="true" />
 
                     </LinearLayout>
 

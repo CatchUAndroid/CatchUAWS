@@ -15,7 +15,6 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class LoginProcess extends AsyncTask<Void, Void, BaseResponse> {
 
     private OnEventListener<BaseResponse> mCallBack;
-    private Context mContext;
     public Exception mException;
     public BaseRequest baseRequest;
     private String token;
@@ -23,7 +22,7 @@ public class LoginProcess extends AsyncTask<Void, Void, BaseResponse> {
 
     public LoginProcess(Context context, OnEventListener callback, String userId, BaseRequest baseRequest, String token) {
         mCallBack = callback;
-        mContext = context;
+        Context mContext = context;
         this.baseRequest = baseRequest;
         this.token = token;
         this.userId = userId;

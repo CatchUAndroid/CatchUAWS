@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter"
+            android:contentDescription="TODO" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,30 +72,27 @@
                 android:id="@+id/cleanImgv"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignParentStart="true"
-                android:layout_alignTop="@+id/addTextImgv"
                 android:padding="5dp"
-                android:src="@mipmap/icon_clean" />
+                android:src="@mipmap/icon_clean"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/brushImgv"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignTop="@+id/addTextImgv"
                 android:layout_marginLeft="15dp"
                 android:padding="5dp"
-                android:src="@mipmap/icon_share_brush" />
+                android:src="@mipmap/icon_share_brush"
+                android:contentDescription="TODO" />
 
             <ImageView
                 android:id="@+id/addTextImgv"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
                 android:layout_marginLeft="15dp"
                 android:padding="5dp"
-                android:src="@drawable/aa_icon" />
+                android:src="@drawable/aa_icon"
+                android:contentDescription="TODO" />
 
         </LinearLayout>
 

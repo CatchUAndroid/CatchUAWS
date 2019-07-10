@@ -62,10 +62,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
     private Activity mActivity;
     private Context mContext;
     private Post post;
-    private Comment comment;
     private List<Post> postList;
     private List<Comment> commentList;
-    private List<Comment> tempCommentList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
     GradientDrawable imageShape;
     private PersonListItemClickListener personListItemClickListener;
@@ -83,7 +81,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         this.fragmentNavigation = fragmentNavigation;
         this.postList = new ArrayList<Post>();
         this.commentList = new ArrayList<Comment>();
-        this.tempCommentList = new ArrayList<Comment>();
+        List<Comment> tempCommentList = new ArrayList<Comment>();
         this.numberOfCallback = numberOfCallback;
         this.feedPosition = feedPosition;
 
@@ -161,7 +159,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             post = postList.get(position);
             ((PostViewHolder) holder).setData(post, position);
         } else if (holder instanceof CommentViewHolder) {
-            comment = commentList.get(position - postList.size());
+            Comment comment = commentList.get(position - postList.size());
             ((CommentViewHolder) holder).setData(comment, position);
         } else {
             ((ProgressViewHolder) holder).progressBar.setIndeterminate(true);

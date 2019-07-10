@@ -59,7 +59,7 @@ public class PostHelper {
         static String commentId;
         static boolean isLiked;
 
-        public static final void startProcess(Context context, String postId, String commentId, boolean isPostLiked) {
+        public static void startProcess(Context context, String postId, String commentId, boolean isPostLiked) {
             LikeClicked.postId = postId;
             LikeClicked.commentId = commentId;
             LikeClicked.isLiked = isPostLiked;
@@ -134,8 +134,8 @@ public class PostHelper {
         static String toolbarTitle;
         static String postId;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
-                                              String postId) {
+        public static void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, String toolbarTitle,
+                                        String postId) {
 
             fragmentNavigation = fragmNav;
             LikeListClicked.toolbarTitle = toolbarTitle;
@@ -164,8 +164,8 @@ public class PostHelper {
         static String postId;
         static int position;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav,
-                                              String postId, int position) {
+        public static void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav,
+                                        String postId, int position) {
 
             fragmentNavigation = fragmNav;
             CommentListClicked.postId = postId;
@@ -191,7 +191,7 @@ public class PostHelper {
         static Media media;
         static BaseFragment.FragmentNavigation mfragmentNavigation;
 
-        public static final void startProcess(Activity activity, Context context, Media m, BaseFragment.FragmentNavigation fragmentNavigation) {
+        public static void startProcess(Activity activity, Context context, Media m, BaseFragment.FragmentNavigation fragmentNavigation) {
             mfragmentNavigation = fragmentNavigation;
             media = m;
             new ViewPagerItemClicked();
@@ -224,7 +224,7 @@ public class PostHelper {
         static BaseFragment.FragmentNavigation fragmentNavigation;
         static UserInfoListItem userInfoListItem;
 
-        public static final void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, UserInfoListItem userInfoListItem) {
+        public static void startProcess(Context context, BaseFragment.FragmentNavigation fragmNav, UserInfoListItem userInfoListItem) {
 
             fragmentNavigation = fragmNav;
             ProfileClicked.userInfoListItem = userInfoListItem;
@@ -256,7 +256,7 @@ public class PostHelper {
         static Comment comment;
         static int position;
 
-        public static final void startProcess(Context context, String postId, Comment comment, int position) {
+        public static void startProcess(Context context, String postId, Comment comment, int position) {
 
             AddComment.postId = postId;
             AddComment.comment = comment;
@@ -323,7 +323,7 @@ public class PostHelper {
         static Post post;
         static String userId;
 
-        public static final void startProcess(Context context, String userId, Post post) {
+        public static void startProcess(Context context, String userId, Post post) {
 
             PostCommentPermission.userId = userId;
             PostCommentPermission.post = post;
@@ -389,7 +389,7 @@ public class PostHelper {
         static String userId;
         static String postId;
 
-        public static final void startProcess(Context context, String userId, String postId) {
+        public static void startProcess(Context context, String userId, String postId) {
 
             DeletePost.userId = userId;
             DeletePost.postId = postId;
@@ -447,7 +447,7 @@ public class PostHelper {
         static String postId;
         static Report report;
 
-        public static final void startProcess(Context context, String userId, String postId, Report report) {
+        public static void startProcess(Context context, String userId, String postId, Report report) {
 
             ReportPost.userId = userId;
             ReportPost.postId = postId;
@@ -506,7 +506,7 @@ public class PostHelper {
         static String requestedUserId;
         static String requestTYpe;
 
-        public static final void startProcess(Context context, String userId, String requestedUserId, String requestTYpe) {
+        public static void startProcess(Context context, String userId, String requestedUserId, String requestTYpe) {
 
             UpdateFollowStatus.userId = userId;
             UpdateFollowStatus.requestedUserId = requestedUserId;
@@ -656,7 +656,7 @@ public class PostHelper {
 
     public static class Utils {
 
-        public static final String calculateDistance(Double distance) {
+        public static String calculateDistance(Double distance) {
             String distanceValue;
             if (distance < 1) {
                 distance = distance * 1000;

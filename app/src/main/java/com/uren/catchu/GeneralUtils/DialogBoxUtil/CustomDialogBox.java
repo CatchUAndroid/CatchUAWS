@@ -25,42 +25,25 @@ import catchu.model.User;
 
 
 public class CustomDialogBox {
-    private String title;
-    private String message;
-    private String positiveBtnText;
-    private String negativeBtnText;
-    private int pBtnColor;
-    private int nBtnColor;
-    private int pBtnVisibleType;
-    private int nBtnVisibleType;
-    private int editTextVisibleType;
-    private Activity activity;
-    private CustomDialogListener pListener;
-    private CustomDialogReturnListener returnListener;
-    private CustomDialogListener nListener;
-    private boolean cancel;
-    private User user;
-    private GroupRequestResultResultArrayItem group;
-    private long durationTime;
 
     private CustomDialogBox(CustomDialogBox.Builder builder) {
-        this.title = builder.title;
-        this.message = builder.message;
-        this.activity = builder.activity;
-        this.pListener = builder.pListener;
-        this.nListener = builder.nListener;
-        this.returnListener = builder.returnListener;
-        this.pBtnColor = builder.pBtnColor;
-        this.nBtnColor = builder.nBtnColor;
-        this.pBtnVisibleType = builder.pBtnVisibleType;
-        this.nBtnVisibleType = builder.nBtnVisibleType;
-        this.positiveBtnText = builder.positiveBtnText;
-        this.negativeBtnText = builder.negativeBtnText;
-        this.editTextVisibleType = builder.editTextVisibleType;
-        this.user = builder.user;
-        this.group = builder.group;
-        this.cancel = builder.cancel;
-        this.durationTime = builder.durationTime;
+        String title = builder.title;
+        String message = builder.message;
+        Activity activity = builder.activity;
+        CustomDialogListener pListener = builder.pListener;
+        CustomDialogListener nListener = builder.nListener;
+        CustomDialogReturnListener returnListener = builder.returnListener;
+        int pBtnColor = builder.pBtnColor;
+        int nBtnColor = builder.nBtnColor;
+        int pBtnVisibleType = builder.pBtnVisibleType;
+        int nBtnVisibleType = builder.nBtnVisibleType;
+        String positiveBtnText = builder.positiveBtnText;
+        String negativeBtnText = builder.negativeBtnText;
+        int editTextVisibleType = builder.editTextVisibleType;
+        User user = builder.user;
+        GroupRequestResultResultArrayItem group = builder.group;
+        boolean cancel = builder.cancel;
+        long durationTime = builder.durationTime;
     }
 
     public static class Builder {

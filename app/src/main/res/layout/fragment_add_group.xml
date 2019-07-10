@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/addGroupDtlRelLayout">
 
     <LinearLayout
@@ -28,7 +29,8 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:padding="@dimen/ADD_GROUP_IMGV_SIZE"
-                    android:src="@mipmap/icon_photo_camera" />
+                    android:src="@mipmap/icon_photo_camera"
+                    android:contentDescription="TODO" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -107,6 +109,9 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="155dp"
-        android:src="@drawable/tick_icon50" />
+        android:src="@mipmap/icon_tick"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        android:backgroundTint="@color/colorAccent"/>
 
 </RelativeLayout>

@@ -22,7 +22,8 @@
                 android:id="@+id/navImgProfile"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:layout_gravity="center" />
+                android:layout_gravity="center"
+                android:contentDescription="TODO" />
 
             <TextView
                 android:id="@+id/navViewShortenTextView"
@@ -38,7 +39,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_alignParentStart="true"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="10dp"
             android:orientation="vertical">

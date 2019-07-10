@@ -11,6 +11,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -38,6 +39,7 @@ import java.util.Map;
 import catchu.model.User;
 
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
+import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_BLOCK;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_PHOTO_URL;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
@@ -72,6 +74,66 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
+
+
+        if (remoteMessage != null) {
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().
+                    getReference("RemoteMessages").child("remotemessage");
+
+            String key = databaseReference.push().getKey();
+
+            final Map<String, Object> values = new HashMap<>();
+
+            if (remoteMessage.getData() != null && remoteMessage.getData().toString() != null) {
+                values.put("data", remoteMessage.getData().toString());
+                values.put("datasize", remoteMessage.getData().size());
+            }
+
+
+            Map<String, String> params = remoteMessage.getData();
+
+
+            RemoteMessage.Notification notification = remoteMessage.getNotification();
+
+            if (remoteMessage.getNotification() != null) {
+                Log.i("Info", "Message Notification Body: " + remoteMessage.getNotification().getBody());
+                values.put("notificationBody", remoteMessage.getNotification().getBody());
+                values.put("notificationlockey", remoteMessage.getNotification().getBodyLocalizationKey());
+                values.put("notificationlocargs", remoteMessage.getNotification().getBodyLocalizationArgs());
+                values.put("notificationloctitlekey", remoteMessage.getNotification().getTitleLocalizationKey());
+                values.put("notificationloctitleargs", remoteMessage.getNotification().getTitleLocalizationArgs());
+
+                values.put("notificationtitle", remoteMessage.getNotification().getTitle());
+                values.put("notificationtag", remoteMessage.getNotification().getTag());
+            }
+
+
+            if(remoteMessage.getCollapseKey() != null)
+                values.put("collapsekey", remoteMessage.getCollapseKey());
+
+            if(remoteMessage.getFrom() != null)
+                values.put("from", remoteMessage.getFrom());
+
+            if(remoteMessage.getMessageId() != null)
+                values.put("messageid", remoteMessage.getMessageId());
+
+            if(remoteMessage.getMessageType() != null)
+                values.put("messagetype", remoteMessage.getMessageType());
+
+
+            databaseReference.child(key).updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+
+                }
+            });
+        }
+
         if (remoteMessage.getData().size() > 0 && remoteMessage.getNotification() != null) {
             String photoUrl = remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
 
@@ -103,7 +165,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(String token) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
-        if(firebaseAuth != null && firebaseAuth.getCurrentUser() != null &&
+        if (firebaseAuth != null && firebaseAuth.getCurrentUser() != null &&
                 firebaseAuth.getCurrentUser().getUid() != null) {
             String userid = firebaseAuth.getCurrentUser().getUid();
             if (!userid.isEmpty())
@@ -154,12 +216,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setSound(defaultSoundUri)
                 .setContentIntent(pendingIntent);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notificationBuilder.setSmallIcon(R.mipmap.app_notif_icon);
-            notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
-        } else {
-            notificationBuilder.setSmallIcon(R.mipmap.app_notif_icon);
-        }
+        notificationBuilder.setSmallIcon(R.mipmap.app_notif_icon);
+        notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
 
         if (messageTitle != null && !messageTitle.isEmpty())
             notificationBuilder.setContentTitle(messageTitle);

@@ -15,38 +15,24 @@ import pl.droidsonroids.gif.GifImageView;
 
 
 public class GifDialogBox {
-    private String title;
-    private String message;
-    private String positiveBtnText;
-    private String negativeBtnText;
-    private int pBtnColor;
-    private int nBtnColor;
-    private int pBtnVisibleType;
-    private int nBtnVisibleType;
-    private int titleVisibleType;
-    private Activity activity;
-    private GifDialogListener pListener;
-    private GifDialogListener nListener;
-    private boolean cancel;
     int gifImageResource;
-    private long durationTime;
 
     private GifDialogBox(GifDialogBox.Builder builder) {
-        this.title = builder.title;
-        this.message = builder.message;
-        this.activity = builder.activity;
-        this.pListener = builder.pListener;
-        this.nListener = builder.nListener;
-        this.pBtnColor = builder.pBtnColor;
-        this.nBtnColor = builder.nBtnColor;
-        this.pBtnVisibleType = builder.pBtnVisibleType;
-        this.nBtnVisibleType = builder.nBtnVisibleType;
-        this.titleVisibleType = builder.titleVisibleType;
-        this.positiveBtnText = builder.positiveBtnText;
-        this.negativeBtnText = builder.negativeBtnText;
+        String title = builder.title;
+        String message = builder.message;
+        Activity activity = builder.activity;
+        GifDialogListener pListener = builder.pListener;
+        GifDialogListener nListener = builder.nListener;
+        int pBtnColor = builder.pBtnColor;
+        int nBtnColor = builder.nBtnColor;
+        int pBtnVisibleType = builder.pBtnVisibleType;
+        int nBtnVisibleType = builder.nBtnVisibleType;
+        int titleVisibleType = builder.titleVisibleType;
+        String positiveBtnText = builder.positiveBtnText;
+        String negativeBtnText = builder.negativeBtnText;
         this.gifImageResource = builder.gifImageResource;
-        this.cancel = builder.cancel;
-        this.durationTime = builder.durationTime;
+        boolean cancel = builder.cancel;
+        long durationTime = builder.durationTime;
     }
 
     public static class Builder {

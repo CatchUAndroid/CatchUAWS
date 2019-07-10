@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:adjustViewBounds="true" />
+            android:adjustViewBounds="true"
+            android:contentDescription="TODO" />
 
     </RelativeLayout>
 
@@ -47,14 +48,13 @@
             android:id="@+id/editText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_gravity="center"
             android:layout_marginBottom="15dp"
             android:background="@color/transparent"
             android:textColor="@color/White"
             android:textStyle="bold"/>
 
-        <include layout="@layout/color_palette_layout"></include>
+        <include layout="@layout/color_palette_layout" />
 
     </LinearLayout>
 

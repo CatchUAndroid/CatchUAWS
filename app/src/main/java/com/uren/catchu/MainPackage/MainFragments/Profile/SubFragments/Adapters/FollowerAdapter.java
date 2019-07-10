@@ -49,7 +49,6 @@ import static com.uren.catchu.Constants.StringConstants.FRIEND_REMOVE_FROM_FOLLO
 
 public class FollowerAdapter extends RecyclerView.Adapter implements Filterable {
 
-    private View mView;
     private Context mContext;
     private ListItemClickListener listItemClickListener;
     private List<User> userList;
@@ -121,7 +120,7 @@ public class FollowerAdapter extends RecyclerView.Adapter implements Filterable 
         public FollowerViewHolder(View view) {
             super(view);
 
-            mView = view;
+            View mView = view;
             profileName = mView.findViewById(R.id.profile_name);
             profileUserName = mView.findViewById(R.id.profile_user_name);
             shortUserNameTv = mView.findViewById(R.id.shortUserNameTv);

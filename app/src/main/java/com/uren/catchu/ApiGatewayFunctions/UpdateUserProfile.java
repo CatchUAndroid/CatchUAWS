@@ -14,14 +14,13 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class UpdateUserProfile extends AsyncTask<Void, Void, UserProfile> {
 
     private OnEventListener<UserProfile> mCallBack;
-    private Context mContext;
     public Exception mException;
     public UserProfile userProfile;
     private String token;
 
     public UpdateUserProfile(Context context, OnEventListener callback, UserProfile userProfile, String token) {
         mCallBack = callback;
-        mContext = context;
+        Context mContext = context;
         this.userProfile = userProfile;
         this.token = token;
     }

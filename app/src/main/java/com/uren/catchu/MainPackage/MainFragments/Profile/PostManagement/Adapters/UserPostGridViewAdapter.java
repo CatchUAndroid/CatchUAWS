@@ -46,13 +46,12 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
     public static final int VIEW_ITEM = 1;
     public static final int VIEW_PROG = 0;
 
-    private Activity mActivity;
     private Context mContext;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
 
     public UserPostGridViewAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
-        this.mActivity = activity;
+        Activity mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.postList = new ArrayList<Post>();

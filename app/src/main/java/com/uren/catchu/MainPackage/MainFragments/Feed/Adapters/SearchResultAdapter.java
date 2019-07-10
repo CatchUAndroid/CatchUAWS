@@ -50,13 +50,12 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
 
     private Context mContext;
     private List<User> userList;
-    private BaseFragment.FragmentNavigation fragmentNavigation;
     private ListItemClickListener listItemClickListener;
     GradientDrawable imageShape;
 
     public SearchResultAdapter(Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mContext = context;
-        this.fragmentNavigation = fragmentNavigation;
+        BaseFragment.FragmentNavigation fragmentNavigation1 = fragmentNavigation;
         this.userList = new ArrayList<User>();
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),

@@ -44,7 +44,8 @@
                 <ImageView
                     android:id="@+id/imgPost"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:contentDescription="TODO" />
 
                 <ImageView
                     android:id="@+id/imgVideoCamera"
@@ -54,7 +55,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_margin="10dp"
                     android:src="@mipmap/icon_video_camera"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:contentDescription="TODO" />
 
                 <ImageView
                     android:id="@+id/imgGridMore"
@@ -64,7 +66,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_margin="10dp"
                     android:src="@mipmap/icon_grid_more"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:contentDescription="TODO" />
 
             </RelativeLayout>
 
@@ -90,7 +93,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:text="Retry"
                 android:textColor="@color/black"
                 android:textSize="15sp" />

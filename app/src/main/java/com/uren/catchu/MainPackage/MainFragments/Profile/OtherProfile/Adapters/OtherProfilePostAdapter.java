@@ -50,7 +50,6 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
 
     public static String PARTIAL_DATA_LOADING = "PARTIAL_DATA_LOADING";
 
-    private Activity mActivity;
     public Context mContext;
     private List<Post> postList;
     private BaseFragment.FragmentNavigation fragmentNavigation;
@@ -58,7 +57,7 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
     private int pageCnt;
 
     public OtherProfilePostAdapter(Activity activity, Context context, BaseFragment.FragmentNavigation fragmentNavigation ,User selectedUser, int pageCnt) {
-        this.mActivity = activity;
+        Activity mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.selectedUser = selectedUser;

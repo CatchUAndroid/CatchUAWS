@@ -29,12 +29,6 @@ public class KeyboardHeightProvider extends PopupWindow {
     /** The keyboard height observer */
     private KeyboardHeightObserver observer;
 
-    /** The cached landscape height of the keyboard */
-    private int keyboardLandscapeHeight;
-
-    /** The cached portrait height of the keyboard */
-    private int keyboardPortraitHeight;
-
     /** The view that is used to calculate the keyboard height */
     private View popupView;
 
@@ -141,11 +135,13 @@ public class KeyboardHeightProvider extends PopupWindow {
             notifyKeyboardHeightChanged(0, orientation);
         }
         else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            this.keyboardPortraitHeight = keyboardHeight;
+            /** The cached portrait height of the keyboard */
+            int keyboardPortraitHeight = keyboardHeight;
             notifyKeyboardHeightChanged(keyboardPortraitHeight, orientation);
         }
         else {
-            this.keyboardLandscapeHeight = keyboardHeight;
+            /** The cached landscape height of the keyboard */
+            int keyboardLandscapeHeight = keyboardHeight;
             notifyKeyboardHeightChanged(keyboardLandscapeHeight, orientation);
         }
     }

@@ -60,7 +60,6 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
     private EmojiBSFragment mEmojiBSFragment;
     private TextView mTxtCurrentTool;
     private RecyclerView mRvTools, mRvFilters;
-    private EditingToolsAdapter mEditingToolsAdapter;
     private FilterViewAdapter mFilterViewAdapter = new FilterViewAdapter(this);
     private ConstraintLayout mRootView;
     private ConstraintSet mConstraintSet = new ConstraintSet();
@@ -123,7 +122,7 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
 
     public void initVariables() {
         permissionModule = new PermissionModule(getContext());
-        mEditingToolsAdapter = new EditingToolsAdapter(this, getContext());
+        EditingToolsAdapter mEditingToolsAdapter = new EditingToolsAdapter(this, getContext());
 
         mPropertiesBSFragment = new PropertiesBSFragment();
         mEmojiBSFragment = new EmojiBSFragment();

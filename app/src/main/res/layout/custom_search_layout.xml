@@ -27,7 +27,8 @@
                     android:layout_height="20dp"
                     android:layout_gravity="center"
                     android:layout_weight="0.7"
-                    android:src="@mipmap/icon_search_gray" />
+                    android:src="@mipmap/icon_search_gray"
+                    android:contentDescription="TODO" />
 
                 <EditText
                     android:layout_width="0dp"
@@ -49,17 +50,17 @@
                 android:padding="1dp"
                 android:src="@mipmap/icon_cancel_gray"
                 android:id="@+id/searchCancelImgv"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                android:contentDescription="TODO" />
 
         </LinearLayout>
-
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.8dp"
             android:layout_marginTop="7dp"
-            android:background="@color/Silver"></View>
+            android:background="@color/Silver" />
 
         <TextView
             android:id="@+id/searchResultTv"

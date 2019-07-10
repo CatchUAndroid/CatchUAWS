@@ -77,7 +77,6 @@ public class  GroupManagementFragment extends BaseFragment {
     private GroupRequestResult groupRequestResult;
     private String operationType;
     private ReturnCallback returnCallback;
-    private LinearLayoutManager linearLayoutManager;
     private UserGroupsListAdapter userGroupsListAdapter;
 
     private static final int ITEM_CHANGED = 0;
@@ -257,7 +256,7 @@ public class  GroupManagementFragment extends BaseFragment {
         }, operationType);
 
         specialRecyclerView.setAdapter(userGroupsListAdapter);
-        linearLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setOrientation(RecyclerView.VERTICAL);
         specialRecyclerView.setLayoutManager(linearLayoutManager);
     }

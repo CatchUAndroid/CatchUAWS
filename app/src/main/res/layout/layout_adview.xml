@@ -4,7 +4,5 @@
     android:id="@+id/adView"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
     ads:adSize="SMART_BANNER"
-    ads:adUnitId="@string/ADMOB_BANNER_AD_UNIT_ID"></com.google.android.gms.ads.AdView>
+    ads:adUnitId="@string/ADMOB_BANNER_AD_UNIT_ID" />

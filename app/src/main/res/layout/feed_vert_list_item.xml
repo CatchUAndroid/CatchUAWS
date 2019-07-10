@@ -45,7 +45,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
-                                android:padding="4dp" />
+                                android:padding="4dp"
+                                android:contentDescription="TODO" />
 
                             <TextView
                                 android:id="@+id/txtProfilePic"
@@ -89,7 +90,8 @@
                                 android:layout_gravity="center"
                                 android:layout_marginRight="5dp"
                                 android:scaleType="fitXY"
-                                android:src="@mipmap/icon_time" />
+                                android:src="@mipmap/icon_time"
+                                android:contentDescription="TODO" />
 
                             <TextView
                                 android:id="@+id/txtCreateAt"
@@ -105,7 +107,8 @@
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="10dp"
                                 android:padding="3dp"
-                                android:scaleType="fitXY" />
+                                android:scaleType="fitXY"
+                                android:contentDescription="TODO" />
 
                         </LinearLayout>
 
@@ -127,7 +130,8 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:layout_marginRight="10dp"
-                        android:src="@mipmap/icon_like" />
+                        android:src="@mipmap/icon_like"
+                        android:contentDescription="TODO" />
 
                 </LinearLayout>
 
@@ -139,7 +143,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:fontFamily="@font/roboto"
-                android:text="contentText"
                 android:textColor="@color/Black"
                 android:textSize="14sp" />
 
@@ -157,7 +160,6 @@
                 android:id="@+id/SliderDots"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/viewPager"
                 android:gravity="center_vertical|center_horizontal"
                 android:orientation="horizontal" />
 
@@ -171,7 +173,8 @@
                 android:layout_marginTop="2dp"
                 android:gravity="left"
                 android:orientation="horizontal"
-                android:weightSum="3">
+                android:weightSum="3"
+                android:baselineAligned="false">
 
                 <!-- Like layout  /-->
                 <LinearLayout
@@ -189,7 +192,8 @@
                         android:background="@drawable/btn_feed_action"
                         android:padding="12dp"
                         android:scaleType="fitCenter"
-                        android:src="@mipmap/icon_like_gray" />
+                        android:src="@mipmap/icon_like_gray"
+                        android:contentDescription="TODO" />
 
                     <TextView
                         android:id="@+id/txtLikeCount"
@@ -221,7 +225,8 @@
                             android:padding="12dp"
                             android:scaleType="fitCenter"
                             android:src="@mipmap/icon_comment_gray"
-                            android:visibility="visible"/>
+                            android:visibility="visible"
+                            android:contentDescription="TODO" />
 
                         <ImageView
                             android:id="@+id/imgCommentNotAllowed"
@@ -234,7 +239,8 @@
                             android:paddingTop="10dp"
                             android:scaleType="fitCenter"
                             android:src="@mipmap/icon_slash"
-                            android:visibility="gone" />
+                            android:visibility="gone"
+                            android:contentDescription="TODO" />
 
 
                     </RelativeLayout>
@@ -265,7 +271,8 @@
                         android:background="@drawable/btn_feed_action"
                         android:padding="12dp"
                         android:scaleType="fitCenter"
-                        android:src="@mipmap/icon_more_gray" />
+                        android:src="@mipmap/icon_more_gray"
+                        android:contentDescription="TODO" />
 
                 </LinearLayout>
 
@@ -300,7 +307,8 @@
                             android:background="@drawable/btn_feed_action"
                             android:padding="10dp"
                             android:scaleType="fitCenter"
-                            android:src="@mipmap/icon_location" />
+                            android:src="@mipmap/icon_location"
+                            android:contentDescription="TODO" />
 
                     </LinearLayout>
 

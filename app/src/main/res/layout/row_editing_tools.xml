@@ -17,7 +17,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout_editor_absoluteY="4dp"
-        tools:src="@drawable/ic_brush" />
+        tools:src="@drawable/ic_brush"
+        tools:ignore="MissingConstraints"
+        android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/txtTool"

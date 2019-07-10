@@ -16,7 +16,8 @@
             android:layout_height="60dp"
             android:background="@color/White"
             android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:baselineAligned="false">
 
             <FrameLayout
                 android:layout_width="0dp"
@@ -28,7 +29,8 @@
                     android:id="@+id/groupPicImgView"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/shortGroupNameTv"
@@ -46,7 +48,8 @@
                     android:layout_gravity="right|bottom"
                     android:padding="4dp"
                     android:src="@mipmap/icon_tick"
-                    android:visibility="gone"/>
+                    android:visibility="gone"
+                    android:contentDescription="TODO" />
 
             </FrameLayout>
 
@@ -103,10 +106,6 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="70dp"
-                android:layout_height="match_parent"></LinearLayout>
 
             <View
                 android:layout_width="match_parent"

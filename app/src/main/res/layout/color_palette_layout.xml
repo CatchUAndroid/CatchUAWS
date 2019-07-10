@@ -3,8 +3,6 @@
     android:id="@+id/colorPaletteLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentStart="true"
     android:layout_marginBottom="10dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
@@ -21,8 +19,6 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
             android:layout_marginBottom="3dp"
             android:background="@drawable/img_border"
             android:text="@string/close"
@@ -42,12 +38,13 @@
             android:id="@+id/brushImgv"
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:src="@drawable/color_palette_brush" />
+            android:src="@drawable/color_palette_brush"
+            android:contentDescription="TODO" />
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/colorViewPager"
             android:layout_width="match_parent"
-            android:layout_height="30dp"></androidx.viewpager.widget.ViewPager>
+            android:layout_height="30dp" />
 
     </LinearLayout>
 

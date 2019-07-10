@@ -6,10 +6,10 @@ public enum Error {
 
 
     private String stringValue;
-    private int intValue;
+
     Error(String toString, int value) {
         stringValue = toString;
-        intValue = value;
+        int intValue = value;
     }
 
     @Override

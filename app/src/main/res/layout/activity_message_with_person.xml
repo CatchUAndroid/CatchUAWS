@@ -30,7 +30,8 @@
                 android:layout_marginRight="5dp"
                 android:gravity="left"
                 android:orientation="horizontal"
-                android:weightSum="10">
+                android:weightSum="10"
+                android:baselineAligned="false">
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -43,7 +44,8 @@
                         android:layout_height="?attr/actionBarSize"
                         android:padding="7dp"
                         android:src="@mipmap/icon_left_arrow"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:contentDescription="TODO" />
 
                 </RelativeLayout>
 
@@ -61,7 +63,8 @@
                             android:id="@+id/profilePicImgView"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:layout_gravity="center" />
+                            android:layout_gravity="center"
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:id="@+id/shortUserNameTv"
@@ -92,8 +95,6 @@
                             android:id="@+id/toolbarTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
                             android:layout_marginRight="10dp"
                             android:fontFamily="@font/capriola"
                             android:gravity="left"
@@ -104,8 +105,6 @@
                             android:id="@+id/toolbarSubTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
                             android:layout_marginRight="10dp"
                             android:fontFamily="@font/capriola"
                             android:gravity="left"
@@ -128,7 +127,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:padding="8dp"
-                        android:src="@mipmap/icon_more_gray" />
+                        android:src="@mipmap/icon_more_gray"
+                        android:contentDescription="TODO" />
 
                 </RelativeLayout>
 
@@ -154,7 +154,8 @@
                     android:layout_height="?attr/actionBarSize"
                     android:padding="7dp"
                     android:src="@mipmap/icon_left_arrow"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:contentDescription="TODO" />
 
             </RelativeLayout>
 
@@ -190,7 +191,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentEnd="true"
                     android:padding="15dp"
-                    android:src="@mipmap/icon_trash" />
+                    android:src="@mipmap/icon_trash"
+                    android:contentDescription="TODO" />
 
             </RelativeLayout>
 
@@ -215,7 +217,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:padding="3dp"
-            android:text="ckcddjcjjb dbcjdcjb jdcjbdjbc"
             android:textColor="@color/Red" />
 
         <View
@@ -224,14 +225,13 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="7dp"
             android:layout_marginRight="10dp"
-            android:background="@color/Silver"></View>
+            android:background="@color/Silver" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/contentRoot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/toolbarLayout"
         android:background="@color/White"
         android:elevation="@dimen/default_elevation"
         android:orientation="vertical">
@@ -281,7 +281,8 @@
                             android:layout_height="55dp"
                             android:layout_margin="5dp"
                             android:padding="18dp"
-                            android:src="@mipmap/icon_down_arrow" />
+                            android:src="@mipmap/icon_down_arrow"
+                            android:contentDescription="TODO" />
 
                         <TextView
                             android:id="@+id/waitingMsgCntTv"
@@ -359,7 +360,8 @@
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="5dp"
                                 android:padding="3dp"
-                                android:src="@mipmap/icon_happy_smiley" />
+                                android:src="@mipmap/icon_happy_smiley"
+                                android:contentDescription="TODO" />
 
                             <!--<EditText
                                 android:id="@+id/messageEdittext"
@@ -378,8 +380,6 @@
                                 android:id="@+id/messageEdittext"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
                                 android:layout_gravity="center"
                                 android:layout_marginLeft="5dp"
                                 android:background="@null"

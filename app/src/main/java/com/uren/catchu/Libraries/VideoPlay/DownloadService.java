@@ -1,5 +1,6 @@
-package com.uren.catchu._Libraries.VideoPlay;
+package com.uren.catchu.Libraries.VideoPlay;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -15,6 +16,7 @@ import java.util.Date;
  * Created by krupenghetiya on 03/05/17.
  */
 
+@SuppressLint("Registered")
 public class DownloadService extends IntentService {
 
     public DownloadService() {

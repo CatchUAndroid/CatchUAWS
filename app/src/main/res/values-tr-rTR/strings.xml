@@ -72,6 +72,7 @@
     <string name="SCREENSHOT">Çek</string>
     <string name="detail">Detay</string>
     <string name="searchGroup">Grup Ara</string>
+    <string name="GROUPS_LOADING">Grouplar Yükleniyor...</string>
 
     <string name="searchUser">Kullanıcı arayın...</string>
     <string name="IN_GROUP">Grupta</string>
@@ -240,7 +241,6 @@
     <string name="BLOCK">Engelle</string>
     <string name="UNBLOCK">Engeli Kaldır</string>
     <string name="REPORT_PERSON">Şikayet Et</string>
-    <string name="CLEAR_CHAT">Sohbeti Temizle</string>
     <string name="YOU_HAVE_NEW_MESSAGES">Yeni mesajlarınız var</string>
     <string name="ACCEPT">Onayla</string>
     <string name="REJECT">Reddet</string>

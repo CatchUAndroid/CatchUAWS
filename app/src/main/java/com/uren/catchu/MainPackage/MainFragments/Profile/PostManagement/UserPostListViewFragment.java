@@ -44,7 +44,7 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallba
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
+import com.uren.catchu.Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +80,6 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private boolean loading = true;
     private boolean pulledToRefresh = false;
-    private boolean isFirstFetch = false;
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt, pageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
@@ -186,7 +185,7 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void initRecyclerView() {
 
-        isFirstFetch = true;
+        boolean isFirstFetch = true;
         mainExceptionLayout.setVisibility(View.GONE);
         setLayoutManager();
         setAdapter();
@@ -298,7 +297,6 @@ public class UserPostListViewFragment extends BaseFragment {
         }
     }
 
-    @SuppressWarnings("unchecked")
     void transitionTo(Intent i) {
         final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);

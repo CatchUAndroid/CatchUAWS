@@ -53,15 +53,8 @@ public class SettingOperation {
     public static void userSignOut(CompleteCallback completeCallback) {
 
         mCompleteCallback = completeCallback;
-        //Normal users
-        firebaseAuth = AccountHolderInfo.getFirebaseAuth();
+        firebaseAuth = FirebaseAuth.getInstance();
         updateDeviceTokenForFCM();
-
-
-        /*firebaseAuth.signOut();
-        facebookLogout();
-        twitterLogout();
-        clearSingletonClasses();*/
     }
 
     public static void facebookLogout() {
@@ -150,16 +143,19 @@ public class SettingOperation {
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
-                MessageUpdateProcess.updateTokenSigninValue(firebaseAuth.getCurrentUser().getUid(), CHAR_H);
-                String deviceToken = instanceIdResult.getToken();
-                startEndPointProcess(deviceToken);
+                try {
+                    MessageUpdateProcess.updateTokenSigninValue(firebaseAuth.getCurrentUser().getUid(), CHAR_H);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    String deviceToken = instanceIdResult.getToken();
+                    startEndPointProcess(deviceToken);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                userLogOut();
-            }
-        });
+        }).addOnFailureListener(e -> userLogOut());
     }
 
     private static void startEndPointProcess(final String deviceToken) {

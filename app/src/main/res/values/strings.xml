@@ -68,6 +68,7 @@
     <string name="USE">Use</string>
     <string name="detail">Detail</string>
     <string name="searchGroup">Search Group</string>
+    <string name="GROUPS_LOADING">Groups loading...</string>
 
     <string name="typeToAddText">Say something...</string>
     <string name="UPDATING">Updating...</string>
@@ -261,7 +262,6 @@
     <string name="BLOCK">Block</string>
     <string name="UNBLOCK">Unblock</string>
     <string name="REPORT_PERSON">Report</string>
-    <string name="CLEAR_CHAT">Clear Chat</string>
     <string name="YOU_HAVE_NEW_MESSAGES">You have new messages</string>
     <string name="ACCEPT">Accept</string>
     <string name="REJECT">Reject</string>

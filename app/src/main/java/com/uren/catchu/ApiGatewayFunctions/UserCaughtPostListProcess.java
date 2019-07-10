@@ -12,7 +12,6 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class UserCaughtPostListProcess extends AsyncTask<Void, Void, PostListResponse> {
 
     private OnEventListener<PostListResponse> mCallBack;
-    private Context mContext;
     private Exception mException;
     private String userId;
     private String uid;
@@ -34,7 +33,7 @@ public class UserCaughtPostListProcess extends AsyncTask<Void, Void, PostListRes
                                      String privacyType,
                                      String token) {
         this.mCallBack = callback;
-        this.mContext = context;
+        Context mContext = context;
         this.userId = userId;
         this.uid = uid;
         this.longitude = longitude;

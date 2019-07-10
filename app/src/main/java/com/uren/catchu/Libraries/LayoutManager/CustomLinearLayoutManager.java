@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.LayoutManager;
+package com.uren.catchu.Libraries.LayoutManager;
 
 import android.content.Context;
 import android.graphics.PointF;

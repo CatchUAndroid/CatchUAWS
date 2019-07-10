@@ -40,6 +40,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+
     <!--style name="sss">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>

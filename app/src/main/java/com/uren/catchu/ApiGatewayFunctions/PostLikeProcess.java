@@ -12,7 +12,6 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class PostLikeProcess extends AsyncTask<Void, Void, BaseResponse> {
 
     private OnEventListener<BaseResponse> mCallBack;
-    private Context mContext;
     public Exception mException;
     private String userId;
     private String postId;
@@ -22,7 +21,7 @@ public class PostLikeProcess extends AsyncTask<Void, Void, BaseResponse> {
 
     public PostLikeProcess(Context context, OnEventListener callback, String userId, String postId, String commentId, boolean isPostLiked, String token) {
         mCallBack = callback;
-        mContext = context;
+        Context mContext = context;
         this.userId = userId;
         this.postId = postId;
         this.commentId = commentId;

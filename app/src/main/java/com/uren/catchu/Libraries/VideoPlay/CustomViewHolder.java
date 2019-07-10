@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.VideoPlay;
+package com.uren.catchu.Libraries.VideoPlay;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -13,6 +13,7 @@ import java.util.concurrent.Callable;
 /**
  * Created by krupenghetiya on 03/02/17.
  */
+
 
 public class CustomViewHolder extends RecyclerView.ViewHolder {
     private VideoImage videoImage;

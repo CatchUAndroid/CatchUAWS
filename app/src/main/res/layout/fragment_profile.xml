@@ -39,7 +39,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:clickable="true"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:focusable="true">
 
                         <RelativeLayout
                             android:id="@+id/menuLayout"
@@ -65,7 +66,7 @@
                                 android:background="@drawable/circle_text_bg"
                                 android:gravity="center"
                                 android:textColor="@color/white"
-                                android:textSize="9dp"
+                                android:textSize="12dp"
                                 android:textStyle="bold"
                                 android:visibility="gone" />
 
@@ -110,7 +111,8 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:clickable="true"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:focusable="true">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgUserEdit"
@@ -173,7 +175,8 @@
                             <ImageView
                                 android:id="@+id/imgProfile"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent" />
+                                android:layout_height="match_parent"
+                                android:contentDescription="TODO" />
 
                             <TextView
                                 android:id="@+id/txtProfile"
@@ -190,7 +193,7 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="0dp"
                             android:layout_gravity="center"
                             android:layout_marginTop="5dp"
                             android:layout_weight="1"
@@ -203,7 +206,6 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:text="Ugur Gogebakan"
                                 android:textColor="@color/colorPrimaryDark"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
@@ -391,7 +393,8 @@
                                                 android:layout_width="40dp"
                                                 android:layout_height="40dp"
                                                 android:padding="8dp"
-                                                android:src="@mipmap/icon_location" />
+                                                android:src="@mipmap/icon_location"
+                                                android:contentDescription="TODO" />
 
                                         </LinearLayout>
 
@@ -422,7 +425,8 @@
                                             android:layout_marginRight="10dp"
                                             android:layout_weight="1"
                                             android:padding="12dp"
-                                            android:src="@mipmap/icon_right_arrow" />
+                                            android:src="@mipmap/icon_right_arrow"
+                                            android:contentDescription="TODO" />
 
 
                                     </LinearLayout>
@@ -457,7 +461,8 @@
                                                 android:id="@+id/imgCatchPosts"
                                                 android:layout_width="40dp"
                                                 android:layout_height="40dp"
-                                                android:src="@mipmap/icon_catch" />
+                                                android:src="@mipmap/icon_catch"
+                                                android:contentDescription="TODO" />
 
                                         </LinearLayout>
 
@@ -489,7 +494,8 @@
                                             android:layout_marginRight="10dp"
                                             android:layout_weight="1"
                                             android:padding="12dp"
-                                            android:src="@mipmap/icon_right_arrow" />
+                                            android:src="@mipmap/icon_right_arrow"
+                                            android:contentDescription="TODO" />
 
 
                                     </LinearLayout>
@@ -522,7 +528,8 @@
                                                 android:layout_width="40dp"
                                                 android:layout_height="40dp"
                                                 android:padding="8dp"
-                                                android:src="@drawable/groups_icon_500" />
+                                                android:src="@drawable/groups_icon_500"
+                                                android:contentDescription="TODO" />
 
                                         </LinearLayout>
 
@@ -575,7 +582,7 @@
                                                 android:id="@+id/txtGroupDetail"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="wrap_content"
-                                                android:text="Grouplar Yükleniyor.."
+                                                android:text="@string/GROUPS_LOADING"
                                                 android:textSize="17sp" />
 
                                         </LinearLayout>
@@ -600,13 +607,6 @@
                                         </LinearLayout>
                                     </RelativeLayout>
 
-
-                                    <LinearLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="50dp"
-                                        android:orientation="vertical">
-
-                                    </LinearLayout>
 
                                 </LinearLayout>
 

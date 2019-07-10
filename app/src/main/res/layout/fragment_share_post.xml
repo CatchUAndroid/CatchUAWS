@@ -52,7 +52,8 @@
                                 android:id="@+id/profilePicImgView"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:layout_gravity="center" />
+                                android:layout_gravity="center"
+                                android:contentDescription="TODO" />
 
                             <TextView
                                 android:id="@+id/shortUserNameTv"
@@ -84,8 +85,6 @@
                                 android:id="@+id/toolbarTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
                                 android:layout_marginRight="10dp"
                                 android:fontFamily="@font/capriola"
                                 android:gravity="left"
@@ -96,13 +95,11 @@
                                 android:id="@+id/toolbarSubTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentStart="true"
-                                android:layout_centerVertical="true"
                                 android:layout_marginRight="10dp"
                                 android:fontFamily="@font/capriola"
                                 android:gravity="left"
                                 android:textColor="@color/White"
-                                android:textSize="10sp" />
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
@@ -138,10 +135,11 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:orientation="vertical">
@@ -177,7 +175,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginRight="2dp"
                                     android:src="@mipmap/icon_green_checked"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    android:contentDescription="TODO" />
 
                             </RelativeLayout>
 
@@ -211,7 +210,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginRight="2dp"
                                     android:src="@mipmap/icon_green_checked"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    android:contentDescription="TODO" />
 
                             </RelativeLayout>
 
@@ -232,7 +232,8 @@
                                     android:layout_width="50dp"
                                     android:layout_height="50dp"
                                     android:padding="8dp"
-                                    android:src="@mipmap/icon_share_text" />
+                                    android:src="@mipmap/icon_share_text"
+                                    android:contentDescription="TODO" />
 
                                 <ImageView
                                     android:id="@+id/textCheckedImgv"
@@ -242,7 +243,8 @@
                                     android:layout_alignParentTop="true"
                                     android:layout_marginRight="2dp"
                                     android:src="@mipmap/icon_green_checked"
-                                    android:visibility="gone" />
+                                    android:visibility="gone"
+                                    android:contentDescription="TODO" />
 
                             </RelativeLayout>
 
@@ -310,16 +312,15 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp">
+                    android:layout_height="60dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginBottom="5dp"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginRight="7dp"
-                        android:layout_weight="1"
+                        android:layout_marginBottom="5dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -331,7 +332,7 @@
 
                         <LinearLayout
                             android:id="@+id/justMeSelectLayout"
-                            android:layout_width="55dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -340,10 +341,9 @@
                                 android:id="@+id/justMeImgv"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
+                                android:contentDescription="TODO"
                                 android:padding="2dp"
                                 android:src="@mipmap/icon_lock" />
 
@@ -353,14 +353,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/justMeShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="8sp"
+                                android:textSize="10sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/groupsSelectLayout"
-                            android:layout_width="55dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -369,10 +369,9 @@
                                 android:id="@+id/groupsImgv"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
+                                android:contentDescription="TODO"
                                 android:src="@drawable/groups_icon_500" />
 
                             <TextView
@@ -381,14 +380,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/groupsShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="8sp"
+                                android:textSize="10sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/specialSelectLayout"
-                            android:layout_width="55dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -397,10 +396,9 @@
                                 android:id="@+id/specialImgv"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
+                                android:contentDescription="TODO"
                                 android:src="@mipmap/icon_friends" />
 
                             <TextView
@@ -409,14 +407,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/friendsShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="8sp"
+                                android:textSize="10sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/allFollowersSelectLayout"
-                            android:layout_width="55dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -425,10 +423,9 @@
                                 android:id="@+id/allFollowersImgv"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
+                                android:contentDescription="TODO"
                                 android:src="@mipmap/icon_all_followers"
                                 android:visibility="visible" />
 
@@ -438,14 +435,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/allFollowersShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="8sp"
+                                android:textSize="10sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/publicSelectLayout"
-                            android:layout_width="55dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -454,10 +451,9 @@
                                 android:id="@+id/publicImgv"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:layout_alignParentStart="true"
-                                android:layout_alignParentTop="true"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_marginTop="5dp"
+                                android:contentDescription="TODO"
                                 android:src="@mipmap/icon_world" />
 
                             <TextView
@@ -466,7 +462,7 @@
                                 android:layout_gravity="center"
                                 android:text="@string/publicShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="8sp"
+                                android:textSize="10sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
@@ -479,8 +475,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
                     android:layout_marginBottom="5dp"
                     android:orientation="horizontal">
 
@@ -531,8 +525,6 @@
                     android:id="@+id/mapLayout"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentStart="true"
                     android:animateLayoutChanges="true"
                     android:visibility="visible">
 

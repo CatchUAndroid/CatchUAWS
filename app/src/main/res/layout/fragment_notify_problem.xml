@@ -15,7 +15,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbarLayout"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="40dp"
@@ -64,8 +63,6 @@
             <GridLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerInParent="true"
                 android:layout_marginLeft="10dp"
                 android:columnCount="4"
                 android:rowCount="3">
@@ -80,7 +77,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/White"
                         android:src="@mipmap/icon_add_white"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:contentDescription="TODO" />
 
                     <ImageView
                         android:id="@+id/imgDelete1"
@@ -89,7 +87,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:src="@mipmap/icon_cancel_gray2"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:contentDescription="TODO" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -103,7 +102,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/White"
                         android:src="@mipmap/icon_add_white"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:contentDescription="TODO" />
 
                     <ImageView
                         android:id="@+id/imgDelete2"
@@ -112,7 +112,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:src="@mipmap/icon_cancel_gray2"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:contentDescription="TODO" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -126,7 +127,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/White"
                         android:src="@mipmap/icon_add_white"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:contentDescription="TODO" />
                     <ImageView
                         android:id="@+id/imgDelete3"
                         android:layout_width="15dp"
@@ -134,7 +136,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:src="@mipmap/icon_cancel_gray2"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:contentDescription="TODO" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -148,7 +151,8 @@
                         android:layout_height="match_parent"
                         android:background="@color/White"
                         android:src="@mipmap/icon_add_white"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        android:contentDescription="TODO" />
                     <ImageView
                         android:id="@+id/imgDelete4"
                         android:layout_width="15dp"
@@ -156,7 +160,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentTop="true"
                         android:src="@mipmap/icon_cancel_gray2"
-                        android:visibility="gone" />
+                        android:visibility="gone"
+                        android:contentDescription="TODO" />
                 </RelativeLayout>
 
             </GridLayout>

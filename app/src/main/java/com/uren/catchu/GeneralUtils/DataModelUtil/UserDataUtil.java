@@ -84,16 +84,16 @@ public class UserDataUtil {
     }
 
     public static String getShortenUserName(String name) {
-        String returnValue = "";
+        StringBuilder returnValue = new StringBuilder();
         if (name != null && !name.trim().isEmpty()) {
             String[] seperatedName = name.trim().split(" ");
             for (String word : seperatedName) {
                 if (returnValue.length() < 3)
-                    returnValue = returnValue + word.substring(0, 1).toUpperCase();
+                    returnValue.append(word.substring(0, 1).toUpperCase());
             }
         }
 
-        return returnValue;
+        return returnValue.toString();
     }
 
     public static int setProfilePicture(Context context, String url, String name, String username, TextView shortNameTv,
@@ -302,7 +302,7 @@ public class UserDataUtil {
             age--;
         }
 
-        Integer ageInt = new Integer(age);
+        Integer ageInt = Integer.valueOf(age);
         //String ageS = ageInt.toString();
 
         return age;

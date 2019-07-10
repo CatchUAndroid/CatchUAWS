@@ -36,7 +36,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowerFr
 import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.FollowingFragment;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.LayoutManager.CustomGridLayoutManager;
+import com.uren.catchu.Libraries.LayoutManager.CustomGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -385,7 +385,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                     txtAge.setText("");
                     txtAge.setVisibility(View.GONE);
                 } else {
-                    Integer ageInt = new Integer(age);
+                    Integer ageInt = Integer.valueOf(age);
                     txtAge.setText(mContext.getResources().getString(R.string.AGE) + " " + ageInt.toString());
                     txtAge.setVisibility(View.VISIBLE);
                 }

@@ -75,7 +75,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
     private boolean isFlashSupported;
     private boolean isTorchOn;
-    private static Context context;
 
     private static final String TAG = "VideoRecordFragment";
 
@@ -104,7 +103,6 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
 
     private ToggleButton toggleRecordingButton;
     private ImageView flashModeImgv;
-    private ImageView switchCamImgv;
     private TextView remainingTimeTv;
 
     private CameraDevice mCameraDevice;
@@ -247,12 +245,12 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         mTextureView = view.findViewById(R.id.texture);
         toggleRecordingButton = view.findViewById(R.id.toggleRecordingButton);
         flashModeImgv = view.findViewById(R.id.flashModeImgv);
-        switchCamImgv = view.findViewById(R.id.switchCamImgv);
+        ImageView switchCamImgv = view.findViewById(R.id.switchCamImgv);
         remainingTimeTv = view.findViewById(R.id.remainingTimeTv);
         toggleRecordingButton.setOnClickListener(this);
         flashModeImgv.setOnClickListener(this);
         switchCamImgv.setOnClickListener(this);
-        context = getContext();
+        Context context = getContext();
     }
 
     @Override

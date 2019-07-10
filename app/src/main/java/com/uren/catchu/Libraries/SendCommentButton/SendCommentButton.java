@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.SendCommentButton;
+package com.uren.catchu.Libraries.SendCommentButton;
 
 import android.content.Context;
 import android.util.AttributeSet;

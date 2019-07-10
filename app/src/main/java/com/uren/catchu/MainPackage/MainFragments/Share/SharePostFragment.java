@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.location.Location;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -61,7 +60,6 @@ import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
 import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.GeneralUtils.TransitionHelper;
-import com.uren.catchu.GeneralUtils.UriAdapter;
 import com.uren.catchu.GeneralUtils.VideoUtil.VideoSelectUtil;
 import com.uren.catchu.InfoActivity;
 import com.uren.catchu.Interfaces.PermissionCallback;
@@ -71,14 +69,12 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupMa
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.SelectFriendFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
-import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.VideoTrimmedCallback;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ImageShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.ShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Models.VideoShareItemBox;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.PhotoEditorFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.ShareAdvanceSettingsFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoRecordFragment;
-import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoTrimmerFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.SubFragments.VideoViewFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.CheckShareItems;
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.KeyboardHeightProvider;
@@ -100,7 +96,6 @@ import catchu.model.UserProfile;
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.uren.catchu.Constants.NumericConstants.KEYBOARD_CHECK_VALUE;
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1MB;
-import static com.uren.catchu.Constants.NumericConstants.MAX_VIDEO_DURATION;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
@@ -1057,7 +1052,6 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         }
     }
 
-    @SuppressWarnings("unchecked")
     void transitionTo(Intent i) {
         final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);

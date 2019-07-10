@@ -22,11 +22,10 @@
             android:gravity="bottom">
 
             <TextView
-                android:id="@+id/appName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
-                android:text="CatchU"
+                android:text="@string/app_name"
                 android:textColor="@color/White"
                 android:textSize="50sp" />
 
@@ -37,7 +36,6 @@
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/appName"
             android:layout_weight="1.5"
             android:alpha="10"
             android:descendantFocusability="beforeDescendants"
@@ -51,8 +49,6 @@
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_margin="3dp"
                 android:background="@color/transparent"
                 android:ems="15"
@@ -67,12 +63,10 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_margin="3dp"
                 android:background="@color/transparent"
                 android:ems="15"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="textPassword"
                 android:paddingLeft="7dp"

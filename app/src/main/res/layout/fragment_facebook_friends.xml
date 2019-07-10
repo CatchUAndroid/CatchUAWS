@@ -47,7 +47,7 @@
 
     </LinearLayout>
 
-    <include layout="@layout/warning_message_tv"></include>
+    <include layout="@layout/warning_message_tv" />
 
     <include layout="@layout/layout_progress_bar" />
 
@@ -62,7 +62,8 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:src="@mipmap/icon_facebook" />
+            android:src="@mipmap/icon_facebook"
+            android:contentDescription="TODO" />
 
         <TextView
             android:layout_width="match_parent"

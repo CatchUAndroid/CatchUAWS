@@ -3,7 +3,6 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
@@ -49,7 +47,6 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.GroupManagementFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.Interfaces.ProfileRefreshCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageListActivity;
-import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Interfaces.UnreadMessageCallback;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MessageGetProcess;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.ShowSelectedPhotoFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.GroupsListAdapter;
@@ -66,17 +63,13 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.GroupListHolder;
-import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
-import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
 
 import java.util.Collections;
-import java.util.Comparator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
 import catchu.model.GroupRequestResult;
-import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
 
@@ -347,6 +340,7 @@ public class ProfileFragment extends BaseFragment
         //        getResources().getColor(R.color.DarkBlue, null)));
     }
 
+    @SuppressLint("WrongConstant")
     public void setDrawerListeners() {
         drawerLayout.addDrawerListener(new ActionBarDrawerToggle(getActivity(),
                 drawerLayout,
@@ -728,13 +722,13 @@ public class ProfileFragment extends BaseFragment
         if (v == llSharedPosts) {
             String targetUid = AccountHolderInfo.getUserID();
             String toolbarTitle = getContext().getResources().getString(R.string.sharedPosts);
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new UserPostFragment(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llCatchedPosts) {
             String targetUid = AccountHolderInfo.getUserID();
             String toolbarTitle = getContext().getResources().getString(R.string.caughtPosts);
-            mFragmentNavigation.pushFragment(UserPostFragment.newInstance(PROFILE_POST_TYPE_CAUGHT, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
+            mFragmentNavigation.pushFragment(new UserPostFragment(PROFILE_POST_TYPE_CAUGHT, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == followingsLayout) {

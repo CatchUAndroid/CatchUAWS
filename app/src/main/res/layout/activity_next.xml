@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:id="@+id/profilePageMainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -58,28 +58,13 @@
                 android:background="@color/fab_color_shadow" />
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/bottom_tab_layout"
+                android:id="@+id/tablayout"
                 style="@style/BottomTabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/GhostWhite"
                 app:tabTextAppearance="@style/MainTabLayoutTextAppearance" />
-
-            <!--<eu.long1.spacetablayout.SpaceTabLayout
-                android:id="@+id/spaceTabLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:number_of_tabs="five"
-                app:starting_position="three"
-                app:tab_color="@color/colorPrimary"
-                app:button_color="@color/colorAccent"
-                app:text_color="#61FFFFFF"
-                app:icon_one="@drawable/ic_hotel_black_24dp"
-                app:icon_two="@drawable/design_ic_visibility"
-                app:icon_three="@drawable/ic_content_cut_black_24dp"
-                app:icon_four="@drawable/ic_check_black_24dp"
-                app:icon_five="@drawable/ic_fingerprint_black_24dp"/>-->
 
 
         </LinearLayout>

@@ -27,7 +27,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostCommentListProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.CommentListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
@@ -37,7 +36,7 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoLis
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.SendCommentButton.SendCommentButton;
+import com.uren.catchu.Libraries.SendCommentButton.SendCommentButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,8 +82,6 @@ public class CommentListFragment extends BaseFragment
 
     @BindView(R.id.btnSendComment)
     SendCommentButton btnSendComment;
-
-    private int drawingStartLocation = 0;
 
     public static CommentListFragment newInstance(String postId, int position) {
         Bundle args = new Bundle();
@@ -159,6 +156,7 @@ public class CommentListFragment extends BaseFragment
     private void startIntroAnimation() {
         ViewCompat.setElevation(toolbarLayout, 0);
         contentRoot.setScaleY(0.1f);
+        int drawingStartLocation = 0;
         contentRoot.setPivotY(drawingStartLocation);
         llAddComment.setTranslationY(200);
     }

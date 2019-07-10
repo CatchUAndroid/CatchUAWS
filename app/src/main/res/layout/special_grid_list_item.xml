@@ -31,7 +31,8 @@
                     android:id="@+id/specialPictureImgView"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:id="@+id/shortUserNameTv"
@@ -51,7 +52,8 @@
                 android:layout_alignEnd="@+id/frameLayout"
                 android:layout_alignParentTop="true"
                 android:padding="1dp"
-                android:src="@mipmap/icon_cancel_gray2" />
+                android:src="@mipmap/icon_cancel_gray2"
+                android:contentDescription="TODO" />
 
         </RelativeLayout>
 
@@ -60,8 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="user name surname"
-            android:textSize="7sp"
+            android:textSize="12sp"
             android:textStyle="bold|italic" />
 
     </LinearLayout>

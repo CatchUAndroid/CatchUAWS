@@ -13,4 +13,5 @@
             <enum name="AccelerateDecelerate" value="3"/>
         </attr>
     </declare-styleable>
+
 </resources>

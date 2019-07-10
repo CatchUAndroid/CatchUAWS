@@ -65,6 +65,7 @@ public class NextActivity extends FragmentActivity implements
     public Button screenShotCancelBtn;
     public Button screenShotApproveBtn;
     public TabLayout bottomTabLayout;
+
     public LinearLayout tabMainLayout;
     AdView adView;
 
@@ -110,13 +111,6 @@ public class NextActivity extends FragmentActivity implements
 
         switchTab(0);
         updateTabSelection(0);
-
-        /*bottomTabLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });*/
 
         bottomTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -198,7 +192,7 @@ public class NextActivity extends FragmentActivity implements
 
     private void initValues() {
         ButterKnife.bind(this);
-        bottomTabLayout = findViewById(R.id.bottom_tab_layout);
+        bottomTabLayout = findViewById(R.id.tablayout);
         profilePageMainLayout = findViewById(R.id.profilePageMainLayout);
         screenShotMainLayout = findViewById(R.id.screenShotMainLayout);
         screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
@@ -224,20 +218,15 @@ public class NextActivity extends FragmentActivity implements
 
     private void setStatusBarTransparent() {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            // Android 5.0
-            int visibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                // Android 6.0
-                // visibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-            }
-            getWindow().getDecorView().setSystemUiVisibility(visibility);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // Android 4.4
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        // Android 5.0
+        int visibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Android 6.0
+            // visibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
         }
+        getWindow().getDecorView().setSystemUiVisibility(visibility);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
     }
 
@@ -263,7 +252,6 @@ public class NextActivity extends FragmentActivity implements
             }
             bottomTabLayout.getTabAt(0).getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
         }
-
     }
 
     private View getTabView(int position) {
@@ -450,10 +438,8 @@ public class NextActivity extends FragmentActivity implements
     }
 
     public void updateStatusBarColor(int colorCode){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(colorCode);
-        }
+        Window window = getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(colorCode);
     }
 }

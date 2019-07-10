@@ -22,7 +22,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
-import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
+import com.uren.catchu.Libraries.VideoPlay.VideoPlay;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,8 +33,6 @@ public class PostVideoPlayFragment extends BaseFragment {
 
 
     View mView;
-
-    private VideoPlay videoPlay;
 
     @BindView(R.id.progressLoading)
     ProgressBar progressLoading;
@@ -85,7 +83,7 @@ public class PostVideoPlayFragment extends BaseFragment {
             videoUrl = myVideoModel.getVideo_url();
         }
 
-        videoPlay = new VideoPlay(root_view, videoUrl, (Activity) getContext());
+        VideoPlay videoPlay = new VideoPlay(root_view, videoUrl, (Activity) getContext());
         videoPlay.playVideo();
         videoPlay.videoStarted();
 

@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.VideoPlay;
+package com.uren.catchu.Libraries.VideoPlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import static com.uren.catchu._Libraries.VideoPlay.Utils.getString;
+import static com.uren.catchu.Libraries.VideoPlay.Utils.getString;
 
 /**
  * Created by krupenghetiya on 16/12/16.

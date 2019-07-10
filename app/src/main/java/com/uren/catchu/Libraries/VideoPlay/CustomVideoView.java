@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.VideoPlay;
+package com.uren.catchu.Libraries.VideoPlay;
 
 import android.app.Activity;
 import android.content.Context;
@@ -76,10 +76,10 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
                     Surface surface = new Surface(this.getSurfaceTexture());
                     try {
                         mMediaPlayer = new MediaPlayer();
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN) {
-                            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mp) {
+                        mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                            @Override
+                            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                                     _act.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -91,30 +91,11 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
 
                                         }
                                     });
-                                }
-                            });
-                        } else {
-                            mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                                @Override
-                                public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                                    if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                                        _act.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                try {
-                                                    myFuncIn.call();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
 
-                                            }
-                                        });
-
-                                    }
-                                    return false;
                                 }
-                            });
-                        }
+                                return false;
+                            }
+                        });
 
 //                  mMediaPlayer.setOnCompletionListener(mCompletionListener);
 //                  mMediaPlayer.setOnBufferingUpdateListener(this);
@@ -178,10 +159,10 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
                 try {
                     mMediaPlayer = new MediaPlayer();
                     if (myFuncIn != null) {
-                        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.JELLY_BEAN) {
-                            mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mp) {
+                        mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                            @Override
+                            public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                                if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
                                     _act.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
@@ -194,28 +175,9 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
                                         }
                                     });
                                 }
-                            });
-                        } else {
-                            mMediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
-                                @Override
-                                public boolean onInfo(MediaPlayer mp, int what, int extra) {
-                                    if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-                                        _act.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                try {
-                                                    myFuncIn.call();
-                                                } catch (Exception e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                            }
-                                        });
-                                    }
-                                    return false;
-                                }
-                            });
-                        }
+                                return false;
+                            }
+                        });
 
                     }
 
@@ -262,10 +224,8 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         //        Log.d("k9k9", "onSurfaceTextureDestroyed: ");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //pre lollipop needs SurfaceTexture it owns before calling onDetachedFromWindow super
-            surfaceTexture.release();
-        }
+        //pre lollipop needs SurfaceTexture it owns before calling onDetachedFromWindow super
+        surfaceTexture.release();
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             mMediaPlayer.release();
@@ -287,11 +247,10 @@ public class CustomVideoView extends TextureView implements TextureView.SurfaceT
     }
 
     public void clearAll() {
-        if (getSurfaceTexture() != null)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //pre lollipop needs SurfaceTexture it owns before calling onDetachedFromWindow super
-                getSurfaceTexture().release();
-            }
+        if (getSurfaceTexture() != null) {
+            //pre lollipop needs SurfaceTexture it owns before calling onDetachedFromWindow super
+            getSurfaceTexture().release();
+        }
         if (mMediaPlayer != null) {
             mMediaPlayer.stop();
             mMediaPlayer.reset();

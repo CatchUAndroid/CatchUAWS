@@ -787,7 +787,6 @@ public class FragNavController {
      *
      * @return Current stack
      */
-    @SuppressWarnings("unchecked")
     @CheckResult
     @Nullable
     public Stack<Fragment> getCurrentStack() {

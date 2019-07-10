@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.VideoPlay;
+package com.uren.catchu.Libraries.VideoPlay;
 
 import android.view.View;
 import android.view.ViewGroup;

@@ -21,9 +21,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/following_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_height="match_parent" />
 
-            <include layout="@layout/warning_message_tv"></include>
+            <include layout="@layout/warning_message_tv" />
 
         </RelativeLayout>
 

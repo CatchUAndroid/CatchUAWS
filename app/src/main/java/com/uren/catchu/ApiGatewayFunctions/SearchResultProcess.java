@@ -12,7 +12,6 @@ import static com.uren.catchu.Constants.NumericConstants.RESPONSE_OK;
 public class SearchResultProcess extends AsyncTask<Void, Void, UserListResponse> {
 
     private OnEventListener<UserListResponse> mCallBack;
-    private Context mContext;
     public Exception mException;
     public String userid;
     public String searchText;
@@ -22,7 +21,7 @@ public class SearchResultProcess extends AsyncTask<Void, Void, UserListResponse>
 
     public SearchResultProcess(Context context, OnEventListener callback, String userid, String searchText, String perpage, String page, String token) {
         this.mCallBack = callback;
-        this.mContext = context;
+        Context mContext = context;
         this.userid = userid;
         this.searchText = searchText;
         this.page = page;

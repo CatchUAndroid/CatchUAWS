@@ -21,11 +21,6 @@
         android:orientation="horizontal"
         android:weightSum="10">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3" />
-
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -63,7 +58,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|left"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/search" />
+                        android:src="@mipmap/search"
+                        android:contentDescription="TODO" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -92,20 +88,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="2dp"
-            android:layout_weight="1"
-            android:gravity="center">
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0.3" />
 
     </LinearLayout>
 

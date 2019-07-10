@@ -27,7 +27,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.UserDetail;
 import com.uren.catchu.ApiGatewayFunctions.UserSharedPostListProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.TransitionHelper;
@@ -45,7 +44,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
+import com.uren.catchu.Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +60,7 @@ import static com.uren.catchu.Constants.NumericConstants.DEFAULT_PROFILE_GRIDVIE
 import static com.uren.catchu.Constants.NumericConstants.FILTERED_FEED_RADIUS;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 
 @SuppressLint("ValidFragment")
 public class OtherProfileFragment extends BaseFragment
@@ -95,12 +95,11 @@ public class OtherProfileFragment extends BaseFragment
     private static final int ADAPTER_ITEMS_END_POSITION = 2;
     private boolean pulledToRefreshHeader = false;
     private boolean pulledToRefreshPost = false;
-    private boolean isFirstFetch = false;
     private boolean loading = true;
     private boolean isMoreItemAvailable = true;
     private int lastCompletelyVisibleItemPosition;
 
-    private int perPageCnt, pageCnt, innerRecyclerPageCnt;
+    private int innerRecyclerPageCnt;
     private static final int RECYCLER_VIEW_CACHE_COUNT = 50;
 
     //Location
@@ -157,14 +156,14 @@ public class OtherProfileFragment extends BaseFragment
         //toolbar Title
         if (selectedUser != null) {
             if (isValid(selectedUser.getUsername())) {
-                toolbarTitleTv.setText(selectedUser.getUsername());
+                toolbarTitleTv.setText(CHAR_AMPERSAND + selectedUser.getUsername());
             }
         }
     }
 
     private void initRecyclerView() {
 
-        isFirstFetch = true;
+        boolean isFirstFetch = true;
         setPaginationValues();
         setLayoutManager();
         setAdapter();
@@ -202,8 +201,8 @@ public class OtherProfileFragment extends BaseFragment
     }
 
     private void setPaginationValues() {
-        perPageCnt = DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
-        pageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
+        int perPageCnt = DEFAULT_PROFILE_GRIDVIEW_PERPAGE_COUNT;
+        int pageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
         innerRecyclerPageCnt = DEFAULT_PROFILE_GRIDVIEW_PAGE_COUNT;
         isMoreItemAvailable = true;
         float radiusInKm = (float) ((double) FILTERED_FEED_RADIUS / (double) 1000);
@@ -326,7 +325,6 @@ public class OtherProfileFragment extends BaseFragment
         }
     }
 
-    @SuppressWarnings("unchecked")
     void transitionTo(Intent i) {
         final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);

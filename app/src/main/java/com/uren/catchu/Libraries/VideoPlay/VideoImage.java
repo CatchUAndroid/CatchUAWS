@@ -1,4 +1,4 @@
-package com.uren.catchu._Libraries.VideoPlay;
+package com.uren.catchu.Libraries.VideoPlay;
 
 import android.annotation.TargetApi;
 import android.content.Context;

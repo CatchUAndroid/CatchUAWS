@@ -32,7 +32,8 @@
                     android:id="@+id/specialPictureImgView"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="center" />
+                    android:layout_gravity="center"
+                    android:contentDescription="TODO" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -51,7 +52,8 @@
                 android:layout_alignEnd="@+id/frameLayout"
                 android:layout_alignParentTop="true"
                 android:padding="1dp"
-                android:src="@mipmap/icon_cancel_gray2" />
+                android:src="@mipmap/icon_cancel_gray2"
+                android:contentDescription="TODO" />
         </RelativeLayout>
 
         <TextView

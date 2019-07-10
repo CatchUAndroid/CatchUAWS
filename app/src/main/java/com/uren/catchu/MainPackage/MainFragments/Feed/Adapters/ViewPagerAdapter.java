@@ -26,7 +26,7 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.MyVideoModel;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
-import com.uren.catchu._Libraries.VideoPlay.VideoPlay;
+import com.uren.catchu.Libraries.VideoPlay.VideoPlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +48,6 @@ public class ViewPagerAdapter extends PagerAdapter {
     private List<String> imageList = new ArrayList<>();
     private int imageCounter;
     private int videoCounter;
-    private VideoPlay videoPlay;
     BaseFragment.FragmentNavigation fragmentNavigation;
 
     public ViewPagerAdapter(Activity activity, Context context, List<Media> attachments, BaseFragment.FragmentNavigation fragmentNavigation) {
@@ -173,7 +172,7 @@ public class ViewPagerAdapter extends PagerAdapter {
             videoUrl = videoList.get(videoCounter).getVideo_url();
         }
 
-        videoPlay = new VideoPlay(itemView, videoUrl, mActivity);
+        VideoPlay videoPlay = new VideoPlay(itemView, videoUrl, mActivity);
 
     }
 

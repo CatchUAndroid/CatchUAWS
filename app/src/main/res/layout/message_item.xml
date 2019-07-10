@@ -172,7 +172,7 @@
                     android:gravity="right"
                     android:padding="3dp"
                     android:textColor="@color/gray"
-                    android:textSize="10sp" />
+                    android:textSize="12sp" />
 
             </RelativeLayout>
 

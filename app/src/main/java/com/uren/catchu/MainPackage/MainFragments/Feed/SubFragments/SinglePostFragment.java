@@ -50,8 +50,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.SendCommentButton.SendCommentButton;
-import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
+import com.uren.catchu.Libraries.SendCommentButton.SendCommentButton;
+import com.uren.catchu.Libraries.VideoPlay.CustomRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,13 +80,11 @@ public class SinglePostFragment extends BaseFragment
         PostDeletedCallback{
 
     private View mView;
-    private String toolbarTitle;
     private Post post;
     private String postId;
     private int position;
     private int numberOfCallback;
     private SinglePostAdapter singlePostAdapter;
-    private LinearLayoutManager mLayoutManager;
 
     @BindView(R.id.rootLayout)
     RelativeLayout rootLayout;
@@ -177,7 +175,7 @@ public class SinglePostFragment extends BaseFragment
     private void getItemsFromBundle() {
         Bundle args = getArguments();
         if (args != null) {
-            toolbarTitle = args.getString("toolbarTitle");
+            String toolbarTitle = args.getString("toolbarTitle");
             postId = args.getString("postId");
             position = args.getInt("position");
             numberOfCallback = args.getInt("numberOfCallback");
@@ -290,7 +288,7 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void setLayoutManager() {
-        mLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new SinglePostItemAnimator());
     }

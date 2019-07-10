@@ -102,7 +102,7 @@
                 android:textSize="16sp"
                 android:hint="@string/commentHint" />
 
-            <com.uren.catchu._Libraries.SendCommentButton.SendCommentButton
+            <com.uren.catchu.Libraries.SendCommentButton.SendCommentButton
                 android:id="@+id/btnSendComment"
                 android:layout_width="72dp"
                 android:layout_height="match_parent"

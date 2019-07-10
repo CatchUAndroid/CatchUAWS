@@ -15,11 +15,10 @@ import java.util.List;
 
 public class SilinecekAdapter extends RecyclerView.Adapter<SilinecekAdapter.MyViewHolder> {
 
-    private Context context;
     private List<String> textList;
 
     public SilinecekAdapter(Context context, List<String> textList) {
-        this.context = context;
+        Context context1 = context;
         this.textList = textList;
     }
 

@@ -27,7 +27,6 @@ public class FragmentHistory {
      * of the stack
      *
      * @param entry
-     * @throws Exception
      */
     public void push(int entry) {
 
@@ -47,7 +46,6 @@ public class FragmentHistory {
      * top of the stack.
      *
      * @return
-     * @throws Exception
      */
     public int pop() {
 
@@ -67,7 +65,6 @@ public class FragmentHistory {
      * top of the stack.
      *
      * @return
-     * @throws Exception
      */
     public int popPrevious() {
 

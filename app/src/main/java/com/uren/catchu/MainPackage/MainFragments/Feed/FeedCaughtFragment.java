@@ -27,7 +27,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostListResponseProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.TransitionHelper;
@@ -42,8 +41,8 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallba
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
-import com.uren.catchu._Libraries.LayoutManager.CustomLinearLayoutManager;
-import com.uren.catchu._Libraries.VideoPlay.CustomRecyclerView;
+import com.uren.catchu.Libraries.LayoutManager.CustomLinearLayoutManager;
+import com.uren.catchu.Libraries.VideoPlay.CustomRecyclerView;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
@@ -288,7 +287,6 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
         }
     }
 
-    @SuppressWarnings("unchecked")
     void transitionTo(Intent i) {
         final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
