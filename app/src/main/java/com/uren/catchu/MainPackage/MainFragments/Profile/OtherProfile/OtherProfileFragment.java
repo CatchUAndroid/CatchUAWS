@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -150,6 +151,7 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setInitialValues() {
 
+        toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_my_profile_toolbar));
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
 

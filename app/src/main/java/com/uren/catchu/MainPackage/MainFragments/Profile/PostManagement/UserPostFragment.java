@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement.Adapters.UserPostPagerAdapter;
@@ -144,6 +145,7 @@ public class UserPostFragment extends BaseFragment
 
         userPostPagerAdapter = new UserPostPagerAdapter(getFragmentManager(), 2, catchType, targetUid);
         viewPager.setAdapter(userPostPagerAdapter);
+        viewPager.setPageTransformer(true, new RotateUpTransformer());
     }
 
     @Override

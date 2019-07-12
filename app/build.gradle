@@ -153,6 +153,8 @@ dependencies {
 
     implementation 'com.github.florent37:shapeofview:1.4.7'
 
+    implementation 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:2.0.24'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -30,7 +30,6 @@ public class AppIntroductionActivity extends AppCompatActivity {
     private LinearLayout dotsLayout;
     private int[] layouts;
     private Button btnSkip, btnNext;
-    //private AppIntroSession appIntroSession;
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
@@ -50,13 +49,6 @@ public class AppIntroductionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Checking for first time launch - before calling setContentView()
-        /*appIntroSession = new AppIntroSession(this);
-        if (!appIntroSession.isFirstTimeLaunch()) {
-            launchHomeScreen();
-            finish();
-        }*/
-
         // Making notification bar transparent
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);
 
@@ -74,7 +66,6 @@ public class AppIntroductionActivity extends AppCompatActivity {
         layouts = new int[]{
                 R.layout.welcome_slide1,
                 R.layout.welcome_slide2,
-                R.layout.welcome_slide3,
                 R.layout.welcome_slide4};
 
         // adding bottom dots

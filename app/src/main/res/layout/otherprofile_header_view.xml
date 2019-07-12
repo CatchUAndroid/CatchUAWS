@@ -17,7 +17,7 @@
             android:id="@+id/llProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/bg_my_profile"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="vertical"
@@ -41,8 +41,8 @@
 
                     <RelativeLayout
                         android:id="@+id/profilePicLayout"
-                        android:layout_width="88dp"
-                        android:layout_height="88dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:layout_marginRight="16dp">
 
                         <ImageView
@@ -75,15 +75,24 @@
                             android:id="@+id/txtName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:text="Ugur Gogebakan"
                             android:textColor="#ffffff"
-                            android:textSize="24sp" />
+                            android:textSize="20sp" />
 
                         <TextView
                             android:id="@+id/txtAge"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="3dp"
+                            android:paddingBottom="3dp"
+                            android:text="Age, 34"
                             android:textColor="#ffffff"
-                            android:textSize="18sp"
+                            android:textSize="15sp"
                             android:textStyle="italic"
                             android:visibility="gone" />
 

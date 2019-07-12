@@ -315,7 +315,7 @@
     <string name="SOCIAL_INTERACTION">Social Interaction</string>
     <string name="DIGITAL_FOOTPRINT">Digital Footprint</string>
     <string name="TIME_CAPSULE">Time Capsule</string>
-    <string name="IMMORTAL_NODES">Immortal Nodes</string>
+    <string name="IMMORTAL_NODES">Immortal Notes</string>
 
     <string name="SOCIAL_INTERACTION_DESC">A more powerful local interaction by combining location and sharing</string>
     <string name="DIGITAL_FOOTPRINT_DESC">Leave your digital tracks instead of physical tracks and wait for them to be discovered</string>

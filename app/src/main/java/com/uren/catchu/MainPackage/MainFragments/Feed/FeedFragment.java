@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
@@ -123,6 +124,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
         feedPagerAdapter = new FeedPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(feedPagerAdapter);
+        viewPager.setPageTransformer(true, new RotateUpTransformer());
 
         setCustomTab();
         setTabListener();
@@ -210,10 +212,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
         return selectedTabPosition;
     }
 
-    public void setSelectedTabPosition(int selectedTabPosition) {
-        this.selectedTabPosition = selectedTabPosition;
-    }
-
     public void getUserUnreadMsgCount() {
 
         MessageGetProcess.getUnreadMessageCount(new UnreadMessageCallback() {
@@ -246,19 +244,13 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void startMessageListActivity() {
-        /*if (MessageListActivity.thisActivity != null) {
-            MessageListActivity.thisActivity.finish();
-        }*/
-
         final Intent intent = new Intent(getContext(), MessageListActivity.class);
 
         if (AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty()) {
-            //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
             startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
         } else {
             AccountHolderInfo.getInstance();
             AccountHolderInfo.setAccountHolderInfoCallback(userProfile -> {
-                //intent.putExtra(FCM_CODE_RECEIPT_USERID, AccountHolderInfo.getUserID());
                 startActivityForResult(intent, REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY);
             });
         }

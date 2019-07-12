@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
+import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
 import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
@@ -124,6 +125,7 @@ public class ExplorePeopleFragment extends BaseFragment {
         adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
         adapter.addFragment(contactsFragment, getResources().getString(R.string.CONTACTS));
         viewPager.setAdapter(adapter);
+        viewPager.setPageTransformer(true, new RotateUpTransformer());
         navigationTabBar.setViewPager(viewPager, 0);
     }
 

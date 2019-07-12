@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.OtherProfile.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.GridViewUtil;
+import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -347,6 +349,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             //Name
             if (isValid(selectedUser.getName())) {
                 txtName.setText(selectedUser.getName());
+                txtName.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.transparentBlack, null),
+                        0, GradientDrawable.RECTANGLE, 30, 0));
             }
 
             //send msg button
@@ -388,6 +392,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                     Integer ageInt = Integer.valueOf(age);
                     txtAge.setText(mContext.getResources().getString(R.string.AGE) + " " + ageInt.toString());
                     txtAge.setVisibility(View.VISIBLE);
+                    txtAge.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.transparentBlack, null),
+                            0, GradientDrawable.RECTANGLE, 30, 0));
                 }
             } else {
                 txtAge.setText("");
