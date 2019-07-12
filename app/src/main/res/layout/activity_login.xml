@@ -56,7 +56,8 @@
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="textEmailAddress"
                 android:paddingLeft="7dp"
-                android:textColor="@color/White" />
+                android:textColor="@color/White"
+                android:textColorHint="@color/White"/>
 
 
             <EditText
@@ -70,7 +71,8 @@
                 android:importantForAutofill="noExcludeDescendants"
                 android:inputType="textPassword"
                 android:paddingLeft="7dp"
-                android:textColor="@color/White" />
+                android:textColor="@color/White"
+                android:textColorHint="@color/White"/>
 
             <CheckBox
                 android:id="@+id/rememberMeCb"

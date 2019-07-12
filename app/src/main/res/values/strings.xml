@@ -24,7 +24,9 @@
 
     <string name="search">Search</string>
     <string name="FACEBOOK">FACEBOOK</string>
+    <string name="FACEBOOK_LOWER">Facebook</string>
     <string name="CONTACTS">CONTACTS</string>
+    <string name="CONTACTS_LOWER">Contacts</string>
     <string name="error">Error:</string>
     <string name="errorUpper">ERROR</string>
     <string name="addPersonToGroup">Add Friend to Group</string>
@@ -305,6 +307,8 @@
     <string name="ABOUT_ME">About me</string>
     <string name="ABOUT_ME_BIO">About me</string>
     <string name="AGE">Age,</string>
+    <string name="direct_follow_notif_text">has started following you</string>
+    <string name="follow_request_notif_text">sent you a follow-up request</string>
 
 
     <!-- App introduction variables-->

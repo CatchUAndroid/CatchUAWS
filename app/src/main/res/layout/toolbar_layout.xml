@@ -16,8 +16,8 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <RelativeLayout
             android:layout_width="?attr/actionBarSize"
@@ -27,19 +27,19 @@
                 android:id="@+id/searchToolbarBackImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
+                android:contentDescription="TODO"
                 android:padding="14dp"
                 android:src="@mipmap/icon_left_arrow"
-                android:visibility="visible"
-                android:contentDescription="TODO" />
+                android:visibility="visible" />
 
             <ImageView
                 android:id="@+id/imgCancelSearch"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
+                android:contentDescription="TODO"
                 android:padding="17dp"
                 android:src="@mipmap/icon_cancel"
-                android:visibility="gone"
-                android:contentDescription="TODO" />
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -63,8 +63,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|left"
                         android:layout_marginLeft="10dp"
-                        android:src="@mipmap/search"
-                        android:contentDescription="TODO" />
+                        android:contentDescription="TODO"
+                        android:src="@mipmap/search" />
 
                     <EditText
                         android:id="@+id/editTextSearch"
@@ -73,6 +73,7 @@
                         android:background="@drawable/search_edittext"
                         android:hint="@string/search"
                         android:paddingLeft="30dp"
+                        android:textColor="@color/White"
                         android:textColorHint="@color/White"
                         android:textSize="17sp" />
 
@@ -84,17 +85,27 @@
 
         <RelativeLayout
             android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center">
 
-            <ImageView
+            <TextView
+                android:id="@+id/addNewItemTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yeni Grup"
+                android:textColor="@color/White"
+                android:gravity="center"/>
+
+            <!--<ImageView
                 android:id="@+id/searchToolbarAddItemImgv"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="?attr/actionBarSize"
-                android:padding="12dp"
+                android:contentDescription="TODO"
+                android:padding="16dp"
                 android:paddingRight="5dp"
-                android:src="@mipmap/icon_add_group"
-                android:visibility="visible"
-                android:contentDescription="TODO" />
+                android:src="@mipmap/icon_pencil"
+                android:visibility="visible" />-->
 
         </RelativeLayout>
 

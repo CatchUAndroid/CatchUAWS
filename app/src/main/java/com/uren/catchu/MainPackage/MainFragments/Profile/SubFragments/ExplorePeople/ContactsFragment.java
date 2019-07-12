@@ -73,8 +73,8 @@ public class ContactsFragment extends BaseFragment {
     ImageView imgCancelSearch;
     @BindView(R.id.searchToolbarBackImgv)
     ImageView searchToolbarBackImgv;
-    @BindView(R.id.searchToolbarAddItemImgv)
-    ImageView searchToolbarAddItemImgv;
+    @BindView(R.id.addNewItemTv)
+    TextView addNewItemTv;
     @BindView(R.id.warningMsgLayout)
     LinearLayout warningMsgLayout;
     @BindView(R.id.warningMsgTv)
@@ -123,7 +123,7 @@ public class ContactsFragment extends BaseFragment {
         permissionModule = new PermissionModule(getActivity());
         reformedContactList = new ArrayList<>();
         inviteContactsList = new ArrayList<>();
-        searchToolbarAddItemImgv.setVisibility(View.GONE);
+        addNewItemTv.setVisibility(View.GONE);
         contactFriendModelList = new ArrayList<>();
         fragment = this;
     }

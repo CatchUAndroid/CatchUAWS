@@ -151,6 +151,8 @@ dependencies {
     //implementation 'com.github.iammert:AnimatedTabLayout:0.1'
     implementation 'devlight.io:navigationtabbar:1.2.5'
 
+    implementation 'com.github.florent37:shapeofview:1.4.7'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

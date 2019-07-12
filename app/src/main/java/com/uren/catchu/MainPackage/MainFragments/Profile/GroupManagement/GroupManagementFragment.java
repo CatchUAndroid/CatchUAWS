@@ -59,8 +59,8 @@ public class  GroupManagementFragment extends BaseFragment {
     RecyclerView specialRecyclerView;
     @BindView(R.id.warningMsgTv)
     TextView warningMsgTv;
-    @BindView(R.id.searchToolbarAddItemImgv)
-    ImageView searchToolbarAddItemImgv;
+    @BindView(R.id.addNewItemTv)
+    TextView addNewItemTv;
     @BindView(R.id.searchToolbarBackImgv)
     ImageView searchToolbarBackImgv;
 
@@ -119,7 +119,7 @@ public class  GroupManagementFragment extends BaseFragment {
 
     public void initValues() {
         searchToolbarLayout.setVisibility(View.VISIBLE);
-        searchToolbarAddItemImgv.setVisibility(View.VISIBLE);
+        addNewItemTv.setVisibility(View.VISIBLE);
         editTextSearch.setHint(getContext().getResources().getString(R.string.searchGroup));
         warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         setFloatButtonVisibility();
@@ -147,10 +147,10 @@ public class  GroupManagementFragment extends BaseFragment {
             }
         });
 
-        searchToolbarAddItemImgv.setOnClickListener(v -> {
+        addNewItemTv.setOnClickListener(v -> {
             CommonUtils.hideKeyBoard(getContext());
-            searchToolbarAddItemImgv.setEnabled(false);
-            searchToolbarAddItemImgv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
+            addNewItemTv.setEnabled(false);
+            addNewItemTv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             addNewGroup();
         });
 
@@ -325,12 +325,12 @@ public class  GroupManagementFragment extends BaseFragment {
                         startSelectFriendFragment();
 
                 }
-                searchToolbarAddItemImgv.setEnabled(true);
+                addNewItemTv.setEnabled(true);
             }
 
             @Override
             public void onFailed(Exception e) {
-                searchToolbarAddItemImgv.setEnabled(true);
+                addNewItemTv.setEnabled(true);
                 if (getContext() != null) {
                     DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), () -> {
                     });

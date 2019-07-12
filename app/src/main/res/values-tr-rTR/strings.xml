@@ -5,6 +5,8 @@
 
     <string name="FACEBOOK">FACEBOOK</string>
     <string name="CONTACTS">BAĞLANTILAR</string>
+    <string name="FACEBOOK_LOWER">Facebook</string>
+    <string name="CONTACTS_LOWER">Bağlantılar</string>
     <string name="error">Hata:</string>
     <string name="errorUpper">HATA</string>
     <string name="addPersonToGroup">Katılımcı Ekle</string>
@@ -285,6 +287,8 @@
     <string name="ABOUT_ME">Hakkımda</string>
     <string name="ABOUT_ME_BIO">Kısaca Ben</string>
     <string name="AGE">Yaş,</string>
+    <string name="direct_follow_notif_text">sizi takip etmeye başladı</string>
+    <string name="follow_request_notif_text">size takip isteği gönderdi</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>

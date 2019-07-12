@@ -312,7 +312,7 @@
 
                 <RelativeLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp">
+                    android:layout_height="55dp">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -332,7 +332,7 @@
 
                         <LinearLayout
                             android:id="@+id/justMeSelectLayout"
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -353,14 +353,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/justMeShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="10sp"
+                                android:textSize="8sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/groupsSelectLayout"
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -380,14 +380,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/groupsShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="10sp"
+                                android:textSize="8sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/specialSelectLayout"
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -407,14 +407,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/friendsShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="10sp"
+                                android:textSize="8sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/allFollowersSelectLayout"
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -435,14 +435,14 @@
                                 android:layout_gravity="center"
                                 android:text="@string/allFollowersShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="10sp"
+                                android:textSize="8sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/publicSelectLayout"
-                            android:layout_width="65dp"
+                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
                             android:animateLayoutChanges="true"
                             android:orientation="vertical">
@@ -462,7 +462,7 @@
                                 android:layout_gravity="center"
                                 android:text="@string/publicShareText"
                                 android:textColor="@color/RoyalBlue"
-                                android:textSize="10sp"
+                                android:textSize="8sp"
                                 android:textStyle="bold" />
 
                         </LinearLayout>

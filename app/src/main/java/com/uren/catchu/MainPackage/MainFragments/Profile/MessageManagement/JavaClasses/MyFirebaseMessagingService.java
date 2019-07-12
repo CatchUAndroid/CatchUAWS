@@ -25,19 +25,29 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainActivity;
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Activities.MessageWithPersonActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import catchu.model.User;
 
+import static com.uren.catchu.Constants.StringConstants.AddedGroupPushNotificationStruct;
+import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
+import static com.uren.catchu.Constants.StringConstants.DirectFollowsPushNotificationStruct;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_BLOCK;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
@@ -45,6 +55,7 @@ import static com.uren.catchu.Constants.StringConstants.FCM_CODE_PHOTO_URL;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_SENDER_USERID;
 import static com.uren.catchu.Constants.StringConstants.FCM_MESSAGE_TYPE;
+import static com.uren.catchu.Constants.StringConstants.FollowRequestPushNotificationStruct;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -74,73 +85,53 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
         // [END_EXCLUDE]
 
-
-
-        if (remoteMessage != null) {
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().
-                    getReference("RemoteMessages").child("remotemessage");
-
-            String key = databaseReference.push().getKey();
-
-            final Map<String, Object> values = new HashMap<>();
-
-            if (remoteMessage.getData() != null && remoteMessage.getData().toString() != null) {
-                values.put("data", remoteMessage.getData().toString());
-                values.put("datasize", remoteMessage.getData().size());
-            }
-
-
-            Map<String, String> params = remoteMessage.getData();
-
-
-            RemoteMessage.Notification notification = remoteMessage.getNotification();
-
+        if (remoteMessage.getData().size() > 0) {
+            //Send notif for messaging
             if (remoteMessage.getNotification() != null) {
-                Log.i("Info", "Message Notification Body: " + remoteMessage.getNotification().getBody());
-                values.put("notificationBody", remoteMessage.getNotification().getBody());
-                values.put("notificationlockey", remoteMessage.getNotification().getBodyLocalizationKey());
-                values.put("notificationlocargs", remoteMessage.getNotification().getBodyLocalizationArgs());
-                values.put("notificationloctitlekey", remoteMessage.getNotification().getTitleLocalizationKey());
-                values.put("notificationloctitleargs", remoteMessage.getNotification().getTitleLocalizationArgs());
+                String photoUrl = remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
 
-                values.put("notificationtitle", remoteMessage.getNotification().getTitle());
-                values.put("notificationtag", remoteMessage.getNotification().getTag());
+                if (photoUrl == null) photoUrl = "";
+
+                if (!checkMessagingPageIsOpen(remoteMessage))
+                    new GetNotification(remoteMessage).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoUrl);
+            } else {
+                //Send notif for other operations
+                parseSnsRemoteMessage(remoteMessage);
             }
-
-
-            if(remoteMessage.getCollapseKey() != null)
-                values.put("collapsekey", remoteMessage.getCollapseKey());
-
-            if(remoteMessage.getFrom() != null)
-                values.put("from", remoteMessage.getFrom());
-
-            if(remoteMessage.getMessageId() != null)
-                values.put("messageid", remoteMessage.getMessageId());
-
-            if(remoteMessage.getMessageType() != null)
-                values.put("messagetype", remoteMessage.getMessageType());
-
-
-            databaseReference.child(key).updateChildren(values).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-
-                }
-            });
         }
+    }
 
-        if (remoteMessage.getData().size() > 0 && remoteMessage.getNotification() != null) {
-            String photoUrl = remoteMessage.getData().get(FCM_CODE_PHOTO_URL);
+    private void parseSnsRemoteMessage(RemoteMessage remoteMessage) {
+        String keyValue = "", username = "", groupName = "";
+        Map<String, String> params = remoteMessage.getData();
 
-            if (photoUrl == null) photoUrl = "";
+        for (String s : params.values()) {
+            try {
+                JSONObject dataJSONObject = new JSONObject(s);
+                keyValue = dataJSONObject.getString("key");
 
-            if (!checkMessagingPageIsOpen(remoteMessage))
-                new GetNotification(remoteMessage).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, photoUrl);
+                JSONArray jsonArray = dataJSONObject.getJSONArray("value");
+                username = jsonArray.getString(0);
+
+                try {
+                    groupName = jsonArray.getString(1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                /*if (keyValue.equals(AddedGroupPushNotificationStruct)) {
+                    JSONArray jsonArray = dataJSONObject.getJSONArray("value");
+                    username = jsonArray.getString(0);
+                    groupName = jsonArray.getString(1);
+                } else if (keyValue.equals(FollowRequestPushNotificationStruct) ||
+                        keyValue.equals(DirectFollowsPushNotificationStruct)) {
+                    username = dataJSONObject.getString("value");
+                }*/
+
+                sendNotificationFromSNS(keyValue, username, groupName);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -187,7 +178,65 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         });
     }
 
-    private void sendNotification(RemoteMessage remoteMessage, Bitmap bitmap) {
+    private void sendNotificationFromSNS(String keyVal, String username, String groupName) {
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT);
+
+        String channelId = getString(R.string.default_notification_channel_id);
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        notificationBuilder.setSmallIcon(R.mipmap.app_notif_icon);
+        notificationBuilder.setColor(getResources().getColor(R.color.DodgerBlue, null));
+
+        notificationBuilder.setContentTitle(getResources().getString(R.string.app_name));
+
+        StringBuilder messageBody = new StringBuilder();
+
+        switch (keyVal) {
+            case AddedGroupPushNotificationStruct:
+                if (CommonUtils.getLanguage().equals("tr"))
+                    messageBody.append(CHAR_AMPERSAND).append(username).append(" sizi \'").append(groupName)
+                            .append("\' grubuna ekledi");
+                else
+                    messageBody.append(CHAR_AMPERSAND).append(username).append(" has added you to the \'")
+                            .append(groupName).append("\' group");
+                break;
+            case DirectFollowsPushNotificationStruct:
+                messageBody.append(CHAR_AMPERSAND).append(username).append(" ")
+                        .append(getResources().getString(R.string.direct_follow_notif_text));
+                break;
+            case FollowRequestPushNotificationStruct:
+                messageBody.append(CHAR_AMPERSAND).append(username).append(" ")
+                        .append(getResources().getString(R.string.follow_request_notif_text));
+                break;
+            default:
+                break;
+        }
+
+        notificationBuilder.setContentText(messageBody);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Since android Oreo notification channel is needed.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    "Channel human readable title",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        notificationManager.notify(NotificationID.getID(), notificationBuilder.build());
+    }
+
+    private void sendNotificationForMessaging(RemoteMessage remoteMessage, Bitmap bitmap) {
         String messageBody = remoteMessage.getNotification().getBody();
         String messageTitle = remoteMessage.getNotification().getTitle();
         String senderId = remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
@@ -266,7 +315,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     myBitmap = BitmapConversion.getBitmapFromInputStream(input, getApplicationContext(), 350, 350);
                 }
 
-                sendNotification(remoteMessage, myBitmap);
+                sendNotificationForMessaging(remoteMessage, myBitmap);
 
             } catch (Exception e) {
                 e.printStackTrace();

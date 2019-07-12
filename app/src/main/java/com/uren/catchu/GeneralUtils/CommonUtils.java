@@ -38,6 +38,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -448,5 +449,10 @@ public class CommonUtils {
 
         Random rand = new Random();
         return colorList[rand.nextInt(colorList.length)];
+    }
+
+    public static String getLanguage() {
+        String language = Locale.getDefault().getLanguage();
+        return language;
     }
 }

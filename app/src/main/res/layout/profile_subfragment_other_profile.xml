@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/common_toolbar_layout" />
+        <include layout="@layout/common_toolbar_layout_rounded" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"

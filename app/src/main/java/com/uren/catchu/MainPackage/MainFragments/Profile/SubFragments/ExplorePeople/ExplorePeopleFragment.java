@@ -1,5 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.ExplorePeople;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,9 +22,14 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import devlight.io.library.ntb.NavigationTabBar;
 
+import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_GRID;
+import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_LIST;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ExplorePeopleFragment extends BaseFragment {
@@ -35,12 +42,12 @@ public class ExplorePeopleFragment extends BaseFragment {
     ImageView imgCancelSearch;
     @BindView(R.id.viewpager)
     ViewPager viewPager;
-    @BindView(R.id.tabs)
-    TabLayout tabLayout;
     @BindView(R.id.searchToolbarBackImgv)
     ImageView searchToolbarBackImgv;
-    @BindView(R.id.searchToolbarAddItemImgv)
-    ImageView searchToolbarAddItemImgv;
+    @BindView(R.id.addNewItemTv)
+    TextView addNewItemTv;
+    @BindView(R.id.ntb_horizontal)
+    NavigationTabBar navigationTabBar;
 
     SpecialSelectTabAdapter adapter;
     FacebookFriendsFragment facebookFriendsFragment;
@@ -83,10 +90,30 @@ public class ExplorePeopleFragment extends BaseFragment {
     }
 
     private void initializeItems() {
-        searchToolbarAddItemImgv.setVisibility(View.GONE);
+        initNavigationBar();
+        addNewItemTv.setVisibility(View.GONE);
         setupViewPager();
-        tabLayout.setupWithViewPager(viewPager);
         selectedProperty = TAB_FACEBOOK;
+    }
+
+    private void initNavigationBar(){
+        final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.facebook_circular_icon, null),
+                        Color.parseColor("#d1395c"))
+                        .title(getContext().getResources().getString(R.string.FACEBOOK_LOWER))
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_phone_white, null),
+                        Color.parseColor("#FF861F"))
+                        .title(getContext().getResources().getString(R.string.CONTACTS_LOWER))
+                        .build()
+        );
+
+        navigationTabBar.setModels(models);
     }
 
     private void setupViewPager() {
@@ -97,22 +124,17 @@ public class ExplorePeopleFragment extends BaseFragment {
         adapter.addFragment(facebookFriendsFragment, getResources().getString(R.string.FACEBOOK));
         adapter.addFragment(contactsFragment, getResources().getString(R.string.CONTACTS));
         viewPager.setAdapter(adapter);
+        navigationTabBar.setViewPager(viewPager, 0);
     }
 
     private void addListeners() {
 
-        searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getActivity().onBackPressed();
-            }
-        });
+        searchToolbarBackImgv.setOnClickListener(v -> getActivity().onBackPressed());
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-                switch (tab.getPosition()) {
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+                switch (position) {
 
                     case TAB_FACEBOOK:
                         selectedProperty = TAB_FACEBOOK;
@@ -134,24 +156,21 @@ public class ExplorePeopleFragment extends BaseFragment {
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onPageSelected(final int position) {
 
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(final int state) {
 
             }
         });
 
-        imgCancelSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchTextClear();
-                CommonUtils.hideKeyBoard(getContext());
-                searchToolbarBackImgv.setVisibility(View.VISIBLE);
-                imgCancelSearch.setVisibility(View.GONE);
-            }
+        imgCancelSearch.setOnClickListener(v -> {
+            searchTextClear();
+            CommonUtils.hideKeyBoard(getContext());
+            searchToolbarBackImgv.setVisibility(View.VISIBLE);
+            imgCancelSearch.setVisibility(View.GONE);
         });
 
         editTextSearch.addTextChangedListener(new TextWatcher() {

@@ -64,6 +64,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/GhostWhite"
+                app:tabTextColor="@color/DarkGray"
+                app:tabSelectedTextColor="@color/DodgerBlue"
                 app:tabTextAppearance="@style/MainTabLayoutTextAppearance" />
 
 

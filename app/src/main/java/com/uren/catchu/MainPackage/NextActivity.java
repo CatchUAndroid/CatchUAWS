@@ -76,9 +76,9 @@ public class NextActivity extends FragmentActivity implements
     public FragNavTransactionOptions transactionOptions;
 
     private int[] mTabIconsSelected = {
-            R.mipmap.icon_home_tab,
-            R.mipmap.icon_share_tab,
-            R.mipmap.icon_profile_tab};
+            R.drawable.ic_home_white,
+            R.drawable.ic_share_white,
+            R.drawable.ic_person_white};
 
     public String[] TABS;
 

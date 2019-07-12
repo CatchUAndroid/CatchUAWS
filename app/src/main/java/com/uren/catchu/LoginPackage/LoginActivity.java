@@ -112,8 +112,6 @@ public class LoginActivity extends AppCompatActivity
     String userPassword;
     ProgressDialog progressDialog;
     public LoginUser loginUser;
-    private InputStream profileImageStream;
-    private Bitmap photo = null;
 
     //Firebase
     private FirebaseAuth mAuth;
@@ -448,8 +446,6 @@ public class LoginActivity extends AppCompatActivity
                         progressDialog.dismiss();
 
                         if (task.isSuccessful()) {
-                            Log.i("info:", "signIn successfull..");
-
                             setUserInfo("", userEmail);
                             startMainPage();
                         } else {
@@ -477,66 +473,12 @@ public class LoginActivity extends AppCompatActivity
         if (!userName.isEmpty() && !userName.equals("")) {
             loginUser.setUsername(userName);
         } else {
-            loginUser.setUsername("default");
+            loginUser.setUsername("undefined");
         }
 
         loginUser.setEmail(userEmail);
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
-        //updateDeviceTokenForFCM();
     }
-
-    /*public void updateDeviceTokenForFCM(){
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                String deviceToken = instanceIdResult.getToken();
-                MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, mAuth.getCurrentUser().getUid());
-                startEndPointProcess(deviceToken);
-            }
-        });
-
-        MessageUpdateProcess.updateTokenSigninValue(mAuth.getCurrentUser().getUid(), CHAR_E);
-    }
-
-    private void startEndPointProcess(final String deviceToken){
-
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-
-                final Endpoint endpoint = new Endpoint();
-                endpoint.setDeviceToken(deviceToken);
-                endpoint.setUserid(mAuth.getCurrentUser().getUid());
-                endpoint.setPlatformType(ENDPOINT_PLATFORM_ANDROID);
-                endpoint.setRequestType(ENDPOINT_LOGGED_IN);
-
-                EndPointProcess endPointProcess = new EndPointProcess(new OnEventListener<BaseResponse>() {
-
-                    @Override
-                    public void onSuccess(BaseResponse baseResponse) {
-
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-
-                    }
-
-                    @Override
-                    public void onTaskContinue() {
-
-                    }
-                }, token, endpoint);
-
-                endPointProcess.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
-            @Override
-            public void onTokenFail(String message) {
-
-            }
-        });
-    }*/
 
     private void startMainPage() {
         loginUser.setUserId(mAuth.getCurrentUser().getUid());
@@ -601,10 +543,7 @@ public class LoginActivity extends AppCompatActivity
                         public void onComplete(@NonNull Task<AuthResult> task) {
 
                             if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in loginUser's information
-                                //updateDeviceTokenForFCM();
                                 checkUserInSystem();
-
                             } else {
                                 CommonUtils.showToastShort(LoginActivity.this,
                                         getResources().getString(R.string.UNEXPECTED_ERROR));
@@ -616,7 +555,6 @@ public class LoginActivity extends AppCompatActivity
                     getResources().getString(R.string.UNEXPECTED_ERROR));
         }
     }
-
 
     private void handleTwitterSession(final TwitterSession session) {
 
@@ -674,7 +612,6 @@ public class LoginActivity extends AppCompatActivity
         loginUser.setProviderId(String.valueOf(session.getUserId()));
         //providerType
         loginUser.setProviderType(PROVIDER_TYPE_TWITTER);
-        //updateDeviceTokenForFCM();
     }
 
     public void checkUserInSystem() {
@@ -734,6 +671,4 @@ public class LoginActivity extends AppCompatActivity
                     e.getMessage());
         }
     }
-
-
 }

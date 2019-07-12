@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -65,8 +66,8 @@ public class SelectFriendFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.searchToolbarBackImgv)
     ImageView searchToolbarBackImgv;
-    @BindView(R.id.searchToolbarAddItemImgv)
-    ImageView searchToolbarAddItemImgv;
+    @BindView(R.id.addNewItemTv)
+    TextView addNewItemTv;
 
     private FriendList followerList;
     private ProgressDialogUtil progressDialogUtil;
@@ -119,7 +120,7 @@ public class SelectFriendFragment extends BaseFragment {
             SelectedFriendList.setInstance(null);
             progressDialogUtil = new ProgressDialogUtil(getContext(), null, false);
             progressDialogUtil.dialogShow();
-            searchToolbarAddItemImgv.setVisibility(View.GONE);
+            addNewItemTv.setVisibility(View.GONE);
         }
         return mView;
     }

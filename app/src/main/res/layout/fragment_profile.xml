@@ -39,8 +39,8 @@
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:clickable="true"
-                        android:gravity="center"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:gravity="center">
 
                         <RelativeLayout
                             android:id="@+id/menuLayout"
@@ -61,8 +61,8 @@
                                 android:id="@+id/requestWaitingCntTv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
                                 android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
                                 android:background="@drawable/circle_text_bg"
                                 android:gravity="center"
                                 android:textColor="@color/white"
@@ -83,9 +83,9 @@
                                 android:id="@+id/imgBackBtn"
                                 android:layout_width="?attr/actionBarSize"
                                 android:layout_height="?attr/actionBarSize"
-                                android:paddingBottom="8dp"
-                                android:paddingRight="20dp"
                                 android:paddingTop="8dp"
+                                android:paddingRight="20dp"
+                                android:paddingBottom="8dp"
                                 android:src="@mipmap/icon_left_arrow" />
 
                         </RelativeLayout>
@@ -111,8 +111,8 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:clickable="true"
-                        android:gravity="center"
-                        android:focusable="true">
+                        android:focusable="true"
+                        android:gravity="center">
 
                         <com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView
                             android:id="@+id/imgUserEdit"
@@ -163,7 +163,6 @@
                             android:paddingBottom="24dp"
                             app:layout_collapseMode="parallax">
 
-
                         </LinearLayout>
 
                         <RelativeLayout
@@ -211,11 +210,11 @@
                                 android:textStyle="bold" />
 
                             <LinearLayout
+                                android:id="@+id/bioll"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:background="@color/White"
-                                android:id="@+id/bioll"
                                 android:orientation="vertical"
                                 android:visibility="gone">
 
@@ -250,7 +249,7 @@
                                     android:paddingTop="10dp"
                                     android:paddingBottom="10dp"
                                     android:textColor="@color/Black"
-                                    android:textSize="18sp"
+                                    android:textSize="15sp"
                                     android:textStyle="italic" />
 
                                 <View
@@ -262,7 +261,6 @@
                                     android:background="@color/tintColor" />
 
                             </LinearLayout>
-
 
 
                         </LinearLayout>
@@ -376,8 +374,8 @@
                                         android:id="@+id/llSharedPosts"
                                         android:layout_width="match_parent"
                                         android:layout_height="50dp"
-                                        android:layout_marginBottom="5dp"
                                         android:layout_marginTop="5dp"
+                                        android:layout_marginBottom="5dp"
                                         android:layout_weight="5"
                                         android:background="?attr/selectableItemBackground"
                                         android:orientation="horizontal">
@@ -392,9 +390,9 @@
                                                 android:id="@+id/imgSharedPosts"
                                                 android:layout_width="40dp"
                                                 android:layout_height="40dp"
+                                                android:contentDescription="TODO"
                                                 android:padding="8dp"
-                                                android:src="@mipmap/icon_location"
-                                                android:contentDescription="TODO" />
+                                                android:src="@mipmap/icon_location" />
 
                                         </LinearLayout>
 
@@ -424,9 +422,9 @@
                                             android:layout_height="match_parent"
                                             android:layout_marginRight="10dp"
                                             android:layout_weight="1"
+                                            android:contentDescription="TODO"
                                             android:padding="12dp"
-                                            android:src="@mipmap/icon_right_arrow"
-                                            android:contentDescription="TODO" />
+                                            android:src="@mipmap/icon_right_arrow" />
 
 
                                     </LinearLayout>
@@ -445,8 +443,8 @@
                                         android:id="@+id/llCatchedPosts"
                                         android:layout_width="match_parent"
                                         android:layout_height="50dp"
-                                        android:layout_marginBottom="5dp"
                                         android:layout_marginTop="5dp"
+                                        android:layout_marginBottom="5dp"
                                         android:layout_weight="5"
                                         android:background="?attr/selectableItemBackground"
                                         android:orientation="horizontal">
@@ -461,8 +459,8 @@
                                                 android:id="@+id/imgCatchPosts"
                                                 android:layout_width="40dp"
                                                 android:layout_height="40dp"
-                                                android:src="@mipmap/icon_catch"
-                                                android:contentDescription="TODO" />
+                                                android:contentDescription="TODO"
+                                                android:src="@mipmap/icon_catch" />
 
                                         </LinearLayout>
 
@@ -493,9 +491,9 @@
                                             android:layout_height="match_parent"
                                             android:layout_marginRight="10dp"
                                             android:layout_weight="1"
+                                            android:contentDescription="TODO"
                                             android:padding="12dp"
-                                            android:src="@mipmap/icon_right_arrow"
-                                            android:contentDescription="TODO" />
+                                            android:src="@mipmap/icon_right_arrow" />
 
 
                                     </LinearLayout>
@@ -512,8 +510,8 @@
                                     <LinearLayout
                                         android:layout_width="match_parent"
                                         android:layout_height="50dp"
-                                        android:layout_marginBottom="5dp"
                                         android:layout_marginTop="5dp"
+                                        android:layout_marginBottom="5dp"
                                         android:layout_weight="5"
                                         android:orientation="horizontal">
 
@@ -527,9 +525,9 @@
                                                 android:id="@+id/imgGroupPosts"
                                                 android:layout_width="40dp"
                                                 android:layout_height="40dp"
+                                                android:contentDescription="TODO"
                                                 android:padding="8dp"
-                                                android:src="@drawable/groups_icon_500"
-                                                android:contentDescription="TODO" />
+                                                android:src="@drawable/groups_icon_500" />
 
                                         </LinearLayout>
 
@@ -546,8 +544,8 @@
                                         <RelativeLayout
                                             android:layout_width="0dp"
                                             android:layout_height="match_parent"
-                                            android:layout_weight="1"
-                                            android:layout_marginRight="10dp">
+                                            android:layout_marginRight="10dp"
+                                            android:layout_weight="1">
 
                                             <TextView
                                                 android:id="@+id/txtEditGroup"
@@ -560,8 +558,6 @@
                                                 android:textSize="17sp" />
 
                                         </RelativeLayout>
-
-
 
 
                                     </LinearLayout>

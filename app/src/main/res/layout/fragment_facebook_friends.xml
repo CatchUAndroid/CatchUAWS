@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone">
 
-            <include layout="@layout/common_toolbar_layout" />
+            <include layout="@layout/common_toolbar_layout_rounded" />
         </LinearLayout>
 
 
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone">
 
-            <include layout="@layout/toolbar_layout" />
+            <include layout="@layout/toolbar_layout_rounded" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView

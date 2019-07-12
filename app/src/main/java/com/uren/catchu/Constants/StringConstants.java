@@ -197,6 +197,9 @@ public class StringConstants {
     public static final String FCM_MESSAGE_TYPE_CLUSTER_TO_PERSON = "ClusterMessageToPerson";
 
 
+    public static final String AddedGroupPushNotificationStruct = "AddedGroupPushNotificationStruct";
+    public static final String FollowRequestPushNotificationStruct = "FollowRequestPushNotificationStruct";
+    public static final String DirectFollowsPushNotificationStruct = "DirectFollowsPushNotificationStruct";
 
 
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,7 +65,7 @@ public class MessageListActivity extends AppCompatActivity {
 
     ImageView searchToolbarBackImgv;
     ImageView imgCancelSearch;
-    ImageView searchToolbarAddItemImgv;
+    TextView addNewItemTv;
     EditText editTextSearch;
     ProgressBar progressBar;
     RecyclerView recyclerView;
@@ -103,7 +104,7 @@ public class MessageListActivity extends AppCompatActivity {
     public void initVariables() {
         initUIValues();
         messageListBoxes = new ArrayList<>();
-        searchToolbarAddItemImgv.setVisibility(View.GONE);
+        addNewItemTv.setVisibility(View.GONE);
         setRecyclerViewScroll();
         limitValue = REC_MAXITEM_LIMIT_COUNT;
         MobileAds.initialize(MessageListActivity.this, getResources().getString(R.string.ADMOB_APP_ID));
@@ -113,7 +114,7 @@ public class MessageListActivity extends AppCompatActivity {
     private void initUIValues() {
         searchToolbarBackImgv = findViewById(R.id.searchToolbarBackImgv);
         imgCancelSearch = findViewById(R.id.imgCancelSearch);
-        searchToolbarAddItemImgv = findViewById(R.id.searchToolbarAddItemImgv);
+        addNewItemTv = findViewById(R.id.addNewItemTv);
         editTextSearch = findViewById(R.id.editTextSearch);
         progressBar = findViewById(R.id.progressBar);
         recyclerView = findViewById(R.id.recyclerView);
