@@ -20,7 +20,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.Settings;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -39,6 +38,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Random;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -55,12 +55,12 @@ public class CommonUtils {
 */
 
 
-    public static final void showToastShort(Context context, String message) {
+    public static void showToastShort(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
-    public static final void showToastLong(Context context, String message) {
+    public static void showToastLong(Context context, String message) {
 
         Toast.makeText(context, message, Toast.LENGTH_LONG).show();
     }
@@ -83,7 +83,7 @@ public class CommonUtils {
             toast.show();
     }*/
 
-    public static final String getDeviceID(Context context) {
+    public static String getDeviceID(Context context) {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }
@@ -95,7 +95,7 @@ public class CommonUtils {
     }
 
 
-    public static final String getVersionName(Context context) {
+    public static String getVersionName(Context context) {
 
         PackageInfo pInfo = null;
         try {
@@ -103,7 +103,7 @@ public class CommonUtils {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        return pInfo.versionName;
+        return Objects.requireNonNull(pInfo).versionName;
 
     }
 
@@ -132,12 +132,12 @@ public class CommonUtils {
 
     public static Drawable setDrawableSelector(Context context, int normal, int selected) {
 
-        StateListDrawable drawable = null;
+        StateListDrawable drawable;
 
         Drawable state_normal = ContextCompat.getDrawable(context, normal);
         Drawable state_pressed = ContextCompat.getDrawable(context, selected);
 
-        Bitmap state_normal_bitmap = ((BitmapDrawable) state_normal).getBitmap();
+        Bitmap state_normal_bitmap = ((BitmapDrawable) Objects.requireNonNull(state_normal)).getBitmap();
 
         // Setting alpha directly just didn't work, so we draw a new bitmap!
         Bitmap disabledBitmap = Bitmap.createBitmap(
@@ -248,7 +248,7 @@ public class CommonUtils {
         Activity activity = (Activity) context;
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         if (activity.getCurrentFocus() != null) {
-            inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            Objects.requireNonNull(inputMethodManager).hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
         }
     }
 
@@ -266,7 +266,7 @@ public class CommonUtils {
         Date nowTime = new Date();
         Date date = CommonUtils.fromISO8601UTC(createAt);
 
-        long dateDiff = nowTime.getTime() - date.getTime();
+        long dateDiff = nowTime.getTime() - Objects.requireNonNull(date).getTime();
 
         long second = TimeUnit.MILLISECONDS.toSeconds(dateDiff);
         long minute = TimeUnit.MILLISECONDS.toMinutes(dateDiff);
@@ -295,8 +295,8 @@ public class CommonUtils {
     }
 
     public static String getMessageTime(Context context, long time) {
-        String dateValueStr = null;
-        String hour = null;
+        String dateValueStr;
+        String hour;
 
         Date date = new Date(time);
 

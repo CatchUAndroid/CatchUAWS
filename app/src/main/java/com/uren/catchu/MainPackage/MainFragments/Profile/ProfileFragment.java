@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -65,6 +66,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.GroupListHolder;
 
 import java.util.Collections;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -199,7 +201,7 @@ public class ProfileFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
@@ -233,7 +235,7 @@ public class ProfileFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void setPostRefreshListener() {
@@ -261,7 +263,7 @@ public class ProfileFragment extends BaseFragment
         //        getResources().getColor(R.color.profile_open_color, null), ORIENTATION_TOP_BOTTOM, 0));
 
 
-        imgSharedPosts.setColorFilter(ContextCompat.getColor(getContext(), R.color.gplus_color_1), android.graphics.PorterDuff.Mode.SRC_IN);
+        imgSharedPosts.setColorFilter(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.gplus_color_1), android.graphics.PorterDuff.Mode.SRC_IN);
         imgSharedPosts.setBackground(ShapeUtil.getShape(0,
                 getContext().getResources().getColor(R.color.gplus_color_1, null), GradientDrawable.OVAL, 15, 2));
 
@@ -667,7 +669,7 @@ public class ProfileFragment extends BaseFragment
                     public void onFailed(Exception e) {
 
                         if (getContext() != null) {
-                            DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                            DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
                                 }
@@ -681,23 +683,27 @@ public class ProfileFragment extends BaseFragment
 
         orderGroupByName(groupRequestResult);
 
-        //layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        groupRecyclerView.setLayoutManager(layoutManager);
-        groupRecyclerView.setItemViewCacheSize(25);
+        try {
+            //layout manager
+            LinearLayoutManager layoutManager = new LinearLayoutManager(Objects.requireNonNull(getContext()), LinearLayoutManager.HORIZONTAL, false);
+            groupRecyclerView.setLayoutManager(layoutManager);
+            groupRecyclerView.setItemViewCacheSize(25);
 
-        //adapter
-        GroupsListAdapter groupsListAdapter = new GroupsListAdapter(getContext(), mFragmentNavigation, groupRequestResult);
-        groupRecyclerView.setAdapter(groupsListAdapter);
+            //adapter
+            GroupsListAdapter groupsListAdapter = new GroupsListAdapter(Objects.requireNonNull(getContext()), mFragmentNavigation, groupRequestResult);
+            groupRecyclerView.setAdapter(groupsListAdapter);
 
-        //group layout
-        if (groupRequestResult.getResultArray().size() > 0) {
-            llGroupsInfo.setVisibility(View.GONE);
-            llGroupsRecycler.setVisibility(View.VISIBLE);
-        } else {
-            llGroupsInfo.setVisibility(View.VISIBLE);
-            llGroupsRecycler.setVisibility(View.GONE);
-            txtGroupDetail.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+            //group layout
+            if (groupRequestResult.getResultArray().size() > 0) {
+                llGroupsInfo.setVisibility(View.GONE);
+                llGroupsRecycler.setVisibility(View.VISIBLE);
+            } else {
+                llGroupsInfo.setVisibility(View.VISIBLE);
+                llGroupsRecycler.setVisibility(View.GONE);
+                txtGroupDetail.setText(Objects.requireNonNull(getContext()).getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -716,18 +722,18 @@ public class ProfileFragment extends BaseFragment
         }
 
         if (v == imgBackBtn) {
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         }
 
         if (v == llSharedPosts) {
             String targetUid = AccountHolderInfo.getUserID();
-            String toolbarTitle = getContext().getResources().getString(R.string.sharedPosts);
+            String toolbarTitle = Objects.requireNonNull(getContext()).getResources().getString(R.string.sharedPosts);
             mFragmentNavigation.pushFragment(new UserPostFragment(PROFILE_POST_TYPE_SHARED, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
         if (v == llCatchedPosts) {
             String targetUid = AccountHolderInfo.getUserID();
-            String toolbarTitle = getContext().getResources().getString(R.string.caughtPosts);
+            String toolbarTitle = Objects.requireNonNull(getContext()).getResources().getString(R.string.caughtPosts);
             mFragmentNavigation.pushFragment(new UserPostFragment(PROFILE_POST_TYPE_CAUGHT, targetUid, toolbarTitle), ANIMATE_RIGHT_TO_LEFT);
         }
 
@@ -818,7 +824,7 @@ public class ProfileFragment extends BaseFragment
 
     public void startNotifyProblemFragment() {
         if (mFragmentNavigation != null) {
-            getActivity().findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
+            Objects.requireNonNull(getActivity()).findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;
             mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }

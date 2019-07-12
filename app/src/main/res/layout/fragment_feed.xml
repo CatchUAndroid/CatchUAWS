@@ -57,7 +57,7 @@
                         android:id="@+id/llSearch"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:layout_weight="7.4"
+                        android:layout_weight="8"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -74,8 +74,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center|left"
                                     android:layout_marginLeft="10dp"
-                                    android:src="@mipmap/search"
-                                    android:contentDescription="TODO" />
+                                    android:contentDescription="TODO"
+                                    android:src="@mipmap/search" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -111,8 +111,8 @@
                             android:id="@+id/unreadMsgCntTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
                             android:layout_alignParentTop="true"
+                            android:layout_alignParentEnd="true"
                             android:background="@drawable/circle_text_bg"
                             android:gravity="center"
                             android:textColor="@color/white"
@@ -158,8 +158,21 @@
 
             </LinearLayout>
 
+            <devlight.io.library.ntb.NavigationTabBar
+                android:id="@+id/ntb_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                app:ntb_badge_gravity="top"
+                app:ntb_badge_position="right"
+                app:ntb_badged="false"
+                app:ntb_scaled="true"
+                app:ntb_swiped="true"
+                app:ntb_tinted="true"
+                app:ntb_title_mode="all"
+                app:ntb_titled="true" />
 
-            <com.google.android.material.tabs.TabLayout
+
+            <!--<com.google.android.material.tabs.TabLayout
                 android:id="@+id/tablayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -177,7 +190,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-            </com.google.android.material.tabs.TabLayout>
+            </com.google.android.material.tabs.TabLayout>-->
 
 
         </com.google.android.material.appbar.AppBarLayout>

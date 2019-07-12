@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import ja.burhanrashid52.photoeditor.PhotoEditor;
 
@@ -56,7 +57,7 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) ((View) contentView.getParent()).getLayoutParams();
         CoordinatorLayout.Behavior behavior = params.getBehavior();
 
-        if (behavior != null && behavior instanceof BottomSheetBehavior) {
+        if (behavior instanceof BottomSheetBehavior) {
             ((BottomSheetBehavior) behavior).setBottomSheetCallback(mBottomSheetBehaviorCallback);
         }
         ((View) contentView.getParent()).setBackgroundColor(getResources().getColor(android.R.color.transparent, null));
@@ -75,7 +76,7 @@ public class EmojiBSFragment extends BottomSheetDialogFragment {
 
     public class EmojiAdapter extends RecyclerView.Adapter<EmojiAdapter.ViewHolder> {
 
-        ArrayList<String> emojisList = PhotoEditor.getEmojis(getActivity());
+        ArrayList<String> emojisList = PhotoEditor.getEmojis(Objects.requireNonNull(getActivity()));
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 public class VideosAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
     public VideosAdapter() {
@@ -25,7 +27,7 @@ public class VideosAdapter extends RecyclerView.Adapter<CustomViewHolder> {
             holder.getAah_vi().getCustomVideoView().clearAll();
             holder.getAah_vi().getCustomVideoView().invalidate();
         }
-        super.onViewDetachedFromWindow(holder);
+        super.onViewDetachedFromWindow(Objects.requireNonNull(holder));
     }
 
     @Override
@@ -34,7 +36,7 @@ public class VideosAdapter extends RecyclerView.Adapter<CustomViewHolder> {
             holder.getAah_vi().getCustomVideoView().clearAll();
             holder.getAah_vi().getCustomVideoView().invalidate();
         }
-        super.onViewRecycled(holder);
+        super.onViewRecycled(Objects.requireNonNull(holder));
     }
 
     @Override

@@ -87,6 +87,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -241,7 +242,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         if (getContext() != null)
             CommonUtils.hideKeyBoard(getContext());
         super.onStart();
@@ -257,7 +258,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             if (view == null) {
                 view = inflater.inflate(R.layout.fragment_share_post, container, false);
                 ButterKnife.bind(this, view);
@@ -394,7 +395,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null && !s.toString().isEmpty()) {
+                if (s != null && !s.toString().isEmpty()) {
                     setTextSelectImgvFilled();
                     shareItems.getPost().setMessage(s.toString());
                 } else {
@@ -442,7 +443,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
             @Override
             public void onClick(View v) {
                 //cancelButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -463,7 +464,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         showMapImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
             }
         });
 
@@ -554,7 +555,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void sharePost() {
 
-        getActivity().onBackPressed();
+        Objects.requireNonNull(getActivity()).onBackPressed();
 
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
@@ -670,7 +671,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void startGroupManagementFragment() {
-        CommonUtils.hideKeyBoard(getContext());
+        CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new GroupManagementFragment(GROUP_OP_CHOOSE_TYPE,
                             object -> {
@@ -689,7 +690,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     private void startSelectFriendFragment() {
-        CommonUtils.hideKeyBoard(getContext());
+        CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new SelectFriendFragment(null, null, null,
                     SharePostFragment.class.getName(),
@@ -703,7 +704,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void startAdvancedSettingsFragment() {
-        CommonUtils.hideKeyBoard(getContext());
+        CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
         if (mFragmentNavigation != null) {
             mFragmentNavigation.pushFragment(new ShareAdvanceSettingsFragment(shareItems, object -> shareItems = (ShareItems) object), ANIMATE_LEFT_TO_RIGHT);
         }
@@ -745,17 +746,17 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
         if (permissionModule.checkWriteExternalStoragePermission()) {
             if (selectedShareType.equals(IMAGE_TYPE))
                 startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                        getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
+                        Objects.requireNonNull(getContext()).getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
             else if (selectedShareType.equals(VIDEO_TYPE))
                 startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
-                        getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
+                        Objects.requireNonNull(getContext()).getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
         } else
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     PermissionModule.PERMISSION_WRITE_EXTERNAL_STORAGE);
     }
 
     private void checkCameraProcess() {
-        if (!CommonUtils.checkCameraHardware(getContext())) {
+        if (!CommonUtils.checkCameraHardware(Objects.requireNonNull(getContext()))) {
             CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
             return;
         }
@@ -774,8 +775,8 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     public void openCameraForPhotoSelect() {
-        photoUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".provider",
-                FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE));
+        photoUri = FileProvider.getUriForFile(getContext(), Objects.requireNonNull(getContext()).getPackageName() + ".provider",
+                Objects.requireNonNull(FileAdapter.getOutputMediaFile(MEDIA_TYPE_IMAGE)));
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, (long) MAX_IMAGE_SIZE_1MB);
@@ -891,10 +892,10 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                                 PermissionModule.PERMISSION_CAMERA);
                 } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(IMAGE_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntent(),
-                            getContext().getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
+                            Objects.requireNonNull(getContext()).getResources().getString(R.string.selectPicture)), REQUEST_CODE_PHOTO_GALLERY_SELECT);
                 } else if (galleryOrCameraSelect.equals(GALLERY_TEXT) && selectedShareType.equals(VIDEO_TYPE)) {
                     startActivityForResult(Intent.createChooser(IntentSelectUtil.getGalleryIntentForVideo(getContext()),
-                            getContext().getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
+                            Objects.requireNonNull(getContext()).getResources().getString(R.string.SELECT_VIDEO)), REQUEST_CODE_VIDEO_GALLERY_SELECT);
                 }
             }
         } else if (requestCode == PermissionModule.PERMISSION_CAMERA) {
@@ -1009,7 +1010,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
                     mMap.addMarker(options);
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 } else
-                    mapRipple = new MapRipple(mMap, latLng, getContext());
+                    mapRipple = new MapRipple(mMap, latLng, Objects.requireNonNull(getContext()));
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new
                         LatLng(location.getLatitude(),
@@ -1053,7 +1054,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
     }
 
     void transitionTo(Intent i) {
-        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(Objects.requireNonNull(getActivity()), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
         startActivity(i, transitionActivityOptions.toBundle());
     }
@@ -1098,13 +1099,13 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     private void setWhomItemsImgvFilled() {
         if(colorCode != 0){
-            publicImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
+            publicImgv.setColorFilter(Objects.requireNonNull(getContext()).getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
             allFollowersImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
             specialImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
             groupsImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
             justMeImgv.setColorFilter(getContext().getResources().getColor(colorCode, null), PorterDuff.Mode.SRC_IN);
         }else {
-            publicImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
+            publicImgv.setColorFilter(Objects.requireNonNull(getContext()).getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
             allFollowersImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
             specialImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
             groupsImgv.setColorFilter(getContext().getResources().getColor(R.color.RoyalBlue, null), PorterDuff.Mode.SRC_IN);
@@ -1114,7 +1115,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void setPhotoSelectImgvFilled() {
         photoSelectImgv.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                Objects.requireNonNull(getContext()).getResources().getColor(R.color.RoyalBlue, null),
                 GradientDrawable.OVAL, 50, 3));
         photoCheckedImgv.setVisibility(View.VISIBLE);
     }
@@ -1128,7 +1129,7 @@ public class SharePostFragment extends BaseFragment implements OnMapReadyCallbac
 
     public void setTextSelectImgvFilled() {
         textSelectImgv.setBackground(ShapeUtil.getShape(0,
-                getContext().getResources().getColor(R.color.RoyalBlue, null),
+                Objects.requireNonNull(getContext()).getResources().getColor(R.color.RoyalBlue, null),
                 GradientDrawable.OVAL, 50, 3));
         textCheckedImgv.setVisibility(View.VISIBLE);
     }

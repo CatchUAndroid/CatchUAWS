@@ -31,6 +31,8 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.ColorSelectCal
 import com.uren.catchu.ModelViews.PaintView;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -142,7 +144,7 @@ public class PhotoBrushFragment extends BaseFragment {
             public void onClick(View v) {
                 photoSelectUtil.setScreeanShotBitmap(paintView.getmBitmap());
                 brushCompleteCallback.OnBrushCompleted(photoSelectUtil);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -151,7 +153,7 @@ public class PhotoBrushFragment extends BaseFragment {
             public void onClick(View v) {
                 isPencilSelected = false;
                 isBlurSelected = true;
-                pencilImgv.setColorFilter(getContext().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+                pencilImgv.setColorFilter(Objects.requireNonNull(getContext()).getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
                 blurImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
                 paintView.blur();
             }
@@ -163,7 +165,7 @@ public class PhotoBrushFragment extends BaseFragment {
                 isPencilSelected = true;
                 isBlurSelected = false;
                 pencilImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);
-                blurImgv.setColorFilter(getContext().getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+                blurImgv.setColorFilter(Objects.requireNonNull(getContext()).getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
                 paintView.normal();
             }
         });
@@ -193,11 +195,11 @@ public class PhotoBrushFragment extends BaseFragment {
     }
 
     public void colorPalettePrepare() {
-        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), new ColorSelectCallback() {
+        colorPaletteAdapter = new ColorPaletteAdapter(Objects.requireNonNull(getActivity()), new ColorSelectCallback() {
             @Override
             public void onClick(int colorCode) {
-                brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
-                paintView.setCurrentColor(getContext().getResources().getColor(colorCode, null));
+                brushImgv.setColorFilter(ContextCompat.getColor(Objects.requireNonNull(getActivity()), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
+                paintView.setCurrentColor(Objects.requireNonNull(getContext()).getResources().getColor(colorCode, null));
 
                 if(isBlurSelected)
                     blurImgv.setColorFilter(paintView.getCurrentColor(), android.graphics.PorterDuff.Mode.SRC_IN);

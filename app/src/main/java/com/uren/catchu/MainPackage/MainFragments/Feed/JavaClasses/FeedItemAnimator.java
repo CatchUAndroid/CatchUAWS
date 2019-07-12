@@ -89,19 +89,6 @@ public class FeedItemAnimator extends DefaultItemAnimator {
                                  @NonNull ItemHolderInfo postInfo) {
         cancelCurrentAnimationIfExists(newHolder);
 
-        if (preInfo instanceof FeedItemHolderInfo) {
-/*
-            FeedItemHolderInfo feedItemHolderInfo = (FeedItemHolderInfo) preInfo;
-            FeedAdapter.MyViewHolder holder = (FeedAdapter.MyViewHolder) newHolder;
-
-            animateHeartButton(holder);
-            updateLikesCounter(holder, holder.getFeedItem().likesCount);
-            if (FeedAdapter.ACTION_LIKE_IMAGE_CLICKED.equals(feedItemHolderInfo.updateAction)) {
-                animatePhotoLike(holder);
-            }
-*/
-        }
-
         return false;
     }
 

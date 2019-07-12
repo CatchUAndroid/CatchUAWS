@@ -93,9 +93,10 @@
                 android:id="@+id/addNewItemTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Yeni Grup"
                 android:textColor="@color/White"
-                android:gravity="center"/>
+                android:gravity="center"
+                android:textStyle="bold"
+                android:text="@string/NEW_GROUP"/>
 
             <!--<ImageView
                 android:id="@+id/searchToolbarAddItemImgv"

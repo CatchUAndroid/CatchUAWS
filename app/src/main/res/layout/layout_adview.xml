@@ -5,4 +5,5 @@
     android:layout_width="match_parent"
     android:layout_height="50dp"
     ads:adSize="SMART_BANNER"
+    android:visibility="gone"
     ads:adUnitId="@string/ADMOB_BANNER_AD_UNIT_ID" />

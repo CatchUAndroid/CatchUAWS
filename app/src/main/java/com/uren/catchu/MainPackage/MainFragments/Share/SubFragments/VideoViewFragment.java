@@ -25,6 +25,8 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -71,7 +73,7 @@ public class VideoViewFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+        Objects.requireNonNull(getActivity()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         initValues();
         setShapes();
         addListeners();
@@ -79,7 +81,7 @@ public class VideoViewFragment extends BaseFragment {
     }
 
     private void setShapes() {
-        GradientDrawable playVideoImgvShape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.transparentBlack, null),
+        GradientDrawable playVideoImgvShape = ShapeUtil.getShape(Objects.requireNonNull(getActivity()).getResources().getColor(R.color.transparentBlack, null),
                 getActivity().getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 3);
         playVideoImgv.setBackground(playVideoImgvShape);
         useButton.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.Black, null),
@@ -93,7 +95,7 @@ public class VideoViewFragment extends BaseFragment {
             public void onClick(View v) {
                 videoView.stopPlayback();
                 mediaPlayer = null;
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -146,7 +148,7 @@ public class VideoViewFragment extends BaseFragment {
                 permissionCallback.OnPermGranted();
                 playVideo();
             }else {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
                 permissionCallback.OnPermNotAllowed();
             }
         }
@@ -154,7 +156,7 @@ public class VideoViewFragment extends BaseFragment {
 
     public void playVideo() {
         DisplayMetrics metrics = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        Objects.requireNonNull(getActivity()).getWindowManager().getDefaultDisplay().getMetrics(metrics);
         android.widget.RelativeLayout.LayoutParams params = (android.widget.RelativeLayout.LayoutParams) videoView.getLayoutParams();
         params.width = metrics.widthPixels;
         params.height = metrics.heightPixels;

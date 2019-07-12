@@ -74,7 +74,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
                             groupMessageBox.getSenderUser().getUserid() != null &&
                             groupMessageBox.getSenderUser().getUserid().equals(AccountHolderInfo.getUserID())) {
                         deleteActivated = true;
-                        messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                        messageDeleteCallback.OnDeleteActivated(true);
                     }
                     return false;
                 }
@@ -165,7 +165,7 @@ public class MessageWithGroupAdapter extends RecyclerView.Adapter<MessageWithGro
 
             if (deleteCount == 0) {
                 deleteActivated = false;
-                messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                messageDeleteCallback.OnDeleteActivated(false);
                 deleteMsgCntTv.setText("");
             } else {
                 deleteMsgCntTv.setText(Integer.toString(deleteCount));

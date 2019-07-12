@@ -75,14 +75,14 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
     }
 
     public void initVariables() {
-        this.groupParticipantList = new ArrayList<UserProfileProperties>();
+        this.groupParticipantList = new ArrayList<>();
         this.groupRequestResultResultArrayItem = new GroupRequestResultResultArrayItem();
     }
 
     @Override
     public GroupDetailListAdapter.GroupDetailListHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        GroupDetailListHolder holder = null;
+        GroupDetailListHolder holder;
         view = layoutInflater.inflate(R.layout.group_detail_list, parent, false);
         holder = new GroupDetailListHolder(view);
 
@@ -120,7 +120,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
                 @Override
                 public void onClick(View v) {
                     if (!AccountHolderInfo.getUserID().equals(userProfile.getUserid())) {
-                        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+                        final ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1);
 
                         adapter.add(context.getResources().getString(R.string.viewTheProfile));
 
@@ -165,7 +165,7 @@ public class GroupDetailListAdapter extends RecyclerView.Adapter<GroupDetailList
         }
 
         public User getFollowProperties() {
-            User user = null;
+            User user;
             user = new User();
             user.setEmail(userProfile.getUsername());
             user.setProfilePhotoUrl(userProfile.getProfilePhotoUrl());

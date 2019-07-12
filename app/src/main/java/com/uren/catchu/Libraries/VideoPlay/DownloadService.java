@@ -53,7 +53,7 @@ public class DownloadService extends IntentService {
             FileOutputStream f = new FileOutputStream(rootFile);
             InputStream in = c.getInputStream();
             byte[] buffer = new byte[1024];
-            int len1 = 0;
+            int len1;
             while ((len1 = in.read(buffer)) > 0) {
                 f.write(buffer, 0, len1);
             }

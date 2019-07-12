@@ -29,7 +29,6 @@ import catchu.model.Report;
 
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.REPORT_PLATFORM_ANDROID;
-import static com.uren.catchu.Constants.StringConstants.REPORT_PROBLEM_TYPE_BUG;
 
 public class SaveReportProblemProcess {
 

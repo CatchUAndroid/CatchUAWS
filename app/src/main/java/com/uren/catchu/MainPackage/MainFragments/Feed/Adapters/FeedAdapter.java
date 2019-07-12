@@ -74,8 +74,8 @@ public class FeedAdapter extends RecyclerView.Adapter {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
-        this.postList = new ArrayList<Post>();
-        this.postPositionHashMap = new HashMap<String, Integer>();
+        this.postList = new ArrayList<>();
+        this.postPositionHashMap = new HashMap<>();
     }
 
     @Override
@@ -346,11 +346,7 @@ public class FeedAdapter extends RecyclerView.Adapter {
             UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
                     post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic
                     , true);
-            //Name
-            if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
-                //this.txtName.setText(post.getUser().getName());
-            }
-            //Username
+
             if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
                 this.txtUserName.setText(CHAR_AMPERSAND + post.getUser().getUsername());
             }
@@ -446,13 +442,18 @@ public class FeedAdapter extends RecyclerView.Adapter {
 
             String newFollowStatus = "";
 
-            if (requestType.equals(FRIEND_FOLLOW_REQUEST)) {
-                newFollowStatus = FOLLOW_STATUS_PENDING;
-            } else if (requestType.equals(FRIEND_DELETE_FOLLOW)) {
-                newFollowStatus = FOLLOW_STATUS_NONE;
-            } else if (requestType.equals(FRIEND_CREATE_FOLLOW_DIRECTLY)) {
-                newFollowStatus = FOLLOW_STATUS_FOLLOWING;
-            } else {
+            switch (requestType) {
+                case FRIEND_FOLLOW_REQUEST:
+                    newFollowStatus = FOLLOW_STATUS_PENDING;
+                    break;
+                case FRIEND_DELETE_FOLLOW:
+                    newFollowStatus = FOLLOW_STATUS_NONE;
+                    break;
+                case FRIEND_CREATE_FOLLOW_DIRECTLY:
+                    newFollowStatus = FOLLOW_STATUS_FOLLOWING;
+                    break;
+                default:
+                    break;
             }
 
             for (int i = 0; i < postList.size(); i++) {
@@ -470,7 +471,6 @@ public class FeedAdapter extends RecyclerView.Adapter {
             int targetIcon = R.mipmap.icon_world;
 
             if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
-                targetIcon = R.mipmap.icon_world;
                 imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.MediumTurquoise), android.graphics.PorterDuff.Mode.SRC_IN);
             } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
                 targetIcon = R.mipmap.icon_all_followers;

@@ -36,6 +36,8 @@ import com.uren.catchu.MainPackage.MainFragments.Share.tools.ToolType;
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.ButterKnife;
 import ja.burhanrashid52.photoeditor.OnPhotoEditorListener;
 import ja.burhanrashid52.photoeditor.OnSaveBitmap;
@@ -204,16 +206,16 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
                 @Override
                 public void onBitmapReady(Bitmap saveBitmap) {
                     progressDialogUtil.dialogDismiss();
-                    CommonUtils.snackbarShow(mRootView, getContext(), getResources().getString(R.string.image_saved_successfully), R.color.DodgerBlue);
+                    CommonUtils.snackbarShow(mRootView, Objects.requireNonNull(getContext()), getResources().getString(R.string.image_saved_successfully), R.color.DodgerBlue);
                     thisPhotoSelectUtil.setScreeanShotBitmap(saveBitmap);
                     returnCallback.onReturn(thisPhotoSelectUtil);
-                    getActivity().onBackPressed();
+                    Objects.requireNonNull(getActivity()).onBackPressed();
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     progressDialogUtil.dialogDismiss();
-                    CommonUtils.snackbarShow(mRootView, getContext(), getResources().getString(R.string.failed_to_save_image), R.color.red);
+                    CommonUtils.snackbarShow(mRootView, Objects.requireNonNull(getContext()), getResources().getString(R.string.failed_to_save_image), R.color.red);
                 }
             });
 
@@ -221,7 +223,7 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
         } catch (Exception e) {
             e.printStackTrace();
             progressDialogUtil.dialogDismiss();
-            CommonUtils.snackbarShow(mRootView, getContext(), e.getMessage(), R.color.red);
+            CommonUtils.snackbarShow(mRootView, Objects.requireNonNull(getContext()), e.getMessage(), R.color.red);
         }
     }
 
@@ -260,7 +262,7 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
     }
 
     private void showSaveDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getContext()));
         builder.setMessage(getResources().getString(R.string.sure_exit_not_saving_image));
         builder.setPositiveButton(getResources().getString(R.string.save), new DialogInterface.OnClickListener() {
             @Override
@@ -278,7 +280,7 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
         builder.setNeutralButton(getResources().getString(R.string.discard), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
         builder.create().show();
@@ -296,10 +298,10 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
             case BRUSH:
                 mPhotoEditor.setBrushDrawingMode(true);
                 mTxtCurrentTool.setText(R.string.label_brush);
-                mPropertiesBSFragment.show(getActivity().getSupportFragmentManager(), mPropertiesBSFragment.getTag());
+                mPropertiesBSFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), mPropertiesBSFragment.getTag());
                 break;
             case TEXT:
-                TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(getActivity());
+                TextEditorDialogFragment textEditorDialogFragment = TextEditorDialogFragment.show(Objects.requireNonNull(getActivity()));
                 textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
                     @Override
                     public void onDone(String inputText, int colorCode) {
@@ -317,7 +319,7 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
                 showFilter(true);
                 break;
             case EMOJI:
-                mEmojiBSFragment.show(getActivity().getSupportFragmentManager(), mEmojiBSFragment.getTag());
+                mEmojiBSFragment.show(Objects.requireNonNull(getActivity()).getSupportFragmentManager(), mEmojiBSFragment.getTag());
                 break;
         }
     }
@@ -349,7 +351,7 @@ public class PhotoEditorFragment extends BaseFragment implements OnPhotoEditorLi
     @Override
     public void onEditTextChangeListener(final View rootView, String text, int colorCode) {
         TextEditorDialogFragment textEditorDialogFragment =
-                TextEditorDialogFragment.show(getActivity(), text, colorCode);
+                TextEditorDialogFragment.show(Objects.requireNonNull(getActivity()), text, colorCode);
         textEditorDialogFragment.setOnTextEditorListener(new TextEditorDialogFragment.TextEditor() {
             @Override
             public void onDone(String inputText, int colorCode) {

@@ -6,11 +6,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -41,7 +39,6 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -72,11 +69,10 @@ import com.uren.catchu.MainActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Objects;
 
 import catchu.model.UserProfile;
 import io.fabric.sdk.android.Fabric;
@@ -254,10 +250,6 @@ public class LoginActivity extends AppCompatActivity
         if (view == backgroundLayout) {
             saveLoginInformation();
             CommonUtils.hideKeyBoard(LoginActivity.this);
-        } else if (view == emailET) {
-
-        } else if (view == passwordET) {
-
         } else if (view == imgFacebook) {
             if (checkNetworkConnection())
                 imgFacebookClicked();
@@ -296,7 +288,7 @@ public class LoginActivity extends AppCompatActivity
     private void saveLoginInformation() {
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(emailET.getWindowToken(), 0);
+        Objects.requireNonNull(imm).hideSoftInputFromWindow(emailET.getWindowToken(), 0);
 
         String username = emailET.getText().toString();
         String password = passwordET.getText().toString();
@@ -451,7 +443,7 @@ public class LoginActivity extends AppCompatActivity
                         } else {
 
                             try {
-                                throw task.getException();
+                                throw Objects.requireNonNull(task.getException());
                             } catch (FirebaseAuthInvalidCredentialsException e) {
                                 Log.i("error register", e.toString());
                                 openDialog(context.getString(R.string.INVALID_CREDENTIALS));
@@ -470,18 +462,18 @@ public class LoginActivity extends AppCompatActivity
 
     private void setUserInfo(String userName, String userEmail) {
 
-        if (!userName.isEmpty() && !userName.equals("")) {
+        if (!userName.isEmpty()) {
             loginUser.setUsername(userName);
         } else {
             loginUser.setUsername("undefined");
         }
 
         loginUser.setEmail(userEmail);
-        loginUser.setUserId(mAuth.getCurrentUser().getUid());
+        loginUser.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
     }
 
     private void startMainPage() {
-        loginUser.setUserId(mAuth.getCurrentUser().getUid());
+        loginUser.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("LoginUser", loginUser);
         startActivity(intent);
@@ -489,7 +481,7 @@ public class LoginActivity extends AppCompatActivity
     }
 
     private void startAppIntroPage() {
-        loginUser.setUserId(mAuth.getCurrentUser().getUid());
+        loginUser.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
         Intent intent = new Intent(this, AppIntroductionActivity.class);
         intent.putExtra("LoginUser", loginUser);
         startActivity(intent);
@@ -600,9 +592,9 @@ public class LoginActivity extends AppCompatActivity
         });
 
         //name
-        loginUser.setName(mAuth.getCurrentUser().getProviderData().get(0).getDisplayName());
+        loginUser.setName(Objects.requireNonNull(mAuth.getCurrentUser()).getProviderData().get(0).getDisplayName());
         //profile picture
-        String profilePicture = mAuth.getCurrentUser().getProviderData().get(0).getPhotoUrl().toString();
+        String profilePicture = Objects.requireNonNull(mAuth.getCurrentUser().getProviderData().get(0).getPhotoUrl()).toString();
         profilePicture = profilePicture.replaceFirst("_normal", "");
 
         loginUser.setProfilePhotoUrl(profilePicture);
@@ -639,7 +631,7 @@ public class LoginActivity extends AppCompatActivity
                     public void onTaskContinue() {
 
                     }
-                }, mAuth.getCurrentUser().getUid(), mAuth.getCurrentUser().getUid(), "true", token);
+                }, Objects.requireNonNull(mAuth.getCurrentUser()).getUid(), mAuth.getCurrentUser().getUid(), "true", token);
 
                 loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             }

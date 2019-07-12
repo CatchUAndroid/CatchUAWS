@@ -16,7 +16,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.PostLikeListProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.PersonListAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Interfaces.PersonListItemClickListener;
@@ -25,6 +24,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.JavaClasses.UserInfoLis
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -89,7 +90,7 @@ public class PersonListFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void getItemsFromBundle() {
@@ -116,7 +117,7 @@ public class PersonListFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == commonToolbarbackImgv) {
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
 
@@ -133,12 +134,8 @@ public class PersonListFragment extends BaseFragment
 
                     if(comingFor.equals(COMING_FOR_LIKE_LIST)){
                         startGetPersonList(token);
-                    }else{
-                        // lazım oldukca doldurulacak..
                     }
-
                 }
-
             }
 
             @Override

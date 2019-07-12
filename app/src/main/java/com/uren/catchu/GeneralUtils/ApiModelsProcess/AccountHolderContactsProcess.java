@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class AccountHolderContactsProcess {
 
@@ -19,7 +20,7 @@ public class AccountHolderContactsProcess {
             String previousPhoneNum = "";
 
             Cursor phones = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-            while (phones.moveToNext()) {
+            while (Objects.requireNonNull(phones).moveToNext()) {
 
                 Contact contact = new Contact();
 

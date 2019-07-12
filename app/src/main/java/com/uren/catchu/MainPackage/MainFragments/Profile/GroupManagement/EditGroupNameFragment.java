@@ -28,6 +28,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.GroupManagement.Interfa
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.GroupRequestResultResultArrayItem;
@@ -68,7 +70,7 @@ public class EditGroupNameFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -94,7 +96,7 @@ public class EditGroupNameFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     private void setGroupVariables() {
@@ -114,14 +116,14 @@ public class EditGroupNameFragment extends BaseFragment {
         relLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
             }
         });
 
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -150,14 +152,14 @@ public class EditGroupNameFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 cancelButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
         approveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
                 approveButton.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
                 if (groupNameEditText.getText() != null && !groupNameEditText.getText().toString().trim().isEmpty())
                     updateGroup();
@@ -181,7 +183,7 @@ public class EditGroupNameFragment extends BaseFragment {
                     @Override
                     public void onSuccess(GroupRequestResultResultArrayItem groupItem) {
                         completeCallback.onComplete(groupNameEditText.getText().toString());
-                        getActivity().onBackPressed();
+                        Objects.requireNonNull(getActivity()).onBackPressed();
                     }
 
                     @Override

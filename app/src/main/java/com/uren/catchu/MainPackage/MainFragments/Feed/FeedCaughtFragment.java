@@ -47,6 +47,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,7 +102,7 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
     int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt;
     private int pageCnt;
-    private List<Post> postList = new ArrayList<Post>();
+    private List<Post> postList = new ArrayList<>();
     private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
     private boolean pulledToRefresh = false;
     private boolean isFirstFetch = false;
@@ -288,7 +289,7 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
     }
 
     void transitionTo(Intent i) {
-        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(Objects.requireNonNull(getActivity()), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
         startActivity(i, transitionActivityOptions.toBundle());
     }
@@ -297,25 +298,17 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    getPosts();
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted, yay! Do the
+                getPosts();
 
-                } else {
-                    // permission denied, boo! Disable the
-                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
-                }
-
+            } else {
+                // permission denied, boo! Disable the
+                showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-
         }
-
     }
 
     private void getPosts() {
@@ -363,7 +356,7 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
                 refresh_layout.setRefreshing(false);
 
                 if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
 
@@ -432,7 +425,6 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
         List<String> urls = new ArrayList<>();
         int postNum;
         for (int i = 0; i < postList.size(); i++) {
-            postNum = i + 1;
             for (int j = 0; j < postList.get(i).getAttachments().size(); j++) {
                 Media media = postList.get(i).getAttachments().get(j);
                 urls.add(media.getUrl());
@@ -495,7 +487,7 @@ public class FeedCaughtFragment extends BaseFragment implements View.OnClickList
             serverError.setVisibility(View.GONE);
 
             if (viewType == VIEW_RETRY) {
-                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.tintColor), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgRetry.setColorFilter(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.tintColor), android.graphics.PorterDuff.Mode.SRC_IN);
                 retryLayout.setVisibility(View.VISIBLE);
             } else if (viewType == VIEW_NO_POST_FOUND) {
                 noPostFoundLayout.setVisibility(View.VISIBLE);

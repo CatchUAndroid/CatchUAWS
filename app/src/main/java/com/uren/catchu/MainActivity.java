@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.crashlytics.android.Crashlytics;
-import com.dagang.library.GradientButton;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +35,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaC
 import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaClasses.MyFirebaseMessagingService;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import java.util.Objects;
 
 import catchu.model.BaseRequest;
 import catchu.model.BaseResponse;
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
             /**
              * Already signed-in
              */
-            user.setUserid(firebaseAuth.getCurrentUser().getUid());
+            user.setUserid(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
             user.setEmail(firebaseAuth.getCurrentUser().getEmail());
             user.setUsername("default");
             provider.setProviderid("");
@@ -272,12 +273,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 String deviceToken = instanceIdResult.getToken();
-                MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, firebaseAuth.getCurrentUser().getUid());
+                MyFirebaseMessagingService.sendRegistrationToServer(deviceToken, Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
                 startEndPointProcess(deviceToken);
             }
         });
 
-        MessageUpdateProcess.updateTokenSigninValue(firebaseAuth.getCurrentUser().getUid(), CHAR_E);
+        MessageUpdateProcess.updateTokenSigninValue(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(), CHAR_E);
     }
 
     private void startEndPointProcess(final String deviceToken){
@@ -288,7 +289,7 @@ public class MainActivity extends AppCompatActivity {
 
                 final Endpoint endpoint = new Endpoint();
                 endpoint.setDeviceToken(deviceToken);
-                endpoint.setUserid(firebaseAuth.getCurrentUser().getUid());
+                endpoint.setUserid(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
                 endpoint.setPlatformType(ENDPOINT_PLATFORM_ANDROID);
                 endpoint.setRequestType(ENDPOINT_LOGGED_IN);
 

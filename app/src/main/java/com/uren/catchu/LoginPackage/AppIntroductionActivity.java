@@ -2,7 +2,6 @@ package com.uren.catchu.LoginPackage;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;

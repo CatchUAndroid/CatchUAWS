@@ -18,7 +18,7 @@ public class OtherProfilePostList {
     }
 
     public OtherProfilePostList() {
-        postList = new ArrayList<Post>();
+        postList = new ArrayList<>();
 
     }
 

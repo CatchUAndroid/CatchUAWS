@@ -54,7 +54,7 @@ public class FileAdapter {
                 mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                         "VID_" + timeStamp + ".mp4");
                 return mediaFile;
-            } else if (type == MEDIA_TYPE_AUDIO) {
+            } else {
                 mediaFile = new File(mediaStorageDir.getPath() + File.separator +
                         "AUD_" + timeStamp + ".mp3");
                 return mediaFile;
@@ -65,7 +65,7 @@ public class FileAdapter {
     }
 
     public static File getCropMediaFile() {
-        File mediaFile = null;
+        File mediaFile;
         File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(APP_NAME), Environment.DIRECTORY_PICTURES);
 
         if (!mediaStorageDir.exists()) {

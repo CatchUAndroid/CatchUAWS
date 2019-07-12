@@ -79,9 +79,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         this.mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
-        this.postList = new ArrayList<Post>();
-        this.commentList = new ArrayList<Comment>();
-        List<Comment> tempCommentList = new ArrayList<Comment>();
+        this.postList = new ArrayList<>();
+        this.commentList = new ArrayList<>();
+        List<Comment> tempCommentList = new ArrayList<>();
         this.numberOfCallback = numberOfCallback;
         this.feedPosition = feedPosition;
 
@@ -235,12 +235,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
                     if (isPostLiked) {
                         isPostLiked = false;
-                        post.setIsLiked(isPostLiked);
+                        post.setIsLiked(false);
                         post.setLikeCount(post.getLikeCount() - 1);
                         setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
                     } else {
                         isPostLiked = true;
-                        post.setIsLiked(isPostLiked);
+                        post.setIsLiked(true);
                         post.setLikeCount(post.getLikeCount() + 1);
                         setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
                     }
@@ -341,10 +341,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             UserDataUtil.setProfilePicture(mContext, post.getUser().getProfilePhotoUrl(),
                     post.getUser().getName(), post.getUser().getUsername(), txtProfilePic, imgProfilePic
                     , true);
-            //Name
-            if (post.getUser().getName() != null && !post.getUser().getName().isEmpty()) {
-                //this.txtName.setText(post.getUser().getName());
-            }
+
             //Username
             if (post.getUser().getUsername() != null && !post.getUser().getUsername().isEmpty()) {
                 this.txtUserName.setText(CHAR_AMPERSAND + post.getUser().getUsername());
@@ -400,20 +397,26 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
 
             int targetIcon = R.mipmap.icon_world;
 
-            if (post.getPrivacyType().equals(SHARE_TYPE_EVERYONE)) {
-                targetIcon = R.mipmap.icon_world;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else if (post.getPrivacyType().equals(SHARE_TYPE_ALL_FOLLOWERS)) {
-                targetIcon = R.mipmap.icon_friends;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else if (post.getPrivacyType().equals(SHARE_TYPE_CUSTOM)) {
-                targetIcon = R.drawable.groups_icon_500;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
-            } else if (post.getPrivacyType().equals(SHARE_TYPE_SELF)) {
-                targetIcon = R.drawable.groups_icon_500;
-            } else if (post.getPrivacyType().equals(SHARE_TYPE_GROUP)) {
-                targetIcon = R.drawable.groups_icon_500;
-                imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
+            switch (post.getPrivacyType()) {
+                case SHARE_TYPE_EVERYONE:
+                    targetIcon = R.mipmap.icon_world;
+                    imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
+                    break;
+                case SHARE_TYPE_ALL_FOLLOWERS:
+                    targetIcon = R.mipmap.icon_friends;
+                    imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.green), android.graphics.PorterDuff.Mode.SRC_IN);
+                    break;
+                case SHARE_TYPE_CUSTOM:
+                    targetIcon = R.drawable.groups_icon_500;
+                    imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                    break;
+                case SHARE_TYPE_SELF:
+                    targetIcon = R.drawable.groups_icon_500;
+                    break;
+                case SHARE_TYPE_GROUP:
+                    targetIcon = R.drawable.groups_icon_500;
+                    imgTarget.setColorFilter(ContextCompat.getColor(mContext, R.color.Brown), android.graphics.PorterDuff.Mode.SRC_IN);
+                    break;
             }
 
             Glide.with(mContext)
@@ -547,12 +550,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
             imgLike.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.image_click));
             if (isCommentLiked) {
                 isCommentLiked = false;
-                comment.setIsLiked(isCommentLiked);
+                comment.setIsLiked(false);
                 comment.setLikeCount(comment.getLikeCount() - 1);
                 setLikeIconUI(R.color.black, R.mipmap.icon_like, true);
             } else {
                 isCommentLiked = true;
-                comment.setIsLiked(isCommentLiked);
+                comment.setIsLiked(true);
                 comment.setLikeCount(comment.getLikeCount() + 1);
                 setLikeIconUI(R.color.likeButtonColor, R.mipmap.icon_like_filled, true);
             }
@@ -573,7 +576,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
                     , true);
             //Username
             if (comment.getUser().getUsername() != null && !comment.getUser().getUsername().isEmpty()) {
-                this.txtUsername.setText(comment.getUser().getUsername());
+                this.txtUsername.setText(CHAR_AMPERSAND + comment.getUser().getUsername());
             }
             //Comment message
             if (comment.getMessage() != null && !comment.getMessage().isEmpty()) {
@@ -642,7 +645,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter {
         if (addedCommentList != null) {
             commentList.addAll(addedCommentList);
             notifyItemRangeInserted(totalSize, totalSize + addedCommentList.size());
-            return;
         }
     }
 

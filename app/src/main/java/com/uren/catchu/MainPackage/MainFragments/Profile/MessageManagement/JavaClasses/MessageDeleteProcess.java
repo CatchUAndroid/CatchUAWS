@@ -57,12 +57,10 @@ public class MessageDeleteProcess {
 
         boolean checkVal = false;
 
-        if (messageBoxList != null) {
-            for (MessageBox messageBox1 : messageBoxList) {
-                if (messageBox1.isSelectedForDelete()) {
-                    checkVal = true;
-                    break;
-                }
+        for (MessageBox messageBox1 : messageBoxList) {
+            if (messageBox1.isSelectedForDelete()) {
+                checkVal = true;
+                break;
             }
         }
 
@@ -73,7 +71,7 @@ public class MessageDeleteProcess {
             deleteMsgCntTv.setText("");
         }
 
-        if (messageBoxList != null && messageBoxList.size() == 0)
+        if (messageBoxList.size() == 0)
             deleteMessageContent(context, chattedUserid);
     }
 

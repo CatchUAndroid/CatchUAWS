@@ -62,7 +62,7 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
         this.fragmentNavigation = fragmentNavigation;
         this.selectedUser = selectedUser;
         this.pageCnt = pageCnt;
-        this.postList = new ArrayList<Post>();
+        this.postList = new ArrayList<>();
     }
 
     @Override
@@ -222,13 +222,11 @@ public class OtherProfilePostAdapter extends RecyclerView.Adapter {
             }
 
             //varsa video ThumbNail
-            if (!sourceFound) {
-                for (int i = 0; i < post.getAttachments().size(); i++) {
-                    if (post.getAttachments().get(i).getType().equals(VIDEO_TYPE)) {
-                        loadUrl = post.getAttachments().get(i).getThumbnail();
-                        sourceFound = true;
-                        imgVideoIcon.setVisibility(View.VISIBLE);
-                    }
+            for (int i = 0; i < post.getAttachments().size(); i++) {
+                if (post.getAttachments().get(i).getType().equals(VIDEO_TYPE)) {
+                    loadUrl = post.getAttachments().get(i).getThumbnail();
+                    sourceFound = true;
+                    imgVideoIcon.setVisibility(View.VISIBLE);
                 }
             }
             //varsa image

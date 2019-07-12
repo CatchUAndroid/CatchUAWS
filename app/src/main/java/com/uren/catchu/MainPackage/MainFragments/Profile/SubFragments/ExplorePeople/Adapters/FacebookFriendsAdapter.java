@@ -70,7 +70,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
     @NonNull
     @Override
     public FacebookFriendsAdapter.FacebookFriendsHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        FacebookFriendsHolder holder = null;
+        FacebookFriendsHolder holder;
         view = layoutInflater.inflate(R.layout.person_vert_list_item, viewGroup, false);
         holder = new FacebookFriendsHolder(view);
         return holder;
@@ -220,7 +220,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
 
-                FilterResults filterResults = null;
+                FilterResults filterResults;
 
                 String searchString = charSequence.toString();
 
@@ -257,7 +257,7 @@ public class FacebookFriendsAdapter extends RecyclerView.Adapter<FacebookFriends
 
     @Override
     public int getItemCount() {
-        int size = 0;
+        int size;
         size = userListResponse.getItems().size();
         return size;
     }

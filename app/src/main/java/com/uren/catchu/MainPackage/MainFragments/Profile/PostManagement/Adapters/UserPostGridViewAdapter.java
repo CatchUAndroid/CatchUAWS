@@ -54,7 +54,7 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
         Activity mActivity = activity;
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
-        this.postList = new ArrayList<Post>();
+        this.postList = new ArrayList<>();
 
     }
 
@@ -210,13 +210,11 @@ public class UserPostGridViewAdapter extends RecyclerView.Adapter {
             }
 
             //varsa video ThumbNail
-            if (!sourceFound) {
-                for (int i = 0; i < post.getAttachments().size(); i++) {
-                    if (post.getAttachments().get(i).getType().equals(VIDEO_TYPE)) {
-                        loadUrl = post.getAttachments().get(i).getThumbnail();
-                        sourceFound = true;
-                        imgVideoIcon.setVisibility(View.VISIBLE);
-                    }
+            for (int i = 0; i < post.getAttachments().size(); i++) {
+                if (post.getAttachments().get(i).getType().equals(VIDEO_TYPE)) {
+                    loadUrl = post.getAttachments().get(i).getThumbnail();
+                    sourceFound = true;
+                    imgVideoIcon.setVisibility(View.VISIBLE);
                 }
             }
             //varsa image

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">CatchU</string>
-    <string name="search">Ara</string>
 
+    <string name="facebook_app_id">1429718627133451</string>
+    <string name="fb_login_protocol_scheme">fb1429718627133451</string>
+
+    <string name="search">Ara</string>
     <string name="FACEBOOK">FACEBOOK</string>
     <string name="CONTACTS">BAĞLANTILAR</string>
     <string name="FACEBOOK_LOWER">Facebook</string>
@@ -75,6 +78,7 @@
     <string name="detail">Detay</string>
     <string name="searchGroup">Grup Ara</string>
     <string name="GROUPS_LOADING">Grouplar Yükleniyor...</string>
+    <string name="NEW_GROUP">New Group</string>
 
     <string name="searchUser">Kullanıcı arayın...</string>
     <string name="IN_GROUP">Grupta</string>
@@ -289,6 +293,8 @@
     <string name="AGE">Yaş,</string>
     <string name="direct_follow_notif_text">sizi takip etmeye başladı</string>
     <string name="follow_request_notif_text">size takip isteği gönderdi</string>
+    <string name="wanna_take_screenshot">Şikayetiniz ile ilgili ekran görüntüsü almak ister misiniz? </string>
+    <string name="CONTINUE">DEVAM</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Sosyal Etkileşim</string>
@@ -326,5 +332,12 @@
     <string name="label_eraser">Silgi</string>
     <string name="label_text">Text</string>
     <string name="label_filter">Filtre</string>
+
+    <string name="FCM_SERVER_KEY">AAAA168Go7o:APA91bHDsAJ8_8KZuXmdfBztNN-TSNOQOaQO_dPv6zXbRR4KzgH-83jh6NZ05imPxnUFopz8j8wOzL9jFVLCvgcJrAVuxrNDi_vz2QowCGnQxdxotXAp93tz7z7OblJkwk7GaCuc0Ebl</string>
+
+
+    <string name="ADMOB_APP_ID">ca-app-pub-7227467199436307~1178118713</string>
+    <string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-7227467199436307/4313340521</string>
+    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-7227467199436307/9374095519</string>
 
 </resources>

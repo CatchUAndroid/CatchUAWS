@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
-import android.opengl.Visibility;
 import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +18,8 @@ import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogReturnListener;
 import com.uren.catchu.R;
+
+import java.util.Objects;
 
 import catchu.model.GroupRequestResultResultArrayItem;
 import catchu.model.User;
@@ -152,7 +153,7 @@ public class CustomDialogBox {
         public CustomDialogBox build() {
             final Dialog dialog = new Dialog(this.activity);
             dialog.requestWindowFeature(1);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(0));
             dialog.setCancelable(this.cancel);
             dialog.setContentView(R.layout.layout_custom_dialog_box);
             TextView title1 = dialog.findViewById(R.id.title);
@@ -218,9 +219,7 @@ public class CustomDialogBox {
             if (this.pListener != null) {
                 pBtn.setOnClickListener(view -> {
 
-                    if (Builder.this.returnListener != null &&
-                            editText.getText() != null && editText.getText().toString() != null &&
-                            !editText.getText().toString().isEmpty()) {
+                    if (Builder.this.returnListener != null && editText.getText() != null && !editText.getText().toString().isEmpty()) {
                         Builder.this.returnListener.OnReturn(editText.getText().toString());
                         dialog.dismiss();
                     } else {

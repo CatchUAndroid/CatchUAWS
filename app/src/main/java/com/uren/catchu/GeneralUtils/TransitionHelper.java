@@ -61,6 +61,7 @@ public class TransitionHelper {
                 && otherParticipants[0] == null)) {
             participants.addAll(Arrays.asList(otherParticipants));
         }
+
         return participants.toArray(new Pair[participants.size()]);
     }
 

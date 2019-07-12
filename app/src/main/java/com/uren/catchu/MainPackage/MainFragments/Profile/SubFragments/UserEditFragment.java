@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -50,6 +49,7 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.Calendar;
+import java.util.Objects;
 
 import butterknife.BindArray;
 import butterknife.BindView;
@@ -123,14 +123,14 @@ public class UserEditFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mView = inflater.inflate(R.layout.profile_subfragment_user_edit, container, false);
         ButterKnife.bind(this, mView);
@@ -142,7 +142,7 @@ public class UserEditFragment extends BaseFragment
         initListeners();
         setShapes();
         profilPicChanged = false;
-        toolbarTitleTv.setText(getContext().getResources().getString(R.string.editProfile));
+        toolbarTitleTv.setText(Objects.requireNonNull(getContext()).getResources().getString(R.string.editProfile));
         commonToolbarTickImgv.setVisibility(View.VISIBLE);
         permissionModule = new PermissionModule(getContext());
     }
@@ -160,7 +160,7 @@ public class UserEditFragment extends BaseFragment
     public void setShapes() {
         addPhotoImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                 getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 5));
-        imgProfile.setBackground(ShapeUtil.getShape(getActivity().getResources().getColor(R.color.DodgerBlue, null),
+        imgProfile.setBackground(ShapeUtil.getShape(Objects.requireNonNull(getActivity()).getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0));
     }
 
@@ -173,7 +173,7 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void setGenderClickListener() {
-        genderSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, GENDERS);
+        genderSpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, GENDERS);
         genderSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderSpinnerAdapter);
 
@@ -261,7 +261,7 @@ public class UserEditFragment extends BaseFragment
         if (photoUri != null && !photoUri.toString().trim().isEmpty()) {
             photoExist = true;
             shortUserNameTv.setVisibility(View.GONE);
-            Glide.with(getActivity())
+            Glide.with(Objects.requireNonNull(getActivity()))
                     .load(photoUri)
                     .apply(RequestOptions.circleCropTransform())
                     .into(imgProfile);
@@ -273,7 +273,7 @@ public class UserEditFragment extends BaseFragment
         } else {
             photoExist = false;
             shortUserNameTv.setVisibility(View.GONE);
-            Glide.with(getActivity())
+            Glide.with(Objects.requireNonNull(getActivity()))
                     .load(R.mipmap.icon_user_profile)
                     .apply(RequestOptions.circleCropTransform())
                     .into(imgProfile);
@@ -288,7 +288,7 @@ public class UserEditFragment extends BaseFragment
         }
 
         if (v == commonToolbarTickImgv) {
-            CommonUtils.hideKeyBoard(getActivity());
+            CommonUtils.hideKeyBoard(Objects.requireNonNull(getActivity()));
             editProfileConfirmClicked();
         }
 
@@ -333,16 +333,16 @@ public class UserEditFragment extends BaseFragment
         int day = cal.get(Calendar.DAY_OF_MONTH);
 
         DatePickerDialog dialog = new DatePickerDialog(
-                getActivity(),
+                Objects.requireNonNull(getActivity()),
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
                 mDateSetListener,
                 year, month, day);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
     private void editProfileCancelClicked() {
-        getActivity().onBackPressed();
+        Objects.requireNonNull(getActivity()).onBackPressed();
     }
 
     private void editProfileConfirmClicked() {
@@ -412,7 +412,7 @@ public class UserEditFragment extends BaseFragment
         new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
-                DialogBoxUtil.showSuccessDialogBox(getActivity(), getActivity().getResources().getString(R.string.profileUpdateSuccessful), null, new InfoDialogBoxCallback() {
+                DialogBoxUtil.showSuccessDialogBox(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.profileUpdateSuccessful), null, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                         ProfileHelper.ProfileRefresh.getInstance().profileRefreshStart();
@@ -453,7 +453,7 @@ public class UserEditFragment extends BaseFragment
             }
         };
 
-        DialogBoxUtil.photoChosenDialogBox(getContext(), getActivity().getResources().getString(R.string.chooseProfilePhoto), photoExist, photoChosenCallback);
+        DialogBoxUtil.photoChosenDialogBox(getContext(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.chooseProfilePhoto), photoExist, photoChosenCallback);
     }
 
     private void getGalleryPermission() {
@@ -469,7 +469,7 @@ public class UserEditFragment extends BaseFragment
     }
 
     private void checkCameraProcess() {
-        if (!CommonUtils.checkCameraHardware(getContext())) {
+        if (!CommonUtils.checkCameraHardware(Objects.requireNonNull(getContext()))) {
             CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.deviceHasNoCamera));
             return;
         }

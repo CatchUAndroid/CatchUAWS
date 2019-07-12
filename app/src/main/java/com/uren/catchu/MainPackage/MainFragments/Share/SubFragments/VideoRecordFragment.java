@@ -56,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
@@ -323,7 +324,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             if (grantResults.length > 0 && checkGrantResults(grantResults)) {
                 startOpenCamera();
             } else
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
         }
     }
 
@@ -349,11 +350,11 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         // Choose the sizes for camera preview and video recording
         CameraCharacteristics characteristics = null;
         try {
-            characteristics = manager.getCameraCharacteristics(cameraId);
+            characteristics = Objects.requireNonNull(manager).getCameraCharacteristics(cameraId);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
-        StreamConfigurationMap map = characteristics
+        StreamConfigurationMap map = Objects.requireNonNull(characteristics)
                 .get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
         mSensorOrientation = characteristics.get(CameraCharacteristics.SENSOR_ORIENTATION);
         if (map == null) {
@@ -391,7 +392,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
-                    Glide.with(getActivity()).load(R.drawable.ic_flash_off).into(flashModeImgv);
+                    Glide.with(Objects.requireNonNull(getActivity())).load(R.drawable.ic_flash_off).into(flashModeImgv);
                     isTorchOn = false;
                 } else {
                     mPreviewBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_TORCH);
@@ -400,7 +401,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
                     } catch (CameraAccessException e) {
                         e.printStackTrace();
                     }
-                    Glide.with(getActivity()).load(R.drawable.ic_flash_on).into(flashModeImgv);
+                    Glide.with(Objects.requireNonNull(getActivity())).load(R.drawable.ic_flash_on).into(flashModeImgv);
                     isTorchOn = true;
                 }
             }
@@ -412,9 +413,9 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
             flashModeImgv.setVisibility(View.VISIBLE);
 
             if (isTorchOn) {
-                Glide.with(getActivity()).load(R.drawable.ic_flash_off).into(flashModeImgv);
+                Glide.with(Objects.requireNonNull(getActivity())).load(R.drawable.ic_flash_off).into(flashModeImgv);
             } else {
-                Glide.with(getActivity()).load(R.drawable.ic_flash_on).into(flashModeImgv);
+                Glide.with(Objects.requireNonNull(getActivity())).load(R.drawable.ic_flash_on).into(flashModeImgv);
             }
 
         } else {
@@ -527,7 +528,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         if (null == activity) {
             return;
         }
-        mNextVideoAbsolutePath = FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO).getAbsolutePath();
+        mNextVideoAbsolutePath = Objects.requireNonNull(FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO)).getAbsolutePath();
         mMediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mMediaRecorder.setVideoSource(MediaRecorder.VideoSource.SURFACE);
         mMediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -595,7 +596,7 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
                     mPreviewSession = cameraCaptureSession;
                     updatePreview();
-                    getActivity().runOnUiThread(new Runnable() {
+                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             toggleRecordingButton.setBackgroundResource(R.drawable.btn_capture_photo);
@@ -638,10 +639,10 @@ public class VideoRecordFragment extends BaseFragment implements View.OnClickLis
         mNextVideoAbsolutePath = null;
 
         DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(), null,
-                getContext().getResources().getString(R.string.PLEASE_WAIT), 3000, new InfoDialogBoxCallback() {
+                Objects.requireNonNull(getContext()).getResources().getString(R.string.PLEASE_WAIT), 3000, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
-                        getActivity().onBackPressed();
+                        Objects.requireNonNull(getActivity()).onBackPressed();
                     }
                 });
 

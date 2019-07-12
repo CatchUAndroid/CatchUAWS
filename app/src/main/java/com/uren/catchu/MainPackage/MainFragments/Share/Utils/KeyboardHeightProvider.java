@@ -16,6 +16,8 @@ import android.widget.PopupWindow;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.KeyboardHeightObserver;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 
 /**
  * The keyboard height provider, this class uses a PopupWindow
@@ -48,7 +50,7 @@ public class KeyboardHeightProvider extends PopupWindow {
         this.activity = activity;
 
         LayoutInflater inflator = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        this.popupView = inflator.inflate(R.layout.popupwindow, null, false);
+        this.popupView = Objects.requireNonNull(inflator).inflate(R.layout.popupwindow, null, false);
         setContentView(popupView);
 
         setSoftInputMode(LayoutParams.SOFT_INPUT_ADJUST_RESIZE | LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);

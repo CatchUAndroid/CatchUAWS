@@ -21,6 +21,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import catchu.model.User;
 
@@ -64,7 +65,7 @@ public class MessageGetProcess {
             contentIdListener = contentIdReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
+                    if (dataSnapshot.getChildren() != null) {
                         Map<String, Object> map = (Map) dataSnapshot.getValue();
 
                         if (map != null)
@@ -94,7 +95,7 @@ public class MessageGetProcess {
         notificationStatusListener = notificationStatusReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null && dataSnapshot.getValue() != null)
+                if (dataSnapshot.getValue() != null)
                     notificationStatusCallback.onReturn((String) dataSnapshot.getValue());
             }
 
@@ -179,18 +180,14 @@ public class MessageGetProcess {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                if (dataSnapshot != null) {
-                    try {
-                        Map<String, Object> map = (Map) dataSnapshot.getValue();
-                        TokenInfo tokenInfo = new TokenInfo();
-                        tokenInfo.setToken((String) map.get(FB_CHILD_TOKEN));
-                        tokenInfo.setSigninValue((String) map.get(FB_CHILD_SIGNIN));
-                        getDeviceTokenCallback.onSuccess(tokenInfo);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        getDeviceTokenCallback.onSuccess(null);
-                    }
-                } else {
+                try {
+                    Map<String, Object> map = (Map) dataSnapshot.getValue();
+                    TokenInfo tokenInfo = new TokenInfo();
+                    tokenInfo.setToken((String) map.get(FB_CHILD_TOKEN));
+                    tokenInfo.setSigninValue((String) map.get(FB_CHILD_SIGNIN));
+                    getDeviceTokenCallback.onSuccess(tokenInfo);
+                } catch (Exception e) {
+                    e.printStackTrace();
                     getDeviceTokenCallback.onSuccess(null);
                 }
 
@@ -223,7 +220,7 @@ public class MessageGetProcess {
                 ArrayList<String> contentIdList = new ArrayList<>();
                 for (DataSnapshot dataSnapshot1 : dataSnapshot.getChildren()) {
                     Map<String, Object> map = (Map) dataSnapshot1.getValue();
-                    Map<String, Object> messageContentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
+                    Map<String, Object> messageContentMap = (Map) Objects.requireNonNull(map).get(FB_CHILD_MESSAGE_CONTENT);
                     String contentId = (String) messageContentMap.get(FB_CHILD_CONTENT_ID);
                     contentIdList.add(contentId);
                 }
@@ -250,7 +247,7 @@ public class MessageGetProcess {
 
                     for (DataSnapshot dataSnapshot2 : dataSnapshot.getChildren()) {
                         Map<String, Object> map = (Map) dataSnapshot2.getValue();
-                        Map<String, Object> receiptMap = (Map) map.get(FB_CHILD_RECEIPT);
+                        Map<String, Object> receiptMap = (Map) Objects.requireNonNull(map).get(FB_CHILD_RECEIPT);
                         String receiptUserId = (String) receiptMap.get(FB_CHILD_USERID);
 
                         if (receiptUserId != null && receiptUserId.equals(AccountHolderInfo.getUserID())) {

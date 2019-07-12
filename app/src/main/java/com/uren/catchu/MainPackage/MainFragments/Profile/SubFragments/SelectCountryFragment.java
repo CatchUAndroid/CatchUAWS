@@ -32,6 +32,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -91,7 +92,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
     }
 
     private void setShapes() {
-        GradientDrawable shape = ShapeUtil.getShape(getActivity().getResources().getColor(R.color.White, null),
+        GradientDrawable shape = ShapeUtil.getShape(Objects.requireNonNull(getActivity()).getResources().getColor(R.color.White, null),
                 0, GradientDrawable.RECTANGLE, 15, 0);
         mainLinearLayout.setBackground(shape);
     }
@@ -119,7 +120,7 @@ public class SelectCountryFragment extends Fragment implements Filterable {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedCountry = (String) countryListView.getItemAtPosition(position);
                 parseSelectedCountry(selectedCountry);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
     }
@@ -179,10 +180,10 @@ public class SelectCountryFragment extends Fragment implements Filterable {
 
     public void fillCountryList(Object object) {
         countryListResponse = (CountryListResponse) object;
-        orgCountryList = new ArrayList<String>();
+        orgCountryList = new ArrayList<>();
 
         for (Country country : countryListResponse.getItems()) {
-            String countryItem = "";
+            String countryItem;
 
             if (country.getName() != null && !country.getName().trim().isEmpty() &&
                     country.getDialCode() != null && !country.getDialCode().trim().isEmpty()) {
@@ -191,8 +192,8 @@ public class SelectCountryFragment extends Fragment implements Filterable {
             }
         }
 
-        countryAdapter = new ArrayAdapter<String>(
-                getActivity(),
+        countryAdapter = new ArrayAdapter<>(
+                Objects.requireNonNull(getActivity()),
                 android.R.layout.simple_list_item_1,
                 orgCountryList);
 

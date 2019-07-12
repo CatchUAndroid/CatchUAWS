@@ -38,6 +38,8 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Libraries.SendCommentButton.SendCommentButton;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Comment;
@@ -149,7 +151,7 @@ public class CommentListFragment extends BaseFragment
     }
 
     private void setAdapter() {
-        commentListAdapter = new CommentListAdapter(getContext(), postId);
+        commentListAdapter = new CommentListAdapter(Objects.requireNonNull(getContext()), postId);
         commentList_recyclerView.setAdapter(commentListAdapter);
     }
 
@@ -166,7 +168,7 @@ public class CommentListFragment extends BaseFragment
 
         if (v == imgBack) {
 
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
 
         }

@@ -59,7 +59,7 @@ public class PaintView extends View {
     }
 
     public void init(int width,int height , Bitmap bitmap) {
-        Bitmap mutableBitmap = null;
+        Bitmap mutableBitmap;
         try {
             Bitmap tempBitmap = BitmapConversion.getResizedBitmap(bitmap, width, height);
 

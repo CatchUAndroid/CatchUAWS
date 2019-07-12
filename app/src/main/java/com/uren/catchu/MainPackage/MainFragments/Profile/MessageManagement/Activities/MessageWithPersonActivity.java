@@ -3,6 +3,7 @@ package com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.Acti
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -34,14 +35,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.uren.catchu.FragmentControllers.FragNavController;
 import com.uren.catchu.GeneralUtils.AdMobUtils;
+import com.uren.catchu.GeneralUtils.BitmapConversion;
+import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogReturnListener;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.YesNoDialogBoxCallback;
+import com.uren.catchu.GeneralUtils.PhotoUtil.PhotoSelectUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.Interfaces.CompleteCallback;
 import com.uren.catchu.LoginPackage.Models.LoginUser;
@@ -68,6 +69,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import catchu.model.User;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
@@ -112,9 +114,12 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     TextView waitingMsgCntTv;
     ImageView waitingMsgImgv;
     View mainLinearLayout;
+    RelativeLayout screenShotMainLayout;
     LinearLayout llBlock;
     TextView blockTv;
     AdView adView;
+    Button screenShotCancelBtn;
+    Button screenShotApproveBtn;
 
     public static User chattedUser = new User();
     DatabaseReference databaseReference;
@@ -131,7 +136,6 @@ public class MessageWithPersonActivity extends AppCompatActivity {
 
     String messageContentId = null;
     boolean iblocked = false;
-    //long lastChattedTime;
     String chattedUserDeviceToken = null;
     private String chattedUserSignInValue = null;
 
@@ -151,43 +155,29 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     private static final int CODE_TOP_LOADED = 1;
 
     LoginUser loginUser;
-    String senderUserId;  // Mesaji daha once gondermis kisi(ben degilim)
-    String receiptUserId; // Bu benim
 
     int notificationReadCount = 0, notificationDeleteCount = 0, notificationSendCount = 0;
     String myNotificationStatus = null;
     String otherUserNotificationStatus = null;
     String clusterNotificationStatus = null;
+    String complainText = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_with_person);
         thisActivity = this;
-
         context = MessageWithPersonActivity.this;
         Fabric.with(this, new Crashlytics());
         initUIValues();
-
         loginUser = (LoginUser) getIntent().getSerializableExtra(FCM_CODE_CHATTED_USER);
-        //senderUserId = (String) getIntent().getSerializableExtra(FCM_CODE_SENDER_USERID);
-        //receiptUserId = (String) getIntent().getSerializableExtra(FCM_CODE_RECEIPT_USERID);
         checkMyInformation();
     }
 
     private void checkMyInformation() {
-        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty()) {
+        if (AccountHolderInfo.getInstance() != null && AccountHolderInfo.getUserID() != null && !AccountHolderInfo.getUserID().isEmpty())
             checkSenderInformation();
-        }/*else if (receiptUserId != null && !receiptUserId.isEmpty()) {
-            AccountHolderInfo.getInstance();
-            AccountHolderInfo.setAccountHolderInfoCallback(new AccountHolderInfoCallback() {
-                @Override
-                public void onAccountHolderIfoTaken(UserProfile userProfile) {
-                    if (receiptUserId.equals(userProfile.getUserInfo().getUserid()))
-                        checkSenderInformation();
-                }
-            });
-        }*/
+
     }
 
     private void checkUserBlocked() {
@@ -246,9 +236,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         if (loginUser != null) {
             setChattedUserInfo(loginUser);
             initVariables();
-        } /*else if (senderUserId != null && !senderUserId.isEmpty()) {
-            getChattedUserDetail(senderUserId);
-        }*/
+        }
     }
 
     private void setChattedUserInfo(LoginUser loginUser) {
@@ -257,57 +245,6 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         chattedUser.setName(loginUser.getName());
         chattedUser.setProfilePhotoUrl(loginUser.getProfilePhotoUrl());
     }
-
-    /*private void getChattedUserDetail(final String chattedUserId) {
-        AccountHolderInfo.getToken(new TokenCallback() {
-            @Override
-            public void onTokenTaken(String token) {
-                UserDetail loadUserDetail = new UserDetail(new OnEventListener<UserProfile>() {
-
-                    @Override
-                    public void onSuccess(UserProfile up) {
-                        if (up != null) {
-                            chattedUser = fillChattedUser(up);
-                            initVariables();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Exception e) {
-
-                    }
-
-                    @Override
-                    public void onTaskContinue() {
-
-                    }
-                }, AccountHolderInfo.getUserID(), chattedUserId, "true", token);
-
-                loadUserDetail.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            }
-
-            @Override
-            public void onTokenFail(String message) {
-            }
-        });
-    }*/
-
-    /*public User fillChattedUser(UserProfile up) {
-        User chattedUser = null;
-
-        UserProfile userProfile = (UserProfile) up;
-        UserProfileProperties userProfileProperties = userProfile.getUserInfo();
-
-        chattedUser = new User();
-        chattedUser.setEmail(userProfileProperties.getEmail());
-        chattedUser.setProfilePhotoUrl(userProfileProperties.getProfilePhotoUrl());
-        chattedUser.setUserid(userProfileProperties.getUserid());
-        chattedUser.setName(userProfileProperties.getName());
-        chattedUser.setUsername(userProfileProperties.getUsername());
-        chattedUser.setProvider(userProfileProperties.getProvider());
-        chattedUser.setIsPrivateAccount(userProfileProperties.getIsPrivateAccount());
-        return chattedUser;
-    }*/
 
     public void initVariables() {
         messageBoxList = new ArrayList<>();
@@ -390,6 +327,10 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         waitingMsgImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DeepSkyBlue, null),
                 0, GradientDrawable.OVAL, 50, 0));
         moreSettingsImgv.setColorFilter(this.getResources().getColor(R.color.White, null), PorterDuff.Mode.SRC_IN);
+        screenShotCancelBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.Red, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 4));
+        screenShotApproveBtn.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.MediumSeaGreen, null),
+                getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 4));
     }
 
     private void initUIValues() {
@@ -406,6 +347,9 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         llBlock = findViewById(R.id.llBlock);
         blockTv = findViewById(R.id.blockTv);
         adView = findViewById(R.id.adView);
+        screenShotMainLayout = findViewById(R.id.screenShotMainLayout);
+        screenShotCancelBtn = findViewById(R.id.screenShotCancelBtn);
+        screenShotApproveBtn = findViewById(R.id.screenShotApproveBtn);
 
         relLayout1 = findViewById(R.id.relLayout1);
         relLayout2 = findViewById(R.id.relLayout2);
@@ -511,24 +455,42 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                 .setNegativeBtnText(getResources().getString(R.string.cancel))
                 .setNegativeBtnBackground(getResources().getColor(R.color.Silver, null))
                 .setPositiveBtnVisibility(View.VISIBLE)
-                .setPositiveBtnText(getResources().getString(R.string.SEND))
+                .setPositiveBtnText(getResources().getString(R.string.CONTINUE))
                 .setPositiveBtnBackground(getResources().getColor(R.color.bg_screen1, null))
                 .setDurationTime(0)
                 .isCancellable(true)
                 .setEditTextVisibility(View.VISIBLE)
                 .OnNegativeClicked(() -> {
-
+                    CommonUtils.hideKeyBoard(MessageWithPersonActivity.this);
                 }).OnPositiveClicked(() -> {
 
-                }).OnReturnListenerSet(val -> {
-                   reportPerson(val);
-
-                 }).build();
+        }).OnReturnListenerSet(val -> {
+            CommonUtils.hideKeyBoard(MessageWithPersonActivity.this);
+            complainText= val;
+            showSSInfoDialog();
+        }).build();
     }
 
-    private void reportPerson(String message){
+    private void showSSInfoDialog(){
+        DialogBoxUtil.showYesNoDialog(MessageWithPersonActivity.this, null,
+                getResources().getString(R.string.wanna_take_screenshot)
+                , new YesNoDialogBoxCallback() {
+                    @Override
+                    public void yesClick() {
+                        CommonUtils.hideKeyBoard(MessageWithPersonActivity.this);
+                        screenShotMainLayout.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void noClick() {
+                        reportPerson(null, complainText);
+                    }
+                });
+    }
+
+    private void reportPerson(List<PhotoSelectUtil> list, String message) {
         DialogBoxUtil.showInfoDialogWithLimitedTime(MessageWithPersonActivity.this, null,
-                getResources().getString(R.string.COMPLAIN_FEEDBACK), 3000, () -> new SaveReportProblemProcess(null,
+                getResources().getString(R.string.COMPLAIN_FEEDBACK), 3000, () -> new SaveReportProblemProcess(list,
                         chattedUser.getUserid() + CHAR_COLON + message, AccountHolderInfo.getUserID(),
                         REPORT_PROBLEM_TYPE_PERSON,
                         new CompleteCallback() {
@@ -545,6 +507,20 @@ public class MessageWithPersonActivity extends AppCompatActivity {
     }
 
     public void addListeners() {
+
+        screenShotApproveBtn.setOnClickListener(v -> {
+            Bitmap bitmap = BitmapConversion.getScreenShot(recyclerView);
+            PhotoSelectUtil photoSelectUtil = new PhotoSelectUtil();
+            photoSelectUtil.setBitmap(bitmap);
+            List<PhotoSelectUtil> list = new ArrayList<>();
+            list.add(photoSelectUtil);
+            reportPerson(list, complainText);
+            screenShotMainLayout.setVisibility(View.GONE);
+        });
+
+        screenShotCancelBtn.setOnClickListener(v -> {
+            screenShotMainLayout.setVisibility(View.GONE);
+        });
 
         waitingMsgImgv.setOnClickListener(v -> {
             if (recyclerView != null && messageBoxList != null)
@@ -628,7 +604,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
                     }
                 }
 
-                if (pastVisibleItems == (messageBoxList.size() - 1)) {
+                if (pastVisibleItems == (Objects.requireNonNull(messageBoxList).size() - 1)) {
                     if (messageReachLay.getVisibility() == View.VISIBLE)
                         messageReachLay.setVisibility(View.GONE);
                     invisibleMsgCnt = 0;
@@ -687,32 +663,33 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         valueEventListener = query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
-
-                    messageBoxListTemp = new ArrayList<>();
-
-                    for (final DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
-
-                        if (outboundSnapshot != null &&
-                                outboundSnapshot.getKey() != null && outboundSnapshot.getValue() != null) {
-
-                            messageBoxListCheck(outboundSnapshot);
-                        }
-                    }
-
-                    if (!progressLoaded) {
-                        progressLoaded = true;
-                        messageWithPersonAdapter.removeProgressLoading();
-                    }
-
-                    if (loadCode == CODE_TOP_LOADED && messageBoxListTemp != null &&
-                            messageBoxListTemp.size() > 0) {
-                        addTempList(messageBoxListTemp);
-                    } else
-                        adapterLoadCheck();
-
-                    setSmoothScrolling();
+                if (dataSnapshot != null) {
+                    dataSnapshot.getChildren();
                 }
+
+                messageBoxListTemp = new ArrayList<>();
+
+                for (final DataSnapshot outboundSnapshot : dataSnapshot.getChildren()) {
+
+                    if (outboundSnapshot != null &&
+                            outboundSnapshot.getKey() != null && outboundSnapshot.getValue() != null) {
+
+                        messageBoxListCheck(outboundSnapshot);
+                    }
+                }
+
+                if (!progressLoaded) {
+                    progressLoaded = true;
+                    messageWithPersonAdapter.removeProgressLoading();
+                }
+
+                if (loadCode == CODE_TOP_LOADED && messageBoxListTemp != null &&
+                        messageBoxListTemp.size() > 0) {
+                    addTempList(messageBoxListTemp);
+                } else
+                    adapterLoadCheck();
+
+                setSmoothScrolling();
             }
 
             @Override
@@ -806,7 +783,7 @@ public class MessageWithPersonActivity extends AppCompatActivity {
         messageBox.setMessageId(outboundSnapshot.getKey());
         Map<String, Object> map = (Map) outboundSnapshot.getValue();
 
-        messageBox.setDate((long) map.get(FB_CHILD_DATE));
+        messageBox.setDate((long) Objects.requireNonNull(map).get(FB_CHILD_DATE));
         messageBox.setMessageText((String) map.get(FB_CHILD_MESSAGE));
 
         Map<String, Object> senderMap = (Map) map.get(FB_CHILD_SENDER);

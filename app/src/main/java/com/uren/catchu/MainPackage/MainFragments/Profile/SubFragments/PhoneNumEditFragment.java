@@ -35,6 +35,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -83,14 +84,14 @@ public class PhoneNumEditFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_phone_num_edit, container, false);
             ButterKnife.bind(this, mView);
@@ -111,7 +112,7 @@ public class PhoneNumEditFragment extends BaseFragment {
         toolbarTitleTv.setText(getResources().getString(R.string.PHONE_NUM));
         mProgressDialog = new ProgressDialog(getActivity());
         countryListResponse = new CountryListResponse();
-        countryListResponse.setItems(new ArrayList<Country>());
+        countryListResponse.setItems(new ArrayList<>());
         selectedPhone = new Phone();
     }
 
@@ -119,7 +120,7 @@ public class PhoneNumEditFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -133,7 +134,7 @@ public class PhoneNumEditFragment extends BaseFragment {
         commonToolbarTickImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
                 clearUserPhoneNum();
             }
         });
@@ -236,7 +237,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                         if (object != null) {
                             countryListResponse = (CountryListResponse) object;
 
-                            String locale = getActivity().getResources().getConfiguration().locale.getCountry();
+                            String locale = Objects.requireNonNull(getActivity()).getResources().getConfiguration().locale.getCountry();
 
                             for (Country country : countryListResponse.getItems()) {
                                 if (country != null && country.getCode() != null && !country.getCode().trim().isEmpty()) {
@@ -290,7 +291,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             @Override
             public void onSuccess() {
                 completeCallback.onComplete(" ");
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
 
             @Override
@@ -323,7 +324,7 @@ public class PhoneNumEditFragment extends BaseFragment {
             @Override
             public void onFailed(Exception e) {
                 dialogDismiss();
-                DialogBoxUtil.showErrorDialog(getActivity(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(getActivity(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
 
@@ -340,7 +341,7 @@ public class PhoneNumEditFragment extends BaseFragment {
                 @Override
                 public void onComplete(Object object) {
                     completeCallback.onComplete(completePhoneNum);
-                    getActivity().onBackPressed();
+                    Objects.requireNonNull(getActivity()).onBackPressed();
                 }
 
                 @Override

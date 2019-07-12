@@ -18,7 +18,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
@@ -48,6 +47,7 @@ import com.uren.catchu.Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +73,7 @@ public class UserPostListViewFragment extends BaseFragment {
     private FeedAdapter userPostListViewAdapter;
     private CustomLinearLayoutManager customLinearLayoutManager;
     private RecyclerView listRecyclerView;
-    private List<Post> postList = new ArrayList<Post>();
+    private List<Post> postList = new ArrayList<>();
 
     private static final int MARGING_GRID = 2;
     private static final int SPAN_COUNT = 3;
@@ -298,7 +298,7 @@ public class UserPostListViewFragment extends BaseFragment {
     }
 
     void transitionTo(Intent i) {
-        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(Objects.requireNonNull(getActivity()), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
         startActivity(i, transitionActivityOptions.toBundle());
     }
@@ -307,25 +307,17 @@ public class UserPostListViewFragment extends BaseFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    getPosts();
-                } else {
-                    // permission denied, boo! Disable the
-                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
-                }
-
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted, yay! Do the
+                getPosts();
+            } else {
+                // permission denied, boo! Disable the
+                showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-
         }
-
     }
 
     private void getPosts() {
@@ -357,16 +349,20 @@ public class UserPostListViewFragment extends BaseFragment {
 
     private void startGetPosts(String token) {
 
-        if (catchType.equals(PROFILE_POST_TYPE_SHARED)) {
-            getSharedPosts(token);
-        } else if (catchType.equals(PROFILE_POST_TYPE_CAUGHT)) {
-            getCaughtPosts(token);
-        } else if (catchType.equals(PROFILE_POST_TYPE_GROUP)) {
-            getGroupCaughtPosts(token);
-        } else {
-            //do nothing
+        switch (catchType) {
+            case PROFILE_POST_TYPE_SHARED:
+                getSharedPosts(token);
+                break;
+            case PROFILE_POST_TYPE_CAUGHT:
+                getCaughtPosts(token);
+                break;
+            case PROFILE_POST_TYPE_GROUP:
+                getGroupCaughtPosts(token);
+                break;
+            default:
+                //do nothing
+                break;
         }
-
     }
 
     private void getSharedPosts(String token) {
@@ -408,7 +404,7 @@ public class UserPostListViewFragment extends BaseFragment {
                 refresh_layout.setRefreshing(false);
 
                 if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
                         }
@@ -475,7 +471,7 @@ public class UserPostListViewFragment extends BaseFragment {
                 refresh_layout.setRefreshing(false);
 
                 if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
                         }
@@ -542,7 +538,7 @@ public class UserPostListViewFragment extends BaseFragment {
                 refresh_layout.setRefreshing(false);
 
                 if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
                         }
@@ -651,7 +647,7 @@ public class UserPostListViewFragment extends BaseFragment {
             serverError.setVisibility(View.GONE);
 
             if (viewType == VIEW_RETRY) {
-                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgRetry.setColorFilter(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 retryLayout.setVisibility(View.VISIBLE);
             } else if (viewType == VIEW_NO_POST_FOUND) {
                 noPostFoundLayout.setVisibility(View.VISIBLE);

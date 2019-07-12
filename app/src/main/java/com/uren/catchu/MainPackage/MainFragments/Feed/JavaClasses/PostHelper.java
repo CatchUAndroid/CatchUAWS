@@ -12,7 +12,6 @@ import com.uren.catchu.ApiGatewayFunctions.PostLikeProcess;
 import com.uren.catchu.ApiGatewayFunctions.PostPatchProcess;
 import com.uren.catchu.ApiGatewayFunctions.ReportProblemProcess;
 import com.uren.catchu.GeneralUtils.ApiModelsProcess.AccountHolderFollowProcess;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.Interfaces.CompleteCallback;
@@ -555,7 +554,7 @@ public class PostHelper {
         private static int numberOfCallback;
 
         public SinglePostClicked() {
-            postFeaturesCallbackList = new ArrayList<PostFeaturesCallback>();
+            postFeaturesCallbackList = new ArrayList<>();
             numberOfCallback = -1;
         }
 
@@ -614,7 +613,7 @@ public class PostHelper {
         private static List<FeedRefreshCallback> feedRefreshCallbackList;
 
         public FeedRefresh() {
-            feedRefreshCallbackList = new ArrayList<FeedRefreshCallback>();
+            feedRefreshCallbackList = new ArrayList<>();
         }
 
         public static FeedRefresh getInstance() {

@@ -11,14 +11,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -38,10 +33,9 @@ import org.json.JSONObject;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import catchu.model.User;
 
@@ -49,7 +43,6 @@ import static com.uren.catchu.Constants.StringConstants.AddedGroupPushNotificati
 import static com.uren.catchu.Constants.StringConstants.CHAR_AMPERSAND;
 import static com.uren.catchu.Constants.StringConstants.DirectFollowsPushNotificationStruct;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_DEVICE_TOKEN;
-import static com.uren.catchu.Constants.StringConstants.FB_CHILD_MESSAGE_BLOCK;
 import static com.uren.catchu.Constants.StringConstants.FB_CHILD_TOKEN;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_PHOTO_URL;
 import static com.uren.catchu.Constants.StringConstants.FCM_CODE_RECEIPT_USERID;
@@ -102,7 +95,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
     private void parseSnsRemoteMessage(RemoteMessage remoteMessage) {
-        String keyValue = "", username = "", groupName = "";
+        String keyValue, username, groupName = "";
         Map<String, String> params = remoteMessage.getData();
 
         for (String s : params.values()) {
@@ -118,15 +111,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-                /*if (keyValue.equals(AddedGroupPushNotificationStruct)) {
-                    JSONArray jsonArray = dataJSONObject.getJSONArray("value");
-                    username = jsonArray.getString(0);
-                    groupName = jsonArray.getString(1);
-                } else if (keyValue.equals(FollowRequestPushNotificationStruct) ||
-                        keyValue.equals(DirectFollowsPushNotificationStruct)) {
-                    username = dataJSONObject.getString("value");
-                }*/
 
                 sendNotificationFromSNS(keyValue, username, groupName);
             } catch (JSONException e) {
@@ -156,8 +140,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(String token) {
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
-        if (firebaseAuth != null && firebaseAuth.getCurrentUser() != null &&
-                firebaseAuth.getCurrentUser().getUid() != null) {
+        if (firebaseAuth != null && firebaseAuth.getCurrentUser() != null) {
             String userid = firebaseAuth.getCurrentUser().getUid();
             if (!userid.isEmpty())
                 sendRegistrationToServer(token, userid);
@@ -230,14 +213,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
+            Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
         }
 
-        notificationManager.notify(NotificationID.getID(), notificationBuilder.build());
+        Objects.requireNonNull(notificationManager).notify(NotificationID.getID(), notificationBuilder.build());
     }
 
     private void sendNotificationForMessaging(RemoteMessage remoteMessage, Bitmap bitmap) {
-        String messageBody = remoteMessage.getNotification().getBody();
+        String messageBody = Objects.requireNonNull(remoteMessage.getNotification()).getBody();
         String messageTitle = remoteMessage.getNotification().getTitle();
         String senderId = remoteMessage.getData().get(FCM_CODE_SENDER_USERID);
         String receiptId = remoteMessage.getData().get(FCM_CODE_RECEIPT_USERID);
@@ -285,10 +268,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             NotificationChannel channel = new NotificationChannel(channelId,
                     "Channel human readable title",
                     NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
+            Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
         }
 
-        notificationManager.notify(NotificationID.getID(), notificationBuilder.build());
+        Objects.requireNonNull(notificationManager).notify(NotificationID.getID(), notificationBuilder.build());
     }
 
     public class GetNotification extends AsyncTask<String, Void, Void> {

@@ -15,7 +15,7 @@ public class SelectedFriendList {
 
         if(instance == null) {
             selectedFriendList = new FriendList();
-            selectedFriendList.setResultArray(new ArrayList<UserProfileProperties>());
+            selectedFriendList.setResultArray(new ArrayList<>());
             instance = new SelectedFriendList();
         }
         return instance;
@@ -72,7 +72,7 @@ public class SelectedFriendList {
     public void clearFriendList(){
 
         if(selectedFriendList.getResultArray().size() > 0) {
-            selectedFriendList.setResultArray(new ArrayList<UserProfileProperties>());
+            selectedFriendList.setResultArray(new ArrayList<>());
         }
     }
 

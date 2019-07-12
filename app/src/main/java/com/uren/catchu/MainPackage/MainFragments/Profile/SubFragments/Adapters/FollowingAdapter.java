@@ -58,8 +58,8 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
 
     public FollowingAdapter(Context context) {
         this.mContext = context;
-        this.userList = new ArrayList<User>();
-        this.orgUserList = new ArrayList<User>();
+        this.userList = new ArrayList<>();
+        this.orgUserList = new ArrayList<>();
     }
 
     @Override
@@ -147,24 +147,29 @@ public class FollowingAdapter extends RecyclerView.Adapter implements Filterable
         public void manageFollowStatus() {
 
             //takip ediliyor ise
-            if (user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
-                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
-                    openDialogBox();
-                } else {
-                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                }
-            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
-                //istek gonderilmis ise
-                updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
-                //takip istegi yok ise
-                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
-                    updateFollowStatus(FRIEND_FOLLOW_REQUEST);
-                } else {
-                    updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
-                }
-            } else {
-                //do nothing
+            switch (user.getFollowStatus()) {
+                case FOLLOW_STATUS_FOLLOWING:
+                    if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
+                        openDialogBox();
+                    } else {
+                        updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                    }
+                    break;
+                case FOLLOW_STATUS_PENDING:
+                    //istek gonderilmis ise
+                    updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
+                    break;
+                case FOLLOW_STATUS_NONE:
+                    //takip istegi yok ise
+                    if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
+                        updateFollowStatus(FRIEND_FOLLOW_REQUEST);
+                    } else {
+                        updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
+                    }
+                    break;
+                default:
+                    //do nothing
+                    break;
             }
         }
 

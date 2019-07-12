@@ -34,6 +34,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -67,7 +69,7 @@ public class ChangePasswordFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -92,7 +94,7 @@ public class ChangePasswordFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     private void init() {
@@ -107,7 +109,7 @@ public class ChangePasswordFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -146,13 +148,13 @@ public class ChangePasswordFragment extends BaseFragment {
     public void validatePasswords() {
 
         if (newPasswordEdittext.getText().toString().trim().length() < 6) {
-            Snackbar.make(container, getContext().getResources().getString(R.string.PASSWORD_ERR_LENGTH), Snackbar.LENGTH_LONG)
+            Snackbar.make(container, Objects.requireNonNull(getContext()).getResources().getString(R.string.PASSWORD_ERR_LENGTH), Snackbar.LENGTH_LONG)
                     .show();
             return;
         }
 
         if (!newPasswordEdittext.getText().toString().equals(validatePassEdittext.getText().toString())) {
-            Snackbar.make(container, getContext().getResources().getString(R.string.CHECK_PASSWORD_VALIDATION_VALUE), Snackbar.LENGTH_LONG)
+            Snackbar.make(container, Objects.requireNonNull(getContext()).getResources().getString(R.string.CHECK_PASSWORD_VALIDATION_VALUE), Snackbar.LENGTH_LONG)
                     .show();
             return;
         }
@@ -178,10 +180,10 @@ public class ChangePasswordFragment extends BaseFragment {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.PASSWORD_IS_CHANGED));
+                                        CommonUtils.showToastShort(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.PASSWORD_IS_CHANGED));
                                         thread.start();
                                     } else {
-                                        DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + task.getException().getMessage(), new InfoDialogBoxCallback() {
+                                        DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.error) + Objects.requireNonNull(task.getException()).getMessage(), new InfoDialogBoxCallback() {
                                             @Override
                                             public void okClick() {
                                             }
@@ -190,7 +192,7 @@ public class ChangePasswordFragment extends BaseFragment {
                                 }
                             });
                         } else {
-                            Snackbar.make(container, getContext().getResources().getString(R.string.CURRENT_PASSWORD_INCORRECT), Snackbar.LENGTH_LONG)
+                            Snackbar.make(container, Objects.requireNonNull(getContext()).getResources().getString(R.string.CURRENT_PASSWORD_INCORRECT), Snackbar.LENGTH_LONG)
                                     .show();
                         }
                     }
@@ -208,7 +210,7 @@ public class ChangePasswordFragment extends BaseFragment {
             SettingOperation.userSignOut(new CompleteCallback() {
                 @Override
                 public void onComplete(Object object) {
-                    getActivity().finish();
+                    Objects.requireNonNull(getActivity()).finish();
                     startActivity(new Intent(getActivity(), MainActivity.class));
                 }
 

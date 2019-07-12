@@ -22,6 +22,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import catchu.model.User;
 import catchu.model.UserProfileProperties;
@@ -126,7 +127,7 @@ public class MessageAddProcess {
                 .child(messageContentId);
 
         final String messageId = databaseReference.push().getKey();
-        databaseReference = databaseReference.child(messageId);
+        databaseReference = databaseReference.child(Objects.requireNonNull(messageId));
 
         Map<String, Object> values = new HashMap<>();
 

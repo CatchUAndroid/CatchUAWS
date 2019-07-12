@@ -18,7 +18,7 @@ public class SingletonPostList {
     }
 
     public SingletonPostList() {
-        postList = new ArrayList<Post>();
+        postList = new ArrayList<>();
 
     }
 

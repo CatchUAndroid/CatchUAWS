@@ -29,6 +29,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.Utils.UpdateUserProfile
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Phone;
@@ -73,7 +75,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -128,7 +130,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -186,7 +188,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
         changePhoneBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
     }
@@ -199,7 +201,7 @@ public class VerifyPhoneNumberFragment extends Fragment {
         new UpdateUserProfileProcess(getActivity(), new ServiceCompleteCallback() {
             @Override
             public void onSuccess() {
-                DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(), null, getActivity().getResources().getString(R.string.UPDATE_IS_SUCCESSFUL), 1500, new InfoDialogBoxCallback() {
+                DialogBoxUtil.showInfoDialogWithLimitedTime(getActivity(), null, Objects.requireNonNull(getActivity()).getResources().getString(R.string.UPDATE_IS_SUCCESSFUL), 1500, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                         completeCallback.onComplete(null);

@@ -30,6 +30,8 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.ColorSelectCal
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TextCompleteCallback;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -71,7 +73,7 @@ public class TextEditFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mView = inflater.inflate(R.layout.fragment_photo_text_edit, container, false);
         ButterKnife.bind(this, mView);
         return mView;
@@ -94,11 +96,11 @@ public class TextEditFragment extends BaseFragment {
     public void setSelectedPhoto(){
         if(photoSelectUtil != null){
             if(photoSelectUtil.getScreeanShotBitmap() != null)
-                Glide.with(getContext())
+                Glide.with(Objects.requireNonNull(getContext()))
                         .load(photoSelectUtil.getScreeanShotBitmap())
                         .into(selectedImageView);
             else if(photoSelectUtil.getMediaUri() != null)
-                Glide.with(getContext())
+                Glide.with(Objects.requireNonNull(getContext()))
                         .load(photoSelectUtil.getMediaUri())
                         .into(selectedImageView);
         }
@@ -109,16 +111,16 @@ public class TextEditFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 textCompleteCallback.textCompleted(editText);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
     }
 
     public void colorPalettePrepare() {
-        colorPaletteAdapter = new ColorPaletteAdapter(getActivity(), new ColorSelectCallback() {
+        colorPaletteAdapter = new ColorPaletteAdapter(Objects.requireNonNull(getActivity()), new ColorSelectCallback() {
             @Override
             public void onClick(int colorCode) {
-                brushImgv.setColorFilter(ContextCompat.getColor(getActivity(), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
+                brushImgv.setColorFilter(ContextCompat.getColor(Objects.requireNonNull(getActivity()), colorCode), android.graphics.PorterDuff.Mode.SRC_IN);
                 editText.setTextColor(getActivity().getResources().getColor(colorCode, null));
             }
         });
@@ -130,8 +132,8 @@ public class TextEditFragment extends BaseFragment {
     public void focusEditText() {
         setEditTextParams();
         editText.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
+        InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
+        Objects.requireNonNull(imm).showSoftInput(editText, InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
 
     private void setEditTextParams() {

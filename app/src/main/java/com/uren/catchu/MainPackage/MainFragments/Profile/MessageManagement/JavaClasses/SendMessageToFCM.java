@@ -11,6 +11,7 @@ import com.uren.catchu.R;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -101,7 +102,7 @@ public class SendMessageToFCM {
                     .addHeader("Authorization", "key=" + context.getResources().getString(R.string.FCM_SERVER_KEY))
                     .build();
             Response response = mClient.newCall(request).execute();
-            return response.body().string();
+            return Objects.requireNonNull(response.body()).string();
         } catch (Exception e) {
             messageSentFCMCallback.onFailed(e);
             e.printStackTrace();

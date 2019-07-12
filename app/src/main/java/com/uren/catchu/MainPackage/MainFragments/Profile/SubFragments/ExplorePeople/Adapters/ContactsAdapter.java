@@ -70,7 +70,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
     @NonNull
     @Override
     public ContactsAdapter.ContactsHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        ContactsAdapter.ContactsHolder holder = null;
+        ContactsAdapter.ContactsHolder holder;
         view = layoutInflater.inflate(R.layout.person_vert_list_item, viewGroup, false);
         holder = new ContactsHolder(view);
         return holder;
@@ -262,7 +262,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
 
-                FilterResults filterResults = null;
+                FilterResults filterResults;
                 String searchString = charSequence.toString();
 
                 if (searchString.trim().isEmpty())
@@ -309,7 +309,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
 
     @Override
     public int getItemCount() {
-        int size = 0;
+        int size;
         size = contactFriendModelList.size();
         return size;
     }

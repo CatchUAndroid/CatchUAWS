@@ -9,6 +9,8 @@ import androidx.core.content.FileProvider;
 
 import com.uren.catchu.GeneralUtils.FileAdapter;
 
+import java.util.Objects;
+
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO;
 
 public class IntentSelectUtil {
@@ -27,7 +29,7 @@ public class IntentSelectUtil {
 
     public static Intent getGalleryIntentForVideo(Context context){
         Uri videoUri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider",
-                FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO));
+                Objects.requireNonNull(FileAdapter.getOutputMediaFile(MEDIA_TYPE_VIDEO)));
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, videoUri);
         intent.setAction(Intent.ACTION_GET_CONTENT);

@@ -2,9 +2,6 @@ package com.uren.catchu.Singleton;
 
 import android.os.AsyncTask;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,6 +12,8 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.Interfaces.GroupListHolderCallback;
+
+import java.util.Objects;
 
 import catchu.model.GroupRequest;
 import catchu.model.GroupRequestResult;
@@ -45,7 +44,7 @@ public class GroupListHolder {
 
     public static String getUserIdFromFirebase() {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String FBuserId = currentUser.getUid();
+        String FBuserId = Objects.requireNonNull(currentUser).getUid();
         return FBuserId;
     }
 
@@ -120,12 +119,10 @@ public class GroupListHolder {
         }
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
+        Task<GetTokenResult> tokenTask = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getIdToken(false);
         tokenTask.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                tokenCallback.onTokenTaken(task.getResult().getToken());
-            } else {
-
+                tokenCallback.onTokenTaken(Objects.requireNonNull(task.getResult()).getToken());
             }
         });
     }

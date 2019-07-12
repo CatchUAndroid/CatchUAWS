@@ -41,6 +41,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.GroupListHolder;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Stack;
 
 import butterknife.ButterKnife;
@@ -98,7 +99,7 @@ public class NextActivity extends FragmentActivity implements
         thisActivity = this;
 
         unSelectedTabColor = this.getResources().getColor(R.color.DarkGray, null);
-        selectedTabColor = this.getResources().getColor(R.color.DodgerBlue, null);
+        selectedTabColor = this.getResources().getColor(R.color.colorAccent, null);
 
         initValues();
 
@@ -143,7 +144,7 @@ public class NextActivity extends FragmentActivity implements
         if (tab.getPosition() == TAB1 && feedFragment != null) {
 
             int selectedTabPosition = feedFragment.getSelectedTabPosition();
-            List<Fragment> fragments = feedFragment.getFragmentManager().getFragments();
+            List<Fragment> fragments = Objects.requireNonNull(feedFragment.getFragmentManager()).getFragments();
 
             if (selectedTabPosition == 0) {
                 for (int i = 0; i < fragments.size(); i++) {
@@ -220,10 +221,6 @@ public class NextActivity extends FragmentActivity implements
 
         // Android 5.0
         int visibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Android 6.0
-            // visibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        }
         getWindow().getDecorView().setSystemUiVisibility(visibility);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
@@ -250,7 +247,7 @@ public class NextActivity extends FragmentActivity implements
                     tab.setText(TABS[i]);
                 }*/
             }
-            bottomTabLayout.getTabAt(0).getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
+            Objects.requireNonNull(bottomTabLayout.getTabAt(0).getIcon()).setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
         }
     }
 
@@ -361,10 +358,10 @@ public class NextActivity extends FragmentActivity implements
 
             if (currentTab != i) {
                 //selectedTab.getCustomView().setSelected(false);
-                selectedTab.getIcon().setColorFilter(unSelectedTabColor, PorterDuff.Mode.SRC_IN);
+                Objects.requireNonNull(selectedTab.getIcon()).setColorFilter(unSelectedTabColor, PorterDuff.Mode.SRC_IN);
             } else {
                 //selectedTab.getCustomView().setSelected(true);
-                selectedTab.getIcon().setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
+                Objects.requireNonNull(selectedTab.getIcon()).setColorFilter(selectedTabColor, PorterDuff.Mode.SRC_IN);
             }
         }
     }

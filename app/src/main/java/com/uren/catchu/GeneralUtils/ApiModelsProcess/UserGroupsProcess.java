@@ -163,7 +163,7 @@ public class UserGroupsProcess {
     public static void startChangeGroupAdmin(String adminUserid, String userId, String groupId, String token, CompleteCallback completeCallback) {
         GroupRequest groupRequest = new GroupRequest();
 
-        List<GroupRequestGroupParticipantArrayItem> list = new ArrayList<GroupRequestGroupParticipantArrayItem>();
+        List<GroupRequestGroupParticipantArrayItem> list = new ArrayList<>();
         GroupRequestGroupParticipantArrayItem groupRequestGroupParticipantArrayItem = new GroupRequestGroupParticipantArrayItem();
         groupRequestGroupParticipantArrayItem.setParticipantUserid(adminUserid);
         list.add(groupRequestGroupParticipantArrayItem);

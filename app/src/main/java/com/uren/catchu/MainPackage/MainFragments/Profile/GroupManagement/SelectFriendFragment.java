@@ -38,6 +38,7 @@ import com.uren.catchu.Singleton.SelectedFriendList;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -94,7 +95,7 @@ public class SelectFriendFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -139,7 +140,7 @@ public class SelectFriendFragment extends BaseFragment {
         searchToolbarBackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -171,7 +172,7 @@ public class SelectFriendFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null) {
+                if (s != null) {
                     if (!s.toString().trim().isEmpty()) {
                         imgCancelSearch.setVisibility(View.VISIBLE);
                         searchToolbarBackImgv.setVisibility(View.GONE);
@@ -191,7 +192,7 @@ public class SelectFriendFragment extends BaseFragment {
 
     public void initFollowerList() {
         followerList = new FriendList();
-        followerList.setResultArray(new ArrayList<UserProfileProperties>());
+        followerList.setResultArray(new ArrayList<>());
         followerList.setError(new Error());
     }
 
@@ -244,7 +245,7 @@ public class SelectFriendFragment extends BaseFragment {
                 if (adapter.isShowingProgressLoading()) {
                     adapter.removeProgressLoading();
                 }
-                DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
                     }
@@ -280,7 +281,7 @@ public class SelectFriendFragment extends BaseFragment {
             if (pendingName.equals(ViewGroupDetailFragment.class.getName())) {
                 startAddParticipantToGroup();
             } else if (pendingName.equals(SharePostFragment.class.getName())) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
                 returnCallback.onReturn(null);
             } else if (pendingName.equals(GroupManagementFragment.class.getName())) {
 
@@ -288,7 +289,7 @@ public class SelectFriendFragment extends BaseFragment {
                     mFragmentNavigation.pushFragment(new AddGroupFragment(new CompleteCallback() {
                         @Override
                         public void onComplete(Object object) {
-                            getActivity().onBackPressed();
+                            Objects.requireNonNull(getActivity()).onBackPressed();
                             returnCallback.onReturn(object);
                         }
 
@@ -308,7 +309,7 @@ public class SelectFriendFragment extends BaseFragment {
             @Override
             public void onComplete(Object object) {
                 returnCallback.onReturn(null);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
 
             @Override

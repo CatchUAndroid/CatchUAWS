@@ -46,6 +46,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -104,7 +105,7 @@ public class NotifyProblemFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -136,7 +137,7 @@ public class NotifyProblemFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     private void initVariables() {
@@ -144,7 +145,7 @@ public class NotifyProblemFragment extends BaseFragment {
         permissionModule = new PermissionModule(getContext());
         NextActivity.notifyProblemFragment = this;
         commonToolbarTickImgv.setVisibility(View.VISIBLE);
-        screenShotApproveBtn = getActivity().findViewById(R.id.screenShotApproveBtn);
+        screenShotApproveBtn = Objects.requireNonNull(getActivity()).findViewById(R.id.screenShotApproveBtn);
         screenShotCancelBtn = getActivity().findViewById(R.id.screenShotCancelBtn);
         screenShotMainLayout = getActivity().findViewById(R.id.screenShotMainLayout);
         profilePageMainLayout = getActivity().findViewById(R.id.profilePageMainLayout);
@@ -163,7 +164,7 @@ public class NotifyProblemFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -274,7 +275,7 @@ public class NotifyProblemFragment extends BaseFragment {
 
     public void setViewPadding(ImageView view, ProblemNotifyModel problemNotifyModel) {
         problemNotifyModel.getImageView().setPadding(70, 70, 70, 70);
-        problemNotifyModel.getImageView().setColorFilter(getActivity().getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
+        problemNotifyModel.getImageView().setColorFilter(Objects.requireNonNull(getActivity()).getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
         problemNotifyModel.getImageView().setScaleType(ImageView.ScaleType.FIT_CENTER);
         problemNotifyModel.getDeleteImgv().setVisibility(View.GONE);
     }
@@ -326,7 +327,7 @@ public class NotifyProblemFragment extends BaseFragment {
     }
 
     private void screenShotStart() {
-        getActivity().onBackPressed();
+        Objects.requireNonNull(getActivity()).onBackPressed();
 
         screenShotMainLayout.setVisibility(View.VISIBLE);
 
@@ -432,7 +433,7 @@ public class NotifyProblemFragment extends BaseFragment {
                 getResources().getString(R.string.THANKS_FOR_FEEDBACK), 3000, new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
-                        getActivity().onBackPressed();
+                        Objects.requireNonNull(getActivity()).onBackPressed();
                         ((NextActivity) getActivity()).clearStackGivenIndex(FragNavController.TAB1);
                         ((NextActivity) getActivity()).switchAndUpdateTabSelection(FragNavController.TAB3);
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
@@ -26,15 +25,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Objects;
 
 @SuppressLint("Registered")
 public class UriAdapter extends AppCompatActivity {
 
     public static String getPathFromGalleryUri(final Context context, final Uri uri) {
 
-        final boolean isKitKat = true;
-
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
+        if (DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
                 final String docId = DocumentsContract.getDocumentId(uri);
@@ -50,11 +48,15 @@ public class UriAdapter extends AppCompatActivity {
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
 
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                try {
+                    final String id = DocumentsContract.getDocumentId(uri);
+                    final Uri contentUri = ContentUris.withAppendedId(
+                            Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
 
-                return getDataColumn(context, contentUri, null, null);
+                    return getDataColumn(context, contentUri, null, null);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
@@ -99,23 +101,16 @@ public class UriAdapter extends AppCompatActivity {
 
     public static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
 
-        Cursor cursor = null;
-
         final String column = "_data";
         final String[] projection = {
                 column
         };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
+        try (Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
+                null)) {
             if (cursor != null && cursor.moveToFirst()) {
                 final int index = cursor.getColumnIndexOrThrow(column);
                 return cursor.getString(index);
             }
-        } finally {
-            if (cursor != null)
-                cursor.close();
         }
         return null;
     }
@@ -155,7 +150,7 @@ public class UriAdapter extends AppCompatActivity {
 
     public static void savefile(String realPath, int mediaType, FileSaveCallback fileSaveCallback) {
         File mediaFile = FileAdapter.getOutputMediaFile(mediaType);
-        String destinationFilename = mediaFile.getAbsolutePath();
+        String destinationFilename = Objects.requireNonNull(mediaFile).getAbsolutePath();
 
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
@@ -202,7 +197,7 @@ public class UriAdapter extends AppCompatActivity {
                 int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
                 res = cursor.getString(column_index);
             }
-            cursor.close();
+            Objects.requireNonNull(cursor).close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -214,7 +209,7 @@ public class UriAdapter extends AppCompatActivity {
         if (!TextUtils.isEmpty(fileName)) {
             File copyFile = FileAdapter.getOutputMediaFile(mediaType);
             copy(context, contentUri, copyFile);
-            return copyFile.getAbsolutePath();
+            return Objects.requireNonNull(copyFile).getAbsolutePath();
         }
         return null;
     }
@@ -224,7 +219,7 @@ public class UriAdapter extends AppCompatActivity {
 
         if (uri == null) return null;
         String path = uri.getPath();
-        int cut = path.lastIndexOf('/');
+        int cut = Objects.requireNonNull(path).lastIndexOf('/');
         if (cut != -1) {
             fileName = path.substring(cut + 1);
         }

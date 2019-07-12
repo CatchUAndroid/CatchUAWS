@@ -37,7 +37,7 @@ public class AccountHolderFacebookFriends {
 
         if (accountHolderFacebookFriends == null) {
             userListResponse = new UserListResponse();
-            userListResponse.setItems(new ArrayList<User>());
+            userListResponse.setItems(new ArrayList<>());
             accountHolderFacebookFriends = new AccountHolderFacebookFriends();
         } else
             mCompleteCallback.onComplete(userListResponse);

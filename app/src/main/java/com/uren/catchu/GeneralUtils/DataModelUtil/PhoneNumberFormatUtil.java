@@ -74,7 +74,7 @@ public class PhoneNumberFormatUtil {
                 if (contact != null && contact.getPhoneNumber() != null && !contact.getPhoneNumber().isEmpty()) {
 
                     try {
-                        String completeNumber = "";
+                        String completeNumber;
                         String reverseText = new StringBuilder(contact.getPhoneNumber().trim()).reverse().toString();
                         completeNumber = dialCode.trim() + new StringBuilder(reverseText.substring(0, 10)).reverse().toString();
 

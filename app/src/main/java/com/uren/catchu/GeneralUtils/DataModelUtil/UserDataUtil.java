@@ -210,36 +210,42 @@ public class UserDataUtil {
         GradientDrawable buttonShape = null;
         displayButton.setVisibility(View.VISIBLE);
 
-        if (followStatus.equals(FOLLOW_STATUS_FOLLOWING)) {
-            //takip ediliyor
-            displayButton.setText(context.getResources().getString(R.string.following));
-            displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
-            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
-                    context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
+        switch (followStatus) {
+            case FOLLOW_STATUS_FOLLOWING:
+                //takip ediliyor
+                displayButton.setText(context.getResources().getString(R.string.following));
+                displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
+                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.White, null),
+                        context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
 
-        } else if (followStatus.equals(FOLLOW_STATUS_PENDING)) {
-            //istek gonderildi
-            displayButton.setText(context.getResources().getString(R.string.request_sended));
-            displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
-            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DarkYellow, null),
-                    context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
+                break;
+            case FOLLOW_STATUS_PENDING:
+                //istek gonderildi
+                displayButton.setText(context.getResources().getString(R.string.request_sended));
+                displayButton.setTextColor(context.getResources().getColor(R.color.Black, null));
+                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DarkYellow, null),
+                        context.getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 15, 2);
 
-        } else if (followStatus.equals(FOLLOW_STATUS_OWN)) {
-            //kendisi
-            displayButton.setVisibility(View.GONE);
-        } else if (followStatus.equals(FOLLOW_STATUS_NONE)) {
-            //takip/istek yok
-            displayButton.setText(context.getResources().getString(R.string.follow));
-            displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
-            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
+                break;
+            case FOLLOW_STATUS_OWN:
+                //kendisi
+                displayButton.setVisibility(View.GONE);
+                break;
+            case FOLLOW_STATUS_NONE:
+                //takip/istek yok
+                displayButton.setText(context.getResources().getString(R.string.follow));
+                displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
+                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                        context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
 
-        } else {
-            //ne olur ne olmaz durumu :)
-            displayButton.setText(context.getResources().getString(R.string.follow));
-            displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
-            buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
-                    context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
+                break;
+            default:
+                //ne olur ne olmaz durumu :)
+                displayButton.setText(context.getResources().getString(R.string.follow));
+                displayButton.setTextColor(context.getResources().getColor(R.color.White, null));
+                buttonShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
+                        context.getResources().getColor(R.color.White, null), GradientDrawable.RECTANGLE, 15, 2);
+                break;
         }
 
         displayButton.setBackground(buttonShape);

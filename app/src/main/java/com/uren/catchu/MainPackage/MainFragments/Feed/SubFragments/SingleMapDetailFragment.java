@@ -33,6 +33,8 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallba
 import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Post;
@@ -72,7 +74,7 @@ public class SingleMapDetailFragment extends BaseFragment implements OnMapReadyC
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+            Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
             if (view == null) {
                 view = inflater.inflate(R.layout.fragment_single_map_detail, container, false);
                 ButterKnife.bind(this, view);
@@ -92,7 +94,7 @@ public class SingleMapDetailFragment extends BaseFragment implements OnMapReadyC
     }
 
     private void initializeItems(){
-        btnCloseMap.setBackground(ShapeUtil.getShape(getContext().getResources().getColor(R.color.transparentBlack, null),
+        btnCloseMap.setBackground(ShapeUtil.getShape(Objects.requireNonNull(getContext()).getResources().getColor(R.color.transparentBlack, null),
                 0, GradientDrawable.OVAL, 50, 0));
     }
 
@@ -100,7 +102,7 @@ public class SingleMapDetailFragment extends BaseFragment implements OnMapReadyC
         btnCloseMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
     }
@@ -126,10 +128,7 @@ public class SingleMapDetailFragment extends BaseFragment implements OnMapReadyC
             mMap.addMarker(options);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-        } else {
-
         }
-
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12));
         setMyLocation();
     }
@@ -162,7 +161,7 @@ public class SingleMapDetailFragment extends BaseFragment implements OnMapReadyC
         Location location = locationTrackObj.getLocation();
         if (location != null) {
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            mapRipple = new MapRipple(mMap, latLng, getContext());
+            mapRipple = new MapRipple(mMap, latLng, Objects.requireNonNull(getContext()));
         }
     }
 

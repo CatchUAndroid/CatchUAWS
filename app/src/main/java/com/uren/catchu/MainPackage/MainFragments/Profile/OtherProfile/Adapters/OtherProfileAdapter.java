@@ -85,9 +85,9 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
         this.mContext = context;
         this.fragmentNavigation = fragmentNavigation;
         this.pageCnt = pageCnt;
-        this.objectList = new ArrayList<Object>();
-        this.postList = new ArrayList<Post>();
-        this.addedPostList = new ArrayList<Post>();
+        this.objectList = new ArrayList<>();
+        this.postList = new ArrayList<>();
+        this.addedPostList = new ArrayList<>();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        RecyclerView.ViewHolder viewHolder = null;
+        RecyclerView.ViewHolder viewHolder;
 
         if (viewType == VIEW_HEADER) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -347,11 +347,12 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
             imgProfile.setPadding(3, 3, 3, 3);
 
             //Name
-            if (isValid(selectedUser.getName())) {
+            if (isValid(selectedUser.getName()))
                 txtName.setText(selectedUser.getName());
+
+            if(isValid(selectedUser.getName()) || isValid(selectedUser.getUsername()))
                 txtName.setBackground(ShapeUtil.getShape(mContext.getResources().getColor(R.color.transparentBlack, null),
                         0, GradientDrawable.RECTANGLE, 30, 0));
-            }
 
             //send msg button
             UserDataUtil.updateMessagingButton(mContext, selectedUser.getFollowStatus(),
@@ -442,9 +443,8 @@ public class OtherProfileAdapter extends RecyclerView.Adapter {
                 } else {
                     updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
                 }
-            } else {
-                //do nothing
             }
+
         }
 
         private void updateFollowStatus(final String requestType) {

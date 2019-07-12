@@ -45,6 +45,8 @@ import com.uren.catchu.Permissions.PermissionModule;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -96,7 +98,7 @@ public class AddGroupFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -132,7 +134,7 @@ public class AddGroupFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -146,7 +148,7 @@ public class AddGroupFragment extends BaseFragment {
         saveGroupInfoFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
                 if (groupNameEditText.getText().toString().equals("") || groupNameEditText.getText() == null) {
                     CommonUtils.showToastShort(getContext(), getResources().getString(R.string.pleaseWriteGroupName));
                     return;
@@ -158,7 +160,7 @@ public class AddGroupFragment extends BaseFragment {
         addGroupDtlRelLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
             }
         });
 
@@ -214,7 +216,7 @@ public class AddGroupFragment extends BaseFragment {
 
     public void startCameraProcess() {
 
-        if (!CommonUtils.checkCameraHardware(getContext())) {
+        if (!CommonUtils.checkCameraHardware(Objects.requireNonNull(getContext()))) {
             CommonUtils.showToastShort(getContext(), getResources().getString(R.string.deviceHasNoCamera));
             return;
         }
@@ -238,7 +240,7 @@ public class AddGroupFragment extends BaseFragment {
                 int itemCount = (int) object;
 
                 if (itemCount == 0)
-                    getActivity().onBackPressed();
+                    Objects.requireNonNull(getActivity()).onBackPressed();
                 else
                     participantSize.setText(Integer.toString(itemCount));
             }
@@ -259,7 +261,7 @@ public class AddGroupFragment extends BaseFragment {
                         public void run() {
                             ProfileHelper.ProfileRefresh.profileRefreshStart(); // grup eklendikçe profil sayfası güncellenir.
                             completeCallback.onComplete(object);
-                            getActivity().onBackPressed();
+                            Objects.requireNonNull(getActivity()).onBackPressed();
                         }
                     }, 1000);
                 }
@@ -281,7 +283,7 @@ public class AddGroupFragment extends BaseFragment {
 
         if (resultCode == Activity.RESULT_OK) {
 
-            if (requestCode == PermissionModule.PERMISSION_CAMERA) {
+            if (requestCode == CODE_CAMERA_REQUEST) {
                 photoSelectUtil = new PhotoSelectUtil(getContext(), data, CAMERA_TEXT);
                 setGroupPhoto(photoSelectUtil.getMediaUri());
             } else if (requestCode == CODE_GALLERY_REQUEST) {
@@ -295,7 +297,7 @@ public class AddGroupFragment extends BaseFragment {
         if (groupPhotoUri != null && !groupPhotoUri.toString().trim().isEmpty()) {
             groupPhotoExist = true;
             groupPictureImgv.setPadding(0, 0, 0, 0);
-            Glide.with(getContext())
+            Glide.with(Objects.requireNonNull(getContext()))
                     .load(groupPhotoUri)
                     .apply(RequestOptions.circleCropTransform())
                     .into(groupPictureImgv);

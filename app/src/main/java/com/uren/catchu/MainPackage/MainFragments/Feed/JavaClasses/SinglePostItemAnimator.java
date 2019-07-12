@@ -113,19 +113,6 @@ public class SinglePostItemAnimator extends DefaultItemAnimator {
                                  @NonNull ItemHolderInfo postInfo) {
         cancelCurrentAnimationIfExists(newHolder);
 
-        if (preInfo instanceof SinglePostItemHolderInfo) {
-/*
-            UserPostItemHolderInfo feedItemHolderInfo = (UserPostItemHolderInfo) preInfo;
-            UserPostGridViewAdapter.MyViewHolder holder = (UserPostGridViewAdapter.MyViewHolder) newHolder;
-
-            animateHeartButton(holder);
-            updateLikesCounter(holder, holder.getFeedItem().likesCount);
-            if (FeedAdapter.ACTION_LIKE_IMAGE_CLICKED.equals(feedItemHolderInfo.updateAction)) {
-                animatePhotoLike(holder);
-            }
-*/
-        }
-
         return false;
     }
 

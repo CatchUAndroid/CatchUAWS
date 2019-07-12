@@ -49,7 +49,7 @@ public class ShapeUtil {
     }
 
     public static GradientDrawable getGradientBackgroundFromLeft(int startColor, int endColor, int orientationType, float radius) {
-        GradientDrawable gradientDrawable = null;
+        GradientDrawable gradientDrawable;
 
         if (orientationType == ORIENTATION_LEFT_RIGHT) {
             gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT,

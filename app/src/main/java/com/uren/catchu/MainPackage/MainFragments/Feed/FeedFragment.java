@@ -1,8 +1,8 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -14,14 +14,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
-import com.google.android.material.tabs.TabItem;
-import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.FeedPagerAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
@@ -33,8 +29,12 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.MessageManagement.JavaC
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import devlight.io.library.ntb.NavigationTabBar;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
 import static com.uren.catchu.Constants.NumericConstants.REQUEST_CODE_START_MESSAGE_LIST_ACTIVITY;
@@ -45,9 +45,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
     View mView;
     FeedPagerAdapter feedPagerAdapter;
-    ImageView imgFeedPublic, imgFeedCatched;
-    TextView txtFeedTypePublic, txtFeedTypeCatched;
-    TabItem tabChats, tabCalls;
 
     @BindView(R.id.imgFilter)
     ClickableImageView imgFilter;
@@ -57,8 +54,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     LinearLayout llSearch;
     @BindView(R.id.toolbarLayout)
     Toolbar toolbar;
-    @BindView(R.id.tablayout)
-    TabLayout tabLayout;
     @BindView(R.id.htab_viewpager)
     ViewPager viewPager;
     @BindView(R.id.unreadMsgCntTv)
@@ -70,6 +65,8 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     LinearLayout llSharing;
     @BindView(R.id.smoothProgressBar)
     SmoothProgressBar smoothProgressBar;
+    @BindView(R.id.ntb_horizontal)
+    NavigationTabBar navigationTabBar;
 
     private static final int TAB_PUBLIC = 0;
     private static final int TAB_CATCHED = 1;
@@ -77,8 +74,6 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
     int selectedTabPosition = TAB_PUBLIC;
 
     int unreadMessageCount = 0;
-    private int progressStatus = 0;
-    private Handler handler = new Handler();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,8 +88,7 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
             mView = inflater.inflate(R.layout.fragment_feed, container, false);
             PostHelper.InitFeed.setFeedFragment(this);
             ButterKnife.bind(this, mView);
-
-            initItems();
+            initNavigationBar();
             setUpPager();
             initListeners();
             getUserUnreadMsgCount();
@@ -105,13 +99,28 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
-    private void initItems() {
-        tabChats = mView.findViewById(R.id.tabChats);
-        tabCalls = mView.findViewById(R.id.tabCalls);
+    private void initNavigationBar(){
+        final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.mipmap.icon_world, null),
+                        Color.parseColor("#d1395c"))
+                        .title(Objects.requireNonNull(getContext()).getResources().getString(R.string.feedTypePublic))
+                        .build()
+        );
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.mipmap.app_notif_icon, null),
+                        Color.parseColor("#FF861F"))
+                        .title(getContext().getResources().getString(R.string.feedTypeCatched))
+                        .build()
+        );
+
+        navigationTabBar.setModels(models);
     }
 
     private void initListeners() {
@@ -122,90 +131,32 @@ public class FeedFragment extends BaseFragment implements View.OnClickListener {
 
     private void setUpPager() {
 
-        feedPagerAdapter = new FeedPagerAdapter(getFragmentManager(), tabLayout.getTabCount());
+        feedPagerAdapter = new FeedPagerAdapter(getFragmentManager(), 2);
         viewPager.setAdapter(feedPagerAdapter);
         viewPager.setPageTransformer(true, new RotateUpTransformer());
-
-        setCustomTab();
+        navigationTabBar.setViewPager(viewPager, 0);
         setTabListener();
-
-    }
-
-    private void setCustomTab() {
-
-        View headerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
-                .inflate(R.layout.feed_custom_tab, null, false);
-
-        LinearLayout linearLayout1 = headerView.findViewById(R.id.ll);
-        LinearLayout linearLayout2 = headerView.findViewById(R.id.ll2);
-        imgFeedPublic = headerView.findViewById(R.id.imgFeedPublic);
-        imgFeedCatched = headerView.findViewById(R.id.imgFeedCatched);
-        txtFeedTypePublic = headerView.findViewById(R.id.txtFeedTypePublic);
-        txtFeedTypeCatched = headerView.findViewById(R.id.txtFeedTypeCatched);
-
-        //intial values
-        imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
-        imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-
-        txtFeedTypePublic.setTextColor(ContextCompat.getColor(getContext(), R.color.oceanBlue));
-        txtFeedTypeCatched.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-
-        tabLayout.getTabAt(0).setCustomView(linearLayout1);
-        tabLayout.getTabAt(1).setCustomView(linearLayout2);
-
     }
 
     private void setTabListener() {
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-                selectedTabPosition = tab.getPosition();
-
-                if (tab.getPosition() == TAB_PUBLIC) {
-                    imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.oceanBlue), android.graphics.PorterDuff.Mode.SRC_IN);
-                    imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-
-                    txtFeedTypePublic.setTextColor(ContextCompat.getColor(getContext(), R.color.oceanBlue));
-                    txtFeedTypeCatched.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-
-                    /*
-                    toolbar.setBackgroundColor(ContextCompat.getColor(getContext(),
-                            R.color.colorAccent));
-                    tabLayout.setBackgroundColor(ContextCompat.getColor(getContext(),
-                            R.color.colorAccent));
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getContext(),
-                                R.color.colorAccent));
-                    }
-                    */
-                } else if (tab.getPosition() == TAB_CATCHED) {
-                    imgFeedPublic.setColorFilter(ContextCompat.getColor(getContext(), R.color.black), android.graphics.PorterDuff.Mode.SRC_IN);
-                    //imgFeedCatched.setColorFilter(ContextCompat.getColor(getContext(), R.color.DarkOrange), android.graphics.PorterDuff.Mode.SRC_IN);
-                    imgFeedCatched.clearColorFilter();
-
-                    txtFeedTypePublic.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
-                    txtFeedTypeCatched.setTextColor(ContextCompat.getColor(getContext(), R.color.oceanBlue));
-
-                } else {
-
-                }
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+                //viewPager.setCurrentItem(position);
+                selectedTabPosition = position;
             }
 
             @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+            public void onPageSelected(final int position) {
 
             }
 
             @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+            public void onPageScrollStateChanged(final int state) {
 
             }
         });
-
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
     }
 
     public int getSelectedTabPosition() {

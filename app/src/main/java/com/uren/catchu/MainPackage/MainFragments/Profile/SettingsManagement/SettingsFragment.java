@@ -32,6 +32,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -71,13 +73,13 @@ public class SettingsFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         mView = inflater.inflate(R.layout.profile_subfragment_settings, container, false);
         ButterKnife.bind(this, mView);
         init();
@@ -98,7 +100,7 @@ public class SettingsFragment extends BaseFragment {
     }
 
     public void setDefaultUIValues() {
-        toolbarTitleTv.setText(getActivity().getResources().getString(R.string.settings));
+        toolbarTitleTv.setText(Objects.requireNonNull(getActivity()).getResources().getString(R.string.settings));
 
         if (AccountHolderInfo.getInstance().getUser() != null &&
                 AccountHolderInfo.getInstance().getUser().getUserInfo().getIsPrivateAccount() != null &&
@@ -114,7 +116,7 @@ public class SettingsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -142,7 +144,7 @@ public class SettingsFragment extends BaseFragment {
         inviteForInstallLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DynamicLinkUtil.setAppInvitationLink(getContext(), fragment);
+                DynamicLinkUtil.setAppInvitationLink(Objects.requireNonNull(getContext()), fragment);
             }
         });
 
@@ -178,7 +180,7 @@ public class SettingsFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
 
-                String message = getContext().getString(R.string.VERSION) + ":" + CommonUtils.getVersion(getContext()) + "\n\n" +
+                String message = Objects.requireNonNull(getContext()).getString(R.string.VERSION) + ":" + CommonUtils.getVersion(getContext()) + "\n\n" +
                         getContext().getString(R.string.ABOUT_APP) + "\n\n" +
                         getContext().getString(R.string.email) + ":" + getContext().getString(R.string.authoremail) + "\n";
 
@@ -221,7 +223,7 @@ public class SettingsFragment extends BaseFragment {
 
     public void startNotifyProblemFragment() {
         if (mFragmentNavigation != null) {
-            getActivity().findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
+            Objects.requireNonNull(getActivity()).findViewById(R.id.screenShotMainLayout).setVisibility(View.GONE);
             NextActivity.notifyProblemFragment = null;
             mFragmentNavigation.pushFragment(new NotifyProblemFragment(), ANIMATE_LEFT_TO_RIGHT);
         }
@@ -231,7 +233,7 @@ public class SettingsFragment extends BaseFragment {
         SettingOperation.userSignOut(new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
-                getActivity().finish();
+                Objects.requireNonNull(getActivity()).finish();
                 startActivity(new Intent(getActivity(), MainActivity.class));
             }
 

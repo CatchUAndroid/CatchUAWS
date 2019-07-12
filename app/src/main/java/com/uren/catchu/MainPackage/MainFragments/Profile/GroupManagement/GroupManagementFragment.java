@@ -36,6 +36,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendList;
@@ -95,14 +97,14 @@ public class  GroupManagementFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_group_management, container, false);
             ButterKnife.bind(this, mView);
@@ -120,7 +122,7 @@ public class  GroupManagementFragment extends BaseFragment {
     public void initValues() {
         searchToolbarLayout.setVisibility(View.VISIBLE);
         addNewItemTv.setVisibility(View.VISIBLE);
-        editTextSearch.setHint(getContext().getResources().getString(R.string.searchGroup));
+        editTextSearch.setHint(Objects.requireNonNull(getContext()).getResources().getString(R.string.searchGroup));
         warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_GROUP_CREATE_OR_INCLUDE));
         setFloatButtonVisibility();
         getGroups();
@@ -133,7 +135,7 @@ public class  GroupManagementFragment extends BaseFragment {
     }
 
     public void addListeners() {
-        searchToolbarBackImgv.setOnClickListener(v -> getActivity().onBackPressed());
+        searchToolbarBackImgv.setOnClickListener(v -> Objects.requireNonNull(getActivity()).onBackPressed());
 
         nextFab.setOnClickListener(v -> {
             nextFab.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
@@ -143,12 +145,12 @@ public class  GroupManagementFragment extends BaseFragment {
                     return;
                 }
                 returnCallback.onReturn(selectedGroupItem);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
         addNewItemTv.setOnClickListener(v -> {
-            CommonUtils.hideKeyBoard(getContext());
+            CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
             addNewItemTv.setEnabled(false);
             addNewItemTv.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.image_click));
             addNewGroup();
@@ -167,7 +169,7 @@ public class  GroupManagementFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null && !s.toString().isEmpty()) {
+                if (s != null && !s.toString().isEmpty()) {
                     imgCancelSearch.setVisibility(View.VISIBLE);
                     searchToolbarBackImgv.setVisibility(View.GONE);
                     searchItemInList(s.toString());
@@ -180,7 +182,7 @@ public class  GroupManagementFragment extends BaseFragment {
         });
 
         imgCancelSearch.setOnClickListener(v -> {
-            CommonUtils.hideKeyBoard(getContext());
+            CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
             editTextSearch.setText("");
             imgCancelSearch.setVisibility(View.GONE);
             searchResultTv.setVisibility(View.GONE);
@@ -228,7 +230,7 @@ public class  GroupManagementFragment extends BaseFragment {
                     public void onFailed(Exception e) {
                         progressBar.setVisibility(View.GONE);
                         if (getContext() != null) {
-                            DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                            DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                                 @Override
                                 public void okClick() {
                                 }
@@ -318,8 +320,7 @@ public class  GroupManagementFragment extends BaseFragment {
             public void onComplete(Object object) {
                 if (object != null) {
                     FriendList friendList = (FriendList) object;
-                    if (friendList != null && friendList.getResultArray() != null && friendList.getResultArray().size() == 0 &&
-                            getContext() != null)
+                    if (friendList.getResultArray() != null && friendList.getResultArray().size() == 0 && getContext() != null)
                         CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.addFriendFirst));
                     else
                         startSelectFriendFragment();

@@ -41,6 +41,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
@@ -172,7 +173,7 @@ public class MessageListActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null && !s.toString().trim().isEmpty()) {
+                if (s != null && !s.toString().trim().isEmpty()) {
                     if (messageListAdapter != null)
                         messageListAdapter.updateAdapter(s.toString());
                     imgCancelSearch.setVisibility(View.VISIBLE);
@@ -207,7 +208,7 @@ public class MessageListActivity extends AppCompatActivity {
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
+                if (dataSnapshot.getChildren() != null) {
 
                     if (!dataLoaded) {
                         dataLoaded = true;
@@ -243,7 +244,7 @@ public class MessageListActivity extends AppCompatActivity {
                         try {
                             if (userProfile != null && userProfile.getUserInfo() != null) {
                                 Map<String, Object> map = (Map) outboundSnapshot.getValue();
-                                Map<String, Object> contentMap = (Map) map.get(FB_CHILD_MESSAGE_CONTENT);
+                                Map<String, Object> contentMap = (Map) Objects.requireNonNull(map).get(FB_CHILD_MESSAGE_CONTENT);
 
                                 String contentId = (String) contentMap.get(FB_CHILD_CONTENT_ID);
                                 if (contentId != null && !contentId.isEmpty())
@@ -291,11 +292,12 @@ public class MessageListActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull final DataSnapshot dataSnapshot) {
 
-                    if (dataSnapshot != null && dataSnapshot.getChildren() != null) {
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            messageBoxListCheck(child, userProfileProperties);
-                            adapterLoadCheck();
-                        }
+                    if (dataSnapshot != null) {
+                        dataSnapshot.getChildren();
+                    }
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        messageBoxListCheck(child, userProfileProperties);
+                        adapterLoadCheck();
                     }
                 }
 
@@ -417,7 +419,7 @@ public class MessageListActivity extends AppCompatActivity {
         messageListBox.setUserProfileProperties(userProfileProperties);
 
         Map<String, Object> map = (Map) outboundSnapshot.getValue();
-        messageListBox.setMessageText((String) map.get(FB_CHILD_MESSAGE));
+        messageListBox.setMessageText((String) Objects.requireNonNull(map).get(FB_CHILD_MESSAGE));
         messageListBox.setDate((long) map.get(FB_CHILD_DATE));
 
         Map<String, Object> senderMap = (Map) map.get(FB_CHILD_SENDER);

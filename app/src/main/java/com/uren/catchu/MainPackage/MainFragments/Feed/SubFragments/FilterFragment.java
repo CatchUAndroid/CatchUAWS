@@ -13,13 +13,14 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
-import com.dagang.library.GradientButton;
 import com.uren.catchu.GeneralUtils.DataModelUtil.UserDataUtil;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.PostHelper;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
+
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +107,7 @@ public class FilterFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -125,7 +126,7 @@ public class FilterFragment extends BaseFragment
 
     private void setSeekbar() {
 
-        suffix = " " + getContext().getResources().getString(R.string.meter);
+        suffix = " " + Objects.requireNonNull(getContext()).getResources().getString(R.string.meter);
         radius = FILTERED_FEED_RADIUS;
         seekBar.setMax(10000);
         txtRadius.setText(radius + suffix);
@@ -173,14 +174,14 @@ public class FilterFragment extends BaseFragment
 
         if (v == txtCancel) {
             //((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         }
 
         if (v == txtApply) {
             //Save changes
             FILTERED_FEED_RADIUS = radius;
             PostHelper.FeedRefresh.getInstance().feedRefreshStart();
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
 
         }
 

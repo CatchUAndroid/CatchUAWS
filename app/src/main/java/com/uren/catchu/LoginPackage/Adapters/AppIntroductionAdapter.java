@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 
 import androidx.viewpager.widget.PagerAdapter;
 
+import java.util.Objects;
+
 public class AppIntroductionAdapter extends PagerAdapter {
 
     LayoutInflater layoutInflater;
@@ -22,7 +24,7 @@ public class AppIntroductionAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        View view = layoutInflater.inflate(layouts[position], container, false);
+        View view = Objects.requireNonNull(layoutInflater).inflate(layouts[position], container, false);
         container.addView(view);
 
         return view;

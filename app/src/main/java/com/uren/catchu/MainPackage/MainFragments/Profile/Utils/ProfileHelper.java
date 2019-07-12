@@ -13,7 +13,7 @@ public class ProfileHelper {
         private static List<ProfileRefreshCallback> profileRefreshCallbackList;
 
         public ProfileRefresh() {
-            profileRefreshCallbackList = new ArrayList<ProfileRefreshCallback>();
+            profileRefreshCallbackList = new ArrayList<>();
         }
 
         public static ProfileRefresh getInstance() {

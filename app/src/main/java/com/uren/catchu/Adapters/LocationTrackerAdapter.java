@@ -10,6 +10,8 @@ import android.os.Bundle;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
 import com.uren.catchu.Permissions.PermissionModule;
 
+import java.util.Objects;
+
 import static android.content.Context.LOCATION_SERVICE;
 
 public class LocationTrackerAdapter implements LocationListener {
@@ -59,7 +61,7 @@ public class LocationTrackerAdapter implements LocationListener {
     public boolean canGetLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            isGPSEnabled = Objects.requireNonNull(locationManager).isProviderEnabled(LocationManager.GPS_PROVIDER);
             isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             return isGPSEnabled || isNetworkEnabled;

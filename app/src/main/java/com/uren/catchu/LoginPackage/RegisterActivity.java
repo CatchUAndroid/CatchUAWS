@@ -32,6 +32,8 @@ import com.uren.catchu.LoginPackage.Models.LoginUser;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import io.fabric.sdk.android.Fabric;
 
 
@@ -120,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
@@ -217,7 +219,7 @@ public class RegisterActivity extends AppCompatActivity
                             progressDialog.dismiss();
                             Log.i("Info", "CreateUser : Fail");
                             try {
-                                throw task.getException();
+                                throw Objects.requireNonNull(task.getException());
                             } catch (FirebaseAuthUserCollisionException e) {
                                 DialogBoxUtil.showInfoDialogBox(RegisterActivity.this,
                                         context.getString(R.string.COLLISION_EXCEPTION), null, new InfoDialogBoxCallback() {
@@ -246,7 +248,7 @@ public class RegisterActivity extends AppCompatActivity
         newLoginUser = new LoginUser();
         newLoginUser.setUsername(userName);
         newLoginUser.setEmail(userEmail);
-        newLoginUser.setUserId(mAuth.getCurrentUser().getUid());
+        newLoginUser.setUserId(Objects.requireNonNull(mAuth.getCurrentUser()).getUid());
     }
 
     public void startAppIntroPage() {

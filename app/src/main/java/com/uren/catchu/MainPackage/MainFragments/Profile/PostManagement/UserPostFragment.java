@@ -1,17 +1,13 @@
 package com.uren.catchu.MainPackage.MainFragments.Profile.PostManagement;
 
-import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
@@ -23,6 +19,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,7 +55,7 @@ public class UserPostFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -89,7 +86,7 @@ public class UserPostFragment extends BaseFragment
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_apps_white, null),
                         Color.parseColor("#d1395c"))
-                        .title(getContext().getResources().getString(R.string.feedViewTypeGrid))
+                        .title(Objects.requireNonNull(getContext()).getResources().getString(R.string.feedViewTypeGrid))
                         .build()
         );
         models.add(
@@ -118,8 +115,6 @@ public class UserPostFragment extends BaseFragment
                     selectedTabPosition = USER_POST_VIEW_TYPE_GRID;
                 } else if (position == 1) {
                     selectedTabPosition = USER_POST_VIEW_TYPE_LIST;
-                } else {
-
                 }
             }
 
@@ -152,7 +147,7 @@ public class UserPostFragment extends BaseFragment
     public void onClick(View view) {
 
         if (view == commonToolbarbackImgv) {
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
 

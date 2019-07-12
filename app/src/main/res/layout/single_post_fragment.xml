@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include layout="@layout/common_toolbar_layout" />
+        <include layout="@layout/common_toolbar_layout_rounded" />
 
         <LinearLayout
             android:id="@+id/contentRoot"

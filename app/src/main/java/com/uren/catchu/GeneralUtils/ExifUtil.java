@@ -11,7 +11,7 @@ public class ExifUtil {
     public static Bitmap rotateImageIfRequired(String photoPath, Bitmap bitmap) {
 
         ExifInterface ei;
-        Bitmap rotatedBitmap = null;
+        Bitmap rotatedBitmap;
 
         if (bitmap == null)
             return null;
@@ -25,7 +25,6 @@ public class ExifUtil {
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                 ExifInterface.ORIENTATION_UNDEFINED);
 
-        rotatedBitmap = null;
         switch (orientation) {
 
             case ExifInterface.ORIENTATION_ROTATE_90:
@@ -49,13 +48,13 @@ public class ExifUtil {
     }
 
     public static Bitmap rotateImage(Bitmap source, float angle) {
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         bitmap = Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
                 matrix, true);
 
-        if (source != null && !source.isRecycled())
+        if (!source.isRecycled())
             source.isRecycled();
         return bitmap;
     }

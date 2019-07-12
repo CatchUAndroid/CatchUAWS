@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.dagang.library.GradientButton;
 import com.uren.catchu.Adapters.LocationTrackerAdapter;
 import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.LocationCallback;
@@ -69,10 +68,6 @@ public class InfoActivity extends AppCompatActivity
 
         // Android 5.0
         int visibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Android 6.0
-            // visibility |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
-        }
         getWindow().getDecorView().setSystemUiVisibility(visibility);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().setStatusBarColor(Color.TRANSPARENT);

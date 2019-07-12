@@ -24,6 +24,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Libraries.VideoPlay.VideoPlay;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.Media;
@@ -49,7 +51,7 @@ public class PostVideoPlayFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         ((NextActivity) getActivity()).ANIMATION_TAG = null;
         super.onStart();
     }

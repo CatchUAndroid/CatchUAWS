@@ -22,7 +22,6 @@ import com.uren.catchu.ApiGatewayFunctions.Interfaces.OnEventListener;
 import com.uren.catchu.ApiGatewayFunctions.Interfaces.TokenCallback;
 import com.uren.catchu.ApiGatewayFunctions.SearchResultProcess;
 import com.uren.catchu.GeneralUtils.ClickableImage.ClickableImageView;
-import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Feed.Adapters.SearchResultAdapter;
 import com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses.FeedItemAnimator;
@@ -33,6 +32,7 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -78,7 +78,7 @@ public class SearchFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -105,7 +105,7 @@ public class SearchFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = null;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = null;
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -192,7 +192,7 @@ public class SearchFragment extends BaseFragment
     }
 
     private void setAdapter() {
-        searchResultAdapter = new SearchResultAdapter(getContext(), mFragmentNavigation);
+        searchResultAdapter = new SearchResultAdapter(Objects.requireNonNull(getContext()), mFragmentNavigation);
         recyclerView.setAdapter(searchResultAdapter);
         searchResultAdapter.setListItemClickListener(this);
     }
@@ -200,12 +200,12 @@ public class SearchFragment extends BaseFragment
     private void showKeyboard(boolean showKeyboard) {
 
         if (showKeyboard) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getContext()).getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(imm).toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } else {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+            InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getContext()).getSystemService(
                     Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(edtSearch.getWindowToken(), 0);
             edtSearch.setFocusable(false);
             edtSearch.setFocusableInTouchMode(true);
         }
@@ -229,7 +229,7 @@ public class SearchFragment extends BaseFragment
 
         if (v == imgCancel) {
             showKeyboard(false);
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         }
 
         if (v == recyclerView) {

@@ -106,7 +106,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
                 @Override
                 public boolean onLongClick(View v) {
                     deleteActivated = true;
-                    messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                    messageDeleteCallback.OnDeleteActivated(true);
                     return false;
                 }
             });
@@ -204,7 +204,7 @@ public class MessageWithPersonAdapter extends RecyclerView.Adapter {
 
             if (deleteCount == 0) {
                 deleteActivated = false;
-                messageDeleteCallback.OnDeleteActivated(deleteActivated);
+                messageDeleteCallback.OnDeleteActivated(false);
                 deleteMsgCntTv.setText("");
             } else {
                 deleteMsgCntTv.setText(Integer.toString(deleteCount));

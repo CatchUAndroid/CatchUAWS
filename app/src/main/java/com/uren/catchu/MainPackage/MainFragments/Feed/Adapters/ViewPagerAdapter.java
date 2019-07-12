@@ -116,7 +116,6 @@ public class ViewPagerAdapter extends PagerAdapter {
         final String clickedItemType;
 
         if (videoCounter < videoList.size()) {
-            clickedItemType = VIDEO_TYPE;
 
             /*Ana sayfadan video oynatma özelliği kaldırıldı*/
             /*
@@ -136,7 +135,6 @@ public class ViewPagerAdapter extends PagerAdapter {
 
 
         } else if (imageCounter < imageList.size()) {
-            clickedItemType = IMAGE_TYPE;
             //sonra imagelar bitene kadar eklenir
             itemView = LayoutInflater.from(mContext)
                     .inflate(R.layout.viewpager_image, collection, false);
@@ -251,12 +249,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                     })
                     .apply(RequestOptions.fitCenterTransform())
                     .into(imgFeedItem);
-
-
-        } else {
-            //do nothing
         }
-
     }
 
     @Override

@@ -49,6 +49,7 @@ import com.uren.catchu.Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,7 +76,7 @@ public class OtherProfileFragment extends BaseFragment
 
     private OtherProfileAdapter otherProfileAdapter;
     private CustomLinearLayoutManager customLinearLayoutManager;
-    private List<Object> objectList = new ArrayList<Object>();
+    private List<Object> objectList = new ArrayList<>();
 
     //Refresh layout
     @BindView(R.id.refresh_layout)
@@ -123,13 +124,13 @@ public class OtherProfileFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onStart();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.VISIBLE);
         super.onCreate(savedInstanceState);
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
@@ -151,7 +152,7 @@ public class OtherProfileFragment extends BaseFragment
 
     private void setInitialValues() {
 
-        toolbar.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_my_profile_toolbar));
+        toolbar.setBackground(ContextCompat.getDrawable(Objects.requireNonNull(getContext()), R.drawable.bg_my_profile_toolbar));
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
 
@@ -328,7 +329,7 @@ public class OtherProfileFragment extends BaseFragment
     }
 
     void transitionTo(Intent i) {
-        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(Objects.requireNonNull(getActivity()), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
         startActivity(i, transitionActivityOptions.toBundle());
     }
@@ -337,32 +338,26 @@ public class OtherProfileFragment extends BaseFragment
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay!
-                    getPosts();
+                // permission was granted, yay!
+                getPosts();
 
-                } else {
+            } else {
 
-                    // permission denied, boo!
-                    DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.needLocationPermission), "", new InfoDialogBoxCallback() {
-                        @Override
-                        public void okClick() {
-                        }
-                    });
+                // permission denied, boo!
+                DialogBoxUtil.showInfoDialogBox(getContext(), getResources().getString(R.string.needLocationPermission), "", new InfoDialogBoxCallback() {
+                    @Override
+                    public void okClick() {
+                    }
+                });
 
-                    refresh_layout.setRefreshing(false);
-
-                }
-
+                refresh_layout.setRefreshing(false);
             }
-
         }
-
     }
 
     private void getPosts() {
@@ -477,7 +472,7 @@ public class OtherProfileFragment extends BaseFragment
             if (getActivity() instanceof NextActivity)
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
 
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         }
 
     }

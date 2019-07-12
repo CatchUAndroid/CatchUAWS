@@ -11,6 +11,7 @@ import com.uren.catchu.GeneralUtils.ExifUtil;
 import com.uren.catchu.GeneralUtils.UriAdapter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
@@ -133,7 +134,7 @@ public class PhotoSelectUtil {
         }
 
         if (bitmap == null)
-            bitmap = (Bitmap) data.getExtras().get("data");
+            bitmap = (Bitmap) Objects.requireNonNull(data.getExtras()).get("data");
 
         bitmap = ExifUtil.rotateImageIfRequired(imageRealPath, bitmap);
     }

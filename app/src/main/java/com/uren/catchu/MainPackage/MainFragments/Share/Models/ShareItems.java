@@ -25,9 +25,9 @@ public class ShareItems{
         videoShareItemBoxes = new ArrayList<>();
         selectedGroup = new GroupRequestResultResultArrayItem();
         post = new Post();
-        post.setAttachments(new ArrayList<Media>());
-        post.setAllowList(new ArrayList<User>());
-        post.setComments(new ArrayList<Comment>());
+        post.setAttachments(new ArrayList<>());
+        post.setAllowList(new ArrayList<>());
+        post.setComments(new ArrayList<>());
     }
 
     public Post getPost() {

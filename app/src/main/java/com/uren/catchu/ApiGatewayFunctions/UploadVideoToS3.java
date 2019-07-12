@@ -28,7 +28,7 @@ public class UploadVideoToS3 extends AsyncTask<Void, Void, HttpURLConnection> {
 
         HttpURLConnection connection = null;
         int bytesAvailable, bufferSize, bytesRead, serverResponseCode;
-        int maxBufferSize = 1 * 1024 * 1024;
+        int maxBufferSize = 1024 * 1024;
         byte[] buffer;
 
         try {

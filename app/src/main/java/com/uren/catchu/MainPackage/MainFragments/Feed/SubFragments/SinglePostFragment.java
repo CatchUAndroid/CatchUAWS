@@ -55,6 +55,7 @@ import com.uren.catchu.Libraries.VideoPlay.CustomRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -130,8 +131,8 @@ public class SinglePostFragment extends BaseFragment
 
     private boolean pulledToRefreshPost = false;
     private boolean pulledToRefreshComment = false;
-    private List<Post> postList = new ArrayList<Post>();
-    private List<Comment> commentList = new ArrayList<Comment>();
+    private List<Post> postList = new ArrayList<>();
+    private List<Comment> commentList = new ArrayList<>();
 
     public static SinglePostFragment newInstance(String toolbarTitle, String postId, int position, int numberOfCallback) {
         Bundle args = new Bundle();
@@ -146,7 +147,7 @@ public class SinglePostFragment extends BaseFragment
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
         super.onStart();
     }
@@ -166,7 +167,6 @@ public class SinglePostFragment extends BaseFragment
             //setting content
             init();
             setContent();
-
         }
 
         return mView;
@@ -253,12 +253,7 @@ public class SinglePostFragment extends BaseFragment
     private void setVariables() {
 
         //toolbar
-        toolbar.setBackground(getResources().getDrawable(R.color.white, null));
-        toolbarTitleTv.setText(getContext().getResources().getString(R.string.detail));
-        toolbarTitleTv.setTextColor(ContextCompat.getColor(getContext(), R.color.colorPrimary)) ;
-
-        //imgBack
-        commonToolbarbackImgv.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorPrimary), android.graphics.PorterDuff.Mode.SRC_IN);
+        toolbarTitleTv.setText(Objects.requireNonNull(getContext()).getResources().getString(R.string.detail));
         commonToolbarbackImgv.setOnClickListener(this);
 
         //Comment Allowed
@@ -271,7 +266,6 @@ public class SinglePostFragment extends BaseFragment
         smileyImgv.setColorFilter(this.getResources().getColor(R.color.Gray, null), PorterDuff.Mode.SRC_IN);
         edittextRelLayout.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.White, null),
                 getResources().getColor(R.color.Gray, null), GradientDrawable.RECTANGLE, 50, 2));
-
     }
 
     private void setListeners() {
@@ -284,7 +278,6 @@ public class SinglePostFragment extends BaseFragment
         } else {
             llAddComment.setVisibility(View.VISIBLE);
         }
-
     }
 
     private void setLayoutManager() {
@@ -294,7 +287,7 @@ public class SinglePostFragment extends BaseFragment
     }
 
     private void setAdapter() {
-        singlePostAdapter = new SinglePostAdapter(getActivity(), getContext(), mFragmentNavigation, position, numberOfCallback);
+        singlePostAdapter = new SinglePostAdapter(getActivity(), Objects.requireNonNull(getContext()), mFragmentNavigation, position, numberOfCallback);
         singlePostAdapter.setPersonListItemClickListener(this);
         singlePostAdapter.setCommentAllowedCallback(this);
         singlePostAdapter.setPostDeletedCallback(this);
@@ -318,43 +311,33 @@ public class SinglePostFragment extends BaseFragment
         radius = String.valueOf(radiusInKm);
     }
 
-
     @Override
     public void onClick(View v) {
 
         if (v == commonToolbarbackImgv) {
             SingletonSinglePost.getInstance().setPost(null);
-            ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+            ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
             getActivity().onBackPressed();
         }
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getPost();
-                } else {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getPost();
+            } else {
 
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.needLocationPermission));
-                    refresh_layout.setRefreshing(false);
-                }
-
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
+                CommonUtils.showToastShort(getContext(), getContext().getResources().getString(R.string.needLocationPermission));
+                refresh_layout.setRefreshing(false);
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-
         }
-
     }
 
     private void getPost() {
@@ -465,7 +448,6 @@ public class SinglePostFragment extends BaseFragment
         } else {
             commentDisabled();
         }
-
     }
 
     private void startGetCommentList(String token) {
@@ -514,16 +496,6 @@ public class SinglePostFragment extends BaseFragment
             singlePostAdapter.removeProgressLoading(); // pulled to refresh değilse progress eklenip/kaldırılıyor
             singlePostAdapter.addAll(null, commentList);
         }
-    }
-
-    private List<Comment> reverseList(List<Comment> items) {
-
-        List<Comment> reverseList = new ArrayList<Comment>();
-        for (int i = items.size(); i > 0; i--) {
-            reverseList.add(items.get(i - 1));
-        }
-        return reverseList;
-
     }
 
     @Override
@@ -597,7 +569,7 @@ public class SinglePostFragment extends BaseFragment
     private void commentDisabled() {
         pulledToRefreshComment = true;
         CommentListResponse commentListResponse = new CommentListResponse();
-        List<Comment> items = new ArrayList<Comment>();
+        List<Comment> items = new ArrayList<>();
         commentListResponse.setItems(items);
         singlePostAdapter.removeAllComments();
 

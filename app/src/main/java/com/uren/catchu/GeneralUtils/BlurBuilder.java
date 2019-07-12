@@ -16,7 +16,7 @@ public class BlurBuilder {
     }
 
     public static Bitmap blur(Context ctx, Bitmap image, float bitmapScale, float blurRadius) {
-        Bitmap outputBitmap = null;
+        Bitmap outputBitmap;
 
         int width = Math.round(image.getWidth() * bitmapScale);
         int height = Math.round(image.getHeight() * bitmapScale);
@@ -37,7 +37,7 @@ public class BlurBuilder {
     }
 
     private static Bitmap getScreenshot(View v, Context context) {
-        Bitmap b = null;
+        Bitmap b;
         b = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(b);
         v.draw(c);

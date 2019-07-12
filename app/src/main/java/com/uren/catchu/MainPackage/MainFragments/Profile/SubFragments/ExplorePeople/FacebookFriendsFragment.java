@@ -40,6 +40,7 @@ import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -88,7 +89,7 @@ public class FacebookFriendsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_facebook_friends, container, false);
             ButterKnife.bind(this, mView);
@@ -110,7 +111,7 @@ public class FacebookFriendsFragment extends BaseFragment {
         warningMsgTv.setTypeface(warningMsgTv.getTypeface(), Typeface.BOLD);
         warningMsgTv.setTextSize(15f);
         warningMsgTv.setTextColor(getResources().getColor(R.color.DodgerBlue, null));
-        warningMsgTv.setText(getContext().getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
+        warningMsgTv.setText(Objects.requireNonNull(getContext()).getResources().getString(R.string.THERE_IS_NO_FACEFRIEND_WHO_USING_CATCHU));
         connectFacebookButton.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.RECTANGLE, 15, 2));
     }
@@ -127,7 +128,7 @@ public class FacebookFriendsFragment extends BaseFragment {
     private void checkToolbarVisibility() {
         if (showTollbar) {
             toolbarLayout.setVisibility(View.VISIBLE);
-            toolbarTitleTv.setText(getActivity().getResources().getString(R.string.FACEBOOK_FRIENDS));
+            toolbarTitleTv.setText(Objects.requireNonNull(getActivity()).getResources().getString(R.string.FACEBOOK_FRIENDS));
         }
     }
 
@@ -135,7 +136,7 @@ public class FacebookFriendsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 

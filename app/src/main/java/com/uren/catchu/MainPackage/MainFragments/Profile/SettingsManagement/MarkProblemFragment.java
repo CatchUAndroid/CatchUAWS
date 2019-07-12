@@ -21,6 +21,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.ModelViews.PaintView;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -52,7 +54,7 @@ public class MarkProblemFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -100,7 +102,7 @@ public class MarkProblemFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });
@@ -110,7 +112,7 @@ public class MarkProblemFragment extends BaseFragment {
             public void onClick(View v) {
                 photoSelectUtil.setBitmap(paintView.getmBitmap());
                 returnCallback.onReturn(photoSelectUtil);
-                ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+                ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
                 getActivity().onBackPressed();
             }
         });

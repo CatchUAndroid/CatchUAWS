@@ -35,6 +35,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FollowInfoListResponse;
@@ -91,7 +93,7 @@ public class FollowerFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         if (mView == null) {
             mView = inflater.inflate(R.layout.profile_subfragment_followers, container, false);
             ButterKnife.bind(this, mView);
@@ -108,13 +110,13 @@ public class FollowerFragment extends BaseFragment
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void init() {
         commonToolbarbackImgv.setOnClickListener(this);
         toolbarTitleTv.setText(toolbarTitle);
-        searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWERS));
+        searchEdittext.setHint(Objects.requireNonNull(getContext()).getResources().getString(R.string.SEARCH_FOLLOWERS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
 
@@ -149,7 +151,7 @@ public class FollowerFragment extends BaseFragment
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null) {
+                if (s != null) {
                     if (!s.toString().trim().isEmpty()) {
                         searchCancelImgv.setVisibility(View.VISIBLE);
                     } else {
@@ -177,12 +179,12 @@ public class FollowerFragment extends BaseFragment
     private void showKeyboard(boolean showKeyboard) {
 
         if (showKeyboard) {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getContext()).getSystemService(Context.INPUT_METHOD_SERVICE);
+            Objects.requireNonNull(imm).toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } else {
-            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(
+            InputMethodManager imm = (InputMethodManager) Objects.requireNonNull(getContext()).getSystemService(
                     Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(searchEdittext.getWindowToken(), 0);
+            Objects.requireNonNull(imm).hideSoftInputFromWindow(searchEdittext.getWindowToken(), 0);
             searchEdittext.setFocusable(false);
             searchEdittext.setFocusableInTouchMode(true);
         }
@@ -255,7 +257,7 @@ public class FollowerFragment extends BaseFragment
     public void onClick(View v) {
 
         if (v == commonToolbarbackImgv) {
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         }
     }
 

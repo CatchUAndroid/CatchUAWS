@@ -29,6 +29,8 @@ import com.uren.catchu.GeneralUtils.ShapeUtil;
 import com.uren.catchu.LoginPackage.Utils.Validation;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import io.fabric.sdk.android.Fabric;
 
 public class ForgetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
@@ -81,7 +83,7 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
                 if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    Objects.requireNonNull(imm).hideSoftInputFromWindow(v.getWindowToken(), 0);
                 }
             }
         }
@@ -138,8 +140,8 @@ public class ForgetPasswordActivity extends AppCompatActivity implements View.On
 
         final Context context = this;
 
-        FirebaseAuth auth = null;
-        ActionCodeSettings actionCodeSettings = null;
+        FirebaseAuth auth;
+        ActionCodeSettings actionCodeSettings;
         auth = FirebaseAuth.getInstance();
         actionCodeSettings = ActionCodeSettings.newBuilder()
                 .setAndroidPackageName("uren.com.catchu", true, null)

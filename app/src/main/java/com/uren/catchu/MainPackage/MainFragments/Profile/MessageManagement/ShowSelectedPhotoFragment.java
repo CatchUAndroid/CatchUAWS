@@ -18,6 +18,8 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -39,7 +41,7 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         ((NextActivity) getActivity()).ANIMATION_TAG = null;
         super.onStart();
     }
@@ -70,7 +72,7 @@ public class ShowSelectedPhotoFragment extends BaseFragment {
     }
 
     private void setImage() {
-        Glide.with(getContext())
+        Glide.with(Objects.requireNonNull(getContext()))
                 .load(photoUrl)
                 .apply(RequestOptions.fitCenterTransform())
                 .into(photoSelectImgv);

@@ -56,7 +56,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     public SearchResultAdapter(Context context, BaseFragment.FragmentNavigation fragmentNavigation) {
         this.mContext = context;
         BaseFragment.FragmentNavigation fragmentNavigation1 = fragmentNavigation;
-        this.userList = new ArrayList<User>();
+        this.userList = new ArrayList<>();
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);
@@ -74,7 +74,7 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        RecyclerView.ViewHolder viewHolder = null;
+        RecyclerView.ViewHolder viewHolder;
 
         if (viewType == VIEW_ITEM) {
             View itemView = LayoutInflater.from(parent.getContext())
@@ -148,24 +148,29 @@ public class SearchResultAdapter extends RecyclerView.Adapter {
         public void manageFollowStatus() {
 
             //takip ediliyor ise
-            if (user.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
-                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
-                    openDialogBox();
-                } else {
-                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                }
-            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
-                //istek gonderilmis ise
-                updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-            } else if (user.getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
-                //takip istegi yok ise
-                if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
-                    updateFollowStatus(FRIEND_FOLLOW_REQUEST);
-                } else {
-                    updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
-                }
-            } else {
-                //do nothing
+            switch (user.getFollowStatus()) {
+                case FOLLOW_STATUS_FOLLOWING:
+                    if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
+                        openDialogBox();
+                    } else {
+                        updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                    }
+                    break;
+                case FOLLOW_STATUS_PENDING:
+                    //istek gonderilmis ise
+                    updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
+                    break;
+                case FOLLOW_STATUS_NONE:
+                    //takip istegi yok ise
+                    if (user.getIsPrivateAccount() != null && user.getIsPrivateAccount()) {
+                        updateFollowStatus(FRIEND_FOLLOW_REQUEST);
+                    } else {
+                        updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
+                    }
+                    break;
+                default:
+                    //do nothing
+                    break;
             }
         }
 

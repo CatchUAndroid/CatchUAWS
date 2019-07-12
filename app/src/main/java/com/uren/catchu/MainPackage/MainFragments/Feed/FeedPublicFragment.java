@@ -1,7 +1,6 @@
 package com.uren.catchu.MainPackage.MainFragments.Feed;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -45,6 +44,7 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -101,7 +101,7 @@ public class FeedPublicFragment extends BaseFragment {
     private int pastVisibleItems, visibleItemCount, totalItemCount;
     private int perPageCnt;
     private int pageCnt;
-    private List<Post> postList = new ArrayList<Post>();
+    private List<Post> postList = new ArrayList<>();
     private static final int RECYCLER_VIEW_CACHE_COUNT = 10;
     private boolean pulledToRefresh = false;
     private boolean isFirstFetch = false;
@@ -244,7 +244,7 @@ public class FeedPublicFragment extends BaseFragment {
             showExceptionLayout(true, VIEW_RETRY);
 
             final int TYPE_XML = 1;
-            Intent i = new Intent(getActivity(), InfoActivity.class);
+            Intent i = new Intent(Objects.requireNonNull(getActivity()), InfoActivity.class);
             i.putExtra("EXTRA_TYPE", TYPE_XML);
             transitionTo(i);
 
@@ -265,7 +265,7 @@ public class FeedPublicFragment extends BaseFragment {
     }
 
     void transitionTo(Intent i) {
-        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(Objects.requireNonNull(getActivity()), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
         startActivity(i, transitionActivityOptions.toBundle());
     }
@@ -274,25 +274,17 @@ public class FeedPublicFragment extends BaseFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    getPosts();
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted, yay! Do the
+                getPosts();
 
-                } else {
-                    // permission denied, boo! Disable the
-                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
-                }
-
+            } else {
+                // permission denied, boo! Disable the
+                showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-
         }
-
     }
 
     private void getPosts() {
@@ -340,7 +332,7 @@ public class FeedPublicFragment extends BaseFragment {
                 refresh_layout.setRefreshing(false);
 
                 if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
 

@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 
 import static com.uren.catchu.Libraries.VideoPlay.Utils.getString;
 
@@ -88,7 +89,7 @@ public class CustomRecyclerView extends RecyclerView {
 
 //        List<HandlerThread> threads = new ArrayList<HandlerThread>();
         if (newState == 0) {
-            int firstVisiblePosition = ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
+            int firstVisiblePosition = ((LinearLayoutManager) Objects.requireNonNull(getLayoutManager())).findFirstVisibleItemPosition();
             int lastVisiblePosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
 //            Log.d("trace", "firstVisiblePosition: " + firstVisiblePosition + " |lastVisiblePosition: " + lastVisiblePosition);
             if (firstVisiblePosition >= 0) {
@@ -221,7 +222,7 @@ public class CustomRecyclerView extends RecyclerView {
 
     public void preDownload(List<String> urls) {
         if (!Utils.isConnected(_act)) return;
-        HashSet<String> hashSet = new HashSet<String>();
+        HashSet<String> hashSet = new HashSet<>();
         hashSet.addAll(urls);
         urls.clear();
         urls.addAll(hashSet);

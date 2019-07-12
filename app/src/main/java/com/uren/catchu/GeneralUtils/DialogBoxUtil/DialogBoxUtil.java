@@ -44,7 +44,7 @@ public class DialogBoxUtil {
 
     public static void photoChosenDialogBox(Context context, String title, boolean photoExist, final PhotoChosenCallback photoChosenCallback) {
         CommonUtils.hideKeyBoard(context);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1);
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.openCamera));
 
@@ -72,7 +72,7 @@ public class DialogBoxUtil {
 
     public static void photoChosenForProblemReportDialogBox(Context context, String title, final PhotoChosenForReportCallback photoChosenForReportCallback) {
         CommonUtils.hideKeyBoard(context);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1);
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.TAKE_SCREENSHOT));
 
@@ -94,7 +94,7 @@ public class DialogBoxUtil {
 
     public static void photoChosenForShareDialogBox(Context context, boolean photoExist, final PhotoChosenForShareCallback callback) {
         CommonUtils.hideKeyBoard(context);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1);
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.openCamera));
 
@@ -124,7 +124,7 @@ public class DialogBoxUtil {
 
     public static void videoChosenForShareDialogBox(Context context, boolean videoExist, final VideoChosenForShareCallback callback) {
         CommonUtils.hideKeyBoard(context);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context, android.R.layout.simple_list_item_1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1);
         adapter.add("  " + context.getResources().getString(R.string.openGallery));
         adapter.add("  " + context.getResources().getString(R.string.openCamera));
 
@@ -386,7 +386,7 @@ public class DialogBoxUtil {
 
     private static ArrayList<String> getItemList(Context context, Post post) {
 
-        ArrayList<String> myList = new ArrayList<String>();
+        ArrayList<String> myList = new ArrayList<>();
 
         /**Report*/
         if (!post.getUser().getUserid().equals(AccountHolderInfo.getUserID())) {

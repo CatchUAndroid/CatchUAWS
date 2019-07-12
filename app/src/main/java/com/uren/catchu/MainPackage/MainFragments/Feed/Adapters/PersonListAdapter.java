@@ -103,24 +103,29 @@ public class PersonListAdapter extends RecyclerView.Adapter<PersonListAdapter.My
         public void manageFollowStatus() {
 
             //takip ediliyor ise
-            if (person.getFollowStatus().equals(FOLLOW_STATUS_FOLLOWING)) {
-                if (person.getIsPrivateAccount() != null && person.getIsPrivateAccount()) {
-                    openDialogBox();
-                } else {
-                    updateFollowStatus(FRIEND_DELETE_FOLLOW);
-                }
-            } else if (person.getFollowStatus().equals(FOLLOW_STATUS_PENDING)) {
-                //istek gonderilmis ise
-                updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
-            } else if (person.getFollowStatus().equals(FOLLOW_STATUS_NONE)) {
-                //takip istegi yok ise
-                if (person.getIsPrivateAccount() != null && person.getIsPrivateAccount()) {
-                    updateFollowStatus(FRIEND_FOLLOW_REQUEST);
-                } else {
-                    updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
-                }
-            } else {
-                //do nothing
+            switch (person.getFollowStatus()) {
+                case FOLLOW_STATUS_FOLLOWING:
+                    if (person.getIsPrivateAccount() != null && person.getIsPrivateAccount()) {
+                        openDialogBox();
+                    } else {
+                        updateFollowStatus(FRIEND_DELETE_FOLLOW);
+                    }
+                    break;
+                case FOLLOW_STATUS_PENDING:
+                    //istek gonderilmis ise
+                    updateFollowStatus(FRIEND_DELETE_PENDING_FOLLOW_REQUEST);
+                    break;
+                case FOLLOW_STATUS_NONE:
+                    //takip istegi yok ise
+                    if (person.getIsPrivateAccount() != null && person.getIsPrivateAccount()) {
+                        updateFollowStatus(FRIEND_FOLLOW_REQUEST);
+                    } else {
+                        updateFollowStatus(FRIEND_CREATE_FOLLOW_DIRECTLY);
+                    }
+                    break;
+                default:
+                    //do nothing
+                    break;
             }
         }
 

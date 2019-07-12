@@ -51,9 +51,9 @@ public class FriendVerticalListAdapter extends RecyclerView.Adapter implements F
     public FriendVerticalListAdapter(Context context, List<UserProfileProperties> groupParticipantList) {
         this.context = context;
         this.friendList = new FriendList();
-        this.friendList.setResultArray(new ArrayList<UserProfileProperties>());
+        this.friendList.setResultArray(new ArrayList<>());
         this.orginalFriendList = new FriendList();
-        this.orginalFriendList.setResultArray(new ArrayList<UserProfileProperties>());
+        this.orginalFriendList.setResultArray(new ArrayList<>());
         this.groupParticipantList = groupParticipantList;
     }
 

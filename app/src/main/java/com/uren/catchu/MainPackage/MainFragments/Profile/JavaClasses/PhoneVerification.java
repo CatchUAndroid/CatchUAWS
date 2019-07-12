@@ -93,9 +93,6 @@ public class PhoneVerification {
                             phoneVerifyCallback.onReturn(true);
                         } else {
                             phoneVerifyCallback.onReturn(false);
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-
-                            }
                         }
                     }
                 });

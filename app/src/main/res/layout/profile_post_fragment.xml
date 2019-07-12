@@ -8,8 +8,8 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/White">
+        android:background="@color/White"
+        android:orientation="vertical">
 
         <include layout="@layout/layout_progress_bar" />
 
@@ -20,29 +20,18 @@
 
             <include layout="@layout/common_toolbar_layout" />
 
-
-            <com.github.florent37.shapeofview.shapes.RoundRectView
+            <devlight.io.library.ntb.NavigationTabBar
+                android:id="@+id/ntb_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:elevation="4dp"
-                app:shape_roundRect_bottomLeftRadius="20dp"
-                app:shape_roundRect_bottomRightRadius="20dp">
-
-
-                <devlight.io.library.ntb.NavigationTabBar
-                    android:id="@+id/ntb_horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    app:ntb_badge_gravity="top"
-                    app:ntb_badge_position="right"
-                    app:ntb_badged="false"
-                    app:ntb_scaled="true"
-                    app:ntb_swiped="true"
-                    app:ntb_tinted="true"
-                    app:ntb_title_mode="all"
-                    app:ntb_titled="true" />
-
-            </com.github.florent37.shapeofview.shapes.RoundRectView>
+                app:ntb_badge_gravity="top"
+                app:ntb_badge_position="right"
+                app:ntb_badged="false"
+                app:ntb_scaled="true"
+                app:ntb_swiped="true"
+                app:ntb_tinted="true"
+                app:ntb_title_mode="all"
+                app:ntb_titled="true" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

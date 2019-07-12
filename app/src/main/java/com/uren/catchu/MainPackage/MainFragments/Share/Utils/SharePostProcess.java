@@ -20,11 +20,11 @@ import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.SelectedFriendList;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import catchu.model.BucketUpload;
 import catchu.model.BucketUploadResponse;
@@ -35,7 +35,6 @@ import catchu.model.UserProfileProperties;
 
 import static com.uren.catchu.Constants.StringConstants.IMAGE_TYPE;
 import static com.uren.catchu.Constants.StringConstants.SHARE_TYPE_CUSTOM;
-import static com.uren.catchu.Constants.StringConstants.VIDEO_TYPE;
 
 public class SharePostProcess {
 
@@ -133,7 +132,7 @@ public class SharePostProcess {
         }
 
         if (photoBitmap == null) {
-            if (imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap() != null)
+            if (Objects.requireNonNull(imageShareItemBox.getPhotoSelectUtil()).getScreeanShotBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getScreeanShotBitmap();
             else if (imageShareItemBox.getPhotoSelectUtil().getBitmap() != null)
                 photoBitmap = imageShareItemBox.getPhotoSelectUtil().getBitmap();
@@ -151,7 +150,7 @@ public class SharePostProcess {
                     if (urlConnection != null) {
                         if (urlConnection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                             recycleImageBitmaps(imageShareItemBox);
-                            imageShareItemBox.setUploaded(true);
+                            Objects.requireNonNull(imageShareItemBox).setUploaded(true);
                             Media media = new Media();
                             media.setExtension(bucketUpload.getExtension());
                             media.setType(IMAGE_TYPE);
@@ -160,18 +159,18 @@ public class SharePostProcess {
                             shareItems.getPost().getAttachments().add(media);
                             checkAllItemsUploaded();
                         } else {
-                            imageShareItemBox.setUploaded(false);
+                            Objects.requireNonNull(imageShareItemBox).setUploaded(false);
                             InputStream is = urlConnection.getErrorStream();
                             serviceCompleteCallback.onFailed(new Exception(is.toString()));
                             uploadImageToS3.cancel(true);
                         }
                     } else {
-                        imageShareItemBox.setUploaded(false);
+                        Objects.requireNonNull(imageShareItemBox).setUploaded(false);
                         serviceCompleteCallback.onFailed(new Exception(""));
                         uploadImageToS3.cancel(true);
                     }
                 } catch (Exception e) {
-                    imageShareItemBox.setUploaded(false);
+                    Objects.requireNonNull(imageShareItemBox).setUploaded(false);
                     serviceCompleteCallback.onFailed(e);
                     uploadImageToS3.cancel(true);
                 }
@@ -179,7 +178,7 @@ public class SharePostProcess {
 
             @Override
             public void onFailure(Exception e) {
-                imageShareItemBox.setUploaded(false);
+                Objects.requireNonNull(imageShareItemBox).setUploaded(false);
                 serviceCompleteCallback.onFailed(e);
                 uploadImageToS3.cancel(true);
             }

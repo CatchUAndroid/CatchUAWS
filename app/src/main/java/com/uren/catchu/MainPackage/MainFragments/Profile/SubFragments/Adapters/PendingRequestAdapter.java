@@ -52,7 +52,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
 
     @Override
     public PendingRequestHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = null;
+        View itemView;
         itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.pending_request_list_item, parent, false);
         return new PendingRequestHolder(itemView);
@@ -183,7 +183,7 @@ public class PendingRequestAdapter extends RecyclerView.Adapter<PendingRequestAd
 
     @Override
     public int getItemCount() {
-        int size = 0;
+        int size;
         size = friendRequestList.getResultArray().size();
         return size;
     }

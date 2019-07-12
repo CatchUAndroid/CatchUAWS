@@ -3,10 +3,7 @@ package com.uren.catchu.Singleton;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
-import androidx.annotation.NonNull;
-
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,6 +15,8 @@ import com.uren.catchu.Constants.Error;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.Singleton.Interfaces.AccountHolderInfoCallback;
+
+import java.util.Objects;
 
 import catchu.model.UserProfile;
 import catchu.model.UserProfileProperties;
@@ -111,8 +110,9 @@ public class AccountHolderInfo {
 
     public static String getUserIdFromFirebase() {
         try {
-            String FBuserId = "";
+            String FBuserId;
             FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            assert currentUser != null;
             FBuserId = currentUser.getUid();
             return FBuserId;
         } catch (Exception e) {
@@ -121,9 +121,6 @@ public class AccountHolderInfo {
         return "";
     }
 
-    public static FirebaseAuth getFirebaseAuth() {
-        return firebaseAuth;
-    }
 
     public static void getToken(final TokenCallback tokenCallback) {
 
@@ -136,12 +133,10 @@ public class AccountHolderInfo {
         }
 
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-        Task<GetTokenResult> tokenTask = firebaseAuth.getCurrentUser().getIdToken(false);
+        Task<GetTokenResult> tokenTask = Objects.requireNonNull(firebaseAuth.getCurrentUser()).getIdToken(false);
         tokenTask.addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                tokenCallback.onTokenTaken(task.getResult().getToken());
-            } else {
-
+                tokenCallback.onTokenTaken(Objects.requireNonNull(task.getResult()).getToken());
             }
         });
     }

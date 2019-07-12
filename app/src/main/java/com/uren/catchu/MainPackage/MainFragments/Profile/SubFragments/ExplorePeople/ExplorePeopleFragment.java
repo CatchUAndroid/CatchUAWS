@@ -16,7 +16,6 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 
 import com.ToxicBakery.viewpager.transforms.RotateUpTransformer;
-import com.google.android.material.tabs.TabLayout;
 import com.uren.catchu.Adapters.SpecialSelectTabAdapter;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
@@ -24,13 +23,12 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import devlight.io.library.ntb.NavigationTabBar;
 
-import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_GRID;
-import static com.uren.catchu.Constants.NumericConstants.USER_POST_VIEW_TYPE_LIST;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 
 public class ExplorePeopleFragment extends BaseFragment {
@@ -72,7 +70,7 @@ public class ExplorePeopleFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
 
         if (view == null) {
 
@@ -103,7 +101,7 @@ public class ExplorePeopleFragment extends BaseFragment {
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.facebook_circular_icon, null),
                         Color.parseColor("#d1395c"))
-                        .title(getContext().getResources().getString(R.string.FACEBOOK_LOWER))
+                        .title(Objects.requireNonNull(getContext()).getResources().getString(R.string.FACEBOOK_LOWER))
                         .build()
         );
         models.add(
@@ -131,7 +129,7 @@ public class ExplorePeopleFragment extends BaseFragment {
 
     private void addListeners() {
 
-        searchToolbarBackImgv.setOnClickListener(v -> getActivity().onBackPressed());
+        searchToolbarBackImgv.setOnClickListener(v -> Objects.requireNonNull(getActivity()).onBackPressed());
 
         navigationTabBar.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -170,7 +168,7 @@ public class ExplorePeopleFragment extends BaseFragment {
 
         imgCancelSearch.setOnClickListener(v -> {
             searchTextClear();
-            CommonUtils.hideKeyBoard(getContext());
+            CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
             searchToolbarBackImgv.setVisibility(View.VISIBLE);
             imgCancelSearch.setVisibility(View.GONE);
         });
@@ -186,7 +184,8 @@ public class ExplorePeopleFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null) {
+                if (s != null) {
+                    s.toString();
                     if (!s.toString().trim().isEmpty()) {
                         imgCancelSearch.setVisibility(View.VISIBLE);
                         searchToolbarBackImgv.setVisibility(View.GONE);

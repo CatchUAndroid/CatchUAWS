@@ -3,9 +3,10 @@ package com.uren.catchu.MainPackage.MainFragments.Feed.JavaClasses;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.os.Build;
 import android.view.Display;
 import android.view.WindowManager;
+
+import java.util.Objects;
 
 /**
  * Created by froger_mcs on 05.11.14.
@@ -21,7 +22,7 @@ public class Utils {
     public static int getScreenHeight(Context c) {
         if (screenHeight == 0) {
             WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
+            Display display = Objects.requireNonNull(wm).getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             screenHeight = size.y;
@@ -33,7 +34,7 @@ public class Utils {
     public static int getScreenWidth(Context c) {
         if (screenWidth == 0) {
             WindowManager wm = (WindowManager) c.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
+            Display display = Objects.requireNonNull(wm).getDefaultDisplay();
             Point size = new Point();
             display.getSize(size);
             screenWidth = size.x;

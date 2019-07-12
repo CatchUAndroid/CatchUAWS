@@ -47,6 +47,7 @@ import com.uren.catchu.Libraries.LayoutManager.CustomLinearLayoutManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -73,7 +74,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
     private FeedAdapter userPostListViewAdapter;
     private CustomLinearLayoutManager customLinearLayoutManager;
     private RecyclerView listRecyclerView;
-    private List<Post> postList = new ArrayList<Post>();
+    private List<Post> postList = new ArrayList<>();
 
     private boolean loading = true;
     private boolean pulledToRefresh = false;
@@ -138,7 +139,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     @Nullable
@@ -170,7 +171,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
         if (userName != null && !userName.isEmpty()) {
             toolbarTitleTv.setText(userName);
         } else {
-            toolbarTitleTv.setText(getContext().getResources().getString(R.string.profile));
+            toolbarTitleTv.setText(Objects.requireNonNull(getContext()).getResources().getString(R.string.profile));
         }
 
     }
@@ -305,7 +306,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
     }
 
     void transitionTo(Intent i) {
-        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(getActivity(), false);
+        final Pair<View, String>[] pairs = TransitionHelper.createSafeTransitionParticipants(Objects.requireNonNull(getActivity()), false);
         ActivityOptionsCompat transitionActivityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), pairs);
         startActivity(i, transitionActivityOptions.toBundle());
     }
@@ -314,27 +315,19 @@ public class OtherProfilePostListViewFragment extends BaseFragment
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode) {
-            case PermissionModule.PERMISSION_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        // If request is cancelled, the result arrays are empty.
+        if (requestCode == PermissionModule.PERMISSION_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    // permission was granted, yay! Do the
-                    getPosts();
+                // permission was granted, yay! Do the
+                getPosts();
 
-                } else {
-                    // permission denied, boo! Disable the
-                    showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
-                }
-
+            } else {
+                // permission denied, boo! Disable the
+                showExceptionLayout(true, VIEW_LOCATION_PERMISSION);
             }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-
         }
-
     }
 
     private void getPosts() {
@@ -369,10 +362,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
 
         if (catchType.equals(OTHER_PROFILE_POST_TYPE_SHARED)) {
             getOtherProfileSharedPosts(token);
-        } else {
-            //do nothing
         }
-
     }
 
     private void getOtherProfileSharedPosts(String token) {
@@ -414,7 +404,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
                 refresh_layout.setRefreshing(false);
 
                 if (postList.size() > 0) {
-                    DialogBoxUtil.showErrorDialog(getContext(), getContext().getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
+                    DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getContext()).getResources().getString(R.string.serverError), new InfoDialogBoxCallback() {
                         @Override
                         public void okClick() {
                         }
@@ -472,7 +462,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
             if (getActivity() instanceof NextActivity)
                 ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
 
-            getActivity().onBackPressed();
+            Objects.requireNonNull(getActivity()).onBackPressed();
         }
 
     }
@@ -493,7 +483,7 @@ public class OtherProfilePostListViewFragment extends BaseFragment
             serverError.setVisibility(View.GONE);
 
             if (viewType == VIEW_RETRY) {
-                imgRetry.setColorFilter(ContextCompat.getColor(getContext(), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
+                imgRetry.setColorFilter(ContextCompat.getColor(Objects.requireNonNull(getContext()), R.color.gray), android.graphics.PorterDuff.Mode.SRC_IN);
                 retryLayout.setVisibility(View.VISIBLE);
             } else if (viewType == VIEW_NO_POST_FOUND) {
                 noPostFoundLayout.setVisibility(View.VISIBLE);

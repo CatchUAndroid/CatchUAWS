@@ -6,10 +6,7 @@ import android.os.AsyncTask;
 import android.view.View;
 import android.widget.Switch;
 
-import androidx.annotation.NonNull;
-
 import com.facebook.login.LoginManager;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -34,6 +31,8 @@ import com.uren.catchu.Singleton.AccountHolderFacebookFriends;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 import com.uren.catchu.Singleton.GroupListHolder;
 import com.uren.catchu.Singleton.SelectedFriendList;
+
+import java.util.Objects;
 
 import catchu.model.BaseResponse;
 import catchu.model.Endpoint;
@@ -144,7 +143,7 @@ public class SettingOperation {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 try {
-                    MessageUpdateProcess.updateTokenSigninValue(firebaseAuth.getCurrentUser().getUid(), CHAR_H);
+                    MessageUpdateProcess.updateTokenSigninValue(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid(), CHAR_H);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -166,7 +165,7 @@ public class SettingOperation {
 
                 final Endpoint endpoint = new Endpoint();
                 endpoint.setDeviceToken(deviceToken);
-                endpoint.setUserid(firebaseAuth.getCurrentUser().getUid());
+                endpoint.setUserid(Objects.requireNonNull(firebaseAuth.getCurrentUser()).getUid());
                 endpoint.setPlatformType(ENDPOINT_PLATFORM_ANDROID);
                 endpoint.setRequestType(ENDPOINT_LOGGED_OUT);
 

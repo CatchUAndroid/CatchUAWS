@@ -27,6 +27,7 @@ import com.uren.catchu.R;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_1ANDHALFMB;
 import static com.uren.catchu.Constants.NumericConstants.MAX_IMAGE_SIZE_2ANDHALFMB;
@@ -38,7 +39,7 @@ public class BitmapConversion extends AppCompatActivity {
 
     public static Bitmap getRoundedShape(Bitmap scaleBitmapImage, int Width, int Height) {
 
-        Bitmap targetBitmap = null;
+        Bitmap targetBitmap;
         int targetWidth = Width;
         int targetHeight = Height;
         targetBitmap = Bitmap.createBitmap(targetWidth, targetHeight, Bitmap.Config.ARGB_8888);
@@ -61,7 +62,7 @@ public class BitmapConversion extends AppCompatActivity {
     }
 
     public static Bitmap getScreenShot(View view) {
-        Bitmap bitmap = null;
+        Bitmap bitmap;
         view.setDrawingCacheEnabled(true);
         bitmap = Bitmap.createBitmap(view.getDrawingCache());
         view.setDrawingCacheEnabled(false);
@@ -85,7 +86,7 @@ public class BitmapConversion extends AppCompatActivity {
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {
-        Bitmap resizedBitmap = null;
+        Bitmap resizedBitmap;
 
         int width = bm.getWidth();
         int height = bm.getHeight();
@@ -101,7 +102,7 @@ public class BitmapConversion extends AppCompatActivity {
         resizedBitmap = Bitmap.createBitmap(
                 bm, 0, 0, width, height, matrix, false);
 
-        if (bm != null && !bm.isRecycled())
+        if (!bm.isRecycled())
             bm.recycle();
 
         return resizedBitmap;
@@ -156,7 +157,7 @@ public class BitmapConversion extends AppCompatActivity {
     }
 
     public static Bitmap createUserMapBitmap(Context context, ImageView imageView) {
-        Bitmap result = null;
+        Bitmap result;
 
         result = Bitmap.createBitmap(dp(62, context), dp(76, context), Bitmap.Config.ARGB_8888);
         result.eraseColor(Color.TRANSPARENT);
@@ -195,7 +196,7 @@ public class BitmapConversion extends AppCompatActivity {
     }
 
     public static int dp(float value, Context context) {
-        int dpValue = 0;
+        int dpValue;
 
         if (value == 0) {
             return 0;
@@ -207,7 +208,7 @@ public class BitmapConversion extends AppCompatActivity {
 
     public static Bitmap getBitmapFromInputStream(InputStream input, Context context,
                                                   int width, int height) {
-        Bitmap myBitmap = null;
+        Bitmap myBitmap;
         myBitmap = BitmapFactory.decodeStream(input);
         Bitmap roundedBitmap = BitmapConversion.getRoundedShape(myBitmap, width, height);
         return roundedBitmap;
@@ -225,7 +226,7 @@ public class BitmapConversion extends AppCompatActivity {
 
         Bitmap scaledBitmap = null;
 
-        String filePath = UriAdapter.getRealPathFromURI(photoSelectUtil.getMediaUri(), context);
+        String filePath = UriAdapter.getRealPathFromURI(Objects.requireNonNull(photoSelectUtil).getMediaUri(), context);
 
         if(filePath == null || filePath.trim().isEmpty())
             return null;
@@ -297,7 +298,7 @@ public class BitmapConversion extends AppCompatActivity {
         Matrix scaleMatrix = new Matrix();
         scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
 
-        Canvas canvas = new Canvas(scaledBitmap);
+        Canvas canvas = new Canvas(Objects.requireNonNull(scaledBitmap));
         canvas.setMatrix(scaleMatrix);
         canvas.drawBitmap(bmp, middleX - bmp.getWidth() / 2, middleY - bmp.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
 
@@ -309,7 +310,7 @@ public class BitmapConversion extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        int orientation = exif.getAttributeInt(
+        int orientation = Objects.requireNonNull(exif).getAttributeInt(
                 ExifInterface.TAG_ORIENTATION, 0);
 
         Matrix matrix = new Matrix();
@@ -328,7 +329,7 @@ public class BitmapConversion extends AppCompatActivity {
     }
 
     public static int calculateInSampleSize(Context context, BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        int inSampleSize = 0;
+        int inSampleSize;
         final int height = options.outHeight;
         final int width = options.outWidth;
         inSampleSize = 1;

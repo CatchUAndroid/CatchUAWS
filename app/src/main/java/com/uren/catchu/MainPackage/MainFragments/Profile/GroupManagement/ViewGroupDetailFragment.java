@@ -30,7 +30,6 @@ import com.uren.catchu.GeneralUtils.ApiModelsProcess.UserGroupsProcess;
 import com.uren.catchu.GeneralUtils.CommonUtils;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.CustomDialogBox;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.DialogBoxUtil;
-import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.CustomDialogListener;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.InfoDialogBoxCallback;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.PhotoChosenCallback;
 import com.uren.catchu.GeneralUtils.IntentUtil.IntentSelectUtil;
@@ -54,6 +53,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -148,7 +148,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
     }
 
     public void setGUIVariables() {
@@ -161,7 +161,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
     public void setShapes() {
         addFriendImgv.setBackground(ShapeUtil.getShape(getResources().getColor(R.color.LimeGreen, null),
                 0, GradientDrawable.OVAL, 50, 0));
-        exitGroupImgv.setColorFilter(getContext().getResources().getColor(R.color.likeButtonColor, null), PorterDuff.Mode.SRC_IN);
+        exitGroupImgv.setColorFilter(Objects.requireNonNull(getContext()).getResources().getColor(R.color.likeButtonColor, null), PorterDuff.Mode.SRC_IN);
     }
 
     private void getGroupInformation() {
@@ -239,7 +239,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
         backImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -302,7 +302,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     private void showCustomDialog() {
         new CustomDialogBox.Builder((Activity) getContext())
-                .setMessage(getContext().getResources().getString(R.string.areYouSureExitFromGroup))
+                .setMessage(Objects.requireNonNull(getContext()).getResources().getString(R.string.areYouSureExitFromGroup))
                 .setGroup(groupRequestResultResultArrayItem)
                 .setNegativeBtnVisibility(View.VISIBLE)
                 .setNegativeBtnText(getContext().getResources().getString(R.string.upperNo))
@@ -352,7 +352,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     @Override
     public void onStart() {
-        getActivity().findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).findViewById(R.id.tabMainLayout).setVisibility(View.GONE);
         super.onStart();
     }
 
@@ -362,7 +362,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
             @Override
             public void onComplete(Object object) {
                 recyclerViewAdapterCallback.OnRemoved();
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
 
             @Override
@@ -402,7 +402,7 @@ public class ViewGroupDetailFragment extends BaseFragment {
 
     public void startCameraProcess() {
 
-        if (!CommonUtils.checkCameraHardware(getActivity())) {
+        if (!CommonUtils.checkCameraHardware(Objects.requireNonNull(getActivity()))) {
             CommonUtils.showToastShort(getActivity(), getResources().getString(R.string.deviceHasNoCamera));
             return;
         }

@@ -35,6 +35,8 @@ import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.TrashDragDropC
 import com.uren.catchu.MainPackage.MainFragments.Share.Utils.TrashDragListener;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -118,7 +120,7 @@ public class PhotoSelectedFragment extends BaseFragment {
             public void onClick(View v) {
                 checkTextIsAddedOrNot();
                 returnCallback.onReturn(thisPhotoSelectUtil);
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -256,7 +258,7 @@ public class PhotoSelectedFragment extends BaseFragment {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
                 RelativeLayout.LayoutParams.WRAP_CONTENT);
         layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
-        textView.setTextColor(getActivity().getResources().getColor(R.color.White, null));
+        textView.setTextColor(Objects.requireNonNull(getActivity()).getResources().getColor(R.color.White, null));
         textView.setText("");
         textView.setVisibility(View.GONE);
         textView.setLayoutParams(layoutParams);
@@ -268,11 +270,11 @@ public class PhotoSelectedFragment extends BaseFragment {
 
         if (thisPhotoSelectUtil != null) {
             if (thisPhotoSelectUtil.getScreeanShotBitmap() != null)
-                Glide.with(getContext())
+                Glide.with(Objects.requireNonNull(getContext()))
                         .load(thisPhotoSelectUtil.getScreeanShotBitmap())
                         .into(selectedImageView);
             else if (thisPhotoSelectUtil.getMediaUri() != null)
-                Glide.with(getContext())
+                Glide.with(Objects.requireNonNull(getContext()))
                         .load(thisPhotoSelectUtil.getMediaUri())
                         .into(selectedImageView);
 

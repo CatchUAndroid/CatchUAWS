@@ -384,8 +384,6 @@ public class FragNavController {
                     fragment = getRootFragment(selectedTabIndex);
                     ft.add(mContainerId, fragment, generateTag(fragment));
                     ft.commit();
-
-                    bShouldPush = true;
                 }
             }
 

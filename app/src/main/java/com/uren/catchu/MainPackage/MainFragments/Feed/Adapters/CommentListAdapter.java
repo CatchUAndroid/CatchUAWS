@@ -48,7 +48,7 @@ public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.
     public CommentListAdapter(Context context, String postId) {
         this.mContext = context;
         this.postId = postId;
-        this.commentList = new ArrayList<Comment>();
+        this.commentList = new ArrayList<>();
 
         imageShape = ShapeUtil.getShape(context.getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0);

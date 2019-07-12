@@ -71,6 +71,7 @@
     <string name="detail">Detail</string>
     <string name="searchGroup">Search Group</string>
     <string name="GROUPS_LOADING">Groups loading...</string>
+    <string name="NEW_GROUP">Yeni Grup</string>
 
     <string name="typeToAddText">Say something...</string>
     <string name="UPDATING">Updating...</string>
@@ -309,7 +310,8 @@
     <string name="AGE">Age,</string>
     <string name="direct_follow_notif_text">has started following you</string>
     <string name="follow_request_notif_text">sent you a follow-up request</string>
-
+    <string name="wanna_take_screenshot">Would you like to take a screenshot of your complaint?</string>
+    <string name="CONTINUE">CONTINUE</string>
 
     <!-- App introduction variables-->
     <string name="SOCIAL_INTERACTION">Social Interaction</string>
@@ -356,12 +358,12 @@
 
 
     <string name="ADMOB_APP_ID">ca-app-pub-7227467199436307~1178118713</string>
-    <!--<string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-7227467199436307/4313340521</string>
-    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-7227467199436307/9374095519</string>-->
+    <string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-7227467199436307/4313340521</string>
+    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-7227467199436307/9374095519</string>
 
 
     <!--Test-->
-    <string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-3940256099942544/1033173712</string>
+    <!--<string name="ADMOB_BANNER_AD_UNIT_ID">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ADMOB_INTERSITITIAL_AD_UNIT_ID">ca-app-pub-3940256099942544/1033173712</string>-->
 
 </resources>

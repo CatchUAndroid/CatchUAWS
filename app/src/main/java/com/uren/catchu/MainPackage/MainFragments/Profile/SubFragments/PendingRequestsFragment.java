@@ -26,6 +26,8 @@ import com.uren.catchu.MainPackage.MainFragments.Profile.SubFragments.Adapters.P
 import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FriendRequestList;
@@ -60,7 +62,7 @@ public class PendingRequestsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ((NextActivity) getContext()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getContext())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_penging_requests, container, false);
             ButterKnife.bind(this, mView);
@@ -81,7 +83,7 @@ public class PendingRequestsFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
     }
@@ -133,7 +135,7 @@ public class PendingRequestsFragment extends BaseFragment {
             @Override
             public void onFailed(Exception e) {
                 progressBar.setVisibility(View.GONE);
-                DialogBoxUtil.showErrorDialog(getContext(), getActivity().getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
+                DialogBoxUtil.showErrorDialog(getContext(), Objects.requireNonNull(getActivity()).getResources().getString(R.string.error) + e.getMessage(), new InfoDialogBoxCallback() {
                     @Override
                     public void okClick() {
 

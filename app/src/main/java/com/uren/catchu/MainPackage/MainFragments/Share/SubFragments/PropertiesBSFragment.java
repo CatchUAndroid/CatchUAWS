@@ -15,6 +15,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Adapters.ColorPickerAdapter;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 public class PropertiesBSFragment extends BottomSheetDialogFragment implements SeekBar.OnSeekBarChangeListener {
 
     public PropertiesBSFragment() {
@@ -54,7 +56,7 @@ public class PropertiesBSFragment extends BottomSheetDialogFragment implements S
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         rvColor.setLayoutManager(layoutManager);
         rvColor.setHasFixedSize(true);
-        ColorPickerAdapter colorPickerAdapter = new ColorPickerAdapter(getActivity());
+        ColorPickerAdapter colorPickerAdapter = new ColorPickerAdapter(Objects.requireNonNull(getActivity()));
         colorPickerAdapter.setOnColorPickerClickListener(new ColorPickerAdapter.OnColorPickerClickListener() {
             @Override
             public void onColorPickerClickListener(int colorCode) {

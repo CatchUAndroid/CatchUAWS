@@ -18,17 +18,17 @@ import java.util.List;
 public class FragNavTransactionOptions {
     List<Pair<View, String>> sharedElements;
     @FragNavController.Transit
-    int transition = FragmentTransaction.TRANSIT_NONE;
+    int transition;
     @AnimRes
-    public int enterAnimation = 0;
+    public int enterAnimation;
     @AnimRes
-    public int exitAnimation = 0;
+    public int exitAnimation;
     @AnimRes
-    public int popEnterAnimation = 0;
+    public int popEnterAnimation;
     @AnimRes
-    public int popExitAnimation = 0;
+    public int popExitAnimation;
     @StyleRes
-    int transitionStyle = 0;
+    int transitionStyle;
     String breadCrumbTitle;
     String breadCrumbShortTitle;
 

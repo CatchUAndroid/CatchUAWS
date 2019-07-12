@@ -45,6 +45,7 @@ import com.uren.catchu.Singleton.AccountHolderInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -102,7 +103,7 @@ public class ContactsFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_RIGHT_TO_LEFT;
         if (mView == null) {
             mView = inflater.inflate(R.layout.fragment_contacts, container, false);
             ButterKnife.bind(this, mView);
@@ -138,12 +139,12 @@ public class ContactsFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 if (edittextFocused) {
-                    CommonUtils.hideKeyBoard(getContext());
+                    CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
                     searchToolbarBackImgv.setVisibility(View.GONE);
                     if (editTextSearch != null)
                         editTextSearch.setText("");
                 } else {
-                    getActivity().onBackPressed();
+                    Objects.requireNonNull(getActivity()).onBackPressed();
                 }
             }
         });
@@ -161,7 +162,7 @@ public class ContactsFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null && !s.toString().trim().isEmpty()) {
+                if (s != null && !s.toString().trim().isEmpty()) {
                     updateAdapter(s.toString());
                     imgCancelSearch.setVisibility(View.VISIBLE);
                 } else {
@@ -197,7 +198,7 @@ public class ContactsFragment extends BaseFragment {
                 if (editTextSearch != null)
                     editTextSearch.setText("");
                 imgCancelSearch.setVisibility(View.GONE);
-                CommonUtils.hideKeyBoard(getContext());
+                CommonUtils.hideKeyBoard(Objects.requireNonNull(getContext()));
                 searchToolbarBackImgv.setVisibility(View.GONE);
 
             }
@@ -214,7 +215,7 @@ public class ContactsFragment extends BaseFragment {
 
     public void startGetContactList() {
         progressBar.setVisibility(View.VISIBLE);
-        AccountHolderContactsProcess.getContactList(getActivity(), new CompleteCallback() {
+        AccountHolderContactsProcess.getContactList(Objects.requireNonNull(getActivity()), new CompleteCallback() {
             @Override
             public void onComplete(Object object) {
                 List<Contact> contactList = (List<Contact>) object;
@@ -332,7 +333,7 @@ public class ContactsFragment extends BaseFragment {
 
         if (contactFriendModelList != null && contactFriendModelList.size() == 0) {
             warningMsgLayout.setVisibility(View.VISIBLE);
-            warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
+            warningMsgTv.setText(Objects.requireNonNull(getActivity()).getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
         } else {
             contactsAdapter = new ContactsAdapter(getContext(), contactFriendModelList, new ContactFriendSelectCallback() {
                 @Override
@@ -394,7 +395,7 @@ public class ContactsFragment extends BaseFragment {
                 startGetContactList();
             } else {
                 warningMsgLayout.setVisibility(View.VISIBLE);
-                warningMsgTv.setText(getActivity().getResources().getString(R.string.GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS));
+                warningMsgTv.setText(Objects.requireNonNull(getActivity()).getResources().getString(R.string.GIVE_PERMISSION_TO_SEE_CONTACT_FRIENDS));
             }
         }
     }
@@ -407,7 +408,7 @@ public class ContactsFragment extends BaseFragment {
                     int itemSize = (int) object;
 
                     if (itemSize == 0) {
-                        warningMsgTv.setText(getActivity().getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
+                        warningMsgTv.setText(Objects.requireNonNull(getActivity()).getResources().getString(R.string.THERE_IS_NO_SEARCH_RESULT));
                         warningMsgLayout.setVisibility(View.VISIBLE);
                     } else
                         warningMsgLayout.setVisibility(View.GONE);

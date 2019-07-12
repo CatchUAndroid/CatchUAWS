@@ -191,7 +191,7 @@ public class MessageListAdapter extends RecyclerView.Adapter implements Filterab
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
 
-                FilterResults filterResults = null;
+                FilterResults filterResults;
 
                 String searchString = charSequence.toString();
 

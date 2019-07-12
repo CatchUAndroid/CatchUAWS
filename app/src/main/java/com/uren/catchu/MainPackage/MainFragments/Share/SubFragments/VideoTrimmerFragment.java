@@ -16,6 +16,8 @@ import com.uren.catchu.MainPackage.MainFragments.BaseFragment;
 import com.uren.catchu.MainPackage.MainFragments.Share.Interfaces.VideoTrimmedCallback;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import butterknife.ButterKnife;
 
 import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
@@ -79,11 +81,11 @@ public class VideoTrimmerFragment extends BaseFragment implements com.deep.video
                 videoTrimmedCallback.onTrimmed(uri, uri.getPath());
 
                 DialogBoxUtil.showInfoDialogWithLimitedTime(getContext(), null,
-                        getContext().getResources().getString(R.string.PLEASE_WAIT),
+                        Objects.requireNonNull(getContext()).getResources().getString(R.string.PLEASE_WAIT),
                         2000, new InfoDialogBoxCallback() {
                             @Override
                             public void okClick() {
-                                getActivity().onBackPressed();
+                                Objects.requireNonNull(getActivity()).onBackPressed();
                             }
                         });
             }
@@ -99,6 +101,6 @@ public class VideoTrimmerFragment extends BaseFragment implements com.deep.video
 
             }
         });
-        getActivity().onBackPressed();
+        Objects.requireNonNull(getActivity()).onBackPressed();
     }
 }

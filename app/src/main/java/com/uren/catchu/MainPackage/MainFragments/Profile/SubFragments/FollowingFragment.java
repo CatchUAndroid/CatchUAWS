@@ -33,6 +33,8 @@ import com.uren.catchu.MainPackage.NextActivity;
 import com.uren.catchu.R;
 import com.uren.catchu.Singleton.AccountHolderInfo;
 
+import java.util.Objects;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.FollowInfoListResponse;
@@ -88,7 +90,7 @@ public class FollowingFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        Objects.requireNonNull(getActivity()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         if (mView == null) {
             mView = inflater.inflate(R.layout.profile_subfragment_following, container, false);
             ButterKnife.bind(this, mView);
@@ -109,12 +111,12 @@ public class FollowingFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((NextActivity) getActivity()).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
+        ((NextActivity) Objects.requireNonNull(getActivity())).ANIMATION_TAG = ANIMATE_LEFT_TO_RIGHT;
     }
 
     private void init() {
         toolbarTitleTv.setText(toolbarTitle);
-        searchEdittext.setHint(getContext().getResources().getString(R.string.SEARCH_FOLLOWINGS));
+        searchEdittext.setHint(Objects.requireNonNull(getContext()).getResources().getString(R.string.SEARCH_FOLLOWINGS));
         searchResultTv.setText(getContext().getResources().getString(R.string.USER_NOT_FOUND));
     }
 
@@ -122,7 +124,7 @@ public class FollowingFragment extends BaseFragment {
         commonToolbarbackImgv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
+                Objects.requireNonNull(getActivity()).onBackPressed();
             }
         });
 
@@ -147,7 +149,7 @@ public class FollowingFragment extends BaseFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s != null && s.toString() != null) {
+                if (s != null) {
                     if (!s.toString().trim().isEmpty()) {
                         searchCancelImgv.setVisibility(View.VISIBLE);
                     } else {

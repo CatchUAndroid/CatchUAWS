@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.uren.catchu.GeneralUtils.DialogBoxUtil.Interfaces.GifDialogListener;
 import com.uren.catchu.R;
 
+import java.util.Objects;
+
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -129,7 +131,7 @@ public class GifDialogBox {
         public GifDialogBox build() {
             final Dialog dialog = new Dialog(this.activity);
             dialog.requestWindowFeature(1);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
+            Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(0));
             dialog.setCancelable(this.cancel);
             dialog.setContentView(R.layout.layout_gif_dialog_box);
             TextView title1 = dialog.findViewById(R.id.title);
