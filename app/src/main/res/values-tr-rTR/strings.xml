@@ -86,7 +86,7 @@
     <string name="REMOVE_FOLLOWER_TITLE">Takipçiyi Çıkar?</string>
     <string name="REMOVE_FOLLOWER_MESSAGE">Takipçilerden çıkardığınız bilgisi bu kullanıcıya iletilmeyecektir</string>
     <string name="SEARCH_FOLLOWERS">Takipçileri ara...</string>
-    <string name="SEARCH_FOLLOWINGS">Takip edilenleri ara...</string>
+    <string name="SEARCH_FOLLOWINGS">Takip edilenleri ara…</string>
     <string name="USER_NOT_FOUND">Kullanıcı bulunamadı.</string>
 
     <string name="REMOVE_BLOCK_PERSON">Bu kişi ile mesajlaşabilmek için engeli kaldırmalısınız!</string>
@@ -306,6 +306,12 @@
     <string name="DIGITAL_FOOTPRINT_DESC">Fiziksel izler yerine dijital izlerinizi bırakın ve keşfedilmelerini bekleyin.</string>
     <string name="TIME_CAPSULE_DESC">Gelecekte açılmasını istediğiniz bir mesajı istediğiniz yere bırakın. Belki yarın belki 20 yıl sonra açılsın.</string>
     <string name="IMMORTAL_NODES_DESC">Lokasyona kaybolmayacak notlar bırakın. Dilediğiniz zaman dilediğiniz kişiye o lokasyonda görünsün.</string>
+
+    <string name="WRITE_YOUR_NAME">İsim yazın..</string>
+    <string name="WRITE_USERNAME">Kullanıcı adını yazın..</string>
+    <string name="WRITE_WEB_SITE">Web sitesi adresini yazın..</string>
+    <string name="WRITE_ABOUT_ME">Kısaca kendinizden bahsedin..</string>
+    <string name="WRITE_EMAIL">Email adresinizi yazın..</string>
 
     <array name="months">
         <item>Ocak</item>

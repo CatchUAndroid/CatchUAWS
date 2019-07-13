@@ -25,7 +25,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@color/clearWhite"
                     android:gravity="bottom">
 
@@ -33,13 +33,19 @@
                         style="@style/customTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="bottom"
                         android:text="@string/ADD_YOUR_FRIENDS"
-                        android:textStyle="bold|italic" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <LinearLayout
                     android:id="@+id/addFromFacebookLayout"
@@ -66,6 +72,13 @@
 
                 </LinearLayout>
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/fab_color_shadow" />
+
                 <LinearLayout
                     android:id="@+id/addFromContactLayout"
                     android:layout_width="match_parent"
@@ -88,11 +101,19 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:text="@string/CONTACT_FRIENDS" />
+
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/view4"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@color/clearWhite"
                     android:gravity="bottom">
 
@@ -100,13 +121,20 @@
                         style="@style/customTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="bottom"
                         android:text="@string/INVITE_YOUR_FRIENDS"
-                        android:textStyle="bold|italic" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/view5"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <LinearLayout
                     android:id="@+id/inviteForInstallLayout"
@@ -123,12 +151,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/invite" />
+
                 </LinearLayout>
 
 
+                <View
+                    android:id="@+id/view6"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@color/clearWhite"
                     android:gravity="bottom">
 
@@ -136,13 +172,20 @@
                         style="@style/customTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="bottom"
                         android:text="@string/ACCOUNT"
-                        android:textStyle="bold|italic" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/view7"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <LinearLayout
                     android:id="@+id/changePasswordLayout"
@@ -159,7 +202,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/CHANGE_PASSWORD" />
+
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -190,9 +243,16 @@
 
                 </RelativeLayout>
 
+                <View
+                    android:id="@+id/view8"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
+                    android:layout_height="40dp"
                     android:background="@color/clearWhite"
                     android:gravity="bottom">
 
@@ -200,14 +260,21 @@
                         style="@style/customTextStyle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
                         android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="5dp"
                         android:gravity="bottom"
                         android:text="@string/SUPPORT"
-                        android:textStyle="bold|italic" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
+
+                <View
+                    android:id="@+id/view9"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <LinearLayout
                     android:id="@+id/helpCenterLayout"
@@ -224,7 +291,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/HELP_CENTER" />
+
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.7dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"
+                    android:background="@color/fab_color_shadow" />
 
                 <LinearLayout
                     android:id="@+id/problemInformLayout"

@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
         <include layout="@layout/common_toolbar_layout_rounded" />
 
         <ScrollView
@@ -37,12 +36,11 @@
                     <!-- Profile Picture /-->
                     <RelativeLayout
                         android:id="@+id/rlProfilePicture"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="30dp">
-
 
                         <FrameLayout
                             android:layout_width="wrap_content"
@@ -50,8 +48,8 @@
 
                             <ImageView
                                 android:id="@+id/imgProfile"
-                                android:layout_width="100dp"
-                                android:layout_height="100dp"
+                                android:layout_width="120dp"
+                                android:layout_height="120dp"
                                 android:layout_gravity="center"
                                 android:contentDescription="TODO" />
 
@@ -90,7 +88,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@color/clearWhite"
+                        android:background="@color/White"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -98,46 +96,51 @@
                             style="@style/customTextStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
                             android:layout_marginStart="10dp"
+                            android:layout_marginBottom="5dp"
                             android:gravity="bottom"
                             android:text="@string/PERSONAL_INFORMATION"
                             android:textStyle="bold" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginLeft="10dp"
-                            android:layout_marginRight="10dp"
-                            android:alpha="0.5"
-                            android:background="@color/tintColor" />
 
                     </LinearLayout>
 
                     <!-- Name /-->
                     <LinearLayout
+                        android:id="@+id/xxx"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom">
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/txtName"
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
                                 android:gravity="bottom"
                                 android:text="@string/NAME" />
 
 
                         </LinearLayout>
+
+                        <View
+                            android:id="@+id/view3"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <EditText
                             android:id="@+id/edtName"
@@ -146,7 +149,9 @@
                             android:layout_marginLeft="10dp"
                             android:background="@android:color/transparent"
                             android:maxLength="30"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:hint="@string/WRITE_YOUR_NAME"
+                            android:textColorHint="@color/Silver"/>
 
                     </LinearLayout>
 
@@ -156,11 +161,18 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/view10"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
@@ -168,13 +180,17 @@
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
                                 android:text="@string/username" />
 
-
                         </LinearLayout>
 
+                        <View
+                            android:id="@+id/view11"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <EditText
                             android:id="@+id/edtUserName"
@@ -183,7 +199,9 @@
                             android:layout_marginLeft="10dp"
                             android:background="@android:color/transparent"
                             android:maxLength="30"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:hint="@string/WRITE_USERNAME"
+                            android:textColorHint="@color/Silver" />
 
                     </LinearLayout>
 
@@ -193,24 +211,38 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/view12"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
+                                android:layout_marginBottom="5dp"
                                 android:text="@string/WEBSITE" />
 
 
                         </LinearLayout>
 
+
+                        <View
+                            android:id="@+id/view13"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <EditText
                             android:id="@+id/edtWebsite"
@@ -218,7 +250,9 @@
                             android:layout_height="50dp"
                             android:layout_marginLeft="10dp"
                             android:background="@android:color/transparent"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            android:hint="@string/WRITE_WEB_SITE"
+                            android:textColorHint="@color/Silver"/>
 
                     </LinearLayout>
 
@@ -228,11 +262,18 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/view14"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
@@ -240,11 +281,18 @@
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
+                                android:layout_marginBottom="5dp"
                                 android:text="@string/ABOUT_ME" />
 
                         </LinearLayout>
+
+                        <View
+                            android:id="@+id/view15"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -259,7 +307,9 @@
                                 android:layout_marginRight="10dp"
                                 android:layout_marginTop="5dp"
                                 android:background="@android:color/transparent"
-                                android:maxLength="250" />
+                                android:maxLength="250"
+                                android:hint="@string/WRITE_ABOUT_ME"
+                                android:textColorHint="@color/Silver"/>
 
                         </LinearLayout>
 
@@ -273,22 +323,36 @@
                         android:orientation="vertical">
 
 
+                        <View
+                            android:id="@+id/view16"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
+                                android:layout_marginBottom="5dp"
                                 android:text="@string/BIRTHDAY" />
 
                         </LinearLayout>
+
+                        <View
+                            android:id="@+id/view17"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <EditText
                             android:id="@+id/edtBirthDay"
@@ -299,7 +363,8 @@
                             android:clickable="true"
                             android:focusableInTouchMode="false"
                             android:singleLine="true"
-                            android:focusable="true" />
+                            android:focusable="true"
+                            android:hint="_ _ /_ _ /_ _ _ _"/>
 
                     </LinearLayout>
 
@@ -309,22 +374,36 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/view18"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
                                 style="@style/customTextStyle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="5dp"
                                 android:layout_marginLeft="10dp"
+                                android:layout_marginBottom="5dp"
                                 android:text="@string/email" />
 
                         </LinearLayout>
+
+                        <View
+                            android:id="@+id/view19"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <EditText
                             android:id="@+id/edtEmail"
@@ -334,7 +413,9 @@
                             android:background="@android:color/transparent"
                             android:editable="false"
                             android:singleLine="true"
-                            android:textColor="@color/tintColor" />
+                            android:textColor="@color/tintColor"
+                            android:hint="@string/WRITE_EMAIL"
+                            android:textColorHint="@color/Silver"/>
 
                     </LinearLayout>
 
@@ -344,11 +425,18 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/view20"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
@@ -361,6 +449,13 @@
 
                         </LinearLayout>
 
+
+                        <View
+                            android:id="@+id/view21"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <EditText
                             android:id="@+id/edtPhone"
@@ -379,11 +474,18 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <View
+                            android:id="@+id/view22"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="50dp"
+                            android:layout_height="40dp"
                             android:background="@color/clearWhite"
-                            android:gravity="bottom"
+                            android:gravity="center_vertical"
                             android:orientation="vertical">
 
                             <TextView
@@ -395,6 +497,13 @@
                                 android:text="@string/GENDER" />
 
                         </LinearLayout>
+
+                        <View
+                            android:id="@+id/view23"
+                            android:layout_width="match_parent"
+                            android:layout_height="0.7dp"
+                            android:layout_weight="1"
+                            android:background="@color/fab_color_shadow" />
 
                         <Spinner
                             android:id="@+id/genderSpinner"

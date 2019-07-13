@@ -324,6 +324,12 @@
     <string name="TIME_CAPSULE_DESC">Leave a message where you want it to come in the future. Maybe tomorrow maybe 20 years.</string>
     <string name="IMMORTAL_NODES_DESC">Leave notes that won\'t get lost in the location. When you wish, the person you wish, it will appear in that location</string>
 
+    <string name="WRITE_YOUR_NAME">Type your name..</string>
+    <string name="WRITE_USERNAME">Type your username..</string>
+    <string name="WRITE_WEB_SITE">Type web address..</string>
+    <string name="WRITE_ABOUT_ME">Talk about yourself..</string>
+    <string name="WRITE_EMAIL">Type your email..</string>
+
     <array name="months">
         <item>January</item>
         <item>February</item>
