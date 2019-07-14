@@ -11,6 +11,8 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import catchu.model.UserProfileProperties;
 
+import static com.uren.catchu.Constants.NumericConstants.BIO_MAX_LENGTH;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_LEFT_TO_RIGHT;
 import static com.uren.catchu.Constants.StringConstants.ANIMATE_RIGHT_TO_LEFT;
 import static com.uren.catchu.Constants.StringConstants.CAMERA_TEXT;
@@ -103,6 +106,8 @@ public class UserEditFragment extends BaseFragment
     String[] GENDERS;
     @BindArray(R.array.genderForServer)
     String[] GENDERS_FOR_SERVER;
+    @BindView(R.id.remainBioTv)
+    TextView remainBioTv;
 
     PermissionModule permissionModule;
     PhotoSelectUtil photoSelectUtil;
@@ -114,6 +119,7 @@ public class UserEditFragment extends BaseFragment
 
     boolean profilPicChanged = false;
     boolean photoExist = false;
+    private int bioSize = 0;
 
     private static final int ACTIVITY_REQUEST_CODE_OPEN_GALLERY = 385;
     private static final int ACTIVITY_REQUEST_CODE_OPEN_CAMERA = 85;
@@ -155,6 +161,7 @@ public class UserEditFragment extends BaseFragment
         edtPhone.setOnClickListener(this);
         setBirthDayDataSetListener();
         setGenderClickListener();
+        setEdtBioTextChangedListener();
     }
 
     public void setShapes() {
@@ -162,6 +169,29 @@ public class UserEditFragment extends BaseFragment
                 getResources().getColor(R.color.White, null), GradientDrawable.OVAL, 50, 5));
         imgProfile.setBackground(ShapeUtil.getShape(Objects.requireNonNull(getActivity()).getResources().getColor(R.color.DodgerBlue, null),
                 0, GradientDrawable.OVAL, 50, 0));
+    }
+
+    private void setEdtBioTextChangedListener() {
+        edtBio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                bioSize = BIO_MAX_LENGTH - s.toString().length();
+
+                if (bioSize >= 0)
+                    remainBioTv.setText(Integer.toString(bioSize));
+                else
+                    remainBioTv.setText(Integer.toString(0));
+            }
+        });
     }
 
     private void setBirthDayDataSetListener() {
@@ -217,6 +247,8 @@ public class UserEditFragment extends BaseFragment
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getBio() != null &&
                     !AccountHolderInfo.getInstance().getUser().getUserInfo().getBio().isEmpty()) {
                 edtBio.setText(AccountHolderInfo.getInstance().getUser().getUserInfo().getBio());
+                bioSize = BIO_MAX_LENGTH - AccountHolderInfo.getInstance().getUser().getUserInfo().getBio().length();
+                remainBioTv.setText(Integer.toString(bioSize));
             }
 
             if (AccountHolderInfo.getInstance().getUser().getUserInfo().getEmail() != null &&

@@ -294,24 +294,38 @@
                             android:layout_weight="1"
                             android:background="@color/fab_color_shadow" />
 
-                        <LinearLayout
+                        <RelativeLayout
                             android:layout_width="match_parent"
-                            android:layout_height="100dp"
+                            android:layout_height="110dp"
                             android:orientation="vertical">
 
                             <EditText
                                 android:id="@+id/edtBio"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="77dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="10dp"
                                 android:layout_marginTop="5dp"
+                                android:layout_marginRight="10dp"
                                 android:background="@android:color/transparent"
-                                android:maxLength="250"
                                 android:hint="@string/WRITE_ABOUT_ME"
-                                android:textColorHint="@color/Silver"/>
+                                android:maxLength="250"
+                                android:maxLines="40"
+                                android:lines="10"
+                                android:scrollbars="vertical"
+                                android:textColorHint="@color/Silver"
+                                android:gravity="top"/>
 
-                        </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/remainBioTv"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginRight="5dp"
+                                android:layout_marginBottom="5dp" />
+
+                        </RelativeLayout>
 
 
                     </LinearLayout>
