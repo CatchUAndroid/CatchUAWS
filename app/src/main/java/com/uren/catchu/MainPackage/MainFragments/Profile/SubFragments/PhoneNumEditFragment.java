@@ -235,17 +235,21 @@ public class PhoneNumEditFragment extends BaseFragment {
                     @Override
                     public void onSuccess(Object object) {
                         if (object != null) {
-                            countryListResponse = (CountryListResponse) object;
+                            try {
+                                countryListResponse = (CountryListResponse) object;
 
-                            String locale = Objects.requireNonNull(getActivity()).getResources().getConfiguration().locale.getCountry();
+                                String locale = Objects.requireNonNull(getActivity()).getResources().getConfiguration().locale.getCountry();
 
-                            for (Country country : countryListResponse.getItems()) {
-                                if (country != null && country.getCode() != null && !country.getCode().trim().isEmpty()) {
-                                    if (country.getCode().trim().equals(locale)) {
-                                        setSelectedPhone(country);
-                                        break;
+                                for (Country country : countryListResponse.getItems()) {
+                                    if (country != null && country.getCode() != null && !country.getCode().trim().isEmpty()) {
+                                        if (country.getCode().trim().equals(locale)) {
+                                            setSelectedPhone(country);
+                                            break;
+                                        }
                                     }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                         }
                         dialogDismiss();

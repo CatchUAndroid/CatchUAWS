@@ -135,7 +135,7 @@
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
+                android:background="@color/Black"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
                 <androidx.core.widget.NestedScrollView
@@ -144,6 +144,7 @@
                     android:background="@color/White">
 
                     <LinearLayout
+                        android:id="@+id/ttttt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:descendantFocusability="blocksDescendants"
@@ -191,6 +192,7 @@
                         </RelativeLayout>
 
                         <LinearLayout
+                            android:id="@+id/xxxx"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_gravity="center"
@@ -205,7 +207,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:gravity="center"
-                                android:textColor="@color/colorPrimaryDark"
+                                android:textColor="@color/Black"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
 
